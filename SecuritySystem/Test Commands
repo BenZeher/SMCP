@@ -1,0 +1,26 @@
+Commands to test:
+
+From Server To Controller:
+
+1) Set input pin listening status
+Set pin 9 and 14 to listening, set pin 11 to NOT listening:
+PC=p123&CONTROLLERNAME=ID123&COMMAND=SETPINLISTENINGSTATUS&PINNUMBER9=1&PINNUMBER11=0&PINNUMBER14=1
+
+2) Set output pin activate status (i.e., activate a pin/device)
+PC=p123&CONTROLLERNAME=ID123&COMMAND=SETPINACTIVESTATUS&PINNUMBER9=1&PININTERVAL=3000&PINNUMBER11=0&PININTERVAL11=0&PINNUMBER14=1&PININTERVAL14=1000
+
+
+From Controller to Server:
+
+1) Give me my listening pin assignments (which should be listening)
+GET /sm/smas.ASAlarmListenerAction?CONTROLLERNAME=ID123&PC=p123&DBID=sm1&COMMAND=GETLISTENINGSTATUS
+
+Sample response from the web app:
+ACK=OK&PINNUMBER1=1&PINNUMBER2=0&PINNUMBER3=1
+
+
+2) Give me my active pin assignments:
+GET /sm/smas.ASAlarmListenerAction?CONTROLLERNAME=ID123&PC=p123&DBID=sm1&COMMAND=GETACTIVESTATUS
+
+Sample response from web app:
+ACK=OK&PINNUMBER1=1&PININTERVAL1=3000&PINNUMBER2=0&PININTERVAL2=0&PINNUMBER3=1&PININTERVAL3=1000

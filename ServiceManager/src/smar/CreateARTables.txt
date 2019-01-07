@@ -1,0 +1,398 @@
+drop table aracctset;
+drop table arcustomergroups;
+drop table arcustomers;
+drop table `arcustomershiptos`;
+drop table `arcustomerstatistics`;
+drop table `armatchinglines`;
+drop table `armonthlystatistics`;
+drop table `aroptions`;
+drop table `arterms`;
+drop table `artransactions`;
+drop table `entrybatches`;
+drop table `entries`;
+drop table `entrylines`;
+drop table `glaccounts`;
+drop table `pricelistcodes`;
+
+
+***********************************
+
+
+
+CREATE TABLE `aracctset` (
+  `sAcctSetCode` varchar(6) NOT NULL default '',
+  `sDescription` varchar(60) NOT NULL default '',
+  `iActive` int(11) NOT NULL default '1',
+  `datLastMaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `sAcctsReceivableControlAcct` varchar(45) NOT NULL default '',
+  `sReceiptDiscountsAcct` varchar(45) NOT NULL default '',
+  `sPrepaymentLiabilityAcct` varchar(45) NOT NULL default '',
+  `sWriteOffAcct` varchar(45) NOT NULL default '',
+  `sRetainageAcct` varchar(45) NOT NULL default '',
+  `sCashAcct` varchar(45) NOT NULL default '',
+  PRIMARY KEY  (`sAcctSetCode`)
+) TYPE=InnoDB;
+
+CREATE TABLE `archronlog` (
+  `id` int(11) NOT NULL auto_increment,
+  `loriginalbatchnumber` int(11) NOT NULL default '0',
+  `loriginalentrynumber` int(11) NOT NULL default '0',
+  `idoctype` int(11) NOT NULL default '0',
+  `ldocid` int(11) NOT NULL default '0',
+  `spayeepayor` varchar(12) NOT NULL default '',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `datlogdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `suser` varchar(128) NOT NULL default '',
+  `damount` decimal(17,2) NOT NULL default '0.00',
+  `sdescription` varchar(254) NOT NULL default '',
+  `ssql` text,
+  `sapplytodoc` varchar(75) NOT NULL default '',
+  `sapplyfromdoc` varchar(75) NOT NULL default '',
+  `sparentdoc` varchar(75) NOT NULL default '',
+  `sfirstname` varchar(50) NOT NULL default '',
+  `slastname` varchar(50) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  KEY `payeepayor_key` (`spayeepayor`),
+  KEY `docnumber_key` (`sdocnumber`)
+) ENGINE=InnoDB
+
+
+CREATE TABLE `arcustomergroups` (
+  `sGroupCode` varchar(6) NOT NULL default '',
+  `sDescription` varchar(60) NOT NULL default '',
+  `iActive` int(11) NOT NULL default '1',
+  `datLastMaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `sLastEditUser` varchar(128) NOT NULL default '',
+  PRIMARY KEY  (`sGroupCode`)
+) TYPE=InnoDB;
+
+**************************************************
+
+CREATE TABLE `arcustomers` (
+  `sCustomerNumber` varchar(12) NOT NULL default '',
+  `sCustomerName` varchar(60) NOT NULL default '',
+  `sAddressLine1` varchar(60) NOT NULL default '',
+  `sAddressLine2` varchar(60) NOT NULL default '',
+  `sAddressLine3` varchar(60) NOT NULL default '',
+  `sAddressLine4` varchar(60) NOT NULL default '',
+  `sCity` varchar(30) NOT NULL default '',
+  `sState` varchar(30) NOT NULL default '',
+  `sCountry` varchar(30) NOT NULL default '',
+  `sPostalCode` varchar(20) NOT NULL default '',
+  `sContactName` varchar(60) NOT NULL default '',
+  `sPhoneNumber` varchar(30) NOT NULL default '',
+  `sFaxNumber` varchar(30) NOT NULL default '',
+  `sTerms` varchar(6) NOT NULL default '',
+  `sAccountSet` varchar(6) NOT NULL default '',
+  `iOnHold` int(11) NOT NULL default '1',
+  `datStartDate` date NOT NULL default '0000-00-00',
+  `dCreditLimit` decimal(17,2) NOT NULL default '0.00',
+  `iActive` int(11) NOT NULL default '1',
+  `datLastMaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `sLastEditUser` varchar(128) NOT NULL default '',
+  `sCustomerGroup` varchar(6) NOT NULL default '',
+  `sSalesperson` varchar(8) NOT NULL default '',
+  `mAccountingNotes` text,
+  `mProductionNotes` text,
+  `mCustomerComments` text,
+  `sEmailAddress` varchar(75) NOT NULL default '',
+  `sWebAddress` varchar(75) NOT NULL default '',
+  `spricelistcode` varchar(6) NOT NULL default '',
+  `ipricelevel` int(11) NOT NULL default '0',
+  `staxjurisdiction` varchar(6) NOT NULL default '',
+  `itaxtype` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sCustomerNumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `arcustomershiptos` (
+  `sCustomerNumber` varchar(12) NOT NULL default '',
+  `sShipToCode` varchar(6) NOT NULL default '',
+  `sDescription` varchar(60) NOT NULL default '',
+  `sAddressLine1` varchar(60) NOT NULL default '',
+  `sAddressLine2` varchar(60) NOT NULL default '',
+  `sAddressLine3` varchar(60) NOT NULL default '',
+  `sAddressLine4` varchar(60) NOT NULL default '',
+  `sCity` varchar(30) NOT NULL default '',
+  `sState` varchar(30) NOT NULL default '',
+  `sCountry` varchar(30) NOT NULL default '',
+  `sPostalCode` varchar(20) NOT NULL default '',
+  `sTaxGroup` varchar(12) NOT NULL default '',
+  `sContactName` varchar(60) NOT NULL default '',
+  `sPhoneNumber` varchar(30) NOT NULL default '',
+  `sFaxNumber` varchar(30) NOT NULL default '',
+  PRIMARY KEY  (`sCustomerNumber`,`sShipToCode`)
+) TYPE=InnoDB;
+
+*******************************************
+
+CREATE TABLE `arcustomerstatistics` (
+  `scustomernumber` varchar(12) NOT NULL default '',
+  `datlastinvoice` date NOT NULL default '0000-00-00',
+  `datlastcredit` date NOT NULL default '0000-00-00',
+  `datlastpayment` date NOT NULL default '0000-00-00',
+  `bdamountoflastinvoice` decimal(17,2) NOT NULL default '0.00',
+  `bdamountoflastcredit` decimal(17,2) NOT NULL default '0.00',
+  `bdamountoflastpayment` decimal(17,2) NOT NULL default '0.00',
+  `bdamountofhighestinvoice` decimal(17,2) NOT NULL default '0.00',
+  `bdamountofhighestinvoicelastyear` decimal(17,2) NOT NULL default '0.00',
+  `bdhighestbalance` decimal(17,2) NOT NULL default '0.00',
+  `bdhighestbalancelastyear` decimal(17,2) NOT NULL default '0.00',
+  `ltotalnumberofpaidinvoices` int(11) NOT NULL default '0',
+  `lnumberofopeninvoices` int(11) NOT NULL default '0',
+  `ltotalnumberofdaystopay` decimal(17,2) NOT NULL default '0.00',
+  `bdcurrentbalance` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`scustomernumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `armatchinglines` (
+  `id` int(11) NOT NULL auto_increment,
+  `spayeepayor` varchar(12) NOT NULL default '',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `sapplytodoc` varchar(75) NOT NULL default '',
+  `ldocappliedtoid` int(11) NOT NULL default '0',
+  `damount` decimal(17,2) NOT NULL default '0.00',
+  `sdescription` varchar(128) NOT NULL default '',
+  `dattransactiondate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `lparenttransactionid` int(11) NOT NULL default '0',
+  `iretainage` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  KEY `payeepayor_key` (`spayeepayor`),
+  KEY `payeepayor_docnumber` (`spayeepayor`,`sdocnumber`),
+  KEY `parenttransactionid_key` (`lparenttransactionid`),
+  KEY `docnumber_key` (`sdocnumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `armonthlystatistics` (
+  `scustomernumber` varchar(12) NOT NULL default '',
+  `lyear` int(11) NOT NULL default '0',
+  `lmonth` int(11) NOT NULL default '0',
+  `bdinvoicetotal` decimal(17,2) NOT NULL default '0.00',
+  `bdcredittotal` decimal(17,2) NOT NULL default '0.00',
+  `bdpaymenttotal` decimal(17,2) NOT NULL default '0.00',
+  `lnumberofinvoices` int(11) NOT NULL default '0',
+  `lnumberofcredits` int(11) NOT NULL default '0',
+  `lnumberofpayments` int(11) NOT NULL default '0',
+  `bdaveragedaystopay` decimal(17,2) NOT NULL default '0.00',
+  `lnumberofpaidinvoices` decimal(17,2) NOT NULL default '0.00',
+  `ltotalnumberofdaystopay` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`scustomernumber`,`lyear`,`lmonth`)
+) TYPE=InnoDB;
+
+CREATE TABLE `aroptions` (
+  `ibatchpostinginprocess` int(11) NOT NULL default '0',
+  `suser` varchar(128) NOT NULL default '',
+  `sprocess` varchar(128) NOT NULL default '',
+  `datstartdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `iflagimports` int(11) NOT NULL default '1'
+) TYPE=InnoDB;
+
+CREATE TABLE `arterms` (
+  `sTermsCode` varchar(6) NOT NULL default '',
+  `sDescription` varchar(60) NOT NULL default '',
+  `iActive` int(11) NOT NULL default '1',
+  `datLastMaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `dDiscountPercent` double NOT NULL default '0',
+  `iDiscountNumberOfDays` int(11) NOT NULL default '0',
+  `iDiscountDayOfTheMonth` int(11) NOT NULL default '0',
+  `iDueNumberOfDays` int(11) NOT NULL default '0',
+  `iDueDayOfTheMonth` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sTermsCode`)
+) TYPE=InnoDB;
+
+************************************************
+
+
+CREATE TABLE `artransactions` (
+  `id` int(11) NOT NULL auto_increment,
+  `loriginalbatchnumber` int(11) NOT NULL default '0',
+  `loriginalentrynumber` int(11) NOT NULL default '0',
+  `idoctype` int(11) NOT NULL default '0',
+  `spayeepayor` varchar(12) NOT NULL default '',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `sterms` varchar(6) NOT NULL default '',
+  `datdocdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `datduedate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `doriginalamt` decimal(17,2) NOT NULL default '0.00',
+  `dcurrentamt` decimal(17,2) NOT NULL default '0.00',
+  `sdocdescription` varchar(128) NOT NULL default '',
+  `sordernumber` varchar(22) NOT NULL default '',
+  `scontrolacct` varchar(75) NOT NULL default '',
+  `iretainage` int(11) NOT NULL default '0',
+  `sponumber` varchar(22) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `payeepayor_docnumber` (`spayeepayor`,`sdocnumber`),
+  KEY `payeepayor_key` (`spayeepayor`),
+  KEY `docnumber_key` (`sdocnumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `entrybatches` (
+  `ibatchnumber` int(11) NOT NULL auto_increment,
+  `datbatchdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ibatchstatus` int(11) NOT NULL default '0',
+  `sbatchdescription` varchar(128) NOT NULL default '',
+  `ibatchtype` int(11) NOT NULL default '0',
+  `datlasteditdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ibatchlastentry` int(11) NOT NULL default '0',
+  `screatedby` varchar(128) NOT NULL default '',
+  `slasteditedby` varchar(128) NOT NULL default '',
+  `smoduletype` char(2) NOT NULL default '',
+  `datpostdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`ibatchnumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `entries` (
+  `id` int(11) NOT NULL auto_increment,
+  `ibatchnumber` int(11) NOT NULL default '0',
+  `ientrynumber` int(11) NOT NULL default '0',
+  `idocumenttype` int(11) NOT NULL default '0',
+  `spayeepayor` varchar(12) NOT NULL default '',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `sdocdescription` varchar(128) NOT NULL default '',
+  `datdocdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `stermscode` varchar(6) NOT NULL default '',
+  `datduedate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ilastline` int(11) NOT NULL default '0',
+  `scontrolacct` varchar(75) NOT NULL default '',
+  `doriginalamount` decimal(17,2) NOT NULL default '0.00',
+  `sordernumber` varchar(22) NOT NULL default '',
+  `sentryponumber` varchar(22) NOT NULL default '',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `batch_entry_key` (`ibatchnumber`,`ientrynumber`),
+  KEY `entrynumberkey` (`ientrynumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `entrylines` (
+  `id` int(11) NOT NULL auto_increment,
+  `ibatchnumber` int(11) NOT NULL default '0',
+  `ientrynumber` int(11) NOT NULL default '0',
+  `ilinenumber` int(11) NOT NULL default '0',
+  `sdocappliedto` varchar(75) NOT NULL default '',
+  `sglacct` varchar(75) NOT NULL default '',
+  `sdescription` varchar(75) NOT NULL default '',
+  `damount` decimal(17,2) NOT NULL default '0.00',
+  `scomment` varchar(255) NOT NULL default '',
+  `ldocappliedtoid` int(11) NOT NULL default '-1',
+  `lentryid` int(11) NOT NULL default '-1',
+  `sapplytoordernumber` varchar(22) NOT NULL default '0',
+  PRIMARY KEY  (`id`),
+  UNIQUE KEY `BatchEntryLineKey` (`ibatchnumber`,`ientrynumber`,`ilinenumber`),
+  KEY `linenumberkey` (`ilinenumber`)
+) TYPE=InnoDB;
+
+CREATE TABLE `glaccounts` (
+  `sacctid` varchar(45) NOT NULL default '',
+  `sformattedacctid` varchar(60) NOT NULL default '',
+  `sdescription` varchar(60) NOT NULL default '',
+  `stype` char(1) NOT NULL default '',
+  PRIMARY KEY  (`sacctid`)
+) TYPE=InnoDB;
+
+CREATE TABLE `pricelistcodes` (
+  `spricelistcode` varchar(6) NOT NULL default '',
+  `sdescription` varchar(60) NOT NULL default '',
+  PRIMARY KEY  (`spricelistcode`)
+) TYPE=InnoDB;
+
+**********************************************
+INSERT INTO aroptions (ibatchpostinginprocess) VALUES (0);
+
+UPDATE aracctset SET 
+sAcctSetCode = TRIM(sAcctSetCode),
+sDescription = TRIM(sDescription),
+sAcctsReceivableControlAcct = TRIM(sAcctsReceivableControlAcct),
+sReceiptDiscountsAcct = TRIM(sReceiptDiscountsAcct),
+sPrepaymentLiabilityAcct = TRIM(sPrepaymentLiabilityAcct),
+sWriteOffAcct = TRIM(sWriteOffAcct),
+sRetainageAcct = TRIM(sRetainageAcct),
+sCashAcct = TRIM(sCashAcct)
+;
+
+UPDATE arcustomergroups SET
+sGroupCode = TRIM(sGroupCode),
+sDescription = TRIM(sDescription)
+;
+
+UPDATE arcustomers SET
+sCustomerNumber = TRIM(sCustomerNumber),
+sCustomerName = TRIM(sCustomerName),
+sAddressLine1 = TRIM(sAddressLine1),
+sAddressLine2 = TRIM(sAddressLine2),
+sAddressLine3 = TRIM(sAddressLine3),
+sAddressLine4 = TRIM(sAddressLine4),
+sCity = TRIM(sCity),
+sState = TRIM(sState),
+sCountry = TRIM(sCountry),
+sPostalCode = TRIM(sPostalCode),
+sContactName = TRIM(sContactName),
+sPhoneNumber = TRIM(sPhoneNumber),
+sFaxNumber = TRIM(sFaxNumber),
+sTerms = TRIM(sTerms),
+sAccountSet = TRIM(sAccountSet),
+sCustomerGroup = TRIM(sCustomerGroup),
+sSalesperson = TRIM(sSalesperson),
+mAccountingNotes = TRIM(mAccountingNotes),
+mProductionNotes = TRIM(mProductionNotes),
+mCustomerComments = TRIM(mCustomerComments),
+sEmailAddress = TRIM(sEmailAddress),
+sWebAddress = TRIM(sWebAddress),
+spricelistcode = TRIM(spricelistcode),
+staxjurisdiction = TRIM(staxjurisdiction)
+;
+
+
+*****************************************************
+
+UPDATE arcustomershiptos SET
+sCustomerNumber = TRIM(sCustomerNumber),
+sShipToCode = TRIM(sShipToCode),
+sDescription = TRIM(sDescription),
+sAddressLine1 = TRIM(sAddressLine1),
+sAddressLine2 = TRIM(sAddressLine2),
+sAddressLine3 = TRIM(sAddressLine3),
+sAddressLine4 = TRIM(sAddressLine4),
+sCity = TRIM(sCity),
+sState = TRIM(sState),
+sCountry = TRIM(sCountry),
+sPostalCode = TRIM(sPostalCode),
+sTaxGroup = TRIM(sTaxGroup),
+sContactName = TRIM(sContactName),
+sPhoneNumber = TRIM(sPhoneNumber),
+sFaxNumber = TRIM(sFaxNumber)
+;
+
+UPDATE arcustomerstatistics SET
+scustomernumber = TRIM(scustomernumber)
+;
+
+UPDATE armatchinglines SET
+spayeepayor = TRIM(spayeepayor),
+sdocnumber = TRIM(sdocnumber),
+sapplytodoc = TRIM(sapplytodoc),
+sdescription = TRIM(sdescription)
+;
+
+UPDATE armonthlystatistics SET
+scustomernumber = TRIM(scustomernumber)
+;
+
+UPDATE arterms SET
+sTermsCode = TRIM(sTermsCode),
+sDescription = TRIM(sDescription)
+;
+
+UPDATE artransactions SET
+spayeepayor = TRIM(spayeepayor),
+sdocnumber = TRIM(sdocnumber),
+sterms = TRIM(sterms),
+sdocdescription = TRIM(sdocdescription),
+sordernumber = TRIM(sordernumber),
+scontrolacct = TRIM(scontrolacct),
+sponumber = TRIM(sponumber)
+;
+
+UPDATE glaccounts SET
+sacctid = TRIM(sacctid),
+sformattedacctid = TRIM(sformattedacctid),
+sdescription = TRIM(sdescription)
+;
+

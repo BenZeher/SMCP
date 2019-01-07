@@ -1,0 +1,1205 @@
+<!DOCTYPE web-app
+   PUBLIC "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN" 
+    "http://java.sun.com/dtd/web-app_2_3.dtd"
+>
+
+<web-app>
+
+    <!-- Web application -->
+
+    <display-name>Time Card System</display-name>
+    
+    <description>
+      Time Card Web
+    </description>
+
+    <context-param>
+      <param-name>webappname</param-name>
+      <param-value>timecard</param-value>
+      <description>
+        The actual name of the web app.
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>programtitle</param-name>
+      <param-value>Time Card System</param-value>
+      <description>
+        The actual name of the program.
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>imagepath</param-name>
+      <param-value>/timecard/images/</param-value>
+      <description>
+        The URL path to the 'images' folder.
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>scriptpath</param-name>
+      <param-value>/timecard/scripts/</param-value>
+      <description>
+        The path to the 'scripts' folder, which contains javascript, etc.
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>logfilename</param-name>
+      <param-value>/usr/local/tomcat6/webapps/madg/log.csv</param-value>
+      <description>
+        The absolute path to the log file which the program will create and use.
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>emailserver</param-name>
+      <param-value>192.168.0.2</param-value>
+      <description>
+        The name of the email server used to send out email
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>smtpusername</param-name>
+      <param-value></param-value>
+      <description>
+        The name of the email user used to send out email
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>smtpuserpw</param-name>
+      <param-value></param-value>
+      <description>
+        The email user password
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>periodlength</param-name>
+      <param-value>1</param-value>
+      <description>
+        The length of a pay period in weeks
+      </description>
+    </context-param>
+
+    <context-param>
+      <param-name>maximumnumberofconnections</param-name>
+      <param-value>35</param-value>
+      <description>
+        The maximum number of database connections that this web app will allow to be opened
+      </description>
+    </context-param>
+
+
+    <!-- TimeCardSystem package classes: -->
+    <servlet>
+        <servlet-name>AccessControlFunctionList</servlet-name>
+        <servlet-class>TimeCardSystem.AccessControlFunctionList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AddDefaultLeave</servlet-name>
+        <servlet-class>TimeCardSystem.AddDefaultLeave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AddDefaultPunch</servlet-name>
+        <servlet-class>TimeCardSystem.AddDefaultPunch</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AdminMain</servlet-name>
+        <servlet-class>TimeCardSystem.AdminMain</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DepartmentEdit</servlet-name>
+        <servlet-class>TimeCardSystem.DepartmentEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DepartmentInfoSave</servlet-name>
+        <servlet-class>TimeCardSystem.DepartmentInfoSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DepartmentList</servlet-name>
+        <servlet-class>TimeCardSystem.DepartmentList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>DepartmentRemove</servlet-name>
+        <servlet-class>TimeCardSystem.DepartmentRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeAuxiFieldEdit</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeAuxiFieldEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeAuxiFieldList</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeAuxiFieldList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeAuxiFieldRemove</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeAuxiFieldRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeAuxiFieldSave</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeAuxiFieldSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeAuxiInfoReportFieldSelection</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeAuxiInfoReportFieldSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeConfidentialEdit</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeConfidentialEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeConfidentialSave</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeConfidentialSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeContactList</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeContactList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeContactListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeContactListCriteriaSelection</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>EmployeeGeneralEdit</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeGeneralEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeGeneralSave</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeGeneralSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveEdit</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveManager</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveManager</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveManagerCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveManagerCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveRemove</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveSave</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveSummaryCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveSummaryCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeLeaveSummaryGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeLeaveSummaryGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeList</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeePerformanceList</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeePerformanceList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeePerformanceListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeePerformanceListCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeRemove</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeStatusEdit</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeStatusEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeStatusList</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeStatusList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeStatusRemove</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeStatusRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>EmployeeStatusSave</servlet-name>
+        <servlet-class>TimeCardSystem.EmployeeStatusSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LateFlagChange</servlet-name>
+        <servlet-class>TimeCardSystem.LateFlagChange</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LateReportCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.LateReportCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LateReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.LateReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LeaveAdjustmentTypeEdit</servlet-name>
+        <servlet-class>TimeCardSystem.LeaveAdjustmentTypeEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LeaveAdjustmentTypeList</servlet-name>
+        <servlet-class>TimeCardSystem.LeaveAdjustmentTypeList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LeaveAdjustmentTypeRemove</servlet-name>
+        <servlet-class>TimeCardSystem.LeaveAdjustmentTypeRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LeaveAdjustmentTypeSave</servlet-name>
+        <servlet-class>TimeCardSystem.LeaveAdjustmentTypeSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>LeaveTypeTotal</servlet-name>
+        <servlet-class>TimeCardSystem.LeaveTypeTotal</servlet-class>
+    </servlet>
+
+   <servlet>
+        <servlet-name>MADGICReportCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.MADGICReportCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MADGICReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.MADGICReportGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>MainLogin</servlet-name>
+        <servlet-class>TimeCardSystem.MainLogin</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManageACGroupsAction</servlet-name>
+        <servlet-class>TimeCardSystem.ManageACGroupsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManageACGroups</servlet-name>
+        <servlet-class>TimeCardSystem.ManageACGroups</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManageACGroupsEdit</servlet-name>
+        <servlet-class>TimeCardSystem.ManageACGroupsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManagerAccessControl</servlet-name>
+        <servlet-class>TimeCardSystem.ManagerAccessControl</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManagerAccessControlEdit</servlet-name>
+        <servlet-class>TimeCardSystem.ManagerAccessControlEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManagerAccessControlSave</servlet-name>
+        <servlet-class>TimeCardSystem.ManagerAccessControlSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManagerReviewListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.ManagerReviewListCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ManagerReviewListGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.ManagerReviewListGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MilestonesReportCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.MilestonesReportCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MilestonesReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.MilestonesReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MissingDayReportCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.MissingDayReportCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MissingDayReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.MissingDayReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MissingTimeListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.MissingTimeListCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>MissingTimeListGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.MissingTimeListGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OnClockEmployeeList</servlet-name>
+        <servlet-class>TimeCardSystem.OnClockEmployeeList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>OnClockEmployeeListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.OnClockEmployeeListCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PayTypeEdit</servlet-name>
+        <servlet-class>TimeCardSystem.PayTypeEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PayTypeList</servlet-name>
+        <servlet-class>TimeCardSystem.PayTypeList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PayTypeRemove</servlet-name>
+        <servlet-class>TimeCardSystem.PayTypeRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PayTypeSave</servlet-name>
+        <servlet-class>TimeCardSystem.PayTypeSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PeriodTotalDispCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.PeriodTotalDispCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PeriodTotalEdit</servlet-name>
+        <servlet-class>TimeCardSystem.PeriodTotalEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PeriodTotalFinalize</servlet-name>
+        <servlet-class>TimeCardSystem.PeriodTotalFinalize</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PeriodTotalReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.PeriodTotalReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PeriodTotalSave</servlet-name>
+        <servlet-class>TimeCardSystem.PeriodTotalSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PostPeriodTotal</servlet-name>
+        <servlet-class>TimeCardSystem.PostPeriodTotal</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PostPeriodTotalConfirmation</servlet-name>
+        <servlet-class>TimeCardSystem.PostPeriodTotalConfirmation</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>PostPeriodTotalCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.PostPeriodTotalCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>RawEntryListCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.RawEntryListCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>RawEntryListGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.RawEntryListGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SpecialNoteEdit</servlet-name>
+        <servlet-class>TimeCardSystem.SpecialNoteEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SpecialNoteReportCriteriaSelection</servlet-name>
+        <servlet-class>TimeCardSystem.SpecialNoteReportCriteriaSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SpecialNoteReportGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.SpecialNoteReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>SpecialNoteSave</servlet-name>
+        <servlet-class>TimeCardSystem.SpecialNoteSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCDisplayDataDefs</servlet-name>
+        <servlet-class>TimeCardSystem.TCDisplayDataDefs</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditEmployeeMilestones</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditEmployeeMilestones</servlet-class>
+    </servlet>
+
+   <servlet>
+        <servlet-name>TCEditEmployeeTypesAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditEmployeeTypesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditEmployeeTypesEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditEmployeeTypesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditEmployeeTypeSelection</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditEmployeeTypeSelection</servlet-class>
+    </servlet>
+
+	<servlet>
+    	<servlet-name>TCEditMADGICEventsAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMADGICEventsEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMADGICEventsSelection</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMADGICEventTypesAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventTypesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMADGICEventTypesEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventTypesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMADGICEventTypesSelection</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMADGICEventTypesSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMilestonesAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMilestonesAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>TCEditMilestonesEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMilestonesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCEditMilestonesSelection</servlet-name>
+        <servlet-class>TimeCardSystem.TCEditMilestonesSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCPunchAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCPunchAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>TCQueryGenerate</servlet-name>
+        <servlet-class>TimeCardSystem.TCQueryGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>TCQueryParameters</servlet-name>
+        <servlet-class>TimeCardSystem.TCQueryParameters</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCQuerySelect</servlet-name>
+        <servlet-class>TimeCardSystem.TCQuerySelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCSEditCompanyProfile</servlet-name>
+        <servlet-class>TimeCardSystem.TCSEditCompanyProfile</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCSEditCompanyProfileAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCSEditCompanyProfileAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCSavedQueriesSelect</servlet-name>
+        <servlet-class>TimeCardSystem.TCSavedQueriesSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TCSaveQueryAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCSaveQueryAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryRemove</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntrySave</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntrySave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryTypeEdit</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryTypeEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryTypeInfoSave</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryTypeInfoSave</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryTypeList</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryTypeList</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>TimeEntryTypeRemove</servlet-name>
+        <servlet-class>TimeCardSystem.TimeEntryTypeRemove</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>UserLogin</servlet-name>
+        <servlet-class>TimeCardSystem.UserLogin</servlet-class>
+    </servlet>
+
+
+<!--  TimeCardSystem class mappings: -->
+    <servlet-mapping>
+        <servlet-name>AccessControlFunctionList</servlet-name>
+        <url-pattern>/TimeCardSystem.AccessControlFunctionList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AddDefaultLeave</servlet-name>
+        <url-pattern>/TimeCardSystem.AddDefaultLeave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AddDefaultPunch</servlet-name>
+        <url-pattern>/TimeCardSystem.AddDefaultPunch</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AdminMain</servlet-name>
+        <url-pattern>/TimeCardSystem.AdminMain</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DepartmentEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.DepartmentEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DepartmentInfoSave</servlet-name>
+        <url-pattern>/TimeCardSystem.DepartmentInfoSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DepartmentList</servlet-name>
+        <url-pattern>/TimeCardSystem.DepartmentList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>DepartmentRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.DepartmentRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeAuxiFieldEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeAuxiFieldEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeAuxiFieldList</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeAuxiFieldList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeAuxiFieldRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeAuxiFieldRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeAuxiFieldSave</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeAuxiFieldSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeAuxiInfoReportFieldSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeAuxiInfoReportFieldSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeConfidentialEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeConfidentialEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeConfidentialSave</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeConfidentialSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeContactList</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeContactList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeContactListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeContactListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>EmployeeGeneralEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeGeneralEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeGeneralSave</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeGeneralSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveManager</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveManager</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveManagerCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveManagerCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveSave</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveSummaryCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveSummaryCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveSummaryGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveSummaryGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveRemove</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>EmployeeList</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeePerformanceList</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeePerformanceList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeePerformanceListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeePerformanceListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeStatusEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeStatusEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeStatusList</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeStatusList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeStatusRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeStatusRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>EmployeeStatusSave</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeStatusSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LateFlagChange</servlet-name>
+        <url-pattern>/TimeCardSystem.LateFlagChange</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LateReportCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.LateReportCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LateReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.LateReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LeaveAdjustmentTypeEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.LeaveAdjustmentTypeEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LeaveAdjustmentTypeList</servlet-name>
+        <url-pattern>/TimeCardSystem.LeaveAdjustmentTypeList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LeaveAdjustmentTypeRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.LeaveAdjustmentTypeRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LeaveAdjustmentTypeSave</servlet-name>
+        <url-pattern>/TimeCardSystem.LeaveAdjustmentTypeSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>LeaveTypeTotal</servlet-name>
+        <url-pattern>/TimeCardSystem.LeaveTypeTotal</url-pattern>
+    </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>MADGICReportCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.MADGICReportCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MADGICReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.MADGICReportGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>MainLogin</servlet-name>
+        <url-pattern>/TimeCardSystem.MainLogin</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManageACGroupsAction</servlet-name>
+        <url-pattern>/TimeCardSystem.ManageACGroupsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManageACGroups</servlet-name>
+        <url-pattern>/TimeCardSystem.ManageACGroups</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManageACGroupsEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.ManageACGroupsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManagerAccessControl</servlet-name>
+        <url-pattern>/TimeCardSystem.ManagerAccessControl</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManagerAccessControlEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.ManagerAccessControlEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManagerAccessControlSave</servlet-name>
+        <url-pattern>/TimeCardSystem.ManagerAccessControlSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManagerReviewListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.ManagerReviewListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ManagerReviewListGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.ManagerReviewListGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MilestonesReportCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.MilestonesReportCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MilestonesReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.MilestonesReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MissingDayReportCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.MissingDayReportCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MissingDayReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.MissingDayReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MissingTimeListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.MissingTimeListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>MissingTimeListGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.MissingTimeListGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OnClockEmployeeList</servlet-name>
+        <url-pattern>/TimeCardSystem.OnClockEmployeeList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>OnClockEmployeeListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.OnClockEmployeeListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PayTypeEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.PayTypeEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PayTypeList</servlet-name>
+        <url-pattern>/TimeCardSystem.PayTypeList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PayTypeRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.PayTypeRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PayTypeSave</servlet-name>
+        <url-pattern>/TimeCardSystem.PayTypeSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PeriodTotalDispCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.PeriodTotalDispCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PeriodTotalEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.PeriodTotalEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PeriodTotalFinalize</servlet-name>
+        <url-pattern>/TimeCardSystem.PeriodTotalFinalize</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PeriodTotalReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.PeriodTotalReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PeriodTotalSave</servlet-name>
+        <url-pattern>/TimeCardSystem.PeriodTotalSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PostPeriodTotal</servlet-name>
+        <url-pattern>/TimeCardSystem.PostPeriodTotal</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PostPeriodTotalConfirmation</servlet-name>
+        <url-pattern>/TimeCardSystem.PostPeriodTotalConfirmation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>PostPeriodTotalCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.PostPeriodTotalCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RawEntryListCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.RawEntryListCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>RawEntryListGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.RawEntryListGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SpecialNoteEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.SpecialNoteEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SpecialNoteReportCriteriaSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.SpecialNoteReportCriteriaSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SpecialNoteReportGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.SpecialNoteReportGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SpecialNoteSave</servlet-name>
+        <url-pattern>/TimeCardSystem.SpecialNoteSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCDisplayDataDefs</servlet-name>
+        <url-pattern>/TimeCardSystem.TCDisplayDataDefs</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditEmployeeMilestones</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditEmployeeMilestones</url-pattern>
+    </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>TCEditEmployeeTypesAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditEmployeeTypesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditEmployeeTypesEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditEmployeeTypesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditEmployeeTypeSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditEmployeeTypeSelection</url-pattern>
+    </servlet-mapping>
+
+	<servlet-mapping>
+    	<servlet-name>TCEditMADGICEventsAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMADGICEventsEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMADGICEventsSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMADGICEventTypesAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventTypesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMADGICEventTypesEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventTypesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMADGICEventTypesSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMADGICEventTypesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMilestonesAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMilestonesAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>TCEditMilestonesEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMilestonesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCEditMilestonesSelection</servlet-name>
+        <url-pattern>/TimeCardSystem.TCEditMilestonesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCPunchAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCPunchAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>TCQueryGenerate</servlet-name>
+        <url-pattern>/TimeCardSystem.TCQueryGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>TCQueryParameters</servlet-name>
+        <url-pattern>/TimeCardSystem.TCQueryParameters</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCQuerySelect</servlet-name>
+        <url-pattern>/TimeCardSystem.TCQuerySelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCSEditCompanyProfile</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSEditCompanyProfile</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCSEditCompanyProfileAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSEditCompanyProfileAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCSavedQueriesSelect</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSavedQueriesSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TCSaveQueryAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSaveQueryAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntrySave</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntrySave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryTypeEdit</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryTypeEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryTypeInfoSave</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryTypeInfoSave</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryTypeList</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryTypeList</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>TimeEntryTypeRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.TimeEntryTypeRemove</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>UserLogin</servlet-name>
+        <url-pattern>/TimeCardSystem.UserLogin</url-pattern>
+    </servlet-mapping>
+
+
+
+    <!-- Define the default session timeout for your application,
+         in minutes.  From a servlet or JSP page, you can modify
+         the timeout for a particular session dynamically by using
+         HttpSession.getMaxInactiveInterval(). -->
+
+    <session-config>
+      <session-timeout>30</session-timeout>    <!-- 30 minutes -->
+    </session-config>
+
+
+</web-app>
+

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DataDefinitions"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ServletUtilities"/>
+	<classpathentry kind="lib" path="/usr/share/java/mail.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ConnectionPool"/>
+	<classpathentry kind="lib" path="/usr/share/java/jsp-api.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/servlet-api.jar"/>
+	<classpathentry kind="output" path="build/classes"/>
+</classpath>

@@ -1,0 +1,328 @@
+/* row background color WHITE */
+tr.evennumberedtablerow{
+  background-color: #FFFFFF;
+}
+
+/* row background color GREY */
+tr.oddnumberedtablerow{
+  background-color: #DCDCDC;
+}
+
+/* row background color LIGHT BLUE */
+tr.lightbluetablerow{
+  background-color: #C2E0FF;
+}
+
+/* row background color BLACK */
+tr.blacktablerow{
+  background-color: #000000;
+}
+
+/* row background color MAROON */
+tr.maroontablerow{
+ background-color: #F38282;
+}
+
+/* row background color PURPLE */
+tr.purpletablerow{
+ background-color: #9370DB;
+}
+
+/* row background color GREEN */
+tr.greentablerow{
+ background-color: #9ACD32;
+}
+
+/* row background color YELLOW */
+tr.yellowtablerow{
+ background-color: #FFFF5C;
+}
+
+/* row background color ORANGE */
+tr.orangetablerow{
+ background-color: #FFCC99;
+}
+
+/* row background color LIGHT PINK */
+tr.lightpinktablerow{
+ background-color: #FFCCFF;
+}
+
+/* row background color LIGHT GREEN */
+tr.lightgreentablerow{
+ background-color: #CCFF99;
+}
+
+/* row background color YELLOW */
+tr.yellowtablerow{
+ background-color: #E1D276;
+}
+
+/* row background color GREY */
+tr.greytablerow{
+ background-color: #bdbdbd;
+}
+
+
+/* simple table cell left justified heading */
+td.fieldleftheading{
+  height:22px;
+  font-weight: bold;
+  text-align: left;
+  text-decoration:underline;
+  vertical-align:bottom;
+}
+
+/* simple table cell right justified heading */
+td.fieldrightheading{
+  height:22px;
+  font-weight: bold;
+  text-align: right;
+  text-decoration:underline;
+  vertical-align:bottom;
+}
+
+/* simple table cell center justified heading */
+td.fieldcenterheading{
+  height:22px;
+  font-weight: bold;
+  text-align: center;
+  text-decoration:underline;
+  vertical-align:bottom;
+}
+
+/* simple table cell left justified field control (text box, select list, checkbox, etc.) */
+td.fieldcontrolleft{
+  height: 22px;
+  text-align: left;
+}
+
+/* simple table cell right justified field control (text box, select list, checkbox, etc.) */
+td.fieldcontrolright{
+  height: 22px;
+  text-align: right;
+}
+
+/* simple table cell center justified field control (text box, select list, checkbox, etc.) */
+td.fieldcontrolcenter{
+  height: 22px;
+  text-align: center;
+}
+
+/* simple table cell left justified field control with border (text box, select list, checkbox, etc.) */
+td.fieldcontrolleftwithborder{
+  height: 22px;
+  text-align: left;
+  border-width: 1px;
+  border-spacing: 2px;
+  border-style: solid;
+  border-color: black;
+  border-collapse: separate;
+  padding: 2px;
+}
+
+/* simple table cell right justified field control with border (text box, select list, checkbox, etc.) */
+td.fieldcontrolrightwithborder{
+  height: 22px;
+  text-align: right;
+  border-width: 1px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: black;
+  border-collapse: separate;
+  padding: 2px;
+}
+
+/* simple table cell center justified field control with border (text box, select list, checkbox, etc.) */
+td.fieldcontrolcenterwithborder{
+  height: 22px;
+  text-align: center;
+  border-width: 1px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: black;
+  border-collapse: separate;  
+  padding: 2px;
+}
+
+
+/* basic table definition with border */
+table.basic {
+  border-width: 1px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: black;
+  border-collapse: separate;
+  font-size: small;
+  font-family : Arial;
+  color: black;
+ }
+ 
+ /* basic table definition without border */
+table.basicwithoutborder {
+  border-width: 1px;
+  border-spacing: 0px;
+  border-style: solid;
+  border-color: black;
+  border-collapse: separate;
+  font-size: small;
+  font-family : Arial;
+  color: black;
+ }
+
+/*collapse border */
+table.collapseborder{
+ border-collapse: collapse;
+ border:1px solid black;
+}
+
+/* table data with a collapse border */
+td.collapsebordertabledata{
+ border-collapse: collapse;
+ border:1px solid black;
+}
+
+
+/* table cell left justified, border, small Arial font */
+td.leftjustifiedcell {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: left; 
+  vertical-align:bottom;
+}
+
+/* table cell right justified, border, small Arial font */
+td.rightjustifiedcell {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: right; 
+  vertical-align:bottom;
+}
+
+/* table cell center justified, border, small Arial font */
+td.centerjustifiedcell {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: center; 
+  vertical-align:bottom;
+}
+
+/* table cell left justified, NO border, small Arial font */
+td.leftjustifiedcellnoborder {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: left; 
+  vertical-align:bottom;
+}
+
+/* table cell right justified, NO border, small Arial font */
+td.rightjustifiedcellnoborder {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: right; 
+  vertical-align:bottom;
+}
+
+/* table cell center justified, NO border, small Arial font */
+td.centerjustifiedcellnoborder {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: center; 
+  vertical-align:bottom;
+}
+
+/* table cell left justified, NO border, small Arial font BOLD */
+td.leftjustifiedcellnoborderbold {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: bold;
+  text-align: left; 
+  vertical-align:bottom;
+}
+
+/* table cell right justified, NO border, small Arial font BOLD */
+td.rightjustifiedcellnoborderbold {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: bold;
+  text-align: right; 
+  vertical-align:bottom;
+}
+
+/* table cell center justified, NO border, small Arial font BOLD */
+td.centerjustifiedcellnoborderbold {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: bold;
+  text-align: center; 
+  vertical-align:bottom;
+}
+
+/* table cell left justified heading, border, small, bold Arial font */
+td.leftjustifiedheading {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial; 
+  font-size: small;
+  font-weight: bold;
+  text-align: left;
+  vertical-align:bottom;
+}
+
+/* table cell right justified heading, border, small, bold Arial font */
+td.rightjustifiedheading {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial; 
+  font-size: small;
+  font-weight: bold;
+  text-align: right;
+  vertical-align:bottom;
+}
+
+/* table cell center justified heading, border, small, bold Arial font */
+td.centerjustifiedheading {
+  border: 1px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: bold;
+  text-align: center;
+  vertical-align:bottom; 
+}

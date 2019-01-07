@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/DataDefinitions"/>
+	<classpathentry kind="lib" path="/usr/share/java/mail.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/commons-net-3.3.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/servlet-api.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/xmlworker-5.5.6.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/itextpdf-5.5.6.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/ConnectionPool"/>
+	<classpathentry kind="lib" path="/usr/share/java/commons-codec-1.11.jar"/>
+	<classpathentry kind="output" path="bin"/>
+</classpath>

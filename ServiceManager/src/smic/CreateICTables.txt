@@ -1,0 +1,272 @@
+CREATE TABLE `icitems` (
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `sitemdescription` varchar(75) NOT NULL default '',
+  `datlastmaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `iactive` int(11) NOT NULL default '1',
+  `scategorycode` varchar(6) NOT NULL default '',
+  `sdefaultpricelistcode` varchar(6) NOT NULL default '',
+  `spickingsequence` varchar(10) NOT NULL default '',
+  `datinactive` datetime NOT NULL default '0000-00-00 00:00:00',
+  `scomment1` varchar(75) NOT NULL default '',
+  `scomment2` varchar(75) NOT NULL default '',
+  `scomment3` varchar(75) NOT NULL default '',
+  `scomment4` varchar(75) NOT NULL default '',
+  `slastedituser` varchar(128) NOT NULL default '',
+  `itaxable` int(11) NOT NULL default '1',
+  `scostunitofmeasure` varchar(10) NOT NULL default '',
+  `sdedicatedtoordernumber` varchar(22) NOT NULL default '',
+  `sreportgroup1` varchar(75) NOT NULL default '',
+  `sreportgroup2` varchar(75) NOT NULL default '',
+  `sreportgroup3` varchar(75) NOT NULL default '',
+  `sreportgroup4` varchar(75) NOT NULL default '',
+  `sreportgroup5` varchar(75) NOT NULL default '',
+  `bdmostrecentcost` decimal(17,4) NOT NULL default '0.0000',
+  `ilaboritem` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`sitemnumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `iccategories` (
+  `scategorycode` varchar(6) NOT NULL default '',
+  `sdescription` varchar(60) NOT NULL default '',
+  `scostofgoodssoldacct` varchar(45) NOT NULL default '',
+  `ssalesaccount` varchar(45) NOT NULL default '',
+  `datlastmaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `iactive` int(11) NOT NULL default '1',
+  `datinactive` datetime NOT NULL default '0000-00-00 00:00:00',
+  `slastedituser` varchar(128) NOT NULL default '',
+  PRIMARY KEY  (`scategorycode`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icaccountsets` (
+  `saccountsetcode` varchar(6) NOT NULL default '',
+  `slastedituser` varchar(128) NOT NULL default '',
+  `sdescription` varchar(30) NOT NULL default '',
+  `icostingmethod` int(11) NOT NULL default '0',
+  `sinventoryaccount` varchar(45) NOT NULL default '',
+  `spayablesclearingaccount` varchar(45) NOT NULL default '',
+  `sadjustmentwriteoffaccount` varchar(45) NOT NULL default '',
+  `snonstockclearingaccount` varchar(45) NOT NULL default '',
+  `stransferclearingaccount` varchar(45) NOT NULL default '',
+  `iactive` int(11) NOT NULL default '1',
+  `datlastmaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `datinactive` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`saccountsetcode`)
+) ENGINE=InnoDB
+;
+
+
+CREATE TABLE `iccosts` (
+  `id` int(11) NOT NULL auto_increment,
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `slocation` varchar(6) NOT NULL default '',
+  `bdqty` decimal(17,4) NOT NULL default '0.0000',
+  `isource` int(11) NOT NULL default '0',
+  `sponumber` varchar(22) NOT NULL default '',
+  `sremark` varchar(128) NOT NULL default '',
+  `datcreationdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `bdcost` decimal(17,2) NOT NULL default '0.00',
+  `bdcostshipped` decimal(17,2) NOT NULL default '0.00',
+  `bdqtyshipped` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`id`),
+  KEY `itemnumberkey` (`sitemnumber`),
+  KEY `locationkey` (`slocation`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icitemlocations` (
+  `slocation` varchar(6) NOT NULL default '',
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `bdqtyonhand` decimal(17,4) NOT NULL default '0.0000',
+  `bdtotalcost` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`slocation`,`sitemnumber`),
+  KEY `itemnumberkey` (`sitemnumber`),
+  KEY `locationkey` (`slocation`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icitemprices` (
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `spricelistcode` varchar(6) NOT NULL default '',
+  `datlastmaintained` datetime NOT NULL default '0000-00-00 00:00:00',
+  `slastedituser` varchar(128) NOT NULL default '',
+  `bdbaseprice` decimal(17,2) NOT NULL default '0.00',
+  `bdlevel1price` decimal(17,2) NOT NULL default '0.00',
+  `bdlevel2price` decimal(17,2) NOT NULL default '0.00',
+  `bdlevel3price` decimal(17,2) NOT NULL default '0.00',
+  `bdlevel4price` decimal(17,2) NOT NULL default '0.00',
+  `bdlevel5price` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`sitemnumber`,`spricelistcode`),
+  KEY `sitemnumber` (`sitemnumber`),
+  KEY `spricelistcode` (`spricelistcode`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icitemstatistics` (
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `slocation` varchar(6) NOT NULL default '',
+  `lyear` int(11) NOT NULL default '0',
+  `lmonth` int(11) NOT NULL default '0',
+  `bdqtysold` decimal(17,4) NOT NULL default '0.0000',
+  `lcountsold` int(11) NOT NULL default '0',
+  `bdamountsold` decimal(17,2) NOT NULL default '0.00',
+  `bdcostofitemssold` decimal(17,2) NOT NULL default '0.00',
+  `bdqtyreturned` decimal(17,4) NOT NULL default '0.0000',
+  `lcountreturned` int(11) NOT NULL default '0',
+  `bdamountreturned` decimal(17,2) NOT NULL default '0.00',
+  `bdcostofitemsreturned` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`sitemnumber`,`slocation`,`lyear`,`lmonth`),
+  KEY `sitemnumber` (`sitemnumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icoptions` (
+  `ibatchpostinginprocess` int(11) NOT NULL default '0',
+  `suser` varchar(128) NOT NULL default '',
+  `sprocess` varchar(128) NOT NULL default '',
+  `datstartdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `lcostingmethod` int(11) NOT NULL default '0',
+  `lallownegativeqtys` int(11) NOT NULL default '1',
+  `iflagimports` int(11) NOT NULL default '1',
+  `ssistercompanyname1` varchar(128) NOT NULL default '',
+  `ssistercompanyname2` varchar(128) NOT NULL default '',
+  `ssistercompanydb1` varchar(128) NOT NULL default '',
+  `ssistercompanydb2` varchar(128) NOT NULL default ''
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icbatchentries` (
+  `lid` int(11) NOT NULL auto_increment,
+  `lbatchnumber` int(11) NOT NULL default '0',
+  `lentrynumber` int(11) NOT NULL default '0',
+  `ientrytype` int(11) NOT NULL default '0',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `sentrydescription` varchar(128) NOT NULL default '',
+  `datentrydate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `llastline` int(11) NOT NULL default '0',
+  `scontrolacct` varchar(75) NOT NULL default '',
+  `bdentryamount` decimal(17,2) NOT NULL default '0.00',
+  PRIMARY KEY  (`lid`),
+  UNIQUE KEY `batch_entry_key` (`lbatchnumber`,`lentrynumber`),
+  KEY `entrynumberkey` (`lentrynumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icentrylines` (
+  `lid` int(11) NOT NULL auto_increment,
+  `lbatchnumber` int(11) NOT NULL default '0',
+  `lentrynumber` int(11) NOT NULL default '0',
+  `llinenumber` int(11) NOT NULL default '0',
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `slocation` varchar(6) NOT NULL default '',
+  `bdqty` decimal(17,4) NOT NULL default '0.0000',
+  `bdcost` decimal(17,4) NOT NULL default '0.00',
+  `bdprice` decimal(17,4) NOT NULL default '0.00',
+  `scontrolacct` varchar(75) NOT NULL default '',
+  `sdistributionacct` varchar(75) NOT NULL default '',
+  `sdescription` varchar(75) NOT NULL default '',
+  `scomment` varchar(255) NOT NULL default '',
+  `lentryid` int(11) NOT NULL default '0',
+  `scategorycode` varchar(6) NOT NULL default '0.00',
+  `sreceiptnum` varchar(22) NOT NULL default '',
+  `lcostbucketid` int(11) NOT NULL default '-1',
+  `stargetlocation` varchar(6) NOT NULL default '',
+  `sinvoicenumber` varchar(15) NOT NULL default '',
+  `linvoicelinenumber` int(11) NOT NULL default '0',
+  PRIMARY KEY  (`lid`),
+  UNIQUE KEY `batch_entry_line_key` (`lbatchnumber`,`lentrynumber`, `llinenumber`),
+  KEY `linenumberkey` (`llinenumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icbatches` (
+  `lbatchnumber` int(11) NOT NULL auto_increment,
+  `datbatchdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `ibatchstatus` int(11) NOT NULL default '0',
+  `sbatchdescription` varchar(128) NOT NULL default '',
+  `ibatchtype` int(11) NOT NULL default '0',
+  `datlasteditdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `lbatchlastentry` int(11) NOT NULL default '0',
+  `screatedby` varchar(128) NOT NULL default '',
+  `slasteditedby` varchar(128) NOT NULL default '',
+  `smoduletype` char(2) NOT NULL default '',
+  `datpostdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`lbatchnumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `ictransactions` (
+  `lid` int(11) NOT NULL auto_increment,
+  `loriginalbatchnumber` int(11) NOT NULL default '0',
+  `loriginalentrynumber` int(11) NOT NULL default '0',
+  `loriginallinenumber` int(11) NOT NULL default '0',
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `slocation` varchar(6) NOT NULL default '',
+  `ientrytype` int(11) NOT NULL default '0',
+  `sdocnumber` varchar(75) NOT NULL default '',
+  `sentrydescription` varchar(128) NOT NULL default '',
+  `slinedescription` varchar(75) NOT NULL default '',
+  `datpostingdate` datetime NOT NULL default '0000-00-00 00:00:00',
+  `bdqty` decimal(17,4) NOT NULL default '0.0000',
+  `bdcost` decimal(17,4) NOT NULL default '0.00',
+  `bdprice` decimal(17,4) NOT NULL default '0.00',
+  `scontrolacct` varchar(75) NOT NULL default '',
+  `sdistributionacct` varchar(75) NOT NULL default '',
+  `llineid` int(11) NOT NULL default '0',
+  `spostedby` varchar(128) NOT NULL default '',
+  `sunitofmeasure` varchar(10) NOT NULL default '',
+  PRIMARY KEY  (`lid`),
+  KEY `itemnumberkey` (`sitemnumber`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icphysicalinventories` (
+  `lid` int(11) NOT NULL auto_increment,
+  `sdesc` varchar(128) NOT NULL default '',
+  `screatedby` varchar(128) NOT NULL default '',
+  `datcreated` datetime NOT NULL default '0000-00-00 00:00:00',
+  `istatus` int(11) NOT NULL default '1',
+  `lbatchnumber` int(11) NOT NULL default '0',
+  `sstartinglocation` varchar(6) NOT NULL default '',
+  `sendinglocation` varchar(6) NOT NULL default '',
+  `sstartingitemnumber` varchar(24) NOT NULL default '',
+  `sendingitemnumber` varchar(24) NOT NULL default '',
+  PRIMARY KEY  (`lid`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icphysicalcounts` (
+  `lid` int(11) NOT NULL auto_increment,
+  `lphysicalinventoryid` int(11) NOT NULL default '0',
+  `sdesc` varchar(128) NOT NULL default '',
+  `screatedby` varchar(128) NOT NULL default '',
+  `datcreated` datetime NOT NULL default '0000-00-00 00:00:00',
+  PRIMARY KEY  (`lid`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icphysicalcountlines` (
+  `lid` int(11) NOT NULL auto_increment,
+  `lphysicalinventoryid` int(11) NOT NULL default '0',
+  `lcountid` int(11) NOT NULL default '0',
+  `bdqty` decimal(17,4) NOT NULL default '0.0000',
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `slocation` varchar(6) NOT NULL default '',
+  `sunitofmeasure` varchar(10) NOT NULL default '',
+  `datcreated` datetime NOT NULL default '0000-00-00 00:00:00',
+  `sglacct` varchar(75) NOT NULL default '',
+  PRIMARY KEY  (`lid`),
+  KEY `invcountkey` (`lphysicalinventoryid`, `lid`)
+) ENGINE=InnoDB
+;
+
+CREATE TABLE `icinventoryworksheet` (
+  `lid` int(11) NOT NULL auto_increment,
+  `lphysicalinventoryid` int(11) NOT NULL default '0',
+  `slocation` varchar(6) NOT NULL default '',
+  `sitemnumber` varchar(24) NOT NULL default '',
+  `bdqtyonhand` decimal(17,4) NOT NULL default '0.0000',
+  PRIMARY KEY  (`lid`)
+) ENGINE=InnoDB
+;

@@ -19,7 +19,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 public class CustomerCallLogEntry extends HttpServlet {
-	//OBSOLETE?
+
 	private static final long serialVersionUID = 1L;
 	private String sCompanyName = "";
 	private String sDBID = "";

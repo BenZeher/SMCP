@@ -37,12 +37,12 @@ public class insertRecords extends java.lang.Object{
 		//want to write to it:
 		if (getICImportFlag(conn)){
 			m_sErrorMessage = "Your IC data is turned on - that indicates that the IC data is live"
-				+ " and you cannot convert ACCPAC data into it."
+				+ " and you cannot convert ACCPAC data into it. "
 				;
 			return false;
 		}
 
-		//Next, remove all the tables if they exist:
+		//Next, remove all the tables if they exist :
 		if (!dropTable(conn, "icitems", sUserName)){
 			return false;
 		}

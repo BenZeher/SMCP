@@ -34,7 +34,7 @@ public class insertRecords extends java.lang.Object{
 		String sTable = "";
 
 		//If the IC import flag is turned on, that means we're using live data and we don't
-		//want to write to it:
+		//want to write to it :
 		if (getICImportFlag(conn)){
 			m_sErrorMessage = "Your IC data is turned on - that indicates that the IC data is live"
 				+ " and you cannot convert ACCPAC data into it."

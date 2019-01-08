@@ -2,7 +2,7 @@ package SMDataDefinition;
 
 public class SMCreateGoogleDriveFolderParamDefinitions {
 	
-	//These are used to pass parameters to a Google Web App script that is able to create new folders in Google Drive
+	//These are used to pass parameters to a Google Web App script that is able to create new folders in Google Drive.
 	
 	//Parameter names:
 	public static final String foldername = "foldername";
@@ -14,5 +14,4 @@ public class SMCreateGoogleDriveFolderParamDefinitions {
 	public static final String folderid = "folderid";
 	public static final String newfoldername = "newfoldername";
 	public static final String backgroundcolor = "bkgroundcolor";
-	
 }

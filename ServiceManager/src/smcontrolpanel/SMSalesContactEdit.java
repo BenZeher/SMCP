@@ -457,7 +457,9 @@ public class SMSalesContactEdit extends HttpServlet {
     							
     					if(bAllowEditAppointments){		
     						out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditAppointmentEdit?" 
-    								+ SMAppointment.Paramlid + "=" + rsappointments.getString(SMTableappointments.lid) + "\">"
+    								+ SMAppointment.Paramlid + "=" + rsappointments.getString(SMTableappointments.lid) 
+    								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    								+ "\">"
     								+ rsappointments.getString(SMTableappointments.lid) + "</A>");
     					}else{
     						out.println(Integer.toString(rsappointments.getInt(SMTableappointments.lid)));
@@ -553,6 +555,7 @@ public class SMSalesContactEdit extends HttpServlet {
 	    			+ "&" + SMAppointment.Paramscontactname + "=" + clsServletUtilities.URLEncode(sContactName)
 	    			+ "&" + SMAppointment.Paramisalescontactid + "=" + clsServletUtilities.URLEncode(Integer.toString(iSalesContactID))
 	    			+ "&" + SMAppointment.Paramdatentrydate + "=" + SMUtilities.EMPTY_DATE_VALUE
+	    			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					;
 
 			} catch (SQLException e) {

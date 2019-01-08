@@ -252,6 +252,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    	try {
 							out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditAppointmentEdit"
 									+ "?" + SMTableappointments.lid + "=" + Integer.toString(rsAppointments.getInt(SMTableappointments.TableName + "." + SMTableappointments.lid))
+									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 									+ "\">" 
 									+  Integer.toString(rsAppointments.getInt(SMTableappointments.TableName + "." + SMTableappointments.lid)) + "</A>"
 									+ "&nbsp;-&nbsp;"

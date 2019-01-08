@@ -3,7 +3,7 @@ package SMDataDefinition;
 public class SMCreateGoogleDriveFolderParamDefinitions {
 	
 
-	//These are used to pass parameters to a Google Web App script that is able to create new folders in Google Drive:
+	//These are used to pass parameters to a Google Web App script that is able to create new folders in Google Drive 
 	
 	//Parameter names:
 	

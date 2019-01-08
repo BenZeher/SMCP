@@ -694,7 +694,6 @@ public class SMImportDataAction extends HttpServlet {
 	private int insertFromTemporaryTablewithUpdate (ArrayList<SQLWarning> warning, ArrayList<String> sPrimaryKey, String sConf, String sTableName, ArrayList<String> columns, String DATABASEID, String sUserID) throws SQLException{
 		int iNumberOfRecords = 0;
 		String sSQL = "";
-		System.out.println(sSQL);
 		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);

@@ -92,7 +92,7 @@ public class SMUpdateData extends java.lang.Object{
 			throw new Exception(e.getMessage());
 		}
 
-		//Update a local variable we can use in the loop:
+		//Update a local variable we can use in the loop :
 		int iReadDatabaseVersion = m_iReadDatabaseVersion;
 		while (iReadDatabaseVersion < m_CurrentDatabaseVersion){
 			//Log the entry:

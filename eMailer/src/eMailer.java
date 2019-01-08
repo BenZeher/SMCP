@@ -258,6 +258,7 @@ public class eMailer
 					try {
 						File file = new File(sFullFilePathName); 
 						BufferedReader br = new BufferedReader(new FileReader(file)); 
+						@SuppressWarnings("unused")
 						String sTestString; 
 						while ((sTestString = br.readLine()) != null){
 						    //Do nothing 

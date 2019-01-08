@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import javax.servlet.http.HttpServlet;
 
 import ServletUtilities.clsStringFunctions;
+import smic.ICPOReceiptHeader;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -71,11 +72,9 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println(sNote);
 		System.out.println(clsStringFunctions.filter(sNote));
 		
-		/*
 		ICPOReceiptHeader rcpt = new ICPOReceiptHeader();
 		rcpt.setsID("57578");
 		rcpt.delete(conn, "TR", "6");
-		*/
 		
 		/*
 		APBatch batch = new APBatch("469");

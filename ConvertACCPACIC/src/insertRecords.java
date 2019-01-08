@@ -42,7 +42,7 @@ public class insertRecords extends java.lang.Object{
 			return false;
 		}
 
-		//Next, remove all the tables if they exist :
+		//Next, remove all the tables if they exist:
 		if (!dropTable(conn, "icitems", sUserName)){
 			return false;
 		}

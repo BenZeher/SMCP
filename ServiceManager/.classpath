@@ -6,17 +6,16 @@
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ServletUtilities"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/ConnectionPool"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/TimeCardSystem"/>
-	<classpathentry exported="true" kind="lib" path="/usr/share/java/mail.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/barbecue-1.5-beta1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/commons-fileupload-1.2.1.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/commons-net-3.3.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/mysql-connector-java-5.1.28-bin.jar"/>
-	<classpathentry exported="true" kind="lib" path="/usr/share/java/jpscs.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/pvjdbc2.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/pvjdbc2x.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/sqljdbc4.jar"/>
 	<classpathentry combineaccessrules="false" exported="true" kind="src" path="/SecuritySystem"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/commons-io-1.4.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/javax.mail.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -325,6 +325,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 							+ "?" + SMAppointment.Paramlid + "=-1"
 							+ "&" + SMAppointment.Paramluserid + "=" + aUserIDs.get(iUserIndex)
 							+ "&" + SMAppointment.Paramdatentrydate + "=" + clsDateAndTimeConversions.resultsetDateStringToString(arrCalendarDayCells.get((iUserIndex * iIntervalOfDays) + iDayOfWeekIndex).sDate)
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 							+ sNavigationStringParams 
 							+ "\""
 							+ "> "
@@ -386,7 +387,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 		//Close the form:
 		out.println("</FORM>");
 
-		out.println(sCommandScript(context, sNavigationStringParams));
+		out.println(sCommandScript(context, sNavigationStringParams, sDBID));
 
 	}
 	
@@ -630,7 +631,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 		
 		return s;
 	}
-	private String sCommandScript(ServletContext context, String sNavigationStringParams){
+	private String sCommandScript(ServletContext context, String sNavigationStringParams, String sDBID){
 		String sEditEntryLinkBase = SMUtilities.getURLLinkBase(context) 
 				+ "smcontrolpanel.SMEditAppointmentEdit";
 		
@@ -662,9 +663,13 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 		s +=  "$('div.entryrecordedit').on('click', function(e) {\n"
 				+"       if(!TextHighlighted(document.getElementById('AppointmentInfo'))){\n"
 				+	"  if ( e.ctrlKey ) {\n"
-				+ "    window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" + sNavigationStringParams + "\");\n"
+				+ "    window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ sNavigationStringParams + "\");\n"
 				+ "  }else{\n"
-				+ "      window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" + sNavigationStringParams + "\");\n"
+				+ "      window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ sNavigationStringParams + "\");\n"
 				+ "   }\n"
 				+ " }\n"
 				+"});\n\n"
@@ -672,9 +677,13 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 		
 		s +=  "$('div.entryrecordeditsingleday').on('click', function(e) {\n"
 				+	"if ( e.ctrlKey ) {\n"
-				+ "window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" + sNavigationStringParams + "\");\n"
+				+ "window.open(\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ sNavigationStringParams + "\");\n"
 				+ "   } else {\n"
-				+ "window.location.href=\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" + sNavigationStringParams + "\"\n"
+				+ "window.location.href=\"" + sEditEntryLinkBase + "?lid=\" + $(this).attr('id') + \"" 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ sNavigationStringParams + "\"\n"
 				+"    }\n"
 				+"});\n\n"
 				;

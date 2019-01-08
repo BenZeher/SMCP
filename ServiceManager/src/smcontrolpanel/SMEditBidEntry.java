@@ -1982,6 +1982,7 @@ public class SMEditBidEntry  extends HttpServlet {
 	    			+ "&" + SMAppointment.Paramszip + "=" + clsServletUtilities.URLEncode(entry.getsshiptozip())
 	    			+ "&" + SMAppointment.Paramibidid + "=" + clsServletUtilities.URLEncode(entry.getlid())
 	    			+ "&" + SMAppointment.Paramdatentrydate + "=" + SMUtilities.EMPTY_DATE_VALUE
+	    			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
 	    			
 				+ "\");\n"
 				+ "}\n"

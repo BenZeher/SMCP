@@ -68,6 +68,8 @@ public class SMEditTaxCertificatesSelect extends HttpServlet {
 	    	sEditCode = req.getParameter(SMTaxCertificate.Paramlid);
 	    }
 	    
+	    s += "\n<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + smselect.getsDBID() + "'>" + "\n";
+	    
 		s+= 
 			"<P>Enter " + SMTaxCertificate.ParamObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
 			+ SMTaxCertificate.Paramlid + "\""

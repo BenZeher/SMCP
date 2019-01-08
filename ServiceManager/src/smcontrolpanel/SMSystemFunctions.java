@@ -2312,7 +2312,7 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ " , CONCAT("
 								+ "'<A HREF=\\*LINKBASE*smap.APViewTransactionInformation?lid=',"
 								+ "aptransactions.lid,"
-								//+ "'&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "'"
+								+ "'&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "',"
 								+ "'>',"
 								+ " aptransactions.sdocnumber,"
 								+ " '</A>'"

@@ -85,7 +85,7 @@ public class SMUpdateData extends java.lang.Object{
 
 		//First, update the data
 
-		//Store the version we started with so we can show it later:
+		//Store the version we started with so we can show it later :
 		try {
 			m_iReadDatabaseVersion = getReadDatabaseVersion(conn);
 		} catch (Exception e) {

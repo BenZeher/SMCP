@@ -83,6 +83,7 @@ public class SMDisplayReminders  extends HttpServlet {
 	    out.println (getStyle());
 		out.println ("<FORM NAME=MAINFORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayRemindersAction\">");
 		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
+		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + " VALUE=\"" + sDBID + "\">");
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=0 style=\" border-collapse:collapse;\">");
 		
 		out.println(displayReminderHeader());

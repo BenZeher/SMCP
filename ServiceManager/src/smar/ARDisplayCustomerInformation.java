@@ -572,9 +572,11 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 
 						pwOut.println( "<TR bgcolor=\"" + sRowColor + "\" ><TD style=\"padding-right: 20px\"><FONT SIZE=2><A HREF=\"" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sgdoclink) 
 						+ "\">" + "View" + "</A> </TD>"
-						+ "<TD style=\"padding-right: 20px\"> <FONT SIZE=2> " + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxCertificatesEdit?" 
-								+ SMTabletaxcertificates.lid + "=" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid))
-								+ "\">" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid)) + "</A></FONT></TD>");
+						+ "<TD style=\"padding-right: 20px\"> <FONT SIZE=2> " 
+							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxCertificatesEdit?" 
+							+ SMTabletaxcertificates.lid + "=" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid))
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+							+ "\">" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid)) + "</A></FONT></TD>");
 											
 						 if(clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber).compareToIgnoreCase("") != 0){
 							pwOut.println( "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " +"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?" 

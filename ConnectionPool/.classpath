@@ -2,11 +2,6 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-<<<<<<< Updated upstream
-=======
-	<classpathentry kind="lib" path="/usr/share/java/jsp-api-2.2.jar"/>
-	<classpathentry kind="lib" path="/usr/share/java/servlet-api-3.0.jar"/>
->>>>>>> Stashed changes
 	<classpathentry kind="lib" path="/usr/share/java/javax.servlet-api-3.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

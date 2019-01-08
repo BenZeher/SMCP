@@ -340,7 +340,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		 			;
 		 		return s;
 		}
-	 		
+	 	
 	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
 	 	s += "</BODY></HTML>";
 	 	return s;

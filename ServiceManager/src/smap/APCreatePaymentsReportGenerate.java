@@ -365,7 +365,7 @@ public class APCreatePaymentsReportGenerate extends HttpServlet {
 				)
 			;
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047697]");
 			String sWarning = "Failed to create payment batch - " + e.getMessage();
 			if (sWarning.length() > MAX_ERROR_LENGTH){
 				sWarning = sWarning.substring(0, MAX_ERROR_LENGTH) + "...";
@@ -410,7 +410,7 @@ public class APCreatePaymentsReportGenerate extends HttpServlet {
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "&Warning=" + e.getMessage()
 			);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047698]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 		    		+ SMTableapbatches.lbatchnumber + "=" + autopaymentbatch.getsbatchnumber()
@@ -421,7 +421,7 @@ public class APCreatePaymentsReportGenerate extends HttpServlet {
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047699]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(sUserID,SMLogEntry.LOG_OPERATION_APPRECHECK, "REPORT", "AP Pre-Check Register", "[1495576378]");

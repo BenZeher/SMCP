@@ -92,7 +92,7 @@ public class APDistributionCodesEdit extends HttpServlet {
 		    	}
 		    	
 			    if (!entry.delete(entry.getlid(), conn)){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047710]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APDistributionCodesSelection"
     					+ "?" + APDistributionCode.Paramlid + "=" + entry.getlid()
@@ -101,7 +101,7 @@ public class APDistributionCodesEdit extends HttpServlet {
     				);
 					return;
 			    }else{
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047711]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APDistributionCodesSelection"
     					+ "?" + APDistributionCode.Paramlid + "=" + entry.getlid()

@@ -120,7 +120,7 @@ public class APConfirmCheckPrintAction extends HttpServlet{
 		String arrFinalizedEntryIDs[] = sFinalizedEntryIDList.split(",");
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[]1547047438");
 			throw new Exception("Error [1513214551] - couldn't start data transaction.");
 		}
 		
@@ -141,7 +141,7 @@ public class APConfirmCheckPrintAction extends HttpServlet{
 			rsChecks.close();
 			if (sCheckNumber.compareToIgnoreCase("") == 0){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[]1547047439");
 				throw new Exception("Error [1513214540] - Check number for last check page linked to batch entry ID " + arrFinalizedEntryIDs[i] + " was not found with SQL '" + SQL + "'.");
 			}
 			
@@ -164,17 +164,17 @@ public class APConfirmCheckPrintAction extends HttpServlet{
 				);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[]1547047440");
 				throw new Exception("Error [1510770200] updating finalized batch entries with SQL '" + SQL + "' - " + e.getMessage());
 			}
 		}
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[]1547047441");
 			throw new Exception("Error [1513214553] - couldn't commit data transaction.");
 			
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[]1547047442");
 		return;
 		
 	}

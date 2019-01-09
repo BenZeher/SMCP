@@ -105,10 +105,10 @@ public class APDistributionCode extends java.lang.Object{
     		throw new Exception("Counld not get connection to load APDistributionCodes.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547047701]");
     		throw new Exception("Error loading APDistributionCodes - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547047702]");
     }
     public void loadByDistributionCode(
     	Connection conn, 
@@ -160,7 +160,7 @@ public class APDistributionCode extends java.lang.Object{
 		
 		//Validate entries
 		if(!validateEntries()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547047703]");
 			return false;
 		}
 		
@@ -196,7 +196,7 @@ public class APDistributionCode extends java.lang.Object{
 		 		stmt.executeUpdate(SQL);
 		 		m_sNewRecord = "0";
 		 	}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547047704]");
 		 		m_sErrorMessageArray.add("Error updating record with SQL: " + " - " + e.getMessage());
 		 		return false;
 		}
@@ -205,7 +205,7 @@ public class APDistributionCode extends java.lang.Object{
 			rs.close();
 			
 			if(!validateEntries()){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547047705]");
 				return false;
 			}
 			SQL = "INSERT INTO " + SMTableapdistributioncodes.TableName + " ("
@@ -224,7 +224,7 @@ public class APDistributionCode extends java.lang.Object{
 				clsDatabaseFunctions.executeSQL(SQL, conn);
 				m_sNewRecord = "0";
 			}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547047706]");
 		 		m_sErrorMessageArray.add("Error inserting record with SQL: " +  " - " + e.getMessage());
 		 		m_sNewRecord = "1";
 		 		return false;
@@ -241,7 +241,7 @@ public class APDistributionCode extends java.lang.Object{
 					}
 					rs.close();
 				} catch (SQLException e) {
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547047707]");
 					m_sErrorMessageArray.add("Could not get last ID number - " + e.getMessage());
 				}
 				//If something went wrong, we can't get the last ID:
@@ -250,12 +250,12 @@ public class APDistributionCode extends java.lang.Object{
 				}
 	
 			//Change new record status
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547047708]");
 
 			return true;			
     	}
 			}catch(SQLException e){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547047709]");
 				m_sErrorMessageArray.add("Error [1450810035] saving  - " + e.getMessage());
 				return false;
 			}

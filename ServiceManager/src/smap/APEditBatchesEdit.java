@@ -464,7 +464,7 @@ public class APEditBatchesEdit extends HttpServlet {
 			}
     		SMOption opt = new SMOption();
     		if(!opt.load(conn)){
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047711]");
     			pwOut.println("<BR><B><FONT COLOR=RED>Error [1494430079] getting SM Options - " + opt.getErrorMessage() + "</FONT></B><BR>");
     		}
     		
@@ -646,7 +646,7 @@ public class APEditBatchesEdit extends HttpServlet {
         		+ "  </TR>\n"
         	);
         	
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047712]");
     	} //end if
 	}
 	private String sCommandScript(){

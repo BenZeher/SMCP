@@ -153,7 +153,7 @@ public class APEditCheckFormsAction extends HttpServlet{
 	    }
 	    
 	    if (!clsDatabaseFunctions.start_data_transaction(conn)){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047713]");
 	    	out.println("Error [1502977394] starting database transaction");
 			out.println("</BODY></HTML>");
 			return;
@@ -189,7 +189,7 @@ public class APEditCheckFormsAction extends HttpServlet{
 	    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 	    }catch (SQLException ex){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047714]");
 	    	out.println("Error [1502977469] updating check forms with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
@@ -203,7 +203,7 @@ public class APEditCheckFormsAction extends HttpServlet{
 				java.sql.ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (!rs.next()){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047715]");
 			    	out.println("Error [1502977493] getting last insert ID with SQL: " + sSQL);
 					out.println("</BODY></HTML>");
 					return;
@@ -213,7 +213,7 @@ public class APEditCheckFormsAction extends HttpServlet{
 				}
 			} catch (SQLException e) {
 		    	clsDatabaseFunctions.rollback_data_transaction(conn);
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047716]");
 		    	out.println("Error [1502977494] getting last insert ID with SQL: " + sSQL);
 				out.println("</BODY></HTML>");
 				return;
@@ -222,12 +222,12 @@ public class APEditCheckFormsAction extends HttpServlet{
 	    
 	    if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047717]");
 	    	out.println("Error [1502977495] - Unable to commit data transaction.");
 				out.println("</BODY></HTML>");
 				return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047718]");
 		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditCheckFormsEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

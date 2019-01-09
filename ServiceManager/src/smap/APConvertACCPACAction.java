@@ -165,7 +165,7 @@ public class APConvertACCPACAction extends HttpServlet {
 					sACCPACDatabaseuser,
 					sACCPACDatabasepw);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
+			clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[]1547047443");
 	   		sWarning = "Unable to get ACCPAC connection - " + e.getMessage();
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -183,8 +183,8 @@ public class APConvertACCPACAction extends HttpServlet {
 			iFunctionValue = Integer.parseInt(sFunctionValue);
 		} catch (NumberFormatException e2) {
     		sWarning = "Invalid function value '" + sFunctionValue + "'.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[]1547047444");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[]1547047445");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ APConvertACCPAC.RADIO_FIELD_NAME + "=" + APConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -207,8 +207,8 @@ public class APConvertACCPACAction extends HttpServlet {
     		);
 		} catch (Exception e2) {
     		sWarning = e2.getMessage() + ".";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[]1547047446");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[]1547047447");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ APConvertACCPAC.RADIO_FIELD_NAME + "=" + APConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -228,8 +228,8 @@ public class APConvertACCPACAction extends HttpServlet {
     	}else{
     		sNextFunctionValue = Integer.toString(iFunctionValue + 1);
     	}
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[]1547047448");
+		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[]1547047449");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ APConvertACCPAC.RADIO_FIELD_NAME + "=" + sNextFunctionValue
@@ -342,6 +342,3 @@ public class APConvertACCPACAction extends HttpServlet {
 		return cnACCPAC;
 	}
 }
-
-
-

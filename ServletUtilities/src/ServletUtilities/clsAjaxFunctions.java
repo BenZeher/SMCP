@@ -33,7 +33,7 @@ public class clsAjaxFunctions {
 					throw new Exception("Error [1529689042] saving - " + e.getMessage());
 				}
 				
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[]1547047424");
 				return;
 			}
 	 

@@ -123,7 +123,7 @@ public class APDisplayVendorInformation extends HttpServlet {
     		
     	}
     	
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047700]");
     	
 	    out.println("</BODY></HTML>");
 	}

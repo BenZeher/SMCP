@@ -113,7 +113,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
     		clsDatabaseFunctions.freeConnection(context, conn, "[1546998929]");
     		throw new Exception("Error loading AP1099CPRSCodes - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[]1547047425");
     }
     
 
@@ -175,7 +175,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
 		 		stmt.executeUpdate(SQL);
 		 		m_sNewRecord = "0";
 		 	}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[]1547047426");
 		 		m_sErrorMessageArray.add("Error updating record with SQL: " + " - " + e.getMessage());
 		 		return false;
 		}
@@ -184,7 +184,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
 			rs.close();
 			
 			if(!validateEntries()){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[]1547047427");
 				return false;
 			}
 			SQL = "INSERT INTO " + SMTableap1099cprscodes.TableName + " ("
@@ -203,7 +203,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
 				clsDatabaseFunctions.executeSQL(SQL, conn);
 				m_sNewRecord = "0";
 			}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[]1547047428");
 		 		m_sErrorMessageArray.add("Error inserting record with SQL: " +  " - " + e.getMessage());
 		 		m_sNewRecord = "1";
 		 		return false;
@@ -220,7 +220,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
 					}
 					rs.close();
 				} catch (SQLException e) {
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[]1547047429");
 					m_sErrorMessageArray.add("Could not get last ID number - " + e.getMessage());
 				}
 				//If something went wrong, we can't get the last ID:
@@ -229,12 +229,12 @@ public class AP1099CPRSCodes extends java.lang.Object{
 				}
 	
 			//Change new record status
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[]1547047430");
 
 			return true;			
     	}
 			}catch(SQLException e){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[]1547047431");
 				m_sErrorMessageArray.add("Error [1450713294] saving  - " + e.getMessage());
 				return false;
 			}

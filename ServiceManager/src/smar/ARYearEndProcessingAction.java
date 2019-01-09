@@ -73,7 +73,7 @@ public class ARYearEndProcessingAction extends HttpServlet{
 		}
 		if(!ARYearEndProcess.processYearEnd(conn)){
 			sWarning = ARYearEndProcess.getErrorMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067575]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?Warning=" + sWarning
@@ -81,7 +81,7 @@ public class ARYearEndProcessingAction extends HttpServlet{
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067576]");
 		response.sendRedirect(
 			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 			+ "?Warning=Year end processing completed successfully."

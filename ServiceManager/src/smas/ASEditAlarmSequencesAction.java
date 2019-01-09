@@ -302,7 +302,7 @@ public class ASEditAlarmSequencesAction extends HttpServlet{
 			throw new Exception("Error [1460505994] - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067606]");
 	}
 	private void loadActivationDevices(SSAlarmSequence entry, String sConf, String sUser) throws Exception{
 
@@ -323,7 +323,7 @@ public class ASEditAlarmSequencesAction extends HttpServlet{
 			throw new Exception("Error [1462320918] - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067605]");
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

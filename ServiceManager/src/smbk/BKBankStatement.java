@@ -135,22 +135,22 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 			throw new Exception("Error [1391551096] getting connection - " + e.getMessage());
 		}
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067440]");
 			throw new Exception ("Error [1391551097] - could not start data transaction.");
 		}
 		try {
 			save_without_data_transaction(conn, sUser);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067441]");
 			throw new Exception("Error saving " + ObjectName + " - " + e.getMessage());
 		}
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067442]");
 			throw new Exception("Error [1391551099] committing transaction.");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067443]");
 		return;
 	}
 	private void save_without_data_transaction (Connection conn, String sUser) throws Exception{

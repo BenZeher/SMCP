@@ -67,7 +67,7 @@ public class ASUserEventLogEntry {
 			}
 			rsUsers.close();
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067610]");
 			throw new Exception("Error [1459296622] reading users for user event log - " + e1.getMessage());
 		}
     	
@@ -80,7 +80,7 @@ public class ASUserEventLogEntry {
 	    	try {
 				device.load(conn);
 			} catch (Exception e2) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067611]");
 				throw new Exception("Error [1459296623] reading device for user event log - " + e2.getMessage());
 			}
 	    	sDeviceDescription = device.getsdescription();
@@ -151,10 +151,10 @@ public class ASUserEventLogEntry {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067612]");
 			throw new Exception("Error [1459297199] writing user event log  - " + e.getMessage() + ".");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067613]");
 		return;
     }
 }

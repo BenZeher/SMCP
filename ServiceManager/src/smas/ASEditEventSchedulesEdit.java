@@ -282,7 +282,7 @@ public class ASEditEventSchedulesEdit  extends HttpServlet {
 		
 		//Next display the alarm sequences and devices:
 		s += displayDevicesAndSequences(conn, entry, bAllowDeviceEdit, bAllowAlarmSequenceEdit);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067609]");
 		
 
 		s += "<BR><BR><SUP><a name=\"duration\">1</a></SUP><B>Duration</B>: For devices, the duration determines how long the contacts will remain closed.  A 'duration' of 8 hours means that the schedule will hold"

@@ -113,7 +113,7 @@ public class ASActivateSelectedSequencesAction extends HttpServlet{
 						SMBackgroundScheduleProcessor.getServerID(getServletContext())
 					);
 			} catch (Exception e2) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067589]");
 				smaction.redirectAction(
 					"Could not set alarm sequence(s) - " + e2.getMessage(), 
 					"",
@@ -131,7 +131,7 @@ public class ASActivateSelectedSequencesAction extends HttpServlet{
 			sQueryParameters += "&" + ASActivateAlarmsEdit.PARAMETER_TRIGGER_DEVICE_MALFUNCTION + "=Y";
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067590]");
 		smaction.redirectAction(
 			"", 
 			sResult,

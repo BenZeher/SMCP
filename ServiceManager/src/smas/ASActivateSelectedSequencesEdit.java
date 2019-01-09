@@ -150,7 +150,7 @@ public class ASActivateSelectedSequencesEdit  extends HttpServlet {
 		
 		s += createToggleButton();
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067591]");
 		return s;
 	}
 	private String createHeaderRow(){

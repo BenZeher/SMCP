@@ -346,19 +346,19 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 				rs.close();
 			}else{
 				rs.close();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067483]");
 				sWarning = "Could not get user's initials.";
 				return false;
 			}
 		} catch (SQLException e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067484]");
 			sWarning = "Could not get user's initials - " + e1.getMessage();
 			return false;
 		}
 		
 		//Start a data connection
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067485]");
 			sWarning = "Could not start data transaction";
 			return false;
 		}
@@ -366,17 +366,17 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		for (int i = 0; i < arrInvoices.size(); i ++){
 			if (!createIndividualCallSheet(arrInvoices.get(i), sUserInitials, conn)){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067486]");
 				return false;
 			}
 		}
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067487]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067488]");
 		sStatus = "Successfully created " + Integer.toString(arrInvoices.size()) + " new call sheet(s).";
 		return true;
 	}

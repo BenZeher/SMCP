@@ -344,7 +344,7 @@ public class BKEntryImportAction extends HttpServlet{
 			}
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067450]");
 		return bResult;
 
 	}

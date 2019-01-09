@@ -292,7 +292,7 @@ public class SMPriceListCode extends java.lang.Object{
 			stmt.execute(SQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067579]");
 			throw new Exception("Error deleting price code - " + e.getMessage());
 		}
 		
@@ -306,11 +306,11 @@ public class SMPriceListCode extends java.lang.Object{
 			stmt.execute(SQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067580]");
 			throw new Exception("Error deleting item prices for price list code '" + sPriceListCode + "' - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067581]");
 	}
 	public String getM_sPriceListCode() {
 		return m_sPriceListCode;

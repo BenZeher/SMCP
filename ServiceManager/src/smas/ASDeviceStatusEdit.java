@@ -143,7 +143,7 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 		
 		s += createFootNotes();
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067604]");
 
 		return s;
 	}
@@ -190,7 +190,7 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 		try {
 			arrDevices = getDevices(conn, bOutputDiagnostics, sUser, sServerID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067600]");
 			throw new Exception(e.getMessage());
 		}
 
@@ -220,7 +220,7 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 					conn,
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067601]");
 			throw new Exception("Error [1463431224] checking device editing permissions - " + e.getMessage());
 		}
 		boolean bAllowControllerEdit;
@@ -231,7 +231,7 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 					conn,
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067602]");
 			throw new Exception("Error [1463431226] checking controller editing permissions - " + e.getMessage());
 		}
 		for (int i = 0; i < arrDevicesSorted.size(); i++){
@@ -380,7 +380,7 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 
 			bOddRow = !bOddRow;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067603]");
 		return s;
 	}
 

@@ -153,7 +153,7 @@ public class ASActivateAlarmsEdit  extends HttpServlet {
 		
 		s += "</TABLE>";
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067584]");
 		return s;
 	}
 	private String createHeaderRow(){

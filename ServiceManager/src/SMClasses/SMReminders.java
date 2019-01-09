@@ -250,10 +250,10 @@ public class SMReminders extends java.lang.Object{
     		throw new Exception("Counld not get connection to load SMReminders.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067751]");
     		throw new Exception("Error loading SMReminders - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067752]");
     }
     
 
@@ -277,13 +277,13 @@ public class SMReminders extends java.lang.Object{
 		
 		//Validate entries
 		if(!validateEntries()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067753]");
 			return false;
 		}
 		
 		//Now begin a data transaction to update both schedule and scheduled users tables:
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067754]");
 			m_sErrorMessageArray.add("Error [1452537672] beginning data transaction to update schedule tables");
 			return false;
 		}
@@ -292,7 +292,7 @@ public class SMReminders extends java.lang.Object{
 			updateRemindersUsersTable(conn, sStartDate);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067755]");
 			m_sErrorMessageArray.add("Error [1530546752] updating reminders users table - " + e.getMessage());
 			return false;
 		}
@@ -302,7 +302,7 @@ public class SMReminders extends java.lang.Object{
 			updateRemindersTable(conn, context, sUserFullName, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067756]");
 			m_sErrorMessageArray.add("Error [1530546753] updating reminders table - " + e.getMessage());
 			return false;
 		}
@@ -310,13 +310,13 @@ public class SMReminders extends java.lang.Object{
 		//Commit transaction
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067757]");
 			m_sErrorMessageArray.add("Error [1452537846] commiting data transaction for schedule code -' " + m_sschedulecode + "'");
 			return false;
 		}
 	
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067758]");
 	
 		
 		return true;
@@ -579,7 +579,7 @@ private void updateRemindersTable(Connection conn,ServletContext context, String
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067750]");
     	return bResult;
     	
     }

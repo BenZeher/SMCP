@@ -376,7 +376,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 					bIncludePaidTransactions
 			)){
 
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067481]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 						+ "Warning=" + sWarning
@@ -763,7 +763,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "REPORT", "ARAgedTrialBalance", "[1376509254]");
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067482]");
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds (" + (lEndingTime - lStartingTime) + "ms).");
 		out.println("</BODY></HTML>");

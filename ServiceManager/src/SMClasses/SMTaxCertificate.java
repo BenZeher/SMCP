@@ -125,10 +125,10 @@ public class SMTaxCertificate extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067765]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067766]");
     }
     public boolean load (Connection conn) throws Exception{
     	return load (m_slid, conn);
@@ -196,10 +196,10 @@ public class SMTaxCertificate extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUser);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067767]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067768]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUser) throws Exception{
@@ -357,10 +357,10 @@ public class SMTaxCertificate extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067763]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067764]");
     }
     public void delete (Connection conn) throws Exception{
     	

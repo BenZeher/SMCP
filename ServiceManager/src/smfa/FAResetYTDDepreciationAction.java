@@ -93,7 +93,7 @@ public class FAResetYTDDepreciationAction extends HttpServlet {
 					Reset_Depreciation(out, conn);
 					
 					clsDatabaseFunctions.commit_data_transaction(conn);
-				    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067478]");
 					response.sendRedirect(
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAResetYTDDepreciationSelect"
 							+ "?Status=Successfully reset YTD depreciation."
@@ -102,7 +102,7 @@ public class FAResetYTDDepreciationAction extends HttpServlet {
 					
 				}catch(Exception e){
 					clsDatabaseFunctions.rollback_data_transaction(conn);
-				    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067479]");
 					response.sendRedirect(
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAResetYTDDepreciationSelect"
 							+ "?Warning=Error reseting YTD depreciation."

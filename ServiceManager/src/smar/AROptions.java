@@ -143,10 +143,10 @@ public class AROptions extends java.lang.Object{
     		throw new Exception("Counld not get connection to load AROptions.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067562]");
     		throw new Exception("Error loading AROptions - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067563]");
     }
     
 
@@ -183,12 +183,12 @@ public class AROptions extends java.lang.Object{
     		Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067564]");
 			m_sErrorMessageArray.add("Error updating record with SQL: " + SQL + " - " + e.getMessage());
 			return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067565]");
 		
 		return true;
     }

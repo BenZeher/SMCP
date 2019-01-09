@@ -201,7 +201,7 @@ public class FAAssetListGenerate extends HttpServlet {
 				arrClasses)){
 			out.println("Could not print report - " + list.getErrorMessageString());
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067470]");
 		out.println("</BODY></HTML>");
 	}
 

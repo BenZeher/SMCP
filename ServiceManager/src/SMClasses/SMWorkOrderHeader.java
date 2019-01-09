@@ -655,22 +655,22 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			throw new Exception("Error [1391541096] getting connection - " + e.getMessage());
 		}
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067900]");
 			throw new Exception ("Error [1391541097] - could not start data transaction.");
 		}
 		try {
 			save_from_configure_without_data_transaction(conn, sUserID, sUserFullName, log, iSavingFromWhichScreen, sConf, context);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067901]");
 			throw new Exception("Error saving work order - " + e.getMessage());
 		}
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067902]");
 			throw new Exception("Error [1391541099] committing transaction.");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067903]");
 		return;
 	}
 
@@ -694,22 +694,22 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				throw new Exception("Error [1430410108] getting connection - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.start_data_transaction(conn)){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067794]");
 				throw new Exception ("Error [1430410109] - could not start data transaction.");
 			}
 			try {
 				save_detail_sheet_without_data_transaction(conn, sUserID, sUserFullName, log, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067795]");
 				throw new Exception("Error [1430410110] saving work order - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067796]");
 				throw new Exception("Error [1430410111] committing transaction.");
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067797]");
 			return;
 		}
 	public void saveFromAcceptanceScreen(
@@ -731,22 +731,22 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				throw new Exception("Error [1430331067] getting connection - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.start_data_transaction(conn)){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067798]");
 				throw new Exception ("Error [1430331068] - could not start data transaction.");
 			}
 			try {
 				save_acceptance_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sConf, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067799]");
 				throw new Exception("Error saving work order - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067800]");
 				throw new Exception("Error [1430331069] committing transaction.");
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067801]");
 			return;
 		}
 	public void saveFromEditScreen(
@@ -768,22 +768,22 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				throw new Exception("Error [1430407358] getting connection - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.start_data_transaction(conn)){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067904]");
 				throw new Exception ("Error [1430407359] - could not start data transaction.");
 			}
 			try {
 				save_edit_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sConf, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067905]");
 				throw new Exception("Error [1430407360] saving work order - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067906]");
 				throw new Exception("Error [1430407361] committing transaction.");
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067907]");
 			return;
 		}
 	private void save_from_configure_without_data_transaction (
@@ -1834,7 +1834,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		order.setM_strimmedordernumber(getstrimmedordernumber());
     		order.load(conn);	
     		if(!order.isDBAValid(conn)){
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067790]");
     			throw new Exception("The 'Doing Business As Address' on the order as been deleted or is invalid.");
     		} 
         	sSQL = "UPDATE " 
@@ -1876,10 +1876,10 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 
 		try {
 			clsDatabaseFunctions.executeSQL(sSQL, conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067791]");
 			
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067792]");
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 		    	log.writeEntry(
 		    			sUserID, 
@@ -1901,7 +1901,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 					"[1429282128]")
 			;
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067793]");
 		
     }
 
@@ -2146,10 +2146,10 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		try {
 			bResult = load(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067788]");
 			throw new Exception("Error loading - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067789]");
 		return bResult;
 	}
 	public boolean load (Connection conn) throws Exception{
@@ -2805,22 +2805,22 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		throw new Exception("Error [1392133194] getting connection.");
     	}
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067784]");
     		throw new Exception("Error [1392133195] starting data transaction.");
     	}
     	try {
 			delete_without_transaction(conn, sUserID, log, iSavingFromWhichScreen, context);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067785]");
 			throw new Exception("Error [1392133196] deleting - " + e.getMessage());
 		}
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067786]");
 			throw new Exception("Error [1392133197] committing data transaction.");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067787]");
     }
     public void delete_without_transaction (Connection conn, String sUserID, SMLogEntry log, int iSavingFromWhichScreen, ServletContext context) throws Exception{
     	
@@ -3543,7 +3543,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 					"[1437062545]")
 				;
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067782]");
 			throw new Exception("Error [1430410296] adding detail sheet with SQL: " + SQL + " - " + e.getMessage() + ".");
 		}
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
@@ -3555,7 +3555,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				"[1437062546]")
 			;
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067783]");
     	return;
 	}
 		public String createWorkDescription(

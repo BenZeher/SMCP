@@ -87,10 +87,10 @@ public class ARPrintPostingJournal extends HttpServlet{
 					+ "&Warning=Could not open process report: " + pj.getErrorMessage()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID		
 			);
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067568]");
 					return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067569]");
 		return;
 
 	}

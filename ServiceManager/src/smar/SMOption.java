@@ -203,10 +203,10 @@ public class SMOption {
     		throw new Exception("Could not get connection to load SMOptions.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067577]");
     		throw new Exception("Error loading SMOptions - " + getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067578]");
     }
     private void validate_entries() throws Exception{
     	String sErrors = "";

@@ -128,10 +128,10 @@ public class SSController extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067632]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067633]");
     }
     public void load (Connection conn) throws Exception{
     	load (m_slid, conn);
@@ -196,10 +196,10 @@ public class SSController extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUser, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067634]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067635]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUser, String sUserID) throws Exception{
@@ -297,10 +297,10 @@ public class SSController extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067630]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067631]");
     }
     public void delete (Connection conn) throws Exception{
     	
@@ -602,10 +602,10 @@ public class SSController extends clsMasterEntry{
     	try {
 			configure_without_data_transaction (conn, sUser, sUserID, context, sServerID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067628]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067629]");
     	
     }
     

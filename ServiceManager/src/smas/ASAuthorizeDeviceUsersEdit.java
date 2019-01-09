@@ -73,7 +73,7 @@ public class ASAuthorizeDeviceUsersEdit extends HttpServlet {
 		try {
 			device.load(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067597]");
 			out.println("<BR>Error [1459168924] could not load device ID '" + sDeviceID + "' - " + e.getMessage() + ".<BR>");
 			out.println("</BODY></HTML>");
 			return;
@@ -108,13 +108,12 @@ public class ASAuthorizeDeviceUsersEdit extends HttpServlet {
 	    try {
 			Edit_Group(device, out, conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067598]");
 			out.println("<BR>" + e.getMessage() + "<BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
-		
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067599]");
 		out.println("</BODY></HTML>");
 		return;
 	}

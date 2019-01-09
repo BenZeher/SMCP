@@ -102,10 +102,10 @@ public class SSDevice extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067638]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067639]");
     }
     public void load (Connection conn) throws Exception{
     	load (m_slid, conn);
@@ -171,10 +171,10 @@ public class SSDevice extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUser);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067640]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067641]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUser) throws Exception{
@@ -286,10 +286,10 @@ public class SSDevice extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067636]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067637]");
     }
     public void delete (Connection conn) throws Exception{
     	
@@ -667,10 +667,10 @@ public class SSDevice extends clsMasterEntry{
     	try {
 			setOutputContactsState(conn, sSetContactState, sActivationDuration, sUser, context, sServerID);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067650]");
 			throw new Exception(e1.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067651]");
     	return;
     	
      }

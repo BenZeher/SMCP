@@ -109,10 +109,10 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067690]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067691]");
     }
     public void load (Connection conn) throws Exception{
     	try {
@@ -179,10 +179,10 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067692]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067693]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID) throws Exception{
@@ -284,10 +284,10 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067688]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067689]");
     }
     public void delete (Connection conn) throws Exception{
     	

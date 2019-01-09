@@ -293,7 +293,7 @@ public class ASEditDevicesEdit  extends HttpServlet {
 		//End table
 		s += "</TABLE>";
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067608]");
 		
 		return s;
 	}

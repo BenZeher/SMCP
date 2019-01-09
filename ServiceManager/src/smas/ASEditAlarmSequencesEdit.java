@@ -263,7 +263,7 @@ public class ASEditAlarmSequencesEdit  extends HttpServlet {
 		//Next display the activation devices:
 		s += displayActivationDevices(conn, entry, bAllowDeviceEdit);
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067607]");
 		
 		return s;
 	}

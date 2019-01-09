@@ -104,7 +104,7 @@ public class FAPeriodEndProcessingAction extends HttpServlet{
 			SMLogEntry log = new SMLogEntry(conn);
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FIXEDASSETS, "FA Period Process Failed", e.getMessage(), "[1435346362]");
 			
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067476]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAPeriodEndProcessingSelect"
 					+ "?" + cProcessor.getQueryString()
@@ -114,7 +114,7 @@ public class FAPeriodEndProcessingAction extends HttpServlet{
 			return;
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067477]");
 		/*
 		String disposition = "attachment; fileName= " + "FA-Export-" +sDatabaseName + "-" + sProcessingType + "-" + sDetailType + "-" +SMUtilities.now("MM-dd-yyyy") + ".CVS";
 		response.setHeader("Content-Disposition", disposition);

@@ -127,10 +127,10 @@ public class SMMaterialReturn extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067708]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067709]");
     }
     public boolean load (Connection conn) throws Exception{
     	return load (m_slid, conn);
@@ -204,10 +204,10 @@ public class SMMaterialReturn extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUserID, sUserFullName);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067710]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067711]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
@@ -387,10 +387,10 @@ public class SMMaterialReturn extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067706]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067707]");
     }
     public void delete (Connection conn) throws Exception{
     	

@@ -62,10 +62,10 @@ public class SSOptions {
     	try {
 			load(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067662]");
 			throw new Exception("Error [1465315104] could not get connection to load SSOptions.");
 		}
-   		clsDatabaseFunctions.freeConnection(context, conn);
+   		clsDatabaseFunctions.freeConnection(context, conn, "[1547067663]");
     }
 
     private void validate_entries() throws Exception{

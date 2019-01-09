@@ -111,7 +111,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!shipto.delete(shipto.getM_sCustomerNumber(), shipto.getM_sShipToCode(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067538]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomerShipTos"
     					+ "?Warning=Error deleting customer ship-to."
@@ -120,7 +120,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 						return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067539]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomerShipTos"
     					+ "?Status=Successfully deleted customer ship-to"

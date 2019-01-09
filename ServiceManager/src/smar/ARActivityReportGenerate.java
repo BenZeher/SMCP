@@ -152,7 +152,7 @@ public class ARActivityReportGenerate extends HttpServlet {
     	
 	    SMLogEntry log = new SMLogEntry(conn);
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARACTIVITYREPORT, "REPORT", "AR Activity Report", "[1376509251]");
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067480]");
     	out.println("</BODY></HTML>");
 	}
 }

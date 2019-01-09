@@ -74,7 +74,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 		}
 
 		if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sClearingDate)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067503]");
 			m_sWarning = "Invalid clearing date.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -98,7 +98,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 		}
 		java.sql.Date datNow =  clsDateAndTimeConversions.nowAsSQLDate();
 		if (datClearingDate.after(datNow)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067504]");
 			m_sWarning = "Invalid clearing date - you cannot choose a date later than today.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -109,7 +109,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 		}
 
 		if (request.getParameter("ConfirmClear") == null){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067505]");
 			m_sWarning = "You chose to clear, but did not check the box to confirm.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -136,7 +136,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				rs.close();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067506]");
 				m_sWarning = "There are unposted batches - these must be posted before you can clear transactions.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -147,7 +147,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			}
 			rs.close();
 		} catch (SQLException e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067507]");
 			m_sWarning = "Error checking for unposted batches - with SQL: " + SQL + " - " + e1.getMessage() + ".";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -167,7 +167,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 				"[1376509269]");
 
 		if (!checkARPostingFlag (conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067508]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -178,7 +178,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067509]");
 			m_sWarning = "Could not start data transaction.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -192,7 +192,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			clearPostingFlag(conn);
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067510]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -203,7 +203,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067511]");
 			m_sWarning = "Could not commit data transaction.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -222,7 +222,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 				"Using clearing date " + clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM/dd/yyyy"),
 				"[1376509515]");
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067512]");
 		m_sWarning = "Fully paid transactions through " 
 			+ clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM-dd-yyyy") + " were cleared.";
 		response.sendRedirect(

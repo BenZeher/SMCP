@@ -106,7 +106,7 @@ public class ARCallSheet extends clsMasterEntry{
 		}
 
 		boolean bResult = load (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067501]");
 		return bResult;
 
 	}
@@ -216,7 +216,7 @@ public class ARCallSheet extends clsMasterEntry{
 		}
 
 		boolean bResult = save_without_data_transaction (conn, sUserID, sUserFullName, sCompany);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067502]");
 		return bResult;	
 
 	}
@@ -396,7 +396,7 @@ public class ARCallSheet extends clsMasterEntry{
 		}
 
 		boolean bResult = delete (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067500]");
 		return bResult;
 
 	}

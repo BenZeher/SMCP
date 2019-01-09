@@ -57,10 +57,10 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067674]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067675]");
     }
     public void load (Connection conn) throws Exception{
     	load (m_igroupid, conn);
@@ -114,10 +114,10 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, context, sConf, request);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067676]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067677]");
     	
     }
     public void save_without_data_transaction (Connection conn, ServletContext context, String sConf, HttpServletRequest request) throws Exception{
@@ -239,10 +239,10 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067672]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067673]");
     }
     public void delete (Connection conn) throws Exception{
     	

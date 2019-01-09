@@ -121,10 +121,10 @@ public class SMUser extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067773]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067774]");
     }
     public void load (Connection conn) throws Exception{
     	try {
@@ -230,10 +230,10 @@ public class SMUser extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067775]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067776]");
     	
     }
     public void save_without_data_transaction (Connection conn) throws Exception{
@@ -358,10 +358,10 @@ public class SMUser extends clsMasterEntry{
 			
 		ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 		if(rs.next()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067771]");
 			return Long.toString(rs.getLong(SMTableusers.lid));
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067772]");
 		return "-1";
     }
 
@@ -381,10 +381,10 @@ public class SMUser extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067769]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067770]");
     }
     public void delete (Connection conn) throws Exception{
     	

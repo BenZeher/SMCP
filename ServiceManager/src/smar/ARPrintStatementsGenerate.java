@@ -184,7 +184,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					bPrintZeroBalanceStatements,
 					bPrintOnlyRequireStatement
 			)){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067570]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 						+ "Warning=" + sWarning
@@ -224,7 +224,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 							clsDateAndTimeConversions.utilDateToString(datCutOffDate, "MM/dd/yyyy")
 					)){
 						rsBalanceList.close();
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067571]");
 						sWarning = "Error printing customer information table.";
 						response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -298,7 +298,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				printCustomerFooter(out, bdCreditLimit);
 			}
 
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067572]");
 
 			out.println("</TABLE>");
 

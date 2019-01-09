@@ -98,7 +98,7 @@ public class FAEditAssetsEdit extends HttpServlet {
     						return;
 		    	}
 			    if (!asset.delete(asset.getAssetNumber(), conn)){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067474]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
     					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
@@ -107,7 +107,7 @@ public class FAEditAssetsEdit extends HttpServlet {
     				);
 					return;
 			    }else{
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067475]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
     					+ "?Status=Successfully deleted asset " + asset.getAssetNumber() + "."

@@ -285,10 +285,10 @@ public class SMDeliveryTicket extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067680]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067681]");
     }
     public void load (Connection conn) throws Exception{
     	try {
@@ -386,22 +386,22 @@ public class SMDeliveryTicket extends clsMasterEntry{
 				throw new Exception("Error [1445266319] getting connection - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.start_data_transaction(conn)){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067684]");
 				throw new Exception ("Error [1445266320] - could not start data transaction.");
 			}
 			try {
 				save_acceptance_screen_without_data_transaction(conn, sUser, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067685]");
 				throw new Exception("Error saving delivery ticket - " + e.getMessage());
 			}
 			if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067686]");
 				throw new Exception("Error [1445266322] committing transaction.");
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067687]");
 			return;
 		}
     
@@ -451,10 +451,10 @@ public class SMDeliveryTicket extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUserID, sUserFullName);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067682]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067683]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
@@ -716,10 +716,10 @@ public class SMDeliveryTicket extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067678]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067679]");
     }
     public void delete (Connection conn) throws Exception{
     	

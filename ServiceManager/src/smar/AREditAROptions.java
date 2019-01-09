@@ -111,10 +111,10 @@ public class AREditAROptions extends HttpServlet {
 		    	m_sWarning = "Could not load aroptions record - option.load() failed: "
 		    		+ m_aropt.getErrorMessageString();
 		    	//free the connection
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067528]");
 		    	return false;
 			}
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067529]");
 		}
 		return true;
 	}

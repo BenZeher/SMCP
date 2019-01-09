@@ -888,12 +888,12 @@ public class SMInvoice extends clsMasterEntry{//java.lang.Object{
     	try{
     		clsDatabaseFunctions.executeSQL(SQL, conn);
     	}catch(SQLException ex){
-    		clsDatabaseFunctions.freeConnection(servletContext, conn);
+    		clsDatabaseFunctions.freeConnection(servletContext, conn, "[1547067698]");
     		throw new Exception("Error [1474592482] in " + this.toString() + ".updateInvoicingState - "
     			+ "<BR>" + ex.getMessage()
     			+ "<BR>SQL: " + SQL);
     	}
-		clsDatabaseFunctions.freeConnection(servletContext, conn);
+		clsDatabaseFunctions.freeConnection(servletContext, conn, "[1547067699]");
 		return;
 	}
 	

@@ -85,7 +85,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 		}
 		
 	    if (request.getParameter("ConfirmClear") == null){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067513]");
 	    	m_sWarning = "You chose to clear, but did not check the box to confirm.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -97,7 +97,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 
 	    try{
 	    	if(!clsDatabaseFunctions.start_data_transaction(conn)){
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067514]");
 	    		m_sWarning = "Could not start data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -134,7 +134,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	//System.out.println("In " + this.toString() + " SQL = " + SQL);
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067515]");
 	    		m_sWarning = "Could not execute delete statement.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -161,7 +161,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	//System.out.println("In " + this.toString() + " second SQL = " + SQL);
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067516]");
 	    		m_sWarning = "Could not delete empty batches in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -184,7 +184,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	;
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067517]");
 	    		m_sWarning = "Could not delete GL Export Header records in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -206,7 +206,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 		    	;
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067518]");
 	    		m_sWarning = "Could not delete GL Export Detail records in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -217,7 +217,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	}
 	    	
 	    	if(!clsDatabaseFunctions.commit_data_transaction(conn)){
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067519]");
 	    		m_sWarning = "Could not commit data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -229,7 +229,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	
 	    }catch(SQLException e){
 	    	m_sWarning = "Error deleting batches - " + e.getMessage();
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067520]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + m_sWarning
@@ -237,7 +237,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 			);
 			return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067521]");
 		m_sWarning = "Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.";
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

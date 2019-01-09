@@ -73,7 +73,7 @@ public class ASAuthorizeAlarmUsersEdit extends HttpServlet {
 		try {
 			alarmsequence.load(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067594]");
 			out.println("<BR>Error [1462382483] could not load alarm sequence ID '" + sAlarmSequenceID + "' - " + e.getMessage() + ".<BR>");
 			out.println("</BODY></HTML>");
 			return;
@@ -109,13 +109,13 @@ public class ASAuthorizeAlarmUsersEdit extends HttpServlet {
 	    try {
 			Edit_Group(alarmsequence, out, conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067595]");
 			out.println("<BR>" + e.getMessage() + "<BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
 		
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067596]");
 		out.println("</BODY></HTML>");
 		return;
 	}

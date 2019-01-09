@@ -95,7 +95,7 @@ public class ASAlarmListenerAction extends HttpServlet{
 				"Error validating passcode '" + sPasscode + "'",
 				e1.getMessage(),
 				"[1463507195]");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067592]");
 			out.println(SSUtilities.buildKeyValuePair(SSConstants.QUERY_KEY_ACKNOWLEDGMENT, SSConstants.QUERY_KEYVALUE_ACKNOWLEDGMENT_UNSUCCESSFUL)
 				+ SSConstants.QUERY_STRING_DELIMITER
 				+ SSUtilities.buildKeyValuePair(SSConstants.QUERY_KEY_REQUEST_ERROR, e1.getMessage())
@@ -139,7 +139,7 @@ public class ASAlarmListenerAction extends HttpServlet{
 	    */
 		
 		//Free the connection:
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067593]");
 	    return;
 	}
 	

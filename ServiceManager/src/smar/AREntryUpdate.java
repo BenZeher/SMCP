@@ -261,13 +261,13 @@ public class AREntryUpdate extends HttpServlet{
 				sUserFullName, 
 				"SAVING ENTRY " + m_Entry.iEntryNumber() + " IN BATCH " + m_Entry.iBatchNumber())
 				){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067555]");
 			return false;
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067556]");
 			m_sWarning = "could not start data transaction";
 			return false;
 		}
@@ -278,7 +278,7 @@ public class AREntryUpdate extends HttpServlet{
 		if (!m_Entry.save_without_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067557]");
 			if (m_Entry.getErrorMessage().compareToIgnoreCase("") == 0){
 				m_sWarning = "unspecified error in entry class saving entry";
 			}else{
@@ -289,7 +289,7 @@ public class AREntryUpdate extends HttpServlet{
 		}else{
 			clsDatabaseFunctions.commit_data_transaction(conn);
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067558]");
 			return true;
 		}
 	}

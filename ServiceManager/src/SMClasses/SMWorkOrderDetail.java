@@ -128,7 +128,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067779]");
 			throw new Exception("Error [1390944853] loading " + ParamObjectName + " - " + e.getMessage());
 		}
     	
@@ -369,10 +369,10 @@ public class SMWorkOrderDetail extends clsMasterEntry{
     	try {
 			delete (conn,  sUserID, log, iSavingFromWhichScreen, context);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067777]");
 			throw new Exception("Error [1391115714] deleting work order line - " + e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067778]");
     }
     public void delete (Connection conn, String sUserID, SMLogEntry log, int iSavingFromWhichScreen, ServletContext context) throws Exception{
     	
@@ -429,10 +429,10 @@ public class SMWorkOrderDetail extends clsMasterEntry{
     	try {
 			validate_line_fields(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);	
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067780]");	
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067781]");
     }
     public void validate_line_fields (Connection conn) throws Exception{
     	

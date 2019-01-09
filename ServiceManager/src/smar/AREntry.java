@@ -377,7 +377,7 @@ public class AREntry extends java.lang.Object{
 			} catch (Exception e) {
 				m_sErrorMessage = "Error:[1437408984] Invalid document or due date - " + e.getMessage() + ".";
 				rs.close();
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067550]");
 		    	return false;
 			}
 			m_dOriginalAmount = rs.getBigDecimal(SMTableentries.doriginalamount);
@@ -400,20 +400,20 @@ public class AREntry extends java.lang.Object{
 			
 		}catch (SQLException ex){
 			m_sErrorMessage = "Error:[1437408985] with SQL: '" + SQL + ex.getMessage() + ".";
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067551]");
 	        return false;
 		}
 		
 		if (! load_lines(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067552]");
 			return false;
 		}
 		
 		if (!update_distributed_amount()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067553]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067554]");
     	return true;
     }
     public boolean load (
@@ -525,20 +525,20 @@ public class AREntry extends java.lang.Object{
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
-    	        clsDatabaseFunctions.freeConnection(context, conn);
+    	        clsDatabaseFunctions.freeConnection(context, conn, "[1547067540]");
     	        return false;
     		}
     		
     		if (! load_lines(conn)){
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067541]");
     			return false;
     		}
     		
     		if (!update_distributed_amount()){
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067542]");
     			return false;
     		}
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067543]");
         	return true;
         }
     public boolean load (

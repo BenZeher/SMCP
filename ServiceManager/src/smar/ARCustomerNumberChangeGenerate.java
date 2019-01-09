@@ -117,7 +117,7 @@ public class ARCustomerNumberChangeGenerate extends HttpServlet{
 	    if(!acnc.processChange(conn, sFromCustomer, sToCustomer, bIsMerge)){
 		    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 		    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARRENUMBER, sDesc, "Error: " + acnc.getErrorMessage(), "[1376509273]");
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067524]");
 	    	m_sWarning = acnc.getErrorMessage();
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -128,7 +128,7 @@ public class ARCustomerNumberChangeGenerate extends HttpServlet{
 	    }else{
 		    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 		    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARRENUMBER, sDesc, "Successful", "[1376509274]");
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067525]");
 	    	m_sWarning = "Customer code " + sFromCustomer + " successfully merged into customer " + sToCustomer + ".";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

@@ -108,7 +108,7 @@ public class ARListCustomersOnHoldGenerate extends HttpServlet {
     	    SMLogEntry log = new SMLogEntry(conn);
     	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARLISTCUSTOMERSONHOLD, "REPORT", "AR List Customers On Hold", "[1376509283]");
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067559]");
 	    out.println("</BODY></HTML>");
 	}
 }

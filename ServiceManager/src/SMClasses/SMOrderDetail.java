@@ -667,16 +667,16 @@ public class SMOrderDetail extends clsMasterEntry{
     		SMOrderHeader order = new SMOrderHeader();
     		order.setM_strimmedordernumber(this.getM_strimmedordernumber());
     		if (!order.load(conn)){
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067712]");
     			super.addErrorMessage(order.getErrorMessages());
     			return false;
     		}
     		if (!order.addNewDetail(this, sUserID, sUserFullName, conn, sInsertLineAboveDetailNumber)){
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067713]");
     			super.addErrorMessage(order.getErrorMessages());
     			return false;
     		}else{
-    			clsDatabaseFunctions.freeConnection(context, conn);
+    			clsDatabaseFunctions.freeConnection(context, conn, "[1547067714]");
     			return true;
     		}
     	}
@@ -687,7 +687,7 @@ public class SMOrderDetail extends clsMasterEntry{
 			Statement stmt = conn.createStatement();
 			stmt.execute("START TRANSACTION");
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067715]");
     		super.addErrorMessage("Error beginning data transaction - " + e.getMessage() + ".");
     		return false;
 		}
@@ -697,7 +697,7 @@ public class SMOrderDetail extends clsMasterEntry{
 			save_line(conn);
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067716]");
 			super.addErrorMessage(e1.getMessage());
     		return false;
 		}
@@ -706,21 +706,21 @@ public class SMOrderDetail extends clsMasterEntry{
 		order.setM_strimmedordernumber(getM_strimmedordernumber());
 		if (!order.load(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067717]");
 			super.addErrorMessage("Cannot load order - " + order.getErrorMessages());
     		return false;
 		}
 		
 		if (!order.loadDetailLines(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067718]");
 			super.addErrorMessage("Cannot load detail lines on order - " + order.getErrorMessages());
     		return false;
 		}
 		
 		if (!order.save_order_without_data_transaction(conn, sConf, context, sUserID, sUserFullName, false, false, "EDITEDLINE")){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067719]");
 			super.addErrorMessage("Cannot load detail lines on order - " + order.getErrorMessages());
     		return false;
 		}
@@ -731,12 +731,12 @@ public class SMOrderDetail extends clsMasterEntry{
 			stmt.execute("COMMIT");
 		} catch (SQLException e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067720]");
     		super.addErrorMessage("Error committing data transaction - " + e.getMessage() + ".");
     		return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067721]");
     	return true;
     }
     public void save_line(Connection conn) throws SQLException{

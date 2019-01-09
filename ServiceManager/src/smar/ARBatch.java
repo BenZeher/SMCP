@@ -73,7 +73,7 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			String SQL = "SELECT * FROM " + SMTablearoptions.TableName;
 			ResultSet rsAROptions = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rsAROptions.next()){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067489]");
 				throw new Exception("Error getting aroptions record - no record.");
 			}else{
 				if(rsAROptions.getLong(SMTablearoptions.ibatchpostinginprocess) == 1){
@@ -88,13 +88,13 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 							"",
 							"[1376509260]");
 					rsAROptions.close();
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547067490]");
 					throw new Exception(sError);
 				}
 			}
 			rsAROptions.close();
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067491]");
 			throw new Exception("Error checking for previous posting - " + e.getMessage());
 		}
 		//If not, then set the posting flag:
@@ -110,7 +110,7 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067492]");
 			throw new Exception("Error setting posting flag in aroptions - " + e.getMessage());
 		}
 
@@ -128,12 +128,12 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				stmt.execute(SQL);
 				
 			}catch (SQLException e){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067493]");
 				throw new Exception("Error [1457961244] clearing posting flag in aroptions - " + e.getMessage() 
 					+ "-  could not start data transaction");
 			}
 
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067494]");
 			throw new Exception("Error [1457961243] - could not start data transaction");
 		}
 
@@ -157,13 +157,13 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				Statement stmt = conn.createStatement();
 				stmt.execute(SQL);
 			} catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067495]");
 				throw new Exception("Error [1457961309] clearing posting flag in aroptions - " + e.getMessage()
 					+ " - " + e1.getMessage()
 				);
 			}
 			
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067496]");
 			throw new Exception("Error [1457961319] posting - " + e1.getMessage());
 		}
 
@@ -179,11 +179,11 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067497]");
 			throw new Exception("Error [1457961580] clearing posting flag in aroptions - " + e.getMessage());
 		}
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067498]");
 		return;
 	}
 

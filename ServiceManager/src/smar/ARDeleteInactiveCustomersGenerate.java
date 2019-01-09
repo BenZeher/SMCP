@@ -135,7 +135,7 @@ public class ARDeleteInactiveCustomersGenerate extends HttpServlet {
 				}
 			}
 			rs.close();
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067526]");
 		}catch (SQLException e){
 			System.out.println("Error deleting inactives - " + e.getMessage() + ".");
 			sWarning = "Error deleting inactives - " + e.getMessage() + ".";

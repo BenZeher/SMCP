@@ -123,10 +123,10 @@ public class SSEventSchedule extends clsMasterEntry{
 		try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067654]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067655]");
 	}
 	public void load (Connection conn) throws Exception{
 		load (m_slid, conn);
@@ -189,11 +189,11 @@ public class SSEventSchedule extends clsMasterEntry{
 		try {
 			loadEventScheduleDevicesAndSequences(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067656]");
 			throw new Exception("Error [1485970274] - could not load devices or sequences - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067657]");
 		
 	}
 	private void loadEventScheduleDevicesAndSequences(Connection conn) throws Exception{
@@ -243,18 +243,18 @@ public class SSEventSchedule extends clsMasterEntry{
 		try {
 			clsDatabaseFunctions.start_data_transaction(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067659]");
 			throw new Exception("Error [1481732810] starting data transaction - " + e1.getMessage());
 		}
 		try {
 			save_without_data_transaction (conn, sUser, context);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067660]");
 			throw new Exception(e.getMessage());
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067661]");
 
 	}
 	public void save_without_data_transaction (Connection conn, String sUser, ServletContext context) throws Exception{
@@ -448,10 +448,10 @@ public class SSEventSchedule extends clsMasterEntry{
 		try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067652]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067653]");
 	}
 	public void delete (Connection conn) throws Exception{
 
@@ -908,7 +908,7 @@ public class SSEventSchedule extends clsMasterEntry{
 						+ ")"
 					;
 					stmt.execute(SQL);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547067658]");
 				} catch (Exception e) {
 					throw new Exception ("Error [1487719040] deleting schedule detail - " + e.getMessage() + ".");
 				}

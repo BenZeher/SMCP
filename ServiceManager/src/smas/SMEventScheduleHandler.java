@@ -91,12 +91,12 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 						+ ", which is listed in " + CompanyDataCredentials.TableName 
 						+ ", is missing table '" + SMTablesseventscheduledetails.TableName + "'."
 					);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547067614]");
 					return s;
 				}
 			}
 			catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067615]");
 				throw new Exception("Error [1483738484] - " + e.getMessage());
 			}
 			//System.out.println("[1483975843] - eventschedule rs SQL = '" + SQL + "'.");
@@ -105,7 +105,7 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 			//If the resultset is null, that probably means there's nothing to process, probably not even a table or a database
 			//so we return 'quietly':
 			if (rs == null){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067616]");
 				System.out.println("[1483976557] - in company database ID '" 
 					+ sDatabaseID + "', there is no event schedule table for processing.");
 				return s;
@@ -155,7 +155,7 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 			}
 			rs.close();
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067617]");
 			throw new Exception("Error [1482263715] reading event schedule records using database ID '" + sDatabaseID + "' - " + e.getMessage());
 		}
 		
@@ -166,7 +166,7 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 			try {
 				s += processDevice(arrDeviceIDs.get(i), conn, context, sServerID, sTestDeviceID);
 			} catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067618]");
 				throw new Exception("Error [1482267396] - " + e.getMessage());
 			}
 		}
@@ -185,11 +185,11 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 				if(iDiagnosticLoggingLevel >= 1){
 					System.out.println("[1516307939] " + clsDateAndTimeConversions.nowStdFormatWithSeconds() + " - in processSchedules, error processing alarm sequence ID '" + arrAlarmSequenceIDs.get(i) + "' - " + e.getMessage() + ".");
 				}
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547067619]");
 				throw new Exception("Error [1484088922] - " + e.getMessage());
 			}
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067620]");
 		return s;
 	}
 	

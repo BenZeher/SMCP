@@ -319,10 +319,10 @@ public class ARTransaction extends java.lang.Object{
     	}
     	
     	if (load (sCustomerNumber, sDocNumber, conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067573]");
     		return true;
     	}else{
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067574]");
     		return false;
     	}
     }

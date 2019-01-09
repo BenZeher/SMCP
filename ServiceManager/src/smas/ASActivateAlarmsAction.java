@@ -104,7 +104,7 @@ public class ASActivateAlarmsAction extends HttpServlet{
 				bOverrideMalfunctioningDevice,
 				SMBackgroundScheduleProcessor.getServerID(getServletContext()));
 		} catch (Exception e2) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067582]");
 			String sErrorMessage = e2.getMessage();
 			String sOtherParameters = "";
 			//If the error indicates a malfunctioning trigger device, let the user know and then he can decide
@@ -120,7 +120,7 @@ public class ASActivateAlarmsAction extends HttpServlet{
 				return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067583]");
 		smaction.redirectAction(
 			"", 
 			sResult,

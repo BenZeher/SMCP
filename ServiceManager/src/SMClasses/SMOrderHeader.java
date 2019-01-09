@@ -783,7 +783,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 
 		boolean bResult = load (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067727]");
 		return bResult;
 
 	}
@@ -1372,7 +1372,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 
 		boolean bResult = loadFieldInfo (m_sOrderNumber, conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067728]");
 		return bResult;
 
 	}
@@ -1475,7 +1475,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 
 		boolean bResult = save_order_totals_without_data_transaction (conn, sConf, context, sUserID, sUserFullName, sCompany);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067743]");
 		return bResult;	
 
 	}
@@ -2552,7 +2552,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 
 		boolean bResult = saveFieldInfo_without_data_transaction (conn, sUser, sCompany);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067744]");
 		return bResult;	
 
 	}
@@ -3350,7 +3350,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sDeletedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509304]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067731]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -3362,7 +3362,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE DELETIONS",
 				"[1376509292]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067732]");
 		
 	}
 	private void deleteLines(
@@ -3537,7 +3537,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sUnshippedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509293]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067739]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -3549,7 +3549,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE UNSHIPS",
 				"[1376509294]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067740]");
 	}
 	private void unshipLines(
 			ArrayList<String>sDetailNumbers, 
@@ -3670,7 +3670,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sShippedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509294]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067737]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -3682,7 +3682,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE SHIPS",
 				"[1376509295]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067738]");
 	}
 	private void shipLines(
 			ArrayList<String>sDetailNumbers,
@@ -3937,7 +3937,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sItemCreatedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509296]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067733]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -3949,7 +3949,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE SHIPS",
 				"[1376509297]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067734]");
 	}
 	private void createItemsForLines(
 			ArrayList<String>sDetailNumbers, 
@@ -4122,7 +4122,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sMovedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509298]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067735]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -4134,7 +4134,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE DELETIONS",
 				"[1376509299]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067736]");
 		
 	}
 	public void moveLines(
@@ -4300,7 +4300,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sCopiedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1392658098]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067729]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -4312,7 +4312,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE DELETIONS",
 				"[1392658099]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067730]");
 		
 	}
 	public void copyLines(
@@ -4518,7 +4518,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sSelectedLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509300]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067745]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -4530,7 +4530,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL SETTING ORDER LINE MECHANICS",
 				"[1376509301]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067746]");
 		
 	}
 	private void setMechanic(ArrayList<String>sDetailNumbers,
@@ -4657,7 +4657,7 @@ public class SMOrderHeader extends clsMasterEntry{
 						+ sSelectedLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509302]");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067742]");
 			throw new SQLException(e.getMessage());
 		}
 		if (bDebugMode){
@@ -4669,7 +4669,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				"SUCCESSFUL ORDER LINE REPRICING",
 				"[1376509303]");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067741]");
 	}
 	private void repriceQuote(ArrayList<String>sDetailNumbers,
 			String sRepriceMethod,
@@ -4945,16 +4945,16 @@ public class SMOrderHeader extends clsMasterEntry{
 					SMUtilities.getFullClassName(this.toString()) + ".updateLinePrice - user: " + sUser
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067747]");
 			throw new Exception("Error [1397655970] getting connection to update line price - " + e.getMessage());
 		}
 		try {
 			updateLinePrice(line, conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067748]");
 			throw new Exception("Error [1397655971] updating line price - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067749]");
 		
 	}
 	public void updateLinePrice(
@@ -6616,17 +6616,17 @@ public class SMOrderHeader extends clsMasterEntry{
     		"MySQL", 
     		this.toString() + ".getTaxAmount - user = " + sUser + " [1377028099]");
     	if (conn == null){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067724]");
     		throw new Exception("Could not open connection to get tax amount.");
     	}
     	String sTaxAmount;
 		try {
 			sTaxAmount = getSalesTaxAmount(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067725]");
 			throw new Exception(e);
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067726]");
     	return sTaxAmount;
     }
     public String getSalesTaxAmount(Connection conn) throws Exception{
@@ -7101,10 +7101,10 @@ public class SMOrderHeader extends clsMasterEntry{
 			false, 
 			false, 
 			"CUSTOMERCHANGE")){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067722]");
 			throw new Exception("Could not save order - " + getErrorMessages());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067723]");
     }
     public SMOrderDetail getOrderDetail(int iIndex){
     	return m_arrDetails.get(iIndex); 

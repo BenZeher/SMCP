@@ -55,7 +55,7 @@ public class FAClearTransactionHistoryAction extends HttpServlet{
 		try{
 			cProcessor.doProcess(sUserID, conn);
 		}catch(Exception e){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067471]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAClearTransactionHistorySelect"
 					+ "?" + cProcessor.getQueryString()

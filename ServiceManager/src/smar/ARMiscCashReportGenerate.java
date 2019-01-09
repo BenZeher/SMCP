@@ -107,7 +107,7 @@ public class ARMiscCashReportGenerate extends HttpServlet {
 	    SMLogEntry log = new SMLogEntry(conn);
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARMISCCASHREPORT, "REPORT", "AR Misc Cash Report", "[1376509285]");
 	    
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067561]");
 	    out.println("</BODY></HTML>");
 	}
 }

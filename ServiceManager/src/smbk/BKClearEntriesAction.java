@@ -74,7 +74,7 @@ public class BKClearEntriesAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067444]");
 			throw new Exception ("Could not start data transaction");
 		}
 		
@@ -88,7 +88,7 @@ public class BKClearEntriesAction extends HttpServlet{
 			clsDatabaseFunctions.executeSQL(SQL, conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067445]");
 			throw new Exception("Error deleting bank statements with SQL: " + SQL + " - " + e.getMessage());
 		}
 		
@@ -103,7 +103,7 @@ public class BKClearEntriesAction extends HttpServlet{
 			clsDatabaseFunctions.executeSQL(SQL, conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067446]");
 			throw new Exception("Error deleting related posted entries with SQL: " + SQL + " - " + e.getMessage());
 		}
 
@@ -122,17 +122,17 @@ public class BKClearEntriesAction extends HttpServlet{
 			clsDatabaseFunctions.executeSQL(SQL, conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067447]");
 			throw new Exception("Error deleting related account entries with SQL: " + SQL + " - " + e.getMessage());
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067448]");
 			throw new Exception ("Error committing data transaction.");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067449]");
 		return;
 	}
 	public void doGet(HttpServletRequest request,

@@ -124,7 +124,7 @@ public class AREditCustomersEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!cust.delete(cust.getM_sCustomerNumber(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067536]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomers"
     					+ "?" + ARCustomer.ParamsCustomerNumber + "=" + cust.getM_sCustomerNumber()
@@ -134,7 +134,7 @@ public class AREditCustomersEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067537]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomers"
     					+ "?" + ARCustomer.ParamsCustomerNumber + "=" + cust.getM_sCustomerNumber()

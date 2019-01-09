@@ -143,7 +143,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 
 		s += createFootNotes();
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067588]");
 
 		return s;
 	}
@@ -182,7 +182,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 		try {
 			arrDevices = getUsersDevices(conn, sm.getUserName(), sm.getUserID(), bOutputDiagnostics, sServerID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067585]");
 			throw new Exception(e.getMessage());
 		}
 
@@ -194,7 +194,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 					conn,
 					(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067586]");
 			throw new Exception("Error [1463431225] checking device editing permissions - " + e.getMessage());
 		}
 
@@ -298,7 +298,7 @@ public class ASActivateDevicesEdit  extends HttpServlet {
 				bOddRow = !bOddRow;
 			}
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067665]");
 		return s;
 	}
 	private String createFootNotes(){

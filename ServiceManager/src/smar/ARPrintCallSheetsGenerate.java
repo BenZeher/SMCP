@@ -446,13 +446,13 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
     			bOutputToCSV,
     			getServletContext(),
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067567]");
     		sRedirectString += "&Warning=" + rpt.getErrorMessage();
 			response.sendRedirect(sRedirectString);
 			return;
     	}
     	
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067566]");
 	    out.println("</BODY></HTML>");
 		
 		return;

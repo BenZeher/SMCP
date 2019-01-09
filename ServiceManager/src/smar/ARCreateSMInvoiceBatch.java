@@ -75,7 +75,7 @@ public class ARCreateSMInvoiceBatch extends HttpServlet {
 					"Import completed successfully in batch " + arsmi.getM_sBatchNumber(),
 					"",
 					"[1376509271]");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067522]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar." + "AREditBatches" + "?"
 					+ "Warning=Invoice batch " + arsmi.getM_sBatchNumber() + " successfully created."
@@ -88,7 +88,7 @@ public class ARCreateSMInvoiceBatch extends HttpServlet {
 					"Import FAILED: " + arsmi.getErrorMessage(),
 					"",
 					"[1376509272]");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067523]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar." + "AREditBatches" + "?"
 					+ "Warning=Batch NOT created: " + arsmi.getErrorMessage()

@@ -101,7 +101,7 @@ public class ARListInactiveCustomersGenerate extends HttpServlet {
     	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARLISTINACTIVECUST, "REPORT", "AR List Inactive Customers", "[1376509284]");
     	}
     	
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067560]");
 	    out.println("</BODY></HTML>");
 	}
 }

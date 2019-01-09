@@ -197,10 +197,10 @@ public class SMAppointment extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067668]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067669]");
     }
     public boolean load (Connection conn) throws Exception{
     	return load (m_slid, conn);
@@ -277,10 +277,10 @@ public class SMAppointment extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn,sUserID, bRequireGeocode);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067670]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067671]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID, boolean bRequireGeocode) throws Exception{
@@ -449,10 +449,10 @@ public class SMAppointment extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067666]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067667]");
     }
     public void delete (Connection conn) throws Exception{
     	

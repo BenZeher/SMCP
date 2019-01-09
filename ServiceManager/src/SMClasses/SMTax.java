@@ -104,7 +104,7 @@ public class SMTax extends java.lang.Object{
 			throw new Exception(e.getMessage());
 		}
     			
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067759]");
     }
 
 	public void load (
@@ -157,7 +157,7 @@ public class SMTax extends java.lang.Object{
 		try {
 			validateEntries(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067760]");
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -212,7 +212,7 @@ public class SMTax extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067761]");
 	 		throw new Exception("Error [1453839347] saving " + SMTax.ParamObjectName + " record - " + e.getMessage());
 	 	}
 
@@ -236,7 +236,7 @@ public class SMTax extends java.lang.Object{
 			}
 	 	}
 	 	set_snewrecord(ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
-	 	clsDatabaseFunctions.freeConnection(context, conn);
+	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547067762]");
     }
     private void validateEntries(Connection conn) throws Exception{
     	

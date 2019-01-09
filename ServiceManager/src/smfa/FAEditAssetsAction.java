@@ -86,7 +86,7 @@ public class FAEditAssetsAction extends HttpServlet{
 		
 		//Need a connection here because it involves a data transaction:
 		if(!asset.save(sUserName, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067472]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter("CallingClass", request)
 					+ "?" + asset.getQueryString()
@@ -95,7 +95,7 @@ public class FAEditAssetsAction extends HttpServlet{
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067473]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter("CallingClass", request)
 				+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()

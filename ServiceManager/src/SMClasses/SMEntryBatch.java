@@ -313,7 +313,7 @@ public class SMEntryBatch {
     	Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", "SMClasses.SMEntryBatch");
     	
     	if(!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067697]");
     		throw new Exception("Error starting data transaction [1385584931].");
     	}
     	try {
@@ -376,16 +376,16 @@ public class SMEntryBatch {
     	
     	//We do all this in a transaction, so we can roll it back:
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067694]");
     		return false;
     	}
     	
     	if (!delete_entry(sBatchNumber, sEntryNumber, conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067695]");
     	}else{
     		clsDatabaseFunctions.commit_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547067696]");
     	}
     	
     	return true;

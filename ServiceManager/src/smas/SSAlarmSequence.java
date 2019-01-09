@@ -122,10 +122,10 @@ public class SSAlarmSequence extends clsMasterEntry{
 		try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067623]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067624]");
 	}
 	public void load (Connection conn) throws Exception{
 		load (m_slid, conn);
@@ -266,7 +266,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 		try {
 			clsDatabaseFunctions.start_data_transaction(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067625]");
 			throw new Exception("Error [1460477856] starting data transaction - " + e1.getMessage());
 		}
 
@@ -274,11 +274,11 @@ public class SSAlarmSequence extends clsMasterEntry{
 			save_without_data_transaction (conn, sUser);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067626]");
 			throw new Exception(e.getMessage());
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067627]");
 
 	}
 	public void save_without_data_transaction (Connection conn, String sUser) throws Exception{
@@ -382,10 +382,10 @@ public class SSAlarmSequence extends clsMasterEntry{
 		try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067621]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067622]");
 	}
 	public void delete (Connection conn) throws Exception{
 

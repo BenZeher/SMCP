@@ -220,7 +220,7 @@ public class AREditBatchesUpdate extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067530]");
 			return false;
 		}
 		
@@ -228,11 +228,11 @@ public class AREditBatchesUpdate extends HttpServlet{
 			batch.save_without_data_transaction(conn, sUserID, sUserFullName);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067531]");
 			return false;		
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067532]");
 		return true;
     }
 	private static boolean Validate_Batch(ARBatch batch, HttpServletRequest req, PrintWriter pwOut){

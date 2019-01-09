@@ -130,7 +130,7 @@ public class AREditCustomersAction extends HttpServlet{
 				);
 			
 		if(!cust.save(sUserFullName, sUserID, sCompanyName, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067534]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomersEdit"
 					+ "?" + cust.getQueryString()
@@ -139,7 +139,7 @@ public class AREditCustomersAction extends HttpServlet{
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067535]");
 		//System.out.println("In " + this.toString() + " cust.querystring = " + cust.getQueryString());
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomersEdit"

@@ -149,10 +149,10 @@ public class SMLaborBackCharge extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067702]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067703]");
     }
     public boolean load (Connection conn) throws Exception{
     	return load (m_lid, conn);
@@ -224,10 +224,10 @@ public class SMLaborBackCharge extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUserID, sUserFullName);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067704]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067705]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
@@ -370,10 +370,10 @@ public class SMLaborBackCharge extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547067700]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067701]");
     }
     public void delete (Connection conn) throws Exception{
     	

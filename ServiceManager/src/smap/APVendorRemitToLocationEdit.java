@@ -95,7 +95,7 @@ public class APVendorRemitToLocationEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!entry.delete(entry.getsremittocode(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059506]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APVendorRemitToLocationSelection"
             			+ "?" + APVendorRemitToLocation.Paramsvendoracct + "=" + entry.getsvendoracct()
@@ -104,7 +104,7 @@ public class APVendorRemitToLocationEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059507]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APVendorRemitToLocationSelection"
     	            	+ "?" + APVendorRemitToLocation.Paramsvendoracct + "=" + entry.getsvendoracct()

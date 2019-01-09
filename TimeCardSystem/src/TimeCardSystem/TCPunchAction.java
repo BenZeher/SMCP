@@ -271,7 +271,7 @@ public class TCPunchAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060167]");
 			throw new Exception("Error [1517600877] - couldn't start data transaction.");
 		}
 		
@@ -304,7 +304,7 @@ public class TCPunchAction extends HttpServlet{
 			stmt.execute(sSQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060168]");
 			throw new Exception("Error [1517600878] executing SQL '" + sSQL + "' - " + e.getMessage());
 		}
 		
@@ -335,16 +335,16 @@ public class TCPunchAction extends HttpServlet{
 			stmt.execute(sRecSQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060169]");
 			throw new Exception("Error [1517600879] executing SQL '" + sRecSQL + "' - " + e.getMessage());
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060170]");
 			throw new Exception("Error [1517600897] - couldn't commit data transaction.");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060171]");
 		
 		SimpleDateFormat formatter = new SimpleDateFormat ("'at ' hh:mm:ss a ' on ' MM-dd-yyyy");
 		String sEarlyStartPhrase = "";
@@ -572,7 +572,7 @@ public class TCPunchAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060162]");
 			throw new Exception("Error [1516991092] - could not start data transaction.");
 		}
 		
@@ -599,7 +599,7 @@ public class TCPunchAction extends HttpServlet{
 			);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060163]");
 			throw new Exception("Error [1516991093] - could not execute punch in SQL '" + sSQL + "' - " + e.getMessage());
 		}
 		
@@ -636,7 +636,7 @@ public class TCPunchAction extends HttpServlet{
 			);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060164]");
 			throw new Exception("Error [1516991094] - could not execute punch in SQL '" + sSQL + "' - " + e.getMessage());
 		}
 		
@@ -651,12 +651,12 @@ public class TCPunchAction extends HttpServlet{
 			rsTime.close();
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060165]");
 			throw new Exception("Error [1516991095] - could not get LOCALTIME with SQL '" + sSQL + "' - " + e.getMessage());
 		}
 		
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060166]");
 		
 		return sPunchOutTime;
 	}

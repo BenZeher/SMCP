@@ -56,7 +56,7 @@ public class TCEmployeeType extends java.lang.Object{
 			throw new Exception(e.getMessage());
 		}
     			
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060123]");
     }
  
 	public void load (
@@ -101,7 +101,7 @@ public class TCEmployeeType extends java.lang.Object{
 		try {
 			validateEntries(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060124]");
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -138,7 +138,7 @@ public class TCEmployeeType extends java.lang.Object{
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
 	 		clsDatabaseFunctions.rollback_data_transaction(conn);
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547060125]");
 	 		throw new Exception("Error [1508953664] saving " + ParamObjectName + " record with SQL: '" + SQL + "' - " + e.getMessage());
 	 	}
 
@@ -159,13 +159,13 @@ public class TCEmployeeType extends java.lang.Object{
 			//If something went wrong, we can't get the last ID:
 			if (get_slid().compareToIgnoreCase("") == 0){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547060126]");
 				throw new Exception("Error [1508953668] - record was saved but the ID is incorrect");
 			}
 	 	}
 	 	
 	 	clsDatabaseFunctions.commit_data_transaction(conn);
-	 	clsDatabaseFunctions.freeConnection(context, conn);
+	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547060127]");
     }
     
     public void updateEmployeeTypeLinksTable(String sEmployeeTypeID, ServletContext context, String sConf, HttpServletRequest req)throws Exception{
@@ -263,7 +263,7 @@ public class TCEmployeeType extends java.lang.Object{
     	Connection conn = null;
     	conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.getClass().getName() + "- user: " + sUser);
     	delete(slid, conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060122]");
     	return;
     	
     }

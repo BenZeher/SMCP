@@ -130,7 +130,7 @@ public class ManagerAccessControlEdit extends HttpServlet {
 					+ "</B></FONT><BR>");
 			}
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060116]");
     	out.println ("<TR><TD><INPUT TYPE=\"SUBMIT\" VALUE=\"----Save----\"></TD>");
     	out.println("</TABLE>");        	
     	out.println("</FORM>");

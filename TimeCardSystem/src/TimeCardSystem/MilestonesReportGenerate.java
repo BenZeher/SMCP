@@ -94,7 +94,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 					+ sMilstoneID + "' - " + e.getMessage());
 			}
 	    	
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060117]");
 
 		}	
 		

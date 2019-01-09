@@ -96,7 +96,7 @@ public class APVendorGroupEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!entry.delete(entry.getlid(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059494]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APVendorGroupSelection"
     					+ "?" + APVendorGroup.Paramlid + "=" + entry.getlid()
@@ -105,7 +105,7 @@ public class APVendorGroupEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059495]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APVendorGroupSelection"
     					+ "?" + APVendorGroup.Paramlid + "=" + entry.getlid()

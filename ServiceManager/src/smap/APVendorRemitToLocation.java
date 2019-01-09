@@ -186,10 +186,10 @@ public class APVendorRemitToLocation extends java.lang.Object{
     		throw new Exception("Counld not get connection to load vendor remit to location .");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547059498]");
     		throw new Exception("Error loading vendor remit to location  - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059499]");
     }
     
 
@@ -214,7 +214,7 @@ public class APVendorRemitToLocation extends java.lang.Object{
 		
 		//Validate entries
 		if(!validateEntries(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059500]");
 			return false;
 		}
 		
@@ -267,7 +267,7 @@ public class APVendorRemitToLocation extends java.lang.Object{
 		 		stmt.executeUpdate(SQL);
 		 		m_sNewRecord = "0";
 		 	}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547059501]");
 		 		m_sErrorMessageArray.add("Error updating record with SQL: " + " - " + e.getMessage());
 		 		return false;
 		}
@@ -276,7 +276,7 @@ public class APVendorRemitToLocation extends java.lang.Object{
 			rs.close();
 			
 			if(!validateEntries(conn)){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547059502]");
 				return false;
 			}
 			SQL = "INSERT INTO " + SMTableapvendorremittolocations.TableName + " ("
@@ -325,19 +325,19 @@ public class APVendorRemitToLocation extends java.lang.Object{
 				clsDatabaseFunctions.executeSQL(SQL, conn);
 				m_sNewRecord = "0";
 			}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547059503]");
 		 		m_sErrorMessageArray.add("Error inserting record with SQL: " +  " - " + e.getMessage());
 		 		m_sNewRecord = "1";
 		 		return false;
 			}
 	
 			//Change new record status
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059504]");
 
 			return true;			
     	}
 			}catch(SQLException e){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547059505]");
 				m_sErrorMessageArray.add("Error [1451316550] saving  - " + e.getMessage());
 				return false;
 			}

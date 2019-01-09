@@ -125,7 +125,7 @@ public class APVendorTerms extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059510]");
     	return bResult;
     	
     }
@@ -209,7 +209,7 @@ public class APVendorTerms extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUser);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059509]");
     	return bResult;	
     	
     }
@@ -295,7 +295,7 @@ public class APVendorTerms extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059508]");
     	return bResult;
     	
     }

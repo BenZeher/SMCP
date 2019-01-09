@@ -282,7 +282,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		
 		set_iposted("1");
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060553]");
 			throw new Exception ("Error [1391551297] - could not start data transaction.");
 		}
 		try {
@@ -290,16 +290,16 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		} catch (Exception e) {
 			set_iposted("0");
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060554]");
 			throw new Exception(e.getMessage());
 		}
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			set_iposted("0");
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060555]");
 			throw new Exception("Error [1391551799] committing transaction.");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547060556]");
     	return;
     }
 	private void savePostedEntries(Connection conn) throws Exception{
@@ -406,10 +406,10 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		try {
 			load(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060551]");
 			throw new Exception("Error loading - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547060552]");
 	}
 	private void load (Connection conn) throws Exception{
 			//Returns false if there is no record for this ID:
@@ -606,22 +606,22 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
     		throw new Exception("Error [1392135194] getting connection.");
     	}
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547060547]");
     		throw new Exception("Error [1392135195] starting data transaction.");
     	}
     	try {
 			delete_without_transaction(conn, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060548]");
 			throw new Exception("Error [1392135196] deleting - " + e.getMessage());
 		}
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547060549]");
 			throw new Exception("Error [1392135196] committing data transaction.");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060550]");
     }
     private void delete_without_transaction (Connection conn,  String sUserID) throws Exception{
     	

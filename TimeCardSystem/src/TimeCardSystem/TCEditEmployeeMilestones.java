@@ -519,12 +519,12 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 			 stmt.executeUpdate(sSQL);
 			}catch (SQLException e){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-			 	clsDatabaseFunctions.freeConnection(context, conn);
+			 	clsDatabaseFunctions.freeConnection(context, conn, "[1547060120]");
 			 	throw new Exception("Error [4489536150] saving " + "Employee Milestone" + " record with SQL: '" + sSQL + "' - " + e.getMessage());
 			 }
 				
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547060121]");
 	}
 
 	private String sGetJavascript() throws SQLException{

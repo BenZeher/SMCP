@@ -545,7 +545,7 @@ public class APPrintChecksEdit extends HttpServlet {
 		}
 		
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059474]");
 			throw new Exception("Error [1510845329] starting data transaction.");
 		}
 		
@@ -565,7 +565,7 @@ public class APPrintChecksEdit extends HttpServlet {
 			stmt.execute(SQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059475]");
 			throw new Exception("Error [1510845327] deleting unfinalized checks with SQL '" + SQL + "' - " + e.getMessage());
 		}
 		
@@ -583,18 +583,18 @@ public class APPrintChecksEdit extends HttpServlet {
 			stmt.execute(SQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059476]");
 			throw new Exception("Error [1510845331] deleting orhpaned check lines with SQL '" + SQL + "' - " + e.getMessage());
 		}
 		
 		//Commit the transaction:
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059477]");
 			throw new Exception("Error [1510845330] committing transaction to delete unfinalized checks.");
 		}
 		//Free the connection:
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059478]");
 		
 		return;
 		

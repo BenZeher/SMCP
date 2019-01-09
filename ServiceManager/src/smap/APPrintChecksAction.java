@@ -82,11 +82,11 @@ public class APPrintChecksAction extends HttpServlet {
 				sRedirectString += 
 					"&" + "Warning" + "=" + "Error [1504206296] displaying printed checks - " + e.getMessage()
 				;
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059463]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059464]");
 			out.println("</BODY></HTML>");
 			return;
 		}
@@ -98,12 +98,12 @@ public class APPrintChecksAction extends HttpServlet {
 				sRedirectString += 
 					"&" + "Warning" + "=" + "Error [1504206296] displaying printed checks - " + e.getMessage()
 				;
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059465]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
 			out.println("</BODY></HTML>");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059466]");
 			return;
 		}
 		
@@ -114,11 +114,11 @@ public class APPrintChecksAction extends HttpServlet {
 				sRedirectString += 
 					"&" + "Warning" + "=" + "Error [1504206396] reprinting selected checks - " + e.getMessage()
 				;
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059467]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059468]");
 			sRedirectString += "Status=" + "Checks were reset successfully.";
 			redirectProcess(sRedirectString, response);
 		}
@@ -138,11 +138,11 @@ public class APPrintChecksAction extends HttpServlet {
 				sRedirectString += 
 					"&" + "Warning" + "=" + "Error [1504206496] reprinting range of checks - " + e.getMessage()
 				;
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059469]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059470]");
 			sRedirectString += "&" + "Status=" + "Range of checks was reset successfully.";
 			redirectProcess(sRedirectString, response);
 		}
@@ -151,7 +151,7 @@ public class APPrintChecksAction extends HttpServlet {
 			if (request.getParameter(APPrintChecksEdit.CHECKBOX_CONFIRMING_SET_NEXT_CHECK_NUMBER) == null){
 				sRedirectString += 
 				"&" + "Warning" + "=" + "You chose to update the next check number, but did not click the 'Confirm' check box.";
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059471]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
@@ -162,11 +162,11 @@ public class APPrintChecksAction extends HttpServlet {
 				sRedirectString += 
 					"&" + "Warning" + "=" + "Error [1504206497] setting the next check number - " + e.getMessage()
 				;
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059472]");
 				redirectProcess(sRedirectString, response);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059473]");
 			sRedirectString += "&" + "Status=" + "Next check number was updated successfully.";
 			redirectProcess(sRedirectString, response);
 		}

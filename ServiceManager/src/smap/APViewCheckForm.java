@@ -120,12 +120,12 @@ public class APViewCheckForm extends HttpServlet {
 			sRedirectString += 
 				"&" + "Warning" + "=" + "Error [1503324720] displaying check form - " + e.getMessage()
 			;
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059513]");
 			redirectProcess(sRedirectString, response);
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059514]");
 		out.println("</BODY></HTML>");
 		
 	}

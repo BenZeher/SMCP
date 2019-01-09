@@ -489,11 +489,11 @@ public class APEditCheckFormsEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error [1502976881] deleting check form with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059457]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059458]");
 
 		return true;
 	}

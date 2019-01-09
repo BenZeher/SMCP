@@ -514,7 +514,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 				)
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059511]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + e.getMessage()
@@ -524,7 +524,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059512]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(sUserID,SMLogEntry.LOG_OPERATION_APVENDORTRANSACTIONS, "REPORT", "AP Vendor Transactions", "[1502477919]");

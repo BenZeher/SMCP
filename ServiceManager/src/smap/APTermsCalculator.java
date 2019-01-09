@@ -58,7 +58,7 @@ public class APTermsCalculator {
 		APVendorTerms terms = new APVendorTerms();
 		terms.setsTermsCode(m_stermscode);
 		if (!terms.load(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059479]");
 			throw new Exception("Error [1490647721] loading terms with code '" + m_stermscode + "' - " + terms.getErrorMessages());
 		}
 		BigDecimal bdDiscountPercent = new BigDecimal(terms.getsDiscountPercentage().replaceAll(",", ""));
@@ -85,7 +85,7 @@ public class APTermsCalculator {
 		try {
 			datInvoice = clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", m_sinvoicedate);
 		} catch (ParseException e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059480]");
 			throw new Exception("Error [1490647722] converting invoice date '" 
 				+ m_sinvoicedate
 				+ "' into java.sql.Date - " + e.getMessage()
@@ -154,7 +154,7 @@ public class APTermsCalculator {
 		}else{
 			m_sdiscountdate = SMUtilities.EMPTY_DATE_VALUE;
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547059481]");
 		return;
 	}
 	public String getDiscountAmountString(){

@@ -179,10 +179,10 @@ public class APVendorGroup extends java.lang.Object{
     		throw new Exception("Counld not get connection to load APVendorGroups.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547059485]");
     		throw new Exception("Error loading APVendorGroups - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059486]");
     }
     
 
@@ -208,7 +208,7 @@ public class APVendorGroup extends java.lang.Object{
 		
 		//Validate entries
 		if(!validateEntries()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059487]");
 			return false;
 		}
 		
@@ -254,7 +254,7 @@ public class APVendorGroup extends java.lang.Object{
 		 		stmt.executeUpdate(SQL);
 		 		m_sNewRecord = "0";
 		 	}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547059488]");
 		 		m_sErrorMessageArray.add("Error updating record with SQL: " + " - " + e.getMessage());
 		 		return false;
 		}
@@ -263,7 +263,7 @@ public class APVendorGroup extends java.lang.Object{
 			rs.close();
 			
 			if(!validateEntries()){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547059489]");
 				return false;
 			}
 			SQL = "INSERT INTO " + SMTableapvendorgroups.TableName + " ("
@@ -302,7 +302,7 @@ public class APVendorGroup extends java.lang.Object{
 				clsDatabaseFunctions.executeSQL(SQL, conn);
 				m_sNewRecord = "0";
 			}catch (SQLException e){
-		 		clsDatabaseFunctions.freeConnection(context, conn);
+		 		clsDatabaseFunctions.freeConnection(context, conn, "[1547059490]");
 		 		m_sErrorMessageArray.add("Error inserting record with SQL: " +  " - " + e.getMessage());
 		 		m_sNewRecord = "1";
 		 		return false;
@@ -319,7 +319,7 @@ public class APVendorGroup extends java.lang.Object{
 					}
 					rs.close();
 				} catch (SQLException e) {
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547059491]");
 					m_sErrorMessageArray.add("Could not get last ID number - " + e.getMessage());
 				}
 				//If something went wrong, we can't get the last ID:
@@ -328,12 +328,12 @@ public class APVendorGroup extends java.lang.Object{
 				}
 	
 			//Change new record status
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059492]");
 
 			return true;			
     	}
 			}catch(SQLException e){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547059493]");
 				m_sErrorMessageArray.add("Error [1450322005] saving  - " + e.getMessage());
 				return false;
 			}

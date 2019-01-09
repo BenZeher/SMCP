@@ -200,7 +200,7 @@ public class APVendor extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059483]");
     	return bResult;
     	
     }
@@ -303,7 +303,7 @@ public class APVendor extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUserFullName, sUserID, sCompany, bSavingNewVendor);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059484]");
     	return bResult;	
     	
     }
@@ -689,7 +689,7 @@ public class APVendor extends clsMasterEntry{
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059482]");
     	return;
     }
     public void delete (Connection conn) throws Exception{

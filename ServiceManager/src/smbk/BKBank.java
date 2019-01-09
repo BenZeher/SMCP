@@ -160,10 +160,10 @@ public class BKBank extends clsMasterEntry{
     	try {
 			load (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060543]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060544]");
     }
     public boolean load (Connection conn) throws Exception{
     	return load (m_slid, conn);
@@ -301,10 +301,10 @@ public class BKBank extends clsMasterEntry{
     	try {
 			save_without_data_transaction (conn, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060545]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060546]");
     	
     }
     public void save_without_data_transaction (Connection conn, String sUserID) throws Exception{
@@ -458,10 +458,10 @@ public class BKBank extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060541]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060542]");
     }
     public void delete (Connection conn) throws Exception{
     	

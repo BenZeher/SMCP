@@ -54,7 +54,7 @@ public class TCMADGICEventType extends java.lang.Object{
 			throw new Exception(e.getMessage());
 		}
     			
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060151]");
     }
  
 	public void load (
@@ -100,7 +100,7 @@ public class TCMADGICEventType extends java.lang.Object{
 		try {
 			validateEntries(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060152]");
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -122,7 +122,7 @@ public class TCMADGICEventType extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547060153]");
 	 		throw new Exception("Error [1486569846] saving " + ParamObjectName + " record - " + e.getMessage());
 	 	}
 
@@ -145,7 +145,7 @@ public class TCMADGICEventType extends java.lang.Object{
 				throw new Exception("Error [1486569846] - record was saved but the ID is incorrect");
 			}
 	 	}
-	 	clsDatabaseFunctions.freeConnection(context, conn);
+	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547060154]");
     }
     private void validateEntries(Connection conn) throws Exception{
     	
@@ -178,7 +178,7 @@ public class TCMADGICEventType extends java.lang.Object{
     	Connection conn = null;
     	conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.getClass().getName() + "- user: " + sUser);
     	delete(slid, conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060150]");
     	return;
     	
     }

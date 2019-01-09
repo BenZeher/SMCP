@@ -66,7 +66,7 @@ public class TCMADGICEvent extends java.lang.Object{
 			throw new Exception(e.getMessage());
 		}
     			
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060131]");
     }
  
 	public void load (
@@ -113,7 +113,7 @@ public class TCMADGICEvent extends java.lang.Object{
 		try {
 			validateEntries(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060132]");
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -155,7 +155,7 @@ public class TCMADGICEvent extends java.lang.Object{
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
 	 		clsDatabaseFunctions.rollback_data_transaction(conn);
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547060133]");
 	 		throw new Exception("Error [1486653655] saving " + ParamObjectName + " record with SQL: '" + SQL + "' - " + e.getMessage());
 	 	}
 
@@ -176,7 +176,7 @@ public class TCMADGICEvent extends java.lang.Object{
 			//If something went wrong, we can't get the last ID:
 			if (get_slid().compareToIgnoreCase("") == 0){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547060134]");
 				throw new Exception("Error [1486653656] - record was saved but the ID is incorrect");
 			}
 	 	}
@@ -186,12 +186,12 @@ public class TCMADGICEvent extends java.lang.Object{
 			saveEmployees(get_slid(), conn, req);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547060135]");
 			throw new Exception("Error [1486741495] - could not save employees - " + e.getMessage());
 		}
 	 	
 	 	clsDatabaseFunctions.commit_data_transaction(conn);
-	 	clsDatabaseFunctions.freeConnection(context, conn);
+	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547060136]");
     }
     
     private void saveEmployees(String slid, Connection conn, HttpServletRequest req) throws Exception{
@@ -290,7 +290,7 @@ public class TCMADGICEvent extends java.lang.Object{
     	Connection conn = null;
     	conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.getClass().getName() + "- user: " + sUser);
     	delete(slid, conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547060137]");
     	return;
     	
     }

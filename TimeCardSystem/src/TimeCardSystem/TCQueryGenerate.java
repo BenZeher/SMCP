@@ -352,7 +352,7 @@ public class TCQueryGenerate extends HttpServlet {
     			(sQueryTitle.trim().compareToIgnoreCase("") == 0)
     			|| (sQueryString.trim().compareToIgnoreCase("") == 0)
     	){
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060172]");
     		sWarning = "You must enter a query title and a query string.";
     		String sRedirect = clsServletUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     		+ TCQuerySelect.PARAM_QUERYTITLE + "=" + sQueryTitle
@@ -425,7 +425,7 @@ public class TCQueryGenerate extends HttpServlet {
     		
     		out.println("Could not print query '" + sQueryString + "' - " + qry.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060173]");
 	    out.println("</BODY></HTML>");
 	}
 	private String replaceQueryParameters(String sQuery, HttpServletRequest req, PrintWriter pwOut) throws Exception{

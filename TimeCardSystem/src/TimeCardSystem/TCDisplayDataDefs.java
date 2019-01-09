@@ -137,13 +137,13 @@ public class TCDisplayDataDefs  extends HttpServlet {
 				printTableDefs(arrTables.get(i), conn, out);
 			} catch (SQLException e) {
 				out.println("<BR>Error getting table defs for table '" + arrTables.get(i) + " - " + e.getMessage());
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060118]");
 				out.println("</BODY></HTML>");
 				return;
 			}
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060119]");
 		
 		out.println("<BR>Printed definitions for <B>" + arrTables.size() + "</B> tables.<BR>");
 		out.println("</BODY></HTML>");

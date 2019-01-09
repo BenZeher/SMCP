@@ -140,7 +140,7 @@ public class APViewTransactionInformation  extends HttpServlet {
 				sLicenseModuleLevel)
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059515]");
     		redirectAfterError(
     				getServletContext(), 
     				sCallingClass, 
@@ -153,7 +153,7 @@ public class APViewTransactionInformation  extends HttpServlet {
 			return;
 		}
 	    
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059516]");
 	    return;
 	    
 	}

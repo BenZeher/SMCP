@@ -203,10 +203,10 @@ public class APOptions extends java.lang.Object{
     		throw new Exception("Counld not get connection to load APOptions.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547059459]");
     		throw new Exception("Error loading APOptions - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547059460]");
     }
     
 
@@ -246,12 +246,12 @@ public class APOptions extends java.lang.Object{
     		Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547059461]");
 			m_sErrorMessageArray.add("Error updating record with SQL: " + SQL + " - " + e.getMessage());
 			return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547059462]");
 		
 		return true;
     }

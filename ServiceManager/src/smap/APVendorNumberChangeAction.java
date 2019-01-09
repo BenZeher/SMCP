@@ -117,7 +117,7 @@ public class APVendorNumberChangeAction extends HttpServlet{
 		} catch (Exception e) {
 		    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 		    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_APRENUMBER, sDesc, "Error: " + e.getMessage(), "[1507559683]");
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059496]");
 	    	m_sWarning = e.getMessage();
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -129,7 +129,7 @@ public class APVendorNumberChangeAction extends HttpServlet{
 	    
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_APRENUMBER, sDesc, "Successful", "[1507559682]");
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547059497]");
     	String sFunction = "CHANGED TO";
     	if (bIsMerge){
     		sFunction = "MERGED INTO";

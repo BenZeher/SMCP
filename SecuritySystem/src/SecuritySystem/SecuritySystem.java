@@ -299,6 +299,9 @@ public class SecuritySystem {
 		//In case this fails, we don't want to keep trying to do it:
 		setRestartFlag(false);
 		String sCommand = SSConstants.RESTART_PROGRAM_COMMAND;
+		writeControllerLogEntry(
+				"[1547063484] - Attempting to restart securitysystem with command: '" + sCommand + "'.",
+				1);
 		try {
 			SSUtilities.executeSystemCommand(sCommand);
 		} catch (Exception e) {

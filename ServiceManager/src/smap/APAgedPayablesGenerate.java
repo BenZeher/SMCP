@@ -487,7 +487,7 @@ public class APAgedPayablesGenerate extends HttpServlet {
 				)
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1546998936]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + e.getMessage()
@@ -497,7 +497,7 @@ public class APAgedPayablesGenerate extends HttpServlet {
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998937]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "AP Aged Payables", "[1495576478]");

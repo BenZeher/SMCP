@@ -147,7 +147,7 @@ public class SMCreateInvoice extends java.lang.Object{
 		cInvoice.setM_iTransactionType(SMInvoice.TransactionTypeInvoice);
 		cInvoice.setM_mInvoiceComments(cOrder.getM_mInvoiceComments());
 		
-		System.out.println("[1545229555] - mInvoiceComments = '" + cInvoice.getM_mInvoiceComments());
+		//System.out.println("[1545229555] - mInvoiceComments = '" + cInvoice.getM_mInvoiceComments());
 		
 		cInvoice.setM_iOrderSourceID(Integer.parseInt(cOrder.getM_iOrderSourceID()));
 		cInvoice.setM_sOrderSourceDesc(cOrder.getM_sOrderSourceDesc());

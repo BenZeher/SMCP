@@ -87,6 +87,27 @@ public class clsDatabaseFunctions {
 			return false;
 		}
 	}
+	
+	public static boolean freeConnection(ServletContext context, Connection conn, String sDiagnosticMarker){
+		
+		try {
+			PoolUtilities.freeConnection(context, conn, sDiagnosticMarker);
+			return true;
+		}catch (Exception e){
+			java.util.Date todaysDate = new java.util.Date();
+			SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+			String formattedDate = formatter.format(todaysDate);
+			System.out.println("[1479228065] Error in freeConnection - " 
+				+ formattedDate + " - error: " 
+				+ e.getMessage()
+			);
+			//If it's just a 'context is null' error, then we can return true and move on:
+			if (e.getMessage().contains("[1516370817]")){
+				return true;
+			}
+			return false;
+		}
+	}
 
 	public static boolean executeSQL(String SQLStatement, Connection conn) throws SQLException{
 		return PoolUtilities.executeSQL(SQLStatement, conn);

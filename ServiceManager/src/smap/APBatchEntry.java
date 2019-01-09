@@ -1731,11 +1731,11 @@ public class APBatchEntry {
 		try {
 			update_check_reversal_data(conn, sUser);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998960]");
 			throw new Exception(e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998961]");
 		
 		return;
 		
@@ -1915,11 +1915,11 @@ public class APBatchEntry {
 		try {
 			addDefaultInvoiceLine(conn, sUser);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998957]");
 			throw new Exception("Error [1520013822] - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998958]");
 		return;
 	}
 	
@@ -2009,7 +2009,7 @@ public class APBatchEntry {
 		} catch (Exception e) {
 			throw new Exception("Error [1489508150] loading - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998959]");
 		
 	}
 	

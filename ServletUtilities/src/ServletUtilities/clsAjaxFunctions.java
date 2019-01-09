@@ -29,7 +29,7 @@ public class clsAjaxFunctions {
 					ajax_Update(conn,SQLCommand);	
 					
 				} catch (Exception e) {
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1546998927]");
 					throw new Exception("Error [1529689042] saving - " + e.getMessage());
 				}
 				

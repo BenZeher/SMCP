@@ -89,7 +89,7 @@ public class AP1099CPRSCodesEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!entry.delete(entry.getlid(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998931]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.AP1099CPRSCodesSelection"
     					+ "?" + AP1099CPRSCodes.Paramlid + "=" + entry.getlid()
@@ -97,7 +97,7 @@ public class AP1099CPRSCodesEdit extends HttpServlet {
     				);
 					return;
 			    }else{
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998932]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.AP1099CPRSCodesSelection"
     					+ "?" + AP1099CPRSCodes.Paramlid + "=" + entry.getlid()

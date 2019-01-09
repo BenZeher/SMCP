@@ -257,7 +257,7 @@ public class APBatch {
 				SMUtilities.getFullClassName(this.toString()) + ".save_with_data_transaction - user: '" + sUserID + "'");
 
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998948]");
 			throw new Exception("Error [1488918751] could not get data connection.");
 		}
 
@@ -265,11 +265,11 @@ public class APBatch {
 			save_without_data_transaction(conn, sUserID, sUsersFullName, bBatchIsBeingPosted);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998949]");
 			throw new Exception("Error [1488918752] saving - " + e.getMessage());
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998950]");
 		return;
 	}
 	private void validate_fields(Connection conn, String sUserID, boolean bBatchIsBeingPosted) throws Exception{
@@ -418,7 +418,7 @@ public class APBatch {
 		try {
 			clsDatabaseFunctions.start_data_transaction(conn);
 		} catch (Exception e3) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998951]");
 			throw new Exception(e3.getMessage());
 		}
 		
@@ -426,7 +426,7 @@ public class APBatch {
 			entry.save_without_data_transaction(conn, sUserID, false);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998952]");
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -437,7 +437,7 @@ public class APBatch {
 			loadBatch(conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998953]");
 			throw new Exception("Error [1520615104] re-loading batch - " + e.getMessage());
 		}
 		
@@ -455,7 +455,7 @@ public class APBatch {
 			stmt.execute(SQL);
 		} catch (Exception e2) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998954]");
 			throw new Exception(e2.getMessage());
 		}
 		
@@ -463,11 +463,11 @@ public class APBatch {
 			clsDatabaseFunctions.commit_data_transaction(conn);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998955]");
 			throw new Exception(e1.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998956]");
 
 		return entry.getslid();
 	}
@@ -491,7 +491,7 @@ public class APBatch {
 			throw new Exception("Error [1489175149] loading batch number " + getsbatchnumber() + " - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998941]");
 		
 	}
 	
@@ -699,11 +699,11 @@ public class APBatch {
 		try {
 			loadEntries(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998942]");
 			throw new Exception("Error [1489357919] loading AP Batch Entries - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998943]");
 	}
 	private void loadEntries(Connection conn) throws Exception{
 		//Load the entries:
@@ -866,20 +866,20 @@ public class APBatch {
 	    	try {
 	    		unsetPostingFlag(conn);
 	    	} catch (Exception e1) {
-	    		clsDatabaseFunctions.freeConnection(context, conn);
+	    		clsDatabaseFunctions.freeConnection(context, conn, "[1546998944]");
 	    		throw new Exception("Error [1489704632] UNsetting AP posting flag - " + e1.getMessage());
 	    	}
-	    	clsDatabaseFunctions.freeConnection(context, conn);
+	    	clsDatabaseFunctions.freeConnection(context, conn, "[1546998945]");
 			throw new Exception("Error [1489771735] posting - " + e.getMessage());
 		}
     	clsDatabaseFunctions.commit_data_transaction(conn);
     	try {
     		unsetPostingFlag(conn);
     	} catch (Exception e) {
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1546998946]");
     		throw new Exception("Error [1489704332] UNsetting AP posting flag - " + e.getMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1546998947]");
     	return;
     }    
     

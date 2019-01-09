@@ -110,7 +110,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
     		throw new Exception("Counld not get connection to load AP1099CPRSCodes.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1546998929]");
     		throw new Exception("Error loading AP1099CPRSCodes - " + getErrorMessages());
     	}
     	clsDatabaseFunctions.freeConnection(context, conn);
@@ -139,7 +139,7 @@ public class AP1099CPRSCodes extends java.lang.Object{
 		
 		//Validate entries
 		if(!validateEntries()){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1546998930]");
 			return false;
 		}
 		

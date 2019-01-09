@@ -90,7 +90,7 @@ public class APAutoCreatePaymentBatchAction extends HttpServlet{
 				)
 			;
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998938]");
 			String sWarning = "Failed to create payment batch - " + e.getMessage();
 			if (sWarning.length() > MAX_ERROR_LENGTH){
 				sWarning = sWarning.substring(0, MAX_ERROR_LENGTH) + "...";
@@ -107,7 +107,7 @@ public class APAutoCreatePaymentBatchAction extends HttpServlet{
 		try {
 			autopaymentbatch.save_with_data_transaction(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName(), false);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998939]");
 			String sWarning = "Could not SAVE payment batch - " + e.getMessage();
 			if (sWarning.length() > MAX_ERROR_LENGTH){
 				sWarning = sWarning.substring(0, MAX_ERROR_LENGTH) + "...";
@@ -120,7 +120,7 @@ public class APAutoCreatePaymentBatchAction extends HttpServlet{
 			return;
 
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998940]");
 		response.sendRedirect(
 			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smap.APEditBatchesSelect" + "?"
 			+ "Status=" + "Successfully created payment batch " + autopaymentbatch.getsbatchnumber() + "."

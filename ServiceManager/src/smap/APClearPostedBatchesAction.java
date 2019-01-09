@@ -84,7 +84,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 		try {
 			datClearingDate = clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sClearingDate);
 		} catch (ParseException e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998964]");
 	    	m_sWarning = "Error [1489596341] - Invalid clearing date: '" + sClearingDate + "' - " + e1.getMessage();
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -95,7 +95,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 		}
 		
 	    if (request.getParameter("ConfirmClear") == null){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998965]");
 	    	m_sWarning = "You chose to clear, but did not check the box to confirm.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -107,7 +107,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 
 	    try{
 	    	if(!clsDatabaseFunctions.start_data_transaction(conn)){
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998966]");
 	    		m_sWarning = "Error [1489596342] - Could not start data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -158,7 +158,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 	    	//System.out.println("[1489678049] " + this.toString() + " SQL = " + SQL);
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998967]");
 	    		m_sWarning = "Error [1489596767] - Could not execute delete statement with SQL: " + SQL + ".";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -185,7 +185,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 	    	//System.out.println("In " + this.toString() + " second SQL = " + SQL);
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998968]");
 	    		m_sWarning = "Error [1489596768] - Could not delete empty batches in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -208,7 +208,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 		    	;
 		    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 		    		clsDatabaseFunctions.rollback_data_transaction(conn);
-		    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998969]");
 		    		m_sWarning = "Error [1489596926] - Could not delete GL Export Header records in the range.";
 					response.sendRedirect(
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -230,7 +230,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 		    	;
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998970]");
 	    		m_sWarning = "Error [1489597008] - Could not delete GL Export Detail records in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -241,7 +241,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 	    	}
 	    	
 	    	if(!clsDatabaseFunctions.commit_data_transaction(conn)){
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998971]");
 	    		m_sWarning = "Error [1489597009] - Could not commit data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -253,7 +253,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 	    	
 	    }catch(SQLException e){
 	    	m_sWarning = "Error [1489597010] - deleting batches - " + e.getMessage();
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998972]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + m_sWarning
@@ -261,7 +261,7 @@ public class APClearPostedBatchesAction extends HttpServlet{
 			);
 			return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998973]");
 		m_sWarning = "Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.";
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

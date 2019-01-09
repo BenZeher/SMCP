@@ -35,7 +35,7 @@ public class clsDBServerTime {
 			throw new Exception("Error [1494245341] getting connection to read DB server time - " + e.getMessage());
 		}
 		readTimeFromDB(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998928]");
 	}
 	
 	private void readTimeFromDB(Connection conn) throws Exception{

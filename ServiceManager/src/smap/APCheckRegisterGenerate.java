@@ -129,7 +129,7 @@ public class APCheckRegisterGenerate extends HttpServlet {
 			);
 			
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998962]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 		    		+ SMTableapbatches.lbatchnumber + "=" + sBatchNumber
@@ -140,7 +140,7 @@ public class APCheckRegisterGenerate extends HttpServlet {
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998963]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(sUserID,SMLogEntry.LOG_OPERATION_APCHECKREGISTER, "REPORT", "AP Check Register", "[1505916783]");

@@ -453,7 +453,7 @@ public class APCheck {
 		} catch (Exception e) {
 			throw new Exception("Error [1489509150] loading - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1546998961]");
 		
 	}
 	public void load(Connection conn, String sUserID, String sLid) throws Exception{

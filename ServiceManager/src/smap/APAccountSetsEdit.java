@@ -94,7 +94,7 @@ public class APAccountSetsEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!entry.delete(entry.getlid(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998932]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APAccountSetsSelection"
     					+ "?" + APAccountSet.Paramlid + "=" + entry.getlid()
@@ -103,7 +103,7 @@ public class APAccountSetsEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998933]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APAccountSetsSelection"
     					+ "?" + APAccountSet.Paramlid + "=" + entry.getlid()
@@ -145,7 +145,7 @@ public class APAccountSetsEdit extends HttpServlet {
 					"MySQL",
 					this.toString() + ".doPost - User: " + smedit.getUserName());
 			if (!entry.save(conn)){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998934]");
 				//Set attribute before reloading the screen
 				smedit.getCurrentSession().setAttribute(APAccountSet.ParamObjectName, entry);
 				//'Resubmit' the screen (without the submit button parameter)
@@ -157,7 +157,7 @@ public class APAccountSetsEdit extends HttpServlet {
 				);
 		        return;
 			}else{
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998935]");
 				 sSaveStatus = "Account set '" + entry.getlid() + "' saved successfully.";
 			}
 			

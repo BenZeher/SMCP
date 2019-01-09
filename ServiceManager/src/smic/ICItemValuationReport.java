@@ -112,7 +112,7 @@ public class ICItemValuationReport extends java.lang.Object{
 					break;
 				case 1:
 					if(bQuantitiesIncluded){
-						SQL = SQL + " OR (" + SMTableicitemlocations.TableName + "." 
+						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
 							+ SMTableicitemlocations.sTotalCost + " > 0.00" + ") )";
 					}else{
 						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
@@ -123,7 +123,7 @@ public class ICItemValuationReport extends java.lang.Object{
 					break;
 				case 2:
 					if(bQuantitiesIncluded){
-						SQL = SQL + " OR (" + SMTableicitemlocations.TableName + "." 
+						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
 								+ SMTableicitemlocations.sTotalCost + " = 0.00" + ") )";
 					}else{
 						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
@@ -133,7 +133,7 @@ public class ICItemValuationReport extends java.lang.Object{
 					break;
 				case 3:
 					if(bQuantitiesIncluded){
-						SQL = SQL + " OR (" + SMTableicitemlocations.TableName + "." 
+						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
 								+ SMTableicitemlocations.sTotalCost + " < 0.00" + ") )";
 					}else{
 						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
@@ -143,7 +143,7 @@ public class ICItemValuationReport extends java.lang.Object{
 					break;
 				case 4:
 					if(bQuantitiesIncluded){
-						SQL = SQL + " OR (" + SMTableicitemlocations.TableName + "." 
+						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
 								+ SMTableicitemlocations.sTotalCost + " != 0.00" + ") ) ";
 					}else{
 						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 

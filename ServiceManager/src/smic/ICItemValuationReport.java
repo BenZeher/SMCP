@@ -111,43 +111,34 @@ public class ICItemValuationReport extends java.lang.Object{
 				case 0:
 					break;
 				case 1:
+					SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
+							+ SMTableicitemlocations.sTotalCost + " > 0.00" + ") ";
 					if(bQuantitiesIncluded){
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-							+ SMTableicitemlocations.sTotalCost + " > 0.00" + ") )";
-					}else{
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " > 0.00" + ") ";
+						SQL = SQL + " )";
 					}
-
 					bCostIncluded = true;
 					break;
 				case 2:
+					SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
+							+ SMTableicitemlocations.sTotalCost + " = 0.00" + ") ";
 					if(bQuantitiesIncluded){
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " = 0.00" + ") )";
-					}else{
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " = 0.00" + ") ";
+						SQL = SQL + " )";
 					}
 					bCostIncluded = true;
 					break;
 				case 3:
+					SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
+							+ SMTableicitemlocations.sTotalCost + " < 0.00" + ") ";
 					if(bQuantitiesIncluded){
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " < 0.00" + ") )";
-					}else{
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " < 0.00" + ") ";
+						SQL = SQL + " )";
 					}
 					bCostIncluded = true;
 					break;
 				case 4:
+					SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
+							+ SMTableicitemlocations.sTotalCost + " != 0.00 )";
 					if(bQuantitiesIncluded){
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " != 0.00" + ") ) ";
-					}else{
-						SQL = SQL + " AND (" + SMTableicitemlocations.TableName + "." 
-								+ SMTableicitemlocations.sTotalCost + " != 0.00" + ") ";
+						SQL = SQL + " )";
 					}
 					bCostIncluded = true;
 					break;

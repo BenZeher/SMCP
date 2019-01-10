@@ -208,7 +208,7 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	);
     	
     	if (conACCPAC == null){
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080805]");
     		sWarning = "Could not get connection to Service Manager data.";
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -282,8 +282,8 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 	    		sWarning = "";
 	    	}
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conACCPAC);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080806]");
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conACCPAC, "[1547080807]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Status=" + sStatus

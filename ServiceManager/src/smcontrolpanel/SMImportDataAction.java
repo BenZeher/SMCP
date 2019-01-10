@@ -405,7 +405,7 @@ public class SMImportDataAction extends HttpServlet {
 		try{
 			Statement stmt = conn.createStatement();
 			stmt.execute(sSQL);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080563]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -415,7 +415,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080564]");
 			}
 			throw new SQLException("ERROR [1538072982] "+e.getMessage());
 		}
@@ -435,7 +435,7 @@ public class SMImportDataAction extends HttpServlet {
 			SQLWarning w = conn.getWarnings();
 			if(w != null)
 				warning.add(w);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080565]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -445,7 +445,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080566]");
 			}
 			throw new SQLException("ERROR [1538072982] "+e.getMessage());
 		}
@@ -466,7 +466,7 @@ public class SMImportDataAction extends HttpServlet {
 			SQLWarning w = conn.getWarnings();
 			if(w != null)
 				warning.add(w);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080571]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -476,7 +476,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080572]");
 			}
 			throw new SQLException("ERROR [1538072982] "+e.getMessage());
 		}
@@ -524,7 +524,7 @@ public class SMImportDataAction extends HttpServlet {
 			SQLWarning w = conn.getWarnings();
 			if(w != null)
 				warning.add(w);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080567]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -534,7 +534,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080568]");
 			}
 			throw new SQLException("ERROR [1538073042] "+e.getMessage());
 		}
@@ -581,7 +581,7 @@ public class SMImportDataAction extends HttpServlet {
 			SQLWarning w = conn.getWarnings();
 			if(w != null)
 				warning.add(w);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080573]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -591,7 +591,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080574]");
 			}
 			throw new SQLException("ERROR [1538073042] "+e.getMessage());
 		}
@@ -707,7 +707,7 @@ public class SMImportDataAction extends HttpServlet {
 			SQLWarning w = conn.getWarnings();
 			if(w != null)
 				warning.add(w);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080569]");
 		}catch(Exception e){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
 			log.writeEntry(
@@ -717,7 +717,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080570]");
 			}
 			throw new SQLException("ERROR [1538072905]"+e.getMessage());
 		}
@@ -787,7 +787,7 @@ public class SMImportDataAction extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			System.out.println(sSQL);
 			iNumberOfRecords = stmt.executeUpdate(sSQL);
-		    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080561]");
 		}catch (Exception ex) {
 			// handle any errors
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
@@ -798,7 +798,7 @@ public class SMImportDataAction extends HttpServlet {
 					"Command: " + sSQL,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080562]");
 			}
 			throw new SQLException("ERROR [1538073115] "+ex.getMessage());
 		}

@@ -329,7 +329,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		}
 
 		boolean bResult = load (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080914]");
 		return bResult;
 
 	}
@@ -561,30 +561,30 @@ public class ICPOInvoice extends clsMasterEntry{
 		}
 
 		if (!validate_entry_fields(conn, sUserID)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080915]");
 			return false;
 		}
 
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			super.addErrorMessage("Error starting data transaction.");
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080916]");
 			return false;
 		}
 
 		SMLogEntry log = new SMLogEntry(sConf, context);
 		if(!save_without_data_transaction (conn, sUser, log)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080917]");
 			return false;
 		}
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			super.addErrorMessage("Error committing data transaction.");
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080918]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080919]");
 		return true;	
 
 	}
@@ -1091,7 +1091,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		}
 
 		boolean bResult = delete (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080913]");
 		return bResult;
 
 	}
@@ -1297,7 +1297,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			throw new Exception("Error [1490661237] validating - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080920]");
 		
 		return;
 	}

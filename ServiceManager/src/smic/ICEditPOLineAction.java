@@ -150,7 +150,7 @@ public class ICEditPOLineAction extends HttpServlet{
 			} catch (Exception e) {
 				sWarning = "Could not add item to order - " + e.getMessage();
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080840]");
 			smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
 			smaction.redirectAction(
 				sWarning, 
@@ -210,7 +210,7 @@ public class ICEditPOLineAction extends HttpServlet{
 					SMUtilities.getFullClassName(this.toString()) + ".doPost - user: " + smaction.getUserName()
 			);
 			entry.updateMostRecentCost(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080841]");
 			smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
 			smaction.redirectAction(
 				"", 
@@ -232,7 +232,7 @@ public class ICEditPOLineAction extends HttpServlet{
 						SMUtilities.getFullClassName(this.toString()) + ".doPost - user: " + smaction.getUserName()
 				);
 				entry.updateVendorItem(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080842]");
 				smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
 				smaction.redirectAction(
 					"", 

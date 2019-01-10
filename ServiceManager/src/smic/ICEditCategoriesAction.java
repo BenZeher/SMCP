@@ -50,7 +50,7 @@ public class ICEditCategoriesAction extends HttpServlet{
 			this.toString() + ".doPost - User: " + sUserID + " - " + sUserFullName);
 		//Need a connection here because it involves a data transaction:
 		if(!category.save(sUserFullName, sUserID, sCompanyName, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080822]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditCategoriesEdit"
 					+ "?" + category.getQueryString()
@@ -59,7 +59,7 @@ public class ICEditCategoriesAction extends HttpServlet{
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080823]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditCategoriesEdit"
 				+ "?" + category.getQueryString()

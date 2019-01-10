@@ -132,7 +132,7 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 	    }
 	    
 	    if (!clsDatabaseFunctions.start_data_transaction(conn)){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080741]");
 	    	out.println("Error [1534454270] starting database transaction");
 			out.println("</BODY></HTML>");
 			return;
@@ -165,7 +165,7 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 	    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 	    }catch (SQLException ex){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080742]");
 	    	out.println("Error [1534454271] updating financial statement forms with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
@@ -179,7 +179,7 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 				java.sql.ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (!rs.next()){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080743]");
 			    	out.println("Error [1534454272] getting last insert ID with SQL: " + sSQL);
 					out.println("</BODY></HTML>");
 					return;
@@ -189,7 +189,7 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 				}
 			} catch (SQLException e) {
 		    	clsDatabaseFunctions.rollback_data_transaction(conn);
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080744]");
 		    	out.println("Error [1534454273] getting last insert ID with SQL: " + sSQL);
 				out.println("</BODY></HTML>");
 				return;
@@ -198,12 +198,12 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 	    
 	    if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080745]");
 	    	out.println("Error [1534454274] - Unable to commit data transaction.");
 				out.println("</BODY></HTML>");
 				return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080746]");
 		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditFinancialStatementsEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

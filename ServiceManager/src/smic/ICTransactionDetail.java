@@ -55,7 +55,7 @@ public class ICTransactionDetail extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUser);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080991]");
     	return bResult;	
     	
     }

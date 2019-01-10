@@ -50,13 +50,13 @@ public class SMAddNewConnection extends HttpServlet{
 	    		alConnections.add(clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "test - " + USDateTimeformatter.format(new Date(System.currentTimeMillis()))));
 	    	}
 	    	//create a new connection now - because all the existing connections are 'tied up', this will force the program to open a new connection:
-	    	Connection c = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "test - " + USDateTimeformatter.format(new Date(System.currentTimeMillis())));
+	    	Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "test - " + USDateTimeformatter.format(new Date(System.currentTimeMillis())));
 	    	
 	    	try{
 	    		//now free all connections - this leaves us with a new list of 'free' connections, including the one we just created:
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), c);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080401]");
 	    		while (!alConnections.isEmpty()){
-	    			clsDatabaseFunctions.freeConnection(getServletContext(), (Connection) alConnections.get(0));
+	    			clsDatabaseFunctions.freeConnection(getServletContext(), (Connection) alConnections.get(0), "[1547080400]");
 	    			alConnections.remove(0);
 	    		}
 	    	}catch (Exception ex){

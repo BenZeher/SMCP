@@ -99,7 +99,7 @@ public class ICPrintPOGenerate extends HttpServlet {
     			out)){
     		out.println("Could not print PO's - " + po.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080949]");
 	    out.println("</BODY></HTML>");
 	}
 }

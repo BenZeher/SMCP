@@ -62,7 +62,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
     	    		//Since the screen this was called from doesn't have all the order data on it, we need to load the order itself first:
     	    		if(!entry.load(conn)){
 	       				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080522]");
             			smaction.redirectAction( 
     					"Error cloning order: " + entry.getErrorMessages(), 
     					"",
@@ -86,7 +86,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
 					} catch (Exception e1) {
 						System.out.println("[1494256591] - " + e1.getMessage());
 	       				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080523]");
             			smaction.redirectAction( 
     					"Error cloning order: " + e1.getMessage(), 
     					"",
@@ -103,7 +103,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
 					} catch (Exception e) {
 						//System.out.println("[1494256592] - " + e.getMessage());
         				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080524]");
             			smaction.redirectAction( 
     					"Error cloning order: " + e.getMessage(), 
     					"",
@@ -119,7 +119,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
     									     "Clone_Order")){
         				System.out.println("[1494256593] - " + newOrder.getErrorMessages());
         				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080525]");
             			smaction.redirectAction( 
     					"Error cloning order: " + newOrder.getErrorMessages(), 
     					"",
@@ -128,7 +128,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
         				
         			}else{
         				clsDatabaseFunctions.commit_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080526]");
             			smaction.redirectAction( 
             					"", 
             					"Order #" + entry.getM_sOrderNumber() + " cloned successfully.",
@@ -160,7 +160,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
 				return;
     		}
     		if (entry.validate_for_invoicing(conn)){
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080527]");
 				String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 				+ "smcontrolpanel.SMCreateMultipleInvoicesSelection"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -172,7 +172,7 @@ public class SMEditOrderTotalsAction extends HttpServlet{
 				redirectProcess(sRedirectString, response);
 				return;
     		}else{
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080528]");
 				smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 				entry.getErrorMessages(), 

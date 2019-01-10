@@ -341,7 +341,7 @@ public class ICEntryBatch {
     	Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", "smic.ICEntryBatch");
     	
     	if(!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080858]");
     		return false;
     	}
     	
@@ -406,16 +406,16 @@ public class ICEntryBatch {
     	
     	//We do all this in a transaction, so we can roll it back:
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080850]");
     		return false;
     	}
     	
     	if (!delete_entry(sBatchNumber, sEntryNumber, conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080852]");
     	}else{
     		clsDatabaseFunctions.commit_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080853]");
     	}
     	
     	return true;
@@ -933,7 +933,7 @@ public class ICEntryBatch {
     		
     	}catch (Exception e){
 			addErrorMessage("Error [1529956984] checking for previous posting - " + e.getMessage());
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080854]");
     		return false;
     	}
     	
@@ -944,7 +944,7 @@ public class ICEntryBatch {
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080855]");
     		//Clear the posting flag, then return
     		return false;
     	}
@@ -959,7 +959,7 @@ public class ICEntryBatch {
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080856]");
     		return false;
 		}
 
@@ -994,7 +994,7 @@ public class ICEntryBatch {
 			System.out.println(e.getMessage());
 		} 
     	
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080857]");
 		return true;
 	}
 	private void removeCancelingCosts(Connection conn) throws Exception{

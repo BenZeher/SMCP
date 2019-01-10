@@ -225,7 +225,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			);
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080592]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 					+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + sTrimmedOrderNumber
@@ -234,7 +234,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080593]");
 		return;
 	}
 	private String getEditHTML(SMMasterEditEntry sm, String sTrimmedOrderNumber, Connection conn) throws SQLException{

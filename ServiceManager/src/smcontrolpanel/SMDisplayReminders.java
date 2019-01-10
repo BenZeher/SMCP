@@ -351,10 +351,10 @@ public class SMDisplayReminders  extends HttpServlet {
 			}		
 			rsUserSchedules.close();
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080467]");
 			throw new Exception (e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080468]");
 		return s;
 	}
 	

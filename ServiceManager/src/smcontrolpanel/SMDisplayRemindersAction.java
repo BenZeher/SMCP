@@ -110,7 +110,7 @@ public class SMDisplayRemindersAction extends HttpServlet{
 			}			
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080469]");
 		
 		if(!bErrors){
 		CurrentSession.removeAttribute(SMUtilities.SMCP_SESSION_PARAM_CHECK_SCHEDULE);

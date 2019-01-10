@@ -133,7 +133,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 			    					)){
     			sWarning = "Crediting process failed. <BR>"
 		  			      + sWarning;
-        		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080416]");
     			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
     			+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
     			+ "&CREDITNOTEDATE=" + sCreditNoteDate 
@@ -156,7 +156,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 		    	if (bDebugMode){
 		    		System.out.println("In " + this.toString() + " sMessage = " + sMessage);
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080417]");
 				//System.out.println("connections freed.");
 				String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCreateCreditNoteCriteriaSelection" + "?"
 				+ "MESSAGE=" + clsServletUtilities.URLEncode(sMessage)
@@ -173,7 +173,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
     	}catch (Exception ex){
     		sWarning = "Error when creating multiple invoices - " + ex.getMessage() + "<BR>" + sWarning;
 			//System.out.println(sWarning);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080418]");
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 			+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
 			+ "&CREDITNOTEDATE=" + sCreditNoteDate 

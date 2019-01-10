@@ -676,7 +676,7 @@ public class ICEntryLine extends java.lang.Object{
     	}
     	
     	boolean bDetailsReadSuccessfully = getItemDetails(conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080860]");
     	return bDetailsReadSuccessfully;
     }
     public String sUnitOfMeasure(){

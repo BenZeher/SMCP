@@ -65,6 +65,7 @@ public class clsDatabaseFunctions {
 		}
 	}
 
+	/* TJR - replaced this with the function underneath, which calls for an additional parameters, the diagnostic marker:
 	public static boolean freeConnection(ServletContext context, Connection conn){
 		
 		String sDiagnosticMarker = "[1546534875] clsDatabaseFunctions.freeConnection";
@@ -87,7 +88,7 @@ public class clsDatabaseFunctions {
 			return false;
 		}
 	}
-	
+	*/
 	public static boolean freeConnection(ServletContext context, Connection conn, String sDiagnosticMarker){
 		
 		try {

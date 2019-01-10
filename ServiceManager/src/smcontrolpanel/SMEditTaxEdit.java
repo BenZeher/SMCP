@@ -95,7 +95,7 @@ public class SMEditTaxEdit extends HttpServlet {
 		    	try {
 					entry.delete(entry.get_slid(), conn);
 				} catch (Exception e) {
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080547]");
     				response.sendRedirect(
         					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxSelection"
         					+ "?" + SMTabletax.lid + "=" + entry.get_slid()
@@ -103,7 +103,7 @@ public class SMEditTaxEdit extends HttpServlet {
         				);
     				return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080548]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxSelection"
 							+ "?" + SMTabletax.lid + "=" + entry.get_slid()

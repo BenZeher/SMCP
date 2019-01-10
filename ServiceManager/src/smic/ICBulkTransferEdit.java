@@ -254,7 +254,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 					}
 					rsItems.close();
 				} catch (SQLException e) {
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080780]");
 					out.println("<BR><B><FONT COLOR=RED>Error [1475774077] getting reading item with SQL: " + SQL 
 							+ " - " + e.getMessage() + ".</FONT></B><BR>");
 					out.println("</BODY></HTML>");
@@ -300,7 +300,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 					}
 					rsFromLocation.close();
 				} catch (SQLException e) {
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080781]");
 					out.println("<BR><B><FONT COLOR=RED>Error [1475774078] getting reading FROM location info with SQL: " + SQL 
 							+ " - " + e.getMessage() + ".</FONT></B><BR>");
 					out.println("</BODY></HTML>");
@@ -331,7 +331,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
     					}
     					rsToLocation.close();
     				} catch (SQLException e) {
-    					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080782]");
     					out.println("<BR><B><FONT COLOR=RED>Error [1475774079] getting reading TO location info with SQL: " + SQL 
     							+ " - " + e.getMessage() + ".</FONT></B><BR>");
     					out.println("</BODY></HTML>");
@@ -408,7 +408,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 			}
 			rsLocations.close();
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080783]");
 			out.println("<BR><B><FONT COLOR=RED>Error [1475774089] getting locations with SQL: " + SQL 
 					+ " - " + e.getMessage() + ".</FONT></B><BR>");
 			out.println("</BODY></HTML>");
@@ -445,13 +445,13 @@ public class ICBulkTransferEdit  extends HttpServlet{
 			}
 			rsLocations.close();
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080784]");
 			out.println("<BR><B><FONT COLOR=RED>Error [1475774089] getting locations with SQL: " + SQL 
 					+ " - " + e.getMessage() + ".</FONT></B><BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080785]");
 	    out.println(s);
 	    out.println("</SELECT>");
 		out.println("</TD></TR>");

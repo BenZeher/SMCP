@@ -119,7 +119,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			//edit, we'll pick up the ID or key from the request and try to load the entry:
 		}else{
 			if(!entry.load(conn)){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080529]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCallingClass()
 						+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
@@ -133,7 +133,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			String sCancelDate = clsDateAndTimeConversions.stdDateStringToSQLDateString(
 					entry.getM_datOrderCanceledDate());
 			if (sCancelDate.compareTo("1899-12-31 00:00:00") > 0){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080530]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCallingClass()
 						+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
@@ -168,7 +168,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			smedit.createEditPage(getEditHTML(smedit, entry, conn, sObjectName), "");
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080531]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 					+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
@@ -177,7 +177,7 @@ public class SMEditOrderTotalsEdit  extends HttpServlet {
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080532]");
 		return;
 	}
 	private String getEditHTML(SMMasterEditEntry sm, SMOrderHeader entry, Connection conn, String sObjectName) throws SQLException{

@@ -92,7 +92,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		//If we determine that this is a duplicate request, don't display anything on the screen, just
 		//return:
 		if (checkForDuplicateRequest(sUserID, sUserFullName, sPOComment, conn, log)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080769]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -103,7 +103,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		}
 		
 		if (!insertPOHeader(sUserFullName, sUserID, sPOComment, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080770]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -135,7 +135,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sAssignedNumber + "</A>";
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080771]");
 		String sStatus = "PO Number " + sAssignedPOLink + " was assigned to " 
 			+ sUserFullName + " on " + sAssignedDate + ".";
 		response.sendRedirect(

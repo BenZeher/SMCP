@@ -198,7 +198,7 @@ public class ICPrintUPCAction extends HttpServlet {
 				request,
 				getServletContext())
 		){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080957]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCallingClass + "?"
 					+ "Warning=" + pupc.getErrorMessage()
@@ -208,7 +208,7 @@ public class ICPrintUPCAction extends HttpServlet {
 			return;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080958]");
 
 		if(!bPrintToPrinter){
 			out.println("</BODY></HTML>");

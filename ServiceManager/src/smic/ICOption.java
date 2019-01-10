@@ -82,11 +82,11 @@ public class ICOption extends Thread{
 		try {
 			checkAndUpdateICPostingFlagUsingConnection(conn, sUserFullName, sPostingProcess);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080870]");
 			throw new Exception("Error [1529949618] checking and updating IC posting flag - " + e.getMessage());
 		}
 		
-		if(!clsDatabaseFunctions.freeConnection(context, conn)){
+		if(!clsDatabaseFunctions.freeConnection(context, conn, "[1547080871]")){
 			throw new Exception("Error [1529949617] could not free database connection.");
 		}
 		
@@ -177,10 +177,10 @@ public class ICOption extends Thread{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080872]");
 			throw new Exception ("Error [1529970242] resetting IC posting flag with connection - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080873]");
 }
 	
 	private void updatePostingInformation(Connection conn, String sUserFullName, String sPostingProcess, String sDate) throws Exception{
@@ -258,10 +258,10 @@ public class ICOption extends Thread{
     		throw new Exception("Error [1440684679] ould not get connection to load ICOptions.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080874]");
     		throw new Exception("Error [1440684680] loading ICOptions - " + getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080875]");
     }
 
     public boolean saveEditableFields(ServletContext context, String sConf, String sUserName){

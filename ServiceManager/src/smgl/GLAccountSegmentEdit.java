@@ -90,7 +90,7 @@ public class GLAccountSegmentEdit extends HttpServlet {
 		    	try{
 		    		entry.delete(entry.getlid(), conn);
 		    	}catch (Exception e){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080709]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountSegmentSelect"
     					+ "?" + SMTableglaccountsegments.lid + "=" + entry.getlid()
@@ -98,7 +98,7 @@ public class GLAccountSegmentEdit extends HttpServlet {
     				);
 					return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080710]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountSegmentSelect"
 					+ "?" + SMTableglaccountsegments.lid + "=" + entry.getlid()

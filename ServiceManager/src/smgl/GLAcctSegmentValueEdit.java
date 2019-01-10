@@ -91,7 +91,7 @@ public class GLAcctSegmentValueEdit extends HttpServlet {
 		    	try{
 		    		entry.delete(entry.getlid(), conn);
 		    	}catch (Exception e){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080726]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAcctSegmentValueSelect"
     					+ "?" + SMTableglacctsegmentvalues.lid + "=" + entry.getlid()
@@ -99,7 +99,7 @@ public class GLAcctSegmentValueEdit extends HttpServlet {
     				);
 					return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080727]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAcctSegmentValueSelect"
 					+ "?" + SMTableglacctsegmentvalues.lid + "=" + entry.getlid()

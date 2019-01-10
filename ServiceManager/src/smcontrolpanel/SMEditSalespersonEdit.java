@@ -267,7 +267,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 			statement.execute(SQL);
 		} catch (SQLException e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080535]");
 			pwOut.println("<FONT COLOR=RED>Error [1422561430] executing command (" + SQL + ") to delete salesperson - " 
 				+ e.getMessage() + "</FONT>");
 			return false;
@@ -281,7 +281,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 			statement.execute(SQL);
 		} catch (SQLException e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080536]");
 			pwOut.println("<FONT COLOR=RED>Error [1422561431] executing command (" + SQL + ") to delete salesperson for customers - " 
 				+ e.getMessage() + "</FONT>");
 			return false;
@@ -296,7 +296,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 			statement.execute(SQL);
 		} catch (SQLException e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080537]");
 			pwOut.println("<FONT COLOR=RED>Error [1422561432] executing command (" + SQL + ") to remove salesperson from user(s) - " 
 				+ e.getMessage() + "</FONT>");
 			return false;
@@ -304,11 +304,11 @@ public class SMEditSalespersonEdit extends HttpServlet {
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080538]");
 			pwOut.println("<FONT COLOR=RED>Error [1422561432] committing transaction to delete salesperson.</FONT>");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080539]");
 		return true;
 	}
 	

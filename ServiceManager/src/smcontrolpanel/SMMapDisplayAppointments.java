@@ -122,7 +122,7 @@ public class SMMapDisplayAppointments extends HttpServlet {
 				getServletContext(),
 				conn)
 		);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080589]");
 		return;
 	}
 	private String getMapCenterAddress(String sConf, String sUserID,String sUserFullName, ServletContext context) throws SQLException{

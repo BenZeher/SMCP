@@ -356,11 +356,11 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error [1534453826] deleting financial form with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080747]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080748]");
 
 		return true;
 	}

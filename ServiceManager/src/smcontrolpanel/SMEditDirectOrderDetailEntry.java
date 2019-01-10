@@ -239,30 +239,30 @@ public class SMEditDirectOrderDetailEntry  extends HttpServlet {
 		try {
 			loadLocations(arrLocations, arrLocationNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080489]");
 			throw e;
 		}
 		try {
 			loadLaborTypes(arrLaborTypes, arrLaborTypeNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080490]");
 			throw e;
 		}
 		try {
 			loadItemCategories(arrItemCategories, arrItemCategoryNames, conn);
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080491]");
 			throw e;
 		}
 		//Load the order:
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(entry.getM_ordernumber());
 		if (!order.load(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080492]");
 			throw new SQLException("Could not load order number " + entry.getM_ordernumber() + " - " + order.getErrorMessages());
 		}
 		entry.setstaxjurisdiction(order.getstaxjurisdiction());
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080493]");		
 		String s = "";
 		//Store the entry variables that we know at this point:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDirectOrderDetailEntry.Paramsordernumber + "\" VALUE=\"" 

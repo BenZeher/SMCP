@@ -324,7 +324,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080994]");
 			throw new Exception("Error [1396369878] Could not start data transaction.");
 		}
 		if (bDebugMode){
@@ -335,18 +335,18 @@ public class ICTransferImportAction extends HttpServlet{
 			insertTransferLines(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, options, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080995]");
 			throw new Exception("Error [1396370667] inserting transfers - " + e.getMessage());
 			
 		}
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080996]");
 			throw new Exception("Error [1396370668] committing data transaction.");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080997]");
 		return;
 
 	}

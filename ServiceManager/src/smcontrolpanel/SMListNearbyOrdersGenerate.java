@@ -93,7 +93,7 @@ public class SMListNearbyOrdersGenerate extends HttpServlet {
 			){
     		out.println("Could not print report - " + rep.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080581]");
 	    out.println("</BODY></HTML>");
 	}
 }

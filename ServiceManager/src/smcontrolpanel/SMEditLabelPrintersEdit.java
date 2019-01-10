@@ -436,7 +436,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080494]");
 			pwOut.println("Could not read ID of label printer to be deleted with SQL: " 
 					+ sSQL + " - " + e.getMessage() + ".");
 			return false;
@@ -460,11 +460,11 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 					+ " - " + ex.getMessage());
 			System.out.println("Error deleting label printer record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080495]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080496]");
 
 		return true;
 	}

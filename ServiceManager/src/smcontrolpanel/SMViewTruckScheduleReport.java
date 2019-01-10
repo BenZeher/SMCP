@@ -126,7 +126,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			bOutputToCSV,
 			context,
 			sLicenseModuleLevel);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080680]");
 		return;
 	}
 	private void processReport(

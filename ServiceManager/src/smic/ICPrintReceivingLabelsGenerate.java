@@ -356,7 +356,7 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 		){
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080956]");
 		out.println("</BODY></HTML>");
 	}
 

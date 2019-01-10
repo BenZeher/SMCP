@@ -189,10 +189,10 @@ public class GLOptions extends java.lang.Object{
     		throw new Exception("Counld not get connection to load GLOptions.");
     	}
     	if (!load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080755]");
     		throw new Exception("Error loading GLOptions - " + getErrorMessages());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080756]");
     }
     
 
@@ -225,12 +225,12 @@ public class GLOptions extends java.lang.Object{
     		Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080757]");
 			m_sErrorMessageArray.add("Error [1522772564] updating record with SQL: " + SQL + " - " + e.getMessage());
 			return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080758]");
 		
 		return true;
     }

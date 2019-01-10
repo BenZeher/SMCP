@@ -97,7 +97,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		    	try{
 		    		entry.delete(entry.get_sifiscalyear(), conn);
 		    	}catch (Exception e){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080749]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." + CALLING_CLASS
     					+ "?" + SMTableglfiscalperiods.ifiscalyear + "=" + entry.get_sifiscalyear()
@@ -105,7 +105,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
     				);
 					return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080750]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." + CALLING_CLASS
 					+ "?" + SMTableglfiscalperiods.ifiscalyear + "=" + entry.get_sifiscalyear()

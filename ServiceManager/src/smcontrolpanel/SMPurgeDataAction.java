@@ -125,7 +125,7 @@ public class SMPurgeDataAction extends HttpServlet{
 				conn, 
 				out);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080652]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -193,7 +193,7 @@ public class SMPurgeDataAction extends HttpServlet{
 			+ clsDateAndTimeConversions.utilDateToString(datPurgeDeadline, "MM-dd-yyyy") 
 			+ ", time elapsed was " + Long.toString((System.currentTimeMillis() - lStartTime) /1000) + " seconds."
 			;
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080653]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

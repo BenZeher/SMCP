@@ -126,7 +126,7 @@ public class SMDetailSheetAction extends HttpServlet{
 	    }
 	    
 	    if (!clsDatabaseFunctions.start_data_transaction(conn)){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080433]");
 	    	out.println("Error starting database transaction");
 			out.println("</BODY></HTML>");
 			return;
@@ -162,7 +162,7 @@ public class SMDetailSheetAction extends HttpServlet{
 	    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 	    }catch (SQLException ex){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080434]");
 	    	out.println("Error updating detail sheets with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
@@ -176,7 +176,7 @@ public class SMDetailSheetAction extends HttpServlet{
 				java.sql.ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (!rs.next()){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080435]");
 			    	out.println("Error getting last insert ID with SQL: " + sSQL);
 					out.println("</BODY></HTML>");
 					return;
@@ -186,7 +186,7 @@ public class SMDetailSheetAction extends HttpServlet{
 				}
 			} catch (SQLException e) {
 		    	clsDatabaseFunctions.rollback_data_transaction(conn);
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080436]");
 		    	out.println("Error getting last insert ID with SQL: " + sSQL);
 				out.println("</BODY></HTML>");
 				return;
@@ -195,12 +195,12 @@ public class SMDetailSheetAction extends HttpServlet{
 	    
 	    if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080437]");
 	    	out.println("Unable to commit data transaction.");
 				out.println("</BODY></HTML>");
 				return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080438]");
 		String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDetailSheetEdit"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

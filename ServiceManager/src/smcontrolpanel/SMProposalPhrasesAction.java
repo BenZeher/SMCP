@@ -109,7 +109,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 	    }
 	    
 	    if (!clsDatabaseFunctions.start_data_transaction(conn)){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080636]");
 	    	out.println("Error starting database transaction");
 			out.println("</BODY></HTML>");
 			return;
@@ -144,7 +144,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 	    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 	    }catch (SQLException ex){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080637]");
 	    	out.println("Error updating proposal phrases with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
@@ -158,7 +158,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 				java.sql.ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (!rs.next()){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080638]");
 			    	out.println("Error getting last insert ID with SQL: " + sSQL);
 					out.println("</BODY></HTML>");
 					return;
@@ -168,7 +168,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 				}
 			} catch (SQLException e) {
 		    	clsDatabaseFunctions.rollback_data_transaction(conn);
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080639]");
 		    	out.println("Error getting last insert ID with SQL: " + sSQL);
 				out.println("</BODY></HTML>");
 				return;
@@ -193,7 +193,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 			rs.close();
 		} catch (SQLException e) {
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080640]");
 	    	out.println("Error checking for duplcated sort orders with SQL: " + sSQL
 	    		+ " - " + e.getMessage());
 			out.println("</BODY></HTML>");
@@ -214,7 +214,7 @@ public class SMProposalPhrasesAction extends HttpServlet{
 		    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 		    }catch (SQLException ex){
 		    	clsDatabaseFunctions.rollback_data_transaction(conn);
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080641]");
 		    	out.println("Error updating subsequent sort orders with SQL: " + sSQL
 		    		+ " - " + ex.getMessage());
 				out.println("</BODY></HTML>");
@@ -223,12 +223,12 @@ public class SMProposalPhrasesAction extends HttpServlet{
 	    }
 	    if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080642]");
 	    	out.println("Unable to commit data transaction.");
 				out.println("</BODY></HTML>");
 				return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080643]");
 	    out.println("Successfully updated proposal phrases " + sProposalPhraseName + ".");
 	    out.println("</BODY></HTML>");
 	}

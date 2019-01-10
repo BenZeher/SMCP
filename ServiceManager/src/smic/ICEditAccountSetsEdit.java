@@ -104,7 +104,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!acctset.delete(acctset.getAccountSetCode(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080817]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAccountSetsSelection"
     					+ "?" + ICAccountSet.ParamAccountSetCode + "=" + acctset.getAccountSetCode()
@@ -114,7 +114,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080818]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAccountSetsSelection"
     					+ "?" + ICAccountSet.ParamAccountSetCode + "=" + acctset.getAccountSetCode()

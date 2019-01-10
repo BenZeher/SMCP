@@ -157,7 +157,7 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 							   getServletContext(),
 							   (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)))
 			{
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080864]");
 				response.sendRedirect(
 	    			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 	    			+ "Warning=" + rpt.getErrorMessage()
@@ -166,7 +166,7 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 	    		);
     		return;	
     	}
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080865]");
     		out.println("</BODY></HTML>");
 	}
 }

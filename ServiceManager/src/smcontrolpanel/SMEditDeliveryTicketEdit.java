@@ -843,9 +843,9 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 								}
 									rs.close();
 							}catch (Exception e) {
-								 clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+								 clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080485]");
 							}
-						    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080486]");
 							s+= "VALUE='" + sUsersFullName + "'";
 						}
 					}else{

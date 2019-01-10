@@ -194,9 +194,9 @@ public class GLAccountStructure extends java.lang.Object{
     	}
     	try {
 			load(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080718]");
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080719]");
 			throw new Exception("Error [1524589659] could load " + ParamObjectName + " - " + e.getMessage());
 		}
     }
@@ -220,7 +220,7 @@ public class GLAccountStructure extends java.lang.Object{
 		try {
 			validateEntries(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080720]");
 			throw new Exception(e.getMessage());
 		}
 		
@@ -300,7 +300,7 @@ public class GLAccountStructure extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080721]");
 	 		throw new Exception("Error [1524589661] saving " + ParamObjectName + " - " + e.getMessage());
 	 	}
 		
@@ -316,19 +316,19 @@ public class GLAccountStructure extends java.lang.Object{
 				}
 				rs.close();
 			} catch (SQLException e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080722]");
 				throw new Exception("Error [1524589662] saving with SQL '" + SQL + "' - " + e.getMessage());
 			}
 			//If something went wrong, we can't get the last ID:
 			if (m_lid.compareToIgnoreCase("") == 0){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080761]");
 				throw new Exception("Error [1524589663] -could not get last ID number.");
 			}
 	 	}
 	 	
 		//Change new record status
 	 	m_sNewRecord = "1";
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080723]");
 		return;			
     }
     

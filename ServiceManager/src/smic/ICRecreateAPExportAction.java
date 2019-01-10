@@ -90,7 +90,7 @@ public class ICRecreateAPExportAction extends HttpServlet{
         try {
 			export.loadExport(conn, sExportSequence);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080968]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -101,7 +101,7 @@ public class ICRecreateAPExportAction extends HttpServlet{
         //Determine the type of export:
         ICOption icopt = new ICOption();
         if(!icopt.load(conn)){
-        	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080969]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -112,7 +112,7 @@ public class ICRecreateAPExportAction extends HttpServlet{
         //Now write to the download:
         PrintWriter out = response.getWriter();
         try {
-        	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080970]");
         	if (icopt.getExportTo() == SMExportTypes.EXPORT_TO_MAS200){
         		export.writeMAS200ExportDownload(out);
         	}else{
@@ -126,7 +126,7 @@ public class ICRecreateAPExportAction extends HttpServlet{
 			);
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080971]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

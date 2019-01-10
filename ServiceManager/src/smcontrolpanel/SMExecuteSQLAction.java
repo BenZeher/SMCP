@@ -69,7 +69,7 @@ public class SMExecuteSQLAction extends HttpServlet {
 		try{		
 			Statement stmt = conn.createStatement();
 		    i = stmt.executeUpdate(sExecuteString);
-		    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080560]");
 		}catch (Exception ex) {
 			// handle any errors
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
@@ -80,7 +80,7 @@ public class SMExecuteSQLAction extends HttpServlet {
 					"Command: " + sExecuteString,
 					"[1376509321]");
 			if (conn != null){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080559]");
 			}
 			throw new SQLException(ex.getMessage());
 		}

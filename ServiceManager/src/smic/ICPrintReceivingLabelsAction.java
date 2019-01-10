@@ -194,7 +194,7 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			sWarning = "Could not open data connection";
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080952]");
 			return false;
 		}
 
@@ -230,18 +230,18 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 				stmt.execute(SQL);
 			}catch (SQLException e){
 				sWarning = "Error with SQL: " + SQL + " - " + e.getMessage();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080953]");
 				return false;
 			}
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			sWarning = "Could not commit data transaction";
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080954]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080955]");
 		return true;
 	}
 	private boolean printLabels(
@@ -415,14 +415,14 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
     			req,
     			getServletContext())
     	){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080950]");
 				sWarning = pupc.getErrorMessage();
 				out.println("Error printing labels - " + pupc.getErrorMessage() + ".");
 				return false;
 	    }else{
 	    	//out.println("NO Error printing labels.");
 	    }
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080951]");
 	    out.println("</BODY></HTML>");
 		
 		return true;

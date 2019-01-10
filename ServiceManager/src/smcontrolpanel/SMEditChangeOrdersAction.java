@@ -155,11 +155,11 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			stmt.execute(SQL);
 		} catch (SQLException e) {
 			addToWarning("Error deleting change order - " + e.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080478]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080479]");
 
 		return true;
 	}
@@ -217,7 +217,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 		}
 
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080480]");
 			addToWarning("Could not start data transaction to save change orders");
 			return false;
 		}
@@ -235,7 +235,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 					addToWarning("CO " + arrChangeOrders.get(i).getM_dChangeOrderNumber() + ": " 
 							+ arrChangeOrders.get(i).getErrorMessages());
 					clsDatabaseFunctions.rollback_data_transaction(conn);
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080481]");
 					return bEntriesAreSaved;
 				}
 			}
@@ -244,7 +244,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			bEntriesAreSaved = false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080482]");
 		return bEntriesAreSaved;	
 	}
 

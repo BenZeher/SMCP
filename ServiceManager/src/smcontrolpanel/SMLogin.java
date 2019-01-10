@@ -231,7 +231,7 @@ public class SMLogin extends HttpServlet {
 				pwOut.println(SMUtilities.DOCTYPE
 						+ "<HTML>Error getting recordset for database '" 
 						+ cdc.get_databasename() + "' - " + e.getMessage());
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080585]");
 				return false;
 			}
 			sSQL = "SELECT"
@@ -248,11 +248,11 @@ public class SMLogin extends HttpServlet {
 				pwOut.println(SMUtilities.DOCTYPE
 						+ "<HTML>Error getting backgroundcolor for database '" 
 						+ cdc.get_databasename() + "' - " + e.getMessage());
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080586]");
 				return false;
 			}
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080587]");
 		return true;
 	}
 	@Override

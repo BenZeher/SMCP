@@ -334,7 +334,7 @@ public class SMBidEntry extends clsMasterEntry{
 		}
 
 		boolean bResult = load (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080411]");
 		return bResult;
 
 	}
@@ -518,11 +518,11 @@ public class SMBidEntry extends clsMasterEntry{
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			super.addErrorMessage("Error committing data transaction.");
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080412]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080413]");
 		return bResult;	
 
 	}
@@ -816,7 +816,7 @@ public class SMBidEntry extends clsMasterEntry{
 		}
 
 		boolean bResult = delete (conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080410]");
 		return bResult;
 
 	}

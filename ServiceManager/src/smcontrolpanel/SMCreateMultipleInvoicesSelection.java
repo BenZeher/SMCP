@@ -216,7 +216,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 		        			);
 	    		}
 	        	
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080426]");
 	    		//create a link to print all invoices
 	    		String sInvoiceFrom = aInvoices[0];
 	    		String sInvoiceTo = aInvoices[aInvoices.length - 1];

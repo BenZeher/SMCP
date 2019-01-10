@@ -224,7 +224,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
     			getServletContext())){
     		out.println("Could not print report - " + amr.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080409]");
 	    out.println("</BODY></HTML>");
 	}
 	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes){

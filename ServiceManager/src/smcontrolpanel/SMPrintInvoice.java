@@ -207,7 +207,7 @@ public class SMPrintInvoice extends HttpServlet {
 					);
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080604]");
 
 		out.println("</BODY></HTML>");
 	}

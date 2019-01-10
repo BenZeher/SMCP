@@ -290,7 +290,7 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
 		    out.println("</BODY></HTML>");
 	    }
     		
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080944]");
     	return;
 	}
 }

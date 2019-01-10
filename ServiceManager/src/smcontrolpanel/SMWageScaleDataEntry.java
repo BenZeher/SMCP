@@ -334,7 +334,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     		
     		System.out.println("Error validating ecryption key");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080683]");
     	return bKeyisValid;
     }
    
@@ -511,10 +511,10 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	try {
 			delete (conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080681]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080682]");
     }
     public void delete (Connection conn) throws Exception{
     	

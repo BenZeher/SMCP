@@ -53,7 +53,7 @@ public class ICEditAccountSetsAction extends HttpServlet{
 				);
 		//Need a connection here because it involves a data transaction:
 		if(!acctset.save(sUserFullName, sUserID, sCompanyName, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080815]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAccountSetsEdit"
 					+ "?" + acctset.getQueryString()
@@ -62,7 +62,7 @@ public class ICEditAccountSetsAction extends HttpServlet{
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080816]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAccountSetsEdit"
 				+ "?" + acctset.getQueryString()

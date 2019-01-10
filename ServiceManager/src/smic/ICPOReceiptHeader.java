@@ -117,7 +117,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080936]");
     	return bResult;
     	
     }
@@ -214,21 +214,21 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	}
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
     		super.addErrorMessage("Error starting data transaction.");
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080937]");
     		return false;
     	}
     	if(!save (conn, sUserFullName, sUserID)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080938]");
     		return false;
     	}
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080939]");
     		super.addErrorMessage("Could not commit data transaction.");
     		return false;
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080940]");
     	return true;	
     	
     }
@@ -349,22 +349,22 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
     		super.addErrorMessage("Could not start data transaction.");
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547081130]");
     		return false;
     	}
     	if(!delete (conn, sUserFullName, sUserID)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547081131]");
     		return false;
     	}
     	
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547081132]");
     		super.addErrorMessage("Could not commit data transaction.");
     		return false;
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547081134]");
     	return true;
     	
     }
@@ -576,7 +576,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 					//	+ " rs.getDate(SMTableicporeceiptheaders.dattimelastupdated) = '" + rs.getDate(SMTableicporeceiptheaders.dattimelastupdated) + "'"
 					//);
 					if (sdattimeLastUpdated.compareToIgnoreCase(getsdattimelastupdated()) != 0){
-						clsDatabaseFunctions.freeConnection(context, conn);
+						clsDatabaseFunctions.freeConnection(context, conn, "[1547080925]");
 						String sConcurrencyWarning = "Error [1488389088] - This receipt has been updated (function: '" + rs.getString(SMTableicporeceiptheaders.slastupdateprocess) + "')"
 							+ " by user '" + rs.getString(SMTableicporeceiptheaders.slastupdateuserfullname) + "'"
 							+ " on " + sdattimeLastUpdated
@@ -591,11 +591,11 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 				}
 				rs.close();
 			} catch (SQLException e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080926]");
 				throw new Exception("Error [1488313112] reading current receipt record with SQL: '" + SQL + "' - " + e.getMessage());
 			}
         }
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080927]");
     	return;
     }
 
@@ -639,7 +639,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		}
     	
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080928]");
     		throw new Exception("Could not start data transaction to receive all outstanding lines.");
     	}
 		
@@ -651,7 +651,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 			rs.close();
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080929]");
 			throw new Exception("Error in " + SMUtilities.getFullClassName(this.toString()) 
 				+ ".receiveAllOutstandingLines - user: " + sUserFullName + " - " + e.getMessage());
 		}
@@ -660,17 +660,17 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	try {
 			save(conn, sUserFullName, sUserID);
 		} catch (Exception e) {
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080930]");
     		throw new Exception("Could not save " + ParamObjectName + " - " + e.getMessage());
 		}
     	
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080931]");
 			throw new Exception("Error in " + SMUtilities.getFullClassName(this.toString()) 
 				+ ".receiveAllOutstandingLines - user: " + sUserFullName + " - could not commit data transaction");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080932]");
     }
     
     public void checkToReceiveQtyRemainingOnPOLine(
@@ -691,17 +691,17 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		try {
 			checkRecordConcurrency(context, sDBID, sUserFullName); 
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080933]");
 			throw new Exception("Error [1488322597] - " + e1.getMessage());
 		}
 		
     	try {
 			receiveQtyRemainingOnPOLine(sPOLineID, conn, sUserFullName, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080934]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080935]");
     	
     	return;
     }

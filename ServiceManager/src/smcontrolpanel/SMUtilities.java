@@ -815,7 +815,7 @@ public class SMUtilities extends clsServletUtilities {
 		} catch (SQLException e) {
 			clsServletUtilities.sysprint("SMUtilities.getICImportFlag", "SYSTEM", "Error reading IC import flag - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080677]");
 		return bResult;
 	}
 	

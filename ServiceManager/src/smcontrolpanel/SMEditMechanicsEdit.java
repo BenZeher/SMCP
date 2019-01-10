@@ -337,7 +337,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        // handle any errors
 	    	out.println("<BR><BR>Error [1412709513] reading mechanic information - " + ex.getMessage() + ".<BR>");
 	    }
-        clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080499]");
       	out.println ("</Table>");
       	out.println ("<BR>");
       	out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Save----\">");

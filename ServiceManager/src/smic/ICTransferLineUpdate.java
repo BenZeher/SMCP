@@ -235,7 +235,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				sWarning += "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081000]");
 			throw new Exception("Error [1531849445] validating line - " + sWarning);
 		}
 		
@@ -248,7 +248,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					sWarning += "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081001]");
 				throw new Exception("Error [1531849446] adding line - " + sWarning);
 			}
 			//If the line was successfully added, update the line number:
@@ -305,7 +305,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					sWarning += "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081002]");
 				throw new Exception("Error [1531849447] updating line - " + sWarning);
 			}
 		}
@@ -315,10 +315,10 @@ public class ICTransferLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				sWarning += "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081003]");
 			throw new Exception("Error [1531849448] saving line - " + sWarning);
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081004]");
 		
 		//Reload the line class, now that the line was saved:
 		String sBatchNumber = m_Line.sBatchNumber();
@@ -372,10 +372,10 @@ public class ICTransferLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				sWarning += "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080998]");
 			throw new Exception("Error [1531849044] deleting line - " + sWarning);
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080999]");
 		
 		return;
 	}

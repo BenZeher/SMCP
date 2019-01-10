@@ -97,23 +97,23 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 		//Start a data transaction:
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080575]");
 			throw new Exception ("Error [1395411914] starting data transaction.");
 		}
 		try {
 			processImport(conn, sConf, sUserID, sUserFullName, sWorkOrderID, sLocation, sCategory, bDoNotShipExistingItems);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080576]");
 			throw new Exception(e.getMessage());
 		}
 		
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080577]");
 			throw new Exception("Error [1395411918] committing data transaction.");
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080578]");
 		return;
 	}
 	private void processImport(

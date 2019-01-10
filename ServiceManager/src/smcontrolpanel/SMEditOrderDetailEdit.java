@@ -144,7 +144,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			if ((sTrimmedOrderNumberFromRequest.compareToIgnoreCase("") != 0) && (sTrimmedOrderNumberFromRequest.compareToIgnoreCase(detail.getM_strimmedordernumber())) != 0){
 				String sError = "Error [1425503692] Order number requested ('" + sTrimmedOrderNumberFromRequest + "')"
 					 + " doesn't match the order number ('" + detail.getM_strimmedordernumber() + "') stored in the session - " + order.getErrorMessages();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080512]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 						+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + detail.getM_strimmedordernumber()
@@ -159,7 +159,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			order.setM_strimmedordernumber(detail.getM_strimmedordernumber());
 			if (!order.load(conn)){
 				String sError = "Error [1425502855] Could not load order/quote from sessions object to edit detail - " + order.getErrorMessages();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080513]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 						+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + detail.getM_strimmedordernumber()
@@ -177,7 +177,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			order.setM_strimmedordernumber(detail.getM_strimmedordernumber());
 			if (!order.load(conn)){
 				String sError = "Error [1425502856] Could not load order/quote from request string to edit detail - " + order.getErrorMessages();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080514]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
 						+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + detail.getM_strimmedordernumber()
@@ -191,7 +191,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				//If we have a valid detail number, we'll try that:
 				if (detail.getM_iDetailNumber().compareToIgnoreCase("") != 0){
 					if(!detail.load_line(conn)){
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080515]");
 						response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMOrderDetailList"
 								+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
@@ -204,7 +204,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 					}
 				}else{
 					if(!detail.load_line_using_line_number(conn)){
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080516]");
 						response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMOrderDetailList"
 								+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
@@ -270,7 +270,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				);
 			} catch (SQLException e) {
 				String sError = "Could not update item data - " + e.getMessage();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080517]");
 				currentSession.setAttribute(SMOrderDetail.ParamObjectName, detail);
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.getFullClassName(this.toString())
@@ -288,10 +288,10 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		}
 		try {
 			smedit.createEditPage(getEditHTML(smedit, detail, order, conn, bReturningFromItemUpdate, sHeaderObjectName), "");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080518]");
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080519]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMOrderDetailList"
 					+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" + detail.getM_strimmedordernumber()
@@ -301,7 +301,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080520]");
 		return;
 	}
 	private String getEditHTML(

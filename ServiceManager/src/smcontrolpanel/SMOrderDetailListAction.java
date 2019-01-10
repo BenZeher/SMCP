@@ -168,7 +168,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 				return;
     		}
     		if (entry.validate_for_invoicing(conn)){
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080594]");
 				String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 				+ "smcontrolpanel.SMCreateMultipleInvoicesSelection"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -180,7 +180,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 				redirectProcess(sRedirectString, response);
 				return;
     		}else{
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080595]");
 				smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 				entry.getErrorMessages(), 
@@ -873,7 +873,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 			
 		}
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080596]");
 			throw new Exception("Error [1523639833] - could not start data transaction.");
 			
 		}	
@@ -890,7 +890,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 			stmt.executeUpdate(SQL);
 		} catch (Exception ex) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080597]");
 			throw new Exception("Error updating order line number with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
@@ -921,7 +921,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 					stmt.executeUpdate(SQL);
 				} catch (Exception ex) {
 					clsDatabaseFunctions.rollback_data_transaction(conn);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547080598]");
 					throw new Exception("Error updating po line number with SQL: " + SQL + " - " + ex.getMessage());
 				}
 			}
@@ -942,23 +942,23 @@ public class SMOrderDetailListAction extends HttpServlet{
 			if (rsLineNumbers.next()){
 				rsLineNumbers.close();
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080599]");
 				throw new Exception("Error updating order line number with SQL: " + SQL);
 			}
 			rsLineNumbers.close();
 		} catch (SQLException e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080600]");
 			throw new Exception("Error updating order line number with SQL: " + SQL + " - " + e.getMessage());
 		}
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080601]");
 			throw new Exception("Error committing data transaction to update order line numbers");
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);	
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080602]");	
 	}
 	
 	public void doGet(HttpServletRequest request,

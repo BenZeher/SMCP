@@ -129,7 +129,7 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 				request,
 				getServletContext())
 		){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080945]");
 			response.sendRedirect(
 				SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCallingClass + "?"
 				+ ICPrintLabelScanSheetSelect.PARAM_STARTINGITEM + "=" + sStartingItemNumber
@@ -140,7 +140,7 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 			return;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080946]");
 		out.println("</BODY></HTML>");
 		return;
 		

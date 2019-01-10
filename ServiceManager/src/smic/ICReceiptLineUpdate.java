@@ -186,7 +186,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080963]");
 			return false;
 		}
 		
@@ -200,7 +200,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080964]");
 				return false;
 			}
 			//If the line was successfully added, update the line number:
@@ -252,7 +252,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080965]");
 				return false;
 			}
 		}
@@ -261,10 +261,10 @@ public class ICReceiptLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080966]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080967]");
 		
 		//Reload the line class, now that the line was saved:
 		String sBatchNumber = m_Line.sBatchNumber();
@@ -316,10 +316,10 @@ public class ICReceiptLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080961]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080962]");
 		return true;
 	}
 

@@ -96,7 +96,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 		}
 
 		if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sClearingDate)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080800]");
 			m_sWarning = "Invalid clearing date.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -120,7 +120,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 		}
 		java.sql.Date datNow =  clsDateAndTimeConversions.nowAsSQLDate();
 		if (datClearingDate.after(datNow)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080801]");
 			m_sWarning = "Invalid clearing date - you cannot choose a date later than today.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -131,7 +131,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 		}
 
 		if (request.getParameter("ConfirmClear") == null){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080802]");
 			m_sWarning = "You chose to clear, but did not check the box to confirm.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -156,7 +156,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				rs.close();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080803]");
 				m_sWarning = "There are unposted batches - these must be posted before you can clear transactions.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -167,7 +167,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			}
 			rs.close();
 		} catch (SQLException e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080804]");
 			m_sWarning = "Error checking for unposted batches - with SQL: " + SQL + " - " + e1.getMessage() + ".";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -214,7 +214,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 	
 	public void clearTransactionProcess(Connection conn, String sCallingClass, java.sql.Date datClearingDate, SMLogEntry log){
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080796]");
 			m_sWarning = "Could not start data transaction.";
 			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -224,7 +224,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 
 		if (!deleteRecords(conn, datClearingDate)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080797]");
 
 			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -233,7 +233,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 		}
 
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080798]");
 			m_sWarning = "Could not commit data transaction.";
 			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -248,7 +248,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 				"Using clearing date " + clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM/dd/yyyy"),
 				"[1376509376]");
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080799]");
 		String sStatus = "Completed and deleted transactions through " 
 			+ clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM-dd-yyyy") + " were cleared.";
 		sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

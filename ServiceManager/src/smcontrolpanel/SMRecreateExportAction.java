@@ -62,7 +62,7 @@ public class SMRecreateExportAction extends HttpServlet{
 		try{
 			glex.loadExport(sBatchNumber, sSourceLedger, conn);
 		}catch (Exception ex){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080656]");
 	    	if (bDebugMode){
 	    		System.out.println("In " + this.toString() + "Error loading GL export data for batchnumber '" + sBatchNumber 
 	    			+ "', source ledger '" + sSourceLedger + " - " 
@@ -75,7 +75,7 @@ public class SMRecreateExportAction extends HttpServlet{
 			sOtherParameters.replace("*", "&")
 			);
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080657]");		
 		//Now create the download and send it to the browser:
 		response.setContentType("text/csv");
 	    String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);

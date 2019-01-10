@@ -278,11 +278,11 @@ public class SMProposalEdit  extends HttpServlet {
 				sProposalLogo = rs.getString(SMTabledoingbusinessasaddresses.sProposalLogo);
 			}
 		}catch(Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080630]");
 			throw new Exception ("[1546440668]" + e.getMessage());
 		}	
 		rs.close();
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080631]");
 		return sProposalLogo;
 	}
 	

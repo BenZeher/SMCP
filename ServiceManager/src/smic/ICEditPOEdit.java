@@ -391,7 +391,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			throw e;
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080839]");
 		
 		String s = sCommandScripts(entry, sm);
 		s += sStyleScripts();

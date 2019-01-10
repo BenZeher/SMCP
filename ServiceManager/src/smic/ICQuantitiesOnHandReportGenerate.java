@@ -139,7 +139,7 @@ public class ICQuantitiesOnHandReportGenerate extends HttpServlet {
     	)){
     		out.println("Could not print report - " + itemval.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080960]");
 	    out.println("</BODY></HTML>");
 	}
 }

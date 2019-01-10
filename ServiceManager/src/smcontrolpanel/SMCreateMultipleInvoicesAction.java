@@ -228,7 +228,7 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
     		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			;
     		response.sendRedirect(sRedirectString);	
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080423]");
         	return;
     	}
 
@@ -263,8 +263,8 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 	    	if (bDebugMode){
 	    		System.out.println("[1540839354] In " + this.toString() + " sMessage = " + sMessage + " time: " + System.currentTimeMillis());
 	    	}
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conncheck);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080424]");
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080425]");
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ SMUtilities.URLDecode(request.getParameter("SELECTEDLOCATIONS")) 
 			+ SMUtilities.URLDecode(request.getParameter("SELECTEDSERVICETYPES"))
@@ -286,8 +286,8 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 				sWarning += e.getMessage();
 			}
     		sWarning = "Error when creating multiple invoices - " + ex.getMessage() + "<BR>" + sWarning;
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conncheck);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080690]");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080691]");
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ "Warning=" + SMUtilities.URLEncode(sWarning)
 			+ request.getParameter("SELECTEDLOCATIONS") 

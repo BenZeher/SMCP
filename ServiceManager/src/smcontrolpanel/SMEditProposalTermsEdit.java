@@ -263,11 +263,11 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 					+ " - " + ex.getMessage());
 			//System.out.println("Error deleting proposal terms with SQL: " + SQL 
 			//		+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080533]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080534]");
 
 		return true;
 	}

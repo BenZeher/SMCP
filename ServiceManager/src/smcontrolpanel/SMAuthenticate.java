@@ -589,10 +589,10 @@ public class SMAuthenticate{
 					
 					if (!dat.update(conn, sUserID, sConf)){
 						pwOut.println("Error updating database to newer database revision number: " + clsStringFunctions.filter(dat.getErrorMessage()));
-						clsDatabaseFunctions.freeConnection(context, conn);
+						clsDatabaseFunctions.freeConnection(context, conn, "[1547080407]");
 						return false;
 					}else{
-						clsDatabaseFunctions.freeConnection(context, conn);
+						clsDatabaseFunctions.freeConnection(context, conn, "[1547080408]");
 						return true;
 					}
 				}

@@ -63,7 +63,7 @@ public class ICVendorItem extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547081021]");
     	return bResult;
     	
     }
@@ -212,7 +212,7 @@ public class ICVendorItem extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUser);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547081022]");
     	return bResult;	
     	
     }
@@ -286,7 +286,7 @@ public class ICVendorItem extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547081020]");
     	return bResult;
     	
     }
@@ -349,7 +349,7 @@ public class ICVendorItem extends clsMasterEntry{
     	}
     	
     	bResult = validate_entry_fields(conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547081023]");
     	
     	return bResult;
     	

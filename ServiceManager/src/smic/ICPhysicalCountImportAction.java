@@ -356,7 +356,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			}
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080880]");
 		return bResult;
 
 	}

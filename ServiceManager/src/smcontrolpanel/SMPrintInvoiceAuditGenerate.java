@@ -127,7 +127,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 							conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080605]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -155,7 +155,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 						  conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080606]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -180,7 +180,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 						  conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080607]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -202,7 +202,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 			sStartingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Error:[1423581474] Invalid starting date '" + sStartingDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080608]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" +clsServletUtilities.URLEncode(sWarning)
@@ -214,7 +214,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 			sEndingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sEndingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Error:[1423581475] Invalid ending date '" + sEndingDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080609]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -234,7 +234,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 			sStartingCreationDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartingCreationDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Error:[1423580600] Invalid starting creation date '" + sStartingCreationDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080610]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -246,7 +246,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 			sEndingCreationDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sEndingCreationDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Error:[1423580601] Invalid ending creation date '" + sEndingCreationDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080611]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -270,7 +270,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 		
 	    if (sOrderTypes.size() == 0){
     		sWarning = "You must select at least one order type.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080612]");
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -293,7 +293,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 		
 	    if (sSalesGroups.size() == 0){
     		sWarning = "You must select at least one sales group.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080613]");
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -396,7 +396,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
     		out.println("Could not print report - " + iar.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080614]");
     	
     	out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
     			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

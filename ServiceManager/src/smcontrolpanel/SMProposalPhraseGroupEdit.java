@@ -216,14 +216,14 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 			if (rs.next()){
 				pwOut.println("<FONT COLOR=RED>Cannot delete this proposal phrase group, there are still proposal phrases using it.</FONT>");
 				rs.close();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080632]");
 				return false;
 			}
 			rs.close();
 		} catch (SQLException e) {
 			pwOut.println("<FONT COLOR=RED>Error checking for used proposal phrase groups with SQL: " + SQL 
 					+ " - " + e.getMessage() + "</FONT>");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080633]");
 			return false;
 		}
 		SQL = "DELETE FROM " + SMTableproposalphrasegroups.TableName
@@ -237,10 +237,10 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("<FONT COLOR=RED>Error deleting proposal phrase group with SQL: " + SQL 
 					+ " - " + ex.getMessage() + "</FONT>");
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080634]");
 			return false;
 		}		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080635]");
 		return true;
 	}
 

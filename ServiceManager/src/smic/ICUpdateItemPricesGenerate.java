@@ -351,7 +351,7 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
     			getServletContext(),
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)))
     			{
-    				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081006]");
     				response.sendRedirect(
 		    			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 		    			+ "Warning=" + rpt.getErrorMessage()
@@ -360,14 +360,14 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 		    		);
         		return;	
 	    	}
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081007]");
 	    		out.println("</BODY></HTML>");
 		}else{
 			//If it's a request to update, check the confirming flag:
 			if(request.getParameter(ICUpdateItemPricesSelection.UPDATEBUTTONNAME_PARAM) != null){
 				if (request.getParameter(ICUpdateItemPricesSelection.CONFIRMUPDATE_PARAM) == null){
 					sWarning = "You chose to update but did not click the 'Confirm' checkbox.";
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081008]");
     				response.sendRedirect(
 			    			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			    			+ "Warning=" + sWarning
@@ -403,7 +403,7 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 							sUserFullName,
 							sUserID
 					)){
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081009]");
 						response.sendRedirect(
 			    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			    				+ "Warning=" + sWarning
@@ -412,7 +412,7 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 			    		);			
 			        	return;	
 					}else{
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081010]");
 						response.sendRedirect(
 			    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			    				+ "Status=Prices were successfully updated."

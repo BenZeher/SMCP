@@ -109,7 +109,7 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 			e.printStackTrace();
 		}
     	//free the connection
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080689]");
     	
 	    out.println("</BODY></HTML>");
 	}

@@ -112,7 +112,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		}
 
 		boolean bResult = load(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080892]");
 		return bResult;
 
 	}
@@ -200,7 +200,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080895]");
 			super.addErrorMessage("Could not start data transaction.");
 			return false;
 		}
@@ -214,7 +214,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080896]");
 			super.addErrorMessage("Could not commit data transaction.");
 			return false;
 		}
@@ -223,7 +223,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		} catch (Exception e) {
 			//We won't stop for this, but the next user will have to clear the IC posting flag
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080897]");
 		return bResult;
 	}
 
@@ -1035,7 +1035,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		}
 
 		boolean bResult = delete(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080891]");
 		return bResult;
 
 	}
@@ -1073,7 +1073,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		
 		//Do the actual posting:
 		if (!processPostingToBatch(conn, sUserID, sUserFullName)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080893]");
 			return false;
 		}
 		
@@ -1082,7 +1082,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		} catch (Exception e) {
 			//We won't stop for this, but the next user will have to clear the IC posting flag
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080894]");
 		return true;
 	}
 	private boolean processPostingToBatch(Connection conn, String sUserID, String sUserFullName){

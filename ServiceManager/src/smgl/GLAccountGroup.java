@@ -87,9 +87,9 @@ public class GLAccountGroup extends java.lang.Object{
     	}
     	try {
 			load(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080693]");
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080694]");
 			throw new Exception("Error [1528403150] could load " + ParamObjectName + " - " + e.getMessage());
 		}
     }
@@ -113,7 +113,7 @@ public class GLAccountGroup extends java.lang.Object{
 		try {
 			validateEntries();
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080695]");
 			throw new Exception(e.getMessage());
 		}
 		
@@ -136,7 +136,7 @@ public class GLAccountGroup extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080696]");
 	 		throw new Exception("Error [1528403152] saving " + ParamObjectName + " - " + e.getMessage());
 	 	}
 		
@@ -152,19 +152,19 @@ public class GLAccountGroup extends java.lang.Object{
 				}
 				rs.close();
 			} catch (SQLException e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080697]");
 				throw new Exception("Error [1528403153] saving with SQL '" + SQL + "' - " + e.getMessage());
 			}
 			//If something went wrong, we can't get the last ID:
 			if (m_lid.compareToIgnoreCase("") == 0){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080698]");
 				throw new Exception("Error [1528403154] - could not get last ID number.");
 			}
 	 	}
 	 	
 		//Change new record status
 	 	m_sNewRecord = "1";
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080699]");
 		return;			
     }
     

@@ -108,11 +108,11 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 		try {
 			deleteFromUsersCustomLinksTable(sURLID, request, conn, context, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080549]");
 			throw new Exception("Error deleting scheduled users table - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080550]");
 	}
 
 	private void deleteFromUsersCustomLinksTable(String sURLID, HttpServletRequest request, Connection conn, ServletContext context, 
@@ -169,12 +169,12 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 		try {
 			validateEntries(request);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080551]");
 			throw new Exception("Error validating entries - " + e.getMessage());
 		}
 		// Now begin a data transaction to update users custom links:
 		if (!clsDatabaseFunctions.start_data_transaction(conn)) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080552]");
 			throw new Exception("Error [1512153206] beginning data transaction to update users links tables");
 		}
 
@@ -183,19 +183,19 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 			updateUsersCustomLinksTable(request, conn, context, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080553]");
 			throw new Exception("Error [1530547018] updating custom links  table - " + e.getMessage());
 		}
 
 		// Commit transaction
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080554]");
 			throw new Exception(
 					"Error [1512153207] commiting data transaction for custom links");
 		}
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080555]");
 	}
 
 	private void validateEntries(HttpServletRequest request) throws Exception {

@@ -237,7 +237,7 @@ public class ICDisplayItemInformation extends HttpServlet {
     		sUserID)){
     	}
     	
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080814]");
     	
 	    out.println("</BODY></HTML>");
 	}

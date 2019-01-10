@@ -419,11 +419,11 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 				sWorkOrderLogo = rs.getString(SMTabledoingbusinessasaddresses.sWorkOrderReceiptlogo);
 			}
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080414]");
 			throw new Exception ("Error [1546608430] error reading resultset - " + e.getMessage());
 		}
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080415]");
 		
 		return sWorkOrderLogo;
 	}

@@ -229,7 +229,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080886]");
 			return false;
 		}
 		
@@ -243,7 +243,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080887]");
 				return false;
 			}
 			//If the line was successfully added, update the line number:
@@ -297,7 +297,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080888]");
 				return false;
 			}
 		}
@@ -307,10 +307,10 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080889]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080890]");
 		
 		//Reload the line class, now that the line was saved:
 		String sBatchNumber = m_Line.sBatchNumber();
@@ -363,10 +363,10 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080884]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080885]");
 		return true;
 	}
     private boolean setDefaultWriteOffAccount(

@@ -721,14 +721,14 @@ public class SMWorkOrderAction extends HttpServlet{
 	 				bEmailMode);
 	 		
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080686]");
 	 		s += "<FONT COLOR=RED>Error - " + e.getMessage() + ".</FONT>"
 		 			+ "</BODY></HTML>"
 		 			;
 		 		return s;
 		}
 	 		
-	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080687]");
 	 	s += "</BODY></HTML>";
 	 	return s;
 	}

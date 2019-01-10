@@ -59,10 +59,10 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 					bEmailMode
 				);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080431]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080432]");
 		return s;
 	}
 	private String printDeliveryTicket(

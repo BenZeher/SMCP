@@ -113,17 +113,17 @@ public class ICEditICOptions extends HttpServlet {
 			if (!option.load(conn)){
 				m_sWarning = "Could not load icoptions record - option.load() failed: " + option.getErrorMessage();
 				//free the connection
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080826]");
 				return false;
 			}
 			if (!m_OptionInput.loadFromICOptionClass(option)){
 				m_sWarning = "Could not load IC option input from IC Option record";
 				//free the connection
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080827]");
 				return false;
 
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080828]");
 		}
 		return true;
 	}

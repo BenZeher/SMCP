@@ -528,10 +528,10 @@ public class SMProposal extends Object{
 		try {
 			save(conn, sUserID, sUser, sLicenseModuleLevel);
 		} catch (Exception e2) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080628]");
 			throw new Exception(e2.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080629]");
 	}
 
 	private void validateEntries(Connection conn) throws Exception{

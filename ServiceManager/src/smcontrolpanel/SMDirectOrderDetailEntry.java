@@ -160,7 +160,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	try {
 			validate_entry_fields(conn);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080692]");
 			throw new Exception(e.getMessage());
 		}
     }
@@ -369,7 +369,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	try {
 			validate_entry_fields(conn);
 		} catch (Exception e) {
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080442]");
     		throw new Exception(e.getMessage());
 		}
     	if (bDebugMode){
@@ -381,13 +381,13 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	//Check to make sure that the contract amount, gross profit, and labor unit cost are not zero.
     	if (this.getbdTotalBillingAmount().compareTo(BigDecimal.ZERO) == 0){
     		super.addErrorMessage("Contract amount cannot be zero.");
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080443]");
     		throw new Exception(this.getErrorMessages());
     	}
 
     	if (this.getbdUnitLaborCost().compareTo(BigDecimal.ZERO) == 0){
     		super.addErrorMessage("Unit labor cost cannot be zero.");
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080444]");
     		throw new Exception(this.getErrorMessages());
     	}
         
@@ -464,7 +464,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         try {
 			setUnitLaborMarkup(conn);
 		} catch (Exception e) {
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080445]");
     		throw new Exception(e.getMessage());
 		}
         
@@ -503,7 +503,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		super.addErrorMessage(
     			"The labor billing value is more than or equal to the contract amount - "
     				+ "cannot calculate material billing values.");
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080446]");
     		throw new Exception(this.getErrorMessages());
         }
         
@@ -570,7 +570,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	if (bDebugMode){
     		System.out.println("In " + this.toString() + ".calculateValues - up to 06");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080447]");
     }
     private void setUnitLaborMarkup(
     		Connection conn
@@ -646,28 +646,28 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 			if (rs.next()){
 				sLaborItem = rs.getString(SMTablelabortypes.sItemNumber);
 			}else{
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080448]");
 				throw new Exception("Could not read labor type information for '" + getM_slabortype() + "'.");
 			}
 			rs.close();
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080449]");
 			throw new Exception("Error reading labor type information - " + e1.getMessage() + ".");
 		}
     	ICItem laboritem = new ICItem(sLaborItem);
     	if (!laboritem.load(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080450]");
     		throw new Exception("Cannot read labor item '" + sLaborItem + "' - " + laboritem.getErrorMessageString());
     	}
     	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080451]");
     		throw new Exception("Could not start data transaction.");
     	}
     	SMOrderHeader order = new SMOrderHeader();
     	order.setM_strimmedordernumber(getM_ordernumber().trim());
     	if (!order.load(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080452]");
     		throw new Exception("Could not load order - " + order.getErrorMessages());
     	}
     	ArrayList <SMOrderDetail> arrOrderDetails = new ArrayList<SMOrderDetail>(0);
@@ -704,7 +704,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 						item.setTaxable("1");
 						if (!item.save(sUserFullName, sUserID, conn)){
 				    		clsDatabaseFunctions.rollback_data_transaction(conn);
-				    		clsDatabaseFunctions.freeConnection(context, conn);
+				    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080453]");
 							throw new SQLException("Error adding item '" + sNewItemNumber + "': " + item.getErrorMessageString());
 						}
 					}else{
@@ -788,7 +788,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 			}
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080454]");
 			throw new Exception(e1.getMessage());
 		}
     	if (bDebugMode){
@@ -801,16 +801,16 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 			order.addMultipleDetails(arrOrderDetails, conn, sUserID, sUserFullName);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080455]");
 			throw new Exception(e.getMessage());
 		}
     	
     	if (!clsDatabaseFunctions.commit_data_transaction(conn)){
     		clsDatabaseFunctions.rollback_data_transaction(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080456]");
     		throw new Exception("Could not commit data transaction.");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080457]");
     	return;
     }
 

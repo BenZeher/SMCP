@@ -134,7 +134,7 @@ public class ICOnHandByDescriptionGenerate extends HttpServlet {
     	)){
     		out.println("Could not print report - " + rpt.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080869]");
 	    out.println("</BODY></HTML>");
 	}
 }

@@ -168,7 +168,7 @@ public class GLConvertACCPACAction extends HttpServlet {
 					sACCPACDatabaseuser,
 					sACCPACDatabasepw);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
+			clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080728]");
 	   		sWarning = "Unable to get ACCPAC connection - " + e.getMessage();
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -186,8 +186,8 @@ public class GLConvertACCPACAction extends HttpServlet {
 			iFunctionValue = Integer.parseInt(sFunctionValue);
 		} catch (NumberFormatException e2) {
     		sWarning = "Invalid function value '" + sFunctionValue + "'.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080729]");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080730]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -205,8 +205,8 @@ public class GLConvertACCPACAction extends HttpServlet {
     		sProcessingResult = processSelectedFunction(iFunctionValue, iACCPACDatabaseType, sUserName, sUserID, sUserFullName, cnSMCP, cnACCPAC);
 		} catch (Exception e2) {
     		sWarning = e2.getMessage() + ".";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080731]");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080732]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -226,8 +226,8 @@ public class GLConvertACCPACAction extends HttpServlet {
     	}else{
     		sNextFunctionValue = Integer.toString(iFunctionValue + 1);
     	}
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP);
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC);
+		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080733]");
+		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080734]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + sNextFunctionValue

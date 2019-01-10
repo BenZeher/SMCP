@@ -239,7 +239,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     			getServletContext())){
     		out.println("Could not print report - " + cdr.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080430]");
 	    out.println("</BODY></HTML>");
 	}
 	private void redirectAfterError(HttpServletResponse res){

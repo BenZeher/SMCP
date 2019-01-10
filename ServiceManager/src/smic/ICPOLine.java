@@ -164,7 +164,7 @@ public class ICPOLine extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080922]");
     	return bResult;
     	
     }
@@ -286,7 +286,7 @@ public class ICPOLine extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUser);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080923]");
     	return bResult;	
     	
     }
@@ -470,7 +470,7 @@ public class ICPOLine extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080921]");
     	return bResult;
     	
     }
@@ -568,7 +568,7 @@ public class ICPOLine extends clsMasterEntry{
     	}
     	
     	bResult = validate_entry_fields(conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080924]");
     	
     	return bResult;
     	

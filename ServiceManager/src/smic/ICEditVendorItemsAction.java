@@ -126,7 +126,7 @@ public class ICEditVendorItemsAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080843]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?" + ICEditVendorItems.ITEMNUMBER + "=" + sItemNumber
@@ -147,7 +147,7 @@ public class ICEditVendorItemsAction extends HttpServlet{
 				){
 			}else{
 		    	if (!arrVendorItems.get(i).save_without_data_transaction(conn, sUserName)){
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080844]");
 					response.sendRedirect(
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 							+ "?" + ICEditVendorItems.ITEMNUMBER + "=" + sItemNumber
@@ -161,7 +161,7 @@ public class ICEditVendorItemsAction extends HttpServlet{
 	    }
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080845]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?" + ICEditVendorItems.ITEMNUMBER + "=" + sItemNumber
@@ -173,7 +173,7 @@ public class ICEditVendorItemsAction extends HttpServlet{
    
 		//If the save is successful, remove the session attribute:
 		CurrentSession.removeAttribute(VENDORITEMARRAY);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080846]");
 		
 		//If the edit was initiated from a PO, then return to the PO Edit screen:
 		if (sEditingFromPO.trim().compareToIgnoreCase("") != 0){

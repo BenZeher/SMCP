@@ -57,7 +57,7 @@ public class ICEditItemsAction extends HttpServlet{
 		
 		//Need a connection here because it involves a data transaction:
 		if(!item.save(sUserFullName, sUserID, conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080832]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditItemsEdit"
 					+ "?" + item.getQueryString()
@@ -81,7 +81,7 @@ public class ICEditItemsAction extends HttpServlet{
 					try{
 						alMinQty.add(new BigDecimal(request.getParameter(sParamName)));
 					}catch(NumberFormatException e){
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080833]");
 						response.sendRedirect(
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditItemsEdit"
 							+ "?" + item.getQueryString()
@@ -94,7 +94,7 @@ public class ICEditItemsAction extends HttpServlet{
 		}
 		//Start a data connection
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080834]");
 			return;
 		}
 		try{
@@ -125,11 +125,11 @@ public class ICEditItemsAction extends HttpServlet{
 			
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080835]");
 			return;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080836]");
 		
 		//If we are returning from creating an item through the PO system, we'll return to editing the PO:
 		if (clsManageRequestParameters.get_Request_Parameter(ICEditPOLineEdit.CREATE_ITEM_BUTTON, request).compareToIgnoreCase("") != 0){

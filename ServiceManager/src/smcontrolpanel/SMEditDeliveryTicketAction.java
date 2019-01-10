@@ -355,14 +355,14 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 				"Error: " + e.getMessage(), 
 				"[1536256701]"
 			);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080483]");
 	 		s += "<FONT COLOR=RED>Error - " + e.getMessage() + ".</FONT>"
 		 			+ "</BODY></HTML>"
 		 			;
 		 		return s;
 		}
 	 		
-	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080484]");
 	 	s += "</BODY></HTML>";
 	 	return s;
 	}

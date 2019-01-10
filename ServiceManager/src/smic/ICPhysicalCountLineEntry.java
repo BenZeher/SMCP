@@ -78,7 +78,7 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080882]");
     	return bResult;
     	
     }
@@ -154,7 +154,7 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, bAddNewItems);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080883]");
     	return bResult;	
     	
     }
@@ -303,7 +303,7 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080881]");
     	return bResult;
     	
     }

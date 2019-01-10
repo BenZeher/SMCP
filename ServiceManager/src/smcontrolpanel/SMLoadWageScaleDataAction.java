@@ -393,7 +393,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 				bResult = false;
 			}
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080584]");
 		return bResult;
 
 	}
@@ -669,7 +669,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
     	}catch (SQLException ex){	
     		System.out.println("Error validating wagescalerecords table is empty");
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080583]");
 		return bIsValid;
 	}
 

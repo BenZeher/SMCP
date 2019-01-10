@@ -333,7 +333,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error creating temporary item table - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080972]");
     		return false;
     	}
 		
@@ -381,7 +381,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    		m_sWarning = "Error inserting into temporary item table with SQL: " + SQL + " - " 
 	    		+ e1.getMessage() + ".";
 	    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-	    		clsDatabaseFunctions.freeConnection(context, conn);
+	    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080973]");
 	    		return false;
 	    	}		
 		    if (bDebugMode){
@@ -415,7 +415,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				} catch (SQLException e1) {
 		    		m_sWarning = "Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
 		    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547080974]");
 		    		return false;
 					}										
 				}
@@ -423,7 +423,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			rs.close();		
 		}catch(SQLException e){
 			m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080975]");
 			return false;
 		}
 		
@@ -452,7 +452,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080976]");
     		return false;
     	}		
 	    if (bDebugMode){
@@ -490,7 +490,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error ignoring items on Purchase orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080977]");
     		return false;
     	}		
 	    if (bDebugMode){
@@ -524,7 +524,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error ignoring items on Purchase order receipts with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080978]");
     		return false;
     	}
 	    if (bDebugMode){
@@ -555,7 +555,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error ignoring items in iccosts with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080979]");
     		return false;
     	}
 	    if (bDebugMode){
@@ -586,7 +586,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error ignoring items in icitemlocations with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080980]");
     		return false;
     	}
 	    if (bDebugMode){
@@ -610,7 +610,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
     		m_sWarning = "Error updating last transaction dates with SQL: " + SQL + " - " + e1.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080981]");
     		return false;
     	}
 	    if (bDebugMode){
@@ -670,11 +670,11 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     	}catch (SQLException e){
     		m_sWarning = "Error reading items - " + e.getMessage() + ".";
     		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn);
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080982]");
     		return false;
     	}
 		m_sWarning = Remove_Temp_Table_ICITEMLIST(conn);
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080983]");
 		return true;
 	}
 	

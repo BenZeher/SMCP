@@ -117,7 +117,7 @@ public class ICPOReceiptLine extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080941]");
     	return bResult;
     	
     }
@@ -220,7 +220,7 @@ public class ICPOReceiptLine extends clsMasterEntry{
     	}else{
     		clsDatabaseFunctions.rollback_data_transaction(conn);
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080942]");
     	return bResult;	
     	
     }
@@ -691,7 +691,7 @@ public class ICPOReceiptLine extends clsMasterEntry{
     	}
     	
     	bResult = validate_entry_fields(conn, bAllowZeroReceiptQty);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080943]");
     	
     	return bResult;
     	

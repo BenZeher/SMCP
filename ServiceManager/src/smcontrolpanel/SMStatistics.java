@@ -279,7 +279,7 @@ public class SMStatistics extends HttpServlet {
 	     	out.println ("Number of system log events in system: " + rs.getLong("CNT") + ".<BR>" );
 	     	rs.close();
 	     	
-	     	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080672]");
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
@@ -287,7 +287,7 @@ public class SMStatistics extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			//return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080673]");
 		out.println("</BODY></HTML>");
 	}
 	

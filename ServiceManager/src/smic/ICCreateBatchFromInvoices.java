@@ -74,7 +74,7 @@ public class ICCreateBatchFromInvoices extends HttpServlet {
 	    ICAutoCreateInvoiceBatch iccreate = new ICAutoCreateInvoiceBatch();
 		iccreate.setCreatedBy(sUserFullName, sUserID);
 		if(iccreate.checkToCreateNewBatch(conn,sUserFullName, getServletContext(), sDBID, sUserID)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080808]");
 			String sStatus = "";
 			if (iccreate.getM_sBatchNumber().compareToIgnoreCase("-1") == 0){
 				sStatus += "No adjustment batch was created";
@@ -88,7 +88,7 @@ public class ICCreateBatchFromInvoices extends HttpServlet {
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 		}else{
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080809]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Warning=Invoice export NOT processed: " + clsServletUtilities.URLEncode(iccreate.getErrorMessage())

@@ -83,7 +83,7 @@ public class SMListOrderDocuments extends HttpServlet {
 			out.println("<B>Error reading order documents URL: " + e.getMessage() + "</B>");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080582]");
 
 		if (sOrderDocURL.trim().compareToIgnoreCase("") == 0){
 			out.println("<B>Order documents FTP URL is not set in System Options:</B>");

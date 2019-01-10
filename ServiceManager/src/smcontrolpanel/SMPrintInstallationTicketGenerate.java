@@ -133,7 +133,7 @@ public class SMPrintInstallationTicketGenerate extends HttpServlet {
 					"[1405006252]"
 					);
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080603]");
 	    out.println("</BODY></HTML>");
 	}
 }

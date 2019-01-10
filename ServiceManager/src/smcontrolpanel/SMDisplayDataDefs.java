@@ -105,13 +105,13 @@ public class SMDisplayDataDefs  extends HttpServlet {
 				printTableDefs(arrTables.get(i), conn, out);
 			} catch (SQLException e) {
 				out.println("<BR>Error getting table defs for table '" + arrTables.get(i) + " - " + e.getMessage());
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080458]");
 				out.println("</BODY></HTML>");
 				return;
 			}
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080459]");
 		
 		out.println("<BR>Printed definitions for <B>" + arrTables.size() + "</B> tables.<BR>");
 		out.println("</BODY></HTML>");

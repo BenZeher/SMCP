@@ -250,12 +250,12 @@ public class ICBulkTransferAction extends HttpServlet {
 		batch.sSetCreatedByID(sUserID);
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080772]");
 			throw new Exception("Error [1475168409] starting data transaction.");
 		}
 		
 		if (!batch.save_without_data_transaction(conn, sUserFullName, sUserID)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080773]");
 			throw new Exception("Error [1475168408] - could not save transfer batch - " + batch.getErrorMessages());
 		}
 		
@@ -268,16 +268,16 @@ public class ICBulkTransferAction extends HttpServlet {
 		entry.sEntryType(Integer.toString(ICEntryTypes.TRANSFER_ENTRY));
 
 		if(!entry.save_without_data_transaction(conn, sUserID)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080774]");
 			throw new Exception("Error [1475177439] saving entry - " + entry.getErrorMessage());
 		}
 		//System.out.println("[1475181785] got here");
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080775]");
 			throw new Exception("Error [1475177449] committing transaction.");
 		}
 		//System.out.println("[1475181786] got here");
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080776]");
 		return batch.sBatchNumber();
 		
 	}
@@ -308,7 +308,7 @@ public class ICBulkTransferAction extends HttpServlet {
 			throw new Exception(sLineErrors);
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080777]");
 		return;
 		
 	}
@@ -384,12 +384,12 @@ public class ICBulkTransferAction extends HttpServlet {
 				}
 				rs.close();
 			} catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080778]");
 				throw new Exception("Error [1475787304] reading shipments with SQL '" + SQL + "' - " + e.getMessage());
 			}
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080779]");
 		return;
 		
 	}

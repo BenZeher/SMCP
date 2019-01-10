@@ -94,14 +94,14 @@ public class SMEditSMOptions extends HttpServlet {
 	    	throw new Exception ("Error [1457450819] - Could not load smoptions record - connection = null");
 		}	
 		if (!option.load(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080544]");
 			throw new Exception ("Error [1457450820] - Could not load smoptions record - option.load() failed: " + option.getErrorMessage());
 		}
 		if (!optioninput.loadFromSMOptionClass(option)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080545]");
 			throw new Exception ("Error [1457450820] - Could not load SM option input from SM Option record");
 		}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080546]");
     	return optioninput;
 	}
 	private void createEntryScreen(String sDBID, String sUserFullName, String sUserID, SMOptionInput optionInput) throws Exception{

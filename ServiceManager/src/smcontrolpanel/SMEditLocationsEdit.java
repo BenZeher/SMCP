@@ -597,11 +597,11 @@ public class SMEditLocationsEdit extends HttpServlet {
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(sSQL);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080497]");
 		}catch (SQLException ex){
 			throw new Exception("Error [1439993939] adding new location with SQL: " + sSQL + " - " + ex.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080498]");
 	}
 	
 	public void doGet(HttpServletRequest request,

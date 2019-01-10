@@ -125,11 +125,11 @@ public class SMSalesTaxReport {
 					);
 			
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080660]");
 			throw new Exception(e1.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080661]");
 		out.println("\n" + sJavaScripts() + "\n");
 		return;
 	}

@@ -77,7 +77,7 @@ public class SMListBidDocuments extends HttpServlet {
 			out.println("<B>Error reading " + SMBidEntry.ParamObjectName + " documents URL: " + e.getMessage() + "</B>");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080580]");
 
 		if (sBidDocURL.trim().compareToIgnoreCase("") == 0){
 			out.println("<B>" + SMBidEntry.ParamObjectName + " documents FTP URL is not set in System Options:</B>");

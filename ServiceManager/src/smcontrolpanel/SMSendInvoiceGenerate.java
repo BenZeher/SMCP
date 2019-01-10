@@ -163,7 +163,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 			try {
 				out.println(getHTMLInvoiceForm(arrInvoices, request, conn, false));
 			} catch (Exception e1) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080662]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + URLEncoder.encode(e1.getMessage(), "UTF-8")
@@ -172,7 +172,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 						);			
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080663]");
 			return;
 		}	  
 		//If we are going to email the invoices
@@ -187,7 +187,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 					getServletContext(),
 					sUserName);
 			} catch (Exception e1) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080664]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMSendInvoiceGenerate" + "?"
 								+ "Warning=" + URLEncoder.encode(e1.getMessage(), "UTF-8")
@@ -196,7 +196,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 						);
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080665]");
 			if (sSendingEmailResultString.compareToIgnoreCase("") != 0){
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMSendInvoiceGenerate" + "?"
@@ -222,7 +222,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 			try {
 				updateAllInvoiceStates(request,conn);
 			} catch (Exception e1){
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080666]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + URLEncoder.encode(e1.getMessage(), "UTF-8")
@@ -231,7 +231,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 						);			
 				return;
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080667]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 							+ "Status=" + "Invoice statuses successfully updated."
@@ -255,7 +255,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		Collections.sort(sOrderTypes);
 
 		if (sOrderTypes.size() == 0){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080668]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 							+ "Warning=" + URLEncoder.encode("You must select at least one order type.", "UTF-8")
@@ -279,7 +279,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		Collections.sort(sSalesGroups);
 
 		if (sSalesGroups.size() == 0){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080669]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 							+ "Warning=" + URLEncoder.encode("You must select at least one sales group.", "UTF-8")
@@ -376,7 +376,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				bPreSelectInvoicesWithEmailAddresses
 			);
 		} catch (Exception e1){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080670]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 							+ "Warning=" + URLEncoder.encode(e1.getMessage(), "UTF-8")
@@ -385,7 +385,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 					);		
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080671]");
 		out.println("</FORM>");
 		out.println("</BODY></HTML>");
 	}

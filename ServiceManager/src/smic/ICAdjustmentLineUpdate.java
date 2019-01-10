@@ -201,7 +201,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080764]");
 			return false;
 		}
 		
@@ -215,7 +215,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080765]");
 				return false;
 			}
 			//If the line was successfully added, update the line number:
@@ -267,7 +267,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080766]");
 				return false;
 			}
 		}
@@ -277,11 +277,11 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080767]");
 			return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080768]");
 		
 		//Reload the line class, now that the line was saved:
 		String sBatchNumber = m_Line.sBatchNumber();
@@ -330,10 +330,10 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080762]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080763]");
 		return true;
 	}
     private boolean setDefaultWriteOffAccount(

@@ -219,7 +219,7 @@ public class ICPOHeader extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080899]");
     	return bResult;
     	
     }
@@ -344,7 +344,7 @@ public class ICPOHeader extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn, sUserFullName, sUserID, bForceSave);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080900]");
     	return bResult;	
     	
     }
@@ -717,7 +717,7 @@ public class ICPOHeader extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn, sUserFullName, sUserID);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080898]");
     	return bResult;
     	
     }
@@ -1596,12 +1596,12 @@ public class ICPOHeader extends clsMasterEntry{
 			throw new Exception("Error [1400098223] getting connection - " + e.getMessage());
 		}
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080906]");
 			throw new Exception("Error [1400098224] - could not start data transaction.");
 		}
 		if(!save_without_data_transaction(conn, sUserFullName, sUserID, true)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080907]");
 			throw new Exception("Error saving updated PO - " + getErrorMessages());
 		}
 		
@@ -1646,7 +1646,7 @@ public class ICPOHeader extends clsMasterEntry{
 				stmt.execute(SQL);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080908]");
 				throw new Exception("Error updating new vendor item records with SQL: " + SQL + " - " + e.getMessage());
 			}
 			
@@ -1682,7 +1682,7 @@ public class ICPOHeader extends clsMasterEntry{
 				stmt.execute(SQL);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080909]");
 				throw new Exception("Error inserting new vendor item records with SQL: " + SQL + " - " + e.getMessage());
 			}
 		}
@@ -1705,15 +1705,15 @@ public class ICPOHeader extends clsMasterEntry{
 			stmt.execute(SQL);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080910]");
 			throw new Exception("Error deleting previous vendor item records with SQL: " + SQL + " - " + e.getMessage());
 		}
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080911]");
 			throw new Exception("Error committing data transaction to update vendor");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080912]");
 	}
 	
     private void initPOVariables(){
@@ -1819,7 +1819,7 @@ public class ICPOHeader extends clsMasterEntry{
 			return false;
 		}
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080901]");
 			super.addErrorMessage("Error [1523371457] - could not start data transaction.");
 			return false;
 		}		
@@ -1834,7 +1834,7 @@ public class ICPOHeader extends clsMasterEntry{
 			stmt.executeUpdate(SQL);
 		} catch (Exception ex) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080902]");
 			super.addErrorMessage("Error updating po line number with SQL: " + SQL + " - " + ex.getMessage());
 			return false;
 		}
@@ -1861,7 +1861,7 @@ public class ICPOHeader extends clsMasterEntry{
 					stmt.executeUpdate(SQL);
 				} catch (Exception ex) {
 					clsDatabaseFunctions.rollback_data_transaction(conn);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547080903]");
 					super.addErrorMessage("Error updating po line number with SQL: " + SQL + " - " + ex.getMessage());
 					return false;
 				}
@@ -1870,12 +1870,12 @@ public class ICPOHeader extends clsMasterEntry{
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080904]");
 			super.addErrorMessage("Error committing data transaction to update po line numbers");
 			return false;
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080905]");
 		return true;
     }
 }

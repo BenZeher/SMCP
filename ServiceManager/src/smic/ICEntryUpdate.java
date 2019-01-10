@@ -189,7 +189,7 @@ public class ICEntryUpdate extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080861]");
 			m_sWarning = "could not start data transaction";
 			return false;
 		}
@@ -199,7 +199,7 @@ public class ICEntryUpdate extends HttpServlet{
 		
 		if (!m_Entry.save_without_data_transaction(conn, sUserID)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080862]");
 			if (m_Entry.getErrorMessage().size() == 0){
 				m_sWarning = "unspecified error in entry class saving entry";
 			}else{
@@ -211,7 +211,7 @@ public class ICEntryUpdate extends HttpServlet{
 			
 		}else{
 			clsDatabaseFunctions.commit_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080863]");
 			return true;
 		}
 	}

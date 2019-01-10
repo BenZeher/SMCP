@@ -330,11 +330,11 @@ public class SMDetailSheetEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error deleting detail sheet with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080439]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080440]");
 
 		return true;
 	}

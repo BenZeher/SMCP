@@ -106,10 +106,10 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 				context,
 				sLicenseModuleLevel);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080678]");
 			throw new Exception("Error [1499358161] - " + e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080679]");
 		return;
 	}
 	private void processReport(

@@ -233,7 +233,7 @@ public class ICItemValuationReportGenerate extends HttpServlet {
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
     		out.println("Could not print report - " + itemval.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080867]");
 	    out.println("</BODY></HTML>");
 	}
 }

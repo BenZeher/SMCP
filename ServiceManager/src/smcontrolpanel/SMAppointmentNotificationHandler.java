@@ -77,17 +77,17 @@ public class SMAppointmentNotificationHandler  extends clsMasterEntry{
 						+ ", which is listed in " + CompanyDataCredentials.TableName 
 						+ ", is missing table '" + SMTableappointments.TableName + "'."
 					);
-					clsDatabaseFunctions.freeConnection(context, conn);
+					clsDatabaseFunctions.freeConnection(context, conn, "[1547080402]");
 					return s;
 				}
 			}
 			catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080403]");
 				throw new Exception("Error [1505420942] - " + e.getMessage());
 			}		
 
 			if (rs == null){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080404]");
 				return s;
 			}
 
@@ -97,11 +97,11 @@ public class SMAppointmentNotificationHandler  extends clsMasterEntry{
 			}
 			rs.close();
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080405]");
 			throw new Exception("Error [1505421053] reading appointment records using database ID '" + sDatabaseID + "' - " + e.getMessage());
 		}
 		
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080400]");
 		return s;
 	}
 	

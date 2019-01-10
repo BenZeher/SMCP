@@ -186,7 +186,7 @@ public class SMWageScaleReportGenerate extends HttpServlet {
     		out.println("Could not print report - " + wsr.getErrorMessage());
     	}
 
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080684]");
 	    out.println("</BODY></HTML>");
 	}
 	

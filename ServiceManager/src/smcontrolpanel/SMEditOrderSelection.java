@@ -643,7 +643,7 @@ public class SMEditOrderSelection extends HttpServlet {
 					+ "\" VALUE=\"" + VIEWORDER_BUTTON_LABEL + "\"" + "class = \"buttonstyle\"" + "><BR>");
 		}
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080521]");
 		out.println("</FORM>");
 
 		//Set the default focus:

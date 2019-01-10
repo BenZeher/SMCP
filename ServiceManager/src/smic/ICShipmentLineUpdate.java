@@ -221,7 +221,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080986]");
 			return false;
 		}
 		
@@ -235,7 +235,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080987]");
 				return false;
 			}
 			//If the line was successfully added, update the line number:
@@ -293,7 +293,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
 					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080988]");
 				return false;
 			}
 		}
@@ -303,10 +303,10 @@ public class ICShipmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080989]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080990]");
 		
 		//Reload the line class, now that the line was saved:
 		String sBatchNumber = m_Line.sBatchNumber();
@@ -358,10 +358,10 @@ public class ICShipmentLineUpdate extends HttpServlet{
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080984]");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080985]");
 		return true;
 	}
     private boolean setDefaultCategory(

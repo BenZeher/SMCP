@@ -470,7 +470,7 @@ public class SMSalesContactEdit extends HttpServlet {
     					out.println("<TD ALIGN=LEFT style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" + rsappointments.getString(SMTableappointments.mcomment) + "</TD>"); 
     					out.println("</TR>");
 					}	    	
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080658]");
 				rsappointments.close();
 				out.println("</TABLE>");
 				out.println("</TD></TR>");

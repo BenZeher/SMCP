@@ -252,10 +252,10 @@ public void save_without_data_transaction (ServletContext context,
     			throw new Exception ("Error [1446751983] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
     		}
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080487]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080488]");
     	
     }
 

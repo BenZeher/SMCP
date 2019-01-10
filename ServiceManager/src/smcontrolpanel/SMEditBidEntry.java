@@ -141,7 +141,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				return;
 			}
 			
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080470]");
 		}
 		
 		//If this is a 'resubmit', meaning it's being called by SMEditBidEntryAction, then
@@ -224,7 +224,7 @@ public class SMEditBidEntry  extends HttpServlet {
 							conn,
 							(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 					);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080471]");
 			}
 			if (bAllowBidView){
 				SMOption smopt = new SMOption();

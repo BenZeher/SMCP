@@ -298,7 +298,7 @@ public class SMQueryGenerate extends HttpServlet {
     			(sQueryTitle.trim().compareToIgnoreCase("") == 0)
     			|| (sQueryString.trim().compareToIgnoreCase("") == 0)
     	){
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080654]");
     		sWarning = "You must enter a query title and a query string.";
     		String sRedirect = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     		+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -373,7 +373,7 @@ public class SMQueryGenerate extends HttpServlet {
     		
     		out.println("Could not print query '" + sQueryString + "' - " + qry.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080655]");
 	    out.println("</BODY></HTML>");
 	}
 	private String replaceQueryParameters(String sQuery, HttpServletRequest req, PrintWriter pwOut) throws Exception{

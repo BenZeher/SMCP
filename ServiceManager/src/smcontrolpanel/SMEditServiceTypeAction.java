@@ -76,7 +76,7 @@ public class SMEditServiceTypeAction extends HttpServlet{
 	    }
 	    
 	    if (!clsDatabaseFunctions.start_data_transaction(conn)){
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080540]");
 	    	out.println("Error starting database transaction");
 			out.println("</BODY></HTML>");
 			return;
@@ -93,7 +93,7 @@ public class SMEditServiceTypeAction extends HttpServlet{
 	    	clsDatabaseFunctions.executeSQL(sSQL, conn);
 	    }catch (SQLException ex){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080541]");
 	    	out.println("Error updating service types with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
@@ -101,12 +101,12 @@ public class SMEditServiceTypeAction extends HttpServlet{
 		}
 	    if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    	clsDatabaseFunctions.rollback_data_transaction(conn);
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080542]");
 	    	out.println("Unable to commit data transaction.");
 				out.println("</BODY></HTML>");
 				return;
 	    }
-	    clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080543]");
 	    out.println("Successfully updated service type.");
 	    out.println("</BODY></HTML>");
 	}

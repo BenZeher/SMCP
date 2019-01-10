@@ -109,7 +109,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080428]");
     	return bResult;
     	
     }
@@ -186,7 +186,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080429]");
     	return bResult;	
     	
     }
@@ -297,7 +297,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080427]");
     	return bResult;
     	
     }

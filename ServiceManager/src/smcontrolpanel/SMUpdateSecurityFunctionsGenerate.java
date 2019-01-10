@@ -93,7 +93,7 @@ public class SMUpdateSecurityFunctionsGenerate extends HttpServlet {
     	
     	SMUpdateData dat = new SMUpdateData();
     	if (!dat.update (conn, sUserID, sDBID)){
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080675]");
     		sWarning = URLEncoder.encode("WARNING: Could not update - " + clsStringFunctions.filter(dat.getErrorMessage()), "UTF-8");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -106,7 +106,7 @@ public class SMUpdateSecurityFunctionsGenerate extends HttpServlet {
 
     	//If there was no error message, simply advise that the update process was successful:
    		sStatus = URLEncoder.encode("Security Functions Successfully Updated", "UTF-8");
-   		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+   		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080676]");
    		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Status=" + sStatus

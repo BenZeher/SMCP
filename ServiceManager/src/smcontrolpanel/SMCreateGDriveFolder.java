@@ -242,7 +242,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 				stmt.execute(SQL);
 			}
 		} catch (SQLException e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080421]");
 			s += "<BR>Error [Error [1439824295] - Could not update Google Drive link with SQL: '" + SQL + " - " + e1.getMessage() + ".</HTML>";
 			out.println(s);
 			return;
@@ -256,7 +256,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			"Folder URL: '" + sFolderURL + "'", 
 			"[1440028151]"
 		);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080422]");
 		
 		//Assuming all went well, now we can return the user to the appropriate screen:
 		redirectProcess(sRedirectString, response);

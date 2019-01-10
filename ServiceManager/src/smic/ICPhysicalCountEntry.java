@@ -62,7 +62,7 @@ public class ICPhysicalCountEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = load (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080878]");
     	return bResult;
     	
     }
@@ -129,7 +129,7 @@ public class ICPhysicalCountEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = save_without_data_transaction(conn, sUserID, sUserFullName);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080879]");
     	return bResult;	
     	
     }
@@ -268,7 +268,7 @@ public class ICPhysicalCountEntry extends clsMasterEntry{
     	}
     	
     	boolean bResult = delete (conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080877]");
     	return bResult;
     	
     }

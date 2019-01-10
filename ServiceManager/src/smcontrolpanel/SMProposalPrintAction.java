@@ -154,11 +154,11 @@ public class SMProposalPrintAction extends HttpServlet {
 				rsOptions.close();
 			}else{
 				rsOptions.close();
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080646]");
 				throw new Exception("Could not get SM Options record with email info.");
 			}
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080647]");
 			throw new Exception("Error reading SM Options record - " + e1.getMessage());
 		}
 		String sSystemRootPath = SMUtilities.getAbsoluteRootPath(req, getServletContext());
@@ -179,7 +179,7 @@ public class SMProposalPrintAction extends HttpServlet {
 			sSendingEmail = rs.getString(SMTableusers.TableName + "." + SMTableusers.semail).trim();
 			sShipToName = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim();
 		}else{
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080648]");
 			throw new Exception("Could not read salesperson's email address.");
 		}
 		
@@ -210,7 +210,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		}
 		
 		
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080649]");
 		
 		if (sSendingEmail.compareToIgnoreCase("") == 0){
 			throw new Exception("The salesperson's email address is blank.");
@@ -334,14 +334,14 @@ public class SMProposalPrintAction extends HttpServlet {
 				bPrintLogo
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080650]");
 	 		s += "<FONT COLOR=RED>Error - " + e.getMessage() + ".</FONT>"
 		 			+ "</BODY></HTML>"
 		 			;
 		 		return s;
 		}
 	 	
-	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	 	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080651]");
 	 	s += "</BODY></HTML>";
 	 	return s;
 	}

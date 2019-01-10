@@ -278,11 +278,11 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error deleting proposal phrase with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080644]");
 			return false;
 		}		
 
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080645]");
 
 		return true;
 	}

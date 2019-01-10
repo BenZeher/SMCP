@@ -99,7 +99,7 @@ public class GLAccountStructureEdit extends HttpServlet {
 		    	try{
 		    		entry.delete(entry.getlid(), conn);
 		    	}catch (Exception e){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080724]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountStructureSelect"
     					+ "?" + SMTableglaccountstructures.lid + "=" + entry.getlid()
@@ -107,7 +107,7 @@ public class GLAccountStructureEdit extends HttpServlet {
     				);
 					return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080725]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountStructureSelect"
 					+ "?" + SMTableglaccountstructures.lid + "=" + entry.getlid()

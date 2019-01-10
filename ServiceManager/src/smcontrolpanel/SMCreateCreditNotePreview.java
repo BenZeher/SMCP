@@ -129,7 +129,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 		    	//processing error
 	    		sWarning = "Unable to display invoice information.<BR>" + 
 	    					e.getMessage();
-	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080419]");
 	    		response.sendRedirect(
 					"" + sCallingClass + "?"
 					+ "Warning=" + sWarning
@@ -182,7 +182,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 	    	//out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Create----\">");
 	    	out.println ("</FORM>");
 	    	
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080420]");
 			
 	    	out.println ("<NOSCRIPT>\n"
 	    			   + "    <font color=red>\n"

@@ -148,7 +148,7 @@ public class SMMapDisplay extends HttpServlet {
 				getServletContext(),
 				conn)
 		);
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080588]");
 		return;
 	}
 	private String getMapCenterAddress(String sConf, String sUserID, String sUserFullName, ServletContext context) throws SQLException{

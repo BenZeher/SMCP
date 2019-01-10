@@ -96,7 +96,7 @@ public class SMEditOrderAction extends HttpServlet{
     		if (bCloneProposal){
     			if (entry.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE)) != 0){
     				clsDatabaseFunctions.rollback_data_transaction(conn);
-    				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080500]");
         			smaction.redirectAction( 
 					"You can only clone proposals on quotes, not on active or standing orders", 
 					"",
@@ -112,7 +112,7 @@ public class SMEditOrderAction extends HttpServlet{
 			//complete loading the order. 
     		if(!entry.load(conn)){
    				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080501]");
     			smaction.redirectAction( 
 				entry.getErrorMessages(), 
 				"",
@@ -145,7 +145,7 @@ public class SMEditOrderAction extends HttpServlet{
 									   conn);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080502]");
     			smaction.redirectAction( 
 				e.getMessage(), 
 				"",
@@ -165,7 +165,7 @@ public class SMEditOrderAction extends HttpServlet{
 								     smaction.getFullUserName(), 
 								     "Clone_Order")){
 				clsDatabaseFunctions.rollback_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080503]");
     			smaction.redirectAction( 
 				"Error cloning order - " + newOrder.getErrorMessages(), 
 				"",
@@ -184,7 +184,7 @@ public class SMEditOrderAction extends HttpServlet{
 						proposal.load(getServletContext(), sDBID);
 					} catch (Exception e) {
         				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080504]");
             			smaction.redirectAction( 
     					"Error cloning order - " + e.getMessage(), 
     					"",
@@ -204,7 +204,7 @@ public class SMEditOrderAction extends HttpServlet{
 							(String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 					} catch (Exception e) {
         				clsDatabaseFunctions.rollback_data_transaction(conn);
-        				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+        				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080505]");
             			smaction.redirectAction( 
     					"Error cloning order - " + e.getMessage(), 
     					"",
@@ -217,7 +217,7 @@ public class SMEditOrderAction extends HttpServlet{
 					}
 				}
 				clsDatabaseFunctions.commit_data_transaction(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080506]");
     			smaction.redirectAction( 
 					"", 
 					"Order #" + entry.getM_sOrderNumber() + " cloned successfully.",
@@ -259,7 +259,7 @@ public class SMEditOrderAction extends HttpServlet{
 				return;
     		}
     		if (entry.validate_for_invoicing(conn)){
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080507]");
 				String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 				+ "smcontrolpanel.SMCreateMultipleInvoicesSelection"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -271,7 +271,7 @@ public class SMEditOrderAction extends HttpServlet{
 				redirectProcess(sRedirectString, response);
 				return;
     		}else{
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080508]");
 				smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 				entry.getErrorMessages(), 
@@ -453,7 +453,7 @@ public class SMEditOrderAction extends HttpServlet{
     			bRecalculateUnitPrices = true;
     		}
     		if (!entry.loadDetailLines(conn)){
-    			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080509]");
     			smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 					"Could not load detail lines - " + clsServletUtilities.URLEncode(entry.getErrorMessages()), 
@@ -482,7 +482,7 @@ public class SMEditOrderAction extends HttpServlet{
 				bRecalculateUnitPrices, 
 				breacquireGeocode,
 				"UPDATEORDER")) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080510]");
 				smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 				smaction.redirectAction(
 					"Could not save: " + entry.getErrorMessages(), 
@@ -506,7 +506,7 @@ public class SMEditOrderAction extends HttpServlet{
 				//If the save succeeded, force the called function to reload it by NOT
 				//putting the entry object in the current session, but by passing it
 				//in the query string instead:
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080511]");
 				smaction.getCurrentSession().removeAttribute(SMOrderHeader.ParamObjectName);
 				if (smaction.getOriginalURL().trim().compareToIgnoreCase("") != 0){
 					response.sendRedirect(smaction.getOriginalURL().replace("*", "&")

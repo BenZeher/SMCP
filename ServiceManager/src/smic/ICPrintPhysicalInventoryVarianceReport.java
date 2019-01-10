@@ -158,7 +158,7 @@ public class ICPrintPhysicalInventoryVarianceReport extends HttpServlet {
     			getServletContext())){
     		out.println("Could not print report - " + icvar.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080947]");
 	    out.println("</BODY></HTML>");
 	}
 }

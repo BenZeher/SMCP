@@ -506,16 +506,16 @@ public class ICEntry extends java.lang.Object {
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547081120]");
 			return false;
 		}
 
 		if (!load_lines(conn)) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547081121]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547081122]");
 		return true;
 	}
 
@@ -598,16 +598,16 @@ public class ICEntry extends java.lang.Object {
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080847]");
 			return false;
 		}
 
 		if (!load_lines(conn)) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080848]");
 			return false;
 		}
 
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080849]");
 		return true;
 	}
 

@@ -90,7 +90,7 @@ public class GLAccountGroupEdit extends HttpServlet {
 		    	try{
 		    		entry.delete(entry.getlid(), conn);
 		    	}catch (Exception e){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080700]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountGroupSelect"
     					+ "?" + SMTableglaccountgroups.lid + "=" + entry.getlid()
@@ -98,7 +98,7 @@ public class GLAccountGroupEdit extends HttpServlet {
     				);
 					return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080701]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLAccountGroupSelect"
 					+ "?" + SMTableglaccountgroups.lid + "=" + entry.getlid()

@@ -68,7 +68,7 @@ public class ICCreateSMInvoiceBatch extends HttpServlet {
 		ICImportSMInvoices icsmi = new ICImportSMInvoices();
 		icsmi.setCreatedBy(sUserFullName, sUserID);
 		if(icsmi.importInvoices(conn,getServletContext(),sUserFullName, sDBID, sUserID)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080811]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Status=" + SMUtilities.URLEncode("Invoice batch " + icsmi.getM_sBatchNumber() + " successfully created, " //and posted "
@@ -77,7 +77,7 @@ public class ICCreateSMInvoiceBatch extends HttpServlet {
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 		}else{
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080812]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Warning=" + SMUtilities.URLEncode("Batch NOT created: " + icsmi.getErrorMessage())

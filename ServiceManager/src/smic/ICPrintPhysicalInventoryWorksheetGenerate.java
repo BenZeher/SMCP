@@ -139,7 +139,7 @@ public class ICPrintPhysicalInventoryWorksheetGenerate extends HttpServlet {
     			out)){
     		out.println("Could not print report - " + ws.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080948]");
 	    out.println("</BODY></HTML>");
 	}
 }

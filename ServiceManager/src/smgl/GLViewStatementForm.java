@@ -75,11 +75,11 @@ public class GLViewStatementForm extends HttpServlet {
 			sRedirectString += 
 				"&" + "Warning" + "=" + "Error [1536083725] displaying GL statement form - " + e.getMessage()
 			;
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080759]");
 			redirectProcess(sRedirectString, response);
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080760]");
 		out.println("</BODY></HTML>");
 		
 	}

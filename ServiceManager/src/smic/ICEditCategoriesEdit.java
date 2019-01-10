@@ -104,7 +104,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!category.delete(category.getCategoryCode(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080824]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditCategoriesSelection"
     					+ "?" + ICCategory.ParamCategoryCode + "=" + category.getCategoryCode()
@@ -114,7 +114,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080825]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditCategoriesSelection"
     					+ "?" + ICCategory.ParamCategoryCode + "=" + category.getCategoryCode()

@@ -72,10 +72,10 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 				bEmailMode
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080688]");
 			throw new Exception(e.getMessage());
 		}
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080688]");
 		return s;
 	}
 	private String printWorkOrder(

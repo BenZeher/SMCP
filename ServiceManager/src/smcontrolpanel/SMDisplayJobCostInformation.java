@@ -104,7 +104,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
     		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
     		
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080460]");
     	out.println("<HR ALIGN=LEFT WIDTH=50%><B>*  </B> Total cost is the sum of extended cost in all invoice(s) and credit note(s) under the selected order.<BR>" +
     			"							  <B>** </B> Total invoiced is the sum of price after discount in all invoice(s) and credit note(s) under the selected order.");
 	    out.println("</BODY></HTML>");

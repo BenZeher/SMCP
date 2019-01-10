@@ -201,7 +201,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 				}
 			}	
 			rs1.close();
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080813]");
 		}catch (Exception e){
 			sWarning = "Error deleting inactives - " + e.getMessage() + ".";
 			return false;

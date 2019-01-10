@@ -204,18 +204,18 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080819]");
 			return false;
 		}
 		
 		if (!batch.save_without_data_transaction(conn, sUserFullName, sUserID)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080820]");
 			return false;			
 			
 		}else{
 			clsDatabaseFunctions.commit_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080821]");
 			return true;
 		}
     }

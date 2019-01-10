@@ -90,9 +90,9 @@ public class GLAccountSegment extends java.lang.Object{
     	}
     	try {
 			load(conn);
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080702]");
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080703]");
 			throw new Exception("Error [1523045035] could load " + ParamObjectName + " - " + e.getMessage());
 		}
     }
@@ -116,7 +116,7 @@ public class GLAccountSegment extends java.lang.Object{
 		try {
 			validateEntries();
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(context, conn);
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080704]");
 			throw new Exception(e.getMessage());
 		}
 		
@@ -139,7 +139,7 @@ public class GLAccountSegment extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn);
+	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080705]");
 	 		throw new Exception("Error [1523045973] saving " + ParamObjectName + " - " + e.getMessage());
 	 	}
 		
@@ -155,19 +155,19 @@ public class GLAccountSegment extends java.lang.Object{
 				}
 				rs.close();
 			} catch (SQLException e) {
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080706]");
 				throw new Exception("Error [1523046122] saving with SQL '" + SQL + "' - " + e.getMessage());
 			}
 			//If something went wrong, we can't get the last ID:
 			if (m_lid.compareToIgnoreCase("") == 0){
-				clsDatabaseFunctions.freeConnection(context, conn);
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080707]");
 				throw new Exception("Error [1523046123] -could not get last ID number.");
 			}
 	 	}
 	 	
 		//Change new record status
 	 	m_sNewRecord = "1";
-		clsDatabaseFunctions.freeConnection(context, conn);
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547080708]");
 		return;			
     }
     

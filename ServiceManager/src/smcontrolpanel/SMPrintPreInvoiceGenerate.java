@@ -153,7 +153,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 							conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080616]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -178,7 +178,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 							conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080617]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -213,7 +213,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 						  conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080618]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -244,7 +244,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 						  conn  
 				  	)
 				  ){
-					  clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080619]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -267,7 +267,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 			sStartingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning += "Error:[1423580794] Invalid starting date '" + sStartingDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080620]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -279,7 +279,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 			sEndingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sEndingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning += "Error:[1423580795] Invalid ending date '" + sEndingDate + "' - " + e.getMessage();
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080621]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -303,7 +303,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 		
 	    if (sOrderTypes.size() == 0){
     		sWarning += "You must select at least one order type.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080622]");
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -327,7 +327,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 		
 	    if (sLocations.size() == 0){
     		sWarning += "You must select at least one location.";
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080623]");
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
@@ -406,7 +406,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 	   );
 
 	   if (ICconn == null){
-		   clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		   clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080624]");
 		   sWarning += "Could not open connection to IC database.";
 		   response.sendRedirect(
 				   "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -430,7 +430,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 												 (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 												 );
 	   String sURLLinkBase = SMUtilities.getURLLinkBase(getServletContext());
-	   clsDatabaseFunctions.freeConnection(getServletContext(), ICconn);
+	   clsDatabaseFunctions.freeConnection(getServletContext(), ICconn, "[1547080625]");
     	SMPreInvoiceReport pir = new SMPreInvoiceReport();
 		long lStartingTime = System.currentTimeMillis();
     	if (!pir.processReport(
@@ -452,7 +452,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
     		out.println("Could not print report - " + pir.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080626]");
     	long lEndingTime = System.currentTimeMillis();
     	
     	out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 

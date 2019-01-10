@@ -94,7 +94,7 @@ public class GLEditCostCentersEdit extends HttpServlet {
 		    	try {
 					entry.delete(entry.get_slid(), conn);
 				} catch (Exception e) {
-					clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080739]");
     				response.sendRedirect(
         					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditCostCenterSelection"
         					+ "?" + SMTablecostcenters.lid + "=" + entry.get_slid()
@@ -102,7 +102,7 @@ public class GLEditCostCentersEdit extends HttpServlet {
         				);
     				return;
 		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080740]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditCostCenterSelection"
 							+ "?" + SMTablecostcenters.lid + "=" + entry.get_slid()

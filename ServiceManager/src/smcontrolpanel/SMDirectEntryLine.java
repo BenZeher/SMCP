@@ -139,7 +139,7 @@ public class SMDirectEntryLine extends clsMasterEntry{
     	}
     	
     	bResult = validate_entry_fields(conn);
-    	clsDatabaseFunctions.freeConnection(context, conn);
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1547080441]");
     	
     	return bResult;
     	

@@ -90,7 +90,7 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".doPost - user: " + sUser);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080556]");
 			throw new Exception("Error getting database connection - " + e.getMessage() + " - work performed code could not be saved.");
 		}
 		
@@ -98,10 +98,10 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(sSQL);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080557]");
 			throw new Exception("Error - work performed code could not be saved - " + e.getMessage() + ".");
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080558]");
 	}
 	@Override
 	public void doGet(HttpServletRequest request,

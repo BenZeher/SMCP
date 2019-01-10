@@ -71,14 +71,14 @@ public class ICCreateBatchFromReceipts extends HttpServlet {
 	    ICAutoCreateReceiptBatch iccreate = new ICAutoCreateReceiptBatch();
 		iccreate.setCreatedBy(sUserFullName, sUserID);
 		if(iccreate.checkToCreateNewReceiptBatch(conn, getServletContext(), sDBID, sUserID, sUserFullName)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080810]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Status=Receipt batch " + iccreate.getM_sBatchNumber() + " successfully created and posted."
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 		}else{
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080811]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Warning=Batch NOT created: " + iccreate.getErrorMessage()

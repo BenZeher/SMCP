@@ -897,12 +897,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}
 			}else{
 				pwOut.println("Order not found.");
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080461]");
 				return false;
 			}
 			rsOrder.close();
 		}catch (SQLException e){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080462]");
 			pwOut.println("Error opening order query: " + e.getMessage());
 			return false;
 		}
@@ -911,14 +911,14 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(sOrderNum);
 		if (!order.load(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080463]");
 			pwOut.println ("Error [1411490347] loading order - " + order.getErrorMessages());
 			return false;
 		}
 		
 		//Print order details:
 		try {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080464]");
 			pwOut.println(printOrderDetails(order, conn, sLinks, sUserID, bAllowOrderDetailViewing, bAllowItemViewing, sDBID));
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
@@ -1010,7 +1010,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 		//Print Items left on order:
 		try {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080465]");
 			pwOut.println(ItemsLeftOnOrder(order, conn, sLinks,sUserID,bAllowOrderDetailViewing, bAllowItemViewing,  sDBID));
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
@@ -1029,7 +1029,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080466]");
 		return true;
 	}
 	private String printOrderDetails(

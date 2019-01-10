@@ -198,7 +198,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080472]");
 			pwOut.println("Could not read ID of product type to be deleted with SQL: " 
 					+ sSQL + " - " + e.getMessage() + ".");
 			return false;
@@ -210,7 +210,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080473]");
 			pwOut.println("Error starting data transaction to delete product type.");
 			return false;
 		}
@@ -229,7 +229,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 			System.out.println("Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080474]");
 			return false;
 		}		
 
@@ -247,17 +247,17 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 			System.out.println("Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080475]");
 			return false;
 		}		
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080476]");
 			pwOut.println("Could not commit data transaction to complete deletion.");
 			return false;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080477]");
 
 		return true;
 	}

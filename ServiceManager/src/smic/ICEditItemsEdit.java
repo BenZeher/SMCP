@@ -109,7 +109,7 @@ public class ICEditItemsEdit extends HttpServlet {
 		    	clsDatabaseFunctions.start_data_transaction(conn);
 			    if (!item.delete(item.getItemNumber(), conn)){
 			    	clsDatabaseFunctions.rollback_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080837]");
     				response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditItemsSelection"
     					+ "?" + ICItem.ParamItemNumber + "=" + item.getItemNumber()
@@ -119,7 +119,7 @@ public class ICEditItemsEdit extends HttpServlet {
 					return;
 			    }else{
 			    	clsDatabaseFunctions.commit_data_transaction(conn);
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn);
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080838]");
     				
 			    	response.sendRedirect(
     					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditItemsSelection"

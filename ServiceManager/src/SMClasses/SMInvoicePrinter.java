@@ -910,17 +910,9 @@ public class SMInvoicePrinter extends Object{
 	
 	public String getFilePath(HttpServletRequest request, ServletContext context) {
 		String sFullLogoImageFilePath = "";
-		sFullLogoImageFilePath += System.getProperty("file.separator");
+		sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
+		m_testing.add("[1547154186] "+sFullLogoImageFilePath);
 		
-		m_testing.add("[1547154104] "+sFullLogoImageFilePath);
-		
-		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
-			m_testing.add("[1547154198] "+sFullLogoImageFilePath);
-		}else{
-			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
-			m_testing.add("[1547154186] "+sFullLogoImageFilePath);
-		}
 		return sFullLogoImageFilePath;
 	}
 	

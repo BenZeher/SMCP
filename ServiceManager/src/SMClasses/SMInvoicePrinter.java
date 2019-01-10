@@ -907,10 +907,14 @@ public class SMInvoicePrinter extends Object{
 		String sFullLogoImageFilePath = "";
 		sFullLogoImageFilePath += System.getProperty("file.separator");
 		
+		System.out.println("[1547154104] "+sFullLogoImageFilePath);
+		
 		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
 			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
+			System.out.println("[1547154198] "+sFullLogoImageFilePath);
 		}else{
 			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
+			System.out.println("[1547154186] "+sFullLogoImageFilePath);
 		}
 		return sFullLogoImageFilePath;
 	}
@@ -918,9 +922,11 @@ public class SMInvoicePrinter extends Object{
 	public String ImageConcatWithFilePath (String sFileName, String sFullLogoImageFilePath) {
 		if (sFileName.startsWith(System.getProperty("file.separator"))){
 			sFullLogoImageFilePath += sFileName.substring(1);
+			System.out.println("[1547154160] "+sFullLogoImageFilePath);
 		
 		}else{
 			sFullLogoImageFilePath += sFileName;
+			System.out.println("[1547154149] "+sFullLogoImageFilePath);
 			
 		}
 		return sFullLogoImageFilePath;

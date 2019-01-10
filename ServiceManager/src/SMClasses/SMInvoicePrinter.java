@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -44,6 +45,7 @@ public class SMInvoicePrinter extends Object{
 	private String m_InvoiceLogo;
 	private String m_sBase64LogoImage;
 	private String m_sLogoImageFileType;
+	private ArrayList<String> m_testing = new ArrayList<String>();
 	
 	
 	private static SimpleDateFormat m_InvoiceDateformatter;
@@ -488,9 +490,12 @@ public class SMInvoicePrinter extends Object{
 							+ " alt=\"" + "INVOICE LOGO IMAGE" + "\""
 							+ " width=\"" + SMTableinvoiceheaders.EMAILED_LOGO_WIDTH + "\""
 							+ " height=\"" + SMTableinvoiceheaders.EMAILED_LOGO_HEIGHT + "\""
-							+ "/>"
+							+ "/>";
+					for(int i = 0; i < m_testing.size(); i++) {
+						sCompanyLetterHead += "<p>"+m_testing.get(i)+"</p>";
+					}
 					//+ "(LOGO)"
-					+ "</TD>\n"
+					sCompanyLetterHead += "</TD>\n"
 					;
 				}
 		}else{
@@ -907,14 +912,14 @@ public class SMInvoicePrinter extends Object{
 		String sFullLogoImageFilePath = "";
 		sFullLogoImageFilePath += System.getProperty("file.separator");
 		
-		System.out.println("[1547154104] "+sFullLogoImageFilePath);
+		m_testing.add("[1547154104] "+sFullLogoImageFilePath);
 		
 		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
 			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
-			System.out.println("[1547154198] "+sFullLogoImageFilePath);
+			m_testing.add("[1547154198] "+sFullLogoImageFilePath);
 		}else{
 			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
-			System.out.println("[1547154186] "+sFullLogoImageFilePath);
+			m_testing.add("[1547154186] "+sFullLogoImageFilePath);
 		}
 		return sFullLogoImageFilePath;
 	}
@@ -922,11 +927,11 @@ public class SMInvoicePrinter extends Object{
 	public String ImageConcatWithFilePath (String sFileName, String sFullLogoImageFilePath) {
 		if (sFileName.startsWith(System.getProperty("file.separator"))){
 			sFullLogoImageFilePath += sFileName.substring(1);
-			System.out.println("[1547154160] "+sFullLogoImageFilePath);
+			m_testing.add("[1547154160] "+sFullLogoImageFilePath);
 		
 		}else{
 			sFullLogoImageFilePath += sFileName;
-			System.out.println("[1547154149] "+sFullLogoImageFilePath);
+			m_testing.add("[1547154149] "+sFullLogoImageFilePath);
 			
 		}
 		return sFullLogoImageFilePath;

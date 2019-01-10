@@ -88,7 +88,7 @@ public class SMProposalPrintAction extends HttpServlet {
 	    //If it's a request to print:
     	if (sCommandValue.compareToIgnoreCase(SMProposalPrintSelection.PRINTRECEIPTCOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into print mode");
+    			System.out.println("[1547142813] In " + this.toString() + " into print mode");
     		}
     		try {
 				printProposal(request, response, out, sDBID);

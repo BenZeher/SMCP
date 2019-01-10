@@ -63,9 +63,20 @@ public class SMAuthenticate{
         boolean bComingFromLoginScreen = clsManageRequestParameters.get_Request_Parameter("CallingClass", req).compareToIgnoreCase("smcontrolpanel.SMLogin") == 0;
        
         if((!bAllQuickLinkParametersExist && sDatabaseID.compareToIgnoreCase("") == 0) ) {
-        	System.out.println("[1541794978] - Missing db parameter in request class: req.getRequestURI = '" + req.getRequestURI() + "',"
-            		+ " req.getQueryString()  = '" + req.getQueryString() + "'."
-            	);    	
+        	SMUtilities.sysprint(
+        		"[1541794978]", 
+        		sUserFullName, 
+        		"Missing db parameter in request class: req.getRequestURI = '" 
+        			+ req.getRequestURI() + "',"
+                	+ " req.getQueryString()  = '" + req.getQueryString() + "', " 
+                	+ " sSessiondatabase = '" + sSessionDatabase + "', "
+                	+ " lFunctionID = '" + Long.toString(lFunctionID) + "'"
+                	+ "."
+        	);
+        	
+        	//System.out.println("[1541794978] - Missing db parameter in request class: req.getRequestURI = '" + req.getRequestURI() + "',"
+            //		+ " req.getQueryString()  = '" + req.getQueryString() + "'."
+            //	);    	
         }
         
         //Make sure the current session is valid 

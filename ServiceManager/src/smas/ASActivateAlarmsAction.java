@@ -201,7 +201,9 @@ public class ASActivateAlarmsAction extends HttpServlet{
 							sArmedPhrase + " " + entry.getsname() + " alarm sequence from web page in SMCP", 
 							"[1459297590]", 
 							null,
-							entry.getslid());
+							entry.getslid(),
+							getServletContext()
+					);
 				} catch (Exception e) {
 					sResults += 
 							entry.getsdescription() + " was successfully " + sArmedPhrase + " - but there was an error recording it in the user events log"

@@ -14,15 +14,13 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ASUserEventLogEntry {
 
 	private Connection conn;
-	private ServletContext context;
 	private String m_sDBID;
     public ASUserEventLogEntry(Connection cn)
     {
     	conn = cn;
     }
-    public ASUserEventLogEntry(String sDBID, ServletContext cont)
+    public ASUserEventLogEntry(String sDBID)
     {
-    	context = cont;
     	m_sDBID = sDBID;
     }
 
@@ -36,7 +34,8 @@ public class ASUserEventLogEntry {
     		String sComment,
     		String sReferenceId,
     		String sDateTime,
-    		String sAlarmID
+    		String sAlarmID,
+    		ServletContext context
    		) throws Exception{
 
     	if (conn == null){

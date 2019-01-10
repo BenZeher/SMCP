@@ -110,7 +110,7 @@ public class ASDeviceStatusAction extends HttpServlet{
 		}
 		
 		//Record the activation in the user events log:
-		ASUserEventLogEntry usereventlog = new ASUserEventLogEntry(smaction.getsDBID(), getServletContext());
+		ASUserEventLogEntry usereventlog = new ASUserEventLogEntry(smaction.getsDBID());
 		try {
 			
 			usereventlog.writeEntry(
@@ -124,7 +124,9 @@ public class ASDeviceStatusAction extends HttpServlet{
 					+ " ms from the DEVICE STATUS web page in SMCP",
 				"[459297590]", 
 				null,
-				"-1");
+				"-1",
+				getServletContext()
+			);
 		} catch (Exception e) {
 			smaction.redirectAction(
 					"", 

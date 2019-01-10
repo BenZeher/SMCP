@@ -808,7 +808,9 @@ public class SSAlarmSequence extends clsMasterEntry{
 								sCheckingTriggerDeviceResults, 
 								"[1480452758]", 
 								null,
-								getslid());
+								getslid(),
+								context
+						);
 					} catch (Exception e) {
 						throw new Exception(
 								"Error [1480452757] recording the alarm set override in the user events log - " + e.getMessage() + "."

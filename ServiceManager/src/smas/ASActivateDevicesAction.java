@@ -133,9 +133,8 @@ public class ASActivateDevicesAction extends HttpServlet{
 		}
 		
 		//Record the activation in the user events log:
-		ASUserEventLogEntry usereventlog = new ASUserEventLogEntry(smaction.getsDBID(), getServletContext());
+		ASUserEventLogEntry usereventlog = new ASUserEventLogEntry(smaction.getsDBID());
 		try {
-			
 			usereventlog.writeEntry(
 				SMTablessuserevents.DEVICE_ACTIVATED, 
 				smaction.getUserID(),
@@ -146,7 +145,9 @@ public class ASActivateDevicesAction extends HttpServlet{
 				"Activated the device from web page in SMCP when the device was currently " + sCurrentActivationStatus,
 				"[459297590]", 
 				null,
-				"-1");
+				"-1",
+				getServletContext()
+			);
 		} catch (Exception e) {
 			smaction.redirectAction(
 					"", 

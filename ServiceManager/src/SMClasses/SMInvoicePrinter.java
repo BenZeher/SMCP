@@ -45,7 +45,6 @@ public class SMInvoicePrinter extends Object{
 	private String m_InvoiceLogo;
 	private String m_sBase64LogoImage;
 	private String m_sLogoImageFileType;
-	private ArrayList<String> m_testing = new ArrayList<String>();
 	
 	
 	private static SimpleDateFormat m_InvoiceDateformatter;
@@ -490,12 +489,9 @@ public class SMInvoicePrinter extends Object{
 							+ " alt=\"" + "INVOICE LOGO IMAGE" + "\""
 							+ " width=\"" + SMTableinvoiceheaders.EMAILED_LOGO_WIDTH + "\""
 							+ " height=\"" + SMTableinvoiceheaders.EMAILED_LOGO_HEIGHT + "\""
-							+ "/>";
-					for(int i = 0; i < m_testing.size(); i++) {
-						sCompanyLetterHead += "<p>"+m_testing.get(i)+"</p>";
-					}
+							+ "/>"
 					//+ "(LOGO)"
-					sCompanyLetterHead += "</TD>\n"
+					+"</TD>\n"
 					;
 				}
 		}else{
@@ -911,14 +907,12 @@ public class SMInvoicePrinter extends Object{
 	public String getFilePath(HttpServletRequest request, ServletContext context) {
 		String sFullLogoImageFilePath = "";
 		sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
-		m_testing.add("[1547154186] "+sFullLogoImageFilePath);
 		
 		return sFullLogoImageFilePath;
 	}
 	
 	public String ImageConcatWithFilePath (String sFileName, String sFullLogoImageFilePath) {
 			sFullLogoImageFilePath += sFileName;
-			m_testing.add("[1547154149] "+sFullLogoImageFilePath);
 		return sFullLogoImageFilePath;
 	}
 	

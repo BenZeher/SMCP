@@ -916,9 +916,6 @@ public class SMInvoicePrinter extends Object{
 		return sFullLogoImageFilePath;
 	}
 	
-	
-
-	
 	public static String sStyleScripts(){
 		String s = "";
 		String sBorderSize = "0";

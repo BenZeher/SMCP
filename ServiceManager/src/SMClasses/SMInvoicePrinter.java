@@ -917,7 +917,7 @@ public class SMInvoicePrinter extends Object{
 	
 	public String ImageConcatWithFilePath (String sFileName, String sFullLogoImageFilePath) {
 		if (sFileName.startsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath += sFileName.substring(0);
+			sFullLogoImageFilePath += sFileName.substring(1);
 		
 		}else{
 			sFullLogoImageFilePath += sFileName;

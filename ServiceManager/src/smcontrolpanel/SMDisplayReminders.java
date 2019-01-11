@@ -76,8 +76,9 @@ public class SMDisplayReminders  extends HttpServlet {
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sErrorMessage + "</FONT></B><BR>");
 		}
 		
-	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayemindersAction?"
-	    		+ Paramskipreminders + "=" + "1"
+	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayRemindersAction?"
+	    		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    		+ "&" + Paramskipreminders + "=" + "1"
 				+ "\">Skip to Main Menu</A><BR><BR>");
 		
 	    out.println (getStyle());
@@ -372,7 +373,7 @@ public class SMDisplayReminders  extends HttpServlet {
 		String s = "";
 		s +="<TR " + sRowColor + "><TD class=\"reminder\">"
 			 + " <input type=\"checkbox\" " + " style=\"text-align:center;\""
-			 + " name=\"SCHEDULECODE**" + scheduleCode +  "\""
+			 + " name=\"" + SMDisplayReminders.SCHEDULE_CODE_ID_MARKER + scheduleCode +  "\""
 		     + " value=\"" +  scheduledDate + "\"> "	
 			 + "</TD>"
 			 + "<TD class=\"reminder\">" + clsDateAndTimeConversions.resultsetDateStringToString(scheduledDate) + "</TD>"

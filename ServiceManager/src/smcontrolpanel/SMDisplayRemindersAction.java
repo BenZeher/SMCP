@@ -46,7 +46,8 @@ public class SMDisplayRemindersAction extends HttpServlet{
 		if(!warnings.isEmpty()){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayReminders"
-					+ "?" + "Warning=" + warnings 
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID)
+					+ "&" + "Warning=" + warnings 
 				);
 			return;
 		}
@@ -126,8 +127,10 @@ public class SMDisplayRemindersAction extends HttpServlet{
 				sErrorList += s + " ";
 			}
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplaySchedule?"
-					+ "Warning=" + sErrorList.replace(" ", "%20")
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplaySchedule"
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
+					+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID)
+					+ "&" + "Warning=" + sErrorList.replace(" ", "%20")
 				);
 			return;
 		}

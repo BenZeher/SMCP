@@ -81,8 +81,11 @@ public class SMProposalPrintAction extends HttpServlet {
 				emailProposal(request, sDBID, sUserName, sUserID, sUserFullName);
 			} catch (Exception e) {
 				sRedirect += "&Warning=Email failed: " + e.getMessage();
+				response.sendRedirect(sRedirect);
+				return;
 			}
-	    	response.sendRedirect(sRedirect + "&Status=Email successfully sent.");
+	    	sRedirect += "&Status=Email successfully sent.";
+	    	response.sendRedirect(sRedirect);
 	    	return;
 		}
 	    //If it's a request to print:
@@ -94,10 +97,12 @@ public class SMProposalPrintAction extends HttpServlet {
 				printProposal(request, response, out, sDBID);
 			} catch (Exception e) {
 				sRedirect += "&Warning=Print failed: " + e.getMessage();
+				response.sendRedirect(sRedirect);
+		    	return;
 			}
     		return;
     	}
-	    return;
+    	return;
 	}
 	private void emailProposal(
 			HttpServletRequest req, 

@@ -596,7 +596,7 @@ public class APViewTransactionInformation  extends HttpServlet {
 					"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit?"
 			    		+ SMTableapbatches.lbatchnumber + "=" + sOriginalBatchNumber
 			    		+ "&" + SMTableapbatches.ibatchtype + "=" + sBatchType
-						+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "\">" + sOriginalBatchNumber + "</A>"
 				;
 			}

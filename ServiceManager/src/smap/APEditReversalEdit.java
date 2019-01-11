@@ -178,7 +178,7 @@ public class APEditReversalEdit  extends HttpServlet {
 	    smedit.getPWOut().println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit?"
 	    		+ SMTableapbatches.lbatchnumber + "=" + entry.getsbatchnumber()
 	    		+ "&" + SMTableapbatches.ibatchtype + "=" + Integer.toString(SMTableapbatches.AP_BATCH_TYPE_REVERSALS)
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() 
 				+ "\">Return to Batch " + entry.getsbatchnumber() + "</A><BR>\n");
 		
 	    APBatch batch = new APBatch(entry.getsbatchnumber());

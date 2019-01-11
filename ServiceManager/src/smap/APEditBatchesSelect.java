@@ -105,7 +105,8 @@ public class APEditBatchesSelect extends HttpServlet {
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">\n");
 	    out.println("  <TR>\n");
 	    out.println("    <TD>");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+	    	+ "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
 	    	+ SMTableapbatches.ibatchtype + "=" 
 	    	+ Integer.toString(SMTableapbatches.AP_BATCH_TYPE_INVOICE) 
 	    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -113,7 +114,8 @@ public class APEditBatchesSelect extends HttpServlet {
 	    out.println("</TD>\n");
 	    
 	    out.println("    <TD>");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+	    	+ "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
 	    	+ SMTableapbatches.ibatchtype + "=" 
 	    	+ Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT) 
 	    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -137,7 +139,8 @@ public class APEditBatchesSelect extends HttpServlet {
 	    	)
 	    ){
 		    out.println("    <TD>");
-		    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
+		    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+		    	+ "smap.APEditBatchesEdit?" + SMTableapbatches.lbatchnumber + "=-1&" 
 		    	+ SMTableapbatches.ibatchtype + "=" 
 		    	+ Integer.toString(SMTableapbatches.AP_BATCH_TYPE_REVERSALS) 
 		    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

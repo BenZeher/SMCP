@@ -35,7 +35,8 @@ public class ASUserEventLogEntry {
     		String sReferenceId,
     		String sDateTime,
     		String sAlarmID,
-    		ServletContext context
+    		ServletContext context,
+    		String sDiagMarker
    		) throws Exception{
 
     	if (conn == null){
@@ -153,7 +154,12 @@ public class ASUserEventLogEntry {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067612]");
 			throw new Exception("Error [1459297199] writing user event log  - " + e.getMessage() + ".");
 		}
-		clsDatabaseFunctions.freeConnection(context, conn, "[1547067613]");
+		free_AS_Connection(context, conn, sDiagMarker);
 		return;
+    }
+    
+    private boolean free_AS_Connection(ServletContext context, Connection conn, String sMarker){
+    	
+    	return clsDatabaseFunctions.freeConnection(context, conn, "[1547067613]" + " - " + sMarker);
     }
 }

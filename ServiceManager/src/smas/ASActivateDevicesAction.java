@@ -146,7 +146,8 @@ public class ASActivateDevicesAction extends HttpServlet{
 				"[459297590]", 
 				null,
 				"-1",
-				getServletContext()
+				getServletContext(),
+				"[1547226137]"
 			);
 		} catch (Exception e) {
 			smaction.redirectAction(

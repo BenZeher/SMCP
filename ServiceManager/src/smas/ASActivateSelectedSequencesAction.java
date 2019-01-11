@@ -230,7 +230,8 @@ public class ASActivateSelectedSequencesAction extends HttpServlet{
 						"[1488143001]", 
 						null,
 						entry.getslid(),
-						getServletContext()
+						getServletContext(),
+						"[1547226138]"
 				);
 			} catch (Exception e) {
 				sResults += " - "

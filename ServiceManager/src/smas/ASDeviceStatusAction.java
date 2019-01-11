@@ -125,7 +125,8 @@ public class ASDeviceStatusAction extends HttpServlet{
 				"[459297590]", 
 				null,
 				"-1",
-				getServletContext()
+				getServletContext(),
+				"[1547226139]"
 			);
 		} catch (Exception e) {
 			smaction.redirectAction(

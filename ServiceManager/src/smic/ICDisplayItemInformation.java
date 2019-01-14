@@ -534,7 +534,13 @@ public class ICDisplayItemInformation extends HttpServlet {
 	        	sDate = rsItem.getString(SMTableicitems.datLastMaintained);
 	        	String sLastMaintainedDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);
 				pwOut.println("<TD><FONT SIZE=2><B>Last maintained on: </B>" 
-						+ sLastMaintainedDate + "</FONT></TD>");
+						+ sLastMaintainedDate + "</FONT></TD>");				
+				pwOut.println("</TR>");
+				pwOut.println("<TR>");
+				pwOut.println("<TD><FONT SIZE = 2><B>Can be purchased ? </B>");
+				String sPurchase = rsItem.getInt(SMTableicitems.icannotbepurchased) == 0 ? "YES" : "NO";
+				pwOut.println(" "+sPurchase);
+				pwOut.println("</FONT></TD>");
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");
 				pwOut.println("<TD COLSPAN=2><FONT SIZE=2><B>Comment 1: </B>" 

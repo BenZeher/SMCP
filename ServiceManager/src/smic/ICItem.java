@@ -51,6 +51,7 @@ public class ICItem extends Object{
 	public static final String ParamSuppressItemQtyLookup = "SuppressItemQtyLookup";
 	public static final String ParamHideOnInvoiceDefault = "HideOnInvoiceDefault";
 	public static final String Paramsworkordercomment = "sworkordercomment";
+	public static final String Paramicannotbepurchased = "icannotbepurchased";
 	
 	//This is the length of the prefix that is used in the item number when a new item is created from the order entry system:
 	public static final int DEDICATEDITEMPREFIXLENGTH = 3;
@@ -84,6 +85,7 @@ public class ICItem extends Object{
 	private String m_sSuppressItemQtyLookup;
 	private String m_sHideOnInvoiceDefault;
 	private String m_sworkordercomment;
+	private String m_icannotbepurchased;
 	private boolean bDebugMode = false;
 
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
@@ -115,6 +117,7 @@ public class ICItem extends Object{
 		m_sReportGroup5 = "";
 		m_sMostRecentCost = "0.0000";
 		m_sLaborItem = "0";
+		m_icannotbepurchased = "0";
 		m_sNonStockItem = "0";
 		m_sNumberOfLabels = "1.0000";
 		m_sSuppressItemQtyLookup = "0";
@@ -166,6 +169,11 @@ public class ICItem extends Object{
 			m_sLaborItem = "0";
 		}else{
 			m_sLaborItem = "1";
+		}
+		if(req.getParameter(ICItem.Paramicannotbepurchased) == null) {
+			m_icannotbepurchased = "0";
+		}else {
+			m_icannotbepurchased = "1";
 		}
 		if(req.getParameter(ICItem.ParamNonStockItem) == null){
 			m_sNonStockItem = "0";
@@ -276,6 +284,7 @@ public class ICItem extends Object{
 				m_sMostRecentCost = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdmostrecentcost));
 				m_sLaborItem = Integer.toString(rs.getInt(SMTableicitems.ilaboritem));
+				m_icannotbepurchased = Integer.toString(rs.getInt(SMTableicitems.icannotbepurchased));
 				m_sNonStockItem = Integer.toString(rs.getInt(SMTableicitems.inonstockitem));
 				m_sNumberOfLabels = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdnumberoflabels));
@@ -404,6 +413,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.datLastMaintained + " = '" + m_sLastMaintainedDate + "'"
 				+ ", " + SMTableicitems.iActive + " = " + m_sActive
 				+ ", " + SMTableicitems.ilaboritem + " = " + m_sLaborItem
+				+ ", " + SMTableicitems.icannotbepurchased + " = " + m_icannotbepurchased
 				+ ", " + SMTableicitems.inonstockitem + " = " + m_sNonStockItem
 				+ ", " + SMTableicitems.isuppressitemqtylookup + " = " + m_sSuppressItemQtyLookup
 				+ ", " + SMTableicitems.ihideoninvoicedefault + " = " + m_sHideOnInvoiceDefault
@@ -470,7 +480,8 @@ public class ICItem extends Object{
 				+ SMTableicitems.datInactive
 				+ ", " + SMTableicitems.datLastMaintained
 				+ ", " + SMTableicitems.iActive
-				+ ", " + SMTableicitems.ilaboritem
+				+ ", " + SMTableicitems.ilaboritem 
+				+ ", " + SMTableicitems.icannotbepurchased
 				+ ", " + SMTableicitems.inonstockitem
 				+ ", " + SMTableicitems.isuppressitemqtylookup
 				+ ", " + SMTableicitems.ihideoninvoicedefault
@@ -502,6 +513,7 @@ public class ICItem extends Object{
 				+ ", '" + clsDateAndTimeConversions.nowSqlFormat() + "'" 
 				+ ", " + m_sActive
 				+ ", " + m_sLaborItem
+				+ ", " + m_icannotbepurchased
 				+ ", " + m_sNonStockItem
 				+ ", " + m_sSuppressItemQtyLookup
 				+ ", " + m_sHideOnInvoiceDefault
@@ -995,6 +1007,9 @@ public class ICItem extends Object{
 		}
 		if (m_sTaxable.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + ParamTaxable + "=" + m_sTaxable;
+		}
+		if (m_icannotbepurchased.compareToIgnoreCase("1") == 0){
+			sQueryString += "&" + Paramicannotbepurchased + "=" + m_icannotbepurchased;
 		}
 		if (m_sLaborItem.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + ParamLaborItem + "=" + m_sLaborItem;
@@ -1514,6 +1529,12 @@ public class ICItem extends Object{
 	}
 	public String getActive() {
 		return m_sActive;
+	}
+	public String getPurchase() {
+		return m_icannotbepurchased;
+	}
+	public void setPurchase(String sPurchase) {
+		m_icannotbepurchased = sPurchase;
 	}
 	public void setActive(String sActive) {
 		m_sActive = sActive;

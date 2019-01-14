@@ -415,6 +415,20 @@ public class ICEditItemsEdit extends HttpServlet {
 			"Uncheck to make item ALWAYS non-taxable."
 			)
 		);
+	    
+		//Cannot be Purchased?
+	    if (item.getPurchase().compareToIgnoreCase("1") == 0){
+	    	iTrueOrFalse = 1;
+	    }else{
+	    	iTrueOrFalse = 0;
+	    }
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
+	    	ICItem.Paramicannotbepurchased, 
+			iTrueOrFalse, 
+			"Cannot be purchased?", 
+			"Check this to make item unpurchasable."
+			)
+		);
 
 		//Suppress item qty lookup?
 	    iTrueOrFalse = 0;

@@ -412,7 +412,7 @@ public class ICEditItemsEdit extends HttpServlet {
 	    	ICItem.ParamTaxable, 
 			iTrueOrFalse, 
 			"Taxable item?", 
-			"Uncheck to make item ALWAYS non-taxables."
+			"Uncheck to make item ALWAYS non-taxable."
 			)
 		);
 	    

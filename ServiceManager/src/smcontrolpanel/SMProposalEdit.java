@@ -378,7 +378,7 @@ public class SMProposalEdit  extends HttpServlet {
 		s += "<TR>";
 		s += clsTextEditorFunctions.Create_Editable_Form_MultilineText_Input_Field(
 				SMProposal.Paramsbodydescription,
-				entry.getsbodydescription().replace("\"", "&quot;"),
+				entry.getsbodydescription().replace("\"", "&quot;").replace("\n", "<br>"),
 				500,
 				1000,
 				"flagDirty();",

@@ -27,6 +27,7 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsTextEditorFunctions;
 
 public class SMProposalEdit  extends HttpServlet {
 
@@ -170,7 +171,7 @@ public class SMProposalEdit  extends HttpServlet {
 			throw new SQLException("Could not load order number " + entry.getstrimmedordernumber() + " - " + order.getErrorMessages());
 		}
 		String s = "";
-		
+		s += clsTextEditorFunctions.getJavascriptTextEditToolBarFunctions();
 		s += sCommandScripts(entry, sm);
 		s += sStyleScripts();
 
@@ -374,22 +375,19 @@ public class SMProposalEdit  extends HttpServlet {
 		s += "</SELECT>";
 		s += "</TD></TR>";
  
-		//Body description:
 		s += "<TR>";
-		s += "<TD class=\" fieldcontrol \" >"
-			+ "<TEXTAREA NAME=\"" + SMProposal.Paramsbodydescription + "\""
-			+ " rows=\"" + "20" + "\""
-			//+ " cols=\"" + Integer.toString(iCols) + "\""
-			+ "style=\"width:100%\""
-			+ " id = \"" + SMProposal.Paramsbodydescription + "\""
-			+ " onchange=\"flagDirty();\""
-			+ ">"
-			+ entry.getsbodydescription().replace("\"", "&quot;")
-			+ "</TEXTAREA>"
-			+ "</TD>"
-		;
+		s += clsTextEditorFunctions.Create_Editable_Form_MultilineText_Input_Field(
+				SMProposal.Paramsbodydescription,
+				entry.getsbodydescription().replace("\"", "&quot;"),
+				500,
+				1000,
+				"flagDirty();",
+				true,
+				false
+				);
 		s += "</TR>";
 		
+		//TODO: Update iframe with phrases.
 		//Convenience phrases:
 		s += embedProposalPhrases(sm, entry);
 		

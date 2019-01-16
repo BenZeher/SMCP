@@ -382,7 +382,7 @@ public class SMProposalEdit  extends HttpServlet {
 				500,
 				1200,
 				"flagDirty();",
-				false,
+				true,
 				false
 				);
 		s += "</TD></TR>";

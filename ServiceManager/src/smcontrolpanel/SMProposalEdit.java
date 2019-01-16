@@ -375,17 +375,17 @@ public class SMProposalEdit  extends HttpServlet {
 		s += "</SELECT>";
 		s += "</TD></TR>";
  
-		s += "<TR>";
+		s += "<TR><TD>";
 		s += clsTextEditorFunctions.Create_Editable_Form_MultilineText_Input_Field(
 				SMProposal.Paramsbodydescription,
-				entry.getsbodydescription().replace("\"", "&quot;").replace("\n", "<br>"),
+				entry.getsbodydescription().replace("\"", "&quot;"),
 				500,
-				1000,
+				1200,
 				"flagDirty();",
 				true,
 				false
 				);
-		s += "</TR>";
+		s += "</TD></TR>";
 		
 		//TODO: Update iframe with phrases.
 		//Convenience phrases:
@@ -1391,6 +1391,7 @@ public class SMProposalEdit  extends HttpServlet {
 				
 				//+ "    if (document.getElementById('" + INSERTCPSINTODESCRIPTION_ID + "').checked){\n"
 				+ "        textarea = document.getElementById('" + SMProposal.Paramsbodydescription + "');\n"
+				+ "        iFrametext = window.frames['" + SMProposal.Paramsbodydescription + "iFrame'].document;\n"
 				//+ "    }\n"
 
 				//+ "    if (document.getElementById('" + INSERTCPSINTOOPTIONS_ID + "').checked){\n"
@@ -1408,6 +1409,7 @@ public class SMProposalEdit  extends HttpServlet {
 				+ "    var insertionString = phrasestring + '\\n';\n"
 				+ "    var newString = first + insertionString + second;\n"
 				+ "    textarea.value = newString;\n"
+				+ "    iFrametext.body.innerHTML = textarea.value;\n"
 				+ "    var newPos = first.length + insertionString.length;\n"
 				+ "    textarea.setSelectionRange(newPos, newPos);\n"
 				+ "    textarea.scrollTop = textarea.scrollHeight;"

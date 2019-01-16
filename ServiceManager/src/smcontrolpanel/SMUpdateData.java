@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1349;
+	private static final int m_CurrentDatabaseVersion = 1351;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "1/14/2019";
+	private static final String m_sLastRevisionDate = "1/16/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -13813,6 +13813,24 @@ public class SMUpdateData extends java.lang.Object{
 			case 1348:
 				//Added by BJZ 1/16/2019
 				SQL = "UPDATE proposals SET sbodydescription=REPLACE(sbodydescription,'\\r','')";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1349:
+				//Added by BJZ 1/16/2019
+				SQL = "UPDATE proposalphrases SET mproposalphrase=REPLACE(mproposalphrase,'\\n','<br/>')";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1350:
+				//Added by BJZ 1/16/2019
+				SQL = "UPDATE proposalphrases SET mproposalphrase=REPLACE(mproposalphrase,'\\r','')";
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;

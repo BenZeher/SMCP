@@ -387,7 +387,6 @@ public class SMProposalEdit  extends HttpServlet {
 				);
 		s += "</TD></TR>";
 		
-		//TODO: Update iframe with phrases.
 		//Convenience phrases:
 		s += embedProposalPhrases(sm, entry);
 		

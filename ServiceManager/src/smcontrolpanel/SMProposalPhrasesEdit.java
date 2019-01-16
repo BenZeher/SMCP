@@ -17,6 +17,7 @@ import SMDataDefinition.SMTableproposalphrasegroups;
 import SMDataDefinition.SMTableproposalphrases;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsTextEditorFunctions;
 
 public class SMProposalPhrasesEdit extends HttpServlet {
 
@@ -124,7 +125,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 			PrintWriter pwOut, 
 			String sConf,
 			boolean bAddNew){
-
+		pwOut.println(clsTextEditorFunctions.getJavascriptTextEditToolBarFunctions());
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");
@@ -190,18 +191,17 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		);
 
 		//Proposal phrase:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Phrase:</B>&nbsp;</TD>"
-			+ "<TD ALIGN=LEFT>"
-				+ "<TEXTAREA NAME=\"" + SMTableproposalphrases.mproposalphrase + "\""
-				+ " rows=10"
-				+ " cols=120"
-				+ ">"
-				+ sProposalPhrase
-				+ "</TEXTAREA>"
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT>Full phrase that will be inserted into proposals</TD>"
-		+"</TR>");
+		pwOut.println(clsTextEditorFunctions.Create_Edit_Form_Editable_MultilineText_Input_Row (
+				SMTableproposalphrases.mproposalphrase,
+				sProposalPhrase,
+				"Phrase:",
+				"Full phrase that will be inserted into proposals",
+				500,
+				1200,
+				"",
+				false,
+				false
+		));
 		
 		//Proposal phrase group:
 		pwOut.println("<TR>"

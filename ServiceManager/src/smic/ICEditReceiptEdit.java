@@ -16,6 +16,7 @@ import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -383,6 +384,9 @@ public class ICEditReceiptEdit  extends HttpServlet {
 			+ " text-align:right \" >Invoice&nbsp;#</TD>";
 		s += "<TD style=\"font-size:small; font-weight:bold; border-bottom-color:black;"
 				+ " border-bottom-style:solid; vertical-align:bottom;"
+				+ " text-align:left \" >On<BR>Hold?</TD>";
+		s += "<TD style=\"font-size:small; font-weight:bold; border-bottom-color:black;"
+				+ " border-bottom-style:solid; vertical-align:bottom;"
 				+ " text-align:left \" >Item<BR>number</TD>";
 		s += "<TD style=\"font-size:small; font-weight:bold; border-bottom-color:black;"
 				+ " border-bottom-style:solid; vertical-align:bottom;"
@@ -611,6 +615,35 @@ public class ICEditReceiptEdit  extends HttpServlet {
 					+ sInvoiceNumber
 					+ "</FONT></TD>"
 				;
+				if(sInvoiceNumber.equals("N/A") || sInvoiceNumber.equals("")) {
+					
+					s += "<TD ALIGN=LEFT><FONT SIZE=2>"
+							+ "N/A"
+							+ "</FONT></TD>"
+						;
+				}else {
+					SQL = "SELECT "+SMTableaptransactions.ionhold+" FROM "+SMTableaptransactions.TableName+" WHERE "
+						+ " "+SMTableaptransactions.sdocnumber +" = '"+sInvoiceNumber+"'";
+					
+					ResultSet rsOnHold = clsDatabaseFunctions.openResultSet(SQL, 
+							getServletContext(),
+							sDBID, 
+							"MySQL", 
+							SMUtilities.getFullClassName(this.toString()) 
+							+ ".listPOLines.getting po invoice number - userID: " + sUserID
+							);
+					String sOnHold = "";
+					if(rsOnHold.next()) {
+						sOnHold = String.valueOf(rsOnHold.getInt(SMTableaptransactions.ionhold));
+					}
+					sOnHold = sOnHold.equals("1") ? "Y" : "N";
+					s += "<TD ALIGN=LEFT><FONT SIZE=2>"
+							+ sOnHold
+							+ "</FONT></TD>"
+						;
+				}
+				
+				
 				
 				//Item
 				String sItemNumber = rs.getString(SMTableicpolines.TableName + "." 

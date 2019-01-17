@@ -625,8 +625,11 @@ public class ICEditReceiptEdit  extends HttpServlet {
 						;
 				}else {
 					SQL = "SELECT "+SMTableaptransactions.ionhold+" FROM "+SMTableaptransactions.TableName+" WHERE "
-						+ " "+SMTableaptransactions.sdocnumber +" = '"+sInvoiceNumber+"'"
-								+ " AND "+SMTableaptransactions.svendor+" = '"+sInvoiceVendor+"'";
+						+ " ( "
+						+ "("+SMTableaptransactions.sdocnumber +" = '"+sInvoiceNumber+"' )"
+						+ " AND "
+						+ "("+SMTableaptransactions.svendor+" = '"+sInvoiceVendor+"')"
+						+ " )";
 					
 					ResultSet rsOnHold = clsDatabaseFunctions.openResultSet(SQL, 
 							getServletContext(),

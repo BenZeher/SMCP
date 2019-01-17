@@ -96,7 +96,7 @@ public class SMImportDataSelect  extends HttpServlet {
 			sExecuteString = "";
 		}
 		
-		out.println ("<FORM NAME = \""+sFormName+"\" ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMImportDataAction\" method = \"post\" ENCTYPE = \"multipart/form-data\" >");
+		out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMImportDataAction\" method = \"post\" ENCTYPE = \"multipart/form-data\" >");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME= CallingClass VALUE=\"" 
 				+ SMUtilities.getFullClassName(this.toString()) + "\">");
@@ -112,6 +112,8 @@ public class SMImportDataSelect  extends HttpServlet {
 		out.println("</select></TD></TR>\n");
 		out.println("<TR><TD ALIGN=RIGHT><B>Fields :</B></TD>");
 		out.println("<TD><div id = \"fields\"></div></TD></TR>");
+		out.println("<TR><TD ALIGN=RIGHT><B>Include headers? </B></TD>");
+		out.println("<TD><input type =\"checkbox\" id =\"header\" value=\"\" onclick = \"return createHeaderCommand();\"></input> Include the field names of the table from the CSV File</TD></TR>");
 		out.println("</TABLE>");
 		out.println("<BR>");
 		//Text box for the SQL Command
@@ -130,13 +132,10 @@ public class SMImportDataSelect  extends HttpServlet {
 		out.println("<TD><input type =\"radio\" name = \"operation\" id = \"operation\" value=\"UPDATE\">Update</input>");
 		out.println("<input type =\"radio\" name = \"operation\" id = \"operation\" value =\"INSERT/UPDATE\">Insert/Update</input>");
 		out.println("<input type =\"radio\" name = \"operation\" id = \"operation\" value =\"INSERT\">Insert</input><br></TD></TR>");
-		out.println("<TR><TD style = \"color: red\"><B>INCLUDE HEADER ?</B></TD>");
-		out.println("<TD><input type =\"radio\" name = \"header\" id =\"header\"  value=\"yes\">Yes");
-		out.println("<input type =\"radio\" name = \"header\" id =\"header\"  value=\"no\"> No</TD></TR>");
 		out.println("</TABLE>\n");
 		out.println("<BR>");
 		//Submit button
-		out.println("<INPUT TYPE=\"SUBMIT\" onClick=\"return submitCommand(this.form);\" VALUE=\"----Execute command----\">");
+		out.println("<INPUT TYPE=\"SUBMIT\" onClick=\"return submitCommand();\" VALUE=\"----Execute command----\">");
 		out.println("</FORM>");
 		
 		//Javascript to get the preloaded commands of the tables shown in the drop down
@@ -185,6 +184,7 @@ public class SMImportDataSelect  extends HttpServlet {
 							}
 								
 							
+					 //s +="   document.getElementById(\""+PARAM_EXECUTESTRING+"\").value = "+getTableAndColumns(sSQLtables[i],sConfFile)+";\n"
 					  s+= "   break;\n";
 				 }
 			   s += "     }\n"
@@ -199,8 +199,14 @@ public class SMImportDataSelect  extends HttpServlet {
 							 s +="  case \""+sSQLtables[i]+"\":\n";
 							 		String tableName = getTable(sSQLtables[i],sDBID);
 							 		String sCommand = "";
-							 		sCommand = " \"INTO TABLE "+tableName+"\\n\"";
+							 		sCommand = " \"INTO TABLE "+tableName+"\\n\""
+									 + "+ \"FIELDS TERMINATED BY \',\'\\n\""
+									 + "+ \"OPTIONALLY ENCLOSED BY '\\\"' \\n\""
+									 + "+ \"LINES TERMINATED BY '\\\\n' \\n\"";
 							 		s +=  " var a = "+sCommand+";\n"
+							         +"if(document.getElementById(\"header\").checked == false){\n"
+							         +"   a += \"IGNORE 1 LINES \\n\"\n "
+									 + "}\n "
 									 + " a += \"(\"\n"
 									 + " var array = [];\n"
 				    + " for(var i = 0; i < document.getElementById(\"total\").value; i++){\n"
@@ -221,30 +227,28 @@ public class SMImportDataSelect  extends HttpServlet {
 						 }
 				s	+= "     }\n"
 				 + "       }\n"
-				 + " function submitCommand(form){" 
+				 + " function submitCommand(){" 
 				 + " var sqlCommand = document.getElementById('EXECUTESTRING').value;\n"
+				 + " var operation = document.getElementsByName('operation');\n"
 				 + " if(sqlCommand == ''){\n"
 				 + "  alert('Please enter SQL Command Below');\n"
 				 + "  return false;\n"
 				 + "  }\n"
-				 + " if(form.operation[0].checked == false && form.operation[1].checked == false && form.operation[2].checked == false){\n"
-				 + "  alert('Please select an operation');\n"
-				 + "  return false;\n"
-				 + "  }\n"
-				 + " if(form.header[0].checked == false && form.header[1].checked == false){\n"
-				 + "  alert('Please select YES OR NO for Include header');\n"
-				 + "  return false;\n"
-				 + "  }\n"
+				 + "if(sqlCommand.includes(\";\") === false){\n"
+				 + " alert('Please add a semi colon at the end of the query');\n"
+				 + " return false;\n"
+				 + " }\n"
+				 + " var isChecked = false;\n"
+				 + " for ( var i = 0; i < operation.length; i++){\n"
+				 +"  if(operation[i].checked){\n"
+				 +"   isChecked = true;\n"
+				 +"   }\n"
+				 +"  }\n"
+				 +"  if(isChecked === false){\n"
+				 +"   alert('Please select an operation');\n"
+				 +"   return false;\n"
+				 +"  }\n"
 				 + "  return true;\n"
-				 +" }\n"
-				 + " function checkRadio(radio){" 
-				 + " for(var i = 0; i < radio.length; i++){\n"
-				 + " if(radio[i].checked){\n"
-				 + "  return true;\n"
-				 + " break;"
-				 + "  }\n"
-				 + "  return false;\n"
-				 +" }\n"
 				 +" }\n"
 				 + "</script>\n"
 				 ;

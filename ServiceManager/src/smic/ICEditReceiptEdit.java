@@ -571,6 +571,7 @@ public class ICEditReceiptEdit  extends HttpServlet {
 				//Invoice
 				String sInvoiceValueLink = "";
 				String sInvoiceNumber = "";
+				String  sInvoiceVendor = "";
 				if (lPOInvoiceID == 0){
 					sInvoiceValueLink = "N/A";
 				}
@@ -600,6 +601,7 @@ public class ICEditReceiptEdit  extends HttpServlet {
 																		);
 					if (rsICPOInvoice.next()){
 						sInvoiceNumber = rsICPOInvoice.getString(SMTableicpoinvoiceheaders.sinvoicenumber);
+						sInvoiceVendor = rsICPOInvoice.getString(SMTableicpoinvoiceheaders.svendor);
 					}else{
 						sInvoiceNumber = "N/A";
 					}
@@ -623,7 +625,8 @@ public class ICEditReceiptEdit  extends HttpServlet {
 						;
 				}else {
 					SQL = "SELECT "+SMTableaptransactions.ionhold+" FROM "+SMTableaptransactions.TableName+" WHERE "
-						+ " "+SMTableaptransactions.sdocnumber +" = '"+sInvoiceNumber+"'";
+						+ " "+SMTableaptransactions.sdocnumber +" = '"+sInvoiceNumber+"'"
+								+ " AND "+SMTableaptransactions.svendor+" = '"+sInvoiceVendor+"'";
 					
 					ResultSet rsOnHold = clsDatabaseFunctions.openResultSet(SQL, 
 							getServletContext(),

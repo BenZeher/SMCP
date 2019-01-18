@@ -668,6 +668,13 @@ public class ICPOLine extends clsMasterEntry{
 	   	       	bEntriesAreValid = false;
         	}
         }else{
+        	
+        	if(item.getPurchase().compareToIgnoreCase("1") == 0) {
+        		super.addErrorMessage("Item "+m_sitemnumber+" cannot be purchased");
+        		bEntriesAreValid = false;
+        	}
+        	
+        	
         	//If it CAN be loaded, then if it's supposed to be a NON-inventory item, we can't allow that item number:
         	if (getsnoninventoryitem().compareToIgnoreCase("1") == 0){
        	       	super.addErrorMessage("Invalid item number - you've indicated a 'Non-inventory' item,"
@@ -684,6 +691,7 @@ public class ICPOLine extends clsMasterEntry{
        	    //   	bEntriesAreValid = false;
            // }
         }
+        
     	
         if (m_sitemnumber.length() > SMTableicpolines.sitemnumberLength){
         	super.addErrorMessage("Item number is too long.");

@@ -112,6 +112,8 @@ public class SMImportDataSelect  extends HttpServlet {
 		out.println("</select></TD></TR>\n");
 		out.println("<TR><TD ALIGN=RIGHT><B>Fields :</B></TD>");
 		out.println("<TD><div id = \"fields\"></div></TD></TR>");
+		out.println("<TR><TD ALIGN=RIGHT><B>Set :</B></TD>");
+		out.println("<TD><div id = \"set\"></div></TD></TR>");
 		out.println("<TR><TD ALIGN=RIGHT><B>Include headers? </B></TD>");
 		out.println("<TD><input type =\"checkbox\" id =\"header\" value=\"\" onclick = \"return createHeaderCommand();\"></input> Include the field names of the table from the CSV File</TD></TR>");
 		out.println("</TABLE>");
@@ -172,15 +174,19 @@ public class SMImportDataSelect  extends HttpServlet {
 				 for(int i = 0; i < sSQLtables.length; i++){
 					 s +="  case \""+sSQLtables[i]+"\":\n";
 							String table = getTableAndColumns(sSQLtables[i],sDBID);
+							String setTable = getSetColumns(sSQLtables[i],sDBID);
 							s += "var child = document.getElementById(\"fields\");\n"
 								+"while(child.hasChildNodes()){\n"
 								+ " child.removeChild(child.lastChild);\n"
 								+ "}\n";
 							s += "var field = document.getElementById(\"fields\");\n";
+							s += "var set = document.getElementById(\"set\");\n";
 							if(table.equals("")){
 								s += "field.innerHTML = field.innerHTML + \"\";\n" ;
+								s += "set.innerHTML = set.innerHTML + \"\";\n" ;
 							}else{
 								s+=  "field.innerHTML += "+table+";\n" ;
+								s+=  "set.innerHTML += "+setTable+";\n" ;
 							}
 								
 							
@@ -222,6 +228,23 @@ public class SMImportDataSelect  extends HttpServlet {
 					+ "              }\n"
 					+ "   }\n"
 					+ "   a += \")\\n\";\n"
+					+ " var setname = [];\n"
+					+ " var setvalue = [];\n"
+				    + " for(var i = 0; i < document.getElementById(\"settotal\").value; i++){\n"
+					+ "        if(document.getElementById(\"setid\"+i).checked == true){\n"
+					+ "                  setname.push(document.getElementById(\"setid\"+i).value);\n"
+					+ "                  setvalue.push(document.getElementById(\"setvalue\"+i).value);\n"
+					+ "        }\n"
+					+ "   }\n"
+					+ "             a += \"SET \\n\"\n"
+					+ " for(var j = 0; j < setname.length; j++){\n"
+					+ "             if(j == setname.length - 1){\n"
+					+ "                 a += setname[j] + \" = '\"+ setvalue[j]  +\"'\\n\"\n"
+					+ "             }else{\n"
+					+ "               a += setname[j] +\" = '\"+setvalue[j]+\" ' ,\\n\"\n"
+					+ "              }\n"
+					+ "   }\n"
+					+ "   a += \";\\n\";\n"
 					+ "   document.getElementById(\""+PARAM_EXECUTESTRING+"\").value = a;\n"
 					+ "   break;\n";
 						 }
@@ -306,6 +329,50 @@ public class SMImportDataSelect  extends HttpServlet {
 		return tableAndColumn;
 	}
 	
+	private String getSetColumns(String sSelectedTable, String DATABASEID) throws Exception{
+		String tableAndColumn = "";
+		switch (sSelectedTable){
+		case "GL Accounts":
+				tableAndColumn = getColumns(SMTableglaccounts.TableName,DATABASEID);
+				break;
+		case "Mechanics":
+			tableAndColumn = getColumns(SMTablemechanics.TableName,DATABASEID);
+			break;
+		case "Proposal Terms":
+			tableAndColumn = getColumns(SMTableproposalterms.TableName,DATABASEID);
+			break;
+		case "Users":
+			tableAndColumn = getColumns(SMTableusers.TableName,DATABASEID);
+			break;
+		case "IC items":
+			tableAndColumn = getColumns(SMTableicitems.TableName,DATABASEID);
+			break;
+		case "IC items Prices":
+			tableAndColumn = getColumns(SMTableicitemprices.TableName,DATABASEID);
+			break;
+		case "IC Vendor Terms":
+			tableAndColumn = getColumns(SMTableicvendorterms.TableName,DATABASEID);
+			break;
+		case "IC Vendors":
+			tableAndColumn = getColumns(SMTableicvendors.TableName,DATABASEID);
+			break;
+		case "Custom":
+			tableAndColumn = getColumns("Custom",DATABASEID);
+			break;
+		case "AR Customers":
+			tableAndColumn = getColumns(SMTablearcustomer.TableName,DATABASEID);
+			break;
+		case "AR Customers Ship To":
+			tableAndColumn = getColumns(SMTablearcustomershiptos.TableName,DATABASEID);
+			break;
+		default:
+			tableAndColumn = "";
+			break;
+		
+		}
+		return tableAndColumn;
+	}
+	
 	private String getTable(String sSelectedTable, String DATABASEID) throws Exception{
 		String sTableName = "";
 		switch (sSelectedTable){
@@ -347,6 +414,54 @@ public class SMImportDataSelect  extends HttpServlet {
 		return sTableName;
 	}
 	
+	
+	private String getColumns(String sTableName, String DATABASEID) throws Exception{
+		int checkboxcount = 0;
+		String s = " \"<TABLE WIDTH=100% CELLPADDING=5 border=4 STYLE = \'font-size:small;\'>\"\n+"
+				 + "\"<TR>\"\n +"
+				 + "\"<TD><B></B></TD>\"\n+"
+				 + "\"<TD><B>NAME</B></TD>\"\n+"
+				 + "\"<TD><B>VALUE</B></TD>\"\n+"
+				 + "\"<TD><B>KEY</B></TD>\"\n+"
+				 + "\"<TD><B>TYPE</B></TD>\"\n+"
+				 + "\"<TD><B>DEFAULT</B></TD>\"\n+"
+				 ;
+	  if(!sTableName.equals("Custom")){
+		  s += "\"</TR>\"\n+";
+		  String  sSQL =  "DESCRIBE "+sTableName+";";
+		  java.sql.ResultSet rsTableColumns;
+		try {
+			rsTableColumns = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), DATABASEID);
+			  while(rsTableColumns.next()){
+				  	s += "\"<TR>\"\n+"
+				  	  +   "\"<TD><input type = \\'checkbox\\' name = \\'fields\\'  value = \\'"+rsTableColumns.getString("Field")+"\\' id = \\'setid"+checkboxcount+"\\' onclick = 'generateCommand()' ></TD>\"\n+"
+				  	  +   "\"<TD>"+rsTableColumns.getString("Field")+"</TD>\"\n+"
+				  	  +   "\"<TD><input type = 'text' name = 'setvalue' id = \\'setvalue"+checkboxcount+"\\'  onclick = 'generateCommand()'/></TD>\"\n+"
+				  	  +   "\"<TD>"+rsTableColumns.getString("Key")+"</TD>\"\n+"
+				  	  +   "\"<TD>"+rsTableColumns.getString("Type")+"</TD>\"\n+"
+				  	  +   "\"<TD>"+rsTableColumns.getString("Default")+"</TD>\"\n+"
+				  	  + "\"</TR>\"\n+";
+				  	checkboxcount++;	   
+			  }
+		} catch (SQLException e) {
+			throw new Exception(e.getMessage());
+		}
+		
+	  }else{
+		  s += "\"</TR>\"+";
+	  }
+	  s += "\"</TABLE>\"\n+"
+			  + "\"<input type = \\'hidden\\' name = \\'name\\' value = \\'"+checkboxcount+"\\' id = \\'settotal\\'>\"\n";
+	  return s;
+	  
+		
+	}
+	
+	
+	
+	
+	
+	
 	/**
 	 * SQLTableAndColumns
 	 * Runs the command to get the columns of the table 
@@ -355,7 +470,10 @@ public class SMImportDataSelect  extends HttpServlet {
 	 * @return
 	 * @throws Exception
 	 */
-
+	
+	
+	
+	
 	private String createTableAndColumns(String sTableName, String DATABASEID) throws Exception{
 		int checkboxcount = 0;
 		String s = " \"<TABLE WIDTH=100% CELLPADDING=5 border=4 STYLE = \'font-size:small;\'>\"\n+"

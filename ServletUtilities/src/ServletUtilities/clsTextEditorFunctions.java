@@ -111,10 +111,9 @@ public class clsTextEditorFunctions {
 			+ " border:#000000 1px solid;"
 			+ " resize: both; "
 			+ " min-width:" + iWidth_px + "px; "
-			+ " min-height:" + iHeight_px+ "px;"
-			+ "\">"
-			+ "</iframe>\n";
-		
+			+ " min-height:" + iHeight_px+ "px;\""
+			+ ">"
+			+ "</iframe>\n";		
 		s+= "</TD></TR>";
 		s+= "</TABLE>";
 				
@@ -131,8 +130,12 @@ public class clsTextEditorFunctions {
 			+ "doc" + sFieldName + ".close();\n"
 			+ sAutoWrapText		
 			+ "doc" + sFieldName + ".body.innerHTML = document.getElementById(\"" + sFieldName + "\").value;\n"
+			+ "var sOrginalText = document.getElementById(\"" + sFieldName + "\").value;\n"
 			+ "doc" + sFieldName + ".body.addEventListener('blur',function(e) {\n"			
-			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\");\n"				
+			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\");\n"
+			+ "		if(sOrginalText !== document.getElementById(\""+ sFieldName + "\").value){\n"
+			+			onChange + "\n"					
+			+ "		}\n"				
 			+ "});\n"
 			+ "</script>\n";
 		return s;

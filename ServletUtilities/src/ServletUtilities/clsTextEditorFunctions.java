@@ -132,7 +132,7 @@ public class clsTextEditorFunctions {
 			+ "doc" + sFieldName + ".body.innerHTML = document.getElementById(\"" + sFieldName + "\").value;\n"
 			+ "var sOrginalText = document.getElementById(\"" + sFieldName + "\").value;\n"
 			+ "doc" + sFieldName + ".body.addEventListener('blur',function(e) {\n"			
-			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\");\n"
+			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\").replace(\"\\n\",\"\").replace(\"\\r\",\"\");\n"
 			+ "		if(sOrginalText !== document.getElementById(\""+ sFieldName + "\").value){\n"
 			+			onChange + "\n"					
 			+ "		}\n"				

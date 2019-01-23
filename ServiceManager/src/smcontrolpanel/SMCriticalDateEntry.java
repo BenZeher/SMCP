@@ -73,8 +73,8 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 		
 		//timestamp audit
 		m_stimestampaudit = clsManageRequestParameters.get_Request_Parameter(SMCriticalDateEntry.ParamTimeStampAudit, req).trim();
-		if (m_datcriticaldate.compareToIgnoreCase("") == 0){
-			m_datcriticaldate = "NOW()";
+		if (m_stimestampaudit.compareToIgnoreCase("") == 0){
+			m_stimestampaudit = "NOW()";
 		}
 		//responsible
 		m_sresponsibleuserfullname = clsManageRequestParameters.get_Request_Parameter(SMCriticalDateEntry.ParamResponsibleUserFullName, req).trim();

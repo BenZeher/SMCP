@@ -462,19 +462,11 @@ public class SMCustomQuery extends java.lang.Object{
 			}
 			
 			if (bShowSQLCommand){
-//				out.println("SQL Command:");
-//				out.println("<TABLE>");
-//				out.println("<TR><TD>");
-//				//We have to use the 'filter' to convert characters that won't display properly, but we have to put the spaces
-//				//back in to make the table wrap - otherwise the query runs all the way across the screen:
-//				//ALSO - convert the '&lt;BR&gt; back to <BR> so it wraps, in case there are any '\n's in the query - this also keeps it wrapping where intended:
-//				out.println("<B>" + SMUtilities.filter(sRawQueryString).replaceAll("&lt;", "<").replaceAll("&gt;", ">") + "</B>");
-//				out.println("</TD></TR>");
-//				out.println("</TABLE>");
-
 				out.println("SQL Command:<BR>");
-				out.println(clsStringFunctions.filter(sRawQueryString).replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
-
+				//out.println(clsStringFunctions.filter(sQueryString).replaceAll("&lt;", "<").replaceAll("&gt;", ">"));
+				String sDisplayedQueryString = sQueryString;
+				//We can add any filtering we might need to 'sDisplayedQueryString' later:
+				out.println(sDisplayedQueryString);
 			}
 		}
 		return true;

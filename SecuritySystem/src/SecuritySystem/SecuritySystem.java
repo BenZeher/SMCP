@@ -43,6 +43,7 @@ public class SecuritySystem {
 	
 	private static boolean bUsePiGpioPins = false;
 	
+	private static boolean bUsingSystemd = false;
 	private static ListeningService socketlistener = null;
 	
 	//If this gets set to true, it gets picked up in the main loop and restarts the controller program:
@@ -221,7 +222,7 @@ public class SecuritySystem {
 			//}
 			if(bRestartProgram){
 				try {
-					restartProgram();
+					restartProgram(bUsingSystemd);
 				} catch (Exception e) {
 					writeControllerLogEntry("Error restarting program - " + e.getMessage(), 1);
 				}
@@ -295,10 +296,17 @@ public class SecuritySystem {
 		m_bInitiateShutdown = true;
 	}
 	
-	public static void restartProgram() throws Exception{
+	public static void restartProgram(boolean bSystemdRestart) throws Exception{
 		//In case this fails, we don't want to keep trying to do it:
 		setRestartFlag(false);
-		String sCommand = SSConstants.RESTART_PROGRAM_COMMAND;
+		
+		String sCommand = "";
+		if(bSystemdRestart) {
+			sCommand = SSConstants.RESTART_PROGRAM_COMMAND_SYSTEMD;
+		}else {
+			sCommand = SSConstants.RESTART_PROGRAM_COMMAND_INITD;
+		}
+
 		writeControllerLogEntry(
 				"[1547063484] - Attempting to restart securitysystem with command: '" + sCommand + "'.",
 				1);
@@ -377,6 +385,12 @@ public class SecuritySystem {
 	}
 	public static boolean getOutputDiagnostics(){
 		return bOutDiagnosticsToCommandLine;
+	}
+	public static void setUsingSystemd(boolean bUseSystemd){
+		bUsingSystemd = bUseSystemd;
+	}
+	public static boolean getSytsyemInitType(){
+		return bUsingSystemd;
 	}
 	public static void setPrintSampleCommands(boolean bPrintSampleCommands){
 		bOutputSampleCommands = bPrintSampleCommands;

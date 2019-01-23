@@ -87,6 +87,10 @@ public class SSUtilities {
 					//Use PI GPIO Pins (NOT using I2C devices):
 					SecuritySystem.setUsePiGpioPins(true);
 				}
+				if (sCommandLineArguments[i].compareToIgnoreCase(SSConstants.COMMAND_LINE_OPTION_USE_SYSTEMD_RESTART) == 0){
+					//Flag to restart using systemd (newer Linux versions)
+					SecuritySystem.setUsingSystemd(true);
+				}
 			}
 		} catch (Exception e) {
 			throw new Exception("Error [1458178425] reading command line - " + e.getMessage());
@@ -129,7 +133,7 @@ public class SSUtilities {
 				}
 				if (sKeyValue[0].trim().compareToIgnoreCase(SSConstants.CONFFILE_LOG_FILE) == 0){
 					SecuritySystem.setLogFile(sKeyValue[1].trim());
-				}
+				}			
 			}
 			fileReader.close();
 		} catch (IOException e) {

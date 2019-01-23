@@ -89,7 +89,7 @@ public class SSConstants {
 
 	//*******************************************************************************
 	//Current version of this controller software:
-	public static final String CONTROLLER_VERSION = "65";
+	public static final String CONTROLLER_VERSION = "66";
 	//*******************************************************************************
 
 	
@@ -146,6 +146,8 @@ public class SSConstants {
 	public static String COMMAND_LINE_OPTION_SHOW_PIN_TO_TERMINAL_MAPPING = "-m";
 	//This is used if I2C i/o expansion chips are NOT being used. 
 	public static String COMMAND_LINE_OPTION_USE_PI_GPIO_PINS = "-p";
+	//This is used to let the system know how to restart, systemd or initd. 
+	public static String COMMAND_LINE_OPTION_USE_SYSTEMD_RESTART = "-s";
 	
 	//**********************************************************************************
 	//Main Program constants:
@@ -203,7 +205,8 @@ public class SSConstants {
 	public static final String PROGRAM_UPDATE_SCRIPT_ON_CONTROLLER = "update.sh";
 	
 	//Command to restart program:
-	public static final String RESTART_PROGRAM_COMMAND = "/etc/init.d/securitysystem restart";
+	public static final String RESTART_PROGRAM_COMMAND_INITD = "/etc/init.d/securitysystem restart"; //older Linux versions
+	public static final String RESTART_PROGRAM_COMMAND_SYSTEMD = "service securitysystem restart"; //newer Linux versions
 
 	
 	//***************************************************************************************

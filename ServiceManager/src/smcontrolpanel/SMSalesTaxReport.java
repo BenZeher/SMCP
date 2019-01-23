@@ -342,7 +342,6 @@ public class SMSalesTaxReport {
 		s = "";
 
 		try {
-			System.out.println(SQL);
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			
 			while(rs.next()){

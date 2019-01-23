@@ -537,7 +537,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 						+ sLastMaintainedDate + "</FONT></TD>");				
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");
-				pwOut.println("<TD><FONT SIZE = 2><B>Can be purchased ? </B>");
+				pwOut.println("<TD><FONT SIZE = 2><B>Can be purchased through the PO system? </B>");
 				String sPurchase = rsItem.getInt(SMTableicitems.icannotbepurchased) == 0 ? "YES" : "NO";
 				pwOut.println(" "+sPurchase);
 				pwOut.println("</FONT></TD>");

@@ -1530,10 +1530,10 @@ public class ICItem extends Object{
 	public String getActive() {
 		return m_sActive;
 	}
-	public String getPurchase() {
+	public String getCannotBePurchasedFlag() {
 		return m_icannotbepurchased;
 	}
-	public void setPurchase(String sPurchase) {
+	public void setCannotBePurchased(String sPurchase) {
 		m_icannotbepurchased = sPurchase;
 	}
 	public void setActive(String sActive) {

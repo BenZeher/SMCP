@@ -417,7 +417,7 @@ public class ICEditItemsEdit extends HttpServlet {
 		);
 	    
 		//Cannot be Purchased?
-	    if (item.getPurchase().compareToIgnoreCase("1") == 0){
+	    if (item.getCannotBePurchasedFlag().compareToIgnoreCase("1") == 0){
 	    	iTrueOrFalse = 1;
 	    }else{
 	    	iTrueOrFalse = 0;
@@ -425,8 +425,8 @@ public class ICEditItemsEdit extends HttpServlet {
 	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	ICItem.Paramicannotbepurchased, 
 			iTrueOrFalse, 
-			"Cannot be purchased?", 
-			"Check this to make item unpurchasable."
+			"Prevent purchasing?", 
+			"If checked, the PO system will NOT allow this item to be purchased."
 			)
 		);
 

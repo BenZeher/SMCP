@@ -669,7 +669,7 @@ public class ICPOLine extends clsMasterEntry{
         	}
         }else{
         	
-        	if(item.getPurchase().compareToIgnoreCase("1") == 0) {
+        	if(item.getCannotBePurchasedFlag().compareToIgnoreCase("1") == 0) {
         		super.addErrorMessage("Item "+m_sitemnumber+" cannot be purchased");
         		bEntriesAreValid = false;
         	}

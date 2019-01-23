@@ -250,7 +250,7 @@ public class SMUser extends clsMasterEntry{
 			
 			String sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
 			try{
-				System.out.println(sSQL);
+				//System.out.println(sSQL);
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (rs.next()){
 					//This user already exists, so we can't add it:

@@ -51,6 +51,7 @@ public class SSUtilities {
 		System.out.println("'" + SSConstants.COMMAND_LINE_OPTION_OUTPUT_DIAGNOSTICS + "' - tells the program to output diagnostics to the command line.\n");
 		System.out.println("'" + SSConstants.COMMAND_LINE_OPTION_SHOW_SAMPLE_COMMANDS + "' - prints sample socket commands to the command line for testing.\n");
 		System.out.println("'" + SSConstants.COMMAND_LINE_OPTION_SHOW_PIN_TO_TERMINAL_MAPPING + "' - prints the pin-to-terminal mappings to the command line.\n");
+		System.out.println("'" + SSConstants.COMMAND_LINE_OPTION_USE_SYSTEMD_RESTART + "' - tells the program to use systemd commands when restarting.\n");
 	}
 
 	public static void processCommandLine(String sCommandLineArguments[]) throws Exception{

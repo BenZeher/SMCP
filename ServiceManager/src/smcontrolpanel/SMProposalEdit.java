@@ -1382,38 +1382,8 @@ public class SMProposalEdit  extends HttpServlet {
 		
 			s += "function insertProposalPhrase(sPhraseID, label) {\n" 
 				+ "    var phrasestring = document.getElementById(sPhraseID).value;\n"
-				+ "    phrasestring = phrasestring.split('<BR>').join('\\n');\n"
-				//+ "    phrasestring = phrasestring.split('&quot;').join('\"');\n"
-				+ "    phrasestring = phrasestring.split('&quot;').join('\\\"');\n"
-				
-				//+ "    alert(phrasestring);\n"
-				
-				//+ "    if (document.getElementById('" + INSERTCPSINTODESCRIPTION_ID + "').checked){\n"
-				+ "        textarea = document.getElementById('" + SMProposal.Paramsbodydescription + "');\n"
-				+ "        iFrametext = window.frames['" + SMProposal.Paramsbodydescription + "iFrame'].document;\n"
-				//+ "    }\n"
-
-				//+ "    if (document.getElementById('" + INSERTCPSINTOOPTIONS_ID + "').checked){\n"
-				//+ "        textarea = document.getElementById('" + SMProposal.Paramsoptions + "');\n"
-				//+ "    }\n"
-				
-				//+ "    if (document.getElementById('" + INSERTCPSINTOEXTRANOTES_ID + "').checked){\n"
-				//+ "        textarea = document.getElementById('" + SMProposal.Paramsextranotes + "');\n"
-				//+ "    }\n"
-
-				+ "    var caretPos = textarea.selectionStart;\n"
-				+ "    var text = textarea.value;\n"
-				+ "    var first = text.substring(0, caretPos);\n"
-				+ "    var second = text.substring(caretPos, text.length);\n"
-				+ "    var insertionString = phrasestring + '\\n';\n"
-				+ "    var newString = first + insertionString + second;\n"
-				+ "    textarea.value = newString;\n"
-				+ "    iFrametext.body.innerHTML = textarea.value;\n"
-				+ "    var newPos = first.length + insertionString.length;\n"
-				+ "    textarea.setSelectionRange(newPos, newPos);\n"
-				+ "    textarea.scrollTop = textarea.scrollHeight;"
-				//+ "    clickedCheckBoxObj.checked = false;\n"
-				+ "    label.style.fontWeight=\"" + "bold" + "\";\n"
+				+ "    var iFramedoc = window.frames['" + SMProposal.Paramsbodydescription + "iFrame'].document;\n"
+				+ "    iFramedoc.execCommand('insertHTML',false,phrasestring);\n"
 				+ "    flagDirty();\n"
 				+ "}\n"
 			;

@@ -34,12 +34,6 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 	public static final String LIST_OF_INVOICES_CREATED_PARAM = "LISTOFINVOICESCREATED";
 	private static final String DARK_BG_COLOR = "DCDCDC";
 	private static final long serialVersionUID = 1L;
-	private String sCompanyName = "";
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserFullName = "";
-	private String sUserID = "";
-	private String sCallingClass = "smcontrolpanel.SMCreateMultipleInvoicesSelection";
 	private String sSelectedLocations = "";
 	private String sSelectedServiceTypes = "";
 	private ArrayList<String> m_alLocations = new ArrayList<String>(0);
@@ -59,14 +53,15 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 		){
 			return;
 		}
+		String sCallingClass = "smcontrolpanel.SMCreateMultipleInvoicesSelection";
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    
@@ -477,7 +472,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 	    return;	    
 	}
 	
-	private String Get_Order_With_Shipment_SQL(String sUser){
+	private String Get_Order_With_Shipment_SQL(String sUserName){
 
 	    String SQL = "SELECT" 
 	    	+ " 'CreateMultipleOrders.Get_Order_With_Shipment_SQL' AS REPORTNAME"

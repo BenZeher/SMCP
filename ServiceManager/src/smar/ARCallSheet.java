@@ -522,7 +522,7 @@ public class ARCallSheet extends clsMasterEntry{
 		}
 		return true;
 	}
-	public boolean updateDefaultsFromOrder(ServletContext context, String sConfName, String sUserID, String sUserFullName){
+	public boolean updateDefaultsFromOrder(ServletContext context, String sDBID, String sUserID, String sUserFullName){
 		
 		String sOrderNumber = m_sordernumber.trim();
 		if (sOrderNumber.compareToIgnoreCase("") == 0){
@@ -547,7 +547,7 @@ public class ARCallSheet extends clsMasterEntry{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConfName, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".updateDefaultsFromOrder - user: " 
 					+ sUserID

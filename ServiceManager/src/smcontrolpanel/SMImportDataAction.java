@@ -1,8 +1,6 @@
 package smcontrolpanel;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -312,12 +310,10 @@ public class SMImportDataAction extends HttpServlet {
 		StringBuilder sb = new StringBuilder();
 		int count = 0;
 		while(s.charAt(count) != 13) {
-			int AsciiValue = s.charAt(count);
 			if(s.charAt(count) == '=') {
 				while(s.charAt(count) != ',' && s.charAt(count) != ';') {
 					//System.out.println("ENTERED THE OTHER WHILE LOOP "+s.charAt(count)+ " AscciValue - "+AsciiValue);
 					count++;
-					AsciiValue = s.charAt(count);
 				}
 			}
 			//System.out.println(s.charAt(count) + " AscciValue - "+AsciiValue);

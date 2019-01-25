@@ -19,7 +19,6 @@ import SMDataDefinition.SMTableicvendoritems;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMUtilities;
 
 public class APVendorNumberChange extends java.lang.Object{

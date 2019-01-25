@@ -56,20 +56,20 @@ public class TCDisplayDataDefs  extends HttpServlet {
 		
 		//Get the company information:
 		String sSQL = "SELECT * FROM " + TCSTablecompanyprofile.TableName;
-		String sConfName;
+		String sDBID;
 		try {
-			sConfName = (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB);
+			sDBID = (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB);
 		} catch (Exception e1) {
-			sConfName = "";
+			sDBID = "";
 		}
-		if (sConfName == null){
-			sConfName = "";
+		if (sDBID == null){
+			sDBID = "";
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					sSQL, 
 					getServletContext(), 
-					sConfName, 
+					sDBID, 
 					"MySQL",
 					this.toString() + ".reading company name"
 					);

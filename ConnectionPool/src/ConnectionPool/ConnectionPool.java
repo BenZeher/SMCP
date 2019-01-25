@@ -323,7 +323,7 @@ public class ConnectionPool implements Runnable {
 	public void run() {
 
 		synchronized(this) {
-			//System.out.println("Let's see what is it: sConfName = " + sConfName);
+			//System.out.println("Let's see what is it: sDBID = " + sDBID);
 			if (bDebugMode){
 				System.out.println(PoolUtilities.SystemTime() + "in ConnectionPool.run"
 						+ " - going to try to open a database connection."	  

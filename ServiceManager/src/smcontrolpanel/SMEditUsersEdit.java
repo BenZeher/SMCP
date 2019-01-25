@@ -722,7 +722,7 @@ public class SMEditUsersEdit extends HttpServlet {
 			int iCol, 
 			boolean bRestricted, 
 			ServletContext context, 
-			String confName) throws SQLException{
+			String sDBID) throws SQLException{
 		String s = "";
 		// get mechanics's color
 		String sUserColor = "000000";
@@ -730,7 +730,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				+ " WHERE" + " " + SMTablecolortable.irow + " = " + iRow
 				+ " AND" + " " + SMTablecolortable.icol + " = " + iCol;
 		// System.out.println("[1345066542] SQL = " + sSQL);
-		ResultSet rsColorCode = clsDatabaseFunctions.openResultSet(sSQL, context, confName);
+		ResultSet rsColorCode = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
 		if (rsColorCode.next()) {
 			sUserColor = rsColorCode.getString(SMTablecolortable.scolorcode);
 		}
@@ -744,7 +744,7 @@ public class SMEditUsersEdit extends HttpServlet {
 
 		// System.out.println("[1345229718] SQL = " + sSQL);
 
-		ResultSet rsUsedColors = clsDatabaseFunctions.openResultSet(sSQL, context, confName);
+		ResultSet rsUsedColors = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
 		int iSuffix = 0;
 		while (rsUsedColors.next()) {
 

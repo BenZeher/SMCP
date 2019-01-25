@@ -304,7 +304,7 @@ public class PoolUtilities {
 		Connection conn;
 		try {
 			//LTO - changed 4/23/2014:
-			//conn = getConnection(context, confName, "MySQL", "N/A");
+			//conn = getConnection(context, sDBID, "MySQL", "N/A");
 			conn = getConnection(context, sDBID, "MySQL", "SQL: " + SQLStatement);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
@@ -316,7 +316,7 @@ public class PoolUtilities {
 		    freeConnection(
 		    	context, 
 		    	conn,
-		    	"[1546534862] SQL = '" + SQLStatement + "', confName = '" + sDBID + "'."
+		    	"[1546534862] SQL = '" + SQLStatement + "', sDBID = '" + sDBID + "'."
 		    );
 		    return true;
 		}catch (Exception ex) {
@@ -324,7 +324,7 @@ public class PoolUtilities {
 			
 			//If it's just a 'context is null' error, then we can return true and move on:
 			if (ex.getMessage().contains("[1516370817]")){
-				System.out.println("[1543535556] - SQLStatement = '" + SQLStatement + "', sconfName = '" + sDBID + "'.");
+				System.out.println("[1543535556] - SQLStatement = '" + SQLStatement + "', sDBID = '" + sDBID + "'.");
 				return true;
 			}
 			
@@ -333,7 +333,7 @@ public class PoolUtilities {
 					freeConnection(
 						context, 
 						conn,
-						"[1546534861] SQL = '" + SQLStatement + "', confName = '" + sDBID + "'" );
+						"[1546534861] SQL = '" + SQLStatement + "', sDBID = '" + sDBID + "'" );
 				}catch (Exception e){
 					//System.out.println("[1398284671] Failed to free connection");
 					throw new SQLException("[1398284671] Failed to free connection - " + ex.getMessage());
@@ -353,7 +353,7 @@ public class PoolUtilities {
 			Connection conn;
 			try {
 				//TJR - changed 3/19/2012:
-				//conn = getConnection(context, confName, DBType, CallingClass);
+				//conn = getConnection(context, sDBID, DBType, CallingClass);
 				conn = getConnection(context, sDBID, DBType, CallingClass + " SQL: " + SQLStatement);
 			} catch (Exception e) {
 				throw new SQLException(e.getMessage());
@@ -365,7 +365,7 @@ public class PoolUtilities {
 			    freeConnection(
 			    	context,
 			    	conn,
-			    	"[1546534860] SQL = '" + SQLStatement + "', confName = '" + sDBID + "'" 
+			    	"[1546534860] SQL = '" + SQLStatement + "', sDBID = '" + sDBID + "'" 
 			    );
 			    return true;
 			}catch (Exception ex) {
@@ -373,7 +373,7 @@ public class PoolUtilities {
 				
 				//If it's just a 'context is null' error, then we can return true and move on:
 				if (ex.getMessage().contains("[1516370817]")){
-					System.out.println("[154353555] - SQLStatement = '" + SQLStatement + "', sconfName = '" + sDBID + "'" 
+					System.out.println("[154353555] - SQLStatement = '" + SQLStatement + "', sDBID = '" + sDBID + "'" 
 						+ " CallingClass = '" + CallingClass + "'"	
 						+ ".");
 					return true;
@@ -383,7 +383,7 @@ public class PoolUtilities {
 						freeConnection(
 							context, 
 							conn,
-							"[1546535616] SQLStatement = '" + SQLStatement + "', confName = '" + sDBID + "'."
+							"[1546535616] SQLStatement = '" + SQLStatement + "', sDBID = '" + sDBID + "'."
 						);
 					}catch(Exception e){
 						//System.out.println("[1398285175] Failed to free connection");
@@ -396,7 +396,7 @@ public class PoolUtilities {
 	  
 	  public static void executeSQL(
 			  String SQL, 
-			  String confName, 
+			  String sDBID, 
 			  String DBType, 
 			  String CallingClass,
 			  ServletContext context) throws Exception{
@@ -404,8 +404,8 @@ public class PoolUtilities {
 		  Connection conn;
 		  try {
 			  //TJR - changed 3/19/2012:
-			  //conn = getConnection(context, confName, DBType, CallingClass);
-			  conn = getConnection(context, confName, DBType, CallingClass + " SQL: " + SQL);
+			  //conn = getConnection(context, sDBID, DBType, CallingClass);
+			  conn = getConnection(context, sDBID, DBType, CallingClass + " SQL: " + SQL);
 		  } catch (Exception e) {
 			  throw new Exception(e.getMessage());
 		  }
@@ -416,14 +416,14 @@ public class PoolUtilities {
 			  freeConnection(
 					  context, 
 					  conn,
-					  "[1546534863] SQL = '" + SQL + ", confName = '" + confName + "'"
+					  "[1546534863] SQL = '" + SQL + ", sDBID = '" + sDBID + "'"
 					  );
 		  }catch (Exception ex) {
 			  // handle any errors
 			  
 				//If it's just a 'context is null' error, then we can return true and move on:
 				if (ex.getMessage().contains("[1516370817]")){
-					System.out.println("[154353557] - SQLStatement = '" + SQL + "', sconfName = '" + confName + "'" 
+					System.out.println("[154353557] - SQLStatement = '" + SQL + "', sDBID = '" + sDBID + "'" 
 						+ " CallingClass = '" + CallingClass + "'"	
 						+ ".");
 					return;
@@ -434,7 +434,7 @@ public class PoolUtilities {
 					  freeConnection(
 						context, 
 						conn,
-						"[1546534864] SQL = '" + SQL + ", confName = '" + confName + "'"
+						"[1546534864] SQL = '" + SQL + ", sDBID = '" + sDBID + "'"
 					);
 				  }catch(Exception e){
 					  //System.out.println("[1398285175] Failed to free connection");
@@ -449,7 +449,7 @@ public class PoolUtilities {
 	  public static boolean executeSQLsInTransaction(
 			  ArrayList<String> SQLStatements, 
 			  ServletContext context, 
-			  String confName) throws SQLException{
+			  String sDBID) throws SQLException{
 
 		  //First, make sure there is at least one statement in the list:
 		  if (SQLStatements.size() <= 0){
@@ -463,7 +463,7 @@ public class PoolUtilities {
 	    	sAllSQLs += SQLStatements.get(i) + "\n";
 	    }
 		  try{
-			  conn = getConnection(context, confName, "MySQL", "SQL: (Multiple SQLs in transaction.)");
+			  conn = getConnection(context, sDBID, "MySQL", "SQL: (Multiple SQLs in transaction.)");
 			  stmt = conn.createStatement();
 		    stmt.execute("START TRANSACTION");
 		    for (int i=0;i<SQLStatements.size();i++){
@@ -478,7 +478,7 @@ public class PoolUtilities {
 		    freeConnection(
 		    	context, 
 		    	conn,
-		    	"[1546534867] executeSQLsInTransaction - AllSQLs = '" + sAllSQLs + "', confName = '" + confName + "'."
+		    	"[1546534867] executeSQLsInTransaction - AllSQLs = '" + sAllSQLs + "', sDBID = '" + sDBID + "'."
 		    );
 		    
 		    return true;
@@ -486,7 +486,7 @@ public class PoolUtilities {
 			
 			//If it's just a 'context is null' error, then we can return true and move on:
 			if (ex.getMessage().contains("[1516370817]")){
-				System.out.println("[154353559] - SQLStatements.get(0) = '" + SQLStatements.get(0) + "', sconfName = '" + confName + "'" 
+				System.out.println("[154353559] - SQLStatements.get(0) = '" + SQLStatements.get(0) + "', sDBID = '" + sDBID + "'" 
 					+ ".");
 				return true;
 			}
@@ -498,7 +498,7 @@ public class PoolUtilities {
 					freeConnection(
 						context, 
 						conn,
-						"[1546534868] executeSQLsInTransaction - AllSQLs = '" + sAllSQLs + "', confName = '" + confName + "'."
+						"[1546534868] executeSQLsInTransaction - AllSQLs = '" + sAllSQLs + "', sDBID = '" + sDBID + "'."
 					);
 				}catch(Exception e){
 					//System.out.println("[1398285305] Failed to free connection");
@@ -512,7 +512,7 @@ public class PoolUtilities {
 	  public static void executeSQLsInTrans(
 			  ArrayList<String> SQLStatements, 
 			  ServletContext context, 
-			  String confName) throws SQLException{
+			  String sDBID) throws SQLException{
 
 		  //First, make sure there is at least one statement in the list:
 		  if (SQLStatements.size() <= 0){
@@ -528,7 +528,7 @@ public class PoolUtilities {
 	    }
 		  
 		  try{
-			  conn = getConnection(context, confName, "MySQL", "SQL: (Multiple SQLs in transaction.)");
+			  conn = getConnection(context, sDBID, "MySQL", "SQL: (Multiple SQLs in transaction.)");
 			  stmt = conn.createStatement();
 		    stmt.execute("START TRANSACTION");
 		    for (int i=0;i<SQLStatements.size();i++){
@@ -539,13 +539,13 @@ public class PoolUtilities {
 		    freeConnection(
 		    	context, 
 		    	conn,
-		    	"[1546534865] executeSQLsInTrans - AllSQLs = '" + sAllSQLs + "', confName = '" + confName + "'."
+		    	"[1546534865] executeSQLsInTrans - AllSQLs = '" + sAllSQLs + "', sDBID = '" + sDBID + "'."
 		    );
 		}catch (Exception ex) {
 			
 			//If it's just a 'context is null' error, then we can return true and move on:
 			if (ex.getMessage().contains("[1516370817]")){
-				System.out.println("[154353558] - SQLStatements.get(0) = '" + SQLStatements.get(0) + "', sconfName = '" + confName + "'" 
+				System.out.println("[154353558] - SQLStatements.get(0) = '" + SQLStatements.get(0) + "', sDBID = '" + sDBID + "'" 
 					+ ".");
 				return;
 			}
@@ -557,7 +557,7 @@ public class PoolUtilities {
 					freeConnection(
 						context, 
 						conn,
-						"[1546534866] executeSQLsInTrans - AllSQLs = '" + sAllSQLs + "', confName = '" + confName + "'."
+						"[1546534866] executeSQLsInTrans - AllSQLs = '" + sAllSQLs + "', sDBID = '" + sDBID + "'."
 					);
 				}catch(Exception e){
 					//System.out.println("[1398285423] Failed to free connection");
@@ -575,13 +575,13 @@ public class PoolUtilities {
 	        ResultSet rs = stmt.executeQuery(SQLStatement);
 		    return rs;
 		  }
-	  public static ResultSet openResultSet(String SQLStatement, ServletContext context, String confName) throws SQLException{
+	  public static ResultSet openResultSet(String SQLStatement, ServletContext context, String sDBID) throws SQLException{
 		  
 		  Connection conn;
 		try {
 			//TJR - changed 3/19/2012:
-			//conn = getConnection(context, confName, "MySQL", "N/A");
-			conn = getConnection(context, confName, "MySQL", "SQL: " + SQLStatement);
+			//conn = getConnection(context, sDBID, "MySQL", "N/A");
+			conn = getConnection(context, sDBID, "MySQL", "SQL: " + SQLStatement);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -594,7 +594,7 @@ public class PoolUtilities {
 		   freeConnection(
 				 context, 
 				 conn,
-				 "[1546534873] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + confName + "'."
+				 "[1546534873] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + sDBID + "'."
 			);
 		    
 		    return rs;
@@ -603,7 +603,7 @@ public class PoolUtilities {
 			
 			//If it's just a 'context is null' error, then we can return true and move on:
 			if (ex.getMessage().contains("[1516370817]")){
-				System.out.println("[154353562] - SQLStatement = '" + SQLStatement + "', confName = '" + confName + "'" 
+				System.out.println("[154353562] - SQLStatement = '" + SQLStatement + "', sDBID = '" + sDBID + "'" 
 					+ ".");
 				return rs;
 			}
@@ -613,7 +613,7 @@ public class PoolUtilities {
 					freeConnection(
 						context, 
 						conn,
-						"[1546534874] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + confName + "'."
+						"[1546534874] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + sDBID + "'."
 					);
 				}catch(Exception e){
 					//System.out.println("[1398285485] Failed to free connection");
@@ -626,14 +626,14 @@ public class PoolUtilities {
 	  public static ResultSet openResultSet(
 			  String SQLStatement, 
 			  ServletContext context, 
-			  String confName, 
+			  String sDBID, 
 			  String DBType) throws SQLException{
 		  
 		  Connection conn;
 		try {
 			//TJR - changed 3/19/2012:
-			//conn = getConnection(context, confName, DBType, "N/A");
-			conn = getConnection(context, confName, DBType, "SQL: " + SQLStatement);
+			//conn = getConnection(context, sDBID, DBType, "N/A");
+			conn = getConnection(context, sDBID, DBType, "SQL: " + SQLStatement);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -646,7 +646,7 @@ public class PoolUtilities {
 		   freeConnection(
 				  context, 
 				  conn,
-				  "[1546534871] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + confName + "'."
+				  "[1546534871] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + sDBID + "'."
 				   );
 		    
 		    return rs;
@@ -655,7 +655,7 @@ public class PoolUtilities {
 			
 			//If it's just a 'context is null' error, then we can return true and move on:
 			if (ex.getMessage().contains("[1516370817]")){
-				System.out.println("[154353561] - SQLStatements = '" + SQLStatement + "', confName = '" + confName + "'" 
+				System.out.println("[154353561] - SQLStatements = '" + SQLStatement + "', sDBID = '" + sDBID + "'" 
 					+ ".");
 				return rs;
 			}
@@ -665,7 +665,7 @@ public class PoolUtilities {
 					freeConnection(
 						context, 
 						conn,
-						"[1546534872] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + confName + "'."
+						"[1546534872] openResultSet - SQLStatement = '" + SQLStatement + "', DBID = '" + sDBID + "'."
 				);
 				}catch(Exception e){
 					//System.out.println("[1398285531] Failed to free connection");
@@ -685,7 +685,7 @@ public class PoolUtilities {
 		  Connection conn;
 		try {
 			//TJR - changed 3/19/2012:
-			//conn = getConnection(context, confName, DBType, CallingClass);
+			//conn = getConnection(context, sDBID, DBType, CallingClass);
 			conn = getConnection(context, DBID, DBType, CallingClass + " SQL: " + SQLStatement);
 		} catch (Exception e) {
 			throw new SQLException("[1499348041] '" + CallingClass + "' " + e.getMessage());

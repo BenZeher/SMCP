@@ -98,7 +98,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 	    out.println("<script src=\"scripts/json2.min.js\"></script> </div>");
 		out.println("</BODY></HTML>");
 	}
-	private String getStoredSignature(String sSalesCode, String sConfName, String sUserID, String sUserFullName) throws Exception{
+	private String getStoredSignature(String sSalesCode, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		String SQL = "SELECT"
 			+ " " + SMTablesalesperson.mSignature
 			+ " FROM " + SMTablesalesperson.TableName
@@ -111,7 +111,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 
-				sConfName, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".getStoredSignature - user: " + sUserID
 				+ " - "

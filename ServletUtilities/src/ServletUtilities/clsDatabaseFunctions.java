@@ -158,12 +158,12 @@ public class clsDatabaseFunctions {
 		return PoolUtilities.openResultSet(SQLStatement, conn);
 	}
 
-	public static ResultSet openResultSet(String SQLStatement, ServletContext context, String confName) throws SQLException{
-		return PoolUtilities.openResultSet(SQLStatement, context, confName);
+	public static ResultSet openResultSet(String SQLStatement, ServletContext context, String sDBID) throws SQLException{
+		return PoolUtilities.openResultSet(SQLStatement, context, sDBID);
 	}
 
-	public static ResultSet openResultSet(String SQLStatement, ServletContext context, String confName, String DBType, String CallingClass) throws SQLException{
-		return PoolUtilities.openResultSet(SQLStatement, context, confName, DBType, CallingClass);
+	public static ResultSet openResultSet(String SQLStatement, ServletContext context, String sDBID, String DBType, String CallingClass) throws SQLException{
+		return PoolUtilities.openResultSet(SQLStatement, context, sDBID, DBType, CallingClass);
 	}
 
 	public static ArrayList<String> getConnectionStatus(ServletContext context, String sExecutioner){

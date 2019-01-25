@@ -32,13 +32,6 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sMessage = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID= "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	private boolean bDebugMode = false;
 	//private ArrayList<String> alCreatedInvoices = new ArrayList<String>(0);
 	
@@ -55,13 +48,14 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID= (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID= (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    //sCallingClass will look like: smcontrolpanel.SMCreateMultipleInvoicesSelect
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
 
 	    boolean bCreateSingleInvoice = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(
 	    		SMCreateMultipleInvoicesSelection.CREATE_SINGLE_INVOICE_PARAM, request).compareToIgnoreCase("") != 0;
@@ -232,62 +226,19 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
         	return;
     	}
 
-
-    	try{
-    		//Check if there is already someone invoicing. 
-    		checkInvoicingFlag(conn, sDBID, sUserID);
-        	//Set invoicing flag
-    		setInvoicingFlag(true, conn, sDBID, sUserID);
-    		//Create invoices
-    		if (!CreateInvoices(conn,
-				conncheck,
-				sInvoiceDate,
-				alOrders,
-				alDeposits,
-				alCreatedInvoices,
-				sDBID,
-				out
-				)){
-    			sWarning = "Invoicing process failed. <BR>"
-		  			      + sWarning;
-    		}
-    		//Remove invoicing flag
-    		setInvoicingFlag(false,conn, sDBID, sUserID);
-	    	//even if some invoices were not created, we still want to out put created invoice list.
-    		sMessage = "";
-	    	if (alCreatedInvoices.size() > 0){
-		    	for (int i=0;i<alCreatedInvoices.size();i++){
-		    		sMessage +=  alCreatedInvoices.get(i).trim() + "/";
-		    	}
-	    	}
-	    	if (bDebugMode){
-	    		System.out.println("[1540839354] In " + this.toString() + " sMessage = " + sMessage + " time: " + System.currentTimeMillis());
-	    	}
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080424]");
-	    	clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080425]");
-			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-			+ SMUtilities.URLDecode(request.getParameter("SELECTEDLOCATIONS")) 
-			+ SMUtilities.URLDecode(request.getParameter("SELECTEDSERVICETYPES"))
-			+ "&" + SMCreateMultipleInvoicesSelection.LIST_OF_INVOICES_CREATED_PARAM + "=" + sMessage
-			+ "&Warning=" + SMUtilities.URLEncode(sWarning)
-			;
-    		if (bCreateSingleInvoice){
-    			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.CREATE_SINGLE_INVOICE_PARAM + "=Y";
-    			sRedirectString += "&" + SMOrderHeader.Paramstrimmedordernumber + "="+ sTrimmedOrderNumber;
-    			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.LIST_ORDERS_TO_INVOICE_PARAM + "=Y";
-    		}
-    		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
-    		response.sendRedirect(sRedirectString);
-    	}catch (Exception ex){
+		//Check if there is already someone invoicing. 
+		try {
+			checkInvoicingFlag(conn, sDBID, sUserID);
+		} catch (Exception e1) {
     		try {
     			//Remove invoicing flag
 				setInvoicingFlag(false,conn, sDBID, sUserID);
 			} catch (Exception e) {
-				sWarning += e.getMessage();
+				sWarning += e1.getMessage();
 			}
-    		sWarning = "Error when creating multiple invoices - " + ex.getMessage() + "<BR>" + sWarning;
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080690]");
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080691]");
+    		sWarning = "Error when creating multiple invoices - " + e1.getMessage() + "<BR>" + sWarning;
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080790]");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080791]");
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ "Warning=" + SMUtilities.URLEncode(sWarning)
 			+ request.getParameter("SELECTEDLOCATIONS") 
@@ -300,25 +251,97 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
     		}
     		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
     		response.sendRedirect(sRedirectString);
+    		return;
+		}
+    	
+    	try {
+			//Set invoicing flag
+			setInvoicingFlag(true, conn, sDBID, sUserID);
+		} catch (Exception e1) {
+    		sWarning = "Error when creating multiple invoices - " + e1.getMessage() + "<BR>" + sWarning;
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080890]");
+    		clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080891]");
+			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			+ "Warning=" + SMUtilities.URLEncode(sWarning)
+			+ request.getParameter("SELECTEDLOCATIONS") 
+			+ request.getParameter("SELECTEDSERVICETYPES")
+			;
+    		if (bCreateSingleInvoice){
+    			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.CREATE_SINGLE_INVOICE_PARAM + "=Y";
+    			sRedirectString += "&" + SMOrderHeader.Paramstrimmedordernumber + "="+ sTrimmedOrderNumber;
+    			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.LIST_ORDERS_TO_INVOICE_PARAM + "=Y";
+    		}
+    		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+    		response.sendRedirect(sRedirectString);
+    		return;
+		}
+
+		//Create invoices
+    	try{
+			CreateInvoices(conn,
+				conncheck,
+				sInvoiceDate,
+				alOrders,
+				alDeposits,
+				alCreatedInvoices,
+				sDBID,
+				sUserID,
+				sUserFullName,
+				out
+			);
+    	}catch(Exception e){
+    		sWarning = "Invoicing process failed. <BR>" + e.getMessage();
     	}
+		//Remove invoicing flag
+		try {
+			setInvoicingFlag(false,conn, sDBID, sUserID);
+		} catch (Exception e) {
+			//Can't do much about this - it will have to be unset manually
+		}
+    	//even if some invoices were not created, we still want to out put created invoice list.
+		String sMessage = "";
+    	if (alCreatedInvoices.size() > 0){
+	    	for (int i=0;i<alCreatedInvoices.size();i++){
+	    		sMessage +=  alCreatedInvoices.get(i).trim() + "/";
+	    	}
+    	}
+    	if (bDebugMode){
+    		System.out.println("[1540839354] In " + this.toString() + " sMessage = " + sMessage + " time: " + System.currentTimeMillis());
+    	}
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080424]");
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conncheck, "[1547080425]");
+		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			+ SMUtilities.URLDecode(request.getParameter("SELECTEDLOCATIONS")) 
+			+ SMUtilities.URLDecode(request.getParameter("SELECTEDSERVICETYPES"))
+			+ "&" + SMCreateMultipleInvoicesSelection.LIST_OF_INVOICES_CREATED_PARAM + "=" + sMessage
+			+ "&Warning=" + SMUtilities.URLEncode(sWarning)
+		;
+		if (bCreateSingleInvoice){
+			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.CREATE_SINGLE_INVOICE_PARAM + "=Y";
+			sRedirectString += "&" + SMOrderHeader.Paramstrimmedordernumber + "="+ sTrimmedOrderNumber;
+			sRedirectString += "&" + SMCreateMultipleInvoicesSelection.LIST_ORDERS_TO_INVOICE_PARAM + "=Y";
+		}
+		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		response.sendRedirect(sRedirectString);
     	return;
 	}
 
-	private boolean CreateInvoices (Connection conn,
+	private void CreateInvoices (Connection conn,
 									Connection conncheck,
 								   String sInvoiceDate,
 								   ArrayList<String> alOrders,
 								   ArrayList<Double> alDeposits,
 								   ArrayList<String> alInvoices,
 								   String sDBID,
+								   String sUserID,
+								   String sUserFullName,
 								   PrintWriter pwOut
-								   ){
+								   ) throws Exception{
 	
 		alInvoices.clear();
 	    if (alOrders.size()>0){
 	    }else{
-	    	sWarning = "No order is selected.";
-	    	return false;
+	    	throw new Exception("Error [1548457237] - No order is selected.");
 	    }
 	    //Sort the orders:
 	    Collections.sort(alOrders);
@@ -331,12 +354,10 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 	    	if (!cOrder.load(conn)){
 	    		//error loading order
 	    		//out put a message and goto the next order.
-	    		sWarning = "Error [1454609295] loading order " + (String) alOrders.get(i) + " - " + cOrder.getErrorMessages() + "<BR>";
-	    		return false;
+	    		throw new Exception("Error [1454609295] loading order " + (String) alOrders.get(i) + " - " + cOrder.getErrorMessages() + "<BR>");
 	    	}
 	    	if (!cOrder.validate_for_invoicing(conn)){
-	    		sWarning = "Customer " + cOrder.getM_sBillToName() + " cannot be invoiced: " + cOrder.getErrorMessages() + "<BR>";
-	    		return false;
+	    		throw new Exception("Error [1454609296] Customer " + cOrder.getM_sBillToName() + " cannot be invoiced: " + cOrder.getErrorMessages() + "<BR>");
 	    	}
             cInvoice.setM_dPrePayment(BigDecimal.valueOf(alDeposits.get(i)));
             SMCreateInvoice createinv = new SMCreateInvoice();
@@ -350,9 +371,8 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
             		System.out.println("[1540839355] - Creating invoice failed.<BR>"
             	  		+ ex.getMessage());
             	}
-            	sWarning = "Invoice creation failed.<BR>"
-            		     + ex.getMessage();
-            	return false;
+            	throw new Exception("Error [1454609297] Invoice creation failed.<BR>"
+            		     + ex.getMessage());
             }
 
             //out put invoice number into an array.
@@ -363,7 +383,7 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
             		+ cInvoice.getM_sInvoiceNumber() + " has been created successfully.");
             }
 	    }
-		return true;
+		return;
 	}
 	
 	private void checkInvoicingFlag(Connection conn, String sDBID, String sUserID) throws Exception{

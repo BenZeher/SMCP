@@ -14,9 +14,7 @@ public class SMCreateBidDocumentsFolder extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	//OBSOLETE? - We no longer use actual folders for sales lead documents
 	//HttpServletRequest parameters:
-	private String m_sWarning;
 	
-	private static String sDBID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -32,8 +30,8 @@ public class SMCreateBidDocumentsFolder extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    m_sWarning = "";
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String m_sWarning = "";
 	    
 	    String sBidNumber = clsManageRequestParameters.get_Request_Parameter("BidNumber", request).trim();
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request).trim();

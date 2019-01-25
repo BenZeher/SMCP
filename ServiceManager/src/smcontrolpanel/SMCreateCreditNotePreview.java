@@ -28,10 +28,6 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 	
 	private boolean bDebugMode = false;
 	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sUserID = "0";
 	
 		public void doGet(HttpServletRequest request,
 					HttpServletResponse response)
@@ -50,10 +46,10 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 
 		    //Get the session info:
 		    HttpSession CurrentSession = request.getSession(true);
-		    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		    
 		    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 		    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);

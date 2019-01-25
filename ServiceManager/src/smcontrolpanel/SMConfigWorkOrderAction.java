@@ -17,9 +17,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMConfigWorkOrderAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	public static String LASTENTRYEDITED_PARAM = "LastEntryEdited";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebugMode = false;
 	
 	public void doPost(HttpServletRequest request,
@@ -72,9 +69,9 @@ public class SMConfigWorkOrderAction extends HttpServlet{
 		}
 		
 		smaction.getCurrentSession().removeAttribute(SMTableworkorders.ObjectName);
-	    sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 	    //First get the command value that was passed in:

@@ -24,13 +24,6 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sMessage = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	private boolean bDebugMode = false;
 	private String sCreatedCreditNoteNumber = "";
 	
@@ -47,17 +40,19 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    //sCallingClass will look like: smcontrolpanel.SMCreateMultipleInvoicesSelect
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
     	String sInvoiceNumber = clsManageRequestParameters.get_Request_Parameter("INVOICENUMBER", request);
     	String sCreditNoteInfo = clsManageRequestParameters.get_Request_Parameter("CREDITNOTEINFO", request).trim();
 	    String sCreditNoteDate = clsManageRequestParameters.get_Request_Parameter("CREDITNOTEDATE", request).trim();
+	    
+	    String sWarning = "";
 	    
 		if(!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sCreditNoteDate)){
 			sWarning = "Invalid credit note date:\"" + sCreditNoteDate + "\"";
@@ -123,77 +118,67 @@ public class SMCreateCreditNoteAction extends HttpServlet {
         	return;
     	}
 
-    	try{
-    		if (!CreateCreditNote(conn,
-			    				  sDBID,
-			    				  sCreditNoteDate,
-			    				  sInvoiceNumber,
-			    				  sCreditNoteInfo,
-			    				  out
-			    					)){
-    			sWarning = "Crediting process failed. <BR>"
-		  			      + sWarning;
-        		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080416]");
-    			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
-    			+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
-    			+ "&CREDITNOTEDATE=" + sCreditNoteDate 
-    			+ "&CREDITNOTEINFO=" + clsServletUtilities.URLEncode(sCreditNoteInfo)
-    			+ "&INVOICENUMBER=" + sInvoiceNumber
-    			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-    			;
-    			//System.out.println("sRedirectString = " + sRedirectString);
-        		response.sendRedirect(sRedirectString);	
-    		}else{
-    			String sPrintCredit = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + 
-    											"smcontrolpanel.SMPrintInvoiceCriteriaSelection?" +
-    											"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
-    											"&InvoiceNumberFrom=" + sCreatedCreditNoteNumber.trim() +
-    									"\">" + sCreatedCreditNoteNumber.trim() + "</A> (Click here to print)";
-    		
-		    	//even if some invoice failed to be created, we still want to out put created invoice list.
-		    	sMessage = "Invoice #" + sInvoiceNumber + " is credited successfully.<BR>" +
-		    				"Credit note # is: " + sPrintCredit;
-		    	if (bDebugMode){
-		    		System.out.println("In " + this.toString() + " sMessage = " + sMessage);
-		    	}
-		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080417]");
-				//System.out.println("connections freed.");
-				String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCreateCreditNoteCriteriaSelection" + "?"
-				+ "MESSAGE=" + clsServletUtilities.URLEncode(sMessage)
-				+ "&Warning=" + clsServletUtilities.URLEncode(sWarning)
+    	try {
+			CreateCreditNote(conn,
+				  sDBID,
+				  sCreditNoteDate,
+				  sInvoiceNumber,
+				  sCreditNoteInfo,
+				  sUserID,
+				  sUserFullName,
+				  out
+			)
+			;
+		} catch (Exception e) {
+			sWarning = "Crediting process failed. <BR>" + e.getMessage();
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080416]");
+			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
+				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
 				+ "&CREDITNOTEDATE=" + sCreditNoteDate 
 				+ "&CREDITNOTEINFO=" + clsServletUtilities.URLEncode(sCreditNoteInfo)
 				+ "&INVOICENUMBER=" + sInvoiceNumber
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				;
-				//System.out.println("sRedirectString = " + sRedirectString);
-	    		response.sendRedirect(sRedirectString);
-    		}
-	    	return;
-    	}catch (Exception ex){
-    		sWarning = "Error when creating multiple invoices - " + ex.getMessage() + "<BR>" + sWarning;
-			//System.out.println(sWarning);
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080418]");
-			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
-			+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+			;
+			//System.out.println("sRedirectString = " + sRedirectString);
+			response.sendRedirect(sRedirectString);
+			return;
+		}
+		String sPrintCredit = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + 
+				"smcontrolpanel.SMPrintInvoiceCriteriaSelection?" +
+				"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
+				"&InvoiceNumberFrom=" + sCreatedCreditNoteNumber.trim() +
+		"\">" + sCreatedCreditNoteNumber.trim() + "</A> (Click here to print)";
+
+		//even if some credit was not created, we still want to out put created credit list.
+		String sMessage = "Invoice #" + sInvoiceNumber + " is credited successfully.<BR>" +
+		"Credit note # is: " + sPrintCredit;
+		if (bDebugMode){
+			System.out.println("In " + this.toString() + " sMessage = " + sMessage);
+		}
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080417]");
+		//System.out.println("connections freed.");
+		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCreateCreditNoteCriteriaSelection" + "?"
+			+ "MESSAGE=" + clsServletUtilities.URLEncode(sMessage)
+			+ "&Warning=" + clsServletUtilities.URLEncode(sWarning)
 			+ "&CREDITNOTEDATE=" + sCreditNoteDate 
 			+ "&CREDITNOTEINFO=" + clsServletUtilities.URLEncode(sCreditNoteInfo)
 			+ "&INVOICENUMBER=" + sInvoiceNumber
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			;
-			//System.out.println("sRedirectString = " + sRedirectString);
-    		response.sendRedirect(sRedirectString);	
-    		return;
-    	}
+		;
+		//System.out.println("sRedirectString = " + sRedirectString);
+		response.sendRedirect(sRedirectString);
+    	return;
 	}
 	
-	private boolean CreateCreditNote (Connection conn,
+	private void CreateCreditNote (Connection conn,
 									  String sConf,
 									  String sCreditNoteDate,
 									  String sInvoiceNumber,
 									  String sCreditNoteInfo,
+									  String sUserID,
+									  String sUserFullName,
 									  PrintWriter pwOut
-									){
+									) throws Exception{
 	
 		
 		
@@ -213,9 +198,8 @@ public class SMCreateCreditNoteAction extends HttpServlet {
         		System.out.println("Creating credit note failed.<BR>"
         	  		+ ex.getMessage());
         	}
-        	sWarning = "Credit note creation failed.<BR>"
-        		     + ex.getMessage();
-        	return false;
+        	throw new Exception ("Credit note creation failed.<BR>"
+        		     + ex.getMessage());
         }
         
         if (bDebugMode){
@@ -223,6 +207,6 @@ public class SMCreateCreditNoteAction extends HttpServlet {
         		+ "" + " has been created successfully.");
         }
 	    
-		return true;
+		return;
 	}
 }

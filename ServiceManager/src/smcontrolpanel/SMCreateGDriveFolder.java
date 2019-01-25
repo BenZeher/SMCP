@@ -46,8 +46,6 @@ public class SMCreateGDriveFolder extends HttpServlet{
 	public static String RENAMED_ORDER_FOLDER_URL_PARAM_VALUE = "rename order folder";
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -74,8 +72,8 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		}
 		
 		HttpSession CurrentSession = request.getSession();
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		
 		//Create the necessary SQL statement:
 		String SQL = "";

@@ -16,8 +16,6 @@ import ServletUtilities.clsDatabaseFunctions;
 @SuppressWarnings("serial")
 public class SMAddNewConnection extends HttpServlet{
 
-	private String sDBID = "";
-	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -34,7 +32,7 @@ public class SMAddNewConnection extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    
 	    SimpleDateFormat USDateTimeformatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
 	    

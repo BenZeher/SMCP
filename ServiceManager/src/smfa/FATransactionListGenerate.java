@@ -25,19 +25,13 @@ public class FATransactionListGenerate extends HttpServlet {
 
 	private SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sCompanyName = "";
-	private boolean bSelectByCategory = false;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
+		
+		String sWarning = "";
+		String sCallingClass = "";
+		boolean bSelectByCategory = false;
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -48,12 +42,12 @@ public class FATransactionListGenerate extends HttpServlet {
 		 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	   
 
 		boolean bPrintProvisionalTransactions = false;
@@ -128,7 +122,7 @@ public class FATransactionListGenerate extends HttpServlet {
 				);
 		if (conn == null){
 			sWarning = "Unable to get data connection.";
-			redirectAfterError(response);
+			redirectAfterError(response, sCallingClass, sWarning, sDBID, bSelectByCategory);
 			return;
 		}
 
@@ -161,7 +155,7 @@ public class FATransactionListGenerate extends HttpServlet {
 		doPost(request, response);
 	}
 
-	private void redirectAfterError(HttpServletResponse res){
+	private void redirectAfterError(HttpServletResponse res, String sCallingClass, String sWarning, String sDBID, boolean bSelectByCategory){
 
 		String sRedirect =
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

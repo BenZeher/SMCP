@@ -19,10 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMAverageMUReportSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	public static String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
 	public static String PRINTINDIVIDUAL_VALUE_YES = "YES";
 	public static String PRINTINDIVIDUAL_VALUE_NO = "NO";
@@ -39,11 +35,11 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 	    boolean bPrintIndividual = 
 	    	clsManageRequestParameters.get_Request_Parameter(

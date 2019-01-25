@@ -31,15 +31,6 @@ public class SMAverageMUReportGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "0";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sCompanyName = "";
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -51,13 +42,15 @@ public class SMAverageMUReportGenerate extends HttpServlet {
 	    response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		
+		String sWarning = "";
+		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    boolean bPrintIndividual = 
 	    	clsManageRequestParameters.get_Request_Parameter(
 	    		SMAverageMUReportSelection.PRINTINDIVIDUAL_PARAMETER, request).compareToIgnoreCase(
@@ -65,7 +58,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
 	    String sIndividualSalesperson = clsManageRequestParameters.get_Request_Parameter(
 	    		SMAverageMUReportSelection.INDIVIDUALSALESPERSON_PARAMETER, request);
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
 	    String sStartingDate = "";
 	    String sEndingDate = "";
@@ -152,7 +145,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
     		 }
     	  } 
     	String sServiceTypes = "";
-    	sServiceTypes = getSelectedServiceTypes(arServiceTypes);
+    	sServiceTypes = getSelectedServiceTypes(arServiceTypes, sDBID);
     	String sCriteria = "Starting with order date <B>" + sStartingDate + "</B>"
     		+ ", ending with order date <B>" + sEndingDate + "</B>"
     		+ ", including order types <B>" + sServiceTypes + "</B>"
@@ -227,7 +220,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080409]");
 	    out.println("</BODY></HTML>");
 	}
-	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes){
+	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes, String sDBID){
 		
 		String sDesc = "";
 		

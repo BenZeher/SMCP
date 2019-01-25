@@ -62,8 +62,9 @@ public class FATransactionList extends java.lang.Object{
 	    				" " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransDepreciationGLAcct + "," + 
 	    				" " + SMTablefamaster.TableName + "." + SMTablefamaster.sDescription + "," + 
 	    				" " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + 
+	    				", " + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation
 	    
-	    			" FROM" +
+	    			+ " FROM" +
 	    				" " + SMTablefatransactions.TableName + "," + 
 	    				" " + SMTablefamaster.TableName + 
 	    
@@ -206,6 +207,7 @@ public class FATransactionList extends java.lang.Object{
 			        			   		   rs.getString(SMTablefatransactions.sTransDepreciationGLAcct),
 			        			   		   rs.getString(SMTablefatransactions.sTransAccumulatedDepreciationGLAcct),
 			        			   		   rs.getString(SMTablefatransactions.sTransComment),
+			        			   		   rs.getString(SMTablefamaster.sLocation),
 			        			   		   rs.getInt(SMTablefatransactions.iProvisionalPosting),
 			        			   		   rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated),
 			        			   		   bAllowAssetEditing,
@@ -264,6 +266,7 @@ public class FATransactionList extends java.lang.Object{
 									    String sDepGLAcct,
 									    String sAccuDepGLAcct,
 									    String sComment,
+									    String sLocation,
 									    int iProvisional,
 									    BigDecimal bdAmount,
 									    boolean bAllowAssetEditing,

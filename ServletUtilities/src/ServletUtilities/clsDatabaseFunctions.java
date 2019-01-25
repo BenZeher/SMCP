@@ -114,12 +114,12 @@ public class clsDatabaseFunctions {
 		return PoolUtilities.executeSQL(SQLStatement, conn);
 	}
 
-	public static boolean executeSQL(String SQLStatement, ServletContext context, String confName) throws SQLException{
-		return PoolUtilities.executeSQL(SQLStatement, context, confName);
+	public static boolean executeSQL(String SQLStatement, ServletContext context, String sDBID) throws SQLException{
+		return PoolUtilities.executeSQL(SQLStatement, context, sDBID);
 	}
 
-	public static boolean executeSQL(String SQLStatement, ServletContext context, String confName, String DBType, String CallingClass) throws SQLException{
-		return PoolUtilities.executeSQL(SQLStatement, context, confName, DBType, CallingClass);
+	public static boolean executeSQL(String SQLStatement, ServletContext context, String sDBID, String DBType, String CallingClass) throws SQLException{
+		return PoolUtilities.executeSQL(SQLStatement, context, sDBID, DBType, CallingClass);
 	}
 
 	public static void executeSQLWithException(
@@ -138,17 +138,17 @@ public class clsDatabaseFunctions {
 			  context)
 		;
 	}
-	public static void executeSQL(String SQLStatement, String confName, String DBType, String CallingClass, ServletContext context) throws Exception{
-		PoolUtilities.executeSQL(SQLStatement, confName, DBType, CallingClass, context);
+	public static void executeSQL(String SQLStatement, String sDBID, String DBType, String CallingClass, ServletContext context) throws Exception{
+		PoolUtilities.executeSQL(SQLStatement, sDBID, DBType, CallingClass, context);
 	}
 
-	public static boolean executeSQLsInTransaction(ArrayList<String> SQLStatements, ServletContext context, String confName) throws SQLException{
-		return PoolUtilities.executeSQLsInTransaction(SQLStatements, context, confName);
+	public static boolean executeSQLsInTransaction(ArrayList<String> SQLStatements, ServletContext context, String sDBID) throws SQLException{
+		return PoolUtilities.executeSQLsInTransaction(SQLStatements, context, sDBID);
 	}
 
-	public static void executeSQLsInTrans(ArrayList<String> SQLStatements, ServletContext context, String confName) throws SQLException{
+	public static void executeSQLsInTrans(ArrayList<String> SQLStatements, ServletContext context, String sDBID) throws SQLException{
 		try {
-			PoolUtilities.executeSQLsInTransaction(SQLStatements, context, confName);
+			PoolUtilities.executeSQLsInTransaction(SQLStatements, context, sDBID);
 		} catch (Exception e) {
 			throw new SQLException("Error [1539615603] executing SQL statements in transaction - " + e.getMessage() + ".");
 		}

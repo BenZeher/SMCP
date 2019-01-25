@@ -19,8 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class CustomerCallLogSave extends HttpServlet {
 	//OBSOLETE?
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -38,8 +36,8 @@ public class CustomerCallLogSave extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Customer Call Log";
 	    String subtitle = "Saving....";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -131,7 +129,7 @@ public class CustomerCallLogSave extends HttpServlet {
 									 Timestamp tsCallTime,
 									 String sUserName,
 									 Timestamp tsLogTime,
-									 String sConfName){
+									 String sDBID){
 	    
 		if (iOrderSource == 0){
 			return "<FONT COLOR=RED SIZE=4><B>You have to pick a order source before saving the log.</B></FONT><BR><BR>" + 
@@ -152,7 +150,7 @@ public class CustomerCallLogSave extends HttpServlet {
 		    														iOrderSource,
 		    														clsDatabaseFunctions.FormatSQLStatement(sCallNote));
 		    try{
-			    if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConfName)){
+			    if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID)){
 			    	
 			    	return "Customer call log saved successfully.<BR>" + 
 			    		   "<META http-equiv='Refresh' content='1;URL=" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.CustomerCallLogEntry?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "'>";

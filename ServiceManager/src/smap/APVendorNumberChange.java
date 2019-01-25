@@ -19,6 +19,7 @@ import SMDataDefinition.SMTableicvendoritems;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMUtilities;
 
 public class APVendorNumberChange extends java.lang.Object{
@@ -217,6 +218,7 @@ public class APVendorNumberChange extends java.lang.Object{
 		    		+ " - vendor accounts cannot be merged.");
 		    }
 		    
+		    /* TJR - 1/25/2019 - removed this in case the two vendors really DID have a record for the same itemnumber - the function shouldn't choke over that:
 		    //Check that there will be no conflicts in IC vendor's items:
 	    	boolean bICVendorItemsConflict = false;
 	    	String sConflictingVendorItems = "";
@@ -234,7 +236,7 @@ public class APVendorNumberChange extends java.lang.Object{
 	    			+ " AND (" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber + " != '')"
 	    			+ ")"
 	    			;
-	    	System.out.println("[1546022695] - SQL = '" + SQL + "'");
+	    	//System.out.println("[1546022695] - SQL = '" + SQL + "'");
 	    	int iConflictCounter = 0;
 		    try{
 		    	ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -247,12 +249,14 @@ public class APVendorNumberChange extends java.lang.Object{
 		    }catch(SQLException e){
 		    	throw new Exception("Error [1507573951] checking for conflicting vendor items with SQL: '" + SQL + " - " + e.getMessage());
 		    }
+		    x
 		    if(bICVendorItemsConflict){
 		    	throw new Exception("Vendor '" + sFromVendor + "' and vendor '" + sToVendor 
 		    		+ " have the following " + Integer.toString(iConflictCounter) + " vendor items in common: " + sConflictingVendorItems 
 		    		+ " - vendor account cannot be merged."
 		    	);
 		    }
+		    */
 	    }else{  //If this is a CHANGE request:
 	    	//Make sure there is NO 'change to' vendor already:
 	    	SQL = "SELECT " 
@@ -530,7 +534,8 @@ public class APVendorNumberChange extends java.lang.Object{
 		** - All the vendor statistics of the MERGE FROM vendor will be added to (or combined with) the statistics of the MERGE TO vendor.
 		** - All current and historical Purchase Orders for the MERGE FROM vendor will have the vendor account and name changed to the MERGE TO vendor.
 		** - All current and historical Purchase Order Invoices for the MERGE FROM vendor will have the vendor account and name changed to the MERGE TO vendor.
-		** - All Vendor Items (used in the inventory system to record vendor item numbers) for the MERGE FROM vendor will be added to the items in the MERGE TO vendor's list of items.
+		** - All Vendor Items (used in the inventory system to record vendor item numbers) for the MERGE FROM vendor will be added to the items in the MERGE TO vendor's list of items,
+		**        but if there is a duplicate, it will be ignored.
 		** - All current and historical Labor Backcharges for the MERGE FROM vendor will be changed to the MERGE TO vendor.
 		*/
 		
@@ -744,7 +749,7 @@ public class APVendorNumberChange extends java.lang.Object{
 				
 		+ ")"+ "\n"
 		;
-		System.out.println("[1507585004] - SQL = '" + SQL + "'");
+		//System.out.println("[1507585004] - SQL = '" + SQL + "'");
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -796,17 +801,38 @@ public class APVendorNumberChange extends java.lang.Object{
 		}
 		
 		// ** - All Vendor Items (used in the inventory system to record vendor item numbers) for the MERGE FROM vendor will be added to the items in the MERGE TO vendor's list of items.
-		SQL = "UPDATE " + SMTableicvendoritems.TableName
-		+ " SET " + SMTableicvendoritems.sVendor + " = '" + sToVendor + "'"
+		// TJR - 1/25/2019 - modified this in case the two vendors really DID have a record for the same itemnumber - the function shouldn't choke over that:
+		SQL = "INSERT IGNORE INTO " + SMTableicvendoritems.TableName + "("
+			+ SMTableicvendoritems.sCost
+			+ ", " + SMTableicvendoritems.sItemNumber
+			+ ", " + SMTableicvendoritems.sVendor
+			+ ", " + SMTableicvendoritems.sVendorItemNumber
+			+ ", " + SMTableicvendoritems.sComment
+		+ ") "
+		+ " SELECT "
+		+ SMTableicvendoritems.sCost
+		+ ", " + SMTableicvendoritems.sItemNumber
+		+ ", '" + sToVendor + "'"
+		+ ", " + SMTableicvendoritems.sVendorItemNumber
+		+ ", " + SMTableicvendoritems.sComment
+		+ " FROM " + SMTableicvendoritems.TableName
 		+ " WHERE ("
 			+ "(" + SMTableicvendoritems.sVendor + " = '" + sFromVendor + "')"
 		+ ")"
+		;
+		//System.out.println("[1548442709] - SQL = '" + SQL + "'.");
+		
+		//SQL = "UPDATE " + SMTableicvendoritems.TableName
+		//+ " SET " + SMTableicvendoritems.sVendor + " = '" + sToVendor + "'"
+		//+ " WHERE ("
+		//	+ "(" + SMTableicvendoritems.sVendor + " = '" + sFromVendor + "')"
+		//+ ")"
 		;
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (Exception e) {
-			throw new Exception("Error [1507582882] updating vendors on vendor items with SQL: '" + SQL + "' - " + e.getMessage());
+			throw new Exception("Error [1507582882] inserting vendor items from vendor '" + sFromVendor + "' to vendor '" + sToVendor + "' with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 		
 		// ** - All current and historical Labor Backcharges for the MERGE FROM vendor will be changed to the MERGE TO vendor.

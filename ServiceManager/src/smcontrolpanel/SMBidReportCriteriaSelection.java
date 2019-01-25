@@ -15,10 +15,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 
 public class SMBidReportCriteriaSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
 	public static final String SALESGROUP_PARAM_SEPARATOR = ",";
 	public void doGet(HttpServletRequest request,
@@ -40,8 +36,12 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) 
+	    	+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME)
+	    ;
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String title = SMBidEntry.ParamObjectName + " Report";
 	    String subtitle = "select criterias";
 	    

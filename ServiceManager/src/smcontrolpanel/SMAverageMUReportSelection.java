@@ -177,12 +177,12 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 	    	
 		out.println("</BODY></HTML>");
 	}
-	private String getSalespersonCode(String sDBID, String sUsersID, String sUserFullName){
+	private String getSalespersonCode(String sDBID, String sUserID, String sUserFullName){
 		String SQL = "SELECT"
 			+ " " + SMTableusers.sDefaultSalespersonCode
 			+ " FROM " + SMTableusers.TableName
 			+ " WHERE ("
-				+ "(" + SMTableusers.lid + " = " + sUsersID + ")"
+				+ "(" + SMTableusers.lid + " = " + sUserID + ")"
 			+ ")"
 			;
 		

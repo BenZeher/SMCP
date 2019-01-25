@@ -27,9 +27,6 @@ import ServletUtilities.clsStringFunctions;
 
 public class SMBidReportGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "0";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -47,9 +44,9 @@ public class SMBidReportGenerate extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		//Calculate time period
 		SimpleDateFormat USDateTimeformatter = new SimpleDateFormat("MM/dd/yyyy hh:mm:ss a");
@@ -97,7 +94,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		String s = "<TABLE BORDER=0><TR>" +
 		"<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2><B>Sales Group(s):</B></FONT></TD>" +
 		"<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" +
-		getSelectedSalesGroups(alSelectedSalesGroups) +
+		getSelectedSalesGroups(alSelectedSalesGroups, sDBID) +
 		"</FONT>" +
 		"</TD>" +
 		"</TR></TABLE>";
@@ -796,7 +793,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		return SQL;
 	}
 
-	private String getSelectedSalesGroups(ArrayList<String> arSalesGroups){
+	private String getSelectedSalesGroups(ArrayList<String> arSalesGroups, String sDBID){
 
 		String sDesc = "";
 

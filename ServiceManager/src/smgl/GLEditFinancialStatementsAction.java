@@ -23,11 +23,6 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Financial Statement";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID  = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
 	//private boolean bDebugMode = true;
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -46,11 +41,11 @@ public class GLEditFinancialStatementsAction extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		long lID;
 		try {
 			lID = Long.parseLong(clsManageRequestParameters.get_Request_Parameter(SMTableglstatementforms.lid, request));

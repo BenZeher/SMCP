@@ -24,7 +24,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class GLMainMenu extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -49,7 +48,7 @@ public class GLMainMenu extends HttpServlet {
 				bMobileView = true;
 			}
 		}
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
 		out.println(SMUtilities.getMenuHead(
 				subtitle,

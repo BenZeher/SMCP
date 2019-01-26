@@ -32,10 +32,6 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 	public static String BUTTON_SUBMIT_EDIT = "SubmitEdit";
 	public static String BUTTON_SUBMIT_ADD = "SubmitAdd";
 	public static String BUTTON_SUBMIT_DELETE = "SubmitDelete";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebug = false;
 	
 	@Override
@@ -55,10 +51,10 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sStatementFormID = clsStringFunctions.filter(request.getParameter(SMTableglstatementforms.lid));
 
@@ -98,7 +94,7 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 			if (sStatementFormID == null){
 				out.println("Invalid " + sObjectName + " ID. Please go back and try again.");
 			}else{
-				Edit_Record(sStatementFormID, out, sDBID, false, sUserID, sUserFullName);
+				Edit_Record(sStatementFormID, out, sDBID, false, sUserID, sUserFullName, sDBID);
 			}
 		}
 		if(request.getParameter(BUTTON_SUBMIT_DELETE) != null){
@@ -159,7 +155,7 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
 			}
 			else{
-				Edit_Record(sNewCode, out, sDBID, true, sUserID,sUserFullName);
+				Edit_Record(sNewCode, out, sDBID, true, sUserID, sUserFullName, sDBID);
 			}
 		}
 
@@ -172,7 +168,8 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 			String sConf,
 			boolean bAddNew,
 			String sUserID,
-			String sUserFullName){
+			String sUserFullName,
+			String sDBID){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
@@ -330,7 +327,7 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sFinancialFormID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

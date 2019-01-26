@@ -27,8 +27,8 @@ import smcontrolpanel.SMUtilities;
 public class GLEditAccountsEdit extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "GL Account";
-	private static String sCalledClassName = "GLEditAccountsUpdate";
+	private static final String sObjectName = "GL Account";
+	private static final String sCalledClassName = "GLEditAccountsUpdate";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

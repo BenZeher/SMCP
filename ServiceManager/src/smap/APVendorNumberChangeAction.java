@@ -20,10 +20,6 @@ import smcontrolpanel.SMUtilities;
 public class APVendorNumberChangeAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String m_sWarning = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sDBID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -36,10 +32,10 @@ public class APVendorNumberChangeAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String m_sWarning = "";
 	    if ((request.getParameter(APVendorNumberChangeSelect.PROCESS_TYPE) == null)){
 	    	m_sWarning = "You must choose either CHANGE or MERGE for this function.";
 			response.sendRedirect(

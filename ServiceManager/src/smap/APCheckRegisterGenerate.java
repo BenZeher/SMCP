@@ -26,11 +26,6 @@ public class APCheckRegisterGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private long lStartingTime = 0;
-
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -42,15 +37,16 @@ public class APCheckRegisterGenerate extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sBatchNumber = request.getParameter(SMTableapbatches.lbatchnumber);
 		String sBatchType = request.getParameter(SMTableapbatches.ibatchtype);
 
+		long lStartingTime = 0;
 		//Customized title
 		String sReportTitle = "A/P Check Register for check run batch number " + sBatchNumber;
 		

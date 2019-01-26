@@ -38,11 +38,7 @@ public class APEditBatchesSelect extends HttpServlet {
 	 * Parameters:
 	 * Limit - e.g. Limit=25 - number of batches to list
 	 */
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
-	private static String sObjectName = "AP Batch";
+	private static final String sObjectName = "AP Batch";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -58,11 +54,11 @@ public class APEditBatchesSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //Get the variables for the class:
 	    String sNumberOfBatchesToDisplay;
@@ -272,7 +268,8 @@ public class APEditBatchesSelect extends HttpServlet {
 							clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 									rs.getString(SMTableapbatches.TableName + "." + SMTableapbatches.datpostdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE),
 							request,
-							getServletContext()
+							getServletContext(),
+							sDBID
 						)
 					);
 				} catch (Exception e) {
@@ -316,7 +313,8 @@ public class APEditBatchesSelect extends HttpServlet {
 			String sLastEditedDate,
 			String sPostingDate,
 			HttpServletRequest req,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 			){
 
 		String sOutPut = "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

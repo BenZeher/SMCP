@@ -31,8 +31,6 @@ public class APConfirmCheckPrintAction extends HttpServlet{
 	public static final String COMMADELIMITED_LIST_OF_FINALIZED_CHECK_BATCHENTRYIDS = "FINALIZEDENTRIES";
 	
 	private static final long serialVersionUID = 1L;
-	private static String sUserName = "";
-	private static String sDBID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -49,8 +47,8 @@ public class APConfirmCheckPrintAction extends HttpServlet{
     //Get the session info:
     HttpSession CurrentSession = request.getSession(true);
     
-    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
     String sBatchNumber = request.getParameter(SMTableapbatches.lbatchnumber);
     
     //String title = "Updating check status";

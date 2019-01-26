@@ -26,10 +26,6 @@ import smcontrolpanel.SMUtilities;
 public class APCreatePaymentsReportGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
 	private static int MAX_ERROR_LENGTH = 1024;
 	private static String SUBMIT_BUTTON_NAME = "CREATEBATCH";
 	private static String SUBMIT_BUTTON_VALUE = "Create payment batch";
@@ -47,12 +43,13 @@ public class APCreatePaymentsReportGenerate extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sPaymentDate = request.getParameter(APCreatePaymentsReportEdit.PARAM_PAYMENT_DATE);
 		String sBatchDate = request.getParameter(APCreatePaymentsReportEdit.PARAM_BATCH_DATE);
 		String sBankID = request.getParameter(APCreatePaymentsReportEdit.PARAM_BANK_ID);
@@ -366,7 +363,7 @@ public class APCreatePaymentsReportGenerate extends HttpServlet {
 			;
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047697]");
-			String sWarning = "Failed to create payment batch - " + e.getMessage();
+			sWarning = "Failed to create payment batch - " + e.getMessage();
 			if (sWarning.length() > MAX_ERROR_LENGTH){
 				sWarning = sWarning.substring(0, MAX_ERROR_LENGTH) + "...";
 			}

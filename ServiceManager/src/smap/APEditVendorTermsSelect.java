@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 public class APEditVendorTermsSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smap.APEditVendorTermsEdit";
+	private static final String sCalledClassName = "smap.APEditVendorTermsEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

@@ -29,10 +29,6 @@ public class APAgedPayablesGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
 	private long lStartingTime = 0;
 
 	public void doGet(HttpServletRequest request,
@@ -46,12 +42,14 @@ public class APAgedPayablesGenerate extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sWarning = "";
+		
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sAgeAsOf = request.getParameter(APAgedPayablesSelect.PARAM_AS_OF_DATE);
 		String sCutoffBy = request.getParameter(APAgedPayablesSelect.PARAM_CUT_OFF_BY);
 		String sCutOffDate = request.getParameter(APAgedPayablesSelect.PARAM_CUT_OFF_DATE);

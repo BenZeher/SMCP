@@ -33,8 +33,6 @@ import smcontrolpanel.SMUtilities;
 public class APClearTransactionsAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sUserID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -47,8 +45,8 @@ public class APClearTransactionsAction extends HttpServlet{
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		if (clsManageRequestParameters.get_Request_Parameter(APClearTransactionsSelect.CONFIRM_CLEARING_CHECKBOX, request).compareToIgnoreCase("") == 0){
 			String sWarning = "You chose to clear, but did not check the box to confirm.";
@@ -61,7 +59,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		}
 		
 		try {
-			clearTransactions(sDBID, sClearingDate);
+			clearTransactions(sDBID, sClearingDate, sUserID);
 		} catch (Exception e) {
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -80,7 +78,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		);
 		return;
 	}
-	private void clearTransactions(String sDBID, String sClearingDate) throws Exception{
+	private void clearTransactions(String sDBID, String sClearingDate, String sUserID) throws Exception{
 		
 		if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sClearingDate)){
 			throw new Exception("Invalid clearing date - '" + sClearingDate + "'.");
@@ -106,7 +104,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		}
 		
 		try {
-			checkAndSetAPPostingFlag (conn);
+			checkAndSetAPPostingFlag (conn, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047432");
 			throw new Exception("Error [1506471592] checking AP Posting Flag - " + e.getMessage());
@@ -316,7 +314,7 @@ public class APClearTransactionsAction extends HttpServlet{
 			throw new Exception("Error [1506451871] clearing posting flag in apoptions - " + e.getMessage());
 		}
 	}
-	private void checkAndSetAPPostingFlag(Connection conn) throws Exception{
+	private void checkAndSetAPPostingFlag(Connection conn, String sUserID) throws Exception{
 		//First check to make sure no one else is posting:
 		try{
 			String SQL = "SELECT * FROM " + SMTableapoptions.TableName;

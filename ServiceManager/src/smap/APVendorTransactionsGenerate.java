@@ -27,16 +27,11 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private long lStartingTime = 0;
-
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
 
+		long lStartingTime = 0;
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.APVendorTransactionsReport)){
@@ -44,12 +39,13 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 		
 		String sStartingDocumentDate = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_DOCUMENT_DATE);
 		String sEndingDocumentDate = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_DOCUMENT_DATE);

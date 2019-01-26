@@ -45,10 +45,7 @@ public class APEditBatchesEdit extends HttpServlet {
 	 * BatchNumber - batch number
 	 * BatchType - batch type - an integer passed as a string
 	 */
-	private static String sObjectName = "Batch";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Batch";
 	
 	//public static String CREATEGLBATCH_BUTTON_NAME = "CREATEGLBATCH";
 	//public static String CREATEGLBATCH_BUTTON_LABEL = "Re-create GL batch";
@@ -69,9 +66,9 @@ public class APEditBatchesEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 		String title = "";
 		String subtitle = "";
@@ -167,7 +164,7 @@ public class APEditBatchesEdit extends HttpServlet {
            		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Re-create export file</A><BR><BR>\n");
         }
 		
-	    Edit_Record(batch, sUserID, out, request, sDBID, false, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
+	    Edit_Record(batch, sUserID, out, request, sDBID, false, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL), sDBID);
 		out.println("</BODY></HTML>\n");
 		
 	}
@@ -179,7 +176,8 @@ public class APEditBatchesEdit extends HttpServlet {
 			HttpServletRequest req,
 			String sConf,
 			boolean bAddNew,
-			String sLicenseModuleLevel){
+			String sLicenseModuleLevel,
+			String sDBID){
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesAction' METHOD='POST'>\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");

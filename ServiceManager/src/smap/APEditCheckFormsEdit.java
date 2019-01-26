@@ -28,23 +28,19 @@ import smcontrolpanel.SMUtilities;
 public class APEditCheckFormsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Check Form";
-	private static String sCalledClassName = "APEditCheckFormsAction";
-	public static String PRINT_SAMPLE_CHECKS = "PRINTSAMPLECHECKS";
-	public static String NUMBER_OF_SAMPLE_CHECKS_TO_PRINT = "NUMCHECKS";
-	public static String SAMPLE_VENDOR = "SAMPLEVENDOR";
-	public static String SAMPLE_REMIT_TO = "SAMPLEREMITTO";
-	public static String SAMPLE_BANK_ID = "SAMPLEBANKID";
-	public static String SAMPLE_NUMBER_OF_ADVICE_LINES = "SAMPLENUMBEROFADVICELINES";
-	public static String SAMPLE_NUMBER_OF_ADVICE_LINES_DEFAULT = "10";
-	public static String TEST_HTML_BUTTON_LABEL = "Test HTML Form";
-	public static String BUTTON_SUBMIT_EDIT = "SubmitEdit";
-	public static String BUTTON_SUBMIT_ADD = "SubmitAdd";
-	public static String BUTTON_SUBMIT_DELETE = "SubmitDelete";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
+	private static final String sObjectName = "Check Form";
+	private static final String sCalledClassName = "APEditCheckFormsAction";
+	public static final String PRINT_SAMPLE_CHECKS = "PRINTSAMPLECHECKS";
+	public static final String NUMBER_OF_SAMPLE_CHECKS_TO_PRINT = "NUMCHECKS";
+	public static final String SAMPLE_VENDOR = "SAMPLEVENDOR";
+	public static final String SAMPLE_REMIT_TO = "SAMPLEREMITTO";
+	public static final String SAMPLE_BANK_ID = "SAMPLEBANKID";
+	public static final String SAMPLE_NUMBER_OF_ADVICE_LINES = "SAMPLENUMBEROFADVICELINES";
+	public static final String SAMPLE_NUMBER_OF_ADVICE_LINES_DEFAULT = "10";
+	public static final String TEST_HTML_BUTTON_LABEL = "Test HTML Form";
+	public static final String BUTTON_SUBMIT_EDIT = "SubmitEdit";
+	public static final String BUTTON_SUBMIT_ADD = "SubmitAdd";
+	public static final String BUTTON_SUBMIT_DELETE = "SubmitDelete";
 	private boolean bDebug = false;
 	
 	@Override
@@ -64,10 +60,10 @@ public class APEditCheckFormsEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sCheckFormID = clsStringFunctions.filter(request.getParameter(SMTableapcheckforms.lid));
 
@@ -107,7 +103,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 			if (sCheckFormID == null){
 				out.println("Invalid " + sObjectName + " ID. Please go back and try again.");
 			}else{
-				Edit_Record(sCheckFormID, out, sDBID, false, sUserID, sUserFullName);
+				Edit_Record(sCheckFormID, out, sDBID, false, sUserID, sUserFullName, sDBID);
 			}
 		}
 		if(request.getParameter(BUTTON_SUBMIT_DELETE) != null){
@@ -168,7 +164,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
 			}
 			else{
-				Edit_Record(sNewCode, out, sDBID, true, sUserID,sUserFullName);
+				Edit_Record(sNewCode, out, sDBID, true, sUserID, sUserFullName, sDBID);
 			}
 		}
 
@@ -181,7 +177,8 @@ public class APEditCheckFormsEdit extends HttpServlet {
 			String sConf,
 			boolean bAddNew,
 			String sUserID,
-			String sUserFullName){
+			String sUserFullName,
+			String sDBID){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
@@ -463,7 +460,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCheckFormID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

@@ -67,11 +67,6 @@ public class APPrintChecksEdit extends HttpServlet {
 	public static String LIST_OF_ENTRYIDS_IN_CHECK_RUN = "LISTOFENTRYIDSINCHECKRUN";
 	
 	private static String sCalledClassName = "APPrintChecksAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -90,11 +85,11 @@ public class APPrintChecksEdit extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sBatchNumber = clsManageRequestParameters.get_Request_Parameter(SMTableapbatches.lbatchnumber, request);
 	    
@@ -427,7 +422,7 @@ public class APPrintChecksEdit extends HttpServlet {
 			+ "</P>\n";
 		
 		try {
-			sOutPut += getCheckList(sDBID, sUserName, batch, objSingleBatchEntry);
+			sOutPut += getCheckList(sDBID, sUserFullName, batch, objSingleBatchEntry, sUserID);
 		} catch (Exception e) {
 			redirectProcess(
 				sRedirectString
@@ -473,7 +468,7 @@ public class APPrintChecksEdit extends HttpServlet {
 			return;
 		}
 	}
-	private String getCheckList(String sDBID, String sUserName, APBatch batch, APBatchEntry singlebatchentry) throws Exception{
+	private String getCheckList(String sDBID, String sUserFullName, APBatch batch, APBatchEntry singlebatchentry, String sUserID) throws Exception{
 		String s = "";
 		
 		s += printTableHeading();
@@ -658,7 +653,8 @@ public class APPrintChecksEdit extends HttpServlet {
 				Integer.toString(rs.getInt(SMTableapbatchentries.TableName + "." + SMTableapbatchentries.ientrytype)),
 				Integer.toString(rs.getInt(SMTableapchecks.TableName + "." + SMTableapchecks.ipagenumber)),
 				sLastPage,
-				bOddRow
+				bOddRow,
+				sDBID
 			);
 			bOddRow = !bOddRow;
 		}
@@ -680,7 +676,8 @@ public class APPrintChecksEdit extends HttpServlet {
 				singleentry.getsentrytype(),
 				"0",
 				"(N/A)",
-				false
+				false,
+				sDBID
 			);
 		}
 		
@@ -760,7 +757,8 @@ public class APPrintChecksEdit extends HttpServlet {
 					Integer.toString(rs.getInt(SMTableapbatchentries.TableName + "." + SMTableapbatchentries.ientrytype)),
 					Integer.toString(rs.getInt(SMTableapchecks.TableName + "." + SMTableapchecks.ipagenumber)),
 					sLastPage,
-					bOddRow
+					bOddRow,
+					sDBID
 				);
 				sListOfFinalizedPaymentEntries += Long.toString(rs.getLong(SMTableapchecks.TableName + "." + SMTableapchecks.lbatchentryid)) + ",";
 				bOddRow = !bOddRow;
@@ -796,7 +794,8 @@ public class APPrintChecksEdit extends HttpServlet {
 						entry.getsentrytype(),
 						"0",
 						"(N/A)",
-						(i % 2) != 0
+						(i % 2) != 0,
+						sDBID
 					);
 					sListOfFinalizedPaymentEntries += entry.getslid() + ",";
 				}
@@ -832,7 +831,8 @@ public class APPrintChecksEdit extends HttpServlet {
 		String sEntryType,
 		String sPageNumber,
 		String sLastPage,
-		boolean bOddRow
+		boolean bOddRow,
+		String sDBID
 		) throws Exception{
 		String s = "";
 		

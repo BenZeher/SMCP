@@ -2360,12 +2360,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("This allows a user to set the 'next check number' for a bank account - it may be used, for example, in AP when printing checks.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BANKFUNCTIONS);
 			
-			//arrFunctions.add("AP Year End Processing"); 
-			//arrFunctionIDs.add(APYearEndProcessing); 
-			//arrFunctionLinks.add("smap.APYearEndProcessingSelection"); 
-			//arrFunctionDescriptions.add("This function is used to annually update the year to date vendor statistics.");
-			//arrFunctionModuleLevel.add(SMModuleListing.MODULE_ACCOUNTSPAYABLE);
-			
 			arrFunctions.add("AP Clear Fully Paid Transactions"); 
 			arrFunctionIDs.add(APClearFullyPaidTransactions); 
 			arrFunctionLinks.add("smap.APClearTransactionsSelect"); 

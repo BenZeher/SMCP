@@ -38,11 +38,6 @@ import SMDataDefinition.SMTableapvendorremittolocations;
 public class APDisplayVendorInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sCompanyName = "";
 	
 	//private String BACKGROUND_COLOR_LIGHT_YELLOW = "#FFFFBB";
 	private String BACKGROUND_COLOR_LIGHT_BLUE = "#C2E0FF";
@@ -69,11 +64,11 @@ public class APDisplayVendorInformation extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID  = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID  = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sWarning = "";
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
     	String sVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_VENDOR_NUMBER, request);
 
@@ -119,7 +114,9 @@ public class APDisplayVendorInformation extends HttpServlet {
     			sVendorNumber, 
     			out, 
     			request,
-    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    			sUserID,
+    			sDBID)){
     		
     	}
     	
@@ -127,7 +124,14 @@ public class APDisplayVendorInformation extends HttpServlet {
     	
 	    out.println("</BODY></HTML>");
 	}
-	private boolean displayVendor(Connection conn, String sVendorNum, PrintWriter pwOut, HttpServletRequest req, String sLicenseModuleLevel){
+	private boolean displayVendor(
+		Connection conn, 
+		String sVendorNum, 
+		PrintWriter pwOut, 
+		HttpServletRequest req, 
+		String sLicenseModuleLevel, 
+		String sUserID, 
+		String sDBID){
 	
 		String SQL = "SELECT * FROM "
 			+ SMTableicvendors.TableName

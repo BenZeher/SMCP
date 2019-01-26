@@ -22,12 +22,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class APAccountSetsSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = " AP Account Set";
-	private static String sCalledClassName = "APAccountSetsEdit";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = " AP Account Set";
+	private static final String sCalledClassName = "APAccountSetsEdit";
 	public static final String SUBMIT_EDIT_BUTTON_NAME = "SubmitEdit";
 	public static final String SUBMIT_EDIT_BUTTON_VALUE = "Edit Selected " + sObjectName;
 	public static final String SUBMIT_DELETE_BUTTON_NAME = "SubmitDelete";
@@ -52,11 +48,11 @@ public class APAccountSetsSelection extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		         + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName + "s";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

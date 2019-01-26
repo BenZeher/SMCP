@@ -17,11 +17,6 @@ import javax.servlet.http.HttpSession;
 public class SMEditSMOptions extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String m_sWarning;
-	private String m_sDBID;
-	private String m_sUserFullName;
-	private String m_sUserID;
-	private String m_sCompanyName;
 	private PrintWriter m_pwOut;
 
 	public void doPost(HttpServletRequest request,
@@ -39,11 +34,11 @@ public class SMEditSMOptions extends HttpServlet {
 		}
 
 	    HttpSession CurrentSession = request.getSession(true);
-	    m_sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    m_sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String m_sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String m_sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    m_sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    m_sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String m_sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String m_sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 	    String title;
 	    String subtitle = "";
@@ -53,7 +48,7 @@ public class SMEditSMOptions extends HttpServlet {
 	    m_pwOut.println(SMUtilities.getColorPickerIncludeString(getServletContext()));
 	    m_pwOut.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 		//If there is a warning from trying to input previously, print it here:
-	    m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+	    String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (m_sWarning.compareToIgnoreCase("") != 0){
 			m_pwOut.println("<B><FONT COLOR=\"RED\">WARNING: " + m_sWarning + "</FONT></B><BR>");
 		}
@@ -84,12 +79,12 @@ public class SMEditSMOptions extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private SMOptionInput loadSMOptionInput(String sConf)throws Exception{
+	private SMOptionInput loadSMOptionInput(String sDBID)throws Exception{
 		
 		//Load the existing entry:
 		SMOption option = new SMOption();
 		SMOptionInput optioninput = new SMOptionInput();
-		Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), m_sDBID, "MySQL", "smcontrolpanel.SMEditSMOptions");
+		Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMEditSMOptions");
 		if (conn == null){
 	    	throw new Exception ("Error [1457450819] - Could not load smoptions record - connection = null");
 		}	
@@ -107,9 +102,9 @@ public class SMEditSMOptions extends HttpServlet {
 	private void createEntryScreen(String sDBID, String sUserFullName, String sUserID, SMOptionInput optionInput) throws Exception{
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMOptionUpdate' METHOD='POST'>");
-		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + m_sDBID + "\">");
-		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMOptionInput.ParamLastEditUserFullName + "\" VALUE=\"" + m_sUserFullName + "\">");
-		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMOptionInput.ParamLastEditUserID + "\" VALUE=\"" + m_sUserID + "\">");
+		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + sDBID + "\">");
+		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMOptionInput.ParamLastEditUserFullName + "\" VALUE=\"" + sUserFullName + "\">");
+		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMOptionInput.ParamLastEditUserID + "\" VALUE=\"" + sUserID + "\">");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMOptionInput.ParamLastEditProcess + "\" VALUE=\"" + "Edit Options" + "\">");
 		
 		//Start the table:

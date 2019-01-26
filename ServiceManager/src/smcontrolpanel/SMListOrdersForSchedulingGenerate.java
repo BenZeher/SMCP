@@ -22,11 +22,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMListOrdersForSchedulingGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
-	private String sWarning;
 	
 	//private boolean bDebugMode = false;
 	
@@ -46,11 +41,11 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
 		PrintWriter out = response.getWriter();
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, this.toString());
-		sWarning = "";
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, this.toString());
+		String sWarning = "";
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sRedirectString = "";
 		sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass;

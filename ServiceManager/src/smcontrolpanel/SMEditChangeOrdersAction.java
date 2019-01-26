@@ -21,12 +21,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMEditChangeOrdersAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String sDBID;
-	private static String sUserName;
-	private static String sUserID;
-	private static String sUserFullName;
-	private static String sWarning;
-	private static String sOrderNumber;
 	private ArrayList<SMChangeOrder> arrChangeOrders;
 
 	public void doPost(HttpServletRequest request,
@@ -44,21 +38,21 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) +" " + 
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) +" " + 
 						(String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-		sWarning = "";
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sRedirectString = "";
+		String sOrderNumber = "";
 
 		//Make sure there's nothing in the session attribute - we'll read from the request instead:
 		CurrentSession.removeAttribute(SMEditChangeOrdersEdit.CHANGE_ORDER_ARRAY_ATTRIBUTE);
 		arrChangeOrders = new ArrayList<SMChangeOrder>(0);
 
 		//This gives us the order number, we won't have that before this method runs:
-		loadCOArray(request);
+		sOrderNumber = loadCOArray(request);
 
 		//If it's a request to delete a Change order, process that and return:
 		Enumeration <String> e = request.getParameterNames();
@@ -69,22 +63,22 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 				//IF it's not null:
 				if (request.getParameter(sParam) != null){
 					String sID = sParam.substring((SMEditChangeOrdersEdit.DELETE_BUTTON_NAME_PREFIX).length(), sParam.length());
-					if (!deleteCO(sID, sDBID, sUserName,sUserID, sUserFullName, request)){
+					try {
+						deleteCO(sID, sDBID, sUserName,sUserID, sUserFullName, request);
+					} catch (Exception e2) {
 						sRedirectString = 
-							"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
-							+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-							+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
-							+ "&Warning=" + sWarning
-							;		
-					}else{
-						sRedirectString = 
+								"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
+								+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+								+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
+								+ "&Warning=" + e2.getMessage()
+								;	
+					}
+					sRedirectString = 
 							"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 							+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 							+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
 							+ "&Status=" + "Change order successfully deleted."
-							;		
-
-					}
+							;	
 					try {
 						response.sendRedirect(sRedirectString);
 					} catch (IOException e1) {
@@ -99,38 +93,44 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			}
 		}
 
-		if (!saveChangeOrders(sDBID, sUserName)){
+		try {
+			saveChangeOrders(sDBID, sUserName);
+		} catch (Exception e2) {
 			CurrentSession.setAttribute(SMEditChangeOrdersEdit.CHANGE_ORDER_ARRAY_ATTRIBUTE, arrChangeOrders);
 			sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
-				+ "&Warning=" + sWarning
+				+ "&Warning=" + e2.getMessage()
 				;
-		}else{
-			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
-				+ "&Status=Changed orders successfully saved."
-				;
-
 		}
+		sRedirectString = 
+			"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
+			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			+ "&" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber
+			+ "&Status=Changed orders successfully saved."
+		;
+
 		try {
 			response.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("Error [1548471253] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}
 		return;
 	}
-	private boolean deleteCO(String sChangeOrderID, String sConf, String sUser, String sUserID, String sUserFullName,  HttpServletRequest req){
+	private void deleteCO(
+		String sChangeOrderID, 
+		String sConf, 
+		String sUser, 
+		String sUserID, 
+		String sUserFullName,  
+		HttpServletRequest req) throws Exception{
 
 		//check to see if the delete was confirmed:
 		if (req.getParameter(SMEditChangeOrdersEdit.DELETE_CONFIRM_CHECKBOX_NAME + sChangeOrderID) == null){
-			addToWarning("You must check the confirming checkbox to delete a change order.");
-			return false;
+			throw new Exception("You must check the confirming checkbox to delete a change order.");
 		}
 
 		Connection conn = clsDatabaseFunctions.getConnection(
@@ -140,8 +140,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 				this.toString() + ".deleteCO - user: " + sUserID + " - " + sUserFullName
 		);
 		if (conn == null){
-			addToWarning("Could not open data connection to delete CO.");
-			return false;
+			throw new Exception("Could not open data connection to delete CO.");
 		}
 
 		String SQL = "DELETE FROM " + SMTablechangeorders.TableName
@@ -154,17 +153,15 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e) {
-			addToWarning("Error deleting change order - " + e.getMessage());
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080478]");
-			return false;
+			throw new Exception("Error deleting change order - " + e.getMessage());
 		}
 
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080479]");
 
-		return true;
+		return;
 	}
-	private boolean saveChangeOrders(String sConf, String sUser){
-		boolean bEntriesAreSaved = true;
+	private void saveChangeOrders(String sConf, String sUser) throws Exception{
 
 		//First, go through the array and format the change order numbers:
 		for (int i = 0; i < arrChangeOrders.size(); i++){
@@ -175,15 +172,13 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 				try {
 					iTest = Integer.parseInt(arrChangeOrders.get(i).getM_dChangeOrderNumber());
 					if ((iTest <=0)){
-						addToWarning("Change order number '" + arrChangeOrders.get(i).getM_dChangeOrderNumber() 
+						throw new Exception("Change order number '" + arrChangeOrders.get(i).getM_dChangeOrderNumber() 
 								+ "' is invalid.");
-						return false;
 					}
 					arrChangeOrders.get(i).setM_dChangeOrderNumber(Integer.toString(iTest));
 				} catch (NumberFormatException e) {
-					addToWarning("Change order number '" + arrChangeOrders.get(i).getM_dChangeOrderNumber()
+					throw new Exception("Change order number '" + arrChangeOrders.get(i).getM_dChangeOrderNumber()
 							+ "' is invalid.");
-					return false;	
 				}
 				arrChangeOrders.get(i).setM_dChangeOrderNumber(Integer.toString(iTest));
 			}
@@ -197,9 +192,8 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 				}else{
 					if (arrChangeOrders.get(i).getM_dChangeOrderNumber().compareToIgnoreCase(
 							arrChangeOrders.get(j).getM_dChangeOrderNumber()) == 0){
-						addToWarning("Change order number '" 
+						throw new Exception("Change order number '" 
 								+ arrChangeOrders.get(j).getM_dChangeOrderNumber() + "' is a duplicate.");
-						return false;
 					}
 				}
 			}
@@ -212,14 +206,12 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 				this.toString() + ".saveChangeOrders - user: " + sUser
 		);
 		if (conn == null){
-			addToWarning("Could not get data connection to save change orders");
-			return false;
+			throw new Exception("Could not get data connection to save change orders");
 		}
 
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080480]");
-			addToWarning("Could not start data transaction to save change orders");
-			return false;
+			throw new Exception("Could not start data transaction to save change orders");
 		}
 
 		for (int i = 0; i < arrChangeOrders.size(); i++){
@@ -231,31 +223,25 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			){
 			}else{
 				if (!arrChangeOrders.get(i).save_without_data_transaction(conn, sUser)){
-					bEntriesAreSaved = false;
-					addToWarning("CO " + arrChangeOrders.get(i).getM_dChangeOrderNumber() + ": " 
-							+ arrChangeOrders.get(i).getErrorMessages());
 					clsDatabaseFunctions.rollback_data_transaction(conn);
 					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080481]");
-					return bEntriesAreSaved;
+					throw new Exception("CO " + arrChangeOrders.get(i).getM_dChangeOrderNumber() + ": " 
+							+ arrChangeOrders.get(i).getErrorMessages());
 				}
 			}
 		}
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			bEntriesAreSaved = false;
+			throw new Exception("Error [1548471144] committing data transaction.");
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080482]");
-		return bEntriesAreSaved;	
+		return;	
 	}
 
-	private void addToWarning(String sMsg){
-		sWarning += sMsg + "<BR>";
-		if (sWarning.length() > 512){
-			sWarning = sWarning.substring(0, 512) + ". . .";
-		}
-	}
-	private void loadCOArray(HttpServletRequest req){
+	private String loadCOArray(HttpServletRequest req){
 
+		String sOrderNumber = "";
+		
 		int iNumberOfLines = Integer.parseInt(
 				clsManageRequestParameters.get_Request_Parameter(SMEditChangeOrdersEdit.NUMBER_OF_LINES, req));
 
@@ -312,58 +298,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 			//Get the order number here
 			sOrderNumber = co.getM_sJobNumber();
 		}
-		
-		/*
-		//Get the one 'additional' line:
-		SMChangeOrder co = new SMChangeOrder();
-		co.setM_dAmount(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamdAmount + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_datChangeOrderDate(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamdatChangeOrderDate + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_dChangeOrderNumber(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamdChangeOrderNumber + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_dTotalMarkUp(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamdTotalMarkUp + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_dTruckDays(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamdTruckDays + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_iID(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamiID + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_sDesc(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamsDesc + SMUtilities.PadLeft("", "0", 6),
-				req));
-		co.setM_sJobNumber(SMUtilities.get_Request_Parameter(
-				SMEditChangeOrdersEdit.CO_LINE_PARAM_PREFIX 
-				+ SMChangeOrder.ParamsJobNumber + SMUtilities.PadLeft("", "0", 6),
-				req));
-		//If there are NO values on a line, it's just the blank line at the bottom and we can ignore it:
-		if (
-			(co.getM_dAmount().compareToIgnoreCase("0.00") == 0)
-			&& (co.getM_datChangeOrderDate().compareToIgnoreCase(SMChangeOrder.EMPTY_DATE_STRING) == 0)
-			&& (co.getM_dChangeOrderNumber().compareToIgnoreCase("") == 0)
-			&& (co.getM_dTotalMarkUp().compareToIgnoreCase("0.00") == 0)
-			&& (co.getM_dTruckDays().compareToIgnoreCase("0.0000") == 0)
-			&& (co.getM_sDesc().compareToIgnoreCase("") == 0)
-		){
-			//Don't load this one . . . 
-		}else{
-			//Add the change order to the array:
-			arrChangeOrders.add(co);
-		}
-		//System.out.println("for the additional line, co = \n" + co.read_out_debug_data());
-		 */
+		return sOrderNumber;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

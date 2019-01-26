@@ -34,10 +34,6 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 	public static final String LIST_OF_INVOICES_CREATED_PARAM = "LISTOFINVOICESCREATED";
 	private static final String DARK_BG_COLOR = "DCDCDC";
 	private static final long serialVersionUID = 1L;
-	private String sSelectedLocations = "";
-	private String sSelectedServiceTypes = "";
-	private ArrayList<String> m_alLocations = new ArrayList<String>(0);
-	private ArrayList<String> m_alServiceTypes = new ArrayList<String>(0);
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -53,6 +49,12 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 		){
 			return;
 		}
+		
+		String sSelectedLocations = "";
+		String sSelectedServiceTypes = "";
+		ArrayList<String> m_alLocations = new ArrayList<String>(0);
+		ArrayList<String> m_alServiceTypes = new ArrayList<String>(0);
+		
 		String sCallingClass = "smcontrolpanel.SMCreateMultipleInvoicesSelection";
 		
 	    //Get the session info:
@@ -249,11 +251,45 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     			//If it's a single order, read it into the list:
     			sSQL = Get_Single_Order_SQL(sTrimmedOrderNumber, sUserName);
     		}else{
-        		try{
-        			Check_Criteria(request); 
-        		}catch(Exception ex){
+    			
+    	    	//Get the list of selected locations and order types:
+    	    	m_alLocations.clear();
+    	    	m_alServiceTypes.clear();
+    	    	sSelectedLocations = "";
+    	    	sSelectedServiceTypes = "";
+    		    Enumeration<String> paramNames = request.getParameterNames();
+    		    String sParamName = "";
+    		    String sLMarker = "LOCATION";
+    		    String sSTMarker = "SERVICETYPE";
+    		    while(paramNames.hasMoreElements()) {
+    		      sParamName = paramNames.nextElement();
+    			  if (sParamName.contains(sLMarker)){
+    				  m_alLocations.add(sParamName.substring(sParamName.indexOf(sLMarker) + sLMarker.length()));
+    			  }else if (sParamName.contains(sSTMarker)){
+    				  m_alServiceTypes.add(sParamName.substring(sParamName.indexOf(sSTMarker) + sSTMarker.length()));
+    			  }
+    		    }
+    		    Collections.sort(m_alLocations);
+    		    Collections.sort(m_alServiceTypes);
+    			
+    		    if (m_alLocations.size() == 0){
+    	    		sWarning = "You must select at least one location.";
+    		    }else{
+    		    	for (int iL=0;iL<m_alLocations.size();iL++){
+    		    		sSelectedLocations += "&LOCATION" + m_alLocations.get(iL);
+    		    	}
+    		    }
+    		    if (m_alServiceTypes.size() == 0){
+    	    		sWarning = "You must select at least one service type.";
+    		    }else{
+    		    	for (int iST=0;iST<m_alServiceTypes.size();iST++){
+    		    		sSelectedServiceTypes += "&SERVICETYPE" + m_alServiceTypes.get(iST);
+    		    	}
+    		    }
+
+    		    if (sWarning.compareToIgnoreCase("") != 0){
             		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + SMUtilities.URLEncode(ex.getMessage())
+    				+ "Warning=" + SMUtilities.URLEncode(sWarning)
     				+ sSelectedLocations
     				+ sSelectedServiceTypes
     				;
@@ -264,9 +300,9 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
             		sRedirectString +=  "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 	        		response.sendRedirect(sRedirectString);
 	        		return;
-        		}
-    		
-    			sSQL = Get_Order_With_Shipment_SQL(sUserName);
+    		    }
+    		        		
+    			sSQL = Get_Order_With_Shipment_SQL(sUserName, m_alLocations, m_alServiceTypes);
     		}
     		    		
     		try {
@@ -433,46 +469,11 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 		return s;
 	}
 	
-	private void Check_Criteria(HttpServletRequest request) throws Exception{
-
-    	//Get the list of selected locations and order types:
-    	m_alLocations.clear();
-    	m_alServiceTypes.clear();
-    	sSelectedLocations = "";
-    	sSelectedServiceTypes = "";
-	    Enumeration<String> paramNames = request.getParameterNames();
-	    String sParamName = "";
-	    String sLMarker = "LOCATION";
-	    String sSTMarker = "SERVICETYPE";
-	    while(paramNames.hasMoreElements()) {
-	      sParamName = paramNames.nextElement();
-		  if (sParamName.contains(sLMarker)){
-			  m_alLocations.add(sParamName.substring(sParamName.indexOf(sLMarker) + sLMarker.length()));
-		  }else if (sParamName.contains(sSTMarker)){
-			  m_alServiceTypes.add(sParamName.substring(sParamName.indexOf(sSTMarker) + sSTMarker.length()));
-		  }
-	    }
-	    Collections.sort(m_alLocations);
-	    Collections.sort(m_alServiceTypes);
-		
-	    if (m_alLocations.size() == 0){
-    		throw new Exception("You must select at least one location.");
-	    }else{
-	    	for (int iL=0;iL<m_alLocations.size();iL++){
-	    		sSelectedLocations += "&LOCATION" + m_alLocations.get(iL);
-	    	}
-	    }
-	    if (m_alServiceTypes.size() == 0){
-    		throw new Exception("You must select at least one service type.");
-	    }else{
-	    	for (int iST=0;iST<m_alServiceTypes.size();iST++){
-	    		sSelectedServiceTypes += "&SERVICETYPE" + m_alServiceTypes.get(iST);
-	    	}
-	    }
-	    return;	    
-	}
-	
-	private String Get_Order_With_Shipment_SQL(String sUserName){
+	private String Get_Order_With_Shipment_SQL(
+		String sUserName, 
+		ArrayList<String>arrLocations,
+		ArrayList<String>arrServiceTypes
+		){
 
 	    String SQL = "SELECT" 
 	    	+ " 'CreateMultipleOrders.Get_Order_With_Shipment_SQL' AS REPORTNAME"
@@ -505,20 +506,20 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 			 	+ " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderType + " != " + SMTableorderheaders.ORDERTYPE_QUOTE + ")"
 		 	;
 	    
-	    if (m_alLocations.size() > 0){
-	    	SQL += " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '" + (String) m_alLocations.get(0) + "'";
-	    	for (int i=1;i<m_alLocations.size();i++){
-	    		SQL += " OR " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '" + (String) m_alLocations.get(i) + "'";
+	    if (arrLocations.size() > 0){
+	    	SQL += " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '" + (String) arrLocations.get(0) + "'";
+	    	for (int i=1;i<arrLocations.size();i++){
+	    		SQL += " OR " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '" + (String) arrLocations.get(i) + "'";
 	    	}
 	    	SQL += ")";
 	    }else{
 	    	//no location is selected, give out an empty list. Normally, this will not happen.
 	    	SQL += " AND " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '-1'";
 	    }
-	    if (m_alServiceTypes.size() > 0){
-	    	SQL += " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + " = '" + (String) m_alServiceTypes.get(0) + "'";
-	    	for (int i=1;i<m_alServiceTypes.size();i++){
-	    		SQL += " OR " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + " = '" + (String) m_alServiceTypes.get(i) + "'";
+	    if (arrServiceTypes.size() > 0){
+	    	SQL += " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + " = '" + (String) arrServiceTypes.get(0) + "'";
+	    	for (int i=1;i<arrServiceTypes.size();i++){
+	    		SQL += " OR " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + " = '" + (String) arrServiceTypes.get(i) + "'";
 	    	}
 	    	SQL += ")";
 	    }else{

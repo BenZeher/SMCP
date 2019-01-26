@@ -27,12 +27,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMImportDataSelect  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String PARAM_EXECUTESTRING = "EXECUTESTRING";
+	public static final String PARAM_EXECUTESTRING = "EXECUTESTRING";
 
-	private String sCompanyName = "";
-	private String sDBID = "";
-	String sFormName = "IMPORT";
-	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -62,14 +58,14 @@ public class SMImportDataSelect  extends HttpServlet {
 				"Custom"};
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String title = "SM Import Data";
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		try{
-			out.println(getJavaScript(sSQLtables));
+			out.println(getJavaScript(sSQLtables, sDBID));
 		}catch(Exception e){
 			
 		}
@@ -144,7 +140,7 @@ public class SMImportDataSelect  extends HttpServlet {
 		
 		out.println("</BODY></HTML>");
 	}
-	private String getJavaScript(String [] sSQLtables) throws Exception{
+	private String getJavaScript(String [] sSQLtables, String sDBID) throws Exception{
 		String s = "<script>\n";
 		
 		   s += "function selectAll(source){\n"

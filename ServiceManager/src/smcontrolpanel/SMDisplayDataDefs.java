@@ -29,8 +29,6 @@ public class SMDisplayDataDefs  extends HttpServlet {
 	public static String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
 	public static String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
 
-	private String sDBID = "";
-	private String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -48,8 +46,8 @@ public class SMDisplayDataDefs  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String title = "SM Query Selector";
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

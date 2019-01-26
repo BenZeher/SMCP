@@ -20,8 +20,6 @@ public class SMDetailSheetSelect extends HttpServlet {
 	
 	private static String sObjectName = "Detail Sheet";
 	private static String sCalledClassName = "SMDetailSheetEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -40,8 +38,8 @@ public class SMDetailSheetSelect extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName + "s";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(

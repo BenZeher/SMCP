@@ -17,12 +17,10 @@ import javax.servlet.http.HttpSession;
 public class SMEditProposalTermsSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String PROPTERM_PARAM = "PROPTERM";
+	public static final String PROPTERM_PARAM = "PROPTERM";
 	
-	private static String sObjectName = "Proposal Terms";
-	private static String sCalledClassName = "SMEditProposalTermsEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectName = "Proposal Terms";
+	private static final String sCalledClassName = "SMEditProposalTermsEdit";
 	
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -41,8 +39,8 @@ public class SMEditProposalTermsSelect extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName;
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

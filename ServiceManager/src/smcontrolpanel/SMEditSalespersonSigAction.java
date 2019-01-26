@@ -22,8 +22,6 @@ public class SMEditSalespersonSigAction extends HttpServlet{
 	public static final String SIGNATURE_FIELD_NAME = "SIGNATUREOUTPUT";
 	private static String sObjectName = "Salesperson Signature";
 	private static String sCalledClassName = "smcontrolpanel.SMEditSalespersonSigAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -33,8 +31,8 @@ public class SMEditSalespersonSigAction extends HttpServlet{
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.SMEditSalespersonSignatures)){
 	    	return;
 	    }
@@ -53,7 +51,7 @@ public class SMEditSalespersonSigAction extends HttpServlet{
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 	    try {
-			updateSignature(sEditCode, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME), request);
+			updateSignature(sEditCode, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME), request, sDBID);
 		} catch (Exception e) {
 			out.println("<BR><FONT COLOR=RED><B>Warning: " + e.getMessage() + "</B></FONT>");
 		    out.println("</BODY></HTML>");
@@ -92,7 +90,7 @@ public class SMEditSalespersonSigAction extends HttpServlet{
 	    out.println("</BODY></HTML>");
 	    return;
 	}
-	private void updateSignature(String sSalesCode, String sUser, HttpServletRequest req) throws Exception{
+	private void updateSignature(String sSalesCode, String sUser, HttpServletRequest req, String sDBID) throws Exception{
 		
 		String sJSONSignature = clsManageRequestParameters.get_Request_Parameter(SMEditSalespersonSigEdit.SIGNATURE_FIELD_NAME, req);
 	    String SQL = "UPDATE"

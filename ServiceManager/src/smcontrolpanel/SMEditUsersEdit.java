@@ -36,24 +36,18 @@ import ServletUtilities.clsStringFunctions;
 
 public class SMEditUsersEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sCurrentUser = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	
-	public static String DELETE_CUSTOM_LINK_BUTTON_NAME = "DELETECUSTOMLINK";
-	public static String ADD_CUSTOM_LINK_BUTTON_NAME = "ADDCUSTOMLINK";
+	public static final String DELETE_CUSTOM_LINK_BUTTON_NAME = "DELETECUSTOMLINK";
+	public static final String ADD_CUSTOM_LINK_BUTTON_NAME = "ADDCUSTOMLINK";
 	
-	public static String UPDATE_SECURITY_GROUPS_PREFIX = "SecurityGroup***Update";
-	public static String UPDATE_AS_DEVICES_PREFIX = "DeviceUser***Update";
-	public static String UPDATE_AS_ALARM_SEQUENCES_PREFIX = "AlarmSequence***Update";
-	public static String UPDATE_APPOINTMENT_GROUP_PREFIX = "AppointmentGroup***Update";
-	public static String UPDATE_CUSTOM_LINK_PREFIX = "CustomLink***Update";
+	public static final String UPDATE_SECURITY_GROUPS_PREFIX = "SecurityGroup***Update";
+	public static final String UPDATE_AS_DEVICES_PREFIX = "DeviceUser***Update";
+	public static final String UPDATE_AS_ALARM_SEQUENCES_PREFIX = "AlarmSequence***Update";
+	public static final String UPDATE_APPOINTMENT_GROUP_PREFIX = "AppointmentGroup***Update";
+	public static final String UPDATE_CUSTOM_LINK_PREFIX = "CustomLink***Update";
 	
-	
-	public static String UPDATE_USER_BUTTON_NAME = "SubmitEdit";
-	public static String UPDATE_USER_BUTTON_VALUE = "Update User";
+	public static final String UPDATE_USER_BUTTON_NAME = "SubmitEdit";
+	public static final String UPDATE_USER_BUTTON_VALUE = "Update User";
 	
 	
 	public void doPost(HttpServletRequest request,
@@ -72,11 +66,11 @@ public class SMEditUsersEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sCurrentUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCurrentUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	     
 	    //Get the user ID passed in and see if this is a new record
@@ -112,7 +106,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	    	if(userentry.getlid().compareToIgnoreCase("-1") != 0){
 	        	
 	    	    try {
-	    	    	Edit_User_HTML_Header(userentry, out, sWarning, sStatus);
+	    	    	Edit_User_HTML_Header(userentry, out, sWarning, sStatus, sCompanyName, sDBID);
 	    	    	Edit_User_HTML(userentry, out, sDBID);
 					return;
 				} catch (Exception e) {
@@ -179,7 +173,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				}
 		    	
 		    	try {
-		        	Edit_User_HTML_Header(userentry, out, sWarning, sStatus);
+		        	Edit_User_HTML_Header(userentry, out, sWarning, sStatus, sCompanyName, sDBID);
 		        	Edit_User_HTML(userentry, out, sDBID);
 					return;
 				} catch (Exception e) {
@@ -194,7 +188,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	    
 	    //If this class is returning from it's action class.
 	    try {
-	    	Edit_User_HTML_Header(userentry, out, sWarning, sStatus);
+	    	Edit_User_HTML_Header(userentry, out, sWarning, sStatus, sCompanyName, sDBID);
         	Edit_User_HTML(userentry, out, sDBID);
 		} catch (Exception e) {
 			response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
@@ -210,7 +204,9 @@ public class SMEditUsersEdit extends HttpServlet {
 			SMUser userentry, 
 			PrintWriter out, 
 			String sWarning,
-			String sStatus) throws Exception{
+			String sStatus,
+			String sCompanyName,
+			String sDBID) throws Exception{
 		
 		String title = "Edit User - " + userentry.getsUserName();
 		String subtitle = "";
@@ -225,7 +221,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	private void Edit_User_HTML(
 			SMUser userentry, 
 			PrintWriter out, 
-			String sConf) throws Exception{
+			String sDBID) throws Exception{
 
 	    //Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -242,7 +238,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	    //Get license level to control content displayed
 	    long lLicenseModuleLevel = 0;
 		try {
-			lLicenseModuleLevel = Long.parseLong(SMUtilities.getSMCPModuleLevel(getServletContext(), sConf));
+			lLicenseModuleLevel = Long.parseLong(SMUtilities.getSMCPModuleLevel(getServletContext(), sDBID));
 		} catch (Exception e1) {
 			out.println("ERROR - Could not read license file.<BR>");
 		}
@@ -355,7 +351,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		    	+ " FROM " + SMTablemechanics.TableName
 		    	+ " ORDER BY " + SMTablemechanics.sMechInitial 
 		    ;
-		    ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		    ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    sOutPut += "<SELECT NAME=\"" + SMTableusers.smechanicinitials + "\">"; 
 			sOutPut += "<OPTION VALUE=\"" + "" + "\">** NONE SELECTED **</OPTION>"; 
 			while (rsMechanics.next()){
@@ -407,7 +403,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		    	+ " FROM " + SMTableusers.TableName
 		    	+ " WHERE " + SMTableusers.lid + "=" + userentry.getlid() + "" 
 		    ;
-		    ResultSet rsColor = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		    ResultSet rsColor = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 			if (rsColor.next()){
 				iRow = rsColor.getInt(SMTableusers.susercolorcoderow);
@@ -423,7 +419,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		    			iCol, 
 					    false,
 					    getServletContext(),
-					    sConf);
+					    sDBID);
 		}catch (Exception e){
 			sOutPut += "Failed to print color selection -" + e.getMessage();
 		}
@@ -442,7 +438,7 @@ public class SMEditUsersEdit extends HttpServlet {
 			    	+ ", " + SMTablecustomlinks.surlname
 			    	+ " FROM " + SMTablecustomlinks.TableName
 		    ;
-		    ResultSet rsCustomLinks = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		    ResultSet rsCustomLinks = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    String sCheckedOrNot = "";
 		    sOutPut += "<TD>";
 		    ArrayList<String> sUsersCustomLinksTable = new ArrayList<String>(0);
@@ -450,7 +446,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				String sCurrentURLID = rsCustomLinks.getString(SMTablecustomlinks.lid); 
 				String sCurrentURL = rsCustomLinks.getString(SMTablecustomlinks.surl);
 				String sCurrentURLName = rsCustomLinks.getString(SMTablecustomlinks.surlname );
-				sCheckedOrNot = isUserUsingCustomLink(userentry.getlid(), sCurrentURLID, sConf);
+				sCheckedOrNot = isUserUsingCustomLink(userentry.getlid(), sCurrentURLID, sDBID);
 				
 				sUsersCustomLinksTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_CUSTOM_LINK_PREFIX + sCurrentURLID + "\">" 
 				+ "<A HREF=\"" + sCurrentURL + "\">" +sCurrentURLName + "</A>");	 
@@ -474,13 +470,13 @@ public class SMEditUsersEdit extends HttpServlet {
 		    	+ " " + SMTablesecuritygroups.sSecurityGroupName
 		    	+ " FROM " + SMTablesecuritygroups.TableName
 		    ;
-		    ResultSet rsSecurityGroups = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		    ResultSet rsSecurityGroups = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    String sCheckedOrNot = "";
 		    sOutPut += "<TD>";
 		    ArrayList<String> sSecurityGroupsTable = new ArrayList<String>(0);
 			while (rsSecurityGroups.next()){
 				String sCurrentSecurityGroupName = rsSecurityGroups.getString(SMTablesecuritygroups.sSecurityGroupName);
-				sCheckedOrNot = isUserInSecurityGroup(userentry.getlid(), sCurrentSecurityGroupName, sConf);
+				sCheckedOrNot = isUserInSecurityGroup(userentry.getlid(), sCurrentSecurityGroupName, sDBID);
 				
 				sSecurityGroupsTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_SECURITY_GROUPS_PREFIX + sCurrentSecurityGroupName +"\">" + sCurrentSecurityGroupName);	
 			}
@@ -502,13 +498,13 @@ public class SMEditUsersEdit extends HttpServlet {
 		    	+ " " + SMTableappointmentgroups.sappointmentgroupname
 		    	+ " FROM " + SMTableappointmentgroups.TableName
 		    ;
-		    ResultSet rsAppointmentGroups = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		    ResultSet rsAppointmentGroups = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    String sCheckedOrNot = "";
 		    sOutPut += "<TD>";
 		    ArrayList<String> sAppointmentGroupsTable = new ArrayList<String>(0);
 			while (rsAppointmentGroups.next()){
 				String sCurrentAppointmentGroupName = rsAppointmentGroups.getString(SMTableappointmentgroups.sappointmentgroupname);
-				sCheckedOrNot = isUserInAppointmentGroup(userentry.getlid(), sCurrentAppointmentGroupName, sConf);
+				sCheckedOrNot = isUserInAppointmentGroup(userentry.getlid(), sCurrentAppointmentGroupName, sDBID);
 				
 				sAppointmentGroupsTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_APPOINTMENT_GROUP_PREFIX + sCurrentAppointmentGroupName + "\">" + sCurrentAppointmentGroupName);	 
 			}
@@ -532,14 +528,14 @@ public class SMEditUsersEdit extends HttpServlet {
 					+ ", " + SMTablessalarmsequences.sname
 					+ " FROM " + SMTablessalarmsequences.TableName
 					;
-				ResultSet rsAlarmSequences = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rsAlarmSequences = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 				String sCheckedOrNot = "";
 				sOutPut += "<TD>";
 				ArrayList<String> sAlarmSequencesTable = new ArrayList<String>(0);
 				while (rsAlarmSequences.next()){
 					String sCurrentAlarmSequenceName = rsAlarmSequences.getString(SMTablessalarmsequences.sname);
 					String sCurrentAlarmSequenceID = rsAlarmSequences.getString(SMTablessalarmsequences.lid);
-					sCheckedOrNot = isUserInAlarmSequence(userentry.getlid(), sCurrentAlarmSequenceID, sConf);
+					sCheckedOrNot = isUserInAlarmSequence(userentry.getlid(), sCurrentAlarmSequenceID, sDBID);
 				
 					sAlarmSequencesTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_ALARM_SEQUENCES_PREFIX + sCurrentAlarmSequenceID + "\">" + sCurrentAlarmSequenceName);	 
 				}
@@ -566,14 +562,14 @@ public class SMEditUsersEdit extends HttpServlet {
 					+ "(" + SMTablessdevices.soutputterminalnumber + "!= '')"
 		    		+ ")"
 		    		;
-				ResultSet rsDevices = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rsDevices = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 				String sCheckedOrNot = "";
 				sOutPut += "<TD>";
 				ArrayList<String> sDevicesTable = new ArrayList<String>(0);
 				while (rsDevices.next()){
 					String sCurrentDeviceName = rsDevices.getString(SMTablessdevices.sdescription);
 					String sCurrentDeviceID = rsDevices.getString(SMTablessdevices.lid);
-					sCheckedOrNot = isDeviceUser(userentry.getlid(), sCurrentDeviceID, sConf);
+					sCheckedOrNot = isDeviceUser(userentry.getlid(), sCurrentDeviceID, sDBID);
 				
 					sDevicesTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_DEVICES_PREFIX + sCurrentDeviceID + "\">" + sCurrentDeviceName);	 
 				}

@@ -19,19 +19,17 @@ import javax.servlet.http.HttpSession;
 public class SMEditUsersSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public static String EDIT_USER_BUTTON_NAME = "SubmitEdit";
-	public static String EDIT_USER_BUTTON_VALUE = "Edit Selected User";
-	public static String ADD_NEW_USER_BUTTON_NAME = "SubmitAdd";
-	public static String ADD_NEW_USER_BUTTON_VALUE = "Add New User";
-	public static String DELETE_USER_BUTTON_NAME = "SubmitDelete";
-	public static String DELETE_USER_BUTTON_VALUE = "Delete Selected User";
-	public static String DELETE_USER_CONFIRM_CHECKBOX_NAME = "ConfirmDelete";
-	public static String DELETE_USER_CONFIRM_CHECKBOX_LABEL = "Check to confirm deletion";
-	public static String NEW_USER_TEXT_NAME = "NEWUSERNAME";
-	public static String NEW_USER_TEXT_LABEL = "New User To Be Added";
+	public static final String EDIT_USER_BUTTON_NAME = "SubmitEdit";
+	public static final String EDIT_USER_BUTTON_VALUE = "Edit Selected User";
+	public static final String ADD_NEW_USER_BUTTON_NAME = "SubmitAdd";
+	public static final String ADD_NEW_USER_BUTTON_VALUE = "Add New User";
+	public static final String DELETE_USER_BUTTON_NAME = "SubmitDelete";
+	public static final String DELETE_USER_BUTTON_VALUE = "Delete Selected User";
+	public static final String DELETE_USER_CONFIRM_CHECKBOX_NAME = "ConfirmDelete";
+	public static final String DELETE_USER_CONFIRM_CHECKBOX_LABEL = "Check to confirm deletion";
+	public static final String NEW_USER_TEXT_NAME = "NEWUSERNAME";
+	public static final String NEW_USER_TEXT_LABEL = "New User To Be Added";
 	
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -49,8 +47,8 @@ public class SMEditUsersSelection extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage Users";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

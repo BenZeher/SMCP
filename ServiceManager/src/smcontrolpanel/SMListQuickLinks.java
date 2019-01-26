@@ -21,15 +21,6 @@ import java.util.ArrayList;
 public class SMListQuickLinks extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sLicenseModuleLevel = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sPassword = "";
-	private String SQL = "";
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -39,17 +30,17 @@ public class SMListQuickLinks extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
-		sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMListQuickLinks");
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+		String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMListQuickLinks");
 		//LTO 20111010
 		//Password is not saved in session anymore. Therefore is it read from last page.
-		sPassword = clsManageRequestParameters.get_Request_Parameter("PASSWORD", request);
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+		String sPassword = clsManageRequestParameters.get_Request_Parameter("PASSWORD", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String SQL = "";
 		String title = "List Customized Quick Links";
 		String subtitle = "";
 
@@ -292,7 +283,8 @@ public class SMListQuickLinks extends HttpServlet {
 				sDbString,
 				"",
 				sAdditionalParams,
-				request
+				request,
+				sCompanyName
 		) + "<BR>");
 		
 		for (int i = 0; i < arQuikLinkFunctions.size(); i++){
@@ -309,7 +301,8 @@ public class SMListQuickLinks extends HttpServlet {
 							sDbString,
 							arQuikLinkOtherParams.get(i),
 							sAdditionalParams,
-							request
+							request,
+							sCompanyName
 					) + "<BR>");
 				}
 			}
@@ -328,7 +321,8 @@ public class SMListQuickLinks extends HttpServlet {
 			String sDbString,
 			String sQuickLinkParams,
 			String sOtherParams,
-			HttpServletRequest req){
+			HttpServletRequest req,
+			String sCompanyName){
 
 		String sLinkBase = "";
 		try {

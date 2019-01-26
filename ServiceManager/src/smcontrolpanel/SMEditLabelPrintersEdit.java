@@ -24,11 +24,6 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Label Printer";
 	private static String sCalledClassName = "SMEditLabelPrintersAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -46,11 +41,11 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sLabelPrinter = clsStringFunctions.filter(
 				request.getParameter(SMEditLabelPrintersSelect.LABELPRINTER_PARAM));
 
@@ -86,7 +81,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 				out.println ("You must check the 'confirming' check box to delete.");
 			}
 			else{
-				if (Delete_Record(sLabelPrinter, out, sDBID) == false){
+				if (Delete_Record(sLabelPrinter, out, sDBID, sUserID, sUserFirstName, sUserLastName) == false){
 					out.println ("Error deleting label printer: " + sLabelPrinter + ".");
 				}
 				else{
@@ -121,7 +116,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 	private void Edit_Record(
 			String sLabelPrinter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -150,7 +145,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 				+ "(" + SMTablelabelprinters.sName + " = '" + sLabelPrinter + "')"
 				+ ")"
 				;
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				sHost = rs.getString(SMTablelabelprinters.sHost);
@@ -400,7 +395,10 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sLabelPrinter,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID,
+			String sUserID,
+			String sUserFirstName,
+			String sUserLastName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
@@ -430,7 +428,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 		+ ")"
 		;
 		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				lLabelPrinterID = rs.getLong(SMTablelabelprinters.lid);
 			}

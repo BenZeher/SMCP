@@ -19,9 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMListBidDocuments extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
 	//OBSOLETE? - this class would only get called if people use an FTP site for their sales lead documents-if they use Google Drive, this class
 	//is not needed
 	public void doGet(HttpServletRequest request,
@@ -41,12 +38,12 @@ public class SMListBidDocuments extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
     	String sBidNumber = clsManageRequestParameters.get_Request_Parameter("BidNumber", request).trim();
+    	String sWarning = "";
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMListBidDocuments");

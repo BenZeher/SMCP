@@ -20,15 +20,6 @@ public class SMListOrderDocuments extends HttpServlet {
 	//OBSOLETE?  This only works if people are using FTP sites for their documents - otherwise, if they are using Google Drive, this
 	//function is never called.
 	private static final long serialVersionUID = 1L;
-	/*
-	//formats
-	private static SimpleDateFormat SQLDateformatter = new SimpleDateFormat("yyyy-MM-dd");
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	private static SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM-dd-yyyy EEE");
-	*/
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -47,10 +38,10 @@ public class SMListOrderDocuments extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
     	String sOrderNumber = clsManageRequestParameters.get_Request_Parameter("OrderNumber", request).trim();
 		//System.out.println("SMListOrderDocuments: sOrderNumber = '" + sOrderNumber + "'");
     	

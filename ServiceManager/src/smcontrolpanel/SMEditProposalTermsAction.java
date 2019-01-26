@@ -17,8 +17,6 @@ public class SMEditProposalTermsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Proposal Terms";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	private boolean bDebugMode = false;
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -37,8 +35,8 @@ public class SMEditProposalTermsAction extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		int iID = Integer.parseInt(request.getParameter(SMTableproposalterms.sID));
 		String sProposalTermCode = request.getParameter(SMTableproposalterms.sProposalTermCode);
 		String sProposalTermDesc = request.getParameter(SMTableproposalterms.mProposalTermDesc);

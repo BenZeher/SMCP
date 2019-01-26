@@ -114,10 +114,6 @@ public class SMEditOrderEdit  extends HttpServlet {
 	
 	
 	private boolean bDebugMode = false;
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -157,10 +153,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//Make sure we remove any leftover order detail objects:
 		currentSession.removeAttribute(SMOrderDetail.ParamObjectName);
 		
-	    sDBID = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserName = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserID = (String) currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)currentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 		if (currentSession.getAttribute(SMOrderHeader.ParamObjectName) != null){
@@ -356,7 +352,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//smedit.setOnSubmitFunction("validateForm()");
 
 		try{
-			smedit.createEditPage(getEditHTML(smedit, entry, sObjectName), "");
+			smedit.createEditPage(getEditHTML(smedit, entry, sObjectName, sDBID, sUserID, sUserFullName), "");
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
@@ -369,7 +365,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 		return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, SMOrderHeader entry, String sObjectName) throws SQLException{
+	private String getEditHTML(
+			SMMasterEditEntry sm, 
+			SMOrderHeader entry, 
+			String sObjectName,
+			String sDBID,
+			String sUserID,
+			String sUserFullName) throws SQLException{
 
 		String s = "";
 		
@@ -620,7 +622,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			getServletContext(), 
 			sm.getsDBID(),
 			(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
-		s += createOrderCommandsTable(sm, sObjectName, entry, bAllowServiceTicketPrinting, bAllowInstallationTicketPrinting);
+		s += createOrderCommandsTable(sm, sObjectName, entry, bAllowServiceTicketPrinting, bAllowInstallationTicketPrinting, sDBID, sUserID);
 		
 		//Create the customer area table:
 		s += "<TR><TD><TABLE style=\" title:CustomerArea; \" width=100% >\n";
@@ -646,7 +648,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += createOrderMemosTable(sm, entry, sm.getAddingNewEntryFlag());
 		
 		//Create the order commands line at the bottom:
-		s += createOrderCommandsTable(sm, sObjectName, entry, false, false);
+		s += createOrderCommandsTable(sm, sObjectName, entry, false, false, sDBID, sUserID);
 		
 		//Close the parent table:
 		s += "</TR>";
@@ -2136,7 +2138,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				sm.getsDBID(),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 			&& !sm.getAddingNewEntryFlag()){
-			boolean bGDocLinkExists = checkForGDocLink(getServletContext(), sm.getsDBID(), entry.getM_strimmedordernumber());
+			boolean bGDocLinkExists = checkForGDocLink(getServletContext(), sm.getsDBID(), entry.getM_strimmedordernumber(), sm.getUserID(), sm.getFullUserName());
 
 			if(bGDocLinkExists) {
 				sRenameFolderButton = createRenameFolderButton();
@@ -2356,7 +2358,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			String sObjectName,
 			SMOrderHeader order,
 			boolean bIncludePrintServiceWorkOrder,
-			boolean bIncludePrintInstallationWorkOrder){
+			boolean bIncludePrintInstallationWorkOrder,
+			String sDBID,
+			String sUserID
+			){
 		String s = "";
 		
 		s += "<TR><TD>";
@@ -3633,7 +3638,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 	}
 	
-	private boolean checkForGDocLink(ServletContext context, String  sDBID, String sTrimmedOrderNumber){
+	private boolean checkForGDocLink(
+		ServletContext context, 
+		String  sDBID, 
+		String sTrimmedOrderNumber,
+		String sUserID,
+		String sUserFullName){
 		
 		SMOrderHeader entry = new SMOrderHeader();
 		entry.setM_strimmedordernumber(sTrimmedOrderNumber);

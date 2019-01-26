@@ -24,8 +24,6 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = SMBidEntry.ParamObjectName + " Product Type";
 	private static String sCalledClassName = "SMEditBidProductTypesAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -43,8 +41,8 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sBidProductType = clsStringFunctions.filter(
 				request.getParameter(SMEditBidProductTypesSelect.BIDPRODUCTTYPE_PARAM));
 
@@ -114,12 +112,12 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 	private void Edit_Record(
 			String sBidProductType, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sBidProductType, sConf, pwOut) == false){
+			if (Add_Record (sBidProductType, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sBidProductType + ".<BR>");
 				return;
 			}
@@ -140,7 +138,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 			+ "(" + SMTablebidproducttypes.sProductType + " = '" + sBidProductType + "')"
 			+ ")"
 			;
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 			rs.next();
 			//Display fields:
@@ -169,7 +167,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sBidProductType,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
@@ -192,7 +190,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		+ ")"
 		;
 		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				lBidProductTypeID = rs.getLong(SMTablebidproducttypes.lID);
 			}

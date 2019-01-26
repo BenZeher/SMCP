@@ -20,8 +20,6 @@ public class SMEditServiceTypeEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Service Type";
 	private static String sCalledClassName = "SMEditServiceTypeAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	//private boolean bDebug = false;
 	
 	@Override
@@ -41,8 +39,8 @@ public class SMEditServiceTypeEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sServiceTypeID = clsStringFunctions.filter(request.getParameter(SMTableservicetypes.id));
 
 		String title = "";
@@ -71,7 +69,7 @@ public class SMEditServiceTypeEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -91,7 +89,7 @@ public class SMEditServiceTypeEdit extends HttpServlet {
 			+ "(" + SMTableservicetypes.id + " = " + sParameter + ")"
 			+ ")"
 			;
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 			rs.next();
 			iID = rs.getInt(SMTableservicetypes.id);

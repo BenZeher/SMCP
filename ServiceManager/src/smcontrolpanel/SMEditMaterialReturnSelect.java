@@ -15,7 +15,7 @@ import SMDataDefinition.SMTablematerialreturns;
 public class SMEditMaterialReturnSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smcontrolpanel.SMEditMaterialReturnEdit";
+	private static final String sCalledClassName = "smcontrolpanel.SMEditMaterialReturnEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

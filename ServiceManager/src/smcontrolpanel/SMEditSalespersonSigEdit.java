@@ -23,9 +23,6 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 	public static final String SIGNATURE_FIELD_NAME = "SIGNATUREOUTPUT";
 	private static final long serialVersionUID = 1L;
 	private static String sCalledClassName = "smcontrolpanel.SMEditSalespersonSigAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserFullName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -35,9 +32,9 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.SMEditSalespersonSignatures)){
@@ -129,7 +126,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 	private void Edit_Record(
 			String sCode, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew) throws Exception{
 		
 	    String sOutPut = "";
@@ -137,7 +134,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 		try{
 			//Get the record to edit:
 	        sSQL = SMMySQLs.Get_Salesperson_By_Salescode(sCode);
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();
 	        rs.close();

@@ -18,8 +18,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class SMEditAppointmentGroupsSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smcontrolpanel.SMEditAppointmentGroupsEdit";
-	private static String OBJECT_NAME = SMAppointmentCalendarGroup.ParamObjectName;
+	private static final String sCalledClassName = "smcontrolpanel.SMEditAppointmentGroupsEdit";
+	private static final String OBJECT_NAME = SMAppointmentCalendarGroup.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

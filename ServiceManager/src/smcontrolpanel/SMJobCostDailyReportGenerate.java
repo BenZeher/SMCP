@@ -30,13 +30,6 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	//private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	private boolean bSelectByCategory = false;
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -57,15 +50,15 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
 	    if (clsManageRequestParameters.get_Request_Parameter("SelectByCategory", request).compareTo("yes") == 0){
 	    	bSelectByCategory = true;
 	    }else{
@@ -88,7 +81,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 			sEndingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sEndingDate),"yyyy-MM-dd");
 		} catch (ParseException e1) {
 			sWarning = "Invalid ending date- Error:[1423580937] - '" + sEndingDate + "'- " + e1.getMessage();
-			redirectAfterError(response);			
+			redirectAfterError(response, sCallingClass, sWarning, sDBID);			
             return;
 		}
 
@@ -116,12 +109,12 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 
 			if(sLocations.size() == 0){
 				sWarning = "You must select a mechanic location";
-				redirectAfterError(response);
+				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
 	        }
 			if(sServiceTypes.size() == 0){
 				sWarning = "You must select at least one service type";
-				redirectAfterError(response);
+				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
 	        }
 
@@ -177,7 +170,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 				rs.close();
 			} catch (SQLException e) {
 				sWarning = "Could not read list of mechanics: " + e.getMessage();
-				redirectAfterError(response);
+				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
 			}
 		}else{
@@ -202,7 +195,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 	    		sWarning = "You must select at least one mechanic.";
 	    	}
     		
-    		redirectAfterError(response);
+    		redirectAfterError(response, sCallingClass, sWarning, sDBID);
     		return;
     	}
 	    
@@ -289,7 +282,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     	);
     	if (conn == null){
     		sWarning = "Unable to get data connection.";
-    		redirectAfterError(response);
+    		redirectAfterError(response, sCallingClass, sWarning, sDBID);
     		return;
     	}
 
@@ -310,7 +303,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080579]");
 	    out.println("</BODY></HTML>");
 	}
-	private void redirectAfterError(HttpServletResponse res){
+	private void redirectAfterError(HttpServletResponse res, String sCallingClass, String sWarning, String sDBID){
 		
 		String sRedirect =
 			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

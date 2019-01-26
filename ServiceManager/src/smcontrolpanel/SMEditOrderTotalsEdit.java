@@ -22,7 +22,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMEditOrderTotalsEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
+	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
 	private static final String TOTALS_BG_COLOR = "#FFBCA2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	public static final String ORDERUPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>S</FONT></B>ave"; //S

@@ -19,11 +19,9 @@ import javax.servlet.http.HttpSession;
 public class SMEditCompanyProfile extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Company Profile";
-	private static String sCalledClassName = "SMEditCompanyProfileAction";
+	private static final String sObjectName = "Company Profile";
+	private static final String sCalledClassName = "SMEditCompanyProfileAction";
 	
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -40,8 +38,8 @@ public class SMEditCompanyProfile extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName;
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -57,7 +55,7 @@ public class SMEditCompanyProfile extends HttpServlet {
 	
 	private void Edit_Record(
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 	    		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");
@@ -69,7 +67,7 @@ public class SMEditCompanyProfile extends HttpServlet {
 		try{
 			// Get the record to edit:
 	        String sSQL = SMMySQLs.Get_CompanyProfile_SQL();
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
 	        

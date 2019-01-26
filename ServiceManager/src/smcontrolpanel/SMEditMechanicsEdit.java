@@ -20,19 +20,13 @@ import javax.servlet.http.HttpSession;
 
 public class SMEditMechanicsEdit extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	
-	private String sMechLocation = "";
-	private Integer iMechType = 0;
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
-	      
+	     
+		String sMechLocation = "";
+		Integer iMechType = 0;
 	    response.setContentType("text/html");
 
 		PrintWriter out = response.getWriter();
@@ -47,11 +41,11 @@ public class SMEditMechanicsEdit extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID =(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID =(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sMechanicID = "";
 		
 	    String title = "Manage Mechanics";
@@ -234,7 +228,9 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	      									   rsMechInfo.getInt(SMTablemechanics.sMechColorCodeCol), 
 	      									   bRestricted,
 	      									   out,
-	      									   conn);
+	      									   conn,
+	      									   sMechLocation,
+	      									   iMechType);
 	      		out.println("</TD><TD VALIGN=CENTRE>" + sMechColorDescription + "</TD>"
 	    				+ "</TR>");
 	        	
@@ -328,7 +324,9 @@ public class SMEditMechanicsEdit extends HttpServlet{
 											   0, 
 	      									   bRestricted,
 											   out,
-											   conn);
+											   conn,
+											   sMechLocation,
+											   iMechType);
 	      		out.println("</TD><TD VALIGN=CENTRE>" + sMechColorDescription + "</TD>"
 	    				+ "</TR>");
 	        } 
@@ -354,26 +352,14 @@ public class SMEditMechanicsEdit extends HttpServlet{
       	}
       	out.println("</BODY></HTML>");
 	}
-	/*
-	private boolean IsColorUsed(String sColor){
-		if (
-			sColor.compareTo("00007d") == 0 ||
-			sColor.compareTo("174b32") == 0 ||
-			sColor.compareTo("456400") == 0 ||
-			sColor.compareTo("730019") == 0 ||
-			sColor.compareTo("8a0019") == 0 || 
-			sColor.compareTo("8a967d") == 0 ){
-			return true;
-		}else{
-			return false;
-		}
-	}
-	*/
+
 	private void print_mech_color_selection_map(int iRow, 
 												int iCol, 
 												boolean bRestricted, 
 												PrintWriter out, 
-												Connection conn) throws SQLException{
+												Connection conn,
+												String sMechLocation,
+												int iMechType) throws SQLException{
 		
 		//get mechanics's color
 		String sMechColor = "000000";

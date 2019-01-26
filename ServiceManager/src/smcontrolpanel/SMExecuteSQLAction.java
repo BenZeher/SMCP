@@ -17,8 +17,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMExecuteSQLAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sUserID = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -27,8 +25,8 @@ public class SMExecuteSQLAction extends HttpServlet {
 		//PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.SMExecuteSQL)){
 	    	return;
 	    }

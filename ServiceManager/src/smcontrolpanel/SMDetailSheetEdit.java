@@ -21,19 +21,14 @@ import ServletUtilities.clsStringFunctions;
 public class SMDetailSheetEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Detail Sheet";
-	private static String sCalledClassName = "SMDetailSheetAction";
-	public static String TEST_HTML_BUTTON_NAME = "TESTHTMLBUTTONNAME";
-	public static String TEST_HTML_BUTTON_LABEL = "Test HTML Form";
-	public static String DETAIL_SHEET_ID = "DETAILSHEETID";
-	public static String BUTTON_SUBMIT_EDIT = "SubmitEdit";
-	public static String BUTTON_SUBMIT_ADD = "SubmitAdd";
-	public static String BUTTON_SUBMIT_DELETE = "SubmitDelete";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFirstName= "";
-	private String sUserLastName = "";
+	private static final String sObjectName = "Detail Sheet";
+	private static final String sCalledClassName = "SMDetailSheetAction";
+	public static final String TEST_HTML_BUTTON_NAME = "TESTHTMLBUTTONNAME";
+	public static final String TEST_HTML_BUTTON_LABEL = "Test HTML Form";
+	public static final String DETAIL_SHEET_ID = "DETAILSHEETID";
+	public static final String BUTTON_SUBMIT_EDIT = "SubmitEdit";
+	public static final String BUTTON_SUBMIT_ADD = "SubmitAdd";
+	public static final String BUTTON_SUBMIT_DELETE = "SubmitDelete";
 	private boolean bDebug = false;
 	
 	@Override
@@ -53,11 +48,11 @@ public class SMDetailSheetEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sDetailSheetID = clsStringFunctions.filter(request.getParameter(DETAIL_SHEET_ID));
 
 		String title = "";
@@ -106,7 +101,7 @@ public class SMDetailSheetEdit extends HttpServlet {
 				out.println ("You must check the 'confirm' check box to delete.");
 			}
 			else{
-				if (Delete_Record(sDetailSheetID, out, sDBID) == false){
+				if (Delete_Record(sDetailSheetID, out, sDBID, sUserID, sUserFirstName, sUserLastName) == false){
 					out.println ("Error deleting detail sheet: " + sDetailSheetID + ".");
 				}
 				else{
@@ -145,7 +140,7 @@ public class SMDetailSheetEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -171,7 +166,7 @@ public class SMDetailSheetEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				iID = rs.getInt(SMTableworkorderdetailsheets.lid);
@@ -297,7 +292,10 @@ public class SMDetailSheetEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sDetailSheetID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID,
+			String sUserID,
+			String sUserFirstName,
+			String sUserLastName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

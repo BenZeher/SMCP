@@ -24,10 +24,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMJobCostDailyReportSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -46,10 +42,10 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
     					+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    boolean bSelectByCategory = false;
@@ -117,9 +113,9 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 		out.println("</TR>");
 		
 		if (bSelectByCategory){
-			createCategorySelections(out);
+			createCategorySelections(out, sDBID, sUserID, sUserFullName);
 		}else{
-			createMechanicSelections(out);
+			createMechanicSelections(out, sDBID, sUserID, sUserFullName);
 		}
 			    
 		out.println("<TR>");
@@ -135,7 +131,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 		    
 	    out.println("</BODY></HTML>");
 	}
-	private void createMechanicSelections(PrintWriter pwOut){
+	private void createMechanicSelections(PrintWriter pwOut, String sDBID, String sUserID, String sUserFullName){
     	try{ 
 	        //Mechanic List
 	        String SQL = "SELECT * FROM " + SMTablemechanics.TableName
@@ -174,7 +170,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    }
 
 	}
-	private void createCategorySelections(PrintWriter pwOut){
+	private void createCategorySelections(PrintWriter pwOut, String sDBID, String sUserID, String sUserFullName){
     	try{ 
 	        //Location list
 	        String SQL = "SELECT"

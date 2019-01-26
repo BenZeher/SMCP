@@ -14,7 +14,7 @@ import smcontrolpanel.SMSystemFunctions;
 public class SMEditAppointmentGroupsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String OBJECT_NAME = SMAppointmentCalendarGroup.ParamObjectName;
+	private static final String OBJECT_NAME = SMAppointmentCalendarGroup.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

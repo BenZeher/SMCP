@@ -33,11 +33,6 @@ public class SMImportDataAction extends HttpServlet {
 	private static final int MAX_FILE_SIZE = 4196;
 	private static final int MAX_MEM_SIZE = 2000000;
 	private static final String TEMP_TABLE = "TEMPTABLE";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private String filePath = "";
-	private String sCallingClass = "";
-	private String m_sExecuteString = "";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -47,18 +42,18 @@ public class SMImportDataAction extends HttpServlet {
 	    
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.SMImportData)){
 	    	return;
 	    }
 	    
 	  //Calling Class
-	    sCallingClass = "smcontrolpanel.SMImportDataSelect";
+	    String sCallingClass = "smcontrolpanel.SMImportDataSelect";
 	    
 	    //The DatabaseID
-	    String DATABASEID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    
+	    String filePath = "";
+	    String m_sExecuteString = "";
 	    
 	    //The maxMemSize and FileSize 
 	    int maxFileSize = MAX_FILE_SIZE;
@@ -69,7 +64,7 @@ public class SMImportDataAction extends HttpServlet {
 	    String sLoadCommand = "LOAD DATA LOCAL INFILE '"+filePath+"{FILE}'";
 	    try{
 	    	filePath = clsServletUtilities.getAbsoluteRootPath(request, getServletContext());
-	    	iNumberOfImportedRecords = process(filePath,sLoadCommand,CurrentSession,request,maxFileSize,maxMemSize,DATABASEID);
+	    	iNumberOfImportedRecords = process(filePath, sLoadCommand, request, maxFileSize, maxMemSize, sDBID, sUserID);
 		
 			//Log the execution:
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
@@ -113,16 +108,16 @@ public class SMImportDataAction extends HttpServlet {
 	 * @param request
 	 * @param maxFileSize
 	 * @param maxMemSize
-	 * @param sDatabaseID
+	 * @param sDBID
 	 * @throws Exception
 	 */
 	private int  process (String filePath,
 						  String loadCommand,
-						  HttpSession CurrentSession, 
 						  HttpServletRequest request,
 						  int maxFileSize,
 						  long maxMemSize,
-						  String sDatabaseID
+						  String sDBID,
+						  String sUserID
 						  ) throws Exception {
 		
 		int iNumberOfRecordsImported = -1;
@@ -135,7 +130,15 @@ public class SMImportDataAction extends HttpServlet {
 		
 		try{
 			//Write the file, Execute the SQL Command and Delete the File After Executing the command
-			iNumberOfRecordsImported = writeFileExecuteCommandAndDeleteFile(filePath,loadCommand,CurrentSession,request,maxFileSize,maxMemSize,sDatabaseID);
+			iNumberOfRecordsImported = writeFileExecuteCommandAndDeleteFile(
+				filePath,
+				loadCommand,
+				request,
+				maxFileSize,
+				maxMemSize,
+				sDBID,
+				sUserID);
+
 		}catch(Exception e2){
 			throw new Exception(e2.getMessage());
 		}
@@ -175,16 +178,16 @@ public class SMImportDataAction extends HttpServlet {
 	private int writeFileExecuteCommandAndDeleteFile(
 			String filePath,
 			String loadCommand,
-			HttpSession ses, 
+			//HttpSession ses, 
 			HttpServletRequest req,
 			int maxFileSize,
 			long maxMemSize,
-			String DATABASEID
-			
+			String sDBID,
+			String sUserID
 	) throws Exception{
 		
 		//Make sure to initialize the global variable:
-		m_sExecuteString = "";
+		String m_sExecuteString = "";
 		
 		ArrayList<SQLWarning> warning = new ArrayList<SQLWarning>();
 		//Number of Records Imported
@@ -209,7 +212,6 @@ public class SMImportDataAction extends HttpServlet {
 			throw new Exception("Error [1535375153] on upload.parseRequest: " + e1.getMessage());
 		}
 	    	Iterator<FileItem> iFileItemIterator = fileItems.iterator();
-		    String m_sExecuteString = "";
 		    String fileName = IMPORT_FILE_SIGNATURE + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 	    	while(iFileItemIterator.hasNext()){
 	    		FileItem item = iFileItemIterator.next();
@@ -252,22 +254,36 @@ public class SMImportDataAction extends HttpServlet {
 	    		throw new Exception("[1539263145] Error Please select Update , Insert/Update or Insert");
 	    	}
 	    	try{
-	    	didTurnOnLocalInfile = checkLocalInfile (sDBID,DATABASEID);
-	    	checkTemporaryTableExist (warning,sDBID,DATABASEID,sUserID);
+	    	didTurnOnLocalInfile = checkLocalInfile (sDBID);
+	    	checkTemporaryTableExist (warning, sDBID, sUserID);
     		String sTableName = getTableName(m_sExecuteString);
-    		ArrayList<String> sTableFields = tableFields(m_sExecuteString,sDBID,DATABASEID,sUserID);
-    		createTemporaryTable(warning,sDBID,sTableName,sTableFields,DATABASEID,sUserID);
-    		loadCSVFile(warning,m_sExecuteString,sTableName,loadCommand,sDBID,sUserID,fileName,DATABASEID);
-    		ArrayList<String> aPrimaryandUniqueKey = getPrimaryAndUniqueKey(sDBID,sTableName);
-    		ArrayList<String> primaryKeys = getPrimaryKeys(sDBID,sTableName);
+    		ArrayList<String> sTableFields = tableFields(m_sExecuteString);
+    		createTemporaryTable(warning, sDBID, sTableName, sUserID);
+    		loadCSVFile(warning, m_sExecuteString, sTableName, loadCommand, sDBID, sUserID, fileName);
+    		
+    		ArrayList<String> aPrimaryandUniqueKey = getPrimaryAndUniqueKey(sDBID, sTableName);
+    		ArrayList<String> primaryKeys = getPrimaryKeys(sDBID, sTableName);
 	    	if(insert_update == true){
-	    		iNumberOfRecordsImported = insertFromTemporaryTablewithUpdate (warning, aPrimaryandUniqueKey, sDBID, sTableName, sTableFields,DATABASEID, sUserID);
+	    		iNumberOfRecordsImported = insertFromTemporaryTablewithUpdate (warning, aPrimaryandUniqueKey, sDBID, sTableName, sTableFields, sUserID);
 	    	}else if (insert == true){
-	    		iNumberOfRecordsImported = insertFromTemporaryTableWithOutUpdate (warning,sDBID, sTableName, sTableFields,DATABASEID, sUserID);
+	    		iNumberOfRecordsImported = insertFromTemporaryTableWithOutUpdate (
+	    			warning,
+	    			sDBID, 
+	    			sTableName, 
+	    			sTableFields,
+	    			sUserID
+	    		);
 	    	}else if (update == true){
-	    		iNumberOfRecordsImported = updateFromTemporaryTable (warning,aPrimaryandUniqueKey,primaryKeys,sDBID,sTableName, sTableFields,DATABASEID, sUserID);
+	    		iNumberOfRecordsImported = updateFromTemporaryTable (
+	    			warning,
+	    			primaryKeys,
+	    			sDBID,
+	    			sTableName, 
+	    			sTableFields,
+	    			sUserID
+	    		);
 	    	}
-	    	removeTemporaryTable(warning,sDBID,DATABASEID,sUserID);
+	    	removeTemporaryTable(warning, sDBID, sUserID);
 	    	String sWarning = "";
 	    	if(!warning.isEmpty()){
 	    		for(int i = 0; i < warning.size(); i++){
@@ -277,12 +293,12 @@ public class SMImportDataAction extends HttpServlet {
 	    	}
 				} catch (SQLException e) {
 					if(didTurnOnLocalInfile){
-			    		turnOffLocalInfile(sDBID,DATABASEID);
+			    		turnOffLocalInfile(sDBID);
 			    	}
 					throw new Exception("SQL command failed ERROR [1534444137] - "+ e.getMessage());
 				}
 	    	if(didTurnOnLocalInfile){
-	    		turnOffLocalInfile(sDBID,DATABASEID);
+	    		turnOffLocalInfile(sDBID);
 	    	}
 	    	
 			    return iNumberOfRecordsImported;
@@ -324,13 +340,13 @@ public class SMImportDataAction extends HttpServlet {
 		return sb.toString();
 	}
 	
-	private boolean checkLocalInfile (String sConfFile, String DATABASEID) throws Exception{
+	private boolean checkLocalInfile (String sDBID) throws Exception{
 		String sSQL = "show variables where Variable_name = 'local_infile'";
 		boolean turnedOnLocalInfile = false;
 		boolean LocalInfileON = false;
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConfFile, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 			ResultSet result = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(result.next()){
 				if(result.getString("Variable_name").equals("local_infile")){
@@ -354,11 +370,11 @@ public class SMImportDataAction extends HttpServlet {
 	}
 	
 	
-	private void turnOffLocalInfile (String sConfFile, String DATABASEID) throws Exception{
+	private void turnOffLocalInfile (String sDBID) throws Exception{
 		String sSQL = "SET GLOBAL local_infile = 0";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConfFile, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 			Statement stmt = conn.createStatement();
 			stmt.execute(sSQL);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734705]");	
@@ -386,11 +402,11 @@ public class SMImportDataAction extends HttpServlet {
 	
 	
 	
-	private void checkTemporaryTableExist (ArrayList<SQLWarning> warning,String sConf, String DATABASEID, String sUser)throws SQLException{
+	private void checkTemporaryTableExist (ArrayList<SQLWarning> warning, String sDBID, String sUserID)throws SQLException{
 		String sSQL = "DROP TABLE IF EXISTS "+TEMP_TABLE+" ";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -402,9 +418,9 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734928]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + e.getMessage(),
 					"Command: " + sSQL,
@@ -416,11 +432,14 @@ public class SMImportDataAction extends HttpServlet {
 		}
 	}
 	
-	private void removeTemporaryTable (ArrayList<SQLWarning> warning, String sConf, String DATABASEID, String sUser)throws SQLException{
+	private void removeTemporaryTable (
+		ArrayList<SQLWarning> warning, 
+		String sDBID, 
+		String sUser)throws SQLException{
 		String sSQL = "DROP TABLE "+TEMP_TABLE+"";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -432,7 +451,7 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734889]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
 					sUser, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
@@ -446,7 +465,7 @@ public class SMImportDataAction extends HttpServlet {
 		}
 	}
 	
-	private ArrayList<String> tableFields(String sExecuteString, String sConf, String DATABASEID, String sUser)throws Exception{
+	private ArrayList<String> tableFields(String sExecuteString)throws Exception{
 		String [] column = getColumns(sExecuteString).split(",");
 		String setString = getSetColumns(sExecuteString);
 		if(setString.compareToIgnoreCase("") != 0) {
@@ -497,7 +516,13 @@ public class SMImportDataAction extends HttpServlet {
 		return returnarray ;
 	}
 
-	private int insertFromTemporaryTableWithOutUpdate (ArrayList<SQLWarning> warning,String sConf, String sTableName, ArrayList<String> columns, String DATABASEID, String sUser) throws SQLException{
+	private int insertFromTemporaryTableWithOutUpdate (
+			ArrayList<SQLWarning> warning,
+			String sDBID, 
+			String sTableName, 
+			ArrayList<String> columns, 
+			String sUserID
+			) throws SQLException{
 		int numberOfRecords = 0;
 		String sSQL = "INSERT  INTO "+sTableName+" (";
 		for(int i = 0; i < columns.size(); i++){
@@ -516,10 +541,9 @@ public class SMImportDataAction extends HttpServlet {
 				sSQL += ",";
 		}
 		sSQL += " FROM "+TEMP_TABLE+"";
-		//System.out.println(sSQL);
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -531,9 +555,9 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734928]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + e.getMessage(),
 					"Command: " + sSQL,
@@ -546,7 +570,14 @@ public class SMImportDataAction extends HttpServlet {
 		return numberOfRecords;
 	}
 	
-	private int updateFromTemporaryTable (ArrayList<SQLWarning> warning, ArrayList<String> sPrimaryUniqueKey, ArrayList<String> sPrimaryKey, String sConf, String sTableName, ArrayList<String> columns, String DATABASEID, String sUser) throws SQLException{
+	private int updateFromTemporaryTable (
+		ArrayList<SQLWarning> warning, 
+		ArrayList<String> sPrimaryKey, 
+		String sDBID, 
+		String sTableName, 
+		ArrayList<String> columns, 
+		String sUserID
+		) throws SQLException{
 		int numberOfRecords = 0;
 		ArrayList<String> columnWithoutPrimaryAndUnique = columnsWithOutPrimaryAndUniqueKeys(sPrimaryKey,columns);
 		String sSQL = "UPDATE "+sTableName+" INNER JOIN "+TEMP_TABLE+" ON ";
@@ -576,7 +607,7 @@ public class SMImportDataAction extends HttpServlet {
 		//System.out.println(sSQL);
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -588,9 +619,9 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734963]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + e.getMessage(),
 					"Command: " + sSQL,
@@ -682,13 +713,20 @@ public class SMImportDataAction extends HttpServlet {
 		return sb.toString();
 	}
 	
-	private int insertFromTemporaryTablewithUpdate (ArrayList<SQLWarning> warning, ArrayList<String> sPrimaryKey, String sConf, String sTableName, ArrayList<String> columns, String DATABASEID, String sUser) throws SQLException{
+	private int insertFromTemporaryTablewithUpdate (
+			ArrayList<SQLWarning> warning, 
+			ArrayList<String> sPrimaryKey, 
+			String sDBID, 
+			String sTableName, 
+			ArrayList<String> columns, 
+			String sUserID
+			) throws SQLException{
 		int iNumberOfRecords = 0;
-		String sSQL = generateInsertFromTemporaryTableQuery(sPrimaryKey,columns, sTableName);
+		String sSQL = generateInsertFromTemporaryTableQuery(sPrimaryKey, columns, sTableName);
 		//System.out.println(sSQL);
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -700,9 +738,9 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547734996]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + e.getMessage(),
 					"Command: " + sSQL,
@@ -710,16 +748,21 @@ public class SMImportDataAction extends HttpServlet {
 			if (conn != null){
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547735033]");
 			}
-			throw new SQLException("ERROR [1538072905]"+e.getMessage());
+			throw new SQLException("ERROR [1538072905]" + e.getMessage());
 		}
 		return iNumberOfRecords;
 	}
 	
-	private void createTemporaryTable (ArrayList<SQLWarning> warning, String sConf, String sTableName, ArrayList<String> columns, String DATABASEID, String sUser)throws SQLException{
+	private void createTemporaryTable (
+			ArrayList<SQLWarning> warning,
+			String sDBID, 
+			String sTableName, 
+			String sUserID
+			)throws SQLException{
 		String sSQL = "CREATE TABLE "+TEMP_TABLE+" LIKE  "+sTableName+"";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -731,9 +774,9 @@ public class SMImportDataAction extends HttpServlet {
 				warning.add(w);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547735020]");
 		}catch(Exception e){
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + e.getMessage(),
 					"Command: " + sSQL,
@@ -746,11 +789,19 @@ public class SMImportDataAction extends HttpServlet {
 	}
 	
 	
-	private int loadCSVFile(ArrayList<SQLWarning> warning, String sExecuteString, String sTableName, String loadCommand, String sConf, String sUser, String sfileName, String DATABASEID) throws SQLException{
+	private int loadCSVFile(
+		ArrayList<SQLWarning> warning, 
+		String sExecuteString, 
+		String sTableName, 
+		String loadCommand, 
+		String sDBID, 
+		String sUserID, 
+		String sfileName
+		) throws SQLException{
 		Connection conn = null;
 		int iNumberOfRecords = 0;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sExecuteString);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sExecuteString);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -771,9 +822,9 @@ public class SMImportDataAction extends HttpServlet {
 		    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547735060]");
 		}catch (Exception ex) {
 			// handle any errors
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
-					sUser, 
+					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
 					"[1376503188] EXECUTE SQL FAILED - " + ex.getMessage(),
 					"Command: " + sExecuteString,

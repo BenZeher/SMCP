@@ -22,11 +22,6 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFirstName = "";
-	private static String sUserLastName = "";
-
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -42,10 +37,10 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String sCallingClass = "smcontrolpanel.SMEditUsersCustomLinksEdit";
 	    /**************Check Parameters**************/
@@ -56,7 +51,7 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 	  	//If it's an edit, process that:
 	  	if(sCommandValue.compareToIgnoreCase(SMEditUsersCustomLinksEdit.SAVE_COMMAND_VALUE) == 0){  		
 	  		try {	
-				save(request, getServletContext(), sDBID, sUserID );
+				save(request, getServletContext(), sDBID, sUserID, sUserFirstName, sUserLastName);
 				
 			  	//redirect back to edit screen.
 				response.sendRedirect(
@@ -151,7 +146,7 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 		
 	}
 
-	private void save(HttpServletRequest request, ServletContext context, String sConf, String sUserID) throws Exception{
+	private void save(HttpServletRequest request, ServletContext context, String sConf, String sUserID, String sUserFirstName, String sUserLastName) throws Exception{
   		
 		// Get connection
 		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",

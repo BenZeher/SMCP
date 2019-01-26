@@ -18,8 +18,6 @@ public class SMEditProjectTypesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Project Type";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -37,8 +35,8 @@ public class SMEditProjectTypesAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sID = clsStringFunctions.filter(request.getParameter("EditCode"));
 	    String title = "Updating " + sObjectName + "'" + sID + "'";
 	    String subtitle = "";

@@ -24,8 +24,6 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Site Location";
 	private static String sCalledClassName = "SMEditSiteLocationsAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -43,8 +41,8 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sEditCode = clsStringFunctions.filter(clsManageRequestParameters.get_Request_Parameter(sObjectName, request));
 	    String sEditLabel = "";
 	    String sEditCustomerNumber = "";
@@ -140,12 +138,12 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 			String sCustomerShipTo,
 			String sLabel,
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sCustomerNumber, sCustomerShipTo, sLabel, sConf, pwOut) == false){
+			if (Add_Record (sCustomerNumber, sCustomerShipTo, sLabel, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sLabel + ".<BR>");
 				return;
 			}
@@ -166,7 +164,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 		try{
 			//Get the record to edit:
 	        String sSQL = SMMySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();
 	        //Display fields:

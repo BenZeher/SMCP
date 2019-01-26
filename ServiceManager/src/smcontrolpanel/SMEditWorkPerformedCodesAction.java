@@ -18,8 +18,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMEditWorkPerformedCodesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
 	private static String sObjectName = "Work Performed Code";
 	
 	@Override
@@ -38,8 +36,8 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sEditCode = clsStringFunctions.filter(request.getParameter("EditCode"));
 		
 	    String title = "Updating " + sObjectName +  " " + 
@@ -61,7 +59,8 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 				sWPCode, 
 				clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTableworkperformedcodes.iSortOrder)), 
 				clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTableworkperformedcodes.sWorkPerformedPhrase)), 
-				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME)
+				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME),
+				sDBID
 			);
 		} catch (Exception e) {
 			sOutPut = e.getMessage();
@@ -75,7 +74,8 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 			String sWPCode, 
 			String sSortOrder, 
 			String sWorkPerformedPhrase,
-			String sUser) throws Exception{
+			String sUser,
+			String sDBID) throws Exception{
 	    String sSQL = SMMySQLs.Update_WorkPerformedCode_SQL(
 	    		sServiceType, 
 	    		sWPCode, 

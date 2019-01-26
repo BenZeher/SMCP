@@ -22,8 +22,6 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Sales Group";
 	private static String sCalledClassName = "SMEditSalesGroupsAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -41,8 +39,8 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sEditCode = clsStringFunctions.filter(request.getParameter(sObjectName));
 
 		String title = "";
@@ -112,12 +110,12 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 	private void Edit_Record(
 			String sID, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sID, sConf, pwOut) == false){
+			if (Add_Record (sID, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sID + ".<BR>");
 				return;
 			}
@@ -133,7 +131,7 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 		try{
 			//Get the record to edit:
 	        String sSQL = Get_Sales_Group_By_ID(sID);
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
 	        //Display fields:

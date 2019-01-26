@@ -18,7 +18,6 @@ import javax.servlet.http.HttpSession;
 
 public class SMEditUsersAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
 
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -42,7 +41,7 @@ public class SMEditUsersAction extends HttpServlet{
 		//smaction.getCurrentSession().setAttribute(SMScheduleGroup.ParamObjectName, entry);
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    
 	    //Save the record first
 	    try {

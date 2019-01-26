@@ -20,9 +20,6 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sCompanyName = "";
 	private static boolean bDebugMode = false;
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -41,9 +38,9 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String title = "Custom Parts On Hand Not On Sales Order";
 		String subtitle = "";
 

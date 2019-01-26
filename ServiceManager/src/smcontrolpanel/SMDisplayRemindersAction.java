@@ -18,13 +18,15 @@ public class SMDisplayRemindersAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	
-	private ArrayList<String> arrScheduleCodes;
-	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);	
-	
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
+		ArrayList<String> arrScheduleCodes;
+		ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);	
+		
+		
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
 		if (!smaction.processSession(getServletContext(), -1)){return;}
 		HttpSession CurrentSession = request.getSession(true);

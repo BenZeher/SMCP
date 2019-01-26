@@ -17,9 +17,6 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMEditMechanicsRemove extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUser = "";
 	@Override
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -39,9 +36,9 @@ public class SMEditMechanicsRemove extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String title = "Remove Mechanics";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(

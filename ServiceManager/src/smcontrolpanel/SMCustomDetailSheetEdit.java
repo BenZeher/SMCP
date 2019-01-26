@@ -21,7 +21,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMCustomDetailSheetEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String CALLED_CLASS_NAME = "SMCustomDetailSheetAction";
+	private static final String CALLED_CLASS_NAME = "SMCustomDetailSheetAction";
 	public static final String SAVE_BUTTON_NAME = "SAVEBUTTON";
 	public static final String SAVE_BUTTON_LABEL = "Save";
 	public static final String CANCEL_BUTTON_NAME = "CANCELBUTTON";

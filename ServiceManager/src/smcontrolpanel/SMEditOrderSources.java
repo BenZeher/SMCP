@@ -18,10 +18,8 @@ import javax.servlet.http.HttpSession;
 public class SMEditOrderSources extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Order Source";
-	private static String sCalledClassName = "SMEditOrderSourcesEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectName = "Order Source";
+	private static final String sCalledClassName = "SMEditOrderSourcesEdit";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -39,8 +37,8 @@ public class SMEditOrderSources extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName + "s";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

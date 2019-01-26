@@ -32,11 +32,6 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 	public static String DELETE_BUTTON_NAME_PREFIX = "Delete";
 	public static String DELETE_BUTTON_LABEL = "Delete";
 	public static String DELETE_CONFIRM_CHECKBOX_NAME = "CONFIRMDELETE";
-	private static String sCompanyName;
-	private static String sDBID;
-	private static String sUserName;
-	private static String sUserID;
-	private static String sUserFullName;
 	private ArrayList<SMChangeOrder> arrChangeOrders;
 
 	@SuppressWarnings("unchecked")
@@ -55,11 +50,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 
 		String sOrderNumber = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParamsOrderNumber, request);
@@ -117,14 +111,14 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 		if (arrChangeOrders == null){
 			arrChangeOrders = new ArrayList<SMChangeOrder>(0);
 			try {
-				loadChangeOrders(sOrderNumber, sDBID, sUserName);
+				loadChangeOrders(sOrderNumber, sDBID, sUserID, sUserFullName);
 			} catch (SQLException e) {
 				out.println(e.getMessage());
 				return;
 			}
 		}
 
-		out.println(displayContractData(sOrderNumber, sDBID, sUserName));
+		out.println(displayContractData(sOrderNumber, sDBID, sUserID, sUserFullName));
 		
 		out.println(listChangeOrderLines(sOrderNumber));
 
@@ -136,8 +130,9 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 	}
 	private void loadChangeOrders(
 			String sOrderNum, 
-			String sConf, 
-			String sUser) throws SQLException{
+			String sDBID, 
+			String sUserID,
+			String sUserFullName) throws SQLException{
 
 		//arrChangeOrders.clear();
 		String SQL = "SELECT"
@@ -151,7 +146,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL",
 					this.toString() + ".loadChangeOrders - user: " + sUserID
 					+ " - "
@@ -187,7 +182,8 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 	private String displayContractData(
 			String sOrderNum, 
 			String sConf, 
-			String sUser){
+			String sUserID,
+			String sUserFullName){
 
 		String sResult = "";
 		String SQL = "SELECT"

@@ -28,13 +28,6 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sCompanyName = "";
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
@@ -55,14 +48,16 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
+	    
     	//get current URL
     	String sCurrentURL = clsServletUtilities.URLEncode(request.getRequestURI().toString()+ "?" + request.getQueryString()).replace("&", "*");
 
@@ -78,14 +73,14 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 			sStartingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Invalid starting date: '" + sStartingDate + "' - " + e.getMessage();
-			redirectAfterError(response);			
+			redirectAfterError(response, sCallingClass, sDBID, sWarning);			
             return;
 		}
 		try {
 			sEndingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sEndingDate),"yyyy-MM-dd");
 		} catch (ParseException e) {
 			sWarning = "Invalid ending date: '" + sEndingDate + "' - " + e.getMessage();
-			redirectAfterError(response);			
+			redirectAfterError(response, sCallingClass, sDBID, sWarning);			
             return;
 		}
 
@@ -119,7 +114,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    	if(alStatus.size() == 0) {
 	    		sWarning += "You must select at least one status. ";	
 	    	}
-    		redirectAfterError(response);
+    		redirectAfterError(response, sCallingClass, sDBID, sWarning);
     		return;
     	}
 	    Collections.sort(alSelectedUsers);
@@ -218,7 +213,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	);
     	if (conn == null){
     		sWarning = "Unable to get data connection.";
-    		redirectAfterError(response);
+    		redirectAfterError(response, sCallingClass, sDBID, sWarning);
     		return;
     	}
 
@@ -242,7 +237,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080430]");
 	    out.println("</BODY></HTML>");
 	}
-	private void redirectAfterError(HttpServletResponse res){
+	private void redirectAfterError(HttpServletResponse res, String sCallingClass, String sDBID, String sWarning){
 		
 		String sRedirect =
 			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

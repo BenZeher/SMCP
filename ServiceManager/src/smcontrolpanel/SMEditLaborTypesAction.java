@@ -16,8 +16,6 @@ import javax.servlet.http.HttpSession;
 public class SMEditLaborTypesAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Labor Type";
-	private String sCompanyName = "";
-	private String sDBID = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -35,8 +33,8 @@ public class SMEditLaborTypesAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sEditCode = request.getParameter("EditCode");
 		
 	    String title = "Updating " + sObjectName + "'" + sEditCode + "'";
@@ -46,7 +44,6 @@ public class SMEditLaborTypesAction extends HttpServlet{
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); 
 	
 	    String sOutPut = "";
 	

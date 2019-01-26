@@ -19,9 +19,6 @@ import ServletUtilities.clsServletUtilities;
 public class SMEditOrderHandler extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -38,9 +35,9 @@ public class SMEditOrderHandler extends HttpServlet{
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
@@ -161,7 +158,7 @@ public class SMEditOrderHandler extends HttpServlet{
 			}
 			if (request.getParameter(SMEditOrderSelection.EDITORDER_BUTTON_NAME) != null){
 				try {
-					checkForCanceledOrder(sOrderNumber);
+					checkForCanceledOrder(sOrderNumber, sDBID, sUserID, sUserFullName);
 				} catch (Exception e) {
 					sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 					+ sCallingClass
@@ -181,7 +178,7 @@ public class SMEditOrderHandler extends HttpServlet{
 			}
 			if (request.getParameter(SMEditOrderSelection.EDIT_PROPOSAL_NAME) != null){
 				try {
-					checkForCanceledOrder(sOrderNumber);
+					checkForCanceledOrder(sOrderNumber, sDBID, sUserID, sUserFullName);
 				} catch (Exception e) {
 					sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 					+ sCallingClass
@@ -201,7 +198,7 @@ public class SMEditOrderHandler extends HttpServlet{
 			}
 			if (request.getParameter(SMEditOrderSelection.EDITCHANGEORDERS_BUTTON_NAME) != null){
 				try {
-					checkForCanceledOrder(sOrderNumber);
+					checkForCanceledOrder(sOrderNumber, sDBID, sUserID, sUserFullName);
 				} catch (Exception e) {
 					sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 					+ sCallingClass
@@ -374,7 +371,7 @@ public class SMEditOrderHandler extends HttpServlet{
 		}
 		
 	}
-	private void checkForCanceledOrder(String sOrderNumber) throws Exception{
+	private void checkForCanceledOrder(String sOrderNumber, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(sOrderNumber.trim());
 		if (!order.load(getServletContext(), sDBID, sUserID, sUserFullName)){

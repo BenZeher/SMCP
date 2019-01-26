@@ -16,7 +16,7 @@ import SMDataDefinition.SMTableprojecttypes;
 public class SMEditBidSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smcontrolpanel.SMEditBidEntry";
+	private static final String sCalledClassName = "smcontrolpanel.SMEditBidEntry";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

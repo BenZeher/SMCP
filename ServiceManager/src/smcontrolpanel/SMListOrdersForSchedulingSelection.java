@@ -19,8 +19,6 @@ import ServletUtilities.clsServletUtilities;
 
 public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
 	public static String LOCATION_PARAMETER = "LOCATION";
 	public static String SERVICETYPE_PARAMETER = "SERVICETYPE";
 	public static String GENERATE_REPORT_PARAMETER = "GENERATE_REPORT";
@@ -49,8 +47,8 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		//Get the parameters:
 		String sStartingDate = clsManageRequestParameters.get_Request_Parameter(STARTING_DATE_FIELD, request);

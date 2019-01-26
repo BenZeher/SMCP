@@ -26,10 +26,6 @@ public class SMEditLocationsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Location";
 	private static String sCalledClassName = "SMEditLocationsAction";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -46,11 +42,11 @@ public class SMEditLocationsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectName));
 
 		String title = "";
@@ -67,7 +63,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 			
-		    Edit_Record(sEditCode, out, sDBID, false);
+		    Edit_Record(sEditCode, out, sDBID, false, sUserID, sUserFullName);
 	    }
 	    if(request.getParameter("SubmitDelete") != null){
 	    	//User has chosen to delete:
@@ -109,7 +105,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		    	out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
 		    }
 		    else{
-		    	Edit_Record(sNewCode, out, sDBID, true);
+		    	Edit_Record(sNewCode, out, sDBID, true, sUserID, sUserFullName);
 		    }
 	    }
 		
@@ -119,13 +115,15 @@ public class SMEditLocationsEdit extends HttpServlet {
 	private void Edit_Record(
 			String sCode, 
 			PrintWriter pwOut, 
-			String sConf,
-			boolean bAddNew){
+			String sDBID,
+			boolean bAddNew,
+			String sUserID,
+			String sUserFullName){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
 			try {
-				Add_Record (sCode, sConf, pwOut);
+				Add_Record (sCode, sDBID, pwOut);
 			} catch (Exception e) {
 				pwOut.println("ERROR - Could not add " + sCode + " - " + e.getMessage() + ".<BR>");
 				return;
@@ -143,7 +141,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		try{
 			//Get the record to edit:
 	        String sSQL = SMMySQLs.Get_Location_By_Code(sCode);
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
 	        //Display fields:
@@ -413,7 +411,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
 		        	sSQL, 
 		        	getServletContext(), 
-		        	sConf,
+		        	sDBID,
 		        	"MySQL",
 		        	this.toString() + ".Edit_Record - User: " + sUserID
 		        	+ " - "

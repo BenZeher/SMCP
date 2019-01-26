@@ -18,8 +18,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMEditOrderTotalsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private String sUserID = "";
-	private String sUserFullName = "";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -32,8 +30,8 @@ public class SMEditOrderTotalsAction extends HttpServlet{
 		//smaction.getCurrentSession().setAttribute(SMOrderHeader.ParamObjectName, entry);
 		smaction.getCurrentSession().removeAttribute(SMOrderHeader.ParamObjectName);
 		
-	    sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+		String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);;
     	//If it's a request to clone:
     	if (clsManageRequestParameters.get_Request_Parameter(

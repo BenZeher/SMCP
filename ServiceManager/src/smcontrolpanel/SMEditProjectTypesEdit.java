@@ -22,8 +22,6 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Project Type";
 	private static String sCalledClassName = "SMEditProjectTypesAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -41,8 +39,8 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sEditCode = clsStringFunctions.filter(request.getParameter(sObjectName));
 
 		String title = "";
@@ -110,12 +108,12 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 	private void Edit_Record(
 			String sID, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sID, sConf, pwOut) == false){
+			if (Add_Record (sID, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sID + ".<BR>");
 				return;
 			}
@@ -131,7 +129,7 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 		try{
 			//Get the record to edit:
 	        String sSQL = SMMySQLs.Get_Project_Type_By_ID(sID);
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
 	        //Display fields:

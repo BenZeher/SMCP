@@ -36,11 +36,6 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a");
 	NumberFormat currency = NumberFormat.getCurrencyInstance(Locale.US);
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserFullName = "";
-	private String sUserID = "";
-	private String sCompanyName = "";
 	private boolean bDebugMode = false;
 	
 	public void doGet(HttpServletRequest request,
@@ -60,12 +55,12 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, sCallingClass);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, sCallingClass);
     	String sOrderNumber = clsManageRequestParameters.get_Request_Parameter("OrderNumber", request);
     	
     	//Customized title
@@ -101,7 +96,10 @@ public class SMDisplayJobCostInformation extends HttpServlet {
     		conn, 
     		sOrderNumber, 
     		out,
-    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    		sDBID,
+    		sUserID)
+    	){
     		
     	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080460]");
@@ -110,7 +108,14 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 	    out.println("</BODY></HTML>");
 	}
 	
-	private boolean displayJobCostInfo(Connection conn, String sOrderNum, PrintWriter pwOut, String sLicenseModuleLevel){
+	private boolean displayJobCostInfo(
+		Connection conn, 
+		String sOrderNum, 
+		PrintWriter pwOut, 
+		String sLicenseModuleLevel, 
+		String sDBID,
+		String sUserID
+		){
 	
 		//TJR - 11/20/09 - changed from a straight join to a left join to pick up records that
 		//didn't have a corresponding record in the salespersons table:

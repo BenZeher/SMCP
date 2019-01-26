@@ -24,9 +24,6 @@ import smar.SMOption;
 public class SMEditOrderAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebugMode = false;
 	
 	public void doPost(HttpServletRequest request,
@@ -41,9 +38,9 @@ public class SMEditOrderAction extends HttpServlet{
 		entry = new SMOrderHeader(request);
 		
 		smaction.getCurrentSession().removeAttribute(SMOrderHeader.ParamObjectName);
-	    sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+		String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
       	
 	    String sGDriveReturnURL = "";

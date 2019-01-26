@@ -19,25 +19,25 @@ import ServletUtilities.clsStringFunctions;
 
 public class SMCustomQuery extends java.lang.Object{
 
-	public static String USER_VARIABLE = "*USER*";
-	public static String LINKBASE_VARIABLE = "*LINKBASE*";
-	public static String DATEPICKER_PARAM_VARIABLE = "*DATEPICKER*";
-	public static String DATABASE_ID_PARAM_VARIABLE = "*DBID*";
+	public static final String USER_VARIABLE = "*USER*";
+	public static final String LINKBASE_VARIABLE = "*LINKBASE*";
+	public static final String DATEPICKER_PARAM_VARIABLE = "*DATEPICKER*";
+	public static final String DATABASE_ID_PARAM_VARIABLE = "*DBID*";
 	
 	//This is no longer used, but we leave the definition to check old queries:
-	public static String SESSION_TAG_PARAM_VARIABLE = "\\*SESSIONTAG\\*";
+	public static final String SESSION_TAG_PARAM_VARIABLE = "\\*SESSIONTAG\\*";
 	
-	public static String DATEPICKER_TODAY_PARAM_VARIABLE = "TODAY";
-	public static String DATEPICKER_FIRSTDAYOFYEAR_PARAM_VARIABLE = "FIRSTDAYOFYEAR";
-	public static String DATEPICKER_FIRSTDAYOFMONTH_PARAM_VARIABLE = "FIRSTDAYOFMONTH";
-	public static String DATEPICKER_LASTDAYOFYEAR_PARAM_VARIABLE = "LASTDAYOFYEAR";
-	public static String DATEPICKER_LASTDAYOFMONTH_PARAM_VARIABLE = "LASTDAYOFMONTH";
-	public static String DROPDOWN_PARAM_VARIABLE = "*DROPDOWNLIST*";
-	public static String SETVARIABLECOMMAND = "*SETVARIABLES*";
-	public static String STARTINGPARAMDELIMITER = "[[";
-	public static String ENDINGPARAMDELIMITER = "]]";
-	public static String STARTINGPARAMDATADELIMITER = "{";
-	public static String ENDINGPARAMDATADELIMITER = "}";
+	public static final String DATEPICKER_TODAY_PARAM_VARIABLE = "TODAY";
+	public static final String DATEPICKER_FIRSTDAYOFYEAR_PARAM_VARIABLE = "FIRSTDAYOFYEAR";
+	public static final String DATEPICKER_FIRSTDAYOFMONTH_PARAM_VARIABLE = "FIRSTDAYOFMONTH";
+	public static final String DATEPICKER_LASTDAYOFYEAR_PARAM_VARIABLE = "LASTDAYOFYEAR";
+	public static final String DATEPICKER_LASTDAYOFMONTH_PARAM_VARIABLE = "LASTDAYOFMONTH";
+	public static final String DROPDOWN_PARAM_VARIABLE = "*DROPDOWNLIST*";
+	public static final String SETVARIABLECOMMAND = "*SETVARIABLES*";
+	public static final String STARTINGPARAMDELIMITER = "[[";
+	public static final String ENDINGPARAMDELIMITER = "]]";
+	public static final String STARTINGPARAMDATADELIMITER = "{";
+	public static final String ENDINGPARAMDATADELIMITER = "}";
 	
 	private String m_sErrorMessage;
 	private boolean bDebugMode = false;

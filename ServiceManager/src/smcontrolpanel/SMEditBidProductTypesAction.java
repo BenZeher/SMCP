@@ -19,8 +19,6 @@ public class SMEditBidProductTypesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = SMBidEntry.ParamObjectName + " Product Types";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -38,8 +36,8 @@ public class SMEditBidProductTypesAction extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sBidProductType = clsStringFunctions.filter(request.getParameter(SMTablebidproducttypes.sProductType));
 		String sBidProductTypeID = clsManageRequestParameters.get_Request_Parameter(SMTablebidproducttypes.lID, request);
 		

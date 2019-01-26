@@ -34,7 +34,7 @@ import ServletUtilities.clsStringFunctions;
 public class SMEditOrderDetailEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
+	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
 	private static final String ITEMEDIT_BG_COLOR = "#CCFFB2";
 	private static final String ORDERCOMMANDS_BG_COLOR = "#99CCFF";
 	private static final String WORKPERFORMEDCODES_BG_COLOR = "#FFBCA2";

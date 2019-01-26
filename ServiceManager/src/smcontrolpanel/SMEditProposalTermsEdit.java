@@ -22,8 +22,6 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Proposal Terms";
 	private static String sCalledClassName = "SMEditProposalTermsAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
 	private boolean bDebug = false;
 	
 	@Override
@@ -43,8 +41,8 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sProposalTermID = clsStringFunctions.filter(request.getParameter(SMEditProposalTermsSelect.PROPTERM_PARAM));
 
 		String title = "";
@@ -117,7 +115,7 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -143,7 +141,7 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				iID = rs.getInt(SMTableproposalterms.sID);
@@ -235,7 +233,7 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sProposalTermID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

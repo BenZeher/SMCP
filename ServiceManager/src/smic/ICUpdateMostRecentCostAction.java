@@ -19,8 +19,7 @@ import smcontrolpanel.SMUtilities;
 public class ICUpdateMostRecentCostAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sUserName = "";
+	
 	private static String m_sWarning = "";
 	private boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
@@ -38,8 +37,9 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
+	    					+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME) ;
 
 	    String sItemNumber = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamItemNumber, request);
 	    String sMostRecentCost = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamMostRecentCost, request);
@@ -48,7 +48,7 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 	    	ICPhysicalInventoryEntry.ParamID, request);
 	    
 		//Try to update the item:
-		if (!updateItemCost(sItemNumber, sMostRecentCost)){
+		if (!updateItemCost(sItemNumber, sMostRecentCost, sDBID, sUserFullName)){
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?" + ICItem.ParamItemNumber + "=" + sItemNumber
@@ -69,7 +69,7 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 		}
 		return;
 	}
-	private boolean updateItemCost(String sItem, String sMostRecentCost){
+	private boolean updateItemCost(String sItem, String sMostRecentCost, String sDBID, String sUserFullName){
 		
 		//Make sure the most recent cost is ONLY to two decimal places:
 		BigDecimal bdMRC = new BigDecimal(0);
@@ -104,7 +104,7 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 					getServletContext(), 
 					sDBID, 
 					"MySQL", 
-					SMUtilities.getFullClassName(this.toString()) + ".updateItemCost - user: " + sUserName
+					SMUtilities.getFullClassName(this.toString()) + ".updateItemCost - user: " + sUserFullName
 			)){
 				m_sWarning = "Error updating item number '" + sItem + "' with most recent cost " + sMostRecentCost
 					+ ".";

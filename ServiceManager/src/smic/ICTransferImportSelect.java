@@ -15,9 +15,8 @@ import smcontrolpanel.SMUtilities;
 public class ICTransferImportSelect extends HttpServlet {
 	public static final String PARAM_INCLUDES_HEADER_ROW = "IncludesHeaderRow";
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "ICTransferImportAction";
-	private static String sCompanyName = "";
-	private String sDBID = "";
+	private static String sICTransferImportSelectCalledClassName = "ICTransferImportAction";
+
 	private String m_sBatchNumber;
 	private String m_sEntryNumber;
 	private String m_sBatchType;
@@ -37,8 +36,8 @@ public class ICTransferImportSelect extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    get_request_parameters(request);
 	    String title = "Import inventory transfers.";
 	    String subtitle = "";
@@ -82,7 +81,7 @@ public class ICTransferImportSelect extends HttpServlet {
 	    		+ " it only looks for the item number, quantity, FROM location, and TO location - separated by a comma.<BR>"
 	    );
 	    
-	    out.println("<FORM NAME=\"MAINFORM\" action=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "\"" 
+	    out.println("<FORM NAME=\"MAINFORM\" action=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICTransferImportSelectCalledClassName + "\"" 
 	    		+ " method=\"post\""
 	    		+ " enctype=\"multipart/form-data\""
 	    		+ ">");

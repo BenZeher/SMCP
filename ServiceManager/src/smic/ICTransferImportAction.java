@@ -36,10 +36,7 @@ public class ICTransferImportAction extends HttpServlet{
 	private static int FIELD_FROM_LOCATION = 2;
 	private static int FIELD_TO_LOCATION = 3;
 	
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
+
 	private static String sCallingClass = "";
 	
 	//Member variables for the entry:
@@ -68,10 +65,9 @@ public class ICTransferImportAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String sStatus = "";
@@ -94,7 +90,7 @@ public class ICTransferImportAction extends HttpServlet{
 	    }
 	    
 	    try {
-			processRequest(CurrentSession, request, out, sUserID);
+			processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName);
 		} catch (Exception e) {
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
@@ -159,7 +155,9 @@ public class ICTransferImportAction extends HttpServlet{
 			HttpSession ses, 
 			HttpServletRequest req,
 			PrintWriter pwOut,
-			String sUserID
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			) throws Exception{
 
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
@@ -185,7 +183,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		try {
-			writeFileAndProcess(sTempFilePath, ses, req, pwOut, sUserID);
+			writeFileAndProcess(sTempFilePath, ses, req, pwOut, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception (e2.getMessage());
 		}
@@ -202,7 +200,9 @@ public class ICTransferImportAction extends HttpServlet{
 			HttpSession ses, 
 			HttpServletRequest req,
 			PrintWriter pwOut,
-			String sUserID
+			String sDBID,
+			String sUserID, 
+			String sUserFullName
 	) throws Exception{
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
@@ -293,7 +293,7 @@ public class ICTransferImportAction extends HttpServlet{
 		if (bDebugMode){
 			clsServletUtilities.sysprint(
 				this.toString(), 
-				sUserName, 
+				sUserFullName, 
 				"in writeFileAndProcess - bIncludeHeaderRow = " + bIncludesHeaderRow);
 		}
 		
@@ -313,7 +313,7 @@ public class ICTransferImportAction extends HttpServlet{
 					getServletContext(), 
 					sDBID, 
 					"MySQL", 
-					SMUtilities.getFullClassName(this.toString() + ".writeFileAndProcess - user: " + sUserName)
+					SMUtilities.getFullClassName(this.toString() + ".writeFileAndProcess - user: " + sUserFullName)
 			);
 		} catch (Exception e1) {
 			throw new Exception("Error [1396369878] getting a connection - " + e1.getMessage());
@@ -332,7 +332,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		try {
-			insertTransferLines(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, options, sUserID);
+			insertTransferLines(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, options, sDBID, sUserID, sUserFullName);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080995]");
@@ -357,7 +357,9 @@ public class ICTransferImportAction extends HttpServlet{
 			Connection conn,
 			boolean bFileIncludesHeaderRow,
 			ICOption options,
-			String sUserID
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 	) throws Exception{
 		
 		BufferedReader br = null;

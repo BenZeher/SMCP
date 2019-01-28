@@ -19,8 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICSetInactiveItemsAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private static String sDBID = "";
 	private static final boolean bDebugMode = false;
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -30,7 +28,8 @@ public class ICSetInactiveItemsAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sWarning = "";
 	    if (!SMAuthenticate.authenticateSMCPCredentials(
 	    	request, 
 	    	response, 

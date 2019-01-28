@@ -33,9 +33,6 @@ public class ICReceiptLineUpdate extends HttpServlet{
 	private String m_sWarning = "";
 	private String m_sSendRedirect = "";
 	
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -51,9 +48,9 @@ public class ICReceiptLineUpdate extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    m_sWarning = "";
 	    
@@ -87,7 +84,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 					+ "&Warning=" + e1.getMessage()
 			);
 		}
-    	process(CurrentSession);
+    	process(CurrentSession, sDBID, sUserID, sUserFullName);
     	try {
 			options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
 		} catch (Exception e) {
@@ -96,7 +93,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 	   
 	}
 	
-	private void process(HttpSession CurrentSession){
+	private void process(HttpSession CurrentSession, String sDBID, String sUserID, String sUserFullName){
 		 if (m_sDelete.compareToIgnoreCase("") != 0){
 		    	if (m_sConfirmDelete.compareToIgnoreCase("") == 0){
 		    		m_sWarning = "You chose to delete, but did not check the 'confirming' check box.";
@@ -110,7 +107,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 			    	return;
 		    	}else{
 		    		//Delete the line:
-		    		if (!deleteLine()){
+		    		if (!deleteLine(sDBID, sUserID, sUserFullName)){
 		    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
 								+ "BatchNumber=" + m_Line.sBatchNumber()
 								+ "&EntryNumber=" + m_Line.sEntryNumber()
@@ -286,7 +283,7 @@ public class ICReceiptLineUpdate extends HttpServlet{
 		
 		return true;
 	}
-	private boolean deleteLine(){
+	private boolean deleteLine(String sDBID, String sUserID, String sUserFullName){
 		
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), getServletContext(), sDBID)){

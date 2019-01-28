@@ -47,8 +47,6 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	
 	private String m_sWarning = "";
 	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
 	private boolean bDebugMode = false;
 	
 	public void doGet(HttpServletRequest request,
@@ -60,8 +58,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(
 	    		request, 
 	    		response, getServletContext(), SMSystemFunctions.ICSetInactiveItems)){
@@ -197,7 +195,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		bIncludeNonStockItems,
     		sSortBy,
     		out,
-    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    		sUserID
     		)){
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -268,7 +267,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	}
 	private boolean printList(
     		ServletContext context,
-    		String sConf,
+    		String sDBID,
     		Date datEndDate,
     		String sStartingItem,
     		String sEndingItem,
@@ -277,7 +276,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		boolean bIncludeNonStockItems,
     		String sSortBy,
     		PrintWriter pwOut,
-    		String sLicenseModuleLevel
+    		String sLicenseModuleLevel,
+    		String sUserID
     		){
 
 		//Make sure there are no unposted batches:
@@ -293,7 +293,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".printList"
 			);
@@ -322,7 +322,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			this.toString() + ".printList"
 		);

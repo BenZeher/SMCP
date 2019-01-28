@@ -33,11 +33,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 	private String m_sBatchType;
 	private String m_sWarning = "";
 	private String m_sSendRedirect;
-	
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -53,10 +49,9 @@ public class ICShipmentLineUpdate extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    m_sWarning = "";
 	    
@@ -90,7 +85,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 					+ "&Warning=" + e1.getMessage()
 			);
 		}
-    	process(CurrentSession);
+    	process(CurrentSession, sDBID, sUserID, sUserFullName);
     	try {
 			options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
 		} catch (Exception e) {
@@ -98,7 +93,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
     	response.sendRedirect(m_sSendRedirect);
 	    
 	}
-	private void process(HttpSession CurrentSession){
+	private void process(HttpSession CurrentSession, String sDBID, String sUserID, String sUserFullName){
 	    //Branch here, depending on the request:
 	    //If it's a request to update the write off account, update that account:
 	    //System.out.println("In " + this.toString() + " 01");
@@ -106,7 +101,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 	    	if (!setDefaultCategory(
 	    			getServletContext(), 
 	    			sDBID, 
-	    			sUserName,
+	    			sUserFullName,
 	    			m_Line.sItemNumber()
 	    		)){
 	    		//System.out.println("In " + this.toString() + " 02");
@@ -134,7 +129,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 		    	return;
 	    	}else{
 	    		//Delete the line:
-	    		if (!deleteLine()){
+	    		if (!deleteLine(sDBID, sUserID, sUserFullName)){
 	    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
 							+ "BatchNumber=" + m_Line.sBatchNumber()
 							+ "&EntryNumber=" + m_Line.sEntryNumber()
@@ -328,7 +323,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 		
 		return true;
 	}
-	private boolean deleteLine(){
+	private boolean deleteLine(String sDBID, String sUserID, String sUserFullName){
 		
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), getServletContext(), sDBID)){
@@ -367,7 +362,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
     private boolean setDefaultCategory(
     		ServletContext context, 
     		String sDBID, 
-    		String sUserName,
+    		String sUserFullName,
     		String sItemNumber
     		){
     	
@@ -386,7 +381,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
     				context, 
     				sDBID, 
     				"MySQL", 
-    				this.toString() + ".setDefaultCategory - user: " + sUserName);
+    				this.toString() + ".setDefaultCategory - user: " + sUserFullName);
     		if (rs.next()){
     			m_Line.sCategoryCode(rs.getString(SMTableicitems.sCategoryCode));
     			//System.out.println("In " + this.toString() + ".setDefaultCategory - m_Line.sCategoryCode = " + m_Line.sCategoryCode());

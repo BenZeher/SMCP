@@ -22,11 +22,12 @@ public class ICRecreateAPExportSelection extends HttpServlet {
 	public static final String SUBMIT_BUTTON_NAME = "SUBMIT_BUTTON";
 	public static final String SUBMIT_BUTTON_LABEL = "List AP Export Sequences";
 	public static final String SHOW_INDIVIDUAL_INVOICES_CHECKBOX = "SHOW_INDIVIDUAL_INVOICES";
-	private static String sCalledClassName = "smic.ICRecreateAPExportEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
-
+		
+		String sCalledClassName = "smic.ICRecreateAPExportEdit";
+		
 		SMMasterEditSelect smeditselect = new SMMasterEditSelect(
 				request,
 				response,

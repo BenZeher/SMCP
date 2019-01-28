@@ -30,10 +30,6 @@ public class ICTransferLineUpdate extends HttpServlet{
 	private String m_sEntryNumber;
 	private String m_sLineNumber;
 	private String m_sBatchType;
-	
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -49,9 +45,9 @@ public class ICTransferLineUpdate extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //Collect all the request parameters:
@@ -95,7 +91,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 	    	return;
 		}
     	try {
-			processTransferLine(CurrentSession,response);
+			processTransferLine(CurrentSession,response, sDBID, sUserID, sUserFullName);
 		} catch (Exception e1) {
 	    	try {
 				options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
@@ -141,7 +137,7 @@ public class ICTransferLineUpdate extends HttpServlet{
     	return;
 	
 	}
-	private void processTransferLine(HttpSession CurrentSession, HttpServletResponse response) throws Exception{
+	private void processTransferLine(HttpSession CurrentSession, HttpServletResponse response, String sDBID, String sUserID, String sUserFullName) throws Exception{
 	    //If it's a request to display the qtys:
 	    if (m_sDisplayQtys.compareToIgnoreCase("") != 0){
 	    	if (m_Line.sItemNumber().compareToIgnoreCase("") == 0){
@@ -157,7 +153,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 	    	}else{
 	    		//Delete the line:
 	    		try {
-					deleteLine();
+					deleteLine(sDBID, sUserID, sUserFullName);
 				} catch (Exception e) {
 					throw new Exception("Error [1531849292] - " + e.getMessage());
 				}
@@ -202,7 +198,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 			ServletContext context, 
 			String sConf, 
 			String sUserID,
-			String sUseFullName
+			String sUserFullName
 		) throws Exception{
 		
 		String sWarning = "";
@@ -340,7 +336,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		
 		return;
 	}
-	private void deleteLine() throws Exception{
+	private void deleteLine(String sDBID, String sUserID, String sUserFullName) throws Exception{
 		
 		String sWarning = "";
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());

@@ -22,14 +22,7 @@ import ServletUtilities.clsServletUtilities;
 public class SMRecalibrateCountersAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String m_sInvoiceNumber = "";
-	private static String m_sOrderNumber = "";
-	private static String EDIT_PROCESS_NAME = "RECALIBRATE COUNTERS";
+	private static final String EDIT_PROCESS_NAME = "RECALIBRATE COUNTERS";
 	private static char [] cCharacterArray = "abcdefghijklmnopqrstuvwxyz-!@#$%^&*+=-".toCharArray();
 	private String SQL;
 	public void doGet(HttpServletRequest request,
@@ -41,9 +34,9 @@ public class SMRecalibrateCountersAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    Connection conn = clsDatabaseFunctions.getConnection(
 	    		getServletContext(), 
@@ -60,7 +53,8 @@ public class SMRecalibrateCountersAction extends HttpServlet {
 		}
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 	    /**************Get Parameters**************/
 
     	//Customized title
@@ -97,6 +91,7 @@ public class SMRecalibrateCountersAction extends HttpServlet {
         	return;
     	} 
     	//Get the Invoice Number
+    	String m_sInvoiceNumber = "";
     	try{
     		String sInvoiceNumberColumn = "sInvoiceNumberColumn";
     		SQL =  "SELECT"
@@ -115,6 +110,7 @@ public class SMRecalibrateCountersAction extends HttpServlet {
     		sWarning = "Error retrieving Invoice Number [1531242877] "+e.getMessage();
     	}
     	//Get the Order Number 
+    	String m_sOrderNumber = "";
     	try{
     		String sOrderNumberColumn = "sOrderNumberColumn";
     		SQL =  "SELECT"

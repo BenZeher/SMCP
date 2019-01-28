@@ -22,8 +22,6 @@ public class SMPurgeDataSelection extends HttpServlet {
 	public static final String PURGE_SYSTEMLOG = "PURGESYSTEMLOG";
 	public static final String PURGE_MATERIALRETURNS = "PURGEMATERIALRETURNS";
 	public static final String PURGE_SECURITYSYSTEMLOGS = "PURGESECURITYSYSTEMLOGS";
-	private String sCompanyName = "";
-	private String sDBID = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -41,8 +39,8 @@ public class SMPurgeDataSelection extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String title = "Purge Data";
 	    String subtitle = "";
 	    

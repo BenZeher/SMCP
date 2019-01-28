@@ -30,8 +30,6 @@ public class SMSendInvoiceSelection extends HttpServlet {
 	public static final String ALL_ITEMS_PARAM = "ShowALLItemsOnInvoiceIncludingDNP";
 	public static final String SUPRESS_PAGEBREAK_PARAM = "SuppressDetailsPageBreak";
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -50,8 +48,8 @@ public class SMSendInvoiceSelection extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){

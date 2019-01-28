@@ -37,10 +37,6 @@ public class SMSalesTaxReport {
 	private static final int MAX_LINE_BUFFER_COUNT = 1; //If we're just printing to the PrintWriter, we're not buffering
 		//and we don't need this set to anything but one.  If we want to use it, we'll try it at 50.
 	
-	//private static final String SUBTOTAL_LINE_BG_COLOR = "#C2FFE0";
-	//private static final String INVOICE_HEADER_BG_COLOR = "#C2E0FF";
-	//private static final String DETAIL_HEADER_BG_COLOR = "#E6FFE6";
-
 	public void processReport(
 		String sStartingDate,
 		String sEndingDate,

@@ -29,17 +29,11 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 	public static final String EDITENTRYMODE = "EditEntryMode";
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserFullName = "";
-	private String sUserID= "";
-	private String sWarning;
-	//private boolean bDebugMode = false;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
 
-		sWarning = "";
 		PrintWriter out = response.getWriter();
 		
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -53,10 +47,11 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sWarning = "";
 		String sTruckScheduleQueryString = 
 			(String) CurrentSession.getAttribute(SMViewTruckScheduleReport.TRUCKSCHEDULEQUERYSTRING);
 		if (sTruckScheduleQueryString == null){

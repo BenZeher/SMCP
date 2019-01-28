@@ -21,24 +21,24 @@ import ServletUtilities.clsServletUtilities;
 public class SMUnbilledContractReportSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public static String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
-	public static String PRINTINDIVIDUAL_VALUE_YES = "YES";
-	public static String PRINTINDIVIDUAL_VALUE_NO = "NO";
-	public static String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
-	public static String SALESGROUP_PARAMETER = "SALESGROUPCHECKBOX";
-	public static String SALESPERSON_PARAMETER = "SALESPERSON";
-	private static String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
-	private static String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
-	private static String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
-	private static String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
-	public static String SHOW_INDIVIDUAL_ORDERS_PARAMETER = "SHOWINDIVIDUALORDERS";	
-	public static String SHOW_ACTIVE_PARAMETER = "SHOWACTIVE";
-	public static String SHOW_STANDING_PARAMETER = "SHOWSTANDING";
-	public static String SHOW_WORKORDERS_PARAMETER = "SHOWWORKORDERS";
-	public static String SERVICE_TYPE_PARAMETER = "SERVICETYPES";
-	public static String GENERATE_REPORT_PARAMETER = "GENERATEREPORT";
-	private static String FORM_NAME = "UCRFORM";
-	private static String CALLED_CLASS_NAME = "smcontrolpanel.SMUnbilledContractGenerate";
+	public static final String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
+	public static final String PRINTINDIVIDUAL_VALUE_YES = "YES";
+	public static final String PRINTINDIVIDUAL_VALUE_NO = "NO";
+	public static final String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
+	public static final String SALESGROUP_PARAMETER = "SALESGROUPCHECKBOX";
+	public static final String SALESPERSON_PARAMETER = "SALESPERSON";
+	private static final String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
+	private static final String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
+	private static final String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
+	private static final String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
+	public static final String SHOW_INDIVIDUAL_ORDERS_PARAMETER = "SHOWINDIVIDUALORDERS";	
+	public static final String SHOW_ACTIVE_PARAMETER = "SHOWACTIVE";
+	public static final String SHOW_STANDING_PARAMETER = "SHOWSTANDING";
+	public static final String SHOW_WORKORDERS_PARAMETER = "SHOWWORKORDERS";
+	public static final String SERVICE_TYPE_PARAMETER = "SERVICETYPES";
+	public static final String GENERATE_REPORT_PARAMETER = "GENERATEREPORT";
+	private static final String FORM_NAME = "UCRFORM";
+	private static final String CALLED_CLASS_NAME = "smcontrolpanel.SMUnbilledContractGenerate";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.HashMap;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -18,12 +17,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ConnectionPool.WebContextParameters;
 import SMClasses.SMInvoicePrinter;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTablecompanyprofile;
-import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
@@ -43,14 +40,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 
 	private boolean bDebugMode = false;
 
-	private String INVOICE_EMAIL_SUBJECT = "Invoice";
-	private String sSendingEmailResultString = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
+	private static final String INVOICE_EMAIL_SUBJECT = "Invoice";
 	//Button names
 	public static final String sParamPrintButtonName = "PRINTINVOICE";
 	public static final String sParamPrintButtonValue = "Print selected invoices";
@@ -81,16 +71,17 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		{
 			return;
 		}
-		sSendingEmailResultString = "";
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+				+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
 		//Get original query criteria from selection screen.
 		String sQueryString = getQueryString(request, false);
@@ -185,7 +176,10 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 					conn, 
 					request, 
 					getServletContext(),
-					sUserName);
+					sUserName,
+					sUserID,
+					sDBID,
+					sUserFullName);
 			} catch (Exception e1) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080664]");
 				response.sendRedirect(
@@ -197,23 +191,13 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				return;
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080665]");
-			if (sSendingEmailResultString.compareToIgnoreCase("") != 0){
-				response.sendRedirect(
-						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMSendInvoiceGenerate" + "?"
-								+ "Status=" + URLEncoder.encode(sSendingEmailResultString, "UTF-8")
-								+ "&" + sQueryString
-								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-						);
-				return;
-			}else{
-				response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-							+ "Status=" + "Invoices successfully emailed."
-							+ "&" + sQueryString
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					);			
-				return;
-			}
+			response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+						+ "Status=" + "Invoices successfully emailed."
+						+ "&" + sQueryString
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);			
+			return;
 		}
 			
 		//If we are going to save the invoicing states
@@ -373,7 +357,8 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				out,
 				getServletContext(),
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				bPreSelectInvoicesWithEmailAddresses
+				bPreSelectInvoicesWithEmailAddresses,
+				sDBID
 			);
 		} catch (Exception e1){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080670]");
@@ -431,7 +416,8 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 			PrintWriter out,
 			ServletContext context,
 			String sLicenseModuleLevel,
-			boolean bPreSelectInvoicesWithEmailAddresses)  throws Exception{
+			boolean bPreSelectInvoicesWithEmailAddresses,
+			String sDBID)  throws Exception{
 
 		//String sCurrentServiceType = "";
 		String sCurrentInvoiceNumber = "";
@@ -762,13 +748,16 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		}
 		return;
 	}
-	private void emailInvoices(
+	private void  emailInvoices(
 			ArrayList<String> arrInvoice,
 			ArrayList<String> arrEmailAddress,
 			Connection conn,
 			HttpServletRequest request,
 			ServletContext context,
-			String sUser) throws Exception {
+			String sUserName,
+			String sUserID,
+			String sDBID,
+			String sUserFullName) throws Exception {
 
 		SMOption opt = new SMOption();
 		try {
@@ -807,101 +796,15 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 					context,
 					request,
 					conn,
-					sUser);
+					sUserName,
+					sUserID);
 			} catch (Exception e) {
-				sSendingEmailResultString += "\n" + e.getMessage();
+				throw new Exception(e.getMessage());
 			}
 		}
 		return;
 	}
 	
-	public String getFilePath(String sFileName, HttpServletRequest request, ServletContext context) {
-		String sFullLogoImageFilePath = SMUtilities.getAbsoluteRootPath(request, context);
-		
-		sFullLogoImageFilePath = sFullLogoImageFilePath.replace(WebContextParameters.getInitWebAppName(context), "");
-		while (sFullLogoImageFilePath.endsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath = sFullLogoImageFilePath.substring(0, sFullLogoImageFilePath.length() - 1);
-		}
-		
-		sFullLogoImageFilePath = sFullLogoImageFilePath + System.getProperty("file.separator");
-		
-		
-		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
-		}else{
-			sFullLogoImageFilePath += WebContextParameters.getLocalResourcesPath(context);
-		}
-
-		while (sFullLogoImageFilePath.endsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath = sFullLogoImageFilePath.substring(0, sFullLogoImageFilePath.length() - 1);
-		}
-
-		sFullLogoImageFilePath = sFullLogoImageFilePath + System.getProperty("file.separator");
-
-		if (sFileName.startsWith(System.getProperty("file.separator"))){
-			sFullLogoImageFilePath += sFileName.substring(0);
-		
-		}else{
-			sFullLogoImageFilePath += sFileName;
-			
-		}
-		return sFullLogoImageFilePath;
-	}
-	
-	public String getInvoiceLogoFileFromDBA(String sInvoiceNumber,
-									HttpServletRequest request,
-									ServletContext context,
-									Connection conn) throws Exception{
-		String SQL = "";
-		String sDescription = "";
-		String sLogoFileName = "";
-		SQL = "SELECT "+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sdbadescription+" FROM "+SMTableinvoiceheaders.TableName
-				+" WHERE "+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sInvoiceNumber+" = "+sInvoiceNumber;
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					getServletContext(), 
-					sDBID, 
-					"MySQL", 
-					SMUtilities.getFullClassName(this.toString()) + ".sendEmail - " + sUserID
-					+ " - "
-					+ sUserFullName
-					);
-			if (rs.next()){
-				sDescription = rs.getString(SMTableinvoiceheaders.sdbadescription).trim();
-			}
-			rs.close();
-			SQL = "SELECT "+SMTabledoingbusinessasaddresses.TableName+"."+SMTabledoingbusinessasaddresses.sInvoiceLogo+" FROM "
-					+" "+SMTabledoingbusinessasaddresses.TableName+" WHERE "
-					+" "+SMTabledoingbusinessasaddresses.TableName+"."+SMTabledoingbusinessasaddresses.sDescription
-					+ "= '"+sDescription+"'";
-			
-			rs = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					getServletContext(), 
-					sDBID, 
-					"MySQL", 
-					SMUtilities.getFullClassName(this.toString()) + ".sendEmail - " + sUserID
-					+ " - "
-					+ sUserFullName
-					);
-			if (rs.next()){
-				sLogoFileName = rs.getString(SMTabledoingbusinessasaddresses.sInvoiceLogo).trim();
-			}
-			rs.close();
-		} catch (Exception e) {
-			throw new Exception("Error [1487709654] getting File Name - " + e.getMessage() + ".");
-		}
-		
-		sLogoFileName = getFilePath(sLogoFileName,request,context);
-		
-		return sLogoFileName;
-		
-		
-		
-		
-	}
-
 	private void emailSingleInvoice(
 		String sInvoiceNumber,
 		String sEmailAddressee,
@@ -910,7 +813,8 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		ServletContext context,
 		HttpServletRequest req,
 		Connection conn,
-		String sUser
+		String sUser,
+		String sUserID
 		) throws Exception{
 		
 		//First, create the invoice file to attach:
@@ -1025,26 +929,6 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		;
 		return s;
 	}
-	
-	public HashMap<String,String> getInvoiceLogo(ArrayList<String> arrInvoices,
-												 HttpServletRequest request,
-												 ServletContext context,
-												 Connection conn)throws Exception{
-		HashMap<String, String> map = new HashMap<String,String>();
-		
-		for(int i = 0; i < arrInvoices.size(); i++) {
-			String InvoiceNumber = arrInvoices.get(i);
-			String imagePath = "";
-			try {
-			imagePath = getInvoiceLogoFileFromDBA(InvoiceNumber,request,context,conn);
-			}catch(Exception e) {
-				throw new Exception("ERROR [1544104980] "+e.getMessage());
-			}
-			map.put(InvoiceNumber, imagePath);
-		}
-		return map;
-	}
-	
 	
 	private String getHTMLInvoiceForm(
 			ArrayList<String> arrInvoices, 

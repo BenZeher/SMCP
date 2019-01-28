@@ -14,8 +14,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMProposalAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	//private boolean bDebugMode = false;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -30,7 +28,7 @@ public class SMProposalAction extends HttpServlet{
 		proposal.loadFromHTTPRequest(request);
 		
 		smaction.getCurrentSession().removeAttribute(SMTableproposals.ObjectName);
-	    sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		
     	//If it's a request to print:
     	if (clsManageRequestParameters.get_Request_Parameter(

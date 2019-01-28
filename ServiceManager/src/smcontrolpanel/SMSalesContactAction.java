@@ -21,8 +21,6 @@ import javax.servlet.http.HttpSession;
 
 public class SMSalesContactAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -39,8 +37,8 @@ public class SMSalesContactAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Updating sales contact....";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -96,8 +94,9 @@ public class SMSalesContactAction extends HttpServlet{
 		    				clsManageRequestParameters.get_Request_Parameter("SelectedSalesperson", request)) + "'" 
 		    			+ ", " + SMTablesalescontacts.scustomernumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(
 			    			clsManageRequestParameters.get_Request_Parameter("SelectedCustomer", request)) + "'"
-			    		+ ", " + SMTablesalescontacts.scustomername + " = '" + clsDatabaseFunctions.FormatSQLStatement(Get_Customer_Name(clsDatabaseFunctions.FormatSQLStatement(
-				    		clsManageRequestParameters.get_Request_Parameter("SelectedCustomer", request)))) + "'"
+			    		+ ", " + SMTablesalescontacts.scustomername + " = '" 
+			    			+ clsDatabaseFunctions.FormatSQLStatement(Get_Customer_Name(clsDatabaseFunctions.FormatSQLStatement(
+				    		clsManageRequestParameters.get_Request_Parameter("SelectedCustomer", request)), sDBID)) + "'"
 			    		+ ", " + SMTablesalescontacts.scontactname + " = '" + clsDatabaseFunctions.FormatSQLStatement(
 				    		clsManageRequestParameters.get_Request_Parameter("ContactName", request)) + "'" 
 			    		+ ", " + SMTablesalescontacts.sphonenumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(
@@ -180,7 +179,7 @@ public class SMSalesContactAction extends HttpServlet{
 		    				}else{
 				    			sSQL = SMMySQLs.Insert_Sales_Contact_SQL(request.getParameter("SelectedSalesperson"),
 																		 request.getParameter("SelectedCustomer"),
-				    													 Get_Customer_Name(request.getParameter("SelectedCustomer")),
+				    													 Get_Customer_Name(request.getParameter("SelectedCustomer"), sDBID),
 																		 request.getParameter("ContactName"), 
 																		 request.getParameter("PhoneNumber"), 
 																		 request.getParameter("EmailAddress"), 
@@ -280,7 +279,7 @@ public class SMSalesContactAction extends HttpServlet{
 			
 			doPost(request, response);
 		}
-	private String Get_Customer_Name(String sCustomerCode){
+	private String Get_Customer_Name(String sCustomerCode, String sDBID){
 		String sCustomerName = "N/A";
 		
 		try{

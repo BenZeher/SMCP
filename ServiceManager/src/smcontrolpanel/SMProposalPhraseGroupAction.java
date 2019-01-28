@@ -15,10 +15,7 @@ import ServletUtilities.clsDatabaseFunctions;
 public class SMProposalPhraseGroupAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Proposal Phrase Group";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	//private boolean bDebugMode = true;
+	private static final String sObjectName = "Proposal Phrase Group";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -36,8 +33,8 @@ public class SMProposalPhraseGroupAction extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    int iID = Integer.parseInt(request.getParameter(SMTableproposalphrasegroups.sid));
 		String sProposalPhraseGroupName = request.getParameter(SMTableproposalphrasegroups.sgroupname);
 		if (sProposalPhraseGroupName.trim().compareToIgnoreCase("") == 0){

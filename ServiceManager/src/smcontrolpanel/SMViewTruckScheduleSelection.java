@@ -19,30 +19,27 @@ import ServletUtilities.clsServletUtilities;
 
 public class SMViewTruckScheduleSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	public static String LOCATION_PARAMETER = "LOCATION";
-	public static String MECHANIC_PARAMETER = "MECHANIC";
-	public static String SERVICETYPE_PARAMETER = "SERVICETYPE";
-	public static String GENERATE_REPORT_PARAMETER = "GENERATE_REPORT";
-	public static String GENERATE_REPORT_LABEL = "----View----";
-	public static String PRINTINDIVIDUAL_VALUE_NO = "NO";
-	public static String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
-	public static String STARTING_DATE_FIELD = "StartingDate";
-	public static String ENDING_DATE_FIELD = "EndingDate";
-	public static String DATE_RANGE_PARAM = "DateRange";
-	public static String DATE_RANGE_CHOOSE = "DateRangeChoose";
-	public static String DATE_RANGE_TODAY = "DateRangeToday";
-	public static String DATE_RANGE_THISWEEK = "DateRangeThisWeek";
-	public static String DATE_RANGE_NEXTWEEK = "DateRangeNextWeek";
-	public static String EDITSCHEDULE_PARAMETER = "AllowScheduleEditing";
-	public static String ONLYSHOWZEROHOURS_PARAMETER = "OnlyShowZeroHours";
-	public static String AUTOREFRESH_PARAMETER = "AutoRefresh";
-	public static String LOOKUPMECHANIC_PARAMETER = "LOOKUPMECHANIC";
-	public static String VIEWALLLOCATIONS_PARAMETER = "VIEWALLLOCATIONS";
-	public static String VIEWALLSERVICETYPES_PARAMETER = "VIEWALLSERVICETYPES";
-	public static String DISPLAYMOVEANDCOPYBUTTONS_PARAMETER = "DISPLAYMOVEANDCOPYBUTTONS";
+	public static final String LOCATION_PARAMETER = "LOCATION";
+	public static final String MECHANIC_PARAMETER = "MECHANIC";
+	public static final String SERVICETYPE_PARAMETER = "SERVICETYPE";
+	public static final String GENERATE_REPORT_PARAMETER = "GENERATE_REPORT";
+	public static final String GENERATE_REPORT_LABEL = "----View----";
+	public static final String PRINTINDIVIDUAL_VALUE_NO = "NO";
+	public static final String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
+	public static final String STARTING_DATE_FIELD = "StartingDate";
+	public static final String ENDING_DATE_FIELD = "EndingDate";
+	public static final String DATE_RANGE_PARAM = "DateRange";
+	public static final String DATE_RANGE_CHOOSE = "DateRangeChoose";
+	public static final String DATE_RANGE_TODAY = "DateRangeToday";
+	public static final String DATE_RANGE_THISWEEK = "DateRangeThisWeek";
+	public static final String DATE_RANGE_NEXTWEEK = "DateRangeNextWeek";
+	public static final String EDITSCHEDULE_PARAMETER = "AllowScheduleEditing";
+	public static final String ONLYSHOWZEROHOURS_PARAMETER = "OnlyShowZeroHours";
+	public static final String AUTOREFRESH_PARAMETER = "AutoRefresh";
+	public static final String LOOKUPMECHANIC_PARAMETER = "LOOKUPMECHANIC";
+	public static final String VIEWALLLOCATIONS_PARAMETER = "VIEWALLLOCATIONS";
+	public static final String VIEWALLSERVICETYPES_PARAMETER = "VIEWALLSERVICETYPES";
+	public static final String DISPLAYMOVEANDCOPYBUTTONS_PARAMETER = "DISPLAYMOVEANDCOPYBUTTONS";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -58,9 +55,9 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		boolean bAllowedToViewAllSchedules = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMViewTruckSchedules,

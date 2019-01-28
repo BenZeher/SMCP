@@ -19,17 +19,6 @@ public class SMWageScaleReportGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	//private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sStatus = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -47,14 +36,15 @@ public class SMWageScaleReportGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
+	    String sStatus = "";
 	    //If it's a Delete:
 	    if(clsManageRequestParameters.get_Request_Parameter(SMWageScaleDataEntry.DELETE_BUTTON_LABEL, request)
 				   .compareToIgnoreCase(SMWageScaleDataEntry.DELETE_BUTTON_VALUE) == 0){
@@ -103,7 +93,7 @@ public class SMWageScaleReportGenerate extends HttpServlet {
             	return;
 		}else{
 			try {
-				validateOrder(sOrderNumber);
+				validateOrder(sOrderNumber, sDBID, sUserID, sUserFullName);
 			} catch (Exception e) {
 				sWarning = "Invalid order number '" + sOrderNumber + "':" + e.getMessage();
 	    		response.sendRedirect(
@@ -190,7 +180,7 @@ public class SMWageScaleReportGenerate extends HttpServlet {
 	    out.println("</BODY></HTML>");
 	}
 	
-	private void validateOrder(String sOrderNumber) throws Exception{
+	private void validateOrder(String sOrderNumber, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(sOrderNumber.trim());
 		if (!order.load(getServletContext(), sDBID, sUserID, sUserFullName)){

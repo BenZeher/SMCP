@@ -34,14 +34,6 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	//private String sUserName = "";
-	private String sUserID = "";
-	private String sCompanyName = "";
 	private boolean bDebugMode = false;
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -62,16 +54,16 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    //sUserName = (String) CurrentSession.getAttribute(SMUtilities.SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(
     		getServletContext(), 
@@ -146,21 +138,24 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 				  sLastOrderEdited = 
 					  (sParamName.substring(sParamName.indexOf(sSaveAllCommentsMarker) 
 							  + sSaveAllCommentsMarker.length()));
-				  if (!saveAllComments(
-							sUserID,
-							sFullName,
-							request,
-							conn  
-				  	)
-				  ){
+				  try {
+					  saveAllComments(
+								sUserID,
+								sFullName,
+								request,
+								conn,
+								sDBID
+					  	);
+				} catch (Exception e) {
 					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080616]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+								+ "Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				    		);			
 				        	return;
-				  }
+				}
+
 				  break;
 			  }
 			  //TODO: LTO 20130920 save using button with JS
@@ -171,21 +166,25 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 				){
 				  //System.out.println("[1379706741]: save using button with JS");
 				  sLastOrderEdited = request.getParameter("JSLASTEDITEDORDERNUMBER");
-				  if (!saveAllComments(
-							sUserID,
-							sFullName,
-							request,
-							conn  
-				  	)
-				  ){
+				  
+				  try {
+					saveAllComments(
+								sUserID,
+								sFullName,
+								request,
+								conn,
+								sDBID
+					  	);
+				} catch (Exception e) {
 					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080617]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+								+ "Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				    		);			
 				        	return;
-				  }
+				}
+				  
 				  break;
 			  } 
 			  
@@ -210,7 +209,8 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 						  sUserID,
 						  sFullName,
 						  request,
-						  conn  
+						  conn,
+						  sDBID
 				  	)
 				  ){
 					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080618]");
@@ -235,23 +235,27 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 							  + sDeleteThisCommentMarker.length()));
 				  sLastOrderEdited = 
 					  sLastOrderEdited.substring(0, sLastOrderEdited.indexOf("ID"));
-				  if (!deleteComment(
-						  sParamName,
-						  sDeleteThisCommentMarker,
-						  sUserID,
-						  sFullName,
-						  request,
-						  conn  
-				  	)
-				  ){
+				  
+				  try {
+					deleteComment(
+							  sParamName,
+							  sDeleteThisCommentMarker,
+							  sUserID,
+							  sFullName,
+							  request,
+							  conn,
+							  sDBID
+					  	);
+				} catch (Exception e) {
 					  clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080619]");
 			    		response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-								+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+								+ "Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				    		);			
 				        	return;
-				  }
+				}
+
 				  break;
 			  }
 
@@ -465,14 +469,15 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 		
     	out.println("</BODY></HTML>");
 	}
-	private boolean deleteComment (
+	private void deleteComment (
 			String sDeleteParameterName,
 			String sDeleteCommentMarker,
-			String sUsersID,
+			String sUserID,
 			String sUserFullName,
 			HttpServletRequest req,
-			Connection con
-			){
+			Connection con,
+			String sDBID
+			) throws Exception{
 			
 		//The edited text box will have a name like:
 		//"COMMENT" + sInvNumber + "ID" + SMTableinvoicemgrcomments.id
@@ -501,22 +506,22 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 		try{
 			clsDatabaseFunctions.executeSQL(SQL, con);
 		}catch (SQLException e){
-			sWarning += "Error deleting comment " + sEditBoxName + " - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1548687864] deleting comment " + sEditBoxName + " - " + e.getMessage());
 		}
-		return true;
+		return;
 	}
 	
-	private boolean saveComment (
+	private void saveComment (
 			String sOrderAndID,
 			String sComment,
-			String sUsersID,
+			String sUserID,
 			String sUserFullName,
-			Connection con
-			){
+			Connection con,
+			String sDBID
+			) throws Exception{
 	
 		if (sComment.trim().compareToIgnoreCase("") == 0){
-			return true;
+			return;
 		}
 		
 		String sOrder = sOrderAndID.substring(0, sOrderAndID.indexOf("ID"));
@@ -536,12 +541,10 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 				+ "NOW()"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sComment) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sOrder.trim()) + "'"
-				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUsersID) + ""
+				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				+ ")"
 				;
-			//System.out.println("Order manager comments SQL (" + USDateTimeformatter.format(new Date(System.currentTimeMillis())) + " by " + sUserName + "):");
-			//System.out.println(SQL);
 		}else{
 			//It's an existing comment, update it:
 			SQL = "UPDATE " + SMTableordermgrcomments.TableName
@@ -554,8 +557,6 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 				+ SMTableordermgrcomments.id + " = " + sID
 			+ ")"
 			;
-			//System.out.println("Order manager comments SQL (" + USDateTimeformatter.format(new Date(System.currentTimeMillis())) + " by " + sUserName + "):");
-			//System.out.println(SQL);
 		}
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		if (bDebugMode){		
@@ -564,19 +565,19 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 		try{
 			clsDatabaseFunctions.executeSQL(SQL, con);
 		}catch (SQLException e){
-			sWarning += "Error saving comment for order " + sOrder + " - " + e.getMessage();
 		   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_OTHER, "ORDERMGRCOMMENTS", "Preinvoice - Error saving comment for order " + sOrder + " - " + e.getMessage(), "[1376509340]");
-			return false;
+			throw new Exception( "Error [1548688032] saving comment for order " + sOrder + " - " + e.getMessage());
 		}
 		
-		return true;
+		return;
 	}
-	private boolean saveAllComments(
+	private void saveAllComments(
 			String sUsersID,
 			String sUserFullName,
 			HttpServletRequest req,
-			Connection con		
-	){
+			Connection con,
+			String sDBID
+	) throws Exception{
 		
 	    //Process any comments from SMInvoiceAuditReport if it is the calling class:
 	    //COMMENT" + sInvNumber + "ID0"
@@ -596,19 +597,22 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 	    				//(We'll save edited comments next):
 	    				&& (sParamName.contains("ID0"))
 	    		){
-	    			if (!saveComment (
-	    					sParamName.substring(sParamName.indexOf(sCommentMarker) + sCommentMarker.length()),
-	    					req.getParameter(sParamName),
-	    					sUsersID,
-	    					sUserFullName,
-	    					con)){
-	    				sWarning += "Error saving comment " + sParamName;
-	    				return false;
-	    			}
+	    			try {
+						saveComment (
+								sParamName.substring(sParamName.indexOf(sCommentMarker) + sCommentMarker.length()),
+								req.getParameter(sParamName),
+								sUsersID,
+								sUserFullName,
+								con,
+								sDBID)
+						;
+					} catch (Exception e) {
+						throw new Exception("Error 1548688302] saving comment + " + sParamName + " - " + e.getMessage());
+					}
 	    		}
 	    	}
 	    }
-		return true;
+		return;
 	}
 	//updateThisComment
 	private boolean updateThisComment(
@@ -617,7 +621,8 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 			String sUsersID,
 			String sUserFullName,
 			HttpServletRequest req,
-			Connection con		
+			Connection con,
+			String sDBID
 	){
 		
 		//System.out.println("sUpdateParameterName = " + sUpdateParameterName);
@@ -642,16 +647,17 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 			String sUpdateParamName = paramUpdateNames.nextElement();
 			//System.out.println("sUpdateParamName = " + sUpdateParamName + ", value = '" + req.getParameter(sUpdateParamName) + "'");
 			if (sUpdateParamName.compareToIgnoreCase(sEditBoxName) == 0){
-				if (!saveComment(
-						sUpdateParamName.substring(sUpdateParamName.indexOf(sCommentMarker) 
-							+ sCommentMarker.length()),
-						req.getParameter(sUpdateParamName),
-						sUsersID,
-						sUserFullName,
-						con
-					)
-				){
-					
+				try {
+					saveComment(
+							sUpdateParamName.substring(sUpdateParamName.indexOf(sCommentMarker) 
+								+ sCommentMarker.length()),
+							req.getParameter(sUpdateParamName),
+							sUsersID,
+							sUserFullName,
+							con,
+							sDBID
+						);
+				} catch (Exception e) {
 					return false;
 				}
 				break;

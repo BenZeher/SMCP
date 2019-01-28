@@ -23,13 +23,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMProposalPrintAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebugMode = false;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -49,14 +43,14 @@ public class SMProposalPrintAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
 	    String  sRedirect = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ SMProposal.Paramstrimmedordernumber + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposal.Paramstrimmedordernumber, request)
@@ -94,7 +88,7 @@ public class SMProposalPrintAction extends HttpServlet {
     			System.out.println("[1547142813] In " + this.toString() + " into print mode");
     		}
     		try {
-				printProposal(request, response, out, sDBID);
+				printProposal(request, response, out, sDBID, sUserName);
 			} catch (Exception e) {
 				sRedirect += "&Warning=Print failed: " + e.getMessage();
 				response.sendRedirect(sRedirect);
@@ -107,7 +101,7 @@ public class SMProposalPrintAction extends HttpServlet {
 	private void emailProposal(
 			HttpServletRequest req, 
 			String sDBID, 
-			String sUser,
+			String sUserName,
 			String sUserID,
 			String sUserFullName
 			) throws Exception{
@@ -228,7 +222,8 @@ public class SMProposalPrintAction extends HttpServlet {
 				sProposalNumber, 
 				SMProposalForm.REQUEST_TYPE_EMAIL,
 				sDBID,
-				clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, req).compareToIgnoreCase("") != 0
+				clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, req).compareToIgnoreCase("") != 0,
+				sUserName
 			)
 		;
 		try{
@@ -269,7 +264,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		  );
 		  */
 	}
-	private void printProposal(HttpServletRequest req,HttpServletResponse res, PrintWriter out, String sConf) throws Exception{
+	private void printProposal(HttpServletRequest req,HttpServletResponse res, PrintWriter out, String sConf, String sUserName) throws Exception{
 	    String sNumberOfCopies = "";
 	    String sProposalNumber = req.getParameter(SMProposal.Paramstrimmedordernumber);
 	    //Get the number of copies:
@@ -285,7 +280,8 @@ public class SMProposalPrintAction extends HttpServlet {
 	    	sProposalNumber, 
 	    	SMProposalForm.REQUEST_TYPE_PRINT,
 	    	sConf,
-	    	clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, req).compareToIgnoreCase("") != 0
+	    	clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, req).compareToIgnoreCase("") != 0,
+	    	sUserName
 	    	)
 	    );
 	}
@@ -293,8 +289,9 @@ public class SMProposalPrintAction extends HttpServlet {
 			int iNumberOfCopies, 
 			String sProposalNumber, 
 			int iRequestType,
-			String sConf,
-			boolean bPrintLogo) throws Exception{
+			String sDBID,
+			boolean bPrintLogo,
+			String sUserName) throws Exception{
 		String s = 
 			"<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\"><HTML><HEAD>" 
 		   		+ "<STYLE TYPE=\"text/css\">P.breakhere {page-break-before: always}\n"
@@ -315,7 +312,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".printProposal - user: " + sUserName
 					);

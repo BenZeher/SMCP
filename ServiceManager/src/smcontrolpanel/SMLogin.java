@@ -21,13 +21,12 @@ import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTablesmoptions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 /** Servlet that authenticates the user.*/
 public class SMLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private boolean bDebugMode = false;
-	private String sBackgroundcolor = "#" + SMUtilities.DEFAULT_BK_COLOR;
-	private String sCompanyName = "";
 	public static final String INPUT_DB_PARAMS_CLASS = "smcontrolpanel.SMInputDBParams";
 	/*
 	 * Gets passed in the request:
@@ -53,14 +52,32 @@ public class SMLogin extends HttpServlet {
 			out.println("</BODY></HTML>");
 			return;
 		}
-		if (!readInitialCompanyData(
-				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request),
-				getServletContext(),
-				out)){
-
+		
+		try {
+			readInitialCompanyData(
+					clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request),
+					getServletContext(),
+					out)
+			;
+		} catch (Exception e1) {
+			out.println(SMUtilities.DOCTYPE
+					+ "<HTML>\n<BR><FONT COLOR=RED><B>" + e1.getMessage() + "</B></FONT><BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
+		
+		String sBackgroundcolor = "#" + SMUtilities.DEFAULT_BK_COLOR;;
+		try {
+			sBackgroundcolor = getBackgroundColor(
+				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request),
+				getServletContext());
+		} catch (Exception e1) {
+			out.println(SMUtilities.DOCTYPE
+					+ "<HTML>\n<BR><FONT COLOR=RED><B>" + e1.getMessage() + "</B></FONT><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
+		
 		out.println(SMUtilities.getLoginHead(
 				subtitle,
 				sBackgroundcolor,
@@ -76,6 +93,9 @@ public class SMLogin extends HttpServlet {
 		} catch (Exception e) {
 			out.println(e.getMessage());
 		}
+		
+		String sCompanyName = "";
+		
 		out.println("<B><H2>" + sCompanyName + "</H2></B>");
 		out.println(
 				"<BR>Program version " + SMUpdateData.getProgramVersion() + ", " + SMUpdateData.getCopyright() 
@@ -92,7 +112,7 @@ public class SMLogin extends HttpServlet {
 			}
 			out.println("<BR>");
 		}
-		
+
 		//If this is a redirect from internal link with an invalid session, then store all the parameters passed in
 		if(clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS, request).compareToIgnoreCase("") != 0) {
 			out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS, request) + "\">");
@@ -167,11 +187,13 @@ public class SMLogin extends HttpServlet {
 		out.println("</BODY></HTML>");
 		return;
 	}
-	private boolean readInitialCompanyData(
+	private String readInitialCompanyData(
 			String sDbID,
 			ServletContext context,
-			PrintWriter pwOut){
+			PrintWriter pwOut) throws Exception{
 
+		String m_sCompanyName = "";
+		
 		Connection conn = null;
 		if (bDebugMode){
 			System.out.println("In SMLogin - getting connection for company name - sDbID = " + sDbID 
@@ -184,12 +206,7 @@ public class SMLogin extends HttpServlet {
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString() + ".getCompanyName"));
 		} catch (Exception e1) {
-			pwOut.println(SMUtilities.DOCTYPE
-					+ "<HTML>"
-					+ "Error getting connection to database ID '" 
-					+ sDbID + "' - " + e1.getMessage()
-			);
-			return false;			
+			throw new Exception("Error [1548683648] - getting connection to database ID '" + sDbID + "' - " + e1.getMessage());			
 		}
 
 		if (conn == null){
@@ -207,12 +224,8 @@ public class SMLogin extends HttpServlet {
 					serverSettingsFile.readKeyValue(ServerSettingsFileParameters.SERVER_SETTING_CONTROL_DB_PASSWORD)
 				);
 			} catch (Exception e1) {
-				pwOut.println(SMUtilities.DOCTYPE
-						+ "<HTML>"
-						+ "Error getting control database information - " 
-						+ sDbID + "' - " + e1.getMessage()
-				);
-				return false;
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547090585]");
+				throw new Exception("Error [1548683649] - getting control database information '" + sDbID + "' - " + e1.getMessage());
 			}
 			//Need to identify the database here in case we are getting a connection from a pool, and
 			//that pool already has a database selected:
@@ -224,7 +237,7 @@ public class SMLogin extends HttpServlet {
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (rs.next()){
-					sCompanyName = rs.getString(SMTablecompanyprofile.sCompanyName);
+					m_sCompanyName = rs.getString(SMTablecompanyprofile.sCompanyName);
 				}
 				rs.close();
 			} catch (SQLException e) {
@@ -232,28 +245,35 @@ public class SMLogin extends HttpServlet {
 						+ "<HTML>Error getting recordset for database '" 
 						+ cdc.get_databasename() + "' - " + e.getMessage());
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547080585]");
-				return false;
-			}
-			sSQL = "SELECT"
-				+ " " + SMTablesmoptions.sbackgroundcolor
-				+ " FROM " + SMTablesmoptions.TableName
-				;
-			try {
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
-				if (rs.next()){
-					sBackgroundcolor = rs.getString(SMTablesmoptions.sbackgroundcolor);
-				}
-				rs.close();
-			} catch (SQLException e) {
-				pwOut.println(SMUtilities.DOCTYPE
-						+ "<HTML>Error getting backgroundcolor for database '" 
+				throw new Exception("Error [1548683650] - getting recordset for database '" 
 						+ cdc.get_databasename() + "' - " + e.getMessage());
-				clsDatabaseFunctions.freeConnection(context, conn, "[1547080586]");
-				return false;
 			}
 		}
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080587]");
-		return true;
+		return m_sCompanyName;
+	}
+	private String getBackgroundColor(String sDBID, ServletContext context) throws Exception{
+		String sBackGroundColor = "";
+		String sSQL = "SELECT"
+			+ " " + SMTablesmoptions.sbackgroundcolor
+			+ " FROM " + SMTablesmoptions.TableName
+			;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				context, 
+				sDBID, 
+				"MySQL", 
+				clsServletUtilities.getFullClassName(this.toString()) + ".getBackgroundColor");
+			if (rs.next()){
+				sBackGroundColor = rs.getString(SMTablesmoptions.sbackgroundcolor);
+			}
+			rs.close();
+		} catch (SQLException e) {
+			throw new Exception("Error [1548683651] - getting backgroundcoloe for database '" 
+					+ sDBID + "' - " + e.getMessage());
+		}
+		return sBackGroundColor;
 	}
 	@Override
 	public void doGet(HttpServletRequest request,

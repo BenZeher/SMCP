@@ -13,10 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ConnectionPool.WebContextParameters;
 import SMClasses.SMInvoicePrinter;
 import SMClasses.SMLogEntry;
-import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
@@ -28,13 +26,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMPrintInvoice extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	//formats
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -48,14 +39,14 @@ public class SMPrintInvoice extends HttpServlet {
 	
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 		String sInvoiceNumberFrom = clsManageRequestParameters.get_Request_Parameter("InvoiceNumberFrom", request);
 		boolean bPrintMultipleInvoices = false;
 		if (request.getParameter("PrintMultipleInvoices") != null){
@@ -379,10 +370,14 @@ public class SMPrintInvoice extends HttpServlet {
 		return SQL;
 	}
 	
+	/* TJR - 1/28/2019 - NOT USED...?
 	public String getInvoiceLogoFileFromDBA(String sInvoiceNumber,
 											HttpServletRequest request,
 											ServletContext context,
-											Connection conn) throws Exception{
+											Connection conn,
+											String sDBID,
+											String sUserID,
+											String sUserFullName) throws Exception{
 		String SQL = "";
 		String sDescription = "";
 		String sLogoFileName = "";
@@ -460,4 +455,5 @@ public class SMPrintInvoice extends HttpServlet {
 		}
 		return sFullLogoImageFilePath;
 	}
+	*/
 }

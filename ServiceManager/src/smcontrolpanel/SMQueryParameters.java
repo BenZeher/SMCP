@@ -22,8 +22,8 @@ import ServletUtilities.clsStringFunctions;
 public class SMQueryParameters  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String QUERYPARAMBASE = "QPBASE";
-	public static String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
+	public static final String QUERYPARAMBASE = "QPBASE";
+	public static final String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
 	private static final String CALLED_CLASS_NAME = "smcontrolpanel.SMQueryGenerate";
 
 	public void doPost(HttpServletRequest request,

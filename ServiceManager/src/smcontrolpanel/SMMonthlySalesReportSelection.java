@@ -24,20 +24,16 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMMonthlySalesReportSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
 	public static final String SALESGROUP_PARAM_SEPARATOR = ",";
-	public static String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
-	public static String PRINTINDIVIDUAL_VALUE_YES = "YES";
-	public static String PRINTINDIVIDUAL_VALUE_NO = "NO";
-	public static String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
-	public static String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
-	public static String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
-	public static String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
-	public static String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
+	public static final String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
+	public static final String PRINTINDIVIDUAL_VALUE_YES = "YES";
+	public static final String PRINTINDIVIDUAL_VALUE_NO = "NO";
+	public static final String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
+	public static final String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
+	public static final String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
+	public static final String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
+	public static final String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -53,11 +49,11 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + 
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + 
 	    				" " + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String  sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    boolean bPrintIndividual = 
 	    	clsManageRequestParameters.get_Request_Parameter(
 	    	PRINTINDIVIDUAL_PARAMETER, request).compareToIgnoreCase(PRINTINDIVIDUAL_VALUE_YES) == 0;
@@ -75,7 +71,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		    	out.println("<BR><B>You do not have permission to print this report for an individual.</B><BR>");
 		    	return;
 		    }
-		    sIndividualSalesperson = getSalespersonCode(sDBID, sUserID);
+		    sIndividualSalesperson = getSalespersonCode(sDBID, sUserID, sUserFullName);
 		    if (sIndividualSalesperson.compareToIgnoreCase("") == 0){
 		    	out.println("<BR><B>You do not have a valid salesperson code in your user set up.</B><BR>");
 		    	return;
@@ -295,7 +291,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 	    	
 		out.println("</BODY></HTML>");
 	}
-	private String getSalespersonCode(String sDBID, String sUserID){
+	private String getSalespersonCode(String sDBID, String sUserID, String sUserFullName){
 		String SQL = "SELECT"
 			+ " " + SMTableusers.sDefaultSalespersonCode
 			+ " FROM " + SMTableusers.TableName

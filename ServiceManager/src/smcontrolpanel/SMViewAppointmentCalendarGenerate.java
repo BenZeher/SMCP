@@ -25,7 +25,7 @@ import ConnectionPool.WebContextParameters;
 public class SMViewAppointmentCalendarGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static int DEFAULT_NUMBER_OF_DAYS_TO_SHOW = 7;
+	public static final int DEFAULT_NUMBER_OF_DAYS_TO_SHOW = 7;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

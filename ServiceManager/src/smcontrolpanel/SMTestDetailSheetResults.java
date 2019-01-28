@@ -15,7 +15,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMTestDetailSheetResults extends HttpServlet {
 	public static final String DETAIL_FORM_RESULT_TEXT = "DETAILFORMRESULTTEXT";
 	private static final long serialVersionUID = 1L;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 

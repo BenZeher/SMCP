@@ -119,7 +119,7 @@ public class AREditCreditEntry extends HttpServlet {
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+ "\">Return to Edit Batch " + m_EntryInput.getsBatchNumber() + "</A><BR><BR>");
 
-		//Try to construct the rest of the screen form from the AREntryInput object:
+		//Try to construct the rest of the screen from the AREntryInput object:
 		String sappliedtotransactiondocnumber = "";
 		try {
 			sappliedtotransactiondocnumber = getApplyToTransactionDocNumber(m_sApplyToDocumentID, getServletContext(), sDBID);

@@ -20,11 +20,8 @@ import SMDataDefinition.SMTablearcustomer;
 public class AREditCustomers extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String sObjectName = "Customer";
-	private static String sCalledClassName = "AREditCustomersEdit";
-	private static String sCompanyName = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
+	public static final String sObjectName = "Customer";
+	private static final String sCalledClassName = "AREditCustomersEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -41,9 +38,9 @@ public class AREditCustomers extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String title = "Manage " + sObjectName + "s.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

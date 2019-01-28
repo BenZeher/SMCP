@@ -23,13 +23,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class AREditAccountSetsEdit extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Account Set";
-	private static String sCalledClassName = "AREditAccountSetsAction";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Account Set";
+	private static final String sCalledClassName = "AREditAccountSetsAction";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -46,12 +41,11 @@ public class AREditAccountSetsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the code
@@ -138,7 +132,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-	    Edit_Record(set, out, sDBID, sUserName);
+	    Edit_Record(set, out, sDBID, sUserName, sUserFullName);
 		
 		out.println("</BODY></HTML>");
 		return;
@@ -146,8 +140,9 @@ public class AREditAccountSetsEdit extends HttpServlet {
 	private void Edit_Record(
 			ARAccountSet set, 
 			PrintWriter pwOut, 
-			String sConf,
-			String sUser
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			){
 	    
         //Date last maintained:
@@ -214,7 +209,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record - User: " + sUserID
 	        	+ " - "

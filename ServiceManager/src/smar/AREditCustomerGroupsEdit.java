@@ -18,11 +18,8 @@ import SMDataDefinition.SMTablearcustomergroups;
 public class AREditCustomerGroupsEdit extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Customer Group";
-	private static String sCalledClassName = "AREditCustomerGroupsAction";
-	private static String sDBID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Customer Group";
+	private static final String sCalledClassName = "AREditCustomerGroupsAction";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -39,10 +36,10 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		 + " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the gl acct
@@ -141,7 +138,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	private void Edit_Record(
 			ARCustomerGroup group, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			String sUserFullName
 			){
 	    

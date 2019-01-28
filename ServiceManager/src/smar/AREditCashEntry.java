@@ -18,20 +18,8 @@ import smgl.GLAccount;
 public class AREditCashEntry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String sObjectName = "Cash Entry";
+	private static final String sObjectName = "Cash Entry";
 	
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sEditable;
-	private String m_sBatchType;
-	private String m_sDocumentType;
-	private String m_sWarning;
-	private String m_sCustomerNumber;
-	private AREntryInput m_EntryInput;
-	//private HttpServletRequest hsrRequest;
-	private boolean m_bIsNewEntry = false;
-	private boolean m_bEditable = false;
-
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -52,11 +40,28 @@ public class AREditCashEntry extends HttpServlet {
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
-		m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
+	    AREntryInput m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
 		//Get rid of the session variable immediately:
 		CurrentSession.removeAttribute("EntryInput");
 	    
-	    get_request_parameters(request);
+		boolean m_bIsNewEntry = false;
+		if (request.getParameter("EntryNumber") != null){
+			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+				m_bIsNewEntry = true; 
+			}
+		}
+
+		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		boolean m_bEditable = false;
+		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
+			m_bEditable = true;
+		}
+		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
+		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", request);
+		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
 	    
 	    //If we are returning from finding an expense account, update that account and account info:
 	    if (request.getParameter("FOUND" + GLAccount.Paramobjectname) != null){
@@ -64,21 +69,33 @@ public class AREditCashEntry extends HttpServlet {
 	    }
 	    
 		//Try to load an AREntryInput object from which to build the form:
-		if (!loadAREntryInput(sDBID)){
-    		m_pwOut.println(
-					"<META http-equiv='Refresh' content='0;URL=" 
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARAddEntry"
-					+ "?BatchNumber=" + m_sBatchNumber
-					+ "&BatchType=" + m_sBatchType
-					+ "&DocumentType=" + m_sDocumentType
-					+ "&DocumentID="
-					+ "&Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "'>"		
-				);
-			return;
-		}
-		
+	    if (m_EntryInput == null){
+		    try {
+		    	m_EntryInput = loadAREntryInput(
+						sDBID,
+						m_sBatchNumber,
+						m_sEntryNumber,
+						m_sBatchType,
+						m_sDocumentType,
+						m_sCustomerNumber,
+						m_bIsNewEntry)
+				;
+			} catch (Exception e) {
+	    		m_pwOut.println(
+						"<META http-equiv='Refresh' content='0;URL=" 
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARAddEntry"
+						+ "?BatchNumber=" + m_sBatchNumber
+						+ "&BatchType=" + m_sBatchType
+						+ "&DocumentType=" + m_sDocumentType
+						+ "&DocumentID="
+						+ "&Warning=" + m_sWarning
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "'>"		
+					);
+				return;
+	
+			}
+	    }
 	    String title;
 	    String subtitle = "";
 	    if (m_bIsNewEntry){
@@ -130,86 +147,65 @@ public class AREditCashEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadAREntryInput(String sConf){
+	private AREntryInput loadAREntryInput(
+		String sDBID,
+		String sBatchNumber,
+		String sEntryNumber,
+		String sBatchType,
+		String sDocumentType,
+		String sCustomerNumber,
+		boolean bIsNewEntry) throws Exception{
 		
-		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
-		if (m_EntryInput == null){
-			//Have to construct the AREntryInput object here:
-			m_EntryInput = new AREntryInput();
-			if (m_bIsNewEntry){
-				//If it's a new entry:
-				m_EntryInput.setBatchNumber(m_sBatchNumber);
-				m_EntryInput.setBatchType(m_sBatchType);
-				m_EntryInput.setDocumentType(m_sDocumentType);
-				m_EntryInput.setCustomerNumber(m_sCustomerNumber);
-				
-				ARCustomer cust = new ARCustomer(m_sCustomerNumber);
-				if (!cust.load(getServletContext(), sConf)){
-					m_sWarning = "Could not load customer " + m_sCustomerNumber;
-					return false;
-				}
-				m_EntryInput.setControlAcct(cust.getCashAccount(getServletContext(), sConf));
-				//Get the batch date as the default entry date:
-				ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
-				try {
-					batch.load(getServletContext(), sConf);
-					m_EntryInput.setDocDate(batch.sStdBatchDateString());
-				} catch (Exception e) {
-					m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
-				}
-				
-				if (m_EntryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
-					m_EntryInput.setDocDescription("Cash entry");
-				}else{
-					m_EntryInput.setDocDescription("Prepay");
-				}
-				
-				m_EntryInput.setEntryNumber("-1");
-				m_EntryInput.setEntryID("-1");
-				m_EntryInput.setOriginalAmount("0.00");
-			}else{
-				//If it's an existing entry:
-				//Load the existing entry:
-				AREntry entry = new AREntry();
-				entry = new AREntry();
-				if (!entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sConf)){
-			    	m_sWarning = "Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	m_sWarning += "\n" + entry.getErrorMessage();
-			    	return false;
-				}
-				if (!m_EntryInput.loadFromEntry(entry)){
-			    	m_sWarning = "Could not load entry input from entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	return false;
-				}
-			}
-		}
-		return true;
-	}
-	private void get_request_parameters(HttpServletRequest hsrRequest){
+		AREntryInput m_EntryInput = new AREntryInput();
 		
-		if (hsrRequest.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", hsrRequest).equalsIgnoreCase("-1")){
-				m_bIsNewEntry = true; 
-			}else{
-				m_bIsNewEntry = false;
+		//Have to construct the AREntryInput object here:
+		m_EntryInput = new AREntryInput();
+		if (bIsNewEntry){
+			//If it's a new entry:
+			m_EntryInput.setBatchNumber(sBatchNumber);
+			m_EntryInput.setBatchType(sBatchType);
+			m_EntryInput.setDocumentType(sDocumentType);
+			m_EntryInput.setCustomerNumber(sCustomerNumber);
+			
+			ARCustomer cust = new ARCustomer(sCustomerNumber);
+			if (!cust.load(getServletContext(), sDBID)){
+				throw new Exception("Could not load customer " + sCustomerNumber);
 			}
+			m_EntryInput.setControlAcct(cust.getCashAccount(getServletContext(), sDBID));
+			//Get the batch date as the default entry date:
+			ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
+			try {
+				batch.load(getServletContext(), sDBID);
+				m_EntryInput.setDocDate(batch.sStdBatchDateString());
+			} catch (Exception e) {
+				m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
+			}
+			
+			if (m_EntryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
+				m_EntryInput.setDocDescription("Cash entry");
+			}else{
+				m_EntryInput.setDocDescription("Prepay");
+			}
+			
+			m_EntryInput.setEntryNumber("-1");
+			m_EntryInput.setEntryID("-1");
+			m_EntryInput.setOriginalAmount("0.00");
 		}else{
-			m_bIsNewEntry = false;
+			//If it's an existing entry:
+			//Load the existing entry:
+			AREntry entry = new AREntry();
+			entry = new AREntry();
+			if (!entry.load(sBatchNumber, sEntryNumber, getServletContext(), sDBID)){
+		    	throw new Exception("Could not load entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber
+		    			+ "\n" + entry.getErrorMessage());
+			}
+			if (!m_EntryInput.loadFromEntry(entry)){
+				throw new Exception("Could not load entry input from entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber);
+			}
 		}
-
-		m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", hsrRequest);
-		m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", hsrRequest);
-		m_sEditable = ARUtilities.get_Request_Parameter("Editable", hsrRequest);
-		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
-			m_bEditable = true;
-		}else {
-			m_bEditable = false;
-		}
-		m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", hsrRequest);
-		m_sWarning = ARUtilities.get_Request_Parameter("Warning", hsrRequest);
-		m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", hsrRequest);
-		m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", hsrRequest);
+		return m_EntryInput;
 	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

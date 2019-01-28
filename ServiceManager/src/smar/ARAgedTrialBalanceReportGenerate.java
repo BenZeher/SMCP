@@ -33,12 +33,6 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFirstName = "";
-	private static String sUserLastName = "";
 	private static Connection conn;
 	private long lStartingTime = 0;
 	private long lTestTime = 0;
@@ -56,14 +50,15 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 		String sAgeAsOf = request.getParameter("AsOfDate");
 		String sCutOffDate = request.getParameter("CutOffDate");
 		String sStartingCustomer = request.getParameter("StartingCustomer");
@@ -361,7 +356,8 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 			long lTempTableTime = System.currentTimeMillis();
 
-			if(!createTemporaryTables(
+			try{
+				createTemporaryTables(
 					conn,
 					sStartingCustomer, 
 					sEndingCustomer,
@@ -373,13 +369,14 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 					Integer.toString(i1st),
 					Integer.toString(i2nd),
 					Integer.toString(i3rd),
-					bIncludePaidTransactions
-			)){
-
+					bIncludePaidTransactions,
+					sUserID
+						);
+			}catch(Exception e){
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067481]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
+						+ "Warning=" + e.getMessage()
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);			
 				return;
@@ -769,7 +766,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		out.println("</BODY></HTML>");
 
 	}
-	private boolean createTemporaryTables(
+	private void createTemporaryTables(
 			Connection conn,
 			String sStartingCustomer, 
 			String sEndingCustomer,
@@ -781,8 +778,9 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			String sFirstAgingColumn,
 			String sSecondAgingColumn,
 			String sThirdAgingColumn,
-			boolean bIncludePaidTransactions
-	){
+			boolean bIncludePaidTransactions,
+			String sUserID
+	) throws Exception{
 		lTestTime = System.currentTimeMillis();
 		sTempTableName = "ARAGINGTMP" + Long.toString(System.currentTimeMillis());
 		
@@ -806,8 +804,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			//log.writeEntry(sUserName, SMLogEntry.LOG_OPERATION_ARAGING, " Error creating temporary aging table - " 
 					log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error creating temporary aging table - " 
 					+ ex.getMessage(), SQL, "[1376509252]");
-			sWarning = "Error [1540841717] creating temporary aging table with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1540841717] creating temporary aging table with SQL: " + SQL + " - " + ex.getMessage());
 		}
 
 		//Insert the artransactions:
@@ -878,8 +875,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}catch (Exception ex) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "Error inserting transactions into aging table - " 
 					+ ex.getMessage(), SQL, "[1376509511]");
-			sWarning = "Error inserting transactions into aging table with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1548692680] inserting transactions into aging table with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
 		//Turn commit back on in the target table:
@@ -889,8 +885,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		} catch (Exception e) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error turning on COMMIT - " 
 				+ e.getMessage(), SQL, "[1501162623]");
-			sWarning = "Error [1501162623] turning on COMMIT - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1501162623] turning on COMMIT - " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -1014,8 +1009,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}catch (Exception ex) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "Error inserting distribution lines into aging table - " 
 					+ ex.getMessage(), SQL, "[1376509519]");
-			sWarning = "Error inserting distribution lines into aging table with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1548692749] inserting distribution lines into aging table with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
 		//Commit the transaction:
@@ -1025,8 +1019,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		} catch (Exception e) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error COMMITTING transaction - " 
 				+ e.getMessage(), SQL, "[1501162625]");
-			sWarning = "Error [1501162625] COMMITTING transaction - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1501162725] COMMITTING transaction - " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -1068,8 +1061,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}catch (Exception ex) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "Error updating parent document type in aging table - " 
 					+ ex.getMessage(), SQL, "[1376509541]");
-			sWarning = "Error updating parent document type in aging table with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1376509542] updating parent document type in aging table with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
 		//Commit the transaction:
@@ -1079,8 +1071,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		} catch (Exception e) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error COMMITTING transaction - " 
 				+ e.getMessage(), SQL, "[1501162626]");
-			sWarning = "Error [1501162626] COMMITTING transaction - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1501163626] COMMITTING transaction - " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -1105,8 +1096,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}catch (Exception ex) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "Error updating aging columns - " 
 					+ ex.getMessage(), SQL, "[1376509549]");
-			sWarning = "Error updating updating aging columns with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1376509649] updating updating aging columns with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
 		//Commit the transaction:
@@ -1116,8 +1106,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		} catch (Exception e) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error COMMITTING transaction - " 
 				+ e.getMessage(), SQL, "[1501162627]");
-			sWarning = "Error [1501162627] COMMITTING transaction - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1501163627] COMMITTING transaction - " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -1188,8 +1177,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}catch (Exception ex) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, "Error updating retainage balances - " 
 					+ ex.getMessage(), SQL,"[1376509542]");
-			sWarning = "Error updating retainage balances with SQL: " + SQL + " - " + ex.getMessage();
-			return false;
+			throw new Exception("Error [1376509942] updating retainage balances with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		
 		//Commit the transaction:
@@ -1199,8 +1187,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		} catch (Exception e) {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARAGING, " Error COMMITTING transaction - " 
 				+ e.getMessage(), SQL, "[1501162627]");
-			sWarning = "Error [1501162627] COMMITTING transaction - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1501162927] COMMITTING transaction - " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -1208,7 +1195,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 					"[1500480917] In " + this.toString() + " - " + "Updating retainage balances took " 
 					+ (System.currentTimeMillis() - lTestTime) + " milliseconds.");
 		}
-		return true;
+		return;
 	}
 	private String getDocumentTypeLabel(int lDocType){
 

@@ -17,10 +17,6 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ARClearMonthlyStatisticsAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String m_sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -31,28 +27,36 @@ public class ARClearMonthlyStatisticsAction extends HttpServlet {
 	    }
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
 	    /**************Get Parameters**************/
 	    String sClearBeforeYear = ARUtilities.get_Request_Parameter("ClearBeforeYear", request);
 	    String sClearBeforeMonth = ARUtilities.get_Request_Parameter("ClearBeforeMonth", request);
 	    
-	    clearRecords(request, sClearBeforeYear, sClearBeforeMonth);
+	    try {
+			clearRecords(request, sClearBeforeYear, sClearBeforeMonth, sDBID, sUserID);
+		} catch (Exception e) {
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&Warning=" + e.getMessage()
+			);
+		}
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "&Warning=" + m_sWarning
+				+ "&Warning=" + "Monthly statistics BEFORE year " + sClearBeforeYear + ", month " + sClearBeforeMonth
+				+ " were successfully cleared."
 		);
 		return;
 
 	}
-	private void clearRecords(HttpServletRequest req, String sYear, String sMonth){
+	private void clearRecords(HttpServletRequest req, String sYear, String sMonth, String sDBID, String sUserID) throws Exception{
 	    if (req.getParameter("ConfirmClearing") == null){
-	    	m_sWarning = "You chose to clear statistics, but you did not click the 'Confirm clearing' checkbox.";
-	    	return;
+	    	throw new Exception("You chose to clear statistics, but you did not click the 'Confirm clearing' checkbox.");
 	    }
 	    
     	String SQL = "DELETE FROM "
@@ -66,18 +70,14 @@ public class ARClearMonthlyStatisticsAction extends HttpServlet {
     	
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, getServletContext(), sDBID)){
-	    		m_sWarning = "SQL Error clearing monthly statistics";
+	    		throw new Exception("SQL Error clearing monthly statistics");
 	    	}
     	}catch(SQLException e){
-    		m_sWarning = "Error clearing monthly statistics - " + e.getMessage() + ".";
+    		throw new Exception("Error [1548693424] clearing monthly statistics - " + e.getMessage() + ".");
     	}
     	
     	SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
     	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CLEARMONTHLYSTATISTICS, "AR Monthly statistics successfully cleared", SQL, "[1376509268]");
-    	
-		m_sWarning = "Monthly statistics BEFORE year " + sYear + ", month " + sMonth
-			+ " were successfully cleared.";
-  	
 		return;
 	}
 }

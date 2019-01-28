@@ -20,11 +20,11 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class AREditCallSheetsSelection extends HttpServlet {
 
-	public static String PARAM_SHOW_DROP_DOWN_LIST = "SHOWDROPDOWN";
-	public static String PARAM_DROP_DOWN_LIST = "CALLSHEETDROPDOWN";
+	public static final String PARAM_SHOW_DROP_DOWN_LIST = "SHOWDROPDOWN";
+	public static final String PARAM_DROP_DOWN_LIST = "CALLSHEETDROPDOWN";
 	
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smar.AREditCallSheetsEdit";
+	private static final String sCalledClassName = "smar.AREditCallSheetsEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

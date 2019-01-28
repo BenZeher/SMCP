@@ -58,20 +58,10 @@ public class AREditApplyToEntry extends HttpServlet {
 
 	private static String sObjectName = "Apply-to Entry";
 	
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sEditable;
-	private String m_sBatchType;
-	private String m_sDocumentType;
-	private static String m_sWarning;
 	private AREntryInput m_EntryInput;
-	private String m_sCustomerNumber = "";
-	private HttpServletRequest m_hsrRequest;
 	private boolean m_bIsNewEntry = false;
 	private boolean m_bEditable = false;
 
-	private static String sDBID = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -88,19 +78,50 @@ public class AREditApplyToEntry extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
 		m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
 		//Get rid of the session variable immediately:
 		CurrentSession.removeAttribute("EntryInput");
 		
-		m_hsrRequest = request;
-	    get_request_parameters();
+	    //Get the request parameters:
+		if (request.getParameter("EntryNumber") != null){
+			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+				m_bIsNewEntry = true; 
+			}else{
+				m_bIsNewEntry = false;
+			}
+		}else{
+			m_bIsNewEntry = false;
+			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
+		}
+
+		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
+			m_bEditable = true;
+		}else {
+			m_bEditable = false;
+		}
+		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
+		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", request).toUpperCase();
+		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
-		if (!loadAREntryInput()){
+		try {
+			loadAREntryInput(
+					sDBID,
+					m_sBatchNumber,
+					m_sEntryNumber,
+					m_sBatchType,
+					m_sDocumentType,
+					m_sCustomerNumber
+			);
+		} catch (Exception e) {
     		m_pwOut.println(
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARAddEntry"
@@ -108,7 +129,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					+ "&BatchType=" + m_sBatchType
 					+ "&DocumentType=" + m_sDocumentType
 					+ "&DocumentID="
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + e.getMessage()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "'>"		
 				);
@@ -156,7 +177,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					+ "?BatchNumber=" + m_EntryInput.getsBatchNumber()
 					+ "&BatchType=" + m_EntryInput.getsBatchType()
 					+ "&DocumentType=" + m_sDocumentType
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + "Could not load customer"
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "'>"		
 				);
@@ -166,7 +187,12 @@ public class AREditApplyToEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadAREntryInput(){
+	private void loadAREntryInput(String sDBID,
+			String sBatchNumber,
+			String sEntryNumber,
+			String sBatchType,
+			String sDocumentType,
+			String sCustomerNumber) throws Exception{
 		
 		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
 		if (m_EntryInput == null){
@@ -174,16 +200,15 @@ public class AREditApplyToEntry extends HttpServlet {
 			m_EntryInput = new AREntryInput();
 			if (m_bIsNewEntry){
 				//If it's a new entry:
-				m_EntryInput.setBatchNumber(m_sBatchNumber);
-				m_EntryInput.setBatchType(m_sBatchType);
-				m_EntryInput.setDocumentType(m_sDocumentType);
+				m_EntryInput.setBatchNumber(sBatchNumber);
+				m_EntryInput.setBatchType(sBatchType);
+				m_EntryInput.setDocumentType(sDocumentType);
 				//Load the transaction this adjustment will apply from:
-				m_EntryInput.setCustomerNumber(m_sCustomerNumber);
+				m_EntryInput.setCustomerNumber(sCustomerNumber);
 				
-				ARCustomer cust = new ARCustomer(m_sCustomerNumber);
+				ARCustomer cust = new ARCustomer(sCustomerNumber);
 				if (!cust.load(getServletContext(), sDBID)){
-					m_sWarning = "Could not load customer " + m_sCustomerNumber;
-					return false;
+					throw new Exception("Could not load customer " + sCustomerNumber);
 				}
 				
 				m_EntryInput.setControlAcct(cust.getARControlAccount(getServletContext(), sDBID));
@@ -204,51 +229,24 @@ public class AREditApplyToEntry extends HttpServlet {
 				//Load the existing entry:
 				AREntry entry = new AREntry();
 				entry = new AREntry();
-				if (!entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
-			    	m_sWarning = "Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	m_sWarning += "\n" + entry.getErrorMessage();
-			    	return false;
+				if (!entry.load(sBatchNumber, sEntryNumber, getServletContext(), sDBID)){
+					throw new Exception("Could not load entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber
+			    		+ "\n" + entry.getErrorMessage());
 				}
 				if (!m_EntryInput.loadFromEntry(entry)){
-			    	m_sWarning = "Could not load entry input from entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	return false;
+					throw new Exception("Could not load entry input from entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber);
 				}
 			}
 		}
-		return true;
+		return;
 	}
-	private void get_request_parameters(){
- 
-		if (m_hsrRequest.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest).equalsIgnoreCase("-1")){
-				m_bIsNewEntry = true; 
-			}else{
-				m_bIsNewEntry = false;
-			}
-		}else{
-			m_bIsNewEntry = false;
-			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
-		}
 
-		m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sEditable = ARUtilities.get_Request_Parameter("Editable", m_hsrRequest);
-		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
-			m_bEditable = true;
-		}else {
-			m_bEditable = false;
-		}
-		m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = ARUtilities.get_Request_Parameter("Warning", m_hsrRequest);
-		m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", m_hsrRequest).toUpperCase();
-		m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", m_hsrRequest);
-	}
 	public static boolean createFormFromAREntryInput(
 			PrintWriter pwOut,
 			boolean bEditable,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf,
+			String sDBID,
 			String sCallingClass
 	){
 		
@@ -257,12 +255,17 @@ public class AREditApplyToEntry extends HttpServlet {
 		
 	    //Start the entry edit form:
 		pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(context) + "smar.AREntryUpdate' METHOD='POST'>");
-		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sConf + "'>");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		//Record the hidden fields for the entry edit form:
 	    storeHiddenFieldsOnForm (pwOut, bEditable, entryInput, sCallingClass);
 
         //Display the entry header fields:
-	    displayEntryHeaderFields (pwOut, bEditable, entryInput, context, sConf);
+	    try {
+			displayEntryHeaderFields(pwOut, bEditable, entryInput, context, sDBID);
+		} catch (Exception e) {
+			pwOut.println("<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>");
+			return false;
+		}
         
         if (bEditable){
         	displayEditableEntryFields (
@@ -270,18 +273,18 @@ public class AREditApplyToEntry extends HttpServlet {
         		bEditable, 
         		entryInput,
         		context, 
-        		sConf);
+        		sDBID);
         }
         //Else, if the record is NOT editable:
         else{
-        	displayNonEditableEntryFields (pwOut, entryInput, context);
+        	displayNonEditableEntryFields (pwOut, entryInput, context, sDBID);
         }
         
 	    //Now display the transaction lines:
 	    //If it's not editable, just show the current applied lines:
 	    if (! bEditable){
 	    	pwOut.println("<B>Line distribution:</B><BR>");
-	    	Display_NONEditable_Lines(pwOut, entryInput, context, sConf);
+	    	Display_NONEditable_Lines(pwOut, entryInput, context, sDBID);
 	    }else{
     		pwOut.println("<B>Line distribution:</B><BR>");
 	        //Display the line header:
@@ -292,7 +295,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		    		pwOut, 
 		    		entryInput, 
 		    		context,
-		    		sConf
+		    		sDBID
 		    		)){
 		    	return false;
 		    }	    
@@ -336,7 +339,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			AREntryInput entryInput,
 			ServletContext context,
 			String sConf
-	){
+	)throws Exception{
 		
 		pwOut.println("<B>" + SMBatchTypes.Get_Batch_Type(Integer.parseInt(entryInput.getsBatchType())) + "</B>");
 		pwOut.println(" batch number: <B>" + entryInput.getsBatchNumber() + "</B>;");
@@ -358,8 +361,7 @@ public class AREditApplyToEntry extends HttpServlet {
     	sCustomerNumber = entryInput.getsCustomerNumber();
     	ARCustomer m_Customer = new ARCustomer(entryInput.getsCustomerNumber());
 		if (! m_Customer.load(context, sConf)){
-			m_sWarning = "Could not load customer: " + entryInput.getsCustomerNumber();
-			sCustomerName = "";
+			throw new Exception("Could not load customer: " + entryInput.getsCustomerNumber());
 		}else{
 			sCustomerName = m_Customer.getM_sCustomerName();
 			
@@ -384,6 +386,7 @@ public class AREditApplyToEntry extends HttpServlet {
 	    if (bEditable){
 	    	addCommandButtons(entryInput, pwOut);
         }
+	    return;
 	}
 	private static void displayEditableEntryFields(
 			PrintWriter pwOut,
@@ -498,7 +501,8 @@ public class AREditApplyToEntry extends HttpServlet {
 	private static void displayNonEditableEntryFields (
 			PrintWriter pwOut,
 			AREntryInput entryInput,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 	){
 
 		pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
@@ -1011,7 +1015,6 @@ public class AREditApplyToEntry extends HttpServlet {
 					if (iDocType == ARDocumentTypes.PREPAYMENT){
 						ARCustomer cust = new ARCustomer(entryInput.getsCustomerNumber());
 						if (!cust.load(context, sConf)){
-							m_sWarning = "Could not load customer " + entryInput.getsCustomerNumber();
 							return false;
 						}
 						sLineGLAcct = cust.getARPrepayLiabilityAccount(context, sConf);

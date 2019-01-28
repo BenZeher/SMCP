@@ -32,11 +32,6 @@ import ServletUtilities.clsStringFunctions;
 public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sWarning = "";
-	private String sStatus = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -52,9 +47,9 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " +
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " +
 						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
@@ -189,21 +184,24 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 				sRedirectString += "&" + clsServletUtilities.URLEncode(ARAutoCreateCallSheetsSelection.PARAM_SERVICETYPE 
 						+ arrOrderTypes.get(i)) + "=Y";
 			}
-
-			if(!validate_params(
-					sStartingCustomer,
-					sEndingCustomer,
-					sStartingDate,
-					sEndingDate,
-					arrOrderTypes
-			)){
-				sRedirectString += "&Warning=" + sWarning;
-			}else{
-				sRedirectString += "&" + ARAutoCreateCallSheetsSelection.PARAM_RUNREFRESH + "=Y";
+			
+			try {
+				validate_params(
+						sStartingCustomer,
+						sEndingCustomer,
+						sStartingDate,
+						sEndingDate,
+						arrOrderTypes
+				);
+			} catch (Exception e1) {
+				sRedirectString += "&Warning=" + e1.getMessage();
+				response.sendRedirect(sRedirectString);
+				return;
 			}
-
+			sRedirectString += "&" + ARAutoCreateCallSheetsSelection.PARAM_RUNREFRESH + "=Y";
 			response.sendRedirect(sRedirectString);
 			return;
+			
 		}
 
 		if (request.getParameter(ARAutoCreateCallSheetsSelection.CREATECALLSHEETS_BUTTON_NAME) != null){
@@ -226,75 +224,77 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 						+ arrOrderTypes.get(i)) + "=Y";
 			}
 
-			if(!validate_params(
-					sStartingCustomer,
-					sEndingCustomer,
-					sStartingDate,
-					sEndingDate,
-					arrOrderTypes
-			)){
-				sRedirectString += "&Warning=" + sWarning;
-			}else{
-				if (!createCallSheets(
+			try {
+				validate_params(
+						sStartingCustomer,
+						sEndingCustomer,
+						sStartingDate,
+						sEndingDate,
+						arrOrderTypes
+				);
+			} catch (Exception e1) {
+				sRedirectString += "&Warning=" + e1.getMessage();
+				response.sendRedirect(sRedirectString);
+				return;
+			}
+			
+			int iNumberOfInvoices = 0;
+			try{
+				iNumberOfInvoices = createCallSheets(
 					request,
 					sDBID,
 					sUserID,
 					sUserFullName
-				)){
-					sRedirectString += "&Warning=" + sWarning;
-				}else{
-					sRedirectString += "&Status=" + sStatus;
-				}
+				);
+			}catch(Exception e1){
+				sRedirectString += "&Warning=" + e1.getMessage();
+				response.sendRedirect(sRedirectString);
+				return;
 			}
-
+			sRedirectString += "&Status=Successfully created " + Integer.toString(iNumberOfInvoices) + " new call sheet(s).";
 			response.sendRedirect(sRedirectString);
 			return;
 		}
 		return;
 	}
-	private boolean validate_params(
+	private void validate_params(
 			String sStartingCustomer,
 			String sEndingCustomer,
 			String sStartingDate,
 			String sEndingDate,
 			ArrayList<String>arrOrdTypes		
-	){
+	)throws Exception{
 
 		if (sStartingCustomer.compareToIgnoreCase(sEndingCustomer) > 0){
-			sWarning = "Invalid input - starting customer is higher than ending customer.";
-			return false;
+			throw new Exception("Invalid input - starting customer is higher than ending customer.");
 		}
 		Date datStart;
 		try {
 			datStart = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sStartingDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid starting date: '" + sStartingDate + "'.";
-			return false;
+			throw new Exception("Invalid starting date: '" + sStartingDate + "'.");
 		}
 		Date datEnd;
 		try {
 			datEnd = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sEndingDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid ending date: '" + sEndingDate + "'.";
-			return false;
+			throw new Exception("Invalid ending date: '" + sEndingDate + "'.");
 		}
 		if (datStart.compareTo(datEnd) > 0){
-			sWarning = "Invalid input - starting date cannot be later than ending date";
-			return false;
+			throw new Exception("Invalid input - starting date cannot be later than ending date");
 		}
 
 		if (arrOrdTypes.size() < 1){
-			sWarning = "You must choose at least one order type.";
-			return false;
+			throw new Exception("You must choose at least one order type.");
 		}
-		return true;
+		return;
 	}
-	private boolean createCallSheets(
+	private int createCallSheets(
 			HttpServletRequest req,
 			String sConf,
 			String sUserID,
 			String sUserFullName
-	){
+	)throws Exception{
 
 		//Pick off the invoice numbers from the request:
 		ArrayList<String>arrInvoices = new ArrayList<String>(0);
@@ -309,8 +309,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		}
 		
 		if (arrInvoices.size() < 1){
-			sWarning = "You must select at least one invoice.";
-			return false;
+			throw new Exception("You must select at least one invoice.");
 		}
 		
 		//Get a connection then start creating call sheets:
@@ -326,8 +325,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		;
 		
 		if (conn == null){
-			sWarning = "Could not open connection to create call sheets.";
-			return false;
+			throw new Exception("Could not open connection to create call sheets.");
 		}
 		
 		//Get the current user's initials:
@@ -347,40 +345,38 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 			}else{
 				rs.close();
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067483]");
-				sWarning = "Could not get user's initials.";
-				return false;
+				throw new Exception("Could not get user's initials.");
 			}
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067484]");
-			sWarning = "Could not get user's initials - " + e1.getMessage();
-			return false;
+			throw new Exception("Could not get user's initials - " + e1.getMessage());
 		}
 		
 		//Start a data connection
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067485]");
-			sWarning = "Could not start data transaction";
-			return false;
+			throw new Exception("Could not start data transaction");
 		}
 		
 		for (int i = 0; i < arrInvoices.size(); i ++){
-			if (!createIndividualCallSheet(arrInvoices.get(i), sUserInitials, conn)){
+			try {
+				createIndividualCallSheet(arrInvoices.get(i), sUserInitials, conn);
+			} catch (Exception e1) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067486]");
-				return false;
+				throw new Exception("Error [1548694924] creating call sheets - " + e1.getMessage());
 			}
 		}
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067487]");
-			return false;
+			throw new Exception("Error [1548694925] committing data transaction.");
 		}
 
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067488]");
-		sStatus = "Successfully created " + Integer.toString(arrInvoices.size()) + " new call sheet(s).";
-		return true;
+		return arrInvoices.size();
 	}
-	private boolean createIndividualCallSheet(String sInvNumber, String sUserInitials, Connection conn){
+	private void createIndividualCallSheet(String sInvNumber, String sUserInitials, Connection conn) throws Exception{
 		
 		String SQL = "INSERT INTO " + SMTablecallsheets.TableName
 			+ "("
@@ -427,11 +423,10 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		} catch (SQLException e) {
-			sWarning = "Error inserting call sheet with SQL: " + clsServletUtilities.URLEncode(SQL) + " - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1548695350] inserting call sheet with SQL: " + clsServletUtilities.URLEncode(SQL) + " - " + e.getMessage());
 		}
 		
-		return true;
+		return;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

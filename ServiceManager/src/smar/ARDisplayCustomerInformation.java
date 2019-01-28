@@ -38,12 +38,6 @@ import ServletUtilities.clsStringFunctions;
 public class ARDisplayCustomerInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -62,15 +56,15 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
     	String sCustomerNumber = clsManageRequestParameters.get_Request_Parameter("CustomerNumber", request);
 
     	//Customized title
@@ -115,7 +109,10 @@ public class ARDisplayCustomerInformation extends HttpServlet {
     			sCustomerNumber, 
     			out, 
     			request,
-    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    			sUserID,
+    			sDBID,
+    			sUserFullName)){
     		
     	}
     	
@@ -123,7 +120,16 @@ public class ARDisplayCustomerInformation extends HttpServlet {
     	
 	    out.println("</BODY></HTML>");
 	}
-	private boolean displayCustomer(Connection conn, String sCustomerNum, PrintWriter pwOut, HttpServletRequest req, String sLicenseModuleLevel){
+	private boolean displayCustomer(
+			Connection conn, 
+			String sCustomerNum, 
+			PrintWriter pwOut, 
+			HttpServletRequest req, 
+			String sLicenseModuleLevel,
+			String sUserID,
+			String sDBID,
+			String sUserFullName
+			){
 	
 		String SQL = "SELECT * FROM "
 			+ SMTablearcustomer.TableName

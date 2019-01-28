@@ -31,10 +31,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class ARClearPaidTransactionsAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String m_sWarning = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -47,11 +43,11 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 				+ " " + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-
+		String m_sWarning = "";
 		//Need a connection for the data transaction:
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
@@ -166,18 +162,24 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 				"Using clearing date " + clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM/dd/yyyy"),
 				"[1376509269]");
 
-		if (!checkARPostingFlag (conn)){
+		try {
+			checkARPostingFlag(conn, sUserFullName);
+		} catch (Exception e2) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067508]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + e2.getMessage()
 			);
 			return;
 		}
-
+		
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
-			clearPostingFlag(conn);
+			try {
+				clearPostingFlag(conn);
+			} catch (Exception e) {
+				//Have to just throw this away
+			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067509]");
 			m_sWarning = "Could not start data transaction.";
 			response.sendRedirect(
@@ -188,21 +190,36 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			return;
 		}
 
-		if (!deleteRecords(conn, datClearingDate)){
-			clearPostingFlag(conn);
+		try {
+			deleteRecords(conn, datClearingDate);
+		} catch (Exception e) {
+			try {
+				clearPostingFlag(conn);
+			} catch (Exception e1) {
+				//Have to just throw this away
+			}
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			clearPostingFlag(conn);
+			try {
+				clearPostingFlag(conn);
+			} catch (Exception e1) {
+				//Have to just throw this away
+			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067510]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + e.getMessage()
 			);
 			return;
-		}
 
+		}
+		
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
-			clearPostingFlag(conn);
+			try {
+				clearPostingFlag(conn);
+			} catch (Exception e) {
+				//Have to just throw this away
+			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067511]");
 			m_sWarning = "Could not commit data transaction.";
 			response.sendRedirect(
@@ -213,7 +230,11 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			return;
 		}
 
-		clearPostingFlag(conn);
+		try {
+			clearPostingFlag(conn);
+		} catch (Exception e) {
+			//Have to just throw this away
+		}
 
 		log.writeEntry(
 				sUserID, 
@@ -232,7 +253,7 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 		);
 		return;
 	}
-	private boolean deleteRecords(Connection conn, java.sql.Date datClearingDate){
+	private void deleteRecords(Connection conn, java.sql.Date datClearingDate) throws Exception{
 		//Execute deletes here:
 		String SQL = "delete " 
 			+ SMTableartransactions.TableName + " FROM " + SMTableartransactions.TableName
@@ -246,9 +267,8 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not execute delete artransactions statement with SQL: " + SQL
-			+ " - " + e1.getMessage() + ".";
-			return false;
+			throw new Exception("Error [1548693700] - Could not execute delete artransactions statement with SQL: " + SQL
+			+ " - " + e1.getMessage() + ".");
 		}
 
 		//This statement deletes matching lines AS LONG AS their apply-to transaction is gone
@@ -267,9 +287,8 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not execute delete armatchinglines statement with SQL: " + SQL
-			+ " - " + e1.getMessage() + ".";
-			return false;
+			throw new Exception("Error [1548693701] - Could not execute delete armatchinglines statement with SQL: " + SQL
+			+ " - " + e1.getMessage() + ".");
 		}
 
 		//Remove all archronlog entries for deleted transactions here:
@@ -291,13 +310,12 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not execute delete archronlog statement with SQL: " + SQL
-			+ " - " + e1.getMessage() + ".";
-			return false;
+			throw new Exception("Error [1548693702] - Could not execute delete archronlog statement with SQL: " + SQL
+			+ " - " + e1.getMessage() + ".");
 		}		
-		return true;
+		return;
 	}
-	private void clearPostingFlag(Connection conn){
+	private void clearPostingFlag(Connection conn) throws Exception{
 		try{
 			String SQL = "UPDATE " + SMTablearoptions.TableName 
 			+ " SET " + SMTablearoptions.ibatchpostinginprocess + " = 0"
@@ -306,34 +324,31 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			+ ", " + SMTablearoptions.suserfullname + " = ''"
 			;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				m_sWarning = "Error clearing posting flag in aroptions";
+				throw new Exception("Error [1548694031] could not execute SQL command: '" + SQL + "'.");
 			}
 		}catch (SQLException e){
-			m_sWarning = "Error clearing posting flag in aroptions - " + e.getMessage();
+			throw new Exception("Error [1548694032] clearing posting flag in aroptions - " + e.getMessage());
 		}
 	}
-	private boolean checkARPostingFlag(Connection conn){
+	private void checkARPostingFlag(Connection conn, String sUserFullName) throws Exception{
 		//First check to make sure no one else is posting:
 		try{
 			String SQL = "SELECT * FROM " + SMTablearoptions.TableName;
 			ResultSet rsAROptions = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rsAROptions.next()){
-				m_sWarning = "Error getting aroptions record";
-				return false;
+				throw new Exception("No aroptions record found");
 			}else{
 				if(rsAROptions.getLong(SMTablearoptions.ibatchpostinginprocess) == 1){
-					m_sWarning = "A previous posting is not completed - "
+					throw new Exception("A previous posting is not completed - "
 						+ rsAROptions.getString(SMTablearoptions.suserfullname) + " has been "
 						+ rsAROptions.getString(SMTablearoptions.sprocess) + " "
 						+ "since " + rsAROptions.getString(SMTablearoptions.datstartdate) + "."
-						;
-					return false;
+						);
 				}
 			}
 			rsAROptions.close();
 		}catch (SQLException e){
-			m_sWarning = "Error checking for previous posting - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1548694290] checking for previous posting - " + e.getMessage());
 		}
 		//If not, then set the posting flag:
 		try{
@@ -347,10 +362,9 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		}catch (SQLException e){
-			m_sWarning = "Error setting posting flag in aroptions - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1548694291] setting posting flag in aroptions - " + e.getMessage());
 		}
-		return true;
+		return;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

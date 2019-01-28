@@ -33,12 +33,7 @@ public class AREditBatchesUpdate extends HttpServlet{
 	 */
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Batch";
-	private static String m_sWarning = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Batch";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -56,10 +51,11 @@ public class AREditBatchesUpdate extends HttpServlet{
 
     //Get the session info:
     HttpSession CurrentSession = request.getSession(true);
-    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+    String m_sWarning = "";
     String title = "Updating " + sObjectName + "'" + sBatchNumber + "'";
     String subtitle = "";
     out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -166,33 +162,35 @@ public class AREditBatchesUpdate extends HttpServlet{
 	}
 	
 	//Otherwise, we need to save the batch
-    if (Validate_Batch(batch, request, out)){
-    	if (save_batch(batch, getServletContext(), sDBID, sUserID, sUserFullName)){
-				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
-			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
-			    		+ "?BatchNumber=" + batch.sBatchNumber()
-			    		+ "&BatchType=" + batch.sBatchType()
-			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " saved."
-			    		+ "'>");
-				out.println("</BODY></HTML>");
-    		
-    	}else{
-    		//If it DIDN'T save:
-    		m_sWarning = "WARNING: Error saving batch - " + batch.getErrorMessages();
+	try {
+		Validate_Batch(batch, request, out);
+	} catch (Exception e) {
+    	//Invalid entries:
+		out.println("<META http-equiv='Refresh' content='" + "10" + ";URL=" 
+	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
+	    		+ "?BatchNumber=" + batch.sBatchNumber()
+	    		+ "&BatchType=" + batch.sBatchType()
+	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    		+ "&Warning=" + clsServletUtilities.URLEncode(e.getMessage())
+	    		+ "'>");
+		out.println("</BODY></HTML>");
+	    return;
+	}
+	
+	if (save_batch(batch, getServletContext(), sDBID, sUserID, sUserFullName)){
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + clsServletUtilities.URLEncode(m_sWarning)
+		    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " saved."
 		    		+ "'>");
 			out.println("</BODY></HTML>");
-    	}
-    }
-    else{
-    	//Invalid entries:
-		out.println("<META http-equiv='Refresh' content='" + "10" + ";URL=" 
+		
+	}else{
+		//If it DIDN'T save:
+		m_sWarning = "WARNING: Error saving batch - " + batch.getErrorMessages();
+		out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 	    		+ "?BatchNumber=" + batch.sBatchNumber()
 	    		+ "&BatchType=" + batch.sBatchType()
@@ -200,9 +198,8 @@ public class AREditBatchesUpdate extends HttpServlet{
 	    		+ "&Warning=" + clsServletUtilities.URLEncode(m_sWarning)
 	    		+ "'>");
 		out.println("</BODY></HTML>");
-	    return;
-	    }
-    }
+	}
+}
 
     private boolean save_batch(ARBatch batch, ServletContext context, String sConf, String sUserID, String sUserFullName){
 		
@@ -235,7 +232,7 @@ public class AREditBatchesUpdate extends HttpServlet{
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067532]");
 		return true;
     }
-	private static boolean Validate_Batch(ARBatch batch, HttpServletRequest req, PrintWriter pwOut){
+	private static void Validate_Batch(ARBatch batch, HttpServletRequest req, PrintWriter pwOut) throws Exception{
 		
 		//TODO - validate entered information:
 		//System.out.println("In AREditBatchesUpdate.Validate_Batch: year = '" 
@@ -254,41 +251,35 @@ public class AREditBatchesUpdate extends HttpServlet{
 		
 		if (sBatchDate.trim().compareToIgnoreCase("") == 0){
 			pwOut.println("Batch date cannot be blank<BR>");
-			m_sWarning = "WARNING: Invalid batch date passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch date passed");
 		}
 		
 		if (!batch.tsBatchDate(clsDateAndTimeConversions.StringToTimestamp("MM/dd/yyyy", sBatchDate))){
 			pwOut.println("Invalid batch date passed<BR>");
-			m_sWarning = "WARNING: Invalid batch date passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch date passed");
 		}
 		//System.out.println("In AREditBatchesUpdate.Validate_Batch: batch.sStdBatchDateString() = " + batch.sStdBatchDateString());
 		
 		if (req.getParameter(SMEntryBatch.ibatchstatus) == null){
 			pwOut.println("Null batch status passed<BR>");
-			m_sWarning = "WARNING: Null batch status passed";
-			return false;
+			throw new Exception("WARNING: Null batch status passed");
 		}
 		if (! batch.sBatchStatus(req.getParameter(SMEntryBatch.ibatchstatus))){
 			pwOut.println("Invalid batch status passed<BR>");
-			m_sWarning = "WARNING: Invalid batch status passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch status passed");
 		}
 		if (req.getParameter(SMEntryBatch.lcreatedbyid) == null){
 			pwOut.println("Null 'created by' passed<BR>");
-			m_sWarning = "WARNING: Null 'created by' passed";
-			return false;
+			throw new Exception("WARNING: Null 'created by' passed");
 		}
 		batch.sCreatedByID(req.getParameter(SMEntryBatch.lcreatedbyid));
 		
 		if (req.getParameter(SMEntryBatch.sbatchdescription) == null){
 			pwOut.println("Null description passed<BR>");
-			m_sWarning = "WARNING: Null description passed";
-			return false;
+			throw new Exception("WARNING: Null description passed");
 		}
 		batch.sBatchDescription(req.getParameter(SMEntryBatch.sbatchdescription));
-		return true;
+		return;
 	}
 	
 	public void doGet(HttpServletRequest request,

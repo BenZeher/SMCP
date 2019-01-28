@@ -35,10 +35,6 @@ public class ARActivityDisplay extends HttpServlet {
 	 * OpenTransactionsOnly (true or false) - null = true
 	 * OrderNumber IF this function should ONLY display transactions for a particular order
 	 */
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -53,11 +49,11 @@ public class ARActivityDisplay extends HttpServlet {
 	    }
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    			+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //Get the variables for the class:
 	    String sCustomerNumber = "";
@@ -354,7 +350,8 @@ public class ARActivityDisplay extends HttpServlet {
 	        			rs.getString(SMTableartransactions.sdocdescription),
 	        			rs.getString(SMTableartransactions.sponumber),
 	        			sOrderNumber,
-	        			getServletContext()
+	        			getServletContext(),
+	        			sDBID
 	    			);
 	        		//End the row:
 	        		out.println("</TR>");
@@ -403,7 +400,8 @@ public class ARActivityDisplay extends HttpServlet {
 			String sDocDesc,
 			String sPONumber,
 			String sOrderNum,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 			){
 
 		pwout.println("<TD>" + sDocDate + "</TD>");

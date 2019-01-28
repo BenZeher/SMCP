@@ -28,10 +28,6 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	 * MatchedTransactionID
 	 * OpenTransactionsOnly (This is only used to pass this parameter back to the activity display screen)
 	 */
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -46,11 +42,11 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //Get the variables for the class:
 	    String sCustomerNumber = "";
@@ -184,7 +180,10 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	        			//Negate this so that negatives REDUCE customer liability, and positives INCREASE it:
 	        			clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount).negate()),
 	        			rs.getString(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sdescription),
-	        			rs.getLong(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid)
+	        			rs.getLong(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid),
+	        			sDBID,
+	        			sUserID,
+	        			sUserFullName
         			));
         		//End the row:
         		out.println("</TR>");
@@ -215,7 +214,10 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 			int iDocType,
 			String sAmount,
 			String sDocDesc,
-			long lParentTransactionID
+			long lParentTransactionID,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			){
 
 		/*

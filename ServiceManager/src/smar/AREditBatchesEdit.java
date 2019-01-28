@@ -37,12 +37,7 @@ public class AREditBatchesEdit extends HttpServlet {
 	 * BatchNumber - batch number
 	 * BatchType - batch type - an integer passed as a string
 	 */
-	private static String sObjectName = "Batch";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Batch";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -59,9 +54,12 @@ public class AREditBatchesEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    		+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 		String title = "";
 		String subtitle = "";
@@ -123,7 +121,7 @@ public class AREditBatchesEdit extends HttpServlet {
 	    	return;
 	    }
 	    
-	    Edit_Record(batch, sUserName, out, request, sDBID, false);
+	    Edit_Record(batch, sUserName, out, request, sDBID, false, sUserID, sUserFullName);
 	    out.println(getJavaScript());
 		out.println("</BODY></HTML>");
 	}
@@ -133,12 +131,14 @@ public class AREditBatchesEdit extends HttpServlet {
 			String sUserName,
 			PrintWriter pwOut, 
 			HttpServletRequest req,
-			String sConf,
-			boolean bAddNew){
+			String sDBID,
+			boolean bAddNew,
+			String sUserID,
+			String sUserFullName){
 		
 		if (batch.lBatchNumber() != -1){
 			try {
-				batch.load(getServletContext(), sConf);
+				batch.load(getServletContext(), sDBID);
 			} catch (Exception e) {
 				pwOut.println("Could not load batch number " + batch.sBatchNumber() + " - " + e.getMessage());
 			}
@@ -147,7 +147,7 @@ public class AREditBatchesEdit extends HttpServlet {
 		//Get the AR export type:
 		AROptions aropt = new AROptions();
 		try {
-			aropt.load(sConf, getServletContext(), sUserName);
+			aropt.load(sDBID, getServletContext(), sUserName);
 		} catch (Exception e) {
 			pwOut.println("<FONT COLOR=RED><B><BR>Error [1474644839] reading AR Options to get export type - " + aropt.getErrorMessageString()
 					+ " <BR></B></FONT>");
@@ -374,7 +374,7 @@ public class AREditBatchesEdit extends HttpServlet {
 		        ResultSet rsEntries = clsDatabaseFunctions.openResultSet(
 		        	sSQL, 
 		        	getServletContext(), 
-		        	sConf,
+		        	sDBID,
 		        	"MySQL",
 		        	this.toString() + ".Edit_Record - User: " + sUserID
 		        	+ " - "

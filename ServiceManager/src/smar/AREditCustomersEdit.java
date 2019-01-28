@@ -34,12 +34,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class AREditCustomersEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Customer";
-	private static String sCalledClassName = "AREditCustomersAction";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Customer";
+	private static final String sCalledClassName = "AREditCustomersAction";
 	
 	public static final String CUSTOMER_SALESGROUP_SALESPERSON_FIELD = "CUSTOMERSALESGROUPSALESPERSON";
 	public static final String CREATE_UPLOAD_FOLDER_BUTTON_LABEL = "Create folder/Upload to Google Drive";
@@ -68,11 +64,11 @@ public class AREditCustomersEdit extends HttpServlet {
 			}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
@@ -242,7 +238,7 @@ public class AREditCustomersEdit extends HttpServlet {
 			HttpServletRequest request,
 			ARCustomer cust, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			String sUserFullName,
 			String sUserID,
 			String sLicenseModLevel
@@ -378,7 +374,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        ResultSet rsTerms = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (1) - User: " + sUserID
 	        	+ " - "
@@ -408,7 +404,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        ResultSet rsCustomerGroups = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (2) UserID: " + sUserID);
 	        
@@ -437,7 +433,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        ResultSet rsAcctSets = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (3) - UserID: " + sUserID);
 	        
@@ -465,7 +461,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        ResultSet rsPriceListCodes = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (4) - UserID: " + sUserID);
 	        
@@ -534,7 +530,7 @@ public class AREditCustomersEdit extends HttpServlet {
 			ResultSet rsTaxes = clsDatabaseFunctions.openResultSet(
 				sSQL, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".Edit_Record (5) - UserID: " + sUserID);
 			
@@ -786,7 +782,7 @@ public class AREditCustomersEdit extends HttpServlet {
 			ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
 				sSQL, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".Edit_Record (7) - UserID: " + sUserID);
 
@@ -838,7 +834,7 @@ public class AREditCustomersEdit extends HttpServlet {
 			ResultSet rsSalesGroups = clsDatabaseFunctions.openResultSet(
 			    	SQL, 
 			    	getServletContext(), 
-			    	sConf,
+			    	sDBID,
 			    	"MySQL",
 			    	this.toString() + ".Edit_Record.get_salesgroups - UserID: " + sUserID
 			    	+ " - "
@@ -860,7 +856,7 @@ public class AREditCustomersEdit extends HttpServlet {
 						ResultSet rsDefaultSalesperson = clsDatabaseFunctions.openResultSet(
 								sSQL, 
 						    	getServletContext(), 
-						    	sConf,
+						    	sDBID,
 						    	"MySQL",
 						    	this.toString() + ".Edit_Record.get_default_salespersons - UserID: " + sUserID
 						    	+ " - "

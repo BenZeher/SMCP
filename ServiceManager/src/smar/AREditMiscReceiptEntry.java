@@ -22,24 +22,8 @@ import java.sql.SQLException;
 public class AREditMiscReceiptEntry extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private static String sObjectName = " Misc Receipt Entry";
+	private static final String sObjectName = " Misc Receipt Entry";
 	
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sEditable;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private AREntryInput m_EntryInput;
-	private String m_sAccountSet;
-	private HttpServletRequest m_hsrRequest;
-	private boolean m_bIsNewEntry = false;
-	private boolean m_bEditable = false;
-
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -55,35 +39,63 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 			}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
-		m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
+	    AREntryInput m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
 		//Get rid of the session variable immediately:
 		CurrentSession.removeAttribute("EntryInput");
 	    
-		m_hsrRequest = request;
-	    get_request_parameters();
+		boolean m_bIsNewEntry = false;
+		if (request.getParameter("EntryNumber") != null){
+			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+				m_bIsNewEntry = true; 
+			}
+		}
+
+		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		boolean m_bEditable = false;
+		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
+			m_bEditable = true;
+		}
+		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
+		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String m_sAccountSet = ARUtilities.get_Request_Parameter("AccountSet", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
-		if (!loadAREntryInput()){
-    		m_pwOut.println(
-					"<META http-equiv='Refresh' content='0;URL=" 
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARAddEntry"
-					+ "?BatchNumber=" + m_sBatchNumber
-    	    		+ "&BatchType=" + m_sBatchType
-    	    		+ "&DocumentType=" + ARDocumentTypes.MISCRECEIPT_STRING
-					+ "&Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "'>"		
+		if (m_EntryInput == null){
+			try {
+				loadAREntryInput(
+					sDBID,
+					sUserID,
+					sUserFullName,
+					m_sBatchNumber,
+					m_sEntryNumber,
+					m_sBatchType,
+					m_sAccountSet,
+					m_bIsNewEntry
 				);
-			return;
+			} catch (Exception e) {
+	    		m_pwOut.println(
+						"<META http-equiv='Refresh' content='0;URL=" 
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARAddEntry"
+						+ "?BatchNumber=" + m_sBatchNumber
+	    	    		+ "&BatchType=" + m_sBatchType
+	    	    		+ "&DocumentType=" + ARDocumentTypes.MISCRECEIPT_STRING
+						+ "&Warning=" + e.getMessage()
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "'>"		
+					);
+				return;
+			}
+
 		}
-		
 	    String title;
 	    String subtitle = "";
 	    if (m_bIsNewEntry){
@@ -136,79 +148,60 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadAREntryInput(){
+	private void loadAREntryInput(
+			String sDBID,
+			String sUserID,
+			String sUserFullName,
+			String sBatchNumber,
+			String sEntryNumber,
+			String sBatchType,
+			String sAccountSet,
+			boolean bIsNewEntry
+			) throws Exception{
 		
-		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
-		if (m_EntryInput == null){
-			//Have to construct the AREntryInput object here:
-			m_EntryInput = new AREntryInput();
-			if (m_bIsNewEntry){
-				//If it's a new entry:
-				m_EntryInput.setBatchNumber(m_sBatchNumber);
-				m_EntryInput.setBatchType(m_sBatchType);
-				m_EntryInput.setCustomerNumber("");
-				//Get the batch date as the default entry date:
-				ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
-				try {
-					batch.load(getServletContext(), sDBID);
-					m_EntryInput.setDocDate(batch.sStdBatchDateString());
-				} catch (Exception e) {
-					m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
-				}
-				m_EntryInput.setDueDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
-				m_EntryInput.setDocDescription("Misc. receipt");
-				m_EntryInput.setDocumentType(ARDocumentTypes.MISCRECEIPT_STRING);
-				m_EntryInput.setEntryNumber("-1");
-				m_EntryInput.setEntryID("-1");
-				m_EntryInput.setOriginalAmount("0.00");
-				loadCashAccount();
-			}else{
-				//If it's an existing entry:
-				//Load the existing entry:
-				AREntry entry = new AREntry();
-				entry = new AREntry();
-				if (!entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
-			    	m_sWarning = "Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	m_sWarning += "\n" + entry.getErrorMessage();
-			    	return false;
-				}
-				if (!m_EntryInput.loadFromEntry(entry)){
-			    	m_sWarning = "Could not load entry input from entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	return false;
-				}
+		AREntryInput m_EntryInput = new AREntryInput();
+		
+		//Have to construct the AREntryInput object here:
+		m_EntryInput = new AREntryInput();
+		if (bIsNewEntry){
+			//If it's a new entry:
+			m_EntryInput.setBatchNumber(sBatchNumber);
+			m_EntryInput.setBatchType(sBatchType);
+			m_EntryInput.setCustomerNumber("");
+			//Get the batch date as the default entry date:
+			ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
+			try {
+				batch.load(getServletContext(), sDBID);
+				m_EntryInput.setDocDate(batch.sStdBatchDateString());
+			} catch (Exception e) {
+				m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
 			}
-		}
-		
-		return true;
-	}
-	private void get_request_parameters(){
-		
-		if (m_hsrRequest.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest).equalsIgnoreCase("-1")){
-				m_bIsNewEntry = true; 
-			}else{
-				m_bIsNewEntry = false;
-			}
+			m_EntryInput.setDueDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
+			m_EntryInput.setDocDescription("Misc. receipt");
+			m_EntryInput.setDocumentType(ARDocumentTypes.MISCRECEIPT_STRING);
+			m_EntryInput.setEntryNumber("-1");
+			m_EntryInput.setEntryID("-1");
+			m_EntryInput.setOriginalAmount("0.00");
+			loadCashAccount(sDBID, sUserID, sUserFullName, m_EntryInput, sAccountSet);
 		}else{
-			m_bIsNewEntry = false;
+			//If it's an existing entry:
+			//Load the existing entry:
+			AREntry entry = new AREntry();
+			entry = new AREntry();
+			if (!entry.load(sBatchNumber, sEntryNumber, getServletContext(), sDBID)){
+		    	throw new Exception("Could not load entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber
+		    			+ "\n" + entry.getErrorMessage());
+			}
+			if (!m_EntryInput.loadFromEntry(entry)){
+		    	throw new Exception("Could not load entry input from entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber);
+			}
 		}
-
-		m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sEditable = ARUtilities.get_Request_Parameter("Editable", m_hsrRequest);
-		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
-			m_bEditable = true;
-		}else {
-			m_bEditable = false;
-		}
-		m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = ARUtilities.get_Request_Parameter("Warning", m_hsrRequest);
-		m_sAccountSet = ARUtilities.get_Request_Parameter("AccountSet", m_hsrRequest);
-
+		return;
 	}
-	private boolean loadCashAccount(){
+
+	private boolean loadCashAccount(String sDBID, String sUserID, String sUserFullName, AREntryInput m_EntryInput, String sAccountSet){
 		try{
-			String SQL = ARSQLs.Get_AcctSet_By_Code(m_sAccountSet);
+			String SQL = ARSQLs.Get_AcctSet_By_Code(sAccountSet);
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 

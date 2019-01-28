@@ -34,11 +34,7 @@ public class AREditBatches extends HttpServlet {
 	 * Parameters:
 	 * Limit - e.g. Limit=25 - number of batches to list
 	 */
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
-	private static String sObjectName = "Batch";
+	private static final String sObjectName = "Batch";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -57,10 +53,10 @@ public class AREditBatches extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		 		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 			    
 	    //Get the variables for the class:
@@ -207,7 +203,8 @@ public class AREditBatches extends HttpServlet {
 	        			rs.getString(SMEntryBatch.datlasteditdate),
 	        			rs.getString(SMEntryBatch.datpostdate),
 	        			request,
-	        			getServletContext()
+	        			getServletContext(),
+	        			sDBID
         			)
         		);
         		//End the row:
@@ -243,7 +240,8 @@ public class AREditBatches extends HttpServlet {
 			String sLastEditedDate,
 			String sPostingDate,
 			HttpServletRequest req,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 			){
 
 		String sOutPut = "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

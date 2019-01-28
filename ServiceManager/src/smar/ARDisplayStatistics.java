@@ -22,9 +22,7 @@ import smcontrolpanel.SMUtilities;
 public class ARDisplayStatistics extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Customer";
-	private static String sDBID = "";
-	private static String sCompanyName = "";
+	private static final String sObjectName = "Customer";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -40,8 +38,8 @@ public class ARDisplayStatistics extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sCustomerCode = (String) request.getParameter(sObjectName);
 		String title = "";
 		String subtitle = "";

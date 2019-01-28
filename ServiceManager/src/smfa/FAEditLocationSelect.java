@@ -21,10 +21,9 @@ import smcontrolpanel.SMUtilities;
 public class FAEditLocationSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Location";
-	private static String sCalledClassName = "FAEditLocationEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sLocationObjectName = "Location";
+	private static final String sFAEditLocationSelectCalledClassName = "FAEditLocationEdit";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -32,8 +31,8 @@ public class FAEditLocationSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEditDepreciationType)){
 	    	return;
 	    }
@@ -42,7 +41,7 @@ public class FAEditLocationSelect extends HttpServlet {
 		String subtitle = "";
 		
     	//User has chosen to edit:
-		title = "Edit " + sObjectName;
+		title = "Edit " + sLocationObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -54,7 +53,7 @@ public class FAEditLocationSelect extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
 		
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditLocationSelectCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    String sOutPut = "";
 	    
@@ -66,7 +65,7 @@ public class FAEditLocationSelect extends HttpServlet {
 	        				" ORDER BY" +
 	        				" " + SMTablefalocations.sLocLocation;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
+	     	out.println ("<SELECT NAME=\"" + sLocationObjectName + "\">" );
         	
         	while (rs.next()){
         		sOutPut = "<OPTION VALUE=\"" + rs.getString(SMTablefalocations.sLocLocation) + "\">" +
@@ -82,12 +81,12 @@ public class FAEditLocationSelect extends HttpServlet {
 			out.println ("Error reading locations with SQL: " + sSQL + " - " + ex.getMessage());
 		}
 		//Display text boxes:
-		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='height: 0.24in'>";
+		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sLocationObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sLocationObjectName + "' STYLE='height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sLocationObjectName + "' STYLE='height: 0.24in'></P>";
 		sOutPut = sOutPut + 
-			" New Location ID To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=10 MAXLENGTH=" + 
+			" New Location ID To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sLocationObjectName + "\" SIZE=10 MAXLENGTH=" + 
 			"6" + 
 			" STYLE=\"width: 2.41in; height: 0.25in\"> Must be 6 alpha-numerical or less." + 
 			"</P>";

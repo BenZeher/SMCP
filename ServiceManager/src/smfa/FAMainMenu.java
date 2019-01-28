@@ -20,7 +20,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAMainMenu extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -45,7 +45,7 @@ public class FAMainMenu extends HttpServlet {
 				bMobileView = true;
 			}
 		}
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		out.println(SMUtilities.getMenuHead(
 				subtitle,
 				SMUtilities.getInitBackGroundColor(getServletContext(), (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID)),

@@ -19,10 +19,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAEditAdjustmentsSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Asset adjustment";
-	private static String sCalledClassName = "FAEditAdjustmentsEdit";
-	private static String sCompanyName = "";
-	private String sDBID = "";
+	private static final String sAssetAdjustmentObjectName = "Asset adjustment";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -30,13 +27,14 @@ public class FAEditAdjustmentsSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCalledClassName = "FAEditAdjustmentsEdit";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEnterAdjustments)){
 	    	return;
 	    }
 
-	    String title = "Manage " + sObjectName + "s.";
+	    String title = "Manage " + sAssetAdjustmentObjectName + "s.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -94,7 +92,7 @@ public class FAEditAdjustmentsSelect extends HttpServlet {
 			+ "&ParameterString="
 			+ "\"> Find asset</A></P>";
 		
-		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
+		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sAssetAdjustmentObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		

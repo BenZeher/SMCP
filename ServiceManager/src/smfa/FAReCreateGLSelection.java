@@ -27,13 +27,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAReCreateGLSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	//private static String sObjectName = "Asset";
-	private static String sCalledClassName = "smcontrolpanel.SMRecreateExportAction";
-	private static String sCompanyName = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private String sDBID = "";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -42,11 +35,12 @@ public class FAReCreateGLSelection extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sFAReCreateGLSelectionCalledClassName = "smcontrolpanel.SMRecreateExportAction";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAReCreateGLSelection)){
 	    	return;
@@ -86,7 +80,7 @@ public class FAReCreateGLSelection extends HttpServlet {
 				+ icopt.getErrorMessage()
 				+ " <BR></B></FONT>");
 		}
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + sFAReCreateGLSelectionCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMRecreateExportAction.BATCHLABEL_PARAM + "' VALUE='" + "Depreciation" + "'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMRecreateExportAction.SOURCELEDGER_PARAM + "' VALUE='" + SMModuleTypes.FA + "'>");

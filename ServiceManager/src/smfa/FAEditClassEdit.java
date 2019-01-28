@@ -25,10 +25,9 @@ import ServletUtilities.clsStringFunctions;
 public class FAEditClassEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Class";
-	private static String sCalledClassName = "FAEditClassAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sFAEditClassEditCalledClassName = "FAEditClassAction";
+	private static final String sObjectClassName = "Class";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -39,17 +38,19 @@ public class FAEditClassEdit extends HttpServlet {
 		    }
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	   
-	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectName));
+	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectClassName));
 
 		String title = "";
 		String subtitle = "";
 		
 	    if(request.getParameter("SubmitEdit") != null){
 	    	//User has chosen to edit:
-			title = "Edit " + sObjectName + ": " + sEditCode;
+			title = "Edit " + sObjectClassName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -67,7 +68,7 @@ public class FAEditClassEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitDelete") != null){
 	    	//User has chosen to delete:
-			title = "Delete " + sObjectName + ": " + sEditCode;
+			title = "Delete " + sObjectClassName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -94,9 +95,9 @@ public class FAEditClassEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitAdd") != null){
 	    	
-		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectClassName));
 	    	//User has chosen to add a new record:
-			title = "Add " + sObjectName + ": " + sNewCode;
+			title = "Add " + sObjectClassName + ": " + sNewCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -111,7 +112,7 @@ public class FAEditClassEdit extends HttpServlet {
 		    		+ "\">Summary</A><BR><BR>");
 
 		    if (sNewCode == ""){
-		    	out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " code to add.");
+		    	out.println ("You chose to add a new " + sObjectClassName + ", but you did not enter a new " + sObjectClassName + " code to add.");
 		    }
 		    else{
 		    	Edit_Record(sNewCode, out, sDBID, true);
@@ -124,18 +125,18 @@ public class FAEditClassEdit extends HttpServlet {
 	private void Edit_Record(
 			String sCode, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sCode, sConf, pwOut) == false){
+			if (Add_Record (sCode, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sCode + ".<BR>");
 				return;
 			}
 		}
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditClassEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"EditCode\" VALUE=\"" + sCode + "\">");
 	    //String sOutPut = "";
@@ -148,7 +149,7 @@ public class FAEditClassEdit extends HttpServlet {
 	        				" " + SMTablefaclasses.TableName + 
 	        			  " WHERE" +
 	        				" " + SMTablefaclasses.sClass + " = '" + sCode + "'";
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
 	        //Display fields:
@@ -174,7 +175,7 @@ public class FAEditClassEdit extends HttpServlet {
 		
 		pwOut.println("</TABLE>");
 		pwOut.println("<BR>");
-		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectClassName + "' STYLE='height: 0.24in'></P>");
 		pwOut.println("</FORM>");
 		
 	}
@@ -239,7 +240,7 @@ public class FAEditClassEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
-				pwOut.println("The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
+				pwOut.println("The " + sObjectClassName + " '" + sCode + "' already exists - it cannot be added.<BR>");
 				rs.close();
 				return false;
 			}

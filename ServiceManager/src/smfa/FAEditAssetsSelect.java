@@ -19,10 +19,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAEditAssetsSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Asset";
-	private static String sCalledClassName = "FAEditAssetsEdit";
-	private static String sCompanyName = "";
-	private static String sDBID = "";
+	private static final String sAssetObjectName = "Asset";
+	private static final String sFAEditAssestSelectCalledClassName = "FAEditAssetsEdit";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -30,12 +29,12 @@ public class FAEditAssetsSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAManageAssets)){
 	    	return;
 	    }
-	    String title = "Manage " + sObjectName + "s.";
+	    String title = "Manage " + sAssetObjectName + "s.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -58,7 +57,7 @@ public class FAEditAssetsSelect extends HttpServlet {
 				+ "\">Return to Fixed Assets Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.FAManageAssets) 
 	    		+ "\">Summary</A><BR><BR>");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditAssestSelectCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    String sOutPut = "";
 	    
@@ -68,7 +67,7 @@ public class FAEditAssetsSelect extends HttpServlet {
 	    }
 	    
 		sOutPut = 
-			"<P>Enter " + sObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
+			"<P>Enter " + sAssetObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
 			+ FAAsset.ParamAssetNumber + "\""
 			+ " VALUE = \"" + sEditCode + "\""
 			+ " SIZE=32 MAXLENGTH=" 
@@ -111,10 +110,10 @@ public class FAEditAssetsSelect extends HttpServlet {
 			+ "&ParameterString="
 			+ "\"> Find asset</A></P>";
 		
-		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'>";
+		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		

@@ -20,12 +20,6 @@ import ServletUtilities.clsDatabaseFunctions;
 public class FAResetYTDDepreciationAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	//private static String sObjectName = "Depreciation Type";
-	//private static String sCalledClassName = "FAEditDepreciationTypeAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -43,10 +37,10 @@ public class FAResetYTDDepreciationAction extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 
 		String title = "";

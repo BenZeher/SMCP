@@ -20,26 +20,25 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class FAEditDepreciationTypeAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Depreciation Type";
-	private String sCompanyName = "";
-	private String sDBID = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
+		String sDepreciationTypeObjectName = "Depreciation Type";
+		
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEditDepreciationType)){
 	    	return;
 	    }
 
 		String sEditCode = request.getParameter("EditCode");
 		
-	    String title = "Updating " + sObjectName + "'" + sEditCode + "'";
+	    String title = "Updating " + sDepreciationTypeObjectName + "'" + sEditCode + "'";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		
@@ -52,7 +51,6 @@ public class FAEditDepreciationTypeAction extends HttpServlet{
 				+ "\">Return to Fixed Assets Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditItems) 
 	    		+ "\">Summary</A><BR><BR>");
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); 
 	
 	    String sOutPut = "";
 	
@@ -65,16 +63,16 @@ public class FAEditDepreciationTypeAction extends HttpServlet{
 		
 	    try{
 	    	if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID) == false){
-	    		sOutPut = "Could not complete update transaction - " + sObjectName + " was not updated.<BR>";
+	    		sOutPut = "Could not complete update transaction - " + sDepreciationTypeObjectName + " was not updated.<BR>";
 	    	}else{
-	    		sOutPut = "Successfully updated " + sObjectName + ": " + sEditCode + ".";
+	    		sOutPut = "Successfully updated " + sDepreciationTypeObjectName + ": " + sEditCode + ".";
 	    	}
 	    }catch (SQLException ex){
 			System.out.println("Error in " + this.toString() + " class!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
-		    sOutPut = "Error - could not update " + sObjectName + ".<BR>";
+		    sOutPut = "Error - could not update " + sDepreciationTypeObjectName + ".<BR>";
 		}
 	    
 	    out.println(sOutPut);

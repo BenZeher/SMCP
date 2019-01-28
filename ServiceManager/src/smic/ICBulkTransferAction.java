@@ -29,20 +29,16 @@ import smcontrolpanel.SMUtilities;
 public class ICBulkTransferAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserFullName = "";
-	private String sUserID = "";
 	
-	public static String PARAM_UOMMARKER = "UNITOFMEASURE";
-	public static String PARAM_ITEMDESCMARKER = "ITEMDESC";
-	public static String PARAM_FROMLOCATIONQTYONHANDMARKER = "FROMLOCQTYOH";
-	public static String PARAM_TOLOCATIONQTYONHANDMARKER = "TOLOCQTYOH";
-	public static String PARAM_ADD_ROWS = "ADDROWS";
-	public static int NUMBER_OF_ROWS_TO_ADD = 10;
-	public static String PARAM_TOTAL_NUMBER_OF_ROWS = "TOTALNUMBEROFROWS";
-	public static String PARAM_CALLINGCLASS = "CALLINGCLASS";
-	public static String PARAM_SHOWINFOFIELDS = "SHOWINFOFIELDS";
+	public static String PARAM_BULK_TANSFER_UOMMARKER = "UNITOFMEASURE";
+	public static String PARAM_BULK_TANSFER_ITEMDESCMARKER = "ITEMDESC";
+	public static String PARAM_BULK_TANSFER_FROMLOCATIONQTYONHANDMARKER = "FROMLOCQTYOH";
+	public static String PARAM_BULK_TANSFER_TOLOCATIONQTYONHANDMARKER = "TOLOCQTYOH";
+	public static String PARAM_BULK_TANSFER_ADD_ROWS = "ADDROWS";
+	public static int BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD = 10;
+	public static String PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS = "TOTALNUMBEROFROWS";
+	public static String PARAM_BULK_TANSFER_CALLINGCLASS = "CALLINGCLASS";
+	public static String PARAM_BULK_TANSFER_SHOWINFOFIELDS = "SHOWINFOFIELDS";
 	public static String SESSION_OBJECT_TRANSFER_ENTRY = "BULKTRANSFERENTRY";
 	
 	public void doPost(HttpServletRequest request,
@@ -70,12 +66,12 @@ public class ICBulkTransferAction extends HttpServlet {
 		}
 		entry.remove_zero_amount_lines();
 		
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 				+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CALLINGCLASS", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CALLINGCLASS", request);
 		
 		String sCommand = clsManageRequestParameters.get_Request_Parameter(ICBulkTransferEdit.PARAM_COMMAND, request);
 		
@@ -84,7 +80,7 @@ public class ICBulkTransferAction extends HttpServlet {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 					+ "Warning=Invalid number of lines"
-					+ "&" + PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+					+ "&" + PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
@@ -96,7 +92,7 @@ public class ICBulkTransferAction extends HttpServlet {
 			//Create the batch here:
 			String sBatchNumber = "";
 			try {
-				sBatchNumber = createBatch(entry, sDBID);
+				sBatchNumber = createBatch(entry, sDBID, sUserID, sUserFullName);
 			} catch (Exception e) {
 				CurrentSession.setAttribute(ICBulkTransferAction.SESSION_OBJECT_TRANSFER_ENTRY, entry);
 				String sWarning = e.getMessage();
@@ -106,7 +102,7 @@ public class ICBulkTransferAction extends HttpServlet {
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 						+ "Warning=" + sWarning
-						+ "&" + PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+						+ "&" + PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
 				return;
@@ -136,7 +132,7 @@ public class ICBulkTransferAction extends HttpServlet {
 				}
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
-						+ PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+						+ PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 						+ "&" + "Warning=" + sWarning
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
@@ -146,8 +142,8 @@ public class ICBulkTransferAction extends HttpServlet {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 					+ "Status=" + "Validated transfers"
-					+ "&" + PARAM_SHOWINFOFIELDS + "=Y"
-					+ "&" + PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+					+ "&" + PARAM_BULK_TANSFER_SHOWINFOFIELDS + "=Y"
+					+ "&" + PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
@@ -155,19 +151,19 @@ public class ICBulkTransferAction extends HttpServlet {
 		
 		//Process an ADD_ROWS command:
 		if (sCommand.compareToIgnoreCase(ICBulkTransferEdit.PARAM_COMMAND_ADD_TEN_ROWS) == 0){
-			sStatus = "Added " + Integer.toString(NUMBER_OF_ROWS_TO_ADD) + " rows";
+			sStatus = "Added " + Integer.toString(BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD) + " rows";
 			int iNewNumberOfRows;
 			try {
-				iNewNumberOfRows = Integer.parseInt(clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request));
+				iNewNumberOfRows = Integer.parseInt(clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request));
 			} catch (NumberFormatException e) {
 				iNewNumberOfRows = ICBulkTransferEdit.INITIAL_NUMBER_OF_ROWS;
 			}
-			iNewNumberOfRows += NUMBER_OF_ROWS_TO_ADD;
+			iNewNumberOfRows += BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD;
 			CurrentSession.setAttribute(ICBulkTransferAction.SESSION_OBJECT_TRANSFER_ENTRY, entry);
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 					+ "Status=" + sStatus
-					+ "&" + PARAM_TOTAL_NUMBER_OF_ROWS + "=" + Integer.toString(iNewNumberOfRows)
+					+ "&" + PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + Integer.toString(iNewNumberOfRows)
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
@@ -210,7 +206,7 @@ public class ICBulkTransferAction extends HttpServlet {
 				}
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
-						+ PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+						+ PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 						+ "&" + ICBulkTransferEdit.STARTING_DATE_FIELD + " = " 
 							+ clsManageRequestParameters.get_Request_Parameter(ICBulkTransferEdit.STARTING_DATE_FIELD, request)
 						+ sLocationQueryString
@@ -223,8 +219,8 @@ public class ICBulkTransferAction extends HttpServlet {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass + "?"
 					+ "Status=" + "Restocked location(s)"
-					+ "&" + PARAM_SHOWINFOFIELDS + "=Y"
-					+ "&" + PARAM_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_TOTAL_NUMBER_OF_ROWS, request)
+					+ "&" + PARAM_BULK_TANSFER_SHOWINFOFIELDS + "=Y"
+					+ "&" + PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS + "=" + clsManageRequestParameters.get_Request_Parameter(PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request)
 					+ "&" + ICBulkTransferEdit.STARTING_DATE_FIELD + " = " 
 						+ clsManageRequestParameters.get_Request_Parameter(ICBulkTransferEdit.STARTING_DATE_FIELD, request)
 					+ sLocationQueryString
@@ -234,7 +230,7 @@ public class ICBulkTransferAction extends HttpServlet {
 		}
 		return;
 	}
-	private String createBatch(ICEntry entry, String sDBID) throws Exception{
+	private String createBatch(ICEntry entry, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		
 		Connection conn = null;
 		try {

@@ -27,12 +27,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private int iItemCounter = 0;
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
+	private int iDeleteInactiveItemsItemCounter = 0;
+
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -53,13 +49,15 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
+	    
 	    /**************Get Parameters**************/
 	    java.sql.Date datDeleteDate = null;
 	    String sDeleteDate = clsManageRequestParameters.get_Request_Parameter(ICDeleteInactiveItemsSelection.DELETE_DATE, request);
@@ -93,7 +91,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 		   );
 		
     	//Delete inactives:
-    	if (!deleteInactives(getServletContext(), sDBID, datDeleteDate)){
+    	if (!deleteInactives(getServletContext(), sDBID, datDeleteDate, sUserID, sUserFullName, sWarning)){
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ "Warning=" + URLEncoder.encode(sWarning, "UTF-8")
@@ -106,7 +104,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
     	if (sWarning.trim().compareToIgnoreCase("") == 0){
     		sWarning = "ALL inactive items were successfully deleted.";
     	}else if (sWarning.length() > 1024){
-    		sWarning += "<BR>.....<BR><BR> " + Integer.toString(iItemCounter) + " total items could not be deleted. "
+    		sWarning += "<BR>.....<BR><BR> " + Integer.toString(iDeleteInactiveItemsItemCounter) + " total items could not be deleted. "
     				+ "<BR> All OTHER inactive items were successfully deleted.";
     	} else {
     		sWarning += "<BR>All OTHER inactive items were successfully deleted.";
@@ -119,10 +117,10 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
     	return;
 	}
 	
-	private boolean deleteInactives(ServletContext context, String sConf, Date datDeleteDate){	
+	private boolean deleteInactives(ServletContext context, String sConf, Date datDeleteDate, String sUserID, String sUserFullName, String sWarning){	
 	
 		sWarning = "";
-		iItemCounter = 0;
+		iDeleteInactiveItemsItemCounter = 0;
 		
 		//Delete all items with a last transaction date before the entered date
 		String SQL = "SELECT "
@@ -161,7 +159,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 					ICItem item = new ICItem(sItemNum);
 					//If an item cannot be deleted, add it to the warning string, but go on:
 					if (!item.delete(sItemNum, conn)){
-						iItemCounter++;
+						iDeleteInactiveItemsItemCounter++;
 						if (sWarning.trim().compareToIgnoreCase("") == 0){
 							sWarning = "" + item.getErrorMessageString();
 						}else{
@@ -189,7 +187,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 				String sItemNum = rs1.getString(SMTableicitems.sItemNumber);
 				ICItem item = new ICItem(sItemNum);
 				if (!item.delete(sItemNum, conn)){
-					iItemCounter++;
+					iDeleteInactiveItemsItemCounter++;
 					if (sWarning.trim().compareToIgnoreCase("") == 0){
 						sWarning = item.getErrorMessageString();
 					}else{

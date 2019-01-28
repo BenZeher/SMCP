@@ -28,14 +28,13 @@ import ServletUtilities.clsServletUtilities;
 public class ICClearPostedBatchesAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String m_sWarning = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sDBID = "";
+
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
+		String m_sWarning = "";
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -49,10 +48,10 @@ public class ICClearPostedBatchesAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    //Need this for a data transaction:
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

@@ -31,7 +31,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 	public static final String UPDATE_COST_BUCKETS_COMMAND = "UpdateCostBuckets";
 	public static final String SUBMIT_UPDATE_COST_BUCKETS_COMMAND = "SubmitCostBucketUpdate";
 	
-	private static String sObjectName = "Line";
+	private static String sAdjustmentLineObjectName = "Line";
 
 	private ICEntryLine m_line;
 	private String m_sBatchNumber;
@@ -55,10 +55,6 @@ public class ICEditAdjustmentLine extends HttpServlet {
 	private ArrayList<String> m_sCostBucketValues = new ArrayList<String>();
 	private ArrayList<String> m_sCostBucketDescriptions = new ArrayList<String>();
 
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -77,11 +73,11 @@ public class ICEditAdjustmentLine extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		m_hsrRequest = request;
 		get_request_parameters();
@@ -112,9 +108,9 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		String title;
 		String subtitle = "";
 		if (m_sLineNumber.compareToIgnoreCase("-1") == 0){
-			title = "Edit NEW " + sObjectName;
+			title = "Edit NEW " + sAdjustmentLineObjectName;
 		}else{
-			title = "Edit " + sObjectName + ": " + m_sLineNumber;
+			title = "Edit " + sAdjustmentLineObjectName + ": " + m_sLineNumber;
 		}
 
 		m_pwOut.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -177,7 +173,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 			);
 		}
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput(lCostingMethod)){
+		if (!createFormFromLineInput(lCostingMethod, sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAdjustmentEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -192,7 +188,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(long lCostingMethod){
+	private boolean createFormFromLineInput(long lCostingMethod, String sDBID, String sUserID, String sUserFullName){
 
 		//Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICAdjustmentLineUpdate' METHOD='POST'>");
@@ -205,10 +201,10 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
 
-		if (!loadGLList()){
+		if (!loadGLList(sDBID, sUserID, sUserFullName)){
 			return false;
 		}
-		if (!loadLocationList()){
+		if (!loadLocationList(sDBID, sUserID, sUserFullName)){
 			return false;
 		}
 
@@ -489,7 +485,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 			if (m_sUpdateCostBuckets.compareToIgnoreCase("") != 0) {
 				boolean bLoadedCostBuckets = false;
 				try {
-					bLoadedCostBuckets = loadCostBuckets();
+					bLoadedCostBuckets = loadCostBuckets(sDBID, sUserID, sUserFullName);
 				} catch (Exception e) {
 					m_pwOut.println("</SELECT><BR><B><FONT COLOR=RED>" + e.getMessage() + "</FONT></B>");
 					return false;
@@ -563,10 +559,10 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		m_pwOut.println("</TABLE>");
 		//End the entry edit form:
 
-		m_pwOut.println("<BR><INPUT TYPE=SUBMIT NAME='Save' VALUE='Save " + sObjectName + "' STYLE='height: 0.24in'>");
+		m_pwOut.println("<BR><INPUT TYPE=SUBMIT NAME='Save' VALUE='Save " + sAdjustmentLineObjectName + "' STYLE='height: 0.24in'>");
 
 		if (m_line.sLineNumber().compareToIgnoreCase("-1") != 0){
-			m_pwOut.println("&nbsp;&nbsp;<INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sObjectName + "' STYLE='height: 0.24in'>");
+			m_pwOut.println("&nbsp;&nbsp;<INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sAdjustmentLineObjectName + "' STYLE='height: 0.24in'>");
 			m_pwOut.println("&nbsp;&nbsp;Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
 		}
 
@@ -585,7 +581,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		m_sUpdateCostBuckets = clsManageRequestParameters.get_Request_Parameter(UPDATE_COST_BUCKETS_COMMAND, m_hsrRequest);
 
 	}
-	private boolean loadGLList(){
+	private boolean loadGLList(String sDBID, String sUserID, String sUserFullName){
 		m_sGLValues.clear();
 		m_sGLDescriptions.clear();
 		try{
@@ -619,7 +615,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 
 		return true;
 	}
-	private boolean loadLocationList(){
+	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
 		m_sLocationValues.clear();
 		m_sLocationDescriptions.clear();
 		try{
@@ -659,7 +655,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 
 		return true;
 	}
-	private boolean loadCostBuckets() throws Exception{
+	private boolean loadCostBuckets(String sDBID, String sUserID, String sUserFullName) throws Exception{
 		m_sCostBucketValues.clear();
 		m_sCostBucketDescriptions.clear();
 		String sSQL = "";

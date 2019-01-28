@@ -18,13 +18,12 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICClearStatisticsAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String m_sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "0";
+
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
+
+		
 
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
@@ -37,16 +36,18 @@ public class ICClearStatisticsAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = "0";
 	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String m_sWarning = "";
 	    /**************Get Parameters**************/
 	    String sClearBeforeYear = clsManageRequestParameters.get_Request_Parameter("ClearBeforeYear", request);
 	    String sClearBeforeMonth = clsManageRequestParameters.get_Request_Parameter("ClearBeforeMonth", request);
 	    
-	    clearRecords(request, sClearBeforeYear, sClearBeforeMonth);
+	    clearRecords(request, sClearBeforeYear, sClearBeforeMonth, sDBID, sUserID, m_sWarning);
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -55,7 +56,7 @@ public class ICClearStatisticsAction extends HttpServlet {
 		return;
 
 	}
-	private void clearRecords(HttpServletRequest req, String sYear, String sMonth){
+	private void clearRecords(HttpServletRequest req, String sYear, String sMonth, String sDBID, String sUserID, String m_sWarning){
 	    if (req.getParameter("ConfirmClearing") == null){
 	    	m_sWarning = "You chose to clear statistics, but you did not click the 'Confirm clearing' checkbox.";
 	    	return;

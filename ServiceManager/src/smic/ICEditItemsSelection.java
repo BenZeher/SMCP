@@ -20,10 +20,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditItemsSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Item";
-	private static String sCalledClassName = "ICEditItemsEdit";
-	private static String sCompanyName = "";
-	private String sDBID = "";
+	private static final String sItemObjectName = "Item";
+	private static final String sICEditItemsSelectionCalledClassName = "ICEditItemsEdit";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -40,9 +39,9 @@ public class ICEditItemsSelection extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    String title = "Manage " + sObjectName + "s.";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String title = "Manage " + sItemObjectName + "s.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -65,7 +64,7 @@ public class ICEditItemsSelection extends HttpServlet {
 				+ "\">Return to Inventory Control Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditItems) 
 	    		+ "\">Summary</A><BR><BR>");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditItemsSelectionCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    String sOutPut = "";
 
@@ -76,7 +75,7 @@ public class ICEditItemsSelection extends HttpServlet {
 	    }
 	    
 		sOutPut = 
-			"<P>Enter " + sObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
+			"<P>Enter " + sItemObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
 			+ ICItem.ParamItemNumber + "\""
 			+ " VALUE = \"" + sEditCode + "\""
 			+ " SIZE=32 MAXLENGTH=" 
@@ -119,10 +118,10 @@ public class ICEditItemsSelection extends HttpServlet {
 			+ "&ParameterString="
 			+ "\"> Find item</A></P>";
 		
-		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'>";
+		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sItemObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sItemObjectName + "' STYLE='width: 2.00in; height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sItemObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		

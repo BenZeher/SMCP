@@ -25,13 +25,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICAssignPOGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sAssignedDate = "";
-	private String sAssignedNumber = "";
+	private String sICAssignPOGenerateWarning = "";
+	private String sICAssignPOGenerateAssignedDate = "";
+	private String sICAssignPOGenerateAssignedNumber = "";
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
@@ -44,21 +40,21 @@ public class ICAssignPOGenerate extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    			  + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);  
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sAssignedDate = "";
 	    String sPOComment = "";
 		sPOComment = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscomment, request).trim();
 		if(sPOComment.compareToIgnoreCase("") == 0){
-			sWarning = "PO Comments cannot be blank.";
+			sICAssignPOGenerateWarning = "PO Comments cannot be blank.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
 				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
@@ -77,10 +73,10 @@ public class ICAssignPOGenerate extends HttpServlet {
     			+ sUserFullName
     	);
     	if (conn == null){
-    		sWarning = "Unable to get data connection.";
+    		sICAssignPOGenerateWarning = "Unable to get data connection.";
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+    				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
     				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
@@ -95,7 +91,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080769]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+    				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
     				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);
@@ -106,7 +102,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080770]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+    				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
     				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
@@ -114,7 +110,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		}
     	
 	    //Log the usage:
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_POASSIGNMENT, "POASSIGNMENT", "PO Number " + sAssignedNumber 
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_POASSIGNMENT, "POASSIGNMENT", "PO Number " + sICAssignPOGenerateAssignedNumber 
 				+ " was assigned to " + sUserFullName + " on " + sAssignedDate,
 				"[1376509373]"
 		);
@@ -127,12 +123,12 @@ public class ICAssignPOGenerate extends HttpServlet {
 					conn,
 					(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 			);
-		String sAssignedPOLink = sAssignedNumber;
+		String sAssignedPOLink = sICAssignPOGenerateAssignedNumber;
 		if (bAllowPOEditing){
 			sAssignedPOLink = 
 				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
-				+ "?" + ICPOHeader.Paramlid + "=" + sAssignedNumber
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sAssignedNumber + "</A>";
+				+ "?" + ICPOHeader.Paramlid + "=" + sICAssignPOGenerateAssignedNumber
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sICAssignPOGenerateAssignedNumber + "</A>";
 		}
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080771]");
@@ -174,7 +170,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 			rs.close();
 		} catch (SQLException e1) { 
 			//System.out.println("ERROR checking for dupes with SQL:" + SQL + " - " + e1.getMessage());
-			sWarning = "Could not verify PO information - " + e1.getMessage();
+			sICAssignPOGenerateWarning = "Could not verify PO information - " + e1.getMessage();
 			//In this case, we just assume it's not a duplicate and let it go on.
 			return false;
 		}
@@ -191,7 +187,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		long diffMinutes = lTimeDifferenceInMinutes / (60 * 1000);
 		//System.out.println("diffMinutes = " + diffMinutes);
 		if (diffMinutes < 5){
-			sWarning = "This request appears to be a duplicate.  Clicking the 'Back' button in your browser"
+			sICAssignPOGenerateWarning = "This request appears to be a duplicate.  Clicking the 'Back' button in your browser"
 				+ " may show you the PO number that was already assigned.";
 			log.writeEntry(
 					sUserID, 
@@ -229,10 +225,10 @@ public class ICAssignPOGenerate extends HttpServlet {
     	//System.out.println("[1395093960] SQL = " + SQL);
 		try {
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				sWarning = "Could not insert PO to get a number.";
+				sICAssignPOGenerateWarning = "Could not insert PO to get a number.";
 			}
 		} catch (SQLException e) {
-			sWarning = "Could not insert PO record - " + e.getMessage() + ".";
+			sICAssignPOGenerateWarning = "Could not insert PO record - " + e.getMessage() + ".";
 			return false;
 		}
 
@@ -241,15 +237,15 @@ public class ICAssignPOGenerate extends HttpServlet {
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rs.next()){
-				sWarning = "Could not read PO ID.";
+				sICAssignPOGenerateWarning = "Could not read PO ID.";
 				rs.close();
 				return false;
 			}else{
-				sAssignedNumber = Long.toString(rs.getLong(1));
+				sICAssignPOGenerateAssignedNumber = Long.toString(rs.getLong(1));
 				rs.close();
 			}
 		} catch (SQLException e) {
-			sWarning = "Could not read PO ID - " + e.getMessage();
+			sICAssignPOGenerateWarning = "Could not read PO ID - " + e.getMessage();
 			return false;
 		}
 		
@@ -258,22 +254,22 @@ public class ICAssignPOGenerate extends HttpServlet {
 			+ " " + SMTableicpoheaders.datassigned
 			+ " FROM " + SMTableicpoheaders.TableName
 			+ " WHERE ("
-				+ "(" + SMTableicpoheaders.lid + " = " + sAssignedNumber + ")"
+				+ "(" + SMTableicpoheaders.lid + " = " + sICAssignPOGenerateAssignedNumber + ")"
 			+ ")"
 			;
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rs.next()){
-				sWarning = "Could not read PO assigned date.";
+				sICAssignPOGenerateWarning = "Could not read PO assigned date.";
 				rs.close();
 				return false;
 			}else{
-				sAssignedDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				sICAssignPOGenerateAssignedDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
 					rs.getString(SMTableicpoheaders.datassigned));
 				rs.close();
 			}
 		} catch (SQLException e) {
-			sWarning = "Could not read PO assigned date - " + e.getMessage();
+			sICAssignPOGenerateWarning = "Could not read PO assigned date - " + e.getMessage();
 			return false;
 		}
 		

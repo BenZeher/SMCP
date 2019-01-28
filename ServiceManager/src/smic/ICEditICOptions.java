@@ -22,9 +22,7 @@ public class ICEditICOptions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private String m_sWarning;
 	private ICOptionInput m_OptionInput;
-	private String m_sDBID;
-	private String m_sUserName;
-	private String m_sCompanyName;
+	
 	private PrintWriter m_pwOut;
 	private HttpServletRequest m_hsrRequest;
 	private boolean m_bInputLoaded = false;
@@ -34,7 +32,21 @@ public class ICEditICOptions extends HttpServlet {
 	throws ServletException, IOException {
 
 		m_hsrRequest = request;
-		get_request_parameters();
+		//Get the session info:
+		HttpSession CurrentSession = m_hsrRequest.getSession(true);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		if (m_hsrRequest.getParameter("OptionInput") != null){
+			if (clsManageRequestParameters.get_Request_Parameter("OptionInput", m_hsrRequest).equalsIgnoreCase("True")){
+				m_bInputLoaded = true; 
+			}else{
+				m_bInputLoaded = false;
+			}
+		}else{
+			m_bInputLoaded = false;
+		}
+
+		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
 
 		m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -47,12 +59,12 @@ public class ICEditICOptions extends HttpServlet {
 		}
 
 		//Try to load an object from which to build the form:
-		if (!loadICOptionInput()){
+		if (!loadICOptionInput(sDBID)){
 			m_pwOut.println(
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu"
 					+ "?Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "'>"		
 			);
 			return;
@@ -62,7 +74,7 @@ public class ICEditICOptions extends HttpServlet {
 		String subtitle = "";
 		title = "Edit Inventory Options";
 
-		m_pwOut.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), m_sDBID), m_sCompanyName));
+		m_pwOut.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
 		//If there is a warning from trying to input previously, print it here:
 		if (! m_sWarning.equalsIgnoreCase("")){
@@ -71,20 +83,20 @@ public class ICEditICOptions extends HttpServlet {
 
 		//Print a link to main menu:
 		m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Main Menu</A><BR>");
 
 		//Print a link to main menu:
 		m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Inventory Main Menu</A><BR>");
 
-		if (!createEntryScreen(m_sDBID, m_sUserName)){
+		if (!createEntryScreen(sDBID)){
 			m_pwOut.println(
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditICOptions"
 					+ "?Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "'>"		
 			);
 			return;
@@ -93,7 +105,7 @@ public class ICEditICOptions extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadICOptionInput(){
+	private boolean loadICOptionInput(String sDBID){
 
 		//If the class has been passed an AREntryInput query string, just load from that:
 		if (m_bInputLoaded){
@@ -105,7 +117,7 @@ public class ICEditICOptions extends HttpServlet {
 			ICOption option = new ICOption();
 
 			Connection conn = clsDatabaseFunctions.getConnection(
-					getServletContext(), m_sDBID, "MySQL", "smic.ICEditICOptions");
+					getServletContext(), sDBID, "MySQL", "smic.ICEditICOptions");
 			if (conn == null){
 				m_sWarning = "Could not load icoptions record - connection = null";
 				return false;
@@ -127,12 +139,12 @@ public class ICEditICOptions extends HttpServlet {
 		}
 		return true;
 	}
-	private boolean createEntryScreen(String sDBID, String sUser){
+	private boolean createEntryScreen(String sDBID){
 		//Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smic.ICOptionUpdate' METHOD='POST'>");
-		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + m_sDBID + "\">");
+		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + sDBID + "\">");
 
 		//Start the table:
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");		
@@ -301,26 +313,7 @@ public class ICEditICOptions extends HttpServlet {
 		return true;
 
 	}
-	private void get_request_parameters(){
 
-		//Get the session info:
-		HttpSession CurrentSession = m_hsrRequest.getSession(true);
-		m_sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		m_sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		m_sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		if (m_hsrRequest.getParameter("OptionInput") != null){
-			if (clsManageRequestParameters.get_Request_Parameter("OptionInput", m_hsrRequest).equalsIgnoreCase("True")){
-				m_bInputLoaded = true; 
-			}else{
-				m_bInputLoaded = false;
-			}
-		}else{
-			m_bInputLoaded = false;
-		}
-
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

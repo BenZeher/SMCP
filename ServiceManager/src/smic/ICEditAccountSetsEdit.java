@@ -27,13 +27,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditAccountSetsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Account Set";
-	private static String sCalledClassName = "ICEditAccountSetsAction";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sAccountSetsObjectName = "Account Set";
+	private static String sEditAccountSetsCalledClassName = "ICEditAccountSetsAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -47,15 +43,14 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 		{
 			return;
 		}
-
+		 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the account set number
@@ -162,7 +157,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 		}
 		
 		//In any other case, such as the possibility that this is a 'resubmit', we need to edit the account set:
-    	title = "Edit " + sObjectName;
+    	title = "Edit " + sAccountSetsObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -201,7 +196,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(acctset, out, sDBID, sUserName);
+	    Edit_Record(acctset, out, sDBID, sUserID, sUserFullName, sDBID);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -210,9 +205,11 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 			ICAccountSet acctset, 
 			PrintWriter pwOut, 
 			String sConf,
-			String sUser
+			String sUserID,
+			String sUserFullName,
+			String sDBID
 			){
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sEditAccountSetsCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		if(acctset.getNewRecord().compareToIgnoreCase("0") == 0){
 			pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICAccountSet.ParamAccountSetCode 
@@ -224,7 +221,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICAccountSet.ParamLastMaintainedDate 
 				+ "\" VALUE=\"" + acctset.getLastMaintainedDate() + "\">");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
-				+ ICAccountSet.ParamLastEditUser + "\" VALUE=\"" + sUser + "\">");
+				+ ICAccountSet.ParamLastEditUser + "\" VALUE=\"" + sUserFullName + "\">");
 	    pwOut.println("Date last maintained: " + acctset.getLastMaintainedDate());
 	    pwOut.println(" by user: " + acctset.getLastEditUser() + "<BR>");
 	    pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
@@ -393,7 +390,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
         
         pwOut.println("</TABLE>");
         //pwOut.println("<BR>");
-        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sAccountSetsObjectName + "' STYLE='height: 0.24in'></P>");
         pwOut.println("</FORM>");
 		
 	}

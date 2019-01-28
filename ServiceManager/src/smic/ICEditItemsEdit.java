@@ -30,12 +30,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditItemsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Item";
-	private static String sCalledClassName = "ICEditItemsAction";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static String sItemObjectName = "Item";
+	private static String sICEditItemsEditCalledClassName = "ICEditItemsAction";
+
 	private boolean bCreatingAnItemFromPO;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -54,11 +51,11 @@ public class ICEditItemsEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the item number
@@ -193,7 +190,7 @@ public class ICEditItemsEdit extends HttpServlet {
 		}
 		
 		//In any other case, such as the possibility that this is a 'resubmit', we need to edit the item:
-    	title = "Edit " + sObjectName;
+    	title = "Edit " + sItemObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -268,7 +265,7 @@ public class ICEditItemsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(item, out, sDBID, sUserFullName, bCreatingAnItemFromPO, request);
+	    Edit_Record(item, out, sDBID, sUserFullName, bCreatingAnItemFromPO, request, sDBID, sUserID);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -279,9 +276,11 @@ public class ICEditItemsEdit extends HttpServlet {
 			String sConf,
 			String sUserFullName,
 			boolean bCreatingItemFromPO,
-			HttpServletRequest req
+			HttpServletRequest req,
+			String sDBID,
+			String sUserID
 			){
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditItemsEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		if(item.getNewRecord().compareToIgnoreCase("0") == 0){
 			pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICItem.ParamItemNumber + "\" VALUE=\"" + item.getItemNumber() + "\">");
@@ -850,7 +849,7 @@ public class ICEditItemsEdit extends HttpServlet {
         		+ " all of the item statistics from its time as a stock item will be cleared,"
         		+ " but the transaction history will remain.<BR>");
         //pwOut.println("<BR>");
-        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sItemObjectName + "' STYLE='height: 0.24in'></P>");
         pwOut.println("</FORM>");
 		
 	}

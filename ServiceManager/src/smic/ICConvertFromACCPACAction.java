@@ -20,12 +20,10 @@ import java.sql.Connection;
 public class ICConvertFromACCPACAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sStatus = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
+	private String sICConvertFromACCPACActionWarning = "";
+	private String sICConvertFromACCPACActionStatus = "";
+	private String sICConvertFromACCPACActionCallingClass = "";
+
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -44,12 +42,12 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    sICConvertFromACCPACActionCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    /**************Get Parameters**************/
 
 	    /*
@@ -118,10 +116,10 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	if ((request.getParameter("CONVERT_IC") != null)){
     		bConvertIC = true;
         	if (request.getParameter("ConfirmICConversion") == null){
-        		sWarning = "You chose to convert IC from ACCPAC, but you did not check the 'Confirm' checkbox.";
+        		sICConvertFromACCPACActionWarning = "You chose to convert IC from ACCPAC, but you did not check the 'Confirm' checkbox.";
         		response.sendRedirect(
-        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-        				+ "Warning=" + sWarning
+        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+        				+ "Warning=" + sICConvertFromACCPACActionWarning
         				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
             	return;
@@ -130,10 +128,10 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	if ((request.getParameter("CONVERT_POHEADER") != null)){
     		bConvertPOHeaders = true;
         	if (request.getParameter("ConfirmPOHeadConversion") == null){
-        		sWarning = "You chose to convert PO Headers from ACCPAC, but you did not check the 'Confirm' checkbox.";
+        		sICConvertFromACCPACActionWarning = "You chose to convert PO Headers from ACCPAC, but you did not check the 'Confirm' checkbox.";
         		response.sendRedirect(
-        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-        				+ "Warning=" + sWarning
+        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+        				+ "Warning=" + sICConvertFromACCPACActionWarning
         				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
             	return;
@@ -143,10 +141,10 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	if ((request.getParameter("CONVERT_POLINE") != null)){
     		bConvertPOLines = true;
         	if (request.getParameter("ConfirmPOLineConversion") == null){
-        		sWarning = "You chose to convert PO Lines from ACCPAC, but you did not check the 'Confirm' checkbox.";
+        		sICConvertFromACCPACActionWarning = "You chose to convert PO Lines from ACCPAC, but you did not check the 'Confirm' checkbox.";
         		response.sendRedirect(
-        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-        				+ "Warning=" + sWarning
+        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+        				+ "Warning=" + sICConvertFromACCPACActionWarning
         				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
             	return;
@@ -156,10 +154,10 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	if ((request.getParameter("CONVERT_PORECEIPTS") != null)){
     		bConvertPOReceipts = true;
         	if (request.getParameter("ConfirmPOReceiptsConversion") == null){
-        		sWarning = "You chose to convert PO Receipts from ACCPAC, but you did not check the 'Confirm' checkbox.";
+        		sICConvertFromACCPACActionWarning = "You chose to convert PO Receipts from ACCPAC, but you did not check the 'Confirm' checkbox.";
         		response.sendRedirect(
-        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-        				+ "Warning=" + sWarning
+        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+        				+ "Warning=" + sICConvertFromACCPACActionWarning
         				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
             	return;
@@ -169,10 +167,10 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	if ((request.getParameter("CONVERT_ALL") != null)){
     		bConvertAll = true;
         	if (request.getParameter("ConfirmConvertAll") == null){
-        		sWarning = "You chose to convert ALL the IC data from ACCPAC, but you did not check the 'Confirm' checkbox.";
+        		sICConvertFromACCPACActionWarning = "You chose to convert ALL the IC data from ACCPAC, but you did not check the 'Confirm' checkbox.";
         		response.sendRedirect(
-        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-        				+ "Warning=" + sWarning
+        				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+        				+ "Warning=" + sICConvertFromACCPACActionWarning
         				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
             	return;
@@ -190,11 +188,11 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	);
 
     	if (conn == null){
-    		sWarning = "Could not get connection to Service Manager data.";
+    		sICConvertFromACCPACActionWarning = "Could not get connection to Service Manager data.";
     		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Status=" + sStatus
-    				+ "&Warning=" + sWarning
+    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+    				+ "Status=" + sICConvertFromACCPACActionStatus
+    				+ "&Warning=" + sICConvertFromACCPACActionWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID    		);			
         	return;    		
     	}
@@ -209,11 +207,11 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	
     	if (conACCPAC == null){
     		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080805]");
-    		sWarning = "Could not get connection to Service Manager data.";
+    		sICConvertFromACCPACActionWarning = "Could not get connection to Service Manager data.";
     		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Status=" + sStatus
-    				+ "&Warning=" + sWarning
+    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+    				+ "Status=" + sICConvertFromACCPACActionStatus
+    				+ "&Warning=" + sICConvertFromACCPACActionWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID    		
     		);			
         	return;    		
@@ -222,72 +220,72 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	ICConvertACCPAC conv = new ICConvertACCPAC();
     	if (bConvertIC){
 	    	if (!conv.convertICData(conn, conACCPAC, sUserID, out)){
-	    		sWarning = "Error converting IC data: " + conv.getErrorMessage();
-	    		sStatus = "";
+	    		sICConvertFromACCPACActionWarning = "Error converting IC data: " + conv.getErrorMessage();
+	    		sICConvertFromACCPACActionStatus = "";
 	    	}else{
-	    		sStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
+	    		sICConvertFromACCPACActionStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
-	    			sStatus += conv.getStatusMessages().get(i) + "<BR>";
+	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sWarning = "";
+	    		sICConvertFromACCPACActionWarning = "";
 	    	}
     	}
     	if (bConvertPOHeaders){
 	    	if (!conv.convertPOHeaderData(conn, conACCPAC, sUserID, out)){
-	    		sWarning = "Error converting PO data: " + conv.getErrorMessage();
-	    		sStatus = "";
+	    		sICConvertFromACCPACActionWarning = "Error converting PO data: " + conv.getErrorMessage();
+	    		sICConvertFromACCPACActionStatus = "";
 	    	}else{
-	    		sStatus = "Successfully converted PO headerdata from ACCPAC<BR>Events completed:";
+	    		sICConvertFromACCPACActionStatus = "Successfully converted PO headerdata from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
-	    			sStatus += conv.getStatusMessages().get(i) + "<BR>";
+	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sWarning = "";
+	    		sICConvertFromACCPACActionWarning = "";
 	    	}
     	}
     	if (bConvertPOLines){
 	    	if (!conv.convertPOLineData(conn, conACCPAC, sUserID, out)){
-	    		sWarning = "Error converting PO line data: " + conv.getErrorMessage();
-	    		sStatus = "";
+	    		sICConvertFromACCPACActionWarning = "Error converting PO line data: " + conv.getErrorMessage();
+	    		sICConvertFromACCPACActionStatus = "";
 	    	}else{
-	    		sStatus = "Successfully converted PO line data from ACCPAC<BR>Events completed:";
+	    		sICConvertFromACCPACActionStatus = "Successfully converted PO line data from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
-	    			sStatus += conv.getStatusMessages().get(i) + "<BR>";
+	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sStatus = clsServletUtilities.URLEncode(sStatus);
-	    		sWarning = "";
+	    		sICConvertFromACCPACActionStatus = clsServletUtilities.URLEncode(sICConvertFromACCPACActionStatus);
+	    		sICConvertFromACCPACActionWarning = "";
 	    	}
     	}
 
     	if (bConvertPOReceipts){
 	    	if (!conv.convertPOReceiptData(conn, conACCPAC,  sUserID, out)){
-	    		sWarning = "Error converting PO receipt data: " + conv.getErrorMessage();
-	    		sStatus = "";
+	    		sICConvertFromACCPACActionWarning = "Error converting PO receipt data: " + conv.getErrorMessage();
+	    		sICConvertFromACCPACActionStatus = "";
 	    	}else{
-	    		sStatus = "Successfully converted PO receipt data from ACCPAC<BR>Events completed:";
+	    		sICConvertFromACCPACActionStatus = "Successfully converted PO receipt data from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
-	    			sStatus += conv.getStatusMessages().get(i) + "<BR>";
+	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sStatus = clsServletUtilities.URLEncode(sStatus);
-	    		sWarning = "";
+	    		sICConvertFromACCPACActionStatus = clsServletUtilities.URLEncode(sICConvertFromACCPACActionStatus);
+	    		sICConvertFromACCPACActionWarning = "";
 	    	}
     	}
     	
     	if (bConvertAll){
 	    	if (!convertAll(conv, conn, conACCPAC,  sUserID, out)){
 	    	}else{
-	    		sStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
+	    		sICConvertFromACCPACActionStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
-	    			sStatus += conv.getStatusMessages().get(i) + "<BR>";
+	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sWarning = "";
+	    		sICConvertFromACCPACActionWarning = "";
 	    	}
     	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080806]");
     	clsDatabaseFunctions.freeConnection(getServletContext(), conACCPAC, "[1547080807]");
 		response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Status=" + sStatus
-				+ "&Warning=" + sWarning
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICConvertFromACCPACActionCallingClass + "?"
+				+ "Status=" + sICConvertFromACCPACActionStatus
+				+ "&Warning=" + sICConvertFromACCPACActionWarning
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID    		
 		);			
     	return;    		
@@ -301,26 +299,26 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 			){
 		
 		if (!conv.convertICData(conn, conACCPAC,  sUserID, out)){
-    		sWarning = "Error converting IC data: " + conv.getErrorMessage();
-    		sStatus = "";
+    		sICConvertFromACCPACActionWarning = "Error converting IC data: " + conv.getErrorMessage();
+    		sICConvertFromACCPACActionStatus = "";
     		return false;
     	}
 		
 		if (!conv.convertPOHeaderData(conn, conACCPAC, sUserID, out)){
-    		sWarning = "Error converting po header data: " + conv.getErrorMessage();
-    		sStatus = "";
+    		sICConvertFromACCPACActionWarning = "Error converting po header data: " + conv.getErrorMessage();
+    		sICConvertFromACCPACActionStatus = "";
     		return false;
     	}
 		
 		if (!conv.convertPOLineData(conn, conACCPAC, sUserID, out)){
-    		sWarning = "Error converting PO line data: " + conv.getErrorMessage();
-    		sStatus = "";
+    		sICConvertFromACCPACActionWarning = "Error converting PO line data: " + conv.getErrorMessage();
+    		sICConvertFromACCPACActionStatus = "";
     		return false;
     	}
 
 		if (!conv.convertPOReceiptData(conn, conACCPAC, sUserID, out)){
-    		sWarning = "Error converting po receipt data: " + conv.getErrorMessage();
-    		sStatus = "";
+    		sICConvertFromACCPACActionWarning = "Error converting po receipt data: " + conv.getErrorMessage();
+    		sICConvertFromACCPACActionStatus = "";
     		return false;
     	}
 

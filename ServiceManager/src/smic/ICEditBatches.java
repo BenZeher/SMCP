@@ -35,11 +35,8 @@ public class ICEditBatches extends HttpServlet {
 	 * Parameters:
 	 * Limit - e.g. Limit=25 - number of batches to list
 	 */
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
-	private static String sObjectName = "Batch";
+
+	private static final String sBatchObjectName = "Batch";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -55,11 +52,11 @@ public class ICEditBatches extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //Get the variables for the class:
 	    String sNumberOfBatchesToDisplay;
@@ -69,7 +66,7 @@ public class ICEditBatches extends HttpServlet {
 	    	sNumberOfBatchesToDisplay = request.getParameter("Limit");
 	    }
 
-	    String title = "Edit " + sObjectName + "es.";
+	    String title = "Edit " + sBatchObjectName + "es.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getJQueryIncludeString());
@@ -258,7 +255,8 @@ public class ICEditBatches extends HttpServlet {
 	        			rs.getString(ICEntryBatch.datlasteditdate),
 	        			rs.getString(ICEntryBatch.datpostdate),
 	        			request,
-	        			getServletContext()
+	        			getServletContext(),
+	        			sDBID
         			)
         		);
         		//End the row:
@@ -295,7 +293,8 @@ public class ICEditBatches extends HttpServlet {
 			String sLastEditedDate,
 			String sPostingDate,
 			HttpServletRequest req,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 			){
 
 		String sOutPut = "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

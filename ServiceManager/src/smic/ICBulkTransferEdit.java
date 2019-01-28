@@ -31,7 +31,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff";
 	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
-	private static String sCalledClassName = "ICBulkTransferAction";
+	private static String sICBulkTransferEditCalledClassName = "ICBulkTransferAction";
 	public static final int INITIAL_NUMBER_OF_ROWS = 25;
 	public static final String PARAM_COMMAND = "COMMAND";
 	public static final String PARAM_COMMAND_CREATE = "CREATEBATCH";
@@ -39,15 +39,14 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	public static final String PARAM_COMMAND_ADD_TEN_ROWS = "ADDTENROWS";
 	private static final String CREATE_BATCH_LABEL = "Create batch";
 	private static final String VALIDATE_BATCH_LABEL = "Validate batch";
-	private static final String ADD_TEN_ROWS_LABEL = "Add " + Integer.toString(ICBulkTransferAction.NUMBER_OF_ROWS_TO_ADD) + " rows";
+	private static final String ADD_TEN_ROWS_LABEL = "Add " + Integer.toString(ICBulkTransferAction.BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD) + " rows";
 	public static final String PARAM_COMMAND_RESTOCK_FROM_SHIPMENTS = "RESTOCKFROMSHIPMENTS";
 	public static final String RESTOCK_FROM_SHIPMENTS_LABEL = "Restock location(s)";
 	public static final String STARTING_DATE_FIELD = "STARTINGDATE";
 	public static final String LOCATION_PARAMETER = "RESTOCKLOCATION";
 	public static final String RESTOCK_FROM_LOCATION_PARAMETER = "RESTOCKFROMLOCATION";
-	private static String sCompanyName = "";
-	private static String sDBID = "";
-	private static String sUserName = "";
+
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -72,7 +71,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	    
 	    //We always want the ICEntry to display a minimum number of lines:
 	    int iNumberOfRowsToDisplay = INITIAL_NUMBER_OF_ROWS;
-	    String sNumberOfRows = clsManageRequestParameters.get_Request_Parameter(ICBulkTransferAction.PARAM_TOTAL_NUMBER_OF_ROWS, request);
+	    String sNumberOfRows = clsManageRequestParameters.get_Request_Parameter(ICBulkTransferAction.PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS, request);
 	    try {
 			iNumberOfRowsToDisplay = Integer.parseInt(sNumberOfRows);
 		} catch (NumberFormatException e) {
@@ -85,9 +84,9 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	    	entry.add_line(line);
 	    }
 	    
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    
 	    String sScript = "";
 		
@@ -157,7 +156,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICPrintUPCLabels) 
 	    		+ "\">Summary</A><BR>");
 	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) 
-	    		+ "smic." + sCalledClassName + "' METHOD='POST'>");
+	    		+ "smic." + sICBulkTransferEditCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"" + PARAM_COMMAND + "\" VALUE=\"" + "" + "\""
 	    		+ " id=\"" + PARAM_COMMAND + "\"" + "\">");
@@ -173,12 +172,12 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + ICEntry.ParamNumberOfLines + "' VALUE='" + Integer.toString(entry.getLineCount()) + "'>");
 	    
 	    //This tells the program how many rows to actually DISPLAY on the screen:
-	    out.println("<INPUT TYPE=HIDDEN NAME='" + ICBulkTransferAction.PARAM_TOTAL_NUMBER_OF_ROWS 
+	    out.println("<INPUT TYPE=HIDDEN NAME='" + ICBulkTransferAction.PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS 
 	    	+ "' VALUE='" + Integer.toString(entry.getLineCount()) + "'>");
 	    
 		out.println("\n" + sStyleScripts() + "\n");
 		
-		out.println("<INPUT TYPE=HIDDEN NAME='" + ICBulkTransferAction.PARAM_CALLINGCLASS + "' VALUE=\"" + this.getClass().getName() + "\">");
+		out.println("<INPUT TYPE=HIDDEN NAME='" + ICBulkTransferAction.PARAM_BULK_TANSFER_CALLINGCLASS + "' VALUE=\"" + this.getClass().getName() + "\">");
 		
 	    String sItemNumber = "";
 	    String sQuantity = "";

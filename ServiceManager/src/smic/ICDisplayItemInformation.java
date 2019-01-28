@@ -47,13 +47,8 @@ import smcontrolpanel.SMUtilities;
 public class ICDisplayItemInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sCompanyName = "";
+	private String sICDisplayItemInformationWarning = "";
+
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
@@ -73,16 +68,16 @@ public class ICDisplayItemInformation extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
     	String sItemNumber = clsManageRequestParameters.get_Request_Parameter("ItemNumber", request).replace(" ", "");
 
@@ -143,10 +138,10 @@ public class ICDisplayItemInformation extends HttpServlet {
     			+ sUserLastName
     			);
     	if (conn == null){
-    		sWarning = "Unable to get data connection.";
+    		sICDisplayItemInformationWarning = "Unable to get data connection.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + sWarning
+				+ "Warning=" + sICDisplayItemInformationWarning
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -155,7 +150,7 @@ public class ICDisplayItemInformation extends HttpServlet {
     	//If there are 'sister companies' with the same part, display links to them here, but ONLY IF
     	//this is NOT a link to a 'sister' company itself:
     	if (sSisterCompany.compareToIgnoreCase("") == 0){
-    		createSisterCompanyLinks(sItemNumber, conn, out);
+    		createSisterCompanyLinks(sItemNumber, conn, out, sDBID);
     	}
 	    //isFunctionPermitted
     	out.println("<B><U>OPTIONS</U></B><BR>");
@@ -234,14 +229,15 @@ public class ICDisplayItemInformation extends HttpServlet {
     		out,
     		sLicenseModuleLevel,
     		getServletContext(),
-    		sUserID)){
+    		sUserID,
+    		sDBID)){
     	}
     	
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080814]");
     	
 	    out.println("</BODY></HTML>");
 	}
-	private void createSisterCompanyLinks(String sItem, Connection con, PrintWriter pwOut){
+	private void createSisterCompanyLinks(String sItem, Connection con, PrintWriter pwOut, String sDBID){
 		String sSisterCompanyName1 = "";
 		String sSisterCompanyName2 = "";
 		String sSisterCompanyDb1 = "";
@@ -388,7 +384,8 @@ public class ICDisplayItemInformation extends HttpServlet {
 		PrintWriter pwOut,
 		String sLicenseModLevel,
 		ServletContext context,
-		String sUser){
+		String sUserID,
+		String sDBID){
 	
 		String sFullDatabaseName = "";
 		if (sDbName.compareToIgnoreCase("") != 0){
@@ -1285,9 +1282,9 @@ public class ICDisplayItemInformation extends HttpServlet {
 		if (bIncludeAPInvoiceInformation){
 			//Get permissions for the links:
 			
-			boolean bViewInvoiceLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.APViewTransactionInformation, sUser, conn, sLicenseModLevel);
-			boolean bViewPOLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.ICEditPurchaseOrders, sUser, conn, sLicenseModLevel);
-			boolean bViewReceiptLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.ICEditReceipts, sUser, conn, sLicenseModLevel);
+			boolean bViewInvoiceLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.APViewTransactionInformation, sUserID, conn, sLicenseModLevel);
+			boolean bViewPOLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.ICEditPurchaseOrders, sUserID, conn, sLicenseModLevel);
+			boolean bViewReceiptLinks = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.ICEditReceipts, sUserID, conn, sLicenseModLevel);
 
 			try{
 				SQL = "SELECT "

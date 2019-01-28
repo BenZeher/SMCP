@@ -35,16 +35,8 @@ public class ICEditBatchesEdit extends HttpServlet {
 	 * BatchNumber - batch number
 	 * BatchType - batch type - an integer passed as a string
 	 */
-	private static String sObjectName = "Batch";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
-	
-	//public static String CREATEGLBATCH_BUTTON_NAME = "CREATEGLBATCH";
-	//public static String CREATEGLBATCH_BUTTON_LABEL = "Re-create GL batch";
-	
+	private static final String sBatchObjectName = "Batch";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -61,12 +53,12 @@ public class ICEditBatchesEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 		String title = "";
 		String subtitle = "";
@@ -76,7 +68,7 @@ public class ICEditBatchesEdit extends HttpServlet {
 			if (request.getParameter("BatchNumber").compareToIgnoreCase("-1") == 0){
 				title = "Add new batch";
 			}else{
-				title = "Edit " + sObjectName + ": " + (String) request.getParameter("BatchNumber");
+				title = "Edit " + sBatchObjectName + ": " + (String) request.getParameter("BatchNumber");
 			}
 		}
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -159,7 +151,7 @@ public class ICEditBatchesEdit extends HttpServlet {
            		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Re-create export file</A><BR><BR>");
         }
 		
-	    Edit_Record(batch, sUserName, out, request, sDBID, false);
+	    Edit_Record(batch, sUserName, out, request, sDBID, false, sUserID, sUserFullName);
 	    out.println(getJavaScript());
 		out.println("</BODY></HTML>");
 	}
@@ -179,8 +171,10 @@ public class ICEditBatchesEdit extends HttpServlet {
 			String sUserName,
 			PrintWriter pwOut, 
 			HttpServletRequest req,
-			String sConf,
-			boolean bAddNew){
+			String sDBID,
+			boolean bAddNew,
+			String sUserID, 
+			String sUserFullName){
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesUpdate' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
@@ -242,16 +236,16 @@ public class ICEditBatchesEdit extends HttpServlet {
 	    	}
             
         	pwOut.println("<BR><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Save "
-        			+ sObjectName + "' STYLE='height: 0.24in'>");
+        			+ sBatchObjectName + "' STYLE='height: 0.24in'>");
         	
         	if (
         			(batch.iBatchStatus() == SMBatchStatuses.ENTERED)
         			|| (batch.iBatchStatus() == SMBatchStatuses.IMPORTED)
         	){
-        		pwOut.println("  <INPUT TYPE=SUBMIT NAME='Post' VALUE='Post " + sObjectName + "' STYLE='height: 0.24in'>");
+        		pwOut.println("  <INPUT TYPE=SUBMIT NAME='Post' VALUE='Post " + sBatchObjectName + "' STYLE='height: 0.24in'>");
         		pwOut.println("  Check to confirm posting: <INPUT TYPE=CHECKBOX NAME=\"ConfirmPost\">");
         	}
-        	pwOut.println("  <INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sObjectName + "' STYLE='height: 0.24in'>");
+        	pwOut.println("  <INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sBatchObjectName + "' STYLE='height: 0.24in'>");
         	pwOut.println("  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
         	
         	pwOut.println("</FORM>");
@@ -378,7 +372,7 @@ public class ICEditBatchesEdit extends HttpServlet {
 		        ResultSet rsEntries = clsDatabaseFunctions.openResultSet(
 		        	SQL, 
 		        	getServletContext(), 
-		        	sConf,
+		        	sDBID,
 		        	"MySQL",
 		        	this.toString() + ".Edit_Record - User: " + sUserID
 		        	+ " - "

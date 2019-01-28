@@ -39,11 +39,9 @@ import ServletUtilities.clsServletUtilities;
 public class ICClearTransactionsAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private static String m_sWarning = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sSendRedirect = "";
+	private static String m_ICClearTransactionsActionsWarning = "";
+	private static String sICClearTransactionsActionSendRedirect = "";
+	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -70,9 +68,9 @@ public class ICClearTransactionsAction extends HttpServlet{
 		
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		//Need a connection for the data transaction:
 		Connection conn = clsDatabaseFunctions.getConnection(
@@ -86,22 +84,22 @@ public class ICClearTransactionsAction extends HttpServlet{
 				
 				);
 		if (conn == null){
-			m_sWarning = "Unable to get data connection.";
+			m_ICClearTransactionsActionsWarning = "Unable to get data connection.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);			
 			return;
 		}
 
 		if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sClearingDate)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080800]");
-			m_sWarning = "Invalid clearing date.";
+			m_ICClearTransactionsActionsWarning = "Invalid clearing date.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);
 			return;
 		}
@@ -110,33 +108,33 @@ public class ICClearTransactionsAction extends HttpServlet{
 		try {
 			datClearingDate = clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sClearingDate);
 		} catch (ParseException e) {
-			m_sWarning = "Error:[1423767071] Invalid clearing date: '" + sClearingDate + "' - " + e.getMessage();
+			m_ICClearTransactionsActionsWarning = "Error:[1423767071] Invalid clearing date: '" + sClearingDate + "' - " + e.getMessage();
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);
 			return;
 		}
 		java.sql.Date datNow =  clsDateAndTimeConversions.nowAsSQLDate();
 		if (datClearingDate.after(datNow)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080801]");
-			m_sWarning = "Invalid clearing date - you cannot choose a date later than today.";
+			m_ICClearTransactionsActionsWarning = "Invalid clearing date - you cannot choose a date later than today.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);
 			return;
 		}
 
 		if (request.getParameter("ConfirmClear") == null){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080802]");
-			m_sWarning = "You chose to clear, but did not check the box to confirm.";
+			m_ICClearTransactionsActionsWarning = "You chose to clear, but did not check the box to confirm.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);
 			return;
 		}
@@ -157,22 +155,22 @@ public class ICClearTransactionsAction extends HttpServlet{
 			if (rs.next()){
 				rs.close();
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080803]");
-				m_sWarning = "There are unposted batches - these must be posted before you can clear transactions.";
+				m_ICClearTransactionsActionsWarning = "There are unposted batches - these must be posted before you can clear transactions.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 						+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-						+ "&Warning=" + m_sWarning
+						+ "&Warning=" + m_ICClearTransactionsActionsWarning
 				);
 				return;
 			}
 			rs.close();
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080804]");
-			m_sWarning = "Error checking for unposted batches - with SQL: " + SQL + " - " + e1.getMessage() + ".";
+			m_ICClearTransactionsActionsWarning = "Error checking for unposted batches - with SQL: " + SQL + " - " + e1.getMessage() + ".";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning
 			);
 			return;		
 		}
@@ -202,23 +200,23 @@ public class ICClearTransactionsAction extends HttpServlet{
 			);
 			return;
 		}
-		clearTransactionProcess(conn,sCallingClass, datClearingDate, log);
+		clearTransactionProcess(conn, sDBID, sUserID, sCallingClass, datClearingDate, log);
 		try {
 			icopt.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
 		} catch (Exception e) {
 			//We won't stop for this, but the next user will have to clear the IC posting flag
 		}
-		response.sendRedirect(sSendRedirect);
+		response.sendRedirect(sICClearTransactionsActionSendRedirect);
 		return;
 	}
 	
-	public void clearTransactionProcess(Connection conn, String sCallingClass, java.sql.Date datClearingDate, SMLogEntry log){
+	public void clearTransactionProcess(Connection conn, String sDBID, String sUserID, String sCallingClass, java.sql.Date datClearingDate, SMLogEntry log){
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080796]");
-			m_sWarning = "Could not start data transaction.";
-			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			m_ICClearTransactionsActionsWarning = "Could not start data transaction.";
+			sICClearTransactionsActionSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning;
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning;
 			return;
 		}
 
@@ -226,18 +224,18 @@ public class ICClearTransactionsAction extends HttpServlet{
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080797]");
 
-			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			sICClearTransactionsActionSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning;
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning;
 			return;
 		}
 
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080798]");
-			m_sWarning = "Could not commit data transaction.";
-			sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			m_ICClearTransactionsActionsWarning = "Could not commit data transaction.";
+			sICClearTransactionsActionSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning;
+					+ "&Warning=" + m_ICClearTransactionsActionsWarning;
 			return;
 		}
 
@@ -251,7 +249,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080799]");
 		String sStatus = "Completed and deleted transactions through " 
 			+ clsDateAndTimeConversions.utilDateToString(datClearingDate, "MM-dd-yyyy") + " were cleared.";
-		sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+		sICClearTransactionsActionSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&Status=" + sStatus;
 		return;
@@ -295,7 +293,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete physical inventories with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete physical inventories with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -315,7 +313,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete inventory worksheets statement with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete inventory worksheets statement with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -335,7 +333,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icphysicalcounts with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icphysicalcounts with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -355,7 +353,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icphysicalcountlines with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icphysicalcountlines with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -372,7 +370,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icinvoiceexportsequences with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icinvoiceexportsequences with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -390,7 +388,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icpoinvoiceheaders with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icpoinvoiceheaders with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -410,7 +408,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icpoinvoicelines with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icpoinvoicelines with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -445,7 +443,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icporeceiptheaders with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icporeceiptheaders with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -465,7 +463,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icporeceiptlines with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icporeceiptlines with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -493,7 +491,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icpoheaders with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icpoheaders with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -513,7 +511,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete icpolines with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete icpolines with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}	
@@ -530,7 +528,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete ictransactions with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete ictransactions with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}
@@ -550,7 +548,7 @@ public class ICClearTransactionsAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-			m_sWarning = "Could not delete ictransactionlines with SQL: " + SQL
+			m_ICClearTransactionsActionsWarning = "Could not delete ictransactionlines with SQL: " + SQL
 			+ " - " + e1.getMessage() + ".";
 			return false;
 		}

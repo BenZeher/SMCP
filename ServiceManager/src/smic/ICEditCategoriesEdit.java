@@ -27,13 +27,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditCategoriesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Category";
-	private static String sCalledClassName = "ICEditCategoriesAction";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static String sCategoryObjectName = "Category";
+	private static String sICEditCategoriesEditCalledClassName = "ICEditCategoriesAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -50,11 +46,11 @@ public class ICEditCategoriesEdit extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the customer number
@@ -162,7 +158,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 		}
 		
 		//In any other case, such as the possibility that this is a 'resubmit', we need to edit the customer:
-    	title = "Edit " + sObjectName;
+    	title = "Edit " + sCategoryObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -201,7 +197,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(category, out, sDBID, sUserName);
+	    Edit_Record(category, out, sDBID, sUserFullName, sUserID);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -209,10 +205,11 @@ public class ICEditCategoriesEdit extends HttpServlet {
 	private void Edit_Record(
 			ICCategory category, 
 			PrintWriter pwOut, 
-			String sConf,
-			String sUser
+			String sDBID,
+			String sUserFullName,
+			String sUserID
 			){
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditCategoriesEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		if(category.getNewRecord().compareToIgnoreCase("0") == 0){
 			pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICCategory.ParamCategoryCode 
@@ -224,7 +221,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICCategory.ParamLastMaintainedDate 
 				+ "\" VALUE=\"" + category.getLastMaintainedDate() + "\">");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
-				+ ICCategory.ParamLastEditUser + "\" VALUE=\"" + sUser + "\">");
+				+ ICCategory.ParamLastEditUser + "\" VALUE=\"" + sUserFullName + "\">");
 	    pwOut.println("Date last maintained: " + category.getLastMaintainedDate());
 	    pwOut.println(" by user: " + category.getLastEditUser() + "<BR>");
 	    pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
@@ -315,7 +312,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record - User: " + sUserID
 	        	+ " - "
@@ -359,7 +356,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 
         pwOut.println("</TABLE>");
         //pwOut.println("<BR>");
-        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sCategoryObjectName + "' STYLE='height: 0.24in'></P>");
         pwOut.println("</FORM>");
 		
 	}

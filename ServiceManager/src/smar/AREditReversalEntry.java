@@ -76,36 +76,21 @@ public class AREditReversalEntry extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 
-	private static String sObjectName = "Reversal Entry";
+	private static final String sObjectName = "Reversal Entry";
 	
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sEditable;
-	private String m_sBatchType;
-	private String m_sDocumentType;
-	private String m_sWarning;
-	private String m_sApplyToDocumentID;
-	private ARTransaction m_Transaction;
-	private AREntryInput m_EntryInput;
-	private String m_sCustomerARAcct;
 	private String m_sCustomerARCustomerDepositAcct;
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
-	private boolean m_bIsNewEntry = false;
-	private boolean m_bEditable = false;
+
 	//We'll use these to store the GL List, so we don't have to load it several times:
-    private ArrayList<String> m_sGLValues = new ArrayList<String>();
+	// TJR - 1/28/2019 - these are global variables, but they only get written once, so we're leaving them here for now
+	//    because they speed up processing.
+	private ArrayList<String> m_sGLValues = new ArrayList<String>();
     private ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
 
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		m_pwOut = response.getWriter();
+		PrintWriter m_pwOut = response.getWriter();
 		if(!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 
@@ -116,36 +101,64 @@ public class AREditReversalEntry extends HttpServlet {
 			}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
-		m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
+		AREntryInput m_EntryInput = (AREntryInput) CurrentSession.getAttribute("EntryInput");
 		//Get rid of the session variable immediately:
 		CurrentSession.removeAttribute("EntryInput");
 	    
-		m_hsrRequest = request;
-	    get_request_parameters();
-	    
-		//Try to load an AREntryInput object from which to build the form:
-		if (!loadAREntryInput()){
-    		response.sendRedirect(
-					SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARSelectDocID"
-					+ "?BatchNumber=" + m_sBatchNumber
-					+ "&BatchType=" + m_sBatchType
-					+ "&DocumentID=" + m_sApplyToDocumentID
-					+ "&DocumentType=" + m_sDocumentType
-					+ "&Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-        		);
-			return;
+		boolean m_bIsNewEntry = false;
+		if (request.getParameter("EntryNumber") != null){
+			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+				m_bIsNewEntry = true; 
+			}
 		}
 
-		//System.out.println("In " + this.toString() + " AREntryInput Dump:\n" + m_EntryInput.getDataDump());
-		
+		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
+		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
+		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		boolean m_bEditable = false;
+		if (m_sEditable.compareToIgnoreCase("Yes") == 0){
+			m_bEditable = true;
+		}else {
+			m_bEditable = false;
+		}
+		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
+		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+	    
+		//Try to load an AREntryInput object from which to build the form:
+		if (m_EntryInput == null){
+			try {
+				m_EntryInput = loadAREntryInput(
+					sDBID,
+					sUserID, 
+					sUserFullName,
+					m_sBatchNumber,
+					m_sEntryNumber,
+					m_sBatchType,
+					m_bIsNewEntry,
+					m_sApplyToDocumentID
+				);
+			} catch (Exception e) {
+	    		response.sendRedirect(
+						SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARSelectDocID"
+						+ "?BatchNumber=" + m_sBatchNumber
+						+ "&BatchType=" + m_sBatchType
+						+ "&DocumentID=" + m_sApplyToDocumentID
+						+ "&DocumentType=" + m_sDocumentType
+						+ "&Warning=" + m_sWarning
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	        		);
+				return;
+			}
+		}
 	    String title;
 	    String subtitle = "";
 	    if (m_bIsNewEntry){
@@ -172,7 +185,7 @@ public class AREditReversalEntry extends HttpServlet {
 	    		+ "\">Return to Edit Batch " + m_EntryInput.getsBatchNumber() + "</A><BR><BR>");
 
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromAREntryInput(sDBID)){
+		if (!createFormFromAREntryInput(sDBID, sUserID, sUserFullName, m_pwOut, m_EntryInput, m_bEditable, m_sApplyToDocumentID)){
     		m_pwOut.println(
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARSelectDocID"
@@ -190,215 +203,294 @@ public class AREditReversalEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadAREntryInput(){
+	private AREntryInput loadAREntryInput(
+			String sDBID,
+			String sUserID,
+			String sUserFullName,
+			String sBatchNumber,
+			String sEntryNumber,
+			String sBatchType,
+			boolean bIsNewEntry,
+			String sApplyToDocumentID
+			) throws Exception{
+		
+		AREntryInput m_EntryInput = new AREntryInput();
+		String m_sCustomerARAcct = "";
 		
 		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
-		if (m_EntryInput == null){
-
-			//Have to construct the AREntryInput object here:
-			m_EntryInput = new AREntryInput();
-			if (m_bIsNewEntry){
-				//If it's a new entry:
-				//Load the transaction this adjustment will apply to:
-				//Load the transaction this adjustment will apply to:
-				if(!ARUtilities.IsValidLong(m_sApplyToDocumentID)){
-		    		m_sWarning = "Document ID " + m_sApplyToDocumentID + " is not valid.";
-		    		return false;
+		//Have to construct the AREntryInput object here:
+		m_EntryInput = new AREntryInput();
+		if (bIsNewEntry){
+			//If it's a new entry:
+			//Load the transaction this adjustment will apply to:
+			//Load the transaction this adjustment will apply to:
+			if(!ARUtilities.IsValidLong(sApplyToDocumentID)){
+	    		throw new Exception("Document ID " + sApplyToDocumentID + " is not valid.");
+			}
+	    	ARTransaction m_Transaction = new ARTransaction(sApplyToDocumentID);
+	    	if (! m_Transaction.load(getServletContext(), sDBID)){
+	    		throw new Exception("Could not load transaction with document ID: " + sApplyToDocumentID + " - " + m_Transaction.getErrorMessage());
+	    	}	    	
+	    	
+	    	//If it has already been reversed, do not let it be reversed again:
+	    	try {
+				if (checkForPreviousReversal(m_Transaction.getsTransactionID(), sDBID, sUserID, sUserFullName)){
+					throw new Exception("This document was already reversed and can't be reversed again.");
 				}
-		    	m_Transaction = new ARTransaction(m_sApplyToDocumentID);
-		    	if (! m_Transaction.load(getServletContext(), sDBID)){
-		    		m_sWarning = "Could not load transaction with document ID: " + m_sApplyToDocumentID;
-		    		m_sWarning += " - " + m_Transaction.getErrorMessage();
-		    		return false;
-		    	}	    	
-		    	
-		    	//If it has already been reversed, do not let it be reversed again:
-		    	try {
-					if (checkForPreviousReversal(m_Transaction.getsTransactionID())){
-						m_sWarning = "This document was already reversed and can't be reversed again.";
-						return false;
+			} catch (SQLException e) {
+				throw new Exception(e.getMessage());
+			}
+	    	
+	    	//Confirm that the transaction CAN be reversed, i.e., that it's either a receipt,
+	    	//or a prepay, or a misc cash entry, or an apply-to:
+	    	if (
+	    			m_Transaction.getiDocType() == ARDocumentTypes.APPLYTO
+	    			|| m_Transaction.getiDocType() == ARDocumentTypes.MISCRECEIPT
+	    			|| m_Transaction.getiDocType() == ARDocumentTypes.PREPAYMENT
+	    			|| m_Transaction.getiDocType() == ARDocumentTypes.RECEIPT
+	    		){
+	    		
+	    	}else{
+	    		throw new Exception("Can not reverse " + ARDocumentTypes.Get_Document_Type_Label(m_Transaction.getiDocType()) + ".");
+	    	}
+	    	
+			m_EntryInput.setBatchNumber(sBatchNumber);
+			m_EntryInput.setBatchType(sBatchType);
+			m_EntryInput.setCustomerNumber(m_Transaction.getCustomerNumber());
+			String sCashAcct = m_Transaction.getControlAcct();
+			if (sCashAcct.compareToIgnoreCase("") != 0){
+				m_EntryInput.setControlAcct(m_Transaction.getControlAcct());
+			}
+			//Get the batch date as the default entry date:
+			ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
+			try {
+				batch.load(getServletContext(), sDBID);
+				m_EntryInput.setDocDate(batch.sStdBatchDateString());
+			} catch (Exception e) {
+				m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
+			}
+			m_EntryInput.setDocDescription("Reversed doc ID: " + sApplyToDocumentID);
+			m_EntryInput.setDocumentType(Integer.toString(ARDocumentTypes.REVERSAL));
+			m_EntryInput.setEntryNumber("-1");
+			m_EntryInput.setEntryID("-1");
+			m_EntryInput.setOriginalAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+					m_Transaction.getdOriginalAmount().negate()));
+			
+			//For reversals of misc receipts, we just need to create a line from the original transaction
+			//Add one entry line to reverse the original entry:
+			ARLineInput line;
+			if (m_Transaction.getiDocType() == ARDocumentTypes.MISCRECEIPT){
+				line = new ARLineInput();
+				//We use the amount of the artransaction as the line amount:
+				line.setAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_Transaction.getdOriginalAmount()));
+				line.setApplyToOrderNumber(m_Transaction.getOrderNumber());
+				line.setComment("Reversing a " + ARDocumentTypes.Get_Document_Type_Label(m_Transaction.getiDocType()));
+				line.setDescription("");
+				line.setDocAppliedTo(m_Transaction.getDocNumber());
+				line.setDocAppliedToID(sApplyToDocumentID);
+				line.setEntryID("-1");
+				line.setLineID("-1");
+				//On a misc receipt reversal, the user has to pick the distribution GL (usually a
+				//misc income account), so we don't set that here
+				m_EntryInput.addLine(line);
+			}else{
+				//Get the customer name here:
+			    if (m_EntryInput.getsCustomerNumber().compareToIgnoreCase("") != 0){
+			    	ARCustomer m_Customer = new ARCustomer(m_EntryInput.getsCustomerNumber());
+					if (! m_Customer.load(getServletContext(), sDBID)){
+						throw new Exception("Could not load customer: " + m_EntryInput.getsCustomerNumber());
 					}
-				} catch (SQLException e) {
-					m_sWarning = e.getMessage();
-					return false;
+			    	m_sCustomerARAcct = m_Customer.getARControlAccount(
+			    			getServletContext(), sDBID);
+			    	m_sCustomerARCustomerDepositAcct = m_Customer.getARPrepayLiabilityAccount(
+			    			getServletContext(), sDBID);
+			    }
+				//For reversals of cash, prepays, and apply-to's, we need to read the lines:
+				//Misc receipts won't have any . . . . 
+			    
+			    //Now load the child matching lines:
+			    
+				//Now we get all of the transactions that the 'to-be-reversed' transaction applied to.  If the
+				//to-be-reversed transaction is an apply-to, then we just have to get all of the armatching lines
+				//that it included.  But if it's a pre-pay, or a receipt that we're trying to reverse,
+				//we only need the matching lines that the to-be-reversed transaction created, but that
+				//don't apply back to itself:
+				String SQL = "SELECT *" 
+					+ " FROM " + SMTablearmatchingline.TableName
+					+ " WHERE (";
+							if (m_Transaction.getiDocType() == ARDocumentTypes.APPLYTO){
+								//If it's an apply-to, we have to get all the lines from the apply-to:
+								SQL = SQL + "(" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid
+									+ " = " +  m_Transaction.getsTransactionID() + ")";
+							}else{
+								//If it's a receipt or prepay, we only need the lines from the original transaction
+								//that were applied to OTHER transactions:
+								SQL = SQL +  "(" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sdocnumber
+									+ " = '" +  m_Transaction.getDocNumber() + "')"
+									+ " AND ("+ SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
+									+ " = '" +  m_Transaction.getCustomerNumber() + "')"
+						
+									+ " AND ("+ SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sapplytodoc
+									+ " != '" +  m_Transaction.getDocNumber() + "')";
+							}
+						SQL = SQL + ")"
+						+ " ORDER BY " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lid
+						;
+		        try{
+			        ResultSet rsMatchingLines = clsDatabaseFunctions.openResultSet(
+			        	SQL, 
+			        	getServletContext(), 
+			        	sDBID,
+			        	"MySQL",
+			        	this.toString() + ".loadChildMatchingLines (1) - User: " + sUserID
+			        	+ " - "
+			        	+ sUserFullName
+			        		);
+			        while (rsMatchingLines.next()){
+			        	ARLineInput ar_line = new ARLineInput();
+			        	//We negate the line because we want to do an exact reverse:
+			        	ar_line.setAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsMatchingLines.getBigDecimal(SMTableartransactionline.damount).negate()));
+			        	SQL = "SELECT * FROM " + SMTableartransactions.TableName
+			        		+ " WHERE ("
+			        			+ SMTableartransactions.TableName + "." + SMTableartransactions.lid
+			        			+ " = " + Long.toString(rsMatchingLines.getLong(SMTablearmatchingline.ldocappliedtoid))
+			        		+ ")"
+			        	;
+			        	ResultSet rsApplyToTransactions = clsDatabaseFunctions.openResultSet(
+			    	        	SQL, 
+			    	        	getServletContext(), 
+			    	        	sDBID,
+			    	        	"MySQL",
+			    	        	this.toString() + ".loadChildMatchingLines (2) - User: " + sUserID
+			    	        	+ " - "
+			    	        	+ sUserFullName
+			    	        	);
+			        	if(rsApplyToTransactions.next()){
+			            	String sOriginalApplyToID = Long.toString(rsApplyToTransactions.getLong(SMTableartransactions.lid));
+			            	ar_line.setDocAppliedTo(rsApplyToTransactions.getString(SMTableartransactions.sdocnumber));
+			            	ar_line.setDocAppliedToID(sOriginalApplyToID);
+			            	ar_line.setApplyToOrderNumber(rsApplyToTransactions.getString(SMTableartransactions.sordernumber));
+			            	ar_line.setComment("Un-applying from ID " + sOriginalApplyToID);
+			            	ar_line.setDescription(
+				        		"Reverse original application from Doc ID: " + m_Transaction.getsTransactionID() 
+				        		+ " to Doc ID: " + sOriginalApplyToID);
+			            	ar_line.setEntryID("-1");
+				        	//This account will always be the customer's AR account:
+			            	ar_line.setLineAcct("");
+			        	}else{
+			        		throw new Exception("Could not load apply-to transaction for doc ID: " + m_Transaction.getsTransactionID());
+			        	}
+			        	rsApplyToTransactions.close();
+			        	m_EntryInput.addLine(ar_line);
+			        }
+			        rsMatchingLines.close();
+
+				}catch (SQLException ex){
+					throw new Exception("Error [1548709140] loading child matching lines - " + ex.getMessage());
 				}
-		    	
-		    	//Confirm that the transaction CAN be reversed, i.e., that it's either a receipt,
-		    	//or a prepay, or a misc cash entry, or an apply-to:
-		    	if (
-		    			m_Transaction.getiDocType() == ARDocumentTypes.APPLYTO
-		    			|| m_Transaction.getiDocType() == ARDocumentTypes.MISCRECEIPT
-		    			|| m_Transaction.getiDocType() == ARDocumentTypes.PREPAYMENT
-		    			|| m_Transaction.getiDocType() == ARDocumentTypes.RECEIPT
-		    		){
-		    		
-		    	}else{
-		    		m_sWarning = "Can not reverse " + ARDocumentTypes.Get_Document_Type_Label(m_Transaction.getiDocType()) + ".";
-		    		return false;
-		    	}
-		    	
-				m_EntryInput.setBatchNumber(m_sBatchNumber);
-				m_EntryInput.setBatchType(m_sBatchType);
-				m_EntryInput.setCustomerNumber(m_Transaction.getCustomerNumber());
-				String sCashAcct = m_Transaction.getControlAcct();
-				if (sCashAcct.compareToIgnoreCase("") != 0){
-					m_EntryInput.setControlAcct(m_Transaction.getControlAcct());
-				}
-				//Get the batch date as the default entry date:
-				ARBatch batch = new ARBatch(m_EntryInput.getsBatchNumber());
-				try {
-					batch.load(getServletContext(), sDBID);
-					m_EntryInput.setDocDate(batch.sStdBatchDateString());
-				} catch (Exception e) {
-					m_EntryInput.setDocDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
-				}
-				m_EntryInput.setDocDescription("Reversed doc ID: " + m_sApplyToDocumentID);
-				m_EntryInput.setDocumentType(Integer.toString(ARDocumentTypes.REVERSAL));
-				m_EntryInput.setEntryNumber("-1");
-				m_EntryInput.setEntryID("-1");
-				m_EntryInput.setOriginalAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-						m_Transaction.getdOriginalAmount().negate()));
-				
-				//For reversals of misc receipts, we just need to create a line from the original transaction
-				//Add one entry line to reverse the original entry:
-				ARLineInput line;
-				if (m_Transaction.getiDocType() == ARDocumentTypes.MISCRECEIPT){
+			    
+			    //There may have been unapplied lines on the original entry.  We won't find any armatchinglines
+			    //for these, so we have to recreate one line to account for the total of any unapplied lines now:
+			    BigDecimal bdCalculatedLineTotal = BigDecimal.ZERO;
+			    for (int i = 0; i < m_EntryInput.getLineCount(); i++){
+			    	bdCalculatedLineTotal = bdCalculatedLineTotal.add(
+			    		ARUtilities.bdStringToBigDecimal(m_EntryInput.getLine(i).getAmount(),2));
+			    }
+			    
+			    //TJR - test these lines - 3/14/2011:
+			    //If the transaction to be reversed has a current amount on it, then we need to add a line
+			    //to it to make sure we get the entire transaction reversed back and the net on it is zero:
+			    if (m_Transaction.getdCurrentAmount().compareTo(BigDecimal.ZERO) != 0){
 					line = new ARLineInput();
-					//We use the amount of the artransaction as the line amount:
-					line.setAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_Transaction.getdOriginalAmount()));
-					line.setApplyToOrderNumber(m_Transaction.getOrderNumber());
-					line.setComment("Reversing a " + ARDocumentTypes.Get_Document_Type_Label(m_Transaction.getiDocType()));
+					//The artransaction amount and any armatchinglines applying to it have the same sign,
+					// so to reverse,
+					//we have to reverse the sign of the transaction:
+					line.setAmount(
+						clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+								m_Transaction.getdCurrentAmount()));
+					line.setApplyToOrderNumber("");
+					line.setComment("Reversing Doc ID " + sApplyToDocumentID);
+					line.setDescription("Reduces the current amount on the transaction to zero");
+					line.setDocAppliedTo(m_Transaction.getDocNumber());
+					line.setDocAppliedToID(sApplyToDocumentID);
+					line.setEntryID("-1");
+					line.setLineID("-1");
+					m_EntryInput.addLine(line);
+			    }
+			    
+			    //The 'bdAmountAlreadyApplied' is the amount that has already been applied FROM the 
+			    //to-be-reversed transaction, determined by subtracting the current amount from the
+			    //original amount
+			    BigDecimal bdAmountAlreadyApplied = 
+			    	m_Transaction.getdOriginalAmount().subtract(m_Transaction.getdCurrentAmount());
+			    if(bdCalculatedLineTotal.compareTo(bdAmountAlreadyApplied) != 0){
+			    	//If the total of the armatchinglines which were created by this transaction and applied
+			    	//to OTHER transactions doesn't match the amount that the 'bdAmountAlreadyApplied', then
+			    	//some armatching lines have been cleared, which means that the transaction(s) that this
+			    	//to-be-reversed document originally applied to are gone and we can't reverse:
+			    	
+			    	//Commented out this code on 3/14/2011 - TJR
+			    	//Someone had created a reversal of a cash entry, but the invoice that the cash
+			    	//entry had been applied to was no longer in the system, so wound up creating
+			    	//a positive balance cash entry, which we couldn't do anything with.  So
+			    	//changed the logic in here to prevent that.
+			    	/*
+					line = new ARLineInput();
+					line.setAmount(
+						ARUtilities.BigDecimalTo2DecimalSTDFormat(
+							m_Transaction.getdOriginalAmount().subtract(bdCalculatedLineTotal)));
+					line.setApplyToOrderNumber("");
+					line.setComment("Reversing Doc ID " + m_sApplyToDocumentID);
 					line.setDescription("");
 					line.setDocAppliedTo(m_Transaction.getDocNumber());
 					line.setDocAppliedToID(m_sApplyToDocumentID);
 					line.setEntryID("-1");
 					line.setLineID("-1");
-					//On a misc receipt reversal, the user has to pick the distribution GL (usually a
-					//misc income account), so we don't set that here
 					m_EntryInput.addLine(line);
-				}else{
-					//Get the customer name here:
-				    if (m_EntryInput.getsCustomerNumber().compareToIgnoreCase("") != 0){
-				    	ARCustomer m_Customer = new ARCustomer(m_EntryInput.getsCustomerNumber());
-						if (! m_Customer.load(getServletContext(), sDBID)){
-							m_sWarning = "Could not load customer: " + m_EntryInput.getsCustomerNumber();
-							return false;
-						}
-				    	m_sCustomerARAcct = m_Customer.getARControlAccount(
-				    			getServletContext(), sDBID);
-				    	m_sCustomerARCustomerDepositAcct = m_Customer.getARPrepayLiabilityAccount(
-				    			getServletContext(), sDBID);
-				    }
-					//For reversals of cash, prepays, and apply-to's, we need to read the lines:
-					//Misc receipts won't have any . . . . 
-				    if (!loadChildMatchingLines(
-				    		m_Transaction.getsTransactionID(), 
-				    		m_Transaction.getDocNumber(), 
-				    		m_Transaction.getCustomerNumber(),
-				    		m_Transaction.getiDocType())
-				    		){
-				    	return false;
-				    }
-				    
-				    //There may have been unapplied lines on the original entry.  We won't find any armatchinglines
-				    //for these, so we have to recreate one line to account for the total of any unapplied lines now:
-				    BigDecimal bdCalculatedLineTotal = BigDecimal.ZERO;
-				    for (int i = 0; i < m_EntryInput.getLineCount(); i++){
-				    	bdCalculatedLineTotal = bdCalculatedLineTotal.add(
-				    		ARUtilities.bdStringToBigDecimal(m_EntryInput.getLine(i).getAmount(),2));
-				    }
-				    
-				    //TJR - test these lines - 3/14/2011:
-				    //If the transaction to be reversed has a current amount on it, then we need to add a line
-				    //to it to make sure we get the entire transaction reversed back and the net on it is zero:
-				    if (m_Transaction.getdCurrentAmount().compareTo(BigDecimal.ZERO) != 0){
-						line = new ARLineInput();
-						//The artransaction amount and any armatchinglines applying to it have the same sign,
-						// so to reverse,
-						//we have to reverse the sign of the transaction:
-						line.setAmount(
-							clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-									m_Transaction.getdCurrentAmount()));
-						line.setApplyToOrderNumber("");
-						line.setComment("Reversing Doc ID " + m_sApplyToDocumentID);
-						line.setDescription("Reduces the current amount on the transaction to zero");
-						line.setDocAppliedTo(m_Transaction.getDocNumber());
-						line.setDocAppliedToID(m_sApplyToDocumentID);
-						line.setEntryID("-1");
-						line.setLineID("-1");
-						m_EntryInput.addLine(line);
-				    }
-				    
-				    //The 'bdAmountAlreadyApplied' is the amount that has already been applied FROM the 
-				    //to-be-reversed transaction, determined by subtracting the current amount from the
-				    //original amount
-				    BigDecimal bdAmountAlreadyApplied = 
-				    	m_Transaction.getdOriginalAmount().subtract(m_Transaction.getdCurrentAmount());
-				    if(bdCalculatedLineTotal.compareTo(bdAmountAlreadyApplied) != 0){
-				    	//If the total of the armatchinglines which were created by this transaction and applied
-				    	//to OTHER transactions doesn't match the amount that the 'bdAmountAlreadyApplied', then
-				    	//some armatching lines have been cleared, which means that the transaction(s) that this
-				    	//to-be-reversed document originally applied to are gone and we can't reverse:
-				    	
-				    	//Commented out this code on 3/14/2011 - TJR
-				    	//Someone had created a reversal of a cash entry, but the invoice that the cash
-				    	//entry had been applied to was no longer in the system, so wound up creating
-				    	//a positive balance cash entry, which we couldn't do anything with.  So
-				    	//changed the logic in here to prevent that.
-				    	/*
-						line = new ARLineInput();
-						line.setAmount(
-							ARUtilities.BigDecimalTo2DecimalSTDFormat(
-								m_Transaction.getdOriginalAmount().subtract(bdCalculatedLineTotal)));
-						line.setApplyToOrderNumber("");
-						line.setComment("Reversing Doc ID " + m_sApplyToDocumentID);
-						line.setDescription("");
-						line.setDocAppliedTo(m_Transaction.getDocNumber());
-						line.setDocAppliedToID(m_sApplyToDocumentID);
-						line.setEntryID("-1");
-						line.setLineID("-1");
-						m_EntryInput.addLine(line);
-						*/
-				    	m_sWarning = "You are trying to reverse this transaction, but some of the transactions"
-				    		+ " to which THIS transaction applied have already "
-				    		+ "been cleared from the system - so this transaction can NOT be reversed.";
-				    	return false;
-				    }
-				    
-				    //Set the GL acct on the dist lines here:
-				    for (int i = 0; i < m_EntryInput.getLineCount(); i++){
-				    	//If it's a prepay, it should be the customer's 'customer deposit' account:
-				    	//TODO - figure out how to reverse an apply-to if it involved a prepay?????
-				    	if (m_Transaction.getiDocType() == ARDocumentTypes.PREPAYMENT){
-				    		m_EntryInput.getLine(i).setLineAcct(m_sCustomerARCustomerDepositAcct);
-				    	}else{
-				    		m_EntryInput.getLine(i).setLineAcct(m_sCustomerARAcct);
-				    	}
-				    }
-				}
+					*/
+			    	throw new Exception("You are trying to reverse this transaction, but some of the transactions"
+			    		+ " to which THIS transaction applied have already "
+			    		+ "been cleared from the system - so this transaction can NOT be reversed.");
+			    }
 			    
-			    //System.out.println("In " + this.toString() + ".loadAREntryInput - NEW ENTRY:\n" + m_EntryInput.getDataDump());
-			}else{
-				//If it's an existing entry:
-				//Load the existing entry:
-				AREntry entry = new AREntry();
-				entry = new AREntry();
-				if (!entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
-			    	m_sWarning = "Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	m_sWarning += "\n" + entry.getErrorMessage();
-			    	return false;
-				}
-				if (!m_EntryInput.loadFromEntry(entry)){
-			    	m_sWarning = "Could not load entry input from entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	return false;
-				}
-				//System.out.println("In " + this.toString() + ".loadAREntryInput - LOADING FROM EXISTING ENTRY:\n" + m_EntryInput.getDataDump());
+			    //Set the GL acct on the dist lines here:
+			    for (int i = 0; i < m_EntryInput.getLineCount(); i++){
+			    	//If it's a prepay, it should be the customer's 'customer deposit' account:
+			    	//TODO - figure out how to reverse an apply-to if it involved a prepay?????
+			    	if (m_Transaction.getiDocType() == ARDocumentTypes.PREPAYMENT){
+			    		m_EntryInput.getLine(i).setLineAcct(m_sCustomerARCustomerDepositAcct);
+			    	}else{
+			    		m_EntryInput.getLine(i).setLineAcct(m_sCustomerARAcct);
+			    	}
+			    }
 			}
+		    
+		    //System.out.println("In " + this.toString() + ".loadAREntryInput - NEW ENTRY:\n" + m_EntryInput.getDataDump());
+		}else{
+			//If it's an existing entry:
+			//Load the existing entry:
+			AREntry entry = new AREntry();
+			entry = new AREntry();
+			if (!entry.load(sBatchNumber, sEntryNumber, getServletContext(), sDBID)){
+		    	throw new Exception("Could not load entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber
+		    			+ "\n" + entry.getErrorMessage());
+			}
+			if (!m_EntryInput.loadFromEntry(entry)){
+				throw new Exception("Could not load entry input from entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber);
+			}
+			//System.out.println("In " + this.toString() + ".loadAREntryInput - LOADING FROM EXISTING ENTRY:\n" + m_EntryInput.getDataDump());
 		}
-		
-		return true;
+		return m_EntryInput;
 	}
-	private boolean createFormFromAREntryInput(String sDBID){
+	private boolean createFormFromAREntryInput(
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName, 
+			PrintWriter m_pwOut, 
+			AREntryInput ar_entry_input, 
+			boolean bEditable, 
+			String sApplyToDocumentID
+			){
 		
 		//Include the javascript:
 		m_pwOut.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -407,36 +499,36 @@ public class AREditReversalEntry extends HttpServlet {
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREntryUpdate' METHOD='POST'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		//Record the hidden fields for the entry edit form:
-	    storeHiddenFieldsOnForm ();
+	    storeHiddenFieldsOnForm (m_pwOut, ar_entry_input, bEditable, sApplyToDocumentID);
 
         //Display the entry header fields:
-	    displayEntryHeaderFields (sDBID);
+	    displayEntryHeaderFields (sDBID, m_pwOut, ar_entry_input, bEditable);
         
-	    if (!loadGLList()){
+	    if (!loadGLList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 	    
-        if (m_bEditable){
-        	displayEditableEntryFields ();
+        if (bEditable){
+        	displayEditableEntryFields (m_pwOut, ar_entry_input);
         }
         //Else, if the record is NOT editable:
         else{
-        	displayNonEditableEntryFields ();
+        	displayNonEditableEntryFields (m_pwOut, ar_entry_input);
         }
         
 	    //Now display the transaction lines:
         m_pwOut.println("<B>Line distribution:</B><BR>");
 	    
 	    //If it's not editable, just show the current applied lines:
-	    if (! m_bEditable){
-	    	Display_NONEditable_Lines();
+	    if (! bEditable){
+	    	Display_NONEditable_Lines(m_pwOut, ar_entry_input);
 	    }else{
 
 	        //Display the line header:
-		    Display_Line_Header();
+		    Display_Line_Header(m_pwOut);
 
 		    //Display all the current transaction lines:
-		    if (!displayTransactionLines()){
+		    if (!displayTransactionLines(m_pwOut, ar_entry_input)){
 		    	return false;
 		    }	    
 		    m_pwOut.println("</TABLE>");
@@ -446,7 +538,7 @@ public class AREditReversalEntry extends HttpServlet {
 
 		return true;
 	}
-	private boolean checkForPreviousReversal(String sDocID) throws SQLException{
+	private boolean checkForPreviousReversal(String sDocID, String sDBID, String sUserID, String sUserFullName) throws SQLException{
 		
 		boolean bPreviouslyReversed = false;
 		String SQL = "SELECT"
@@ -486,109 +578,14 @@ public class AREditReversalEntry extends HttpServlet {
 		}
 		return bPreviouslyReversed;
 	}
-	private boolean loadChildMatchingLines(
-			String sParentTransactionID, 
-			String sdocNumber, 
-			String sCustomerNumber,
-			int iDocType
-			){
-		
-		//Now we get all of the transactions that the 'to-be-reversed' transaction applied to.  If the
-		//to-be-reversed transaction is an apply-to, then we just have to get all of the armatching lines
-		//that it included.  But if it's a pre-pay, or a receipt that we're trying to reverse,
-		//we only need the matching lines that the to-be-reversed transaction created, but that
-		//don't apply back to itself:
-		String SQL = "SELECT *" 
-			+ " FROM " + SMTablearmatchingline.TableName
-			+ " WHERE (";
-					if (iDocType == ARDocumentTypes.APPLYTO){
-						//If it's an apply-to, we have to get all the lines from the apply-to:
-						SQL = SQL + "(" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid
-							+ " = " +  sParentTransactionID + ")";
-					}else{
-						//If it's a receipt or prepay, we only need the lines from the original transaction
-						//that were applied to OTHER transactions:
-						SQL = SQL +  "(" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sdocnumber
-							+ " = '" +  sdocNumber + "')"
-							+ " AND ("+ SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
-							+ " = '" +  sCustomerNumber + "')"
-				
-							+ " AND ("+ SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sapplytodoc
-							+ " != '" +  sdocNumber + "')";
-					}
-				SQL = SQL + ")"
-				+ " ORDER BY " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lid
-				;
-			//System.out.println("In AREditReversalEntry.loadChildMatchingLines SQL 1 = " + SQL);
-        try{
-	        ResultSet rsMatchingLines = clsDatabaseFunctions.openResultSet(
-	        	SQL, 
-	        	getServletContext(), 
-	        	sDBID,
-	        	"MySQL",
-	        	this.toString() + ".loadChildMatchingLines (1) - User: " + sUserID
-	        	+ " - "
-	        	+ sUserFullName
-	        		);
-	        while (rsMatchingLines.next()){
-	        	ARLineInput line = new ARLineInput();
-	        	//We negate the line because we want to do an exact reverse:
-	        	line.setAmount(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsMatchingLines.getBigDecimal(SMTableartransactionline.damount).negate()));
-	        	SQL = "SELECT * FROM " + SMTableartransactions.TableName
-	        		+ " WHERE ("
-	        			+ SMTableartransactions.TableName + "." + SMTableartransactions.lid
-	        			+ " = " + Long.toString(rsMatchingLines.getLong(SMTablearmatchingline.ldocappliedtoid))
-	        		+ ")"
-	        	;
-	        	//System.out.println("In AREditReversalEntry.loadChildMatchingLines SQL 2 = " + SQL);
-	        	ResultSet rsApplyToTransactions = clsDatabaseFunctions.openResultSet(
-	    	        	SQL, 
-	    	        	getServletContext(), 
-	    	        	sDBID,
-	    	        	"MySQL",
-	    	        	this.toString() + ".loadChildMatchingLines (2) - User: " + sUserID
-	    	        	+ " - "
-	    	        	+ sUserFullName
-	    	        	);
-	        	if(rsApplyToTransactions.next()){
-	            	String sOriginalApplyToID = Long.toString(rsApplyToTransactions.getLong(SMTableartransactions.lid));
-		        	line.setDocAppliedTo(rsApplyToTransactions.getString(SMTableartransactions.sdocnumber));
-		        	line.setDocAppliedToID(sOriginalApplyToID);
-		        	line.setApplyToOrderNumber(rsApplyToTransactions.getString(SMTableartransactions.sordernumber));
-		        	line.setComment("Un-applying from ID " + sOriginalApplyToID);
-		        	line.setDescription(
-		        		"Reverse original application from Doc ID: " + sParentTransactionID 
-		        		+ " to Doc ID: " + sOriginalApplyToID);
-		        	line.setEntryID("-1");
-		        	//This account will always be the customer's AR account:
-		        	line.setLineAcct("");
-		        	//System.out.println("In AREditReversalEntry.loadChildMatchingLines line GL = " + line.getLineAcct());
-	        	}else{
-	        		m_sWarning = "Could not load apply-to transaction for doc ID: " + sParentTransactionID;
-	        		return false;
-	        	}
-	        	rsApplyToTransactions.close();
-	        	m_EntryInput.addLine(line);
-	        }
-	        rsMatchingLines.close();
 
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class: loadChildMatchingLines.");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-
-		return true;
-	}
-	private void storeHiddenFieldsOnForm(){
+	private void storeHiddenFieldsOnForm(PrintWriter m_pwOut, AREntryInput m_EntryInput, boolean bEditable, String sApplyToDocumentID){
 		
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamBatchNumber + "\" VALUE=\"" + m_EntryInput.getsBatchNumber() + "\">");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamEntryNumber + "\" VALUE=\"" + m_EntryInput.getsEntryNumber() + "\">");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamCustomerNumber + "\" VALUE=\"" + m_EntryInput.getsCustomerNumber() + "\">");
 	    String sEditable;
-	    if (m_bEditable){
+	    if (bEditable){
 	    	sEditable = "Yes";
 	    }else{
 	    	sEditable = "No";
@@ -599,10 +596,10 @@ public class AREditReversalEntry extends HttpServlet {
 	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamDocumentType + "\" VALUE=\"" + m_EntryInput.getsDocumentType() + "\">");
 	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamDocNumber + "\" VALUE=" + m_EntryInput.getsDocNumber() + ">");
 	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" + "AREditReversalEntry" + "\">");
-	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "DocumentID" + "\" VALUE=\"" + m_sApplyToDocumentID + "\">");
+	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "DocumentID" + "\" VALUE=\"" + sApplyToDocumentID + "\">");
 	    
 	}
-	private void displayEntryHeaderFields (String sDBID){
+	private void displayEntryHeaderFields (String sDBID, PrintWriter m_pwOut, AREntryInput m_EntryInput, boolean bEditable){
 		
 		m_pwOut.println("<B>" + SMBatchTypes.Get_Batch_Type(Integer.parseInt(m_EntryInput.getsBatchType())) + "</B>");
 		m_pwOut.println(" batch number: <B>" + m_EntryInput.getsBatchNumber() + "</B>;");
@@ -630,13 +627,13 @@ public class AREditReversalEntry extends HttpServlet {
         				Integer.parseInt(m_EntryInput.getsDocumentType()))
         		+ "</B>.  ");
 
-	    if (m_bEditable){
+	    if (bEditable){
 	    	m_pwOut.println("<BR><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Save " + sObjectName + "' STYLE='height: 0.24in'>");
 	    	m_pwOut.println("  <INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sObjectName + "' STYLE='height: 0.24in'>");
 	    	m_pwOut.println("  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
         }
 	}
-	private void displayEditableEntryFields(){
+	private void displayEditableEntryFields(PrintWriter m_pwOut, AREntryInput m_EntryInput){
 		
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 		
@@ -751,7 +748,7 @@ public class AREditReversalEntry extends HttpServlet {
         
         m_pwOut.println("</TABLE>");
 	}
-	private boolean loadGLList(){
+	private boolean loadGLList(String sDBID, String sUserID, String sUserFullName){
         m_sGLValues.clear();
         m_sGLDescriptions.clear();
         try{
@@ -784,7 +781,7 @@ public class AREditReversalEntry extends HttpServlet {
 		
 		return true;
 	}
-	public void displayNonEditableEntryFields (){
+	public void displayNonEditableEntryFields (PrintWriter m_pwOut, AREntryInput m_EntryInput){
 
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 		
@@ -830,7 +827,7 @@ public class AREditReversalEntry extends HttpServlet {
 		m_pwOut.println("</TR>");
 		m_pwOut.println("</TABLE>");
 	}
-	private void Display_Line_Header(){
+	private void Display_Line_Header(PrintWriter m_pwOut){
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2>");
 		m_pwOut.println("<TR>");
 		m_pwOut.println("<TD><B><U>Apply to Doc #</B></U></TD>");
@@ -842,10 +839,10 @@ public class AREditReversalEntry extends HttpServlet {
 		m_pwOut.println("</TR>");
 
 	}
-	private boolean Display_NONEditable_Lines(){
+	private boolean Display_NONEditable_Lines(PrintWriter m_pwOut, AREntryInput m_EntryInput){
 		
         //Display the line header:
-		Display_Line_Header();
+		Display_Line_Header(m_pwOut);
         for (int i = 0; i < m_EntryInput.getLineCount(); i++){
         	ARLineInput line = m_EntryInput.getLine(i);
         	//Apply to doc #:
@@ -881,7 +878,7 @@ public class AREditReversalEntry extends HttpServlet {
 
 		return true;
 	}
-	private boolean displayTransactionLines(){
+	private boolean displayTransactionLines(PrintWriter m_pwOut, AREntryInput m_EntryInput){
 
 		//  Get the lines by reading the database:
 		int iLineIndex = 0;
@@ -991,33 +988,7 @@ public class AREditReversalEntry extends HttpServlet {
 		
 		return true;
 	}
-	private void get_request_parameters(){
- 
-		if (m_hsrRequest.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest).equalsIgnoreCase("-1")){
-				m_bIsNewEntry = true; 
-			}else{
-				m_bIsNewEntry = false;
-			}
-		}else{
-			m_bIsNewEntry = false;
-			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
-		}
 
-		m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sEditable = ARUtilities.get_Request_Parameter("Editable", m_hsrRequest);
-		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
-			m_bEditable = true;
-		}else {
-			m_bEditable = false;
-		}
-		m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", m_hsrRequest);
-		m_sWarning = ARUtilities.get_Request_Parameter("Warning", m_hsrRequest);
-		m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", m_hsrRequest);
-		
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

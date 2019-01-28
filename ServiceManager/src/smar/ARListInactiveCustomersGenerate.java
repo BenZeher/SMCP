@@ -20,11 +20,6 @@ import smcontrolpanel.SMUtilities;
 public class ARListInactiveCustomersGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -42,13 +37,14 @@ public class ARListInactiveCustomersGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
 	    /**************Get Parameters**************/
 
     	//Customized title

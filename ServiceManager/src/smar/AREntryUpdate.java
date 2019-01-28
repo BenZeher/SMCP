@@ -25,24 +25,9 @@ import smgl.GLAccount;
 public class AREntryUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	public static String FIND_GL_CONTROL_ACCT_BUTTON_NAME = "FINDGLEXPENSEACCT";
-    public static String FIND_GL_CONTROL_ACCT_BUTTON_LABEL = "Find GL control account"; 
+	public static final String FIND_GL_CONTROL_ACCT_BUTTON_NAME = "FINDGLEXPENSEACCT";
+    public static final String FIND_GL_CONTROL_ACCT_BUTTON_LABEL = "Find GL control account"; 
 	
-	private AREntry m_Entry;
-	private AREntryInput m_EntryInput;
-	//HttpServletRequest parameters:
-	private String m_sDelete;
-	private String m_sConfirmDelete;
-	private String m_sCallingClass;
-	private String m_sApplyToDocumentID;
-	private String m_sWarning;
-	private boolean bSaveAndAdd = false;  //On cash entries, if the user clicks the 'Save and add' button
-											// instead of the regular 'Save' button, this boolean is set
-											//to true.
-	
-	private static String sDBID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -58,17 +43,33 @@ public class AREntryUpdate extends HttpServlet{
 			}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		      + " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
     
 	    //If there's an entry input object in the session, get rid of it:
 	    CurrentSession.removeAttribute("EntryInput");
 	    
+	    //Instantiate a new entry:
+	    AREntry m_Entry = new AREntry();
+	    
 	    //Collect all the request parameters:
+	    String m_sDelete = "";
+	    String m_sConfirmDelete = "";
+	    String m_sCallingClass = "";
+	    boolean bSaveAndAdd = false;
+	    String m_sApplyToDocumentID = "";
+	    AREntryInput m_EntryInput = null;
 	    try {
-			getRequestParameters(request);
+			m_sDelete = ARUtilities.get_Request_Parameter("Delete", request);
+			m_sConfirmDelete = ARUtilities.get_Request_Parameter("ConfirmDelete", request);
+			m_EntryInput = new AREntryInput(request);
+			m_sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+			m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+			if(request.getParameter("SaveAndAdd") != null){
+				bSaveAndAdd = true;
+			}
 		} catch (Exception e1) {
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar." + m_sCallingClass + "?"
@@ -80,8 +81,7 @@ public class AREntryUpdate extends HttpServlet{
 			);
 			return;
 		}
-	    //Instantiate a new entry:
-	    m_Entry = new AREntry();
+	    
 	    //Load the input parameters into the new entry:
 	    //System.out.println("In AREntryUpdate - m_EntryInput = " + m_EntryInput.getDataDump());
 	    if (!m_EntryInput.loadToEntry(m_Entry, getServletContext(), sDBID)){
@@ -202,21 +202,26 @@ public class AREntryUpdate extends HttpServlet{
 		
 		//If the entry cannot be processed, pass the EntryInput object back to the editing screen
 		//to advise the user and reload the screen:
-		if (!save_entry(getServletContext(), sDBID)){
-
+		
+		//We do not allow zero amount lines here:
+		m_Entry.remove_zero_amount_lines();
+		try {
+			save_entry(getServletContext(), sDBID, sUserFullName, m_Entry);
+		} catch (Exception e) {
 			CurrentSession.setAttribute("EntryInput", m_EntryInput);
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar." + m_sCallingClass + "?"
 					+ "Editable=Yes"
 					+ "&DocumentID=" + m_sApplyToDocumentID
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=Could not process entry - " + m_sWarning
+					+ "&Warning=Could not process entry - " + e.getMessage()
 				);
 			
 	        return;
+		}
+		
 	    //If the entry CAN be processed, load the successful entry back into the EntryInput class, and 
 	    //allow the entry editor to display it:
-		}else{
 			//If it's a cash entry, and the user chose to save and add another entry, link to that here:
 			if (bSaveAndAdd){
 				response.sendRedirect(
@@ -242,9 +247,8 @@ public class AREntryUpdate extends HttpServlet{
 
 			}
 	        return;
-		}
 	}
-	private boolean save_entry(ServletContext context, String sDBID){
+	private void save_entry(ServletContext context, String sDBID, String sUserFullName, AREntry m_Entry) throws Exception{
 		//Need a connection here for the data transaction:
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
@@ -252,90 +256,61 @@ public class AREntryUpdate extends HttpServlet{
 			"MySQL",
 			this.toString() + ".save_entry");
 		if (conn == null){
-			m_sWarning = "could not get connection to save entry.";
-			return false;
+			throw new Exception("Could not get connection to save entry.");
 		}
 		
-		if (!setPostingFlag(
+		try{
+			setPostingFlag(
 				conn, 
 				sUserFullName, 
-				"SAVING ENTRY " + m_Entry.iEntryNumber() + " IN BATCH " + m_Entry.iBatchNumber())
-				){
+				"SAVING ENTRY " + m_Entry.iEntryNumber() + " IN BATCH " + m_Entry.iBatchNumber()
+			);
+		}catch(Exception e){
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067555]");
-			return false;
+			throw new Exception("Could not set AR posting flag.");
 		}
-		
+
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			clearPostingFlag(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067556]");
-			m_sWarning = "could not start data transaction";
-			return false;
+			throw new Exception("Could not start data transaction");
 		}
-		
-		//We do not allow zero amount lines here:
-		m_Entry.remove_zero_amount_lines();
 		
 		if (!m_Entry.save_without_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clearPostingFlag(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067557]");
 			if (m_Entry.getErrorMessage().compareToIgnoreCase("") == 0){
-				m_sWarning = "unspecified error in entry class saving entry";
+				throw new Exception("Unspecified error in entry class saving entry");
 			}else{
-				m_sWarning = m_Entry.getErrorMessage();
+				throw new Exception(m_Entry.getErrorMessage());
 			}
-			return false;			
-			
 		}else{
 			clsDatabaseFunctions.commit_data_transaction(conn);
 			clearPostingFlag(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067558]");
-			return true;
+			return;
 		}
 	}
 
-	private void getRequestParameters(
-    	HttpServletRequest req) throws Exception{
-
-		m_sDelete = ARUtilities.get_Request_Parameter("Delete", req);
-		m_sConfirmDelete = ARUtilities.get_Request_Parameter("ConfirmDelete", req);
-		m_EntryInput = new AREntryInput(req);
-		m_sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", req);
-		m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", req);
-		if(req.getParameter("SaveAndAdd") == null){
-			bSaveAndAdd = false;
-		}else{
-			bSaveAndAdd = true;
-		}
-	}
-
-	public boolean setPostingFlag(Connection conn, String sUserFullName, String sProcess){
+	public void setPostingFlag(Connection conn, String sUserFullName, String sProcess) throws Exception{
 	    	//First check to make sure no one else is posting:
 	    	try{
 	    		String SQL = "SELECT * FROM " + SMTablearoptions.TableName;
 	    		ResultSet rsAROptions = clsDatabaseFunctions.openResultSet(SQL, conn);
 	    		if (!rsAROptions.next()){
-	        		System.out.println("In AREntry.setPostingFlag: Error getting aroptions record");
-	        		return false;
+	        		throw new Exception("Error [1548711989] getting aroptions record");
 	    		}else{
 	    			if(rsAROptions.getLong(SMTablearoptions.ibatchpostinginprocess) == 1){
-	    				m_sWarning = "A previous posting is not completed - "
+	    				throw new Exception("A previous posting is not completed - "
 	    					+ rsAROptions.getString(SMTablearoptions.suserfullname) + " has been "
 	    					+ rsAROptions.getString(SMTablearoptions.sprocess) + " "
-	    					+ "since " + rsAROptions.getString(SMTablearoptions.datstartdate) + "."
-	    				;
-	    				//System.out.println("A previous posting is not completed - "
-	        			//		+ rsAROptions.getString(SMTablearoptions.suser) + " has been "
-	        			//		+ rsAROptions.getString(SMTablearoptions.sprocess) + " "
-	        			//		+ "since " + rsAROptions.getString(SMTablearoptions.datstartdate) + ".");
-	            		return false;
+	    					+ "since " + rsAROptions.getString(SMTablearoptions.datstartdate) + ".");
 	    			}
 	    		}
 	    		rsAROptions.close();
 	    	}catch (SQLException e){
-	    		m_sWarning = "Error checking for previous posting - " + e.getMessage();
-				System.out.println("Error checking for previous posting - " + e.getMessage());
-	    		return false;
+	    		throw new Exception("Error [1548712046] checking for previous posting - " + e.getMessage());
 	    	}
 	    	//If not, then set the posting flag:
 	    	try{
@@ -347,17 +322,13 @@ public class AREntryUpdate extends HttpServlet{
 	       			+ ", " + SMTablearoptions.suserfullname + " = '" + sUserFullName + "'"
 	    			;
 	    		if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-	    			m_sWarning = "In AREntryUpdate.save_entry: Error setting posting flag in aroptions"
-	    					+ " with SQL = " + SQL + ".";
-	        		System.out.println("In ARBatch.post: Error setting posting flag in aroptions");
-	        		return false;
+	    			throw new Exception("Error [1548712047] setting posting flag in aroptions"
+	    					+ " with SQL = " + SQL + ".");
 	    		}
 	    	}catch (SQLException e){
-	    		m_sWarning = "Error setting posting flag in aroptions - " + e.getMessage();
-				System.out.println("Error setting posting flag in aroptions - " + e.getMessage());
-	    		return false;
+	    		throw new Exception("Error [1548712048] setting posting flag in aroptions - " + e.getMessage());
 	    	}
-	    	return true;
+	    	return;
 	}
 	private boolean clearPostingFlag(Connection conn){
 		

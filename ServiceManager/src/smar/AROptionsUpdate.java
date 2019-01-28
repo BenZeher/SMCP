@@ -14,12 +14,6 @@ import javax.servlet.http.HttpSession;
 public class AROptionsUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private AROptions m_aroptions;
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
 	//HttpServletRequest parameters:
 	
 	public void doPost(HttpServletRequest request,
@@ -30,11 +24,12 @@ public class AROptionsUpdate extends HttpServlet{
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 
@@ -44,7 +39,8 @@ public class AROptionsUpdate extends HttpServlet{
 		}
     
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
+		AROptions m_aroptions = new AROptions();
+		m_aroptions = new AROptions(request);
 	    
 		String subtitle = "";
 		String title = "";
@@ -78,11 +74,7 @@ public class AROptionsUpdate extends HttpServlet{
 	        return;
 		}
 	}
-	private void getRequestParameters(
-    	HttpServletRequest req){
 
-		m_aroptions = new AROptions(req);
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

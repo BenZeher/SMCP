@@ -34,8 +34,6 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	//formats
-	private String sWarning = "";
-	private String sCallingClass = "";
 
 	//variables for customer total calculations
 	private BigDecimal dTotalCurrent = new BigDecimal(0);
@@ -50,10 +48,6 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 	private int i1st;
 	private int i2nd;
 	private int i3rd;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sDBID = "";
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -71,11 +65,14 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+				
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 
 		boolean bPrintOnlyOverCurrent = false;
 		if (request.getParameter("OnlyOverCurrent") != null){
@@ -168,30 +165,33 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				);			
 				return;
 			}
-			//System.out.println("In " + this.toString() + ".main - going in to temporary tables");
-			if(!createTemporaryTables(
-					conn, 
-					sStartingCustomer, 
-					sEndingCustomer, 
-					clsDateAndTimeConversions.utilDateToString(datAgeAsOf, "yyyy-MM-dd"),
-					clsDateAndTimeConversions.utilDateToString(datCutOffDate, "yyyy-MM-dd"),
-					Integer.toString(iCurrent),
-					Integer.toString(i1st),
-					Integer.toString(i2nd),
-					Integer.toString(i3rd),
-					sAgedBy,
-					bPrintOnlyOverCurrent,
-					bPrintZeroBalanceStatements,
-					bPrintOnlyRequireStatement
-			)){
+
+			try {
+				createTemporaryTables(
+						conn, 
+						sStartingCustomer, 
+						sEndingCustomer, 
+						clsDateAndTimeConversions.utilDateToString(datAgeAsOf, "yyyy-MM-dd"),
+						clsDateAndTimeConversions.utilDateToString(datCutOffDate, "yyyy-MM-dd"),
+						Integer.toString(iCurrent),
+						Integer.toString(i1st),
+						Integer.toString(i2nd),
+						Integer.toString(i3rd),
+						sAgedBy,
+						bPrintOnlyOverCurrent,
+						bPrintZeroBalanceStatements,
+						bPrintOnlyRequireStatement
+				);
+			} catch (Exception e1) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067570]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
+						+ "Warning=" + e1.getMessage()
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);			
 				return;
 			}
+
 			//System.out.println("In " + this.toString() + ".main - created temporary tables");
 			String sSQL = "SELECT * FROM " + sTempTableName
 				+ " WHERE ("
@@ -217,22 +217,25 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					}
 
 					//Print the customer header:
-					if(!printCompanyInformationTable(
-							out, 
-							conn, 
-							rsBalanceList.getString("scustomer"),
-							clsDateAndTimeConversions.utilDateToString(datCutOffDate, "MM/dd/yyyy")
-					)){
+					try {
+						printCompanyInformationTable(
+								out, 
+								conn, 
+								rsBalanceList.getString("scustomer"),
+								clsDateAndTimeConversions.utilDateToString(datCutOffDate, "MM/dd/yyyy")
+						);
+					} catch (Exception e) {
 						rsBalanceList.close();
 						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067571]");
 						sWarning = "Error printing customer information table.";
 						response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-								+ "Warning=" + sWarning
+								+ "Warning=" + e.getMessage()
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						);			
 						return;
 					}
+
 					//Reset:
 					sCurrentCustomer = rsBalanceList.getString("scustomer");
 
@@ -318,12 +321,12 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 		out.println("</BODY></HTML>");
 	}
-	private boolean printCompanyInformationTable(
+	private void printCompanyInformationTable(
 			PrintWriter pwOut, 
 			Connection conn, 
 			String sCustomerNumber,
 			String sStatementDate
-	){
+	) throws Exception{
 
 		pwOut.println("<TABLE BORDER=0 WIDTH=100%>");
 
@@ -395,8 +398,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			rsCompanyProfile.close();
 
 		}catch(SQLException e){
-			sWarning = "Error reading company/customer information - " + e.getMessage();
-			return false;
+			throw new Exception("Error [1548713902] reading company/customer information - " + e.getMessage());
 		}
 		pwOut.println("</TD>");
 
@@ -428,16 +430,20 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		//End the STATEMENT line
 
 		//Print a table to contain the other tables (COMPANY INFO TABLE):
-		printHeaderTable(pwOut, conn, sCustomerNumber, sStatementDate);
+		try {
+			printHeaderTable(pwOut, conn, sCustomerNumber, sStatementDate);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
 
-		return true;
+		return;
 	}
-	private boolean printHeaderTable(
+	private void printHeaderTable(
 			PrintWriter pwOut,
 			Connection conn,
 			String sCustomerNumber, 
 			String sStatementDate
-	){
+	) throws Exception{
 
 		//Print the 'header' table - this will contain the SOLD TO and REMIT TO tables within it:
 		pwOut.println("<TABLE style=\" width:100%\">");
@@ -445,30 +451,36 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 		//Print the sold to table:
 		pwOut.println("<TD style=\"vertical-align:top; width:50%; text-align=left\">");
-		if (!printSoldToTable(pwOut, conn, sCustomerNumber, sStatementDate)){
-			return false;
+		try {
+			printSoldToTable(pwOut, conn, sCustomerNumber, sStatementDate);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
 		}
+
 		pwOut.println("</TD>");
 
 		//Print the REMIT TO table:
 		pwOut.println("<TD style=\"vertical-align:top; width:50%; text-align=left\">");
-		if (!printRemitToTable(pwOut, conn, sCustomerNumber, sStatementDate)){
-			return false;
+		try {
+			printRemitToTable(pwOut, conn, sCustomerNumber, sStatementDate);
+		} catch (Exception e) {
+			throw new Exception("Error [1548714306] printing remit-to table - " + e.getMessage());
 		}
+			
 		pwOut.println("</TD>");
 		pwOut.println("</TR>");
 		//End the company information table itself (COMPANY INFO TABLE):
 
 		pwOut.println("</TABLE>");
-		return true;
+		return;
 
 	}
-	private boolean printSoldToTable(
+	private void printSoldToTable(
 			PrintWriter pwOut,
 			Connection conn,
 			String sCustomerNumber, 
 			String sStatementDate
-	){
+	) throws Exception{
 
 		pwOut.println("<B>BILL TO:</B><BR><BR>");
 
@@ -525,19 +537,18 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			rsCustomer.close();
 
 		}catch(SQLException e){
-			sWarning = "Error reading company/customer information - " + e.getMessage();
-			return false;
+			throw new Exception("Error reading company/customer information - " + e.getMessage());
 		}
 
-		return true;
+		return;
 	}
 
-	private boolean printRemitToTable(
+	private void printRemitToTable(
 			PrintWriter pwOut,
 			Connection conn,
 			String sCustomerNumber, 
 			String sStatementDate
-	){
+	) throws Exception{
 
 		//REMIT TO:
 		//Begin the REMIT TO table:
@@ -598,13 +609,12 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			rsCompanyProfile.close();
 
 		}catch(SQLException e){
-			sWarning = "Error reading company/customer information - " + e.getMessage();
-			return false;
+			throw new Exception("Error reading company/customer information - " + e.getMessage());
 		}
 
 		//End the REMIT TO table:
 
-		return true;
+		return;
 	}
 	private void printCustomerFooter(
 			PrintWriter out,
@@ -682,7 +692,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		return;
 
 	}
-	private boolean createTemporaryTables(
+	private void createTemporaryTables(
 			Connection conn, 
 			String sStartingCustomer, 
 			String sEndingCustomer,
@@ -696,7 +706,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			boolean bPrintOnlyOverCurrent,
 			boolean bIncludeZeroBalanceStatements,
 			boolean bPrintOnlyRequireStatement
-	){
+	) throws Exception{
 
 		sTempTableName = "ARSTATMENTTMP" + Long.toString(System.currentTimeMillis());
 		String SQL;
@@ -715,8 +725,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			SQL = ARSQLs.Create_Temporary_Aging_Table(sTempTableName, true);
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error creating temporary aging table");
-				sWarning = "Error creating temporary aging table";
-				return false;
+				throw new Exception("Error creating temporary aging table");
 			}
 			//Insert the transactions:
 			SQL = "INSERT INTO " + sTempTableName + " ("
@@ -802,11 +811,8 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			SQL = SQL + ")"
 			; 			
 
-			//System.out.println("In " + this.toString() + ".createTempTables - insert SQL = " + SQL);
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				//System.out.println("Error inserting transactions into aging table");
-				sWarning = "Error inserting transactions into aging table";
-				return false;
+				throw new Exception("Error inserting transactions into aging table");
 			}
 
 			//Insert the matching lines:
@@ -887,16 +893,14 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error inserting distribution lines into aging table");
-				sWarning = "Error inserting distribution lines into aging table";
-				return false;
+				throw new Exception("Error inserting distribution lines into aging table");
 			}
 
 			//Insert_Parent_Document_Type_Into_Aging_Table
 			SQL = ARSQLs.Update_Parent_Document_Type_In_Aging_Table(sTempTableName);
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error updating parent document types into aging table");
-				sWarning = "Error updating parent document types into aging table";
-				return false;
+				throw new Exception("Error updating parent document types into aging table");
 			}
 
 			//Update the aging columns on all lines, based on their 'due' dates: 
@@ -910,12 +914,10 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					sThirdAgingColumn);
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error updating aging columns aging table");
-				sWarning = "Error updating aging columns aging table";
-				return false;
+				throw new Exception("Error updating aging columns aging table");
 			}
 		}catch(SQLException e){
-			sWarning = "Unable to create temporary tables - " + e.getMessage();
-			return false;
+			throw new Exception("Unable to create temporary tables - " + e.getMessage());
 		}
 
 		//Finally, if the user chooses to print zero balance statements, add 'dummy' lines for customers who have
@@ -952,8 +954,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				}
 				rsNulls.close();
 			} catch (SQLException e) {
-				sWarning = "Error getting zero value customers - " + e.getMessage();
-				return false;
+				throw new Exception("Error getting zero value customers - " + e.getMessage());
 			}
 
 			//Now, insert those 'zero balance' customers into the virtual lines:
@@ -1010,12 +1011,11 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					Statement stmt = conn.createStatement();
 					stmt.executeUpdate(SQL);
 				} catch (SQLException e) {
-					sWarning = "Error inserting zero balance record with SQL: " + SQL + " - " + e.getMessage();
-					return false;
+					throw new Exception("Error inserting zero balance record with SQL: " + SQL + " - " + e.getMessage());
 				}
 			}
 		}
-		return true;
+		return;
 	}
 	private String getDocumentTypeLabel(int lDocType){
 

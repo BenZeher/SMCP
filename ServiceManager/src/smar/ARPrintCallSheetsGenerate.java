@@ -28,11 +28,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ARPrintCallSheetsGenerate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCompanyName = "";
-	private String sWarning = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -49,13 +44,14 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		PrintWriter out = response.getWriter();
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 		String sRedirectString = "";
 
 		String sCallSheetID = clsManageRequestParameters.get_Request_Parameter(
@@ -283,7 +279,9 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 				sRedirectString += "&" + ARPrintCallSheetsSelection.PRINTWITHRESPONSIBILITYONLY_FIELD + "=Y";
 			}
 			
-			if(!validate_params(
+			
+			try {
+				validate_params(
 					sCallSheetID,
 					sStartingCustomer,
 					sEndingCustomer,
@@ -293,7 +291,8 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 					sEndingLastContactDate,
 					sStartingNextContactDate,
 					sEndingNextContactDate
-			)){
+				);
+			} catch (Exception e) {
 				sRedirectString += "&Warning=" + sWarning;
 				response.sendRedirect(sRedirectString);
 				return;
@@ -457,7 +456,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		
 		return;
 	}
-	private boolean validate_params(
+	private void validate_params(
 			String sCallSheetID,
 			String sStartingCustomer,
 			String sEndingCustomer,
@@ -467,61 +466,56 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 			String sEndingLastContactDate,
 			String sStartingNextContactDate,
 			String sEndingNextContactDate
-	){
+	) throws Exception{
 
 		sCallSheetID = sCallSheetID.trim();
 		if (sCallSheetID.compareToIgnoreCase("") != 0){
 			try {
 				long lTest = Long.parseLong(sCallSheetID);
 				if (lTest < 0){
-					sWarning = "Invalid input - Call Sheet ID cannot be less than zero.";
-					return false;
+					throw new Exception("Invalid input - Call Sheet ID cannot be less than zero.");
 				}
 			} catch (NumberFormatException e) {
-				sWarning = "Invalid input - Call Sheet ID '" + sCallSheetID + "' is invalid.";
-				return false;
+				throw new Exception("Invalid input - Call Sheet ID '" + sCallSheetID + "' is invalid.");
 			}
 		}
 		if (sStartingCustomer.compareToIgnoreCase(sEndingCustomer) > 0){
-			sWarning = "Invalid input - starting customer is higher than ending customer.";
-			return false;
+			throw new Exception("Invalid input - starting customer is higher than ending customer.");
 		}
 
 		Date datStartingLastContactDate= null;
 		try {
 			datStartingLastContactDate = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sStartingLastContactDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015";
+			throw new Exception("Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015");
 		}
 		Date datEndingLastContactDate = null;
 		try {
 			datEndingLastContactDate = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sEndingLastContactDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015";
+			throw new Exception("Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015");
 		}
 		if (datStartingLastContactDate.compareTo(datEndingLastContactDate) > 0){
-			sWarning = "Invalid input - starting last contact date cannot be later than ending last contact date";
-			return false;
+			throw new Exception("Invalid input - starting last contact date cannot be later than ending last contact date");
 		}
 
 		Date datStartingNextContactDate = null;
 		try {
 			datStartingNextContactDate = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sStartingNextContactDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015";
+			throw new Exception("Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015");
 		}
 		Date datEndingNextContactDate = null;
 		try {
 			datEndingNextContactDate = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sEndingNextContactDate);
 		} catch (ParseException e) {
-			sWarning = "Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015";
+			throw new Exception("Invalid input - Date must be in format MM/dd/yyy, ex: 02/05/2015");
 		}
 		if (datStartingNextContactDate.compareTo(datEndingNextContactDate) > 0){
-			sWarning = "Invalid input - starting next contact date cannot be later than ending next contact date";
-			return false;
+			throw new Exception("Invalid input - starting next contact date cannot be later than ending next contact date");
 		}
 
-		return true;
+		return;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

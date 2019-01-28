@@ -19,14 +19,6 @@ import java.sql.Connection;
 public class ARPrintPostingJournal extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private String m_sStartingBatchNumber;
-	private String m_sEndingBatchNumber;
-	private static boolean m_bIncludeInvoiceBatches = false;
-	private static boolean m_bIncludeCashBatches = false;
-
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -44,11 +36,21 @@ public class ARPrintPostingJournal extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-		getRequestParameters(request);
+		
+		String m_sStartingBatchNumber = ARUtilities.get_Request_Parameter("StartingBatchNumber", request);
+		String m_sEndingBatchNumber = ARUtilities.get_Request_Parameter("EndingBatchNumber", request);
+		boolean m_bIncludeInvoiceBatches = false;
+		if (request.getParameter("IncludeInvoiceBatches") != null){
+			m_bIncludeInvoiceBatches = true;
+		}
+		boolean m_bIncludeCashBatches = false;
+		if (request.getParameter("IncludeCashBatches") != null){
+			m_bIncludeCashBatches = true;
+		}
 
 		ARPostingJournal pj = new ARPostingJournal(
 				m_sStartingBatchNumber, 
@@ -94,23 +96,7 @@ public class ARPrintPostingJournal extends HttpServlet{
 		return;
 
 	}
-	private void getRequestParameters(
-			HttpServletRequest req){
 
-		m_sStartingBatchNumber = ARUtilities.get_Request_Parameter("StartingBatchNumber", req);
-		m_sEndingBatchNumber = ARUtilities.get_Request_Parameter("EndingBatchNumber", req);
-		if (req.getParameter("IncludeInvoiceBatches") != null){
-			m_bIncludeInvoiceBatches = true;
-		}else{
-			m_bIncludeInvoiceBatches = false;
-		}
-		if (req.getParameter("IncludeCashBatches") != null){
-			m_bIncludeCashBatches = true;
-		}else{
-			m_bIncludeCashBatches = false;
-		}
-		
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

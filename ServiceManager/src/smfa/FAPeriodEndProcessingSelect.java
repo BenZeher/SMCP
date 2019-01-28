@@ -24,11 +24,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAPeriodEndProcessingSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	//private static String sObjectName = "Asset";
-	private static String sCalledClassName = "FAPeriodEndProcessingAction";
-	private static String sCompanyName = "";
-	private static String sUserName = "";
-	private static String sDBID = "";
+	private static final String sFAPeriodEndProcessingActionCalledClassName = "FAPeriodEndProcessingAction";
+
 	private SimpleDateFormat sdfDateOnly = new SimpleDateFormat("MM/dd/yyyy");
 	
 	public void doPost(HttpServletRequest request,
@@ -38,9 +35,9 @@ public class FAPeriodEndProcessingSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAPeriodEndProcessing)){
 	    	return;
 	    }
@@ -68,7 +65,7 @@ public class FAPeriodEndProcessingSelect extends HttpServlet {
 				+ "\">Return to Fixed Assets Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.FAPeriodEndProcessing) 
 	    		+ "\">Summary</A><BR><BR>");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAPeriodEndProcessingActionCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    try{
 	    	List_Criteria(out, sDBID, sUserName, request);

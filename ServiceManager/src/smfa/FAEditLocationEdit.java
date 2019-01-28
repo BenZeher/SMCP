@@ -23,10 +23,9 @@ import smcontrolpanel.SMUtilities;
 public class FAEditLocationEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Location";
-	private static String sCalledClassName = "FAEditLocationAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static String sLocationObjectName = "Location";
+	private static String sFAEditLocationEditCalledClassName = "FAEditLocationAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -35,20 +34,21 @@ public class FAEditLocationEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEditLocation)){
 	    	return;
 	    }
 
-	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectName));
+	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sLocationObjectName));
 
 		String title = "";
 		String subtitle = "";
 		
 	    if(request.getParameter("SubmitEdit") != null){
 	    	//User has chosen to edit:
-			title = "Edit " + sObjectName + ": " + sEditCode;
+			title = "Edit " + sLocationObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -60,11 +60,11 @@ public class FAEditLocationEdit extends HttpServlet {
 					+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 					+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
 			
-		    Edit_Record(sEditCode, out, sDBID, false);
+		    Edit_Record(sEditCode, out, sDBID, false, sDBID);
 	    }
 	    if(request.getParameter("SubmitDelete") != null){
 	    	//User has chosen to delete:
-			title = "Delete " + sObjectName + ": " + sEditCode;
+			title = "Delete " + sLocationObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -89,9 +89,9 @@ public class FAEditLocationEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitAdd") != null){
 	    	
-		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sLocationObjectName));
 	    	//User has chosen to add a new record:
-			title = "Add " + sObjectName + ": " + sNewCode;
+			title = "Add " + sLocationObjectName + ": " + sNewCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -104,10 +104,10 @@ public class FAEditLocationEdit extends HttpServlet {
 					+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
 
 		    if (sNewCode == ""){
-		    	out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
+		    	out.println ("You chose to add a new " + sLocationObjectName + ", but you did not enter a new " + sLocationObjectName + " to add.");
 		    }
 		    else{
-		    	Edit_Record(sNewCode, out, sDBID, true);
+		    	Edit_Record(sNewCode, out, sDBID, true, sDBID);
 		    }
 	    }
 		
@@ -118,7 +118,8 @@ public class FAEditLocationEdit extends HttpServlet {
 			String sCode, 
 			PrintWriter pwOut, 
 			String sConf,
-			boolean bAddNew){
+			boolean bAddNew,
+			String sDBID){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
@@ -128,7 +129,7 @@ public class FAEditLocationEdit extends HttpServlet {
 			}
 		}
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditLocationEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"EditCode\" VALUE=\"" + sCode + "\">");
 	    //String sOutPut = "";
@@ -169,7 +170,7 @@ public class FAEditLocationEdit extends HttpServlet {
 		
 		pwOut.println("</TABLE>");
 		pwOut.println("<BR>");
-		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sLocationObjectName + "' STYLE='height: 0.24in'></P>");
 		pwOut.println("</FORM>");
 		
 	}
@@ -213,7 +214,7 @@ public class FAEditLocationEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
-				pwOut.println("The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
+				pwOut.println("The " + sLocationObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
 				rs.close();
 				return false;
 			}

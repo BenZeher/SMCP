@@ -22,12 +22,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAClearTransactionHistorySelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static final String CONFIRMCLEARING = "CONFIRMCLEARING";
+	public static final String FA_TRANSACTION_HISTORY_CONFIRMCLEARING = "CONFIRMCLEARING";
 	//private static String sObjectName = "Transaction";
-	private static String sCalledClassName = "FAClearTransactionHistoryAction";
-	private static String sCompanyName = "";
-	private static String sUserName = "";
-	private String sDBID = "";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -35,9 +32,10 @@ public class FAClearTransactionHistorySelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCalledClassName = "FAClearTransactionHistoryAction";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAClearTransactionHistory)){
 	    	return;
 	    }

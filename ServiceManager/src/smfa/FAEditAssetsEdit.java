@@ -29,13 +29,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class FAEditAssetsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Asset";
-	private static String sCalledClassName = "FAEditAssetsAction";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static final String sAssetObjectName = "Asset";
+	private static final String sFAEditAssetsEditCalledClassName = "FAEditAssetsAction";
 	private boolean bisNew;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -44,13 +39,14 @@ public class FAEditAssetsEdit extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) 
+	   
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) 
 	    				+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAManageAssets)){
 	    	return;
 	    }
@@ -167,7 +163,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 		}
 		
 		//In any other case, such as the possibility that this is a 'resubmit', we need to edit the item:
-    	title = "Edit " + sObjectName;
+    	title = "Edit " + sAssetObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -209,7 +205,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(asset, bisNew, out, sDBID, sUserName, request);
+	    Edit_Record(asset, bisNew, out, sDBID, sUserName, request, sDBID, sUserID, sUserFullName);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -220,9 +216,12 @@ public class FAEditAssetsEdit extends HttpServlet {
 			PrintWriter pwOut, 
 			String sConf,
 			String sUser,
-			HttpServletRequest req
+			HttpServletRequest req,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			){
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditAssetsEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + SMUtilities.getFullClassName(this.toString()) + "'>");
 
@@ -772,7 +771,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 				+ " MAXLENGTH=" + Integer.toString(254)
 				+ "<BR>");
 			
-        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sAssetObjectName + "' STYLE='height: 0.24in'></P>");
         pwOut.println("</FORM>");
 		
 	}

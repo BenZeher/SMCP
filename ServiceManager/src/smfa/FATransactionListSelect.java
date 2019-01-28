@@ -23,10 +23,6 @@ public class FATransactionListSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	//private static String sObjectName = "Asset";
-	private static String sCalledClassName = "FATransactionListGenerate";
-	private static String sCompanyName = "";
-	private static String sUserName = "";
-	private static String sDBID = "";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -35,9 +31,10 @@ public class FATransactionListSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sCalledClassName = "FATransactionListGenerate";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FATransactionReport)){
 	    	return;
 	    }

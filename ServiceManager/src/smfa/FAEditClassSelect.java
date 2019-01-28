@@ -21,10 +21,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class FAEditClassSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Class";
-	private static String sCalledClassName = "FAEditClassEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectClassName = "Class";
+	private static final String sFAEditClassSelectCalledClassName = "FAEditClassEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -32,8 +30,8 @@ public class FAEditClassSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEditClasses)){
 	    	return;
 	    }
@@ -42,7 +40,7 @@ public class FAEditClassSelect extends HttpServlet {
 		String subtitle = "";
 		
     	//User has chosen to edit:
-		title = "Edit " + sObjectName;
+		title = "Edit " + sObjectClassName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -56,7 +54,7 @@ public class FAEditClassSelect extends HttpServlet {
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.FAEditClasses) 
 	    		+ "\">Summary</A><BR><BR>");
 		
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditClassSelectCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    String sOutPut = "";
 	    
@@ -69,7 +67,7 @@ public class FAEditClassSelect extends HttpServlet {
 	        				" ORDER BY" +
 	        				" " + SMTablefaclasses.sClassDescription;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
+	     	out.println ("<SELECT NAME=\"" + sObjectClassName + "\">" );
         	
         	while (rs.next()){
         		sOutPut = "<OPTION VALUE=\"" + rs.getString(SMTablefaclasses.sClass) + "\">" +
@@ -85,12 +83,12 @@ public class FAEditClassSelect extends HttpServlet {
 			out.println ("Error reading classes with SQL: " + sSQL + " - " + ex.getMessage());
 		}
 		//Display text boxes:
-		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='height: 0.24in'>";
+		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectClassName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectClassName + "' STYLE='height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectClassName + "' STYLE='height: 0.24in'></P>";
 		sOutPut = sOutPut + 
-			" New Class Code To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
+			" New Class Code To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectClassName + "\" SIZE=28 MAXLENGTH=" + 
 			Integer.toString(SMTablefaclasses.sClassLength) + 
 			" STYLE=\"width: 2.41in; height: 0.25in\"> Must be 6 alpha-numerical characters or less." + 
 			"</P>";

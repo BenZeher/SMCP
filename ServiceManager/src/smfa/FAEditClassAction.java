@@ -19,9 +19,8 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class FAEditClassAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Class";
-	private String sCompanyName = "";
-	private String sDBID = "";
+	//private static String sObjectName = "Class";
+
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -34,8 +33,9 @@ public class FAEditClassAction extends HttpServlet{
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sObjectName = "Class";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    
 
 		String sEditCode = request.getParameter("EditCode");
@@ -53,7 +53,6 @@ public class FAEditClassAction extends HttpServlet{
 				+ "\">Return to Fixed Assets Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.FAEditClasses) 
 	    		+ "\">Summary</A><BR><BR>");
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); 
 	
 	    String sOutPut = "";
 	

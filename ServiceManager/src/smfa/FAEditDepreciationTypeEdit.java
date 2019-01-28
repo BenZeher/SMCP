@@ -25,10 +25,9 @@ import ServletUtilities.clsStringFunctions;
 public class FAEditDepreciationTypeEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Depreciation Type";
-	private static String sCalledClassName = "FAEditDepreciationTypeAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sDepreciationTypeObjectName = "Depreciation Type";
+	private static final String sFAEditDepreciationTypeEditCalledClassName = "FAEditDepreciationTypeAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -37,20 +36,20 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAEditDepreciationType)){
 	    	return;
 	    }
 
-	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectName));
+	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sDepreciationTypeObjectName));
 
 		String title = "";
 		String subtitle = "";
 		
 	    if(request.getParameter("SubmitEdit") != null){
 	    	//User has chosen to edit:
-			title = "Edit " + sObjectName + ": " + sEditCode;
+			title = "Edit " + sDepreciationTypeObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -64,11 +63,11 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 		    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditItems) 
 		    		+ "\">Summary</A><BR><BR>");
 			
-		    Edit_Record(sEditCode, out, sDBID, false);
+		    Edit_Record(sEditCode, out, sDBID, false, sDBID);
 	    }
 	    if(request.getParameter("SubmitDelete") != null){
 	    	//User has chosen to delete:
-			title = "Delete " + sObjectName + ": " + sEditCode;
+			title = "Delete " + sDepreciationTypeObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -95,9 +94,9 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitAdd") != null){
 	    	
-		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sDepreciationTypeObjectName));
 	    	//User has chosen to add a new record:
-			title = "Add " + sObjectName + ": " + sNewCode;
+			title = "Add " + sDepreciationTypeObjectName + ": " + sNewCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -112,10 +111,10 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 		    		+ "\">Summary</A><BR><BR>");
 
 		    if (sNewCode == ""){
-		    	out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
+		    	out.println ("You chose to add a new " + sDepreciationTypeObjectName + ", but you did not enter a new " + sDepreciationTypeObjectName + " to add.");
 		    }
 		    else{
-		    	Edit_Record(sNewCode, out, sDBID, true);
+		    	Edit_Record(sNewCode, out, sDBID, true, sDBID);
 		    }
 	    }
 		
@@ -126,7 +125,8 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 			String sCode, 
 			PrintWriter pwOut, 
 			String sConf,
-			boolean bAddNew){
+			boolean bAddNew,
+			String sDBID){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
@@ -136,7 +136,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 			}
 		}
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditDepreciationTypeEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"EditCode\" VALUE=\"" + sCode + "\">");
 	    //String sOutPut = "";
@@ -196,7 +196,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 		
 		pwOut.println("</TABLE>");
 		pwOut.println("<BR>");
-		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sDepreciationTypeObjectName + "' STYLE='height: 0.24in'></P>");
 		pwOut.println("</FORM>");
 		
 	}
@@ -240,7 +240,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
-				pwOut.println("The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
+				pwOut.println("The " + sDepreciationTypeObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
 				rs.close();
 				return false;
 			}

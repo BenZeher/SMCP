@@ -25,20 +25,14 @@ public class FAAssetListGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	private String sCompanyName = "";
-	private boolean bSelectByCategory = false;
+	private boolean bSelectAssetListByCategory = false;
+	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
 
+		SimpleDateFormat dfUSDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+		
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 
@@ -47,13 +41,13 @@ public class FAAssetListGenerate extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+		String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sWarning = "";
 
 		boolean bIncludeDisposed = false;
 		boolean bIncludeNonDisposed = false;
@@ -73,7 +67,7 @@ public class FAAssetListGenerate extends HttpServlet {
 		ArrayList<String>arrClasses = new ArrayList<String>(0);
 		//Now add back in all the authorized users for this device:
 		Enumeration<?> paramNames = request.getParameterNames();
-		String sUserMarker = FAAssetListSelect.CLASS_CHECKBOX_PARAM;
+		String sUserMarker = FAAssetListSelect.ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM;
 		while(paramNames.hasMoreElements()) {
 			String sParamName = (String)paramNames.nextElement();
 			if (sParamName.contains(sUserMarker)){
@@ -82,10 +76,10 @@ public class FAAssetListGenerate extends HttpServlet {
 			}
 		}
 
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CALLINGCLASS", request);
-		String sFiscalYear = clsManageRequestParameters.get_Request_Parameter(FAAssetListSelect.FISCALYEARSELECTION, request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CALLINGCLASS", request);
+		String sFiscalYear = clsManageRequestParameters.get_Request_Parameter(FAAssetListSelect.ASSET_LIST_SELECT_FISCALYEARSELECTION, request);
 		int iFiscalYear = 0;
-		if (sFiscalYear.compareToIgnoreCase(FAAssetListSelect.NO_TRANSACTIONS_AVAILABLE) == 0){
+		if (sFiscalYear.compareToIgnoreCase(FAAssetListSelect.ASSET_LIST_SELECT_NO_TRANSACTIONS_AVAILABLE) == 0){
 			iFiscalYear = -1;
 			sFiscalYear = "(N/A)";
 		}
@@ -94,7 +88,7 @@ public class FAAssetListGenerate extends HttpServlet {
 			iFiscalYear = Integer.parseInt(sFiscalYear);
 		} catch (NumberFormatException e) {
 			sWarning = "Invalid fiscal year - '" + sFiscalYear + "'.";
-			redirectAfterError(response);
+			redirectAfterError(response, sCallingClass, sDBID, sWarning);
 		}
 		String sReportTitle = "Asset List for " + sCompanyName;
 		String sHeading = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
@@ -104,7 +98,7 @@ public class FAAssetListGenerate extends HttpServlet {
 				+ "<BODY BGCOLOR=\"#FFFFFF\">"
 				+ "<TABLE BORDER=0 WIDTH=100% style= \"font-family: Arial;\" >"
 				+ "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
-				+ USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
+				+ dfUSDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 				+ " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "FAAssetListGenerate")
 				+ "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
 				+ "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3><B>" + sReportTitle 
@@ -182,7 +176,7 @@ public class FAAssetListGenerate extends HttpServlet {
 				);
 		if (conn == null){
 			sWarning = "Unable to get data connection.";
-			redirectAfterError(response);
+			redirectAfterError(response, sCallingClass, sDBID, sWarning);
 			return;
 		}
 
@@ -212,14 +206,14 @@ public class FAAssetListGenerate extends HttpServlet {
 		doPost(request, response);
 	}
 
-	private void redirectAfterError(HttpServletResponse res){
+	private void redirectAfterError(HttpServletResponse res, String sCallingClass, String sDBID, String sWarning){
 
 		String sRedirect =
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 						+ "Warning=" + sWarning
 						;
 
-		if (bSelectByCategory){
+		if (bSelectAssetListByCategory){
 			sRedirect += "&SelectByCategory=true";
 		}
 

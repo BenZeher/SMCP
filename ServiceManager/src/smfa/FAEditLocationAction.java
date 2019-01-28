@@ -19,10 +19,8 @@ import smcontrolpanel.SMUtilities;
 
 
 public class FAEditLocationAction extends HttpServlet{
+	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Location";
-	private String sCompanyName = "";
-	private String sDBID = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -34,8 +32,9 @@ public class FAEditLocationAction extends HttpServlet{
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sObjectName = "Location";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    
 
 		String sEditCode = request.getParameter("EditCode");
@@ -50,9 +49,7 @@ public class FAEditLocationAction extends HttpServlet{
 				+ "\">Return to user login</A><BR>");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); 
-	
+				+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");	
 	    String sOutPut = "";
 	
 	    String sSQL = "UPDATE " + SMTablefalocations.TableName

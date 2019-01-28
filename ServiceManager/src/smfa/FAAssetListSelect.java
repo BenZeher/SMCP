@@ -23,13 +23,11 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 
 public class FAAssetListSelect extends HttpServlet {
-	public static final String FISCALYEARSELECTION = "FISCALYRSELECT";
-	public static final String NO_TRANSACTIONS_AVAILABLE = "NOTRANSACTIONSAVAILABLE";
-	public static final String CLASS_CHECKBOX_PARAM = "CLASSCHECKBOXPARAM";
+	public static final String ASSET_LIST_SELECT_FISCALYEARSELECTION = "FISCALYRSELECT";
+	public static final String ASSET_LIST_SELECT_NO_TRANSACTIONS_AVAILABLE = "NOTRANSACTIONSAVAILABLE";
+	public static final String ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM = "CLASSCHECKBOXPARAM";
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "FAAssetListGenerate";
-	private String sDBID = "";
-	private String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -37,8 +35,9 @@ public class FAAssetListSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCalledClassName = "FAAssetListGenerate";
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAAssetList)){
 	    	return;
 	    }
@@ -77,7 +76,7 @@ public class FAAssetListSelect extends HttpServlet {
 		sOutPut = sOutPut + "<INPUT TYPE=CHECKBOX NAME='SHOWDETAILS'> Show details.<BR>";
 		
 		sOutPut += "<BR>Show year-to-date values for fiscal year:&nbsp;"
-			+ "<SELECT NAME = \"" + FISCALYEARSELECTION + "\">";
+			+ "<SELECT NAME = \"" + ASSET_LIST_SELECT_FISCALYEARSELECTION + "\">";
 		String SQL = "SELECT DISTINCT "
 			+ SMTablefatransactions.iFiscalYear
 			+ " FROM " + SMTablefatransactions.TableName
@@ -97,7 +96,7 @@ public class FAAssetListSelect extends HttpServlet {
 		}
 		
 		if (iRecordCounter == 0){
-			sOutPut += "<OPTION VALUE=\"" + NO_TRANSACTIONS_AVAILABLE + "\">"
+			sOutPut += "<OPTION VALUE=\"" + ASSET_LIST_SELECT_NO_TRANSACTIONS_AVAILABLE + "\">"
 					+ "(No transactions available)" + "</OPTION>";
 		}
 		sOutPut += " </SELECT>";
@@ -113,7 +112,7 @@ public class FAAssetListSelect extends HttpServlet {
 				sClassTable.add(
 					"<INPUT TYPE=CHECKBOX " 
 					+ clsServletUtilities.CHECKBOX_CHECKED_STRING
-					+ " NAME=\"" + CLASS_CHECKBOX_PARAM +  rsFAClasses.getString(SMTablefaclasses.sClass) + "\">" 
+					+ " NAME=\"" + ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM +  rsFAClasses.getString(SMTablefaclasses.sClass) + "\">" 
 					+ rsFAClasses.getString(SMTablefaclasses.sClass) 
 					+ " - " + rsFAClasses.getString(SMTablefaclasses.sClassDescription)
 				);

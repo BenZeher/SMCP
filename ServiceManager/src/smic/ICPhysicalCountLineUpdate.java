@@ -37,10 +37,6 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	private String m_sWarning = ""; //$NON-NLS-1$
 	private String m_sSendRedirect;
 	
-	private static String sDBID = ""; //$NON-NLS-1$
-	private static String sUserName = ""; //$NON-NLS-1$
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -56,10 +52,9 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); //$NON-NLS-1$
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME); //$NON-NLS-1$
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); //$NON-NLS-1$
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    m_sWarning = ""; //$NON-NLS-1$
@@ -105,7 +100,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	    //If it's a request to update the write off account, update that account:
 	    //System.out.println("In " + this.toString() + " 01");
     	
-    	process(CurrentSession,response);
+    	process(CurrentSession,response, sDBID, sUserID, sUserFullName);
     	try{
         	options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
     	}catch(Exception e){
@@ -116,13 +111,13 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	}
 	
 	
-	private void process( HttpSession CurrentSession, HttpServletResponse response ) throws ServletException, IOException{
+	private void process( HttpSession CurrentSession, HttpServletResponse response, String sDBID, String sUserID, String sUserFullName) throws ServletException, IOException{
 		
 	if (m_sUpdateDefaultWriteOffAccount.compareToIgnoreCase("") != 0){ //$NON-NLS-1$
     	if (!setDefaultWriteOffAccount(
     			getServletContext(), 
     			sDBID, 
-    			sUserName,
+    			sUserFullName,
     			m_Line.sLocation()
     		)){
     		//System.out.println("In " + this.toString() + " 02");
@@ -152,7 +147,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	    	return;
     	}else{
     		//Delete the line:
-    		if (!deleteLine()){
+    		if (!deleteLine(sDBID, sUserID, sUserFullName)){
     			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" //$NON-NLS-1$ //$NON-NLS-2$
 						+ "BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
 						+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
@@ -177,7 +172,8 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	    	if (!saveLine(
 	    			getServletContext(), 
 	    			sDBID, 
-	    			sUserID
+	    			sUserID,
+	    			sUserFullName
 	    		)){
 	    		//System.out.println("In " + this.toString() + " 02");
 	    	}
@@ -196,12 +192,13 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	
 	private boolean saveLine(
 			ServletContext context, 
-			String sConf, 
-			String sUserID
+			String sDBID, 
+			String sUserID,
+			String sUserFullName
 		){
 		
 		ICEntry entry = new ICEntry();
-		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sConf)){
+		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
@@ -210,7 +207,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL",  //$NON-NLS-1$
 				this.toString() + ".saveLine - User: " 
 						+ sUserID
@@ -325,14 +322,14 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 		
 		//Finally, load the line again into the class:
 		m_Line = new ICEntryLine();
-		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sConf)){
+		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sDBID)){
 			m_sWarning = m_sWarning + "\n" + m_Line.getErrorMessage(); //$NON-NLS-1$
 			return false;
 		}
 		
 		return true;
 	}
-	private boolean deleteLine(){
+	private boolean deleteLine(String sDBID, String sUserID, String sUserFullName){
 		
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), getServletContext(), sDBID)){
@@ -372,7 +369,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
     private boolean setDefaultWriteOffAccount(
     		ServletContext context, 
     		String sDBID, 
-    		String sUserName,
+    		String sUserFullName,
     		String sLocation
     		){
     	
@@ -391,7 +388,7 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
     				context, 
     				sDBID, 
     				"MySQL",  //$NON-NLS-1$
-    				this.toString() + ".setDefaultWriteOffAccount - user: " + sUserName); //$NON-NLS-1$
+    				this.toString() + ".setDefaultWriteOffAccount - user: " + sUserFullName); //$NON-NLS-1$
     		if (rs.next()){
     			m_Line.sDistributionAcct(rs.getString(SMTablelocations.sGLWriteOffAcct));
     		}else{

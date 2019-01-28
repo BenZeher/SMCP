@@ -45,10 +45,6 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
     private ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
     private ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
 	
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -65,11 +61,11 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 		m_hsrRequest = request;
 	    get_request_parameters();
@@ -126,7 +122,7 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 	    		+ "\">Return to Edit Entry " + m_sEntryNumber + "</A><BR><BR>");
 		
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput()){
+		if (!createFormFromLineInput( sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -141,7 +137,7 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(){
+	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICPhysicalCountLineUpdate' METHOD='POST'>");
@@ -154,10 +150,10 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
 
-	    if (!loadGLAccountList()){
+	    if (!loadGLAccountList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
-	    if (!loadLocationList()){
+	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 
@@ -415,7 +411,7 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
 		
 	}
-	private boolean loadGLAccountList(){
+	private boolean loadGLAccountList(String sDBID, String sUserID, String sUserFullName){
         m_sGLAccountValues.clear();
         m_sGLAccountDescriptions.clear();
         try{
@@ -457,7 +453,7 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		
 		return true;
 	}
-	private boolean loadLocationList(){
+	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
         m_sLocationValues.clear();
         m_sLocationDescriptions.clear();
         try{

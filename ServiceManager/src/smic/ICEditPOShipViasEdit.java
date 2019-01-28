@@ -23,10 +23,9 @@ import ServletUtilities.clsStringFunctions;
 public class ICEditPOShipViasEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "PO Ship Via";
-	private static String sCalledClassName = "ICEditPOShipViasAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sPOShipViaObjectName = "PO Ship Via";
+	private static final String sICEditPOShipViasEditCalledClassName = "ICEditPOShipViasAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -35,20 +34,20 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ICEditPOShipVias)){
 	    	return;
 	    }
 
-	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sObjectName));
+	    String sEditCode = (String) clsStringFunctions.filter(request.getParameter(sPOShipViaObjectName));
 
 		String title = "";
 		String subtitle = "";
 		String sOutPut = "";
 	    if(request.getParameter("SubmitEdit") != null){
 	    	//User has chosen to edit:
-			title = "Edit " + sObjectName + ": " + sEditCode;
+			title = "Edit " + sPOShipViaObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -70,7 +69,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitDelete") != null){
 	    	//User has chosen to delete:
-			title = "Delete " + sObjectName + ": " + sEditCode;
+			title = "Delete " + sPOShipViaObjectName + ": " + sEditCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -97,9 +96,9 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 	    }
 	    if(request.getParameter("SubmitAdd") != null){
 	    	
-		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sObjectName));
+		    String sNewCode = clsStringFunctions.filter(request.getParameter("New" + sPOShipViaObjectName));
 	    	//User has chosen to add a new record:
-			title = "Add " + sObjectName + ": " + sNewCode;
+			title = "Add " + sPOShipViaObjectName + ": " + sNewCode;
 		    subtitle = "";
 		    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -114,7 +113,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 		    		+ "\">Summary</A><BR><BR>");
 
 		    if (sNewCode == ""){
-		    	out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " code to add.");
+		    	out.println ("You chose to add a new " + sPOShipViaObjectName + ", but you did not enter a new " + sPOShipViaObjectName + " code to add.");
 		    }
 		    else{
 		    	try {
@@ -147,7 +146,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 			}
 		}
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditPOShipViasEditCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"EditCode\" VALUE=\"" + sCode + "\">");
 	  
@@ -184,7 +183,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 		
 		pwOut.println("</TABLE>");
 		pwOut.println("<BR>");
-		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sPOShipViaObjectName + "' STYLE='height: 0.24in'></P>");
 		pwOut.println("</FORM>");
 		
 	}
@@ -234,7 +233,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				rs.close();
-				throw new Exception("Error: The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
+				throw new Exception("Error: The " + sPOShipViaObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
 			}
 			rs.close();
 			

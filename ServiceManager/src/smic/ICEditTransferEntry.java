@@ -32,10 +32,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	private HttpServletRequest m_hsrRequest;
 	private boolean m_bIsNewEntry = false;
 	private boolean m_bEditable = false;
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -52,11 +49,11 @@ public class ICEditTransferEntry extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
 		m_Entry = (ICEntry) CurrentSession.getAttribute("EntryInput");
@@ -70,7 +67,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    get_request_parameters();
 	    
 		//Try to load an ICEntryInput object from which to build the form:
-		if (!loadICEntryInput()){
+		if (!loadICEntryInput( sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -110,7 +107,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    		+ "\">Return to Edit Batch " + m_Entry.sBatchNumber() + "</A><BR><BR>");
 
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromEntryInput()){
+		if (!createFormFromEntryInput( sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit"
 					+ "?BatchNumber=" + m_Entry.sBatchNumber()
@@ -124,7 +121,7 @@ public class ICEditTransferEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadICEntryInput(){
+	private boolean loadICEntryInput(String sDBID, String sUserID, String sUserFullName){
 		
 		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
 		if (m_Entry == null){
@@ -166,7 +163,7 @@ public class ICEditTransferEntry extends HttpServlet {
 		
 		return true;
 	}
-	private boolean createFormFromEntryInput(){
+	private boolean createFormFromEntryInput(String sDBID, String sUserID, String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEntryUpdate' METHOD='POST'>");
@@ -190,7 +187,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    Display_Line_Header();
 
 	    //Display all the current transaction lines:
-	    if (!displayLines(m_bEditable)){
+	    if (!displayLines(m_bEditable, sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 	    
@@ -345,7 +342,7 @@ public class ICEditTransferEntry extends HttpServlet {
 		m_pwOut.println("<TD><FONT SIZE=2><B><U>Description</B></U></FONT></TD>");
 		m_pwOut.println("</TR>");
 	}
-	private boolean displayLines(boolean bEditable){
+	private boolean displayLines(boolean bEditable, String sDBID, String sUserID, String sUserFullName){
 		
         //Display the line header:
         for (int i = 0; i < m_Entry.getLineCount(); i++){

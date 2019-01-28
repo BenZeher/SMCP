@@ -19,9 +19,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class ICEditPOShipViasAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "PO Ship Via";
-	private String sCompanyName = "";
-	private String sDBID = "";
+	private static final String sPOShipViaObjectName = "PO Ship Via";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -30,15 +28,15 @@ public class ICEditPOShipViasAction extends HttpServlet{
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ICEditPOShipVias)){
 	    	return;
 	    }
 
 		String sEditCode = request.getParameter("EditCode");
 		
-	    String title = "Updating " + sObjectName + "'" + sEditCode + "'";
+	    String title = "Updating " + sPOShipViaObjectName + "'" + sEditCode + "'";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		
@@ -51,7 +49,6 @@ public class ICEditPOShipViasAction extends HttpServlet{
 				+ "\">Return to Inventory Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditPOShipVias) 
 	    		+ "\">Summary</A><BR><BR>");
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID); 
 	
 	    String sOutPut = "PO Ship Via successfully updated";
 	
@@ -64,7 +61,7 @@ public class ICEditPOShipViasAction extends HttpServlet{
 	    try{
 	    	clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){
-		    sOutPut = "Error - could not update " + sObjectName + " with SQL: " + sSQL + " - " + ex.getMessage() + ".<BR>";
+		    sOutPut = "Error - could not update " + sPOShipViaObjectName + " with SQL: " + sSQL + " - " + ex.getMessage() + ".<BR>";
 		}
 	    
 	    out.println(sOutPut);

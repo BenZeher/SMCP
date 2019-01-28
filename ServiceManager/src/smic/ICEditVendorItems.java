@@ -42,12 +42,8 @@ public class ICEditVendorItems extends HttpServlet {
 	public static String VENDORITEMCOMMENT_PARAMETER_MARKER = "VENDORCOMMENT";
 	public static String NUMBEROFCURRENTRECORDS_PARAMETER = "NUMBEROFCURRENTRECORDS";
 	
-	private static String sCalledClassName = "ICEditVendorItemsAction";
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+	private static String sICEditVendorItemsCalledClassName = "ICEditVendorItemsAction";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -63,12 +59,12 @@ public class ICEditVendorItems extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 	    //First, get the item number:
 	    String sItemNumber = clsManageRequestParameters.get_Request_Parameter(ITEMNUMBER, request).trim();
@@ -140,13 +136,13 @@ public class ICEditVendorItems extends HttpServlet {
 			String sEditingSingleVendor,
 			String sInitiatedFromPO,
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			String sUser,
 			String sUserID,
 			String sUserFullName,
 			HttpSession session
 			){
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sCalledClassName + "' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditVendorItemsCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ITEMNUMBER + "' VALUE='" + sItem + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + "CallingClass" + "' VALUE='" 
@@ -210,12 +206,12 @@ public class ICEditVendorItems extends HttpServlet {
 		// In either case, we need to read the records fresh from the database.
 		if (arrVendorItems == null){
 			try{
-				printRecordsFromData(sItem, sConf, sUser, sEditingSingleVendor, sCurrentVendors, pwOut);
+				printRecordsFromData(sItem, sDBID, sUserID, sEditingSingleVendor, sCurrentVendors, pwOut);
 			}catch (SQLException e){
 				pwOut.println ("Error reading vendor items - " + e.getMessage());
 			}
 		}else{
-			printRecordsFromSessionObject(sCurrentVendors, arrVendorItems, sEditingSingleVendor, pwOut, sConf, sUser, sUserID,sUserFullName);
+			printRecordsFromSessionObject(sCurrentVendors, arrVendorItems, sEditingSingleVendor, pwOut, sDBID, sUser, sUserID,sUserFullName);
 			session.removeAttribute(ICEditVendorItemsAction.VENDORITEMARRAY);
 		}
 		
@@ -237,7 +233,7 @@ public class ICEditVendorItems extends HttpServlet {
 	private void printRecordsFromData(
 			String sItem,
 			String sDBID, 
-			String sUserName,
+			String sUserID,
 			String sEditingSingleVendor,
 			ArrayList<String> arrVendorsAlreadyListed,
 			PrintWriter pwOut
@@ -264,7 +260,7 @@ public class ICEditVendorItems extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(),
 					sDBID, "MySQL", SMUtilities.getFullClassName(this
 							.toString())
-							+ ".Edit_Records - user: " + sUserName);
+							+ ".Edit_Records - user: " + sUserID);
 			
 			while (rs.next()) {
 				iRowNumber++;
@@ -288,7 +284,9 @@ public class ICEditVendorItems extends HttpServlet {
 				"", 
 				"", 
 				"",
-				arrVendorsAlreadyListed
+				arrVendorsAlreadyListed,
+				sDBID,
+				sUserID
 			);
 		} catch (SQLException e) {
 			pwOut.println("<BR>Error adding new row - " + e.getMessage());
@@ -343,7 +341,9 @@ public class ICEditVendorItems extends HttpServlet {
 				arrVendorItems.get(0).getsvendoritemnumber(), 
 				arrVendorItems.get(0).getscost(),
 				arrVendorItems.get(0).getscomment(),
-				arrVendorsAlreadyListed
+				arrVendorsAlreadyListed,
+				sDBID,
+				sUserID
 			);
 		} catch (SQLException e) {
 			pwOut.println("<BR>Error adding new row - " + e.getMessage());
@@ -357,7 +357,9 @@ public class ICEditVendorItems extends HttpServlet {
 			String sNewVendorItem,
 			String sNewVendorCost,
 			String sNewComment,
-			ArrayList<String>sAlreadyListedVendors
+			ArrayList<String>sAlreadyListedVendors,
+			String sDBID,
+			String sUserID
 		) throws SQLException{
 		
 		pwOut.println("<TR>");
@@ -388,7 +390,7 @@ public class ICEditVendorItems extends HttpServlet {
 	        	getServletContext(), 
 	        	sDBID,
 	        	"MySQL",
-	        	this.toString() + ".createAddRow - User: " + sUserName);
+	        	this.toString() + ".createAddRow - User: " + sUserID);
 	        
 	        while (rsVendors.next()){
 	        	String sVendor = rsVendors.getString(SMTableicvendors.svendoracct).trim();

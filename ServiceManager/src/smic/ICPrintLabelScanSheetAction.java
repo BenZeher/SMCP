@@ -23,9 +23,7 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUser = "";
+
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -43,11 +41,11 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 		
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sStartingItemNumber = clsManageRequestParameters.get_Request_Parameter(
 			ICPrintLabelScanSheetSelect.PARAM_STARTINGITEM, request);
 		String sEndingItemNumber = clsManageRequestParameters.get_Request_Parameter(

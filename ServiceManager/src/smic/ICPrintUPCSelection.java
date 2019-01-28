@@ -40,8 +40,6 @@ public class ICPrintUPCSelection extends HttpServlet {
 	//LTO 20131231
 	//This determines when the "too many labels" message will show before printing.
 	public static final int MAX_NUMBER_OF_LABELS = NUMBER_OF_ROWS_TO_DISPLAY * NUMBER_OF_COLUMNS_TO_DISPLAY * 3;
-	private static String sCompanyName = "";
-	private static String sDBID = "";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -57,8 +55,8 @@ public class ICPrintUPCSelection extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    
 	    String sScript = "";
 		

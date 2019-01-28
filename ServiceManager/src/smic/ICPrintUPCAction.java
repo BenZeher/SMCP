@@ -21,8 +21,6 @@ public class ICPrintUPCAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
 
 	public static String PARAM_NUMBEROFDIFFERENTLABELS = "NUMBEROFDIFFERENTLABELS";
 	public static String PARAM_ITEMNUMMARKER = "ITEMNUM";
@@ -46,10 +44,10 @@ public class ICPrintUPCAction extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
 		//System.out.println("[1539289073] - Param = '" + clsManageRequestParameters.get_Request_Parameter(ICPrintUPCSelection.BUTTON_POPULATE_ITEMS, request) + "'");
 		//System.out.println("[1539289074] - Param = '" + clsManageRequestParameters.get_Request_Parameter(ICPrintUPCSelection.BUTTON_POPULATE_ITEMS_LABEL, request) + "'");

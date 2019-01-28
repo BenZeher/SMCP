@@ -20,10 +20,9 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ICEditPOShipViasSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "PO Ship Via";
-	private static String sCalledClassName = "ICEditPOShipViasEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static String sPOShipViaObjectName = "PO Ship Via";
+	private static String sICEditPOShipViasSelectCalledClassName = "ICEditPOShipViasEdit";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -31,8 +30,8 @@ public class ICEditPOShipViasSelect extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ICEditPOShipVias)){
 	    	return;
 	    }
@@ -41,7 +40,7 @@ public class ICEditPOShipViasSelect extends HttpServlet {
 		String subtitle = "";
 		
     	//User has chosen to edit:
-		title = "Edit " + sObjectName;
+		title = "Edit " + sPOShipViaObjectName;
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -57,7 +56,7 @@ public class ICEditPOShipViasSelect extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 		
 	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." 
-	    		+ sCalledClassName + "' METHOD='POST'>");
+	    		+ sICEditPOShipViasSelectCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    String sOutPut = "";
 	    
@@ -76,7 +75,7 @@ public class ICEditPOShipViasSelect extends HttpServlet {
 	        	"MySQL", 
 	        	this.toString() + ".doPost - user: " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME)
 	        );
-	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
+	     	out.println ("<SELECT NAME=\"" + sPOShipViaObjectName + "\">" );
         	
         	while (rs.next()){
         		sOutPut = "<OPTION VALUE=\"" + rs.getString(SMTableicshipvias.sshipviacode) + "\">" +
@@ -92,12 +91,12 @@ public class ICEditPOShipViasSelect extends HttpServlet {
 			out.println ("Error reading classes with SQL: " + sSQL + " - " + ex.getMessage());
 		}
 		//Display text boxes:
-		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='height: 0.24in'>";
+		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sPOShipViaObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sPOShipViaObjectName + "' STYLE='height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sPOShipViaObjectName + "' STYLE='height: 0.24in'></P>";
 		sOutPut = sOutPut + 
-			" New PO Ship Via Code To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
+			" New PO Ship Via Code To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sPOShipViaObjectName + "\" SIZE=28 MAXLENGTH=" + 
 			Integer.toString(SMTableicshipvias.sshipviacodeLength) + 
 			" STYLE=\"width: 2.41in; height: 0.25in\"> Must be " + Integer.toString(SMTableicshipvias.sshipviacodeLength)
 			+ " alpha-numerical characters or less." + 

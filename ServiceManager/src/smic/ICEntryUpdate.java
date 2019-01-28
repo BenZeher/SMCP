@@ -27,10 +27,7 @@ public class ICEntryUpdate extends HttpServlet{
 	private String m_sCallingClass;
 	private String m_sWarning;
 	
-	private static String sDBID = "";
-	private static String sCompanyName = "";
-	private static String sUserFullName = "";
-	private static String sUserID = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -47,11 +44,11 @@ public class ICEntryUpdate extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
     
 	    //If there's an entry input object in the session, get rid of it:
 	    CurrentSession.removeAttribute("EntryInput");
@@ -85,7 +82,7 @@ public class ICEntryUpdate extends HttpServlet{
 			return;
 		}
     	try {
-			processUpdate(request,response,out,title,CurrentSession,subtitle);
+			processUpdate(request,response,out,title,CurrentSession,subtitle, sDBID, sCompanyName, sUserID);
 		} catch (Exception e1) {
 	    	try {
 				options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
@@ -126,7 +123,10 @@ public class ICEntryUpdate extends HttpServlet{
 			PrintWriter out,
 			String title,
 			HttpSession CurrentSession,
-			String subtitle) throws Exception {
+			String subtitle,
+			String sDBID,
+			String sCompanyName,
+			String sUserID) throws Exception {
 		//Process if it's a 'delete':
 		if (!m_sDelete.equalsIgnoreCase("")){
 			if (m_sConfirmDelete.equalsIgnoreCase("")){

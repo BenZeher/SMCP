@@ -41,11 +41,7 @@ public class ICEditTransferLine extends HttpServlet {
     private ArrayList<String> m_sLocationValues = new ArrayList<String>();
     private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
     private boolean m_bDisplayQtys = false;
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -62,12 +58,11 @@ public class ICEditTransferLine extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 		m_hsrRequest = request;
 	    get_request_parameters();
@@ -124,7 +119,7 @@ public class ICEditTransferLine extends HttpServlet {
 	    		+ "\">Return to Edit Entry " + m_sEntryNumber + "</A><BR><BR>");
 		
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput()){
+		if (!createFormFromLineInput(sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditTransferEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -139,7 +134,7 @@ public class ICEditTransferLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(){
+	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICTransferLineUpdate' METHOD='POST'>");
@@ -151,7 +146,7 @@ public class ICEditTransferLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + "ICEditTransferLine" + "'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
-	    if (!loadLocationList()){
+	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 
@@ -364,7 +359,7 @@ public class ICEditTransferLine extends HttpServlet {
 	    
 	    if (m_bDisplayQtys){
 	    	try {
-				displayQtys();
+				displayQtys(sDBID, sUserID, sUserFullName);
 			} catch (Exception e) {
 				m_pwOut.println("<FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT>");
 			}
@@ -382,7 +377,7 @@ public class ICEditTransferLine extends HttpServlet {
 		m_bDisplayQtys = clsManageRequestParameters.get_Request_Parameter(DISPLAY_QTYS_PARAM, m_hsrRequest).compareToIgnoreCase("") != 0;
 	}
 
-	private boolean loadLocationList(){
+	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
         m_sLocationValues.clear();
         m_sLocationDescriptions.clear();
         try{
@@ -397,7 +392,7 @@ public class ICEditTransferLine extends HttpServlet {
 		        	getServletContext(), 
 		        	sDBID,
 		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserName);
+		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
 	        
 			//Print out directly so that we don't waste time appending to string buffers:
 	        while (rsLocations.next()){
@@ -418,7 +413,7 @@ public class ICEditTransferLine extends HttpServlet {
 		
 		return true;
 	}
-	private void displayQtys() throws Exception{
+	private void displayQtys(String sDBID, String sUserID, String sUserFullName) throws Exception{
 		ICItem item = new ICItem(m_line.sItemNumber());
 		if (!item.load(getServletContext(), sDBID)){
 			m_pwOut.println("<FONT COLOR=RED><B>Can't display quantities for item number '" + m_line.sItemNumber() 
@@ -455,7 +450,7 @@ public class ICEditTransferLine extends HttpServlet {
 				getServletContext(),
 				sDBID, 
 				"MySQL", 
-				this.toString() + ".displayQtys - user: " + sUserName);
+				this.toString() + ".displayQtys - user: " + sUserFullName);
 			while (rs.next()){
 				BigDecimal bdQty = rs.getBigDecimal(SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand);
 				if (bdQty == null){

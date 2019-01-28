@@ -37,15 +37,9 @@ import SMDataDefinition.SMTableicinventoryworksheet;
 public class ICPhysicalCountImportAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static int NUMBER_OF_FIELDS_PER_LINE = 2;
-	private static int FIELD_ITEM = 0;
-	private static int FIELD_QTY = 1;
-	
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sError = "";
-	private static String sCallingClass = "";
+	private static final int NUMBER_OF_FIELDS_PER_LINE = 2;
+	private static final int FIELD_ITEM = 0;
+	private static final int FIELD_QTY = 1;
 	
 	//Member variables for the count:
 	private static String m_sPhysicalInventoryID = "";
@@ -53,7 +47,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static String m_sCountDesc = "";
 	//private static String m_sValidStartingItem = ""; //TJR - removed these 10/1/2018
 	//private static String m_sValidEndingItem = "";
-
+    
+	private static String sPhysicalCountImportStatus = "";
+	private static String sPhysicalCountImportError = "";
+	private static String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
 	private static boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -75,13 +72,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    
-	    String sStatus = "";
-	    sError = "";
+
 	    
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
@@ -100,37 +95,37 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	    	}
 	    }
 	    
-	    if (!processRequest(CurrentSession, request, out)){
+	    if (!processRequest(CurrentSession, request, out, sDBID,sUserID,sUserFullName)){
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Warning=" + sPhysicalCountImportError
 					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
 					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
 			}		
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Warning=" + sPhysicalCountImportError
 					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
 					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 	    }else{
-	    	sStatus = "Import completed without errors.";
+	    	sPhysicalCountImportStatus = "Import completed without errors.";
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Status=" + sStatus
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Status=" + sPhysicalCountImportStatus
 					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
 					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID				
 				);
 			}
 	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Status=" + sStatus
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Status=" + sPhysicalCountImportStatus
 					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
 					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -160,7 +155,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private boolean processRequest(
 			HttpSession ses, 
 			HttpServletRequest req,
-			PrintWriter pwOut
+			PrintWriter pwOut,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			){
 
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
@@ -186,7 +184,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			sTempFilePath, 
 			ses, 
 			req, 
-			pwOut);
+			pwOut, 
+			sDBID,
+			sUserID,
+			sUserFullName);
 		deleteCurrentTempImportFiles(sTempFilePath);
 		return bResult;
 		
@@ -196,7 +197,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			String sTempImportFilePath,
 			HttpSession ses, 
 			HttpServletRequest req,
-			PrintWriter pwOut
+			PrintWriter pwOut,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 	){
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
@@ -235,11 +239,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		    FileItem item = (FileItem) iter.next();
 		    if (item.isFormField()) {
 		    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sCallingClass = item.getString();
+		    		sICPhysicalCountImportActionCallingClass = item.getString();
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+							+ ".writeFileAndProcess, parameter CallingClass = " + sICPhysicalCountImportActionCallingClass + "."); 
 					}		
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(ICPhysicalCountEntry.ParamDesc) == 0){
@@ -309,7 +313,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
-		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems)){
+		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems, sDBID, sUserID, sUserFullName)){
 			return false;
 		}
 		
@@ -346,7 +350,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			this.addToErrorMessage("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
 		}
 		
-		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, bAddNewItems, objICPhysicalInventoryEntry)){
+		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, bAddNewItems, objICPhysicalInventoryEntry,sDBID,sUserID,sUserFullName)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			bResult = false;
 		}else{
@@ -366,9 +370,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			Connection conn, 
 			boolean bFileIncludesHeaderRow,
 			boolean bAddNewItems,
-			ICPhysicalInventoryEntry objICPhysicalInventoryEntry
+			ICPhysicalInventoryEntry objICPhysicalInventoryEntry,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 			){
-		if (!insertCount(conn)){
+		if (!insertCount(conn, sDBID, sUserID, sUserFullName)){
 			return false;
 		}
 		if (bDebugMode){
@@ -380,7 +387,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		return true;
 	}
 	private boolean insertCount(
-			Connection conn
+			Connection conn,
+			String sDBID,
+			String sUserID,
+			String sUserFullName
 	){
 		
 		ICPhysicalCountEntry count = new ICPhysicalCountEntry();
@@ -513,7 +523,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	    return bDeletionSuccessful;
 
 	}
-	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, boolean bAddNewItems) {
+	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName) {
 
 		BufferedReader br = null;
 		boolean bResult = true;
@@ -547,7 +557,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 							//bResult = false;
 						}else{
 							if (!validateImportField(
-									iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""), bAddNewItems)){
+									iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""), bAddNewItems, sDBID,sUserID,sUserFullName)){
 								bResult = false;
 							}
 						}
@@ -582,7 +592,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		return bResult;
 	}
 
-	private boolean validateImportField (int iLineNumber, int iFieldIndex, String sField, boolean bAddNewItems){
+	private boolean validateImportField (int iLineNumber, int iFieldIndex, String sField, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName){
 		
 		boolean bResult = true;
 		
@@ -611,13 +621,13 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			//Make sure it's a valid item in the range from the physical inventory:
 			sField = stripSuffix(sField);
 			//System.out.println(sFieldBefore + " - " + sField);
-			if (!validateItemNumber(iLineNumber, sField, bAddNewItems)){
+			if (!validateItemNumber(iLineNumber, sField, bAddNewItems, sDBID, sUserID, sUserFullName)){
 				bResult = false;
 			}
 		}
 		return bResult;
 	}
-	private boolean validateItemNumber(int iLineNumber, String sItem, boolean bAddNewItems){
+	private boolean validateItemNumber(int iLineNumber, String sItem, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName){
 		
 		boolean bResult = true;
 		
@@ -692,10 +702,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 	private void addToErrorMessage(String sMsg){
 		
-		if (sError.length() > 900){
-			sError = sError.substring(0, 900) + " . . . (remaining errors truncated).";
+		if (sPhysicalCountImportError.length() > 900){
+			sPhysicalCountImportError = sPhysicalCountImportError.substring(0, 900) + " . . . (remaining errors truncated).";
 		}else{
-			sError += sMsg;
+			sPhysicalCountImportError += sMsg;
 		}
 		if (bDebugMode){
 			clsServletUtilities.sysprint(this.toString(), "ICCOUNTIMPORT", sMsg);

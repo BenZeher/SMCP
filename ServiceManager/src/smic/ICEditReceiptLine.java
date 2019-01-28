@@ -44,12 +44,7 @@ public class ICEditReceiptLine extends HttpServlet {
     //Cost bucket array lists:
     private ArrayList<String> m_sCategoryValues = new ArrayList<String>();
     private ArrayList<String> m_sCategoryDescriptions = new ArrayList<String>();
-	
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -66,12 +61,11 @@ public class ICEditReceiptLine extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 		m_hsrRequest = request;
 	    get_request_parameters();
@@ -129,7 +123,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		
 		//Try to construct the rest of the screen form from the AREntryInput object:
 		//TODO - create the edit line form:
-		if (!createFormFromLineInput()){
+		if (!createFormFromLineInput(sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -144,7 +138,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(){
+	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICReceiptLineUpdate' METHOD='POST'>");
@@ -156,10 +150,10 @@ public class ICEditReceiptLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + "ICEditReceiptLine" + "'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
-	    if (!loadCategoryList()){
+	    if (!loadCategoryList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
-	    if (!loadLocationList()){
+	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 
@@ -407,7 +401,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		
 	}
 
-	private boolean loadCategoryList(){
+	private boolean loadCategoryList(String sDBID, String sUserID, String sUserFulName){
         m_sCategoryValues.clear();
         m_sCategoryDescriptions.clear();
         try{
@@ -422,7 +416,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		        	getServletContext(), 
 		        	sDBID,
 		        	"MySQL",
-		        	this.toString() + ".loadCategoryList (1) - User: " + sUserName);
+		        	this.toString() + ".loadCategoryList (1) - User: " + sUserFulName);
 	        
 			//Print out directly so that we don't waste time appending to string buffers:
 	        while (rsCategories.next()){
@@ -443,7 +437,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		
 		return true;
 	}
-	private boolean loadLocationList(){
+	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
         m_sLocationValues.clear();
         m_sLocationDescriptions.clear();
         try{
@@ -458,7 +452,7 @@ public class ICEditReceiptLine extends HttpServlet {
 		        	getServletContext(), 
 		        	sDBID,
 		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserName);
+		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
 	        
 			//Print out directly so that we don't waste time appending to string buffers:
 	        while (rsLocations.next()){

@@ -19,8 +19,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class ICItemNumberMatchUpCriteriaSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
 	
 	public static final String STARTINGITEM_PARAM = "StartingItemNumber";
 	public static final String ENDINGITEM_PARAM = "EndingItemNumber";
@@ -43,8 +41,8 @@ public class ICItemNumberMatchUpCriteriaSelection  extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "IC Item Number Match-Up List";
 	    String subtitle = "criteria selection";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

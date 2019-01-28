@@ -25,9 +25,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class ICListPhysicalInventories extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sCompanyName = "";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -45,9 +42,9 @@ public class ICListPhysicalInventories extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //Get the variables for the class:
 	    String title = "Physical inventories.";
@@ -170,7 +167,8 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    				Long.toString(rs.getLong(SMTableicphysicalinventories.lbatchnumber)),
 	    				SMUtilities.getFullClassName(this.toString()),
 	        			request,
-	        			getServletContext()
+	        			getServletContext(),
+	        			sDBID
         			)
         		);
         		//End the row:
@@ -205,7 +203,8 @@ public class ICListPhysicalInventories extends HttpServlet {
 			String sBatchNumber,
 			String sCallingClass,
 			HttpServletRequest req,
-			ServletContext context
+			ServletContext context,
+			String sDBID
 			){
 
 		String sOutPut = "<TD>";

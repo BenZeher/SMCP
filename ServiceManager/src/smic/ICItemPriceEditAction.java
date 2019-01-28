@@ -23,9 +23,6 @@ import smcontrolpanel.SMUtilities;
 
 public class ICItemPriceEditAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
-	private static String sDBID = "";
-	private static String sUserID = "0";
-	private static String sUserFullName = "";
 	
 	private static String sBasePrice = "";
 	private static String sPriceLevel1 = "";
@@ -51,9 +48,10 @@ public class ICItemPriceEditAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = "0";
+	    	   sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		      + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
@@ -105,9 +103,9 @@ public class ICItemPriceEditAction extends HttpServlet{
 	    
 		return;
 	}
-	private boolean saveItemPrice(String sItemNumber, String sPriceListCode, String sUserFullName, String sUserID, String sConf){
+	private boolean saveItemPrice(String sItemNumber, String sPriceListCode, String sUserFullName, String sUserID, String sDBID){
 		
-		if (!validateFields(sItemNumber, sPriceListCode)){
+		if (!validateFields(sItemNumber, sPriceListCode, sDBID, sUserFullName)){
 			return false;
 		}
 		
@@ -154,7 +152,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			if (!clsDatabaseFunctions.executeSQL(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".saveItemPrice - user: " + sUserFullName)){
 				sErrorMessage = "Could not update/insert item price record.";
@@ -169,7 +167,9 @@ public class ICItemPriceEditAction extends HttpServlet{
 	}
 	private boolean validateFields(
     		String sItemNumber,
-    		String sPriceListCode
+    		String sPriceListCode,
+    		String sDBID,
+    		String sUserFullName
     	){
 		
 		boolean bResult = true;

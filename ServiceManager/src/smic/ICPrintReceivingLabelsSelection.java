@@ -38,8 +38,7 @@ public class ICPrintReceivingLabelsSelection  extends HttpServlet {
 	public static final String RECEIVED_BY_ANYONE = "** Anyone **";
 	
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -57,8 +56,8 @@ public class ICPrintReceivingLabelsSelection  extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "IC Print Receiving Labels";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(

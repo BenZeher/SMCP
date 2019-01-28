@@ -31,8 +31,7 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 	public static final String PARAM_INCLUDE_INVOICED_ITEMS = "INCINVOICEDITEMS";
 	public static final String PARAM_INCLUDE_NONINVOICED_ITEMS = "INCNONINVOICEDITEMS";
 	public static final String PARAM_VENDOR = "SELECTEDVENDOR";
-	private String sDBID = "";
-	private String sCompanyName = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -50,8 +49,8 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "IC Items Received";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));

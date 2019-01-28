@@ -18,7 +18,7 @@ import SMDataDefinition.SMTableicporeceiptheaders;
 public class ICEditPOSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smic.ICEditPOEdit";
+	private static String sICEditPOSelectionCalledClassName = "smic.ICEditPOEdit";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -29,7 +29,7 @@ public class ICEditPOSelection extends HttpServlet {
 				response,
 				entry.getObjectName(),
 				SMUtilities.getFullClassName(this.toString()),
-				sCalledClassName,
+				sICEditPOSelectionCalledClassName,
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
 				SMSystemFunctions.ICEditPurchaseOrders

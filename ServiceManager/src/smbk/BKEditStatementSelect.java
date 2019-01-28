@@ -20,13 +20,16 @@ import ServletUtilities.clsDatabaseFunctions;
 public class BKEditStatementSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smbk.BKEditStatementEdit";
-	private static String sJavaScriptFunctionName = "preventDoubleClickForm";
-	private static String sOnSubmit = "onsubmit = \""+sJavaScriptFunctionName+"(this);\"";
+	
+
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
+		String sCalledClassName = "smbk.BKEditStatementEdit";
+		String sJavaScriptFunctionName = "preventDoubleClickForm";
+		String sOnSubmit = "onsubmit = \""+sJavaScriptFunctionName+"(this);\"";
+		
 		SMMasterEditSelect smeditselect = new SMMasterEditSelect(
 				request,
 				response,
@@ -50,7 +53,7 @@ public class BKEditStatementSelect extends HttpServlet {
 		smeditselect.showAddNewButton(false);
 		smeditselect.showEditButton(false);
 	    try {
-	    	smeditselect.createEditFormWithJavaScript(getEditHTML(smeditselect, request),sOnSubmit);
+	    	smeditselect.createEditFormWithJavaScript(getEditHTML(smeditselect, request, sJavaScriptFunctionName),sOnSubmit);
 		} catch (SQLException e) {
     		smeditselect.getPrintWriter().println("Could not create edit form - " + e.getMessage());
     		smeditselect.getPrintWriter().println("</HTML>");
@@ -59,7 +62,7 @@ public class BKEditStatementSelect extends HttpServlet {
 	    return;
 
 	}
-	private String getEditHTML(SMMasterEditSelect smselect, HttpServletRequest req) throws SQLException{
+	private String getEditHTML(SMMasterEditSelect smselect, HttpServletRequest req, String sJavaScriptFunctionName) throws SQLException{
 
 		String s = "";
 	    String sID = "";
@@ -123,7 +126,7 @@ public class BKEditStatementSelect extends HttpServlet {
 	    	"<B> For Bank:&nbsp;"
 	    	+ "<SELECT NAME=\"" + BKBankStatement.Paramlbankid + "\">"
 	    ;
-		s += preventDoubleClickjavaScript(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME,SMMasterEditSelect.SUBMIT_EDIT_BUTTON_NAME);
+		s += preventDoubleClickjavaScript(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME,SMMasterEditSelect.SUBMIT_EDIT_BUTTON_NAME, sJavaScriptFunctionName);
 	    //Drop down the banks:
 	    SQL = "SELECT "
 	    	+ " " + SMTablebkbanks.lid
@@ -160,7 +163,7 @@ public class BKEditStatementSelect extends HttpServlet {
 		
 		return s;
 	}
-	public String preventDoubleClickjavaScript(String submitButtonName, String editButtonName){
+	public String preventDoubleClickjavaScript(String submitButtonName, String editButtonName, String sJavaScriptFunctionName){
 		String s = "";
 		s += " <script>\n"
 		  +  " function "+sJavaScriptFunctionName+"(form) {\n"

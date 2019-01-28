@@ -22,12 +22,9 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class BKEntryImportSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "BKEntryImportAction";
-	private static String sCompanyName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private String sDBID = "";
-	public static final String INCLUDESHEADERROW = "INCLUDESHEADERROW";
+
+	public static final String INCLUDES_BKENTRY_HEADER_ROW = "INCLUDESHEADERROW";
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -38,10 +35,11 @@ public class BKEntryImportSelect extends HttpServlet {
 	    }
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) +
+	    String sCalledClassName = "BKEntryImportAction";
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) +
 	    				" " + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String title = "Import bank account entries.";
@@ -107,7 +105,7 @@ public class BKEntryImportSelect extends HttpServlet {
 	    out.println("</TD>");
 	    out.println("<TD>");
 	    out.println(
-			"<INPUT TYPE=CHECKBOX NAME=" + "\"" + INCLUDESHEADERROW + "\" " + "" + " width=0.25>" 
+			"<INPUT TYPE=CHECKBOX NAME=" + "\"" + INCLUDES_BKENTRY_HEADER_ROW + "\" " + "" + " width=0.25>" 
 			+ ""
 		);
 	    out.println("</TD>");

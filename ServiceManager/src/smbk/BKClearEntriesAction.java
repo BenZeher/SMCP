@@ -29,7 +29,7 @@ public class BKClearEntriesAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.BKClearStatements)){return;}
 
 		//If the clearing was not confirmed, return:
-		if (request.getParameter(BKClearEntriesSelect.CONFIRM_CLEAR_CHECKBOX_NAME) == null){
+		if (request.getParameter(BKClearEntriesSelect.CONFIRM_CLEAR_BKENTRY_CHECKBOX_NAME) == null){
 			smaction.redirectAction(
 					"You must click the 'confirming' checkbox to clear the posted statements.", 
 					"", 
@@ -39,7 +39,7 @@ public class BKClearEntriesAction extends HttpServlet{
 		}
 		
 		//Pick up all the fields we need here:
-		String sClearingDate = clsManageRequestParameters.get_Request_Parameter(BKClearEntriesSelect.CLEARING_DATE_FIELD, request);
+		String sClearingDate = clsManageRequestParameters.get_Request_Parameter(BKClearEntriesSelect.CLEARING_BKENTRY_DATE_FIELD, request);
 		try {
 			clear_statements(request, smaction, sClearingDate);
 		} catch (Exception e) {

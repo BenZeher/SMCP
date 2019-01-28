@@ -18,25 +18,23 @@ import smcontrolpanel.SMUtilities;
 public class BKClearEntriesSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static final String CONFIRMCLEARING = "CONFIRMCLEARING";
-	//private static String sObjectName = "Transaction";
-	private static String sCalledClassName = "BKClearEntriesAction";
-	private static String sCompanyName = "";
-	private String sDBID = "";
-	public static String CLEAR_BUTTON_NAME = "GENERATE_REPORT";
-	public static String CLEAR_STATEMENT_BUTTON_LABEL = "----Clear Statements----";
-	public static String CLEARING_DATE_FIELD = "Clearing Date";
-	public static String CONFIRM_CLEAR_CHECKBOX_NAME = "CONFIRMCLEARING";
+	
+	public static String CLEAR_BK_BUTTON_NAME = "GENERATE_REPORT";
+	public static String CLEAR_BKSTATEMENT_BUTTON_LABEL = "----Clear Statements----";
+	public static String CLEARING_BKENTRY_DATE_FIELD = "Clearing Date";
+	public static String CONFIRM_CLEAR_BKENTRY_CHECKBOX_NAME = "CONFIRMCLEARING";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 		
+		String sCalledClassName = "BKClearEntriesAction";
+		
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.BKClearStatements)){
 	    	return;
 	    }
@@ -70,18 +68,18 @@ public class BKClearEntriesSelect extends HttpServlet {
 	    out.println("<BR>Clear All Posted Bank Statements Up To:&nbsp;"
 	
 		+ clsCreateHTMLFormFields.TDTextBox(
-				CLEARING_DATE_FIELD, 
+				CLEARING_BKENTRY_DATE_FIELD, 
 				"00/00/0000", 
 				10, 
 				10, 
 				""
 		) 
-		+ SMUtilities.getDatePickerString(CLEARING_DATE_FIELD, getServletContext()));
+		+ SMUtilities.getDatePickerString(CLEARING_BKENTRY_DATE_FIELD, getServletContext()));
 	    
 	    out.println("<BR><INPUT TYPE=\"SUBMIT\" NAME=" 
-				+ CLEAR_BUTTON_NAME 
-				+ " VALUE=\"" + CLEAR_STATEMENT_BUTTON_LABEL+ "\">&nbsp;&nbsp;");
-		out.println("Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CLEAR_CHECKBOX_NAME + "\">");
+				+ CLEAR_BK_BUTTON_NAME 
+				+ " VALUE=\"" + CLEAR_BKSTATEMENT_BUTTON_LABEL+ "\">&nbsp;&nbsp;");
+		out.println("Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CLEAR_BKENTRY_CHECKBOX_NAME + "\">");
 		out.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE='" + SMUtilities.getFullClassName(this.toString()) + "'>");
 		out.println("</FORM>");
 		out.println("</BODY></HTML>");

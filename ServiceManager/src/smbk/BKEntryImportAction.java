@@ -43,12 +43,8 @@ public class BKEntryImportAction extends HttpServlet{
 	private static int FIELD_ISSUE_DATE = 1;
 	private static int FIELD_AMOUNT = 2;
 	
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sError = "";
-	private static String sCallingClass = "";
+	private static String sBKEntryImportActionCallingClass = "";
+	private static String sBKEntryImportActionError = "";
 	
 	//Member variables for the count:
 	private static String m_sBankID = "";
@@ -76,14 +72,13 @@ public class BKEntryImportAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		        + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String sStatus = "";
-	    sError = "";
+	    String sError = "";
 	    
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
@@ -102,10 +97,10 @@ public class BKEntryImportAction extends HttpServlet{
 	    	}
 	    }
 	    
-	    if (!processRequest(CurrentSession, request, out)){
+	    if (!processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName)){
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
 					+ "?Warning=" + sError
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -113,7 +108,7 @@ public class BKEntryImportAction extends HttpServlet{
 				);
 			}		
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
 					+ "?Warning=" + sError
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -123,7 +118,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    	sStatus = "Import completed without errors.";
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
 					+ "?Status=" + sStatus
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -131,7 +126,7 @@ public class BKEntryImportAction extends HttpServlet{
 				);
 			}
 	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
 					+ "?Status=" + sStatus
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -162,7 +157,10 @@ public class BKEntryImportAction extends HttpServlet{
 	private boolean processRequest(
 			HttpSession ses, 
 			HttpServletRequest req,
-			PrintWriter pwOut
+			PrintWriter pwOut,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName
 			){
 
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
@@ -184,7 +182,15 @@ public class BKEntryImportAction extends HttpServlet{
 			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
 		}
 		
-		boolean bResult = writeFileAndProcess(sTempFilePath, ses, req, pwOut);
+		boolean bResult = writeFileAndProcess(
+				sTempFilePath,
+				ses, 
+				req, 
+				pwOut,
+				sDBID, 
+				sUserID, 
+				sUserFullName
+				);
 		deleteCurrentTempImportFiles(sTempFilePath);
 		return bResult;
 		
@@ -194,7 +200,10 @@ public class BKEntryImportAction extends HttpServlet{
 			String sTempImportFilePath,
 			HttpSession ses, 
 			HttpServletRequest req,
-			PrintWriter pwOut
+			PrintWriter pwOut,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName
 	){
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
@@ -231,11 +240,11 @@ public class BKEntryImportAction extends HttpServlet{
 		    FileItem fileitem = (FileItem) iter.next();
 		    if (fileitem.isFormField()) {
 		    	if (fileitem.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sCallingClass = fileitem.getString();
+		    		sBKEntryImportActionCallingClass = fileitem.getString();
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+							+ ".writeFileAndProcess, parameter CallingClass = " + sBKEntryImportActionCallingClass + "."); 
 					}		
 		    	}
 		    	if (fileitem.getFieldName().compareToIgnoreCase(SMTablebkaccountentries.sdescription) == 0){
@@ -258,13 +267,13 @@ public class BKEntryImportAction extends HttpServlet{
 		    	}
 
 		    	if (fileitem.getFieldName().compareToIgnoreCase(
-			    	BKEntryImportSelect.INCLUDESHEADERROW) == 0){
+			    	BKEntryImportSelect.INCLUDES_BKENTRY_HEADER_ROW) == 0){
 		    			bIncludesHeaderRow = true;
 							if (bDebugMode){
 								System.out.println(
 									"In " + this.toString() 
 									+ ".writeFileAndProcess, parameter "
-									+ BKEntryImportSelect.INCLUDESHEADERROW + " = " + bIncludesHeaderRow + "."); 
+									+ BKEntryImportSelect.INCLUDES_BKENTRY_HEADER_ROW + " = " + bIncludesHeaderRow + "."); 
 							}
 		    	}
 		    	
@@ -289,7 +298,7 @@ public class BKEntryImportAction extends HttpServlet{
 		if (bDebugMode){
 			clsServletUtilities.sysprint(
 				this.toString(), 
-				sUserName, 
+				sUserFullName, 
 				"in writeFileAndProcess - bIncludeHeaderRow = " + bIncludesHeaderRow);
 		}
 		
@@ -650,10 +659,10 @@ public class BKEntryImportAction extends HttpServlet{
 
 	private void addToErrorMessage(String sMsg){
 		
-		if (sError.length() > 900){
-			sError = sError.substring(0, 900) + " . . . (remaining errors truncated).";
+		if (sBKEntryImportActionError.length() > 900){
+			sBKEntryImportActionError = sBKEntryImportActionError.substring(0, 900) + " . . . (remaining errors truncated).";
 		}else{
-			sError += sMsg;
+			sBKEntryImportActionError += sMsg;
 		}
 		if (bDebugMode){
 			clsServletUtilities.sysprint(this.toString(), "ICCOUNTIMPORT", sMsg);

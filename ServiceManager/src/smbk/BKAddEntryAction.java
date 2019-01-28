@@ -22,14 +22,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class BKAddEntryAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private String sStatementID = "";
-	private String sEntryType = "";
-	private String sAmt = "";
-	private String sDescription = "";
-	private String sEntryDate = "";
-	private String sGLAccount = "";
-	private String sDocNumber = "";
-	private String sBankID = "";
+
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -38,14 +31,14 @@ public class BKAddEntryAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.BKEditStatements)){return;}
 
 		//Pick up all the fields we need here:
-		sStatementID = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.lstatementid, request);
-		sEntryType = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.ientrytype, request);
-		sAmt = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.bdamount, request).trim();
-		sDescription = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request).trim();
-		sEntryDate = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.datentrydate, request).trim();
-		sGLAccount = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sglaccount, request).trim();
-		sDocNumber = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdocnumber, request).trim();
-		sBankID = clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request);
+		String sStatementID = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.lstatementid, request);
+		String sEntryType = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.ientrytype, request);
+		String sAmt = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.bdamount, request).trim();
+		String sDescription = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request).trim();
+		String sEntryDate = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.datentrydate, request).trim();
+		String sGLAccount = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sglaccount, request).trim();
+		String sDocNumber = clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdocnumber, request).trim();
+		String sBankID = clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request);
 
 		String sRedirectStringParameters =
 				BKBankStatement.Paramlid + "=" + sStatementID
@@ -60,7 +53,18 @@ public class BKAddEntryAction extends HttpServlet{
 			sRedirectStringParameters += "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y";
 		}
 		try {
-			validate_entries(request, smaction);
+			validate_entries(
+					request, 
+					smaction,
+					sStatementID,
+					sEntryType,
+					sAmt,
+					sDescription,
+					sEntryDate,
+					sGLAccount,
+					sDocNumber,
+					sBankID
+					);
 		} catch (Exception e) {
 			smaction.redirectAction(
 				"Error validating entry - " + e.getMessage() + ".", 
@@ -72,7 +76,17 @@ public class BKAddEntryAction extends HttpServlet{
 		
 		//Save the record here:
 		try {
-			add_account_entry(request, smaction);
+			add_account_entry(
+					request, 
+					smaction,
+					sStatementID,
+					sEntryType,
+					sAmt,
+					sDescription,
+					sEntryDate,
+					sGLAccount,
+					sDocNumber,
+					sBankID);
 		} catch (Exception e) {
 			smaction.redirectAction(
 				"Error validating entry - " + e.getMessage() + ".", 
@@ -102,7 +116,18 @@ public class BKAddEntryAction extends HttpServlet{
 			);
 		}
 	}
-	private void validate_entries(HttpServletRequest request, SMMasterEditAction sm) throws Exception{
+	private void validate_entries(
+			HttpServletRequest request, 
+			SMMasterEditAction sm,
+			String sStatementID,
+			String sEntryType,
+			String sAmt,
+			String sDescription,
+			String sEntryDate,
+			String sGLAccount,
+			String sDocNumber,
+			String sBankID
+			) throws Exception{
 		String sErrors = "";
 		boolean bIsValid = true;
 
@@ -158,7 +183,18 @@ public class BKAddEntryAction extends HttpServlet{
 			throw new Exception(sErrors);
 		}
 	}
-	private void add_account_entry(HttpServletRequest request, SMMasterEditAction sm) throws Exception{
+	private void add_account_entry(
+			HttpServletRequest request, 
+			SMMasterEditAction sm,
+			String sStatementID,
+			String sEntryType,
+			String sAmt,
+			String sDescription,
+			String sEntryDate,
+			String sGLAccount,
+			String sDocNumber,
+			String sBankID
+			) throws Exception{
 		String sInsertedAmt = sAmt;
 		if (sEntryType.compareToIgnoreCase(Integer.toString(SMTablebkaccountentries.ENTRY_TYPE_WITHDRAWAL)) == 0){
 			sInsertedAmt = "-1 * " + sAmt;

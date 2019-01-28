@@ -43,11 +43,6 @@ public class SMQuerySelect  extends HttpServlet {
 	public static String PARAM_HIDECOLUMNLABELS = "HIDECOLUMNLABELS";
 	private static String CALLED_CLASS_NAME = "smcontrolpanel.SMQueryParameters";
 
-	private String sCompanyName = "";
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -65,11 +60,11 @@ public class SMQuerySelect  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-		sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String title = "SM Query Selector";
 		String subtitle = "";
@@ -123,7 +118,7 @@ public class SMQuerySelect  extends HttpServlet {
 					+ clsManageRequestParameters.get_Request_Parameter(SMSavedQueriesSelect.SHOW_PUBLIC_QUERIES, request)
 			;
 	    	try {
-				deleteQuery (sDeleteQueryID, sDBID, sUserID, sUserFullName);
+				deleteQuery (sDeleteQueryID, sDBID, sUserID, sUserFullName, sUserName);
 				sRedirectFromDelete += "&Status=Successfully deleted query " + sDeleteQueryID + ".";
 			} catch (Exception e) {
 				sRedirectFromDelete += "&Warning=Error deleting query " + sDeleteQueryID + " - " + e.getMessage();
@@ -380,7 +375,7 @@ public class SMQuerySelect  extends HttpServlet {
 		);
 		out.println("</BODY></HTML>");
 	}
-	private void deleteQuery (String sDeleteQueryID, String sDBID, String sUserID, String sUserFullName) throws Exception{
+	private void deleteQuery (String sDeleteQueryID, String sDBID, String sUserID, String sUserFullName, String sUserName) throws Exception{
 		//Get the title and comment of the query before deleting:
 		String sQueryTitle = "";
 		String sQueryUser = "";

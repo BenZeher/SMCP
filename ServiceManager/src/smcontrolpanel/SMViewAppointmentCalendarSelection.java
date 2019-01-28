@@ -20,27 +20,23 @@ import ServletUtilities.clsServletUtilities;
 
 public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	//private String sUserName = "";
-	public static String APPOINTMENT_GROUP_PARAMETER = "APPOINTMENTGROUP";
-	public static String USERNAME_PARAMETER = "USERNAME";
-	public static String GENERATE_REPORT_PARAMETER = "GENERATE_REPORT";
-	public static String GENERATE_REPORT_LABEL = "----View----";
-	public static String PRINTINDIVIDUAL_VALUE_NO = "NO";
-	public static String INDIVIDUALUSER_PARAMETER = "INDIVIDUALUSER";
-	public static String STARTING_DATE_FIELD = "StartingDate";
-	public static String ENDING_DATE_FIELD = "EndingDate";
-	public static String DATE_RANGE_PARAM = "DateRange";
-	public static String DATE_RANGE_CHOOSE = "DateRangeChoose";
-	public static String DATE_RANGE_TODAY = "DateRangeToday";
-	public static String DATE_RANGE_THISWEEK = "DateRangeThisWeek";
-	public static String DATE_RANGE_NEXTWEEK = "DateRangeNextWeek";
-	public static String EDITAPPOINTMENT_PARAMETER = "AllowAppointmentEditing";
-	public static String VIEWALL_PARAMETER = "VIEWALL";
-	public static String DISPLAYMOVEANDCOPYBUTTONS_PARAMETER = "DISPLAYMOVEANDCOPYBUTTONS";
-	public static String USER_PREFIX = "USER*";
+	public static final String APPOINTMENT_GROUP_PARAMETER = "APPOINTMENTGROUP";
+	public static final String USERNAME_PARAMETER = "USERNAME";
+	public static final String GENERATE_REPORT_PARAMETER = "GENERATE_REPORT";
+	public static final String GENERATE_REPORT_LABEL = "----View----";
+	public static final String PRINTINDIVIDUAL_VALUE_NO = "NO";
+	public static final String INDIVIDUALUSER_PARAMETER = "INDIVIDUALUSER";
+	public static final String STARTING_DATE_FIELD = "StartingDate";
+	public static final String ENDING_DATE_FIELD = "EndingDate";
+	public static final String DATE_RANGE_PARAM = "DateRange";
+	public static final String DATE_RANGE_CHOOSE = "DateRangeChoose";
+	public static final String DATE_RANGE_TODAY = "DateRangeToday";
+	public static final String DATE_RANGE_THISWEEK = "DateRangeThisWeek";
+	public static final String DATE_RANGE_NEXTWEEK = "DateRangeNextWeek";
+	public static final String EDITAPPOINTMENT_PARAMETER = "AllowAppointmentEditing";
+	public static final String VIEWALL_PARAMETER = "VIEWALL";
+	public static final String DISPLAYMOVEANDCOPYBUTTONS_PARAMETER = "DISPLAYMOVEANDCOPYBUTTONS";
+	public static final String USER_PREFIX = "USER*";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -56,10 +52,10 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//sUserName = (String) CurrentSession.getAttribute(SMUtilities.SESSION_PARAM_USERNAME);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 		boolean bAllowedToViewAllAppointments = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMViewAppointmentCalendar,

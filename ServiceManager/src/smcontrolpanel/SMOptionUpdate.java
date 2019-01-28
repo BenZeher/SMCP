@@ -13,12 +13,6 @@ import javax.servlet.http.HttpSession;
 public class SMOptionUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private SMOption m_option;
-	private SMOptionInput m_optioninput;
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sCompanyName = "";
-	//HttpServletRequest parameters:
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -35,13 +29,13 @@ public class SMOptionUpdate extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    //Collect all the request parameters:
-	    m_optioninput = new SMOptionInput(request);
+	    SMOptionInput m_optioninput = new SMOptionInput(request);
 	    //Instantiate a new entry:
-	    m_option = new SMOption();
+	    SMOption m_option = new SMOption();
 	    //Load the input parameters into the new system option record:
 	    if (!m_optioninput.loadToSMOptionClass(m_option)){
 	    	CurrentSession.setAttribute(SMOptionInput.ParamObjectName, m_optioninput);

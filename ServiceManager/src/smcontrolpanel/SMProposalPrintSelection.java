@@ -42,9 +42,6 @@ public class SMProposalPrintSelection extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClass = "smcontrolpanel.SMProposalPrintAction";
-	private String sCompanyName = "";
-	private String sDBID;
-	private String sUserName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -63,9 +60,9 @@ public class SMProposalPrintSelection extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 
 		String title = "Print Proposals";
 		String subtitle = "";

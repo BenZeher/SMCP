@@ -22,10 +22,8 @@ import ServletUtilities.clsTextEditorFunctions;
 public class SMProposalPhrasesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Proposal Phrase";
-	private static String sCalledClassName = "SMProposalPhrasesAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectName = "Proposal Phrase";
+	private static final String sCalledClassName = "SMProposalPhrasesAction";
 	private boolean bDebug = false;
 	
 	@Override
@@ -45,8 +43,8 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sProposalPhraseID = clsStringFunctions.filter(request.getParameter(SMTableproposalphrases.sproposalphrasename));
 
 		String title = "";
@@ -123,7 +121,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 		pwOut.println(clsTextEditorFunctions.getJavascriptTextEditToolBarFunctions());
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -148,7 +146,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				iID = rs.getInt(SMTableproposalphrases.sid);
@@ -252,7 +250,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sProposalPhraseID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

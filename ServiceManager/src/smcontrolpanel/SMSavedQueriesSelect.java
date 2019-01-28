@@ -43,7 +43,6 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 	private static final String ODD_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	
 	private static final long serialVersionUID = 1L;
-	private String sRedirect = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -75,7 +74,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 	    try {
 			smedit.createEditPage(getEditHTML(smedit, smedit.getUserID()), "");
 		} catch (SQLException e) {
-    		sRedirect += "&Warning=Error listing queries: " + e.getMessage()
+    		String sRedirect = "&Warning=Error listing queries: " + e.getMessage()
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID();
 			response.sendRedirect(sRedirect);
 			return;

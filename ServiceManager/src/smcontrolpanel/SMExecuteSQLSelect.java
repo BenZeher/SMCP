@@ -17,8 +17,6 @@ public class SMExecuteSQLSelect  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static String PARAM_EXECUTESTRING = "EXECUTESTRING";
 
-	private String sCompanyName = "";
-	private String sDBID = "";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

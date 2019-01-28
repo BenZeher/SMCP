@@ -18,10 +18,8 @@ public class SMProposalPhraseGroupSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	private static String sObjectName = "Proposal Phrase Group";
-	private static String sCalledClassName = "SMProposalPhraseGroupEdit";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectName = "Proposal Phrase Group";
+	private static final String sCalledClassName = "SMProposalPhraseGroupEdit";
 	
 	@Override
 	public void doPost(HttpServletRequest request,
@@ -40,8 +38,8 @@ public class SMProposalPhraseGroupSelect extends HttpServlet {
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Manage " + sObjectName + "s";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(

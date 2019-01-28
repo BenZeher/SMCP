@@ -32,13 +32,6 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sCompanyName = "";
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -56,13 +49,13 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sWarning = "";
 	    String sStartingDate = "";
 	    String sEndingDate = "";
     	if(request.getParameter("DateRange").compareToIgnoreCase("CurrentMonth") == 0){
@@ -132,7 +125,7 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
     		 }
     	  } 
     	String sServiceTypes = "";
-    	sServiceTypes = getSelectedServiceTypes(arServiceTypes);
+    	sServiceTypes = getSelectedServiceTypes(arServiceTypes, sDBID);
     	
     	//Get the list of selected salespersons:
     	ArrayList<String> sSalespersons = new ArrayList<String>(0);
@@ -212,7 +205,7 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080685]");
 	    out.println("</BODY></HTML>");
 	}
-	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes){
+	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes, String sDBID){
 		
 		String sDesc = "";
 		

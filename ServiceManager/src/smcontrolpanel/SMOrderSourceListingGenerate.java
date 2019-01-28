@@ -26,15 +26,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMOrderSourceListingGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private String sWarning = "";
-	private String sDBID = "";
-	private String sUserName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
-	private String sCallingClass = "";
-	
-	private static boolean bFlipper = false;
 	private String sReportType = "";
 	
 	@Override
@@ -54,15 +45,16 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
     	SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM/dd/yyyy");
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+    	String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+    	String sWarning = "";
 	    String sSQL;
 	    
 	    String sStartingDate = "";
@@ -139,7 +131,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 	    Collections.sort(alServiceTypes);
 		
 	    if (alServiceTypes.size() == 0){
-    		String sWarning = "You must select at least one order type.";
+    		sWarning = "You must select at least one order type.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + sWarning
@@ -161,7 +153,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 	    Collections.sort(alLocations);
 		
 	    if (alLocations.size() == 0){
-    		String sWarning = "You must select at least one location.";
+    		sWarning = "You must select at least one location.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + sWarning
@@ -313,9 +305,20 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		    //BigDecimal bdServiceTypeTotal = BigDecimal.ZERO;
 		    BigDecimal bdOrderSourceTotal = BigDecimal.ZERO;
 		    BigDecimal bdOrderTotal = BigDecimal.ZERO;
+		    
+		    boolean bFlipper = false;
+		    String sbgcolor = "";
   
 		    while (rs.next()){
 
+				bFlipper = !bFlipper;
+				
+		    	if (bFlipper){
+		    		sbgcolor = "\"#FFFFFF\"";
+		    	}else{
+		    		sbgcolor = "\"#EEEEEE\"";
+		    	}
+		    	
 		    	if (iCurrentOrderSourceID == -1){
 		    		//this is the start of the report
 		    		sCurrentDocNumber = rs.getString("sDocNumber");
@@ -344,7 +347,10 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 										 sCurrentCustomerName,
 										 sCurrentCreatedBy,
 										 bdOrderTotal,
-										 out);
+										 out,
+										 sCallingClass,
+										 sDBID,
+										 sbgcolor);
 		    		}
 	    			Print_Order_Source_Footer(sCurrentOrderSourceDesc,
 				    						  bdOrderSourceTotal,
@@ -377,7 +383,10 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 										 sCurrentCustomerName,
 										 sCurrentCreatedBy,
 										 bdOrderTotal,
-										 out);
+										 out,
+										 sCallingClass,
+										 sDBID,
+										 sbgcolor);
 		    		}
 	    			sCurrentDocDate = USDateOnlyformatter.format(rs.getDate("datDocDate"));
 	    			sCurrentDocNumber = rs.getString("sDocNumber");
@@ -400,7 +409,10 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 									 sCurrentCustomerName,
 									 sCurrentCreatedBy,
 									 bdOrderTotal,
-									 out);
+									 out,
+									 sCallingClass,
+									 sDBID,
+									 sbgcolor);
 		    	}
 				Print_Order_Source_Footer(sCurrentOrderSourceDesc,
 			    						  bdOrderSourceTotal,
@@ -454,17 +466,13 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 								  String sBillToName,
 								  String sCreatedBy,
 								  BigDecimal bdAmount,
-								  PrintWriter out
+								  PrintWriter out,
+								  String sCallingClass,
+								  String sDBID,
+								  String sBackgroundColor
 								  ){
 		
-		bFlipper = !bFlipper;
-		String sbgcolor;
-    	if (bFlipper){
-    		sbgcolor = "\"#FFFFFF\"";
-    	}else{
-    		sbgcolor = "\"#EEEEEE\"";
-    	}
-		out.println("<TR BGCOLOR=" + sbgcolor + ">");
+		out.println("<TR BGCOLOR=" + sBackgroundColor + ">");
 		if (sReportType.compareTo("Orders") == 0){
 			out.println("<TD ALIGN=CENTER><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + sDocNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
 		}else if (sReportType.compareTo("Invoices") == 0){

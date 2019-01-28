@@ -23,10 +23,6 @@ public class SMSalesEffortCheckSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String SALESPERSON_CHECKBOX = "SALESPERSONCHECKBOX";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -45,9 +41,11 @@ public class SMSalesEffortCheckSelection extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    		+ " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
@@ -90,7 +88,7 @@ public class SMSalesEffortCheckSelection extends HttpServlet {
 		out.println("</TD>");
 		out.println("</TR>");
 		
-		createSalespersonSelections(out);
+		createSalespersonSelections(out, sDBID, sUserID, sUserFullName);
 			    
 		out.println("<TR>");
 		out.println("<TD>" + "<B>Suppress details:</B></TD><TD>" 
@@ -105,7 +103,7 @@ public class SMSalesEffortCheckSelection extends HttpServlet {
 		    
 	    out.println("</BODY></HTML>");
 	}
-	private void createSalespersonSelections(PrintWriter pwOut){
+	private void createSalespersonSelections(PrintWriter pwOut, String sDBID, String sUserID, String sUserFullName){
     	try{ 
 	        //Mechanic List
 	        String SQL = "SELECT * FROM " + SMTablesalesperson.TableName

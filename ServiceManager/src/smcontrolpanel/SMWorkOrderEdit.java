@@ -88,9 +88,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_YES = "YES";
 	public static final String FULLY_DISPLAYED_WARNING_VALUE_NO = "NO";
 	
-	//This tells the program whether a line of command buttons has already been displayed, so that it knows NOT to display
-	// things like text fields twice, in two different command bars:
-	private boolean m_bCommandsHaveAlreadyBeenDisplayed;
+
 	//This controls if the signature box should be displayed or not.
 	private boolean m_bDisplaySigantureBox;
 	//private boolean bDebugMode = false;
@@ -117,8 +115,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
-		
-
 		
 		SMWorkOrderHeader wohead = new SMWorkOrderHeader();
 		try {
@@ -178,7 +174,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		}
 
 		//Set booleans that control screen layout/content
-		m_bCommandsHaveAlreadyBeenDisplayed = false;
 		m_bDisplaySigantureBox = wohead.isWorkOrderPosted();	
 		
 	    smedit.getPWOut().println(getHeaderString(
@@ -258,6 +253,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	}
 	
 	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName) throws Exception{
+		
+		//Flag to tell if the command have already been displated:
+		boolean bCommandsHaveAlreadyBeenDisplayed = false;
 		
 		//First, load the mechanics:
 		ArrayList<String> arrMechanicsInitials = new ArrayList<String>(0);
@@ -372,8 +370,11 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sm.getUserID(), 
 				sm.getsDBID(),
 				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
-				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)) + "</TD></TR>";
+				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+				bCommandsHaveAlreadyBeenDisplayed) + "</TD></TR>";
 
+		bCommandsHaveAlreadyBeenDisplayed = true;
+		
 		s += "<TR><TD>" + SMWorkOrderEdit.createJobEntryTimesTable(
 			sm, 
 			getServletContext(), 
@@ -441,7 +442,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sm.getUserID(), 
 				sm.getsDBID(),
 				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
-				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)) + "</TD></TR>";
+				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+				bCommandsHaveAlreadyBeenDisplayed) + "</TD></TR>";
+		
+		bCommandsHaveAlreadyBeenDisplayed = true;
 		
 		//Close the parent table:
 		s += "</TR>";
@@ -510,7 +514,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			String sUserID, 
 			String sConf, 
 			String sViewFlag,
-			String sLicenseModuleLevel){
+			String sLicenseModuleLevel,
+			boolean bCommandsHaveAlreadyBeenDisplayed){
 		String s = "";
 		
 		//Create the table:
@@ -545,7 +550,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//Anytime it's posted, IF the email fields have NOT already been displayed, we need to be able to email:
 		if (
 			(wo_order.isWorkOrderPosted())
-			&& (!m_bCommandsHaveAlreadyBeenDisplayed)
+			&& (!bCommandsHaveAlreadyBeenDisplayed)
 		){
 			s += emailreceiptButton();
 		}
@@ -591,7 +596,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sConf,
 				sLicenseModuleLevel)){
 			//If the commands have NOT already been displayed (we can't have the material returns description box appear twice):
-			if (!m_bCommandsHaveAlreadyBeenDisplayed){
+			if (!bCommandsHaveAlreadyBeenDisplayed){
 				s += "<BR>" + createMaterialReturnButton();
 			}
 		}
@@ -635,7 +640,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			}
 		}	
 		s += "</TABLE style=\" title:ENDOrderCommands; \">\n";
-		m_bCommandsHaveAlreadyBeenDisplayed = true;
 		return s;
 	}
 	private String createCalculateTotalsButton(){

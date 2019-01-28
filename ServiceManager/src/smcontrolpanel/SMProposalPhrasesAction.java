@@ -16,13 +16,7 @@ import ServletUtilities.clsDatabaseFunctions;
 public class SMProposalPhrasesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Proposal Phrase";
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUserID = "";
-	private String sUserFirstName = "";
-	private String sUserLastName = "";
-	//private boolean bDebugMode = true;
+	private static final String sObjectName = "Proposal Phrase";
 	@Override
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -40,11 +34,11 @@ public class SMProposalPhrasesAction extends HttpServlet{
 		}
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-		sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	    String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    
 	    long lID = Long.parseLong(request.getParameter(SMTableproposalphrases.sid));

@@ -61,13 +61,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	private static int FIELD_NETPAY = 23;
 	private static int FIELD_VACALLOWED = 24;
 	
-	private static String sDBID = "";
-	private static String sUserName = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
-	private static String sCompanyName = "";
 	private static String sError = "";
-	private static String sCallingClass = "";
 	
 	//Member variables for the data:
 	/*
@@ -109,13 +103,13 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sStatus = "";
 	    sError = "";
 	    
@@ -167,7 +161,9 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			);
 	    	return;
 	    }
-	    if (!processRequest(CurrentSession, request, out)){
+	    try {
+			sCallingClass = processRequest(CurrentSession, request, out, sDBID, sUserName, sUserID, sUserFullName);
+		} catch (Exception e) {
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
@@ -189,25 +185,29 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;
-	    }else{
-	    	//if importing is successfully, print out a message:
-	    	out.println("Importing of wage scale job records is sucessful.<BR>");
-	    	
-	    	//create a link to run the real wage scale reports
-	    	String sLink = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWageScaleReportSelect" 
-							+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
-	    	out.println("<A HREF=\"" + sLink + "\">Create wage scale report</A>");
-	    	out.println("</HTML>");
-
-	    }
+		}
+    	//if importing is successfully, print out a message:
+    	out.println("Importing of wage scale job records is sucessful.<BR>");
+    	
+    	//create a link to run the real wage scale reports
+    	String sLink = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWageScaleReportSelect" 
+						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+    	out.println("<A HREF=\"" + sLink + "\">Create wage scale report</A>");
+    	out.println("</HTML>");
 		
 		return;
 	}
-	private boolean processRequest(HttpSession ses, 
+	private String processRequest(HttpSession ses, 
 								   HttpServletRequest req,
-								   PrintWriter pwOut
-								   ){
+								   PrintWriter pwOut,
+								   String sDBID,
+								   String sUserName,
+								   String sUserID,
+								   String sUserFullName
+								   ) throws Exception{
 
+		String sCallingClassprocessRequest = "";
+		
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
 			+ System.getProperty("file.separator")
 			+ "uploads"
@@ -215,21 +215,21 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 
     	//If the folder has not been created, create it now:
 		if (!createTempImportFileFolder(sTempFilePath)){
-			return false;
+			throw new Exception("Error [1548682692] creating temporary folder for import.");
 		}
     	
 		//First, remove any temporary files:
 		if (!deleteCurrentTempImportFiles(sTempFilePath)){
-			return false;
+			throw new Exception("Error [1548682693] deleting previous temporary import files.");
 		}
 
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
 		}
 		
-		boolean bResult = writeFileAndProcess(sTempFilePath, ses, req, pwOut);
+		sCallingClassprocessRequest = writeFileAndProcess(sTempFilePath, ses, req, pwOut, sDBID, sUserName, sUserID, sUserFullName);
 		deleteCurrentTempImportFiles(sTempFilePath);
-		return bResult;
+		return sCallingClassprocessRequest;
 		
 	}
 	private boolean createTempImportFileFolder(String sTempFileFolder){
@@ -251,11 +251,18 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    return true;
 	}
 	@SuppressWarnings("unchecked")
-	private boolean writeFileAndProcess(String sTempImportFilePath,
+	private String writeFileAndProcess(String sTempImportFilePath,
 										HttpSession ses, 
 										HttpServletRequest req,
-										PrintWriter pwOut
-										){
+										PrintWriter pwOut,
+										String sDBID,
+										String sUserName,
+										String sUserID,
+										String sUserFullName
+										) throws Exception{
+		
+		String sCallingClasswriteFileAndProcess = "";
+		
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
 		String encryptionKey = "";
@@ -283,8 +290,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
 			}
-			e1.printStackTrace();
-			return false;
+			throw new Exception("Error [1548682854] - " + e1.getMessage());
 		}
 		Iterator<FileItem> iter = fileItems.iterator();
 		//??
@@ -293,11 +299,11 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		    FileItem item = (FileItem) iter.next();
 		    if (item.isFormField()) {
 		    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sCallingClass = item.getString();
+		    		sCallingClasswriteFileAndProcess = item.getString();
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+							+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClasswriteFileAndProcess + "."); 
 					}		
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(
@@ -316,13 +322,14 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		    				encryptionKey = item.getString();
 		    				if(encryptionKey.compareToIgnoreCase("") == 0){
 		    					this.addToErrorMessage("Encryption Key is required");
-		    					return false;
+		    					throw new Exception("Error [1548682855] - Encryption key is required.");
 		    				}
 		    				if(encryptionKey.compareToIgnoreCase("") != 0 && 
 		    					encryptionKey.length() < SMWageScaleDataEntry.MinimumEncryptionKeyLength){
 		    					this.addToErrorMessage("Encryption Key must at least " 
-		    				                          + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
-		    					return false;
+		    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
+		    					throw new Exception("Error [1548682856] - Encryption Key must be at least " 
+		    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
 		    				}
 						}  	
 		    }else{
@@ -336,8 +343,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 				} catch (Exception e) {
 					this.addToErrorMessage("<BR>"
 						+ "Error writing temporary file: " + e.getMessage());
-					System.out.println("In " + this.toString() + " error on fi.write: " + e.getMessage());
-					return false;
+					throw new Exception("Error [1548682857] - error writing temporary file - " + e.getMessage());
 				}
 				//InputStream uploadedStream = item.getInputStream();
 		    }
@@ -355,7 +361,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		}
 		
 		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow)){
-			return false;
+			throw new Exception("Error [1548682858] - error validating file.");
 		}
 		
 		//Get a connection:
@@ -374,27 +380,26 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			System.out.println("In " + this.toString() + ".writeFileAndProcess got a connection");
 		}
 		
-		boolean bResult = true;
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			this.addToErrorMessage("Could not start data transaction.");
-			bResult =  false;
+			throw new Exception("Error [1548682859] - couldn't start data transaction.");
 		}
 		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
 		
-		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, encryptionKey)){
+		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, encryptionKey, sUserID)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			bResult = false;
+			throw new Exception("Error [1548682860] - couldn't insert records.");
 		}else{
 			if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 				this.addToErrorMessage("Could not commit data transaction.");
-				bResult = false;
+				throw new Exception("Error [1548682861] - couldn't commit data transaction.");
 			}
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080584]");
-		return bResult;
+		return sCallingClasswriteFileAndProcess;
 
 	}
 	private boolean insertRecords(
@@ -402,7 +407,8 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			String sFileName,
 			Connection conn,
 			boolean bFileIncludesHeaderRow,
-			String encryptKey
+			String encryptKey,
+			String sUserID
 	){
 		
 		BufferedReader br = null;

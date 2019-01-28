@@ -32,11 +32,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMMapDisplay extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebugMode = false;
-	private int iLegendColumnCount = 0;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -53,12 +49,13 @@ public class SMMapDisplay extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 		String sCenterAddress = "";
+		
 		try {
 			sCenterAddress = getMapCenterAddress(sDBID, sUserID, sUserFullName, getServletContext());
 		} catch (SQLException e) {
@@ -874,7 +871,10 @@ public class SMMapDisplay extends HttpServlet {
 	        // Create the legend and display on the map
 		    s += "var html1 = " + get_Mechanic_Color_Code_Legend_HTML(arrMechanics, conn) + "\n;";
 
-		    s += "var legend = new Legend('Legend', '80px', html1, '" + (200 * (iLegendColumnCount + 1)) + "px');\n"
+		    //Get the column count:
+		    int m_iLegendColumnCount = getLegendColumnCount(arrMechanics);
+		    
+		    s += "var legend = new Legend('Legend', '80px', html1, '" + (200 * (m_iLegendColumnCount + 1)) + "px');\n"
 		    	+ "map.controls[google.maps.ControlPosition.TOP_RIGHT].push(legend.div);\n"
 		    	;
 		    }
@@ -1109,7 +1109,6 @@ public class SMMapDisplay extends HttpServlet {
 		//first, generate corresponding color Array
 		//ArrayList<String> arrColors = get_Legend_Colors(arrMechanics.size());
 		Collections.sort(arrMechanics);
-		iLegendColumnCount = -1;
 		
 		//now arrange mechanics in this way:
 		//	1.	Order by first name in one column, then next
@@ -1118,6 +1117,7 @@ public class SMMapDisplay extends HttpServlet {
 		ArrayList<String> alRows = new ArrayList<String> (iAllowedNumberOfRows);
 		int iterator = 0;
 		int iRowCount = 0;
+		int iLegendColumnCount = -1;
 		
 		while (iterator < arrMechanics.size()){ 
 			if (iRowCount == 0){
@@ -1152,7 +1152,36 @@ public class SMMapDisplay extends HttpServlet {
 		return s;
 					
 	}
-	
+	private int getLegendColumnCount(ArrayList<String> arrMechanics){
+		int iLegendColumnCount = -1;
+		int iAllowedNumberOfRows = 25;
+		
+		//Load the array for mechanic legends
+		//sort Mechanics by first Name/Initial
+		//first, generate corresponding color Array
+		//ArrayList<String> arrColors = get_Legend_Colors(arrMechanics.size());
+		Collections.sort(arrMechanics);
+		
+		//now arrange mechanics in this way:
+		//	1.	Order by first name in one column, then next
+		//	2.	Each column will be 25 names or less, but all columns will be the same length +/- 1 row.
+		//first, figure out how many columns and how many rows
+		int iterator = 0;
+		int iRowCount = 0;
+		
+		while (iterator < arrMechanics.size()){ 
+			if (iRowCount == 0){
+				iLegendColumnCount++;
+			}
+			iRowCount ++;
+			if (iRowCount % iAllowedNumberOfRows == 0){
+				iRowCount = 0;
+			}
+			iterator++;
+		}
+		
+		return iLegendColumnCount;
+	}
 	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

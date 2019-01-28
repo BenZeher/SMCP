@@ -30,11 +30,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMMapDisplayAppointments extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sUserID = "";
-	private String sUserFullName = "";
 	private boolean bDebugMode = false;
-	private int iLegendColumnCount = 0;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -52,9 +48,9 @@ public class SMMapDisplayAppointments extends HttpServlet {
 
 		PrintWriter out = response.getWriter();
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-		sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
 		String sCenterAddress = "";
@@ -769,7 +765,7 @@ public class SMMapDisplayAppointments extends HttpServlet {
 	        // Create the legend and display on the map
 		    s += "var html1 = " + get_User_Color_Code_Legend_HTML(arrUsers, conn) + "\n;";
 
-		    s += "var legend = new Legend('Legend', '80px', html1, '" + (200 * (iLegendColumnCount + 1)) + "px');\n"
+		    s += "var legend = new Legend('Legend', '80px', html1, '" + (200 * (getLegendColumnCount(arrUsers) + 1)) + "px');\n"
 		    	+ "map.controls[google.maps.ControlPosition.TOP_RIGHT].push(legend.div);\n"
 		    	;
 		    }
@@ -1004,7 +1000,7 @@ public class SMMapDisplayAppointments extends HttpServlet {
 		//first, generate corresponding color Array
 		//ArrayList<String> arrColors = get_Legend_Colors(arrUsers.size());
 		Collections.sort(arrUsers);
-		iLegendColumnCount = -1;
+		int iLegendColumnCount = -1;
 		
 		//now arrange users in this way:
 		//	1.	Order by first name in one column, then next
@@ -1047,7 +1043,36 @@ public class SMMapDisplayAppointments extends HttpServlet {
 		return s;
 					
 	}
-	
+	private int getLegendColumnCount(ArrayList<String> arrUsers){
+		int iLegendColumnCount = -1;
+		int iAllowedNumberOfRows = 25;
+		
+		//Load the array for user legends
+		//sort users by first Name/Initial
+		//first, generate corresponding color Array
+		//ArrayList<String> arrColors = get_Legend_Colors(arrUsers.size());
+		Collections.sort(arrUsers);
+		
+		//now arrange mechanics in this way:
+		//	1.	Order by first name in one column, then next
+		//	2.	Each column will be 25 names or less, but all columns will be the same length +/- 1 row.
+		//first, figure out how many columns and how many rows
+		int iterator = 0;
+		int iRowCount = 0;
+		
+		while (iterator < arrUsers.size()){ 
+			if (iRowCount == 0){
+				iLegendColumnCount++;
+			}
+			iRowCount ++;
+			if (iRowCount % iAllowedNumberOfRows == 0){
+				iRowCount = 0;
+			}
+			iterator++;
+		}
+		
+		return iLegendColumnCount;
+	}
 	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

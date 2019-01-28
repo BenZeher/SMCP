@@ -118,8 +118,6 @@ public class SMOrderDetailList  extends HttpServlet {
 	
 	private boolean bDebugMode = false;
 	
-	private BigDecimal dRemainingOrderTotal; 
-	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -817,7 +815,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			s += "<tbody id=\"sortable\" style=\"overflow-y: auto;\">\n";
 			int BufferCounter = 0;
 			String sTemp = "";
-			dRemainingOrderTotal = new BigDecimal(0.00);
+			BigDecimal dRemainingOrderTotal = new BigDecimal(0.00);
 			BigDecimal bdShippedValue = new BigDecimal(0.00);
 			BigDecimal bdTotalExtendedEstimatedCost = new BigDecimal(0.00);
 			BigDecimal bdExtendedEstimatedCost = new BigDecimal(0.00);

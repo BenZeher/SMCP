@@ -20,9 +20,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMManageSecurityGroupsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sLicenseModuleLevel = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -40,9 +37,9 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 	    String sGroupName = clsStringFunctions.filter(request.getParameter("Security Groups"));
 		PrintWriter out = response.getWriter();
 		
@@ -155,13 +152,13 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	private void Edit_Group(
 			String sGroup, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddGroup,
 			String sLicenseModuleLevel){
 	    
 		//first, add the group if it's an 'Add':
 		if (bAddGroup == true){
-			if (Add_Group (sGroup, sConf, pwOut) == false){
+			if (Add_Group (sGroup, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add group " + sGroup + ".<BR>");
 				return;
 			}
@@ -183,10 +180,10 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        		+ "((" + SMTablesecurityfunctions.imodulelevelsum + " & " + sLicenseModuleLevel + ") > 0)"
 	        	+ ")"
 	        	+ " ORDER BY " + SMTablesecurityfunctions.sFunctionName;
-	        ResultSet rsFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        sSQL = SMMySQLs.Get_Security_Group_Functions_SQL(sGroup);
-	        ResultSet rsGroupFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsGroupFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
 	        ArrayList<String> sFunctionTable = new ArrayList<String>(0);
@@ -233,10 +230,10 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		try{
 			//First get a list of all the users:
 	        String sSQL = SMMySQLs.Get_User_List_SQL(false);
-	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        sSQL = SMMySQLs.Get_Security_Group_Users_SQL(sGroup);
-	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
         	while (rsUsers.next()){

@@ -23,10 +23,6 @@ import ServletUtilities.clsStringFunctions;
 public class SMUnbilledContractGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sReportTitle = "Unbilled Orders Report";
-    //private boolean bShowJobDetails = false;
-    //private boolean bShowActive = false;
-    //private boolean bShowStanding = false;
-	//SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM/dd/yyyy");
     
 	@Override
 	public void doPost(HttpServletRequest request,

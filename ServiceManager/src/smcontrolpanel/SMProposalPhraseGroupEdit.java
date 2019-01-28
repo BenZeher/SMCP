@@ -21,10 +21,8 @@ import ServletUtilities.clsStringFunctions;
 public class SMProposalPhraseGroupEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Proposal Phrase Group";
-	private static String sCalledClassName = "SMProposalPhraseGroupAction";
-	private String sDBID = "";
-	private String sCompanyName = "";
+	private static final String sObjectName = "Proposal Phrase Group";
+	private static final String sCalledClassName = "SMProposalPhraseGroupAction";
 	private boolean bDebug = false;
 	
 	@Override
@@ -44,8 +42,8 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 		}
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
-		sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 		String sProposalPhraseGroupID = clsStringFunctions.filter(request.getParameter(SMTableproposalphrasegroups.sid));
 
@@ -122,7 +120,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
@@ -145,7 +143,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				iID = rs.getInt(SMTableproposalphrasegroups.sid);
@@ -191,7 +189,7 @@ public class SMProposalPhraseGroupEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sProposalPhraseGroupID,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

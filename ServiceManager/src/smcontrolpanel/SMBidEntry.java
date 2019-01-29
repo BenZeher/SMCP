@@ -320,10 +320,10 @@ public class SMBidEntry extends clsMasterEntry{
 		Collections.sort(m_arrBidProductTypeAmounts);
 
 	}
-	public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean load (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + " - user: " + sUserID + " - " + sUserFullName
 		);
@@ -494,11 +494,11 @@ public class SMBidEntry extends clsMasterEntry{
 		}
 		return true;
 	}
-	public boolean save_without_data_transaction (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean save_without_data_transaction (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + " - user: " + sUserID + " - " + sUserFullName
 		);
@@ -801,11 +801,11 @@ public class SMBidEntry extends clsMasterEntry{
 		return true;
 	}
 
-	public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + " - user: " + sUserID + " - " + sUserFullName
 		);

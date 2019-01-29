@@ -71,7 +71,7 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 		//Try to load an AREntryInput object from which to build the form:
 		if (m_EntryInput == null){
 			try {
-				loadAREntryInput(
+				m_EntryInput = loadAREntryInput(
 					sDBID,
 					sUserID,
 					sUserFullName,
@@ -148,7 +148,7 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private void loadAREntryInput(
+	private AREntryInput loadAREntryInput(
 			String sDBID,
 			String sUserID,
 			String sUserFullName,
@@ -196,7 +196,7 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 		    	throw new Exception("Could not load entry input from entry with batch number " + sBatchNumber + ", entry number " + sEntryNumber);
 			}
 		}
-		return;
+		return m_EntryInput;
 	}
 
 	private boolean loadCashAccount(String sDBID, String sUserID, String sUserFullName, AREntryInput m_EntryInput, String sAccountSet){

@@ -196,7 +196,7 @@ public class GLOptions extends java.lang.Object{
     }
     
 
-    public boolean saveEditableFields(ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean saveEditableFields(ServletContext context, String sDBIB, String sUserID, String sUserFullName){
     	
     	//Only re-sets the fields that can be edited from the 'Edit Options' screen:
 		String SQL = "UPDATE " + SMTablegloptions.TableName
@@ -213,7 +213,7 @@ public class GLOptions extends java.lang.Object{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) + ":saveEditableFields - user: " + sUserID + " - " + sUserFullName
 		);

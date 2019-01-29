@@ -325,8 +325,6 @@ public class SMCriticalDateEdit  extends HttpServlet {
 					}
 					
 					if( iType == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
-						System.out.println("I'm Here!!");
-						System.out.println("Date in data:" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate)));
 						s +="<TR><TD ALIGN=RIGHT><b>Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Number: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Status: </b></TD><TD ALIGN=LEFT>" + SMTableicpoheaders.getStatusDescription(rsInfo.getInt((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus))) + "</TD></TR>"; 

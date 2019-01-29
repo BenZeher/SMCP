@@ -80,7 +80,7 @@ public class AREditRetainageEntry extends HttpServlet {
 		//Try to load an AREntryInput object from which to build the form:
 		if(m_EntryInput == null){
 			try {
-				loadAREntryInput(
+				m_EntryInput = loadAREntryInput(
 					sDBID,
 					m_sBatchNumber,
 					m_sEntryNumber,

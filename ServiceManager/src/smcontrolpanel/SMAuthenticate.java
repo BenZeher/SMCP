@@ -553,7 +553,7 @@ public class SMAuthenticate{
 	    return bResult;
 	}
 	private static boolean checkForSMCPUpdates(
-			String sConf, 
+			String sDBIB, 
 			String sUserName,
 			String sUserID,
 			String sUserFullName,
@@ -567,7 +567,7 @@ public class SMAuthenticate{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-	        		sConf,
+	        		sDBIB,
 	        		"MySQL",
 	        		"SMAuthenticate" + ".checkForUpdates = User: " 
 	        		+ sUserID
@@ -585,7 +585,7 @@ public class SMAuthenticate{
 					SMUpdateData dat  = new SMUpdateData();
 					Connection conn = clsDatabaseFunctions.getConnection(
 							context, 
-							sConf, 
+							sDBIB, 
 							"MySQL", 
 							"In " 
 							+ "SMAuthenticate.checkForUpdates - User: " 
@@ -598,7 +598,7 @@ public class SMAuthenticate{
 						return false;
 					}
 					
-					if (!dat.update(conn, sUserID, sConf)){
+					if (!dat.update(conn, sUserID, sDBIB)){
 						pwOut.println("Error updating database to newer database revision number: " + clsStringFunctions.filter(dat.getErrorMessage()));
 						clsDatabaseFunctions.freeConnection(context, conn, "[1547080407]");
 						return false;

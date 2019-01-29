@@ -51,7 +51,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-		String sWarning = "";
+		//String sWarning = "";
 		String sRedirectString = "";
 
 		String sCallSheetID = clsManageRequestParameters.get_Request_Parameter(
@@ -293,7 +293,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 					sEndingNextContactDate
 				);
 			} catch (Exception e) {
-				sRedirectString += "&Warning=" + sWarning;
+				sRedirectString += "&Warning=" + clsServletUtilities.URLEncode(e.getMessage());
 				response.sendRedirect(sRedirectString);
 				return;
 			}

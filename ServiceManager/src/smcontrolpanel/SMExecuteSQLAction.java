@@ -55,11 +55,11 @@ public class SMExecuteSQLAction extends HttpServlet {
 		response.sendRedirect(response.encodeRedirectURL(sRedirect));
 	    return;
 	}
-	private int executeCommand(String sExecuteString, String sConf, String sUserID) throws SQLException{
+	private int executeCommand(String sExecuteString, String sDBID, String sUserID) throws SQLException{
 		int i = -1;
 		Connection conn;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sExecuteString);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sExecuteString);
 		} catch (Exception e) {
 			throw new SQLException(e.getMessage());
 		}
@@ -70,7 +70,7 @@ public class SMExecuteSQLAction extends HttpServlet {
 		    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080560]");
 		}catch (Exception ex) {
 			// handle any errors
-			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
 					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 
@@ -84,7 +84,7 @@ public class SMExecuteSQLAction extends HttpServlet {
 		}
 
 		//Log the execution:
-		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sConf, getServletContext());
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 				sUserID, 
 				SMLogEntry.LOG_OPERATION_SMEXECUTESQL, 

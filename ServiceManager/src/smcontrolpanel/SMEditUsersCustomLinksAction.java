@@ -86,9 +86,9 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 	  	}
 	}
 	
-	private void delete(String sURLID, HttpServletRequest request, ServletContext context, String sConf, String sUserID, String sUserFirstName, String sUserLastName) throws Exception{
+	private void delete(String sURLID, HttpServletRequest request, ServletContext context, String sDBID, String sUserID, String sUserFirstName, String sUserLastName) throws Exception{
 		// Get connection
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL",
 				SMUtilities.getFullClassName(this.toString()) 
 				+ ":save - userID: " 
 				+ sUserID
@@ -146,10 +146,10 @@ public class SMEditUsersCustomLinksAction extends HttpServlet {
 		
 	}
 
-	private void save(HttpServletRequest request, ServletContext context, String sConf, String sUserID, String sUserFirstName, String sUserLastName) throws Exception{
+	private void save(HttpServletRequest request, ServletContext context, String sDBID, String sUserID, String sUserFirstName, String sUserLastName) throws Exception{
   		
 		// Get connection
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL",
 				SMUtilities.getFullClassName(this.toString()) 
 				+ ":save - userID: " 
 				+ sUserID

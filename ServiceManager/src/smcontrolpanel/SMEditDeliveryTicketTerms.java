@@ -210,7 +210,7 @@ public class SMEditDeliveryTicketTerms  extends HttpServlet {
 	}
 	
 public void save_without_data_transaction (ServletContext context, 
-								String sConf, 
+								String sDBID, 
 								String sUserID,
 								String sUserFullName,
 								String sTerms,
@@ -219,7 +219,7 @@ public void save_without_data_transaction (ServletContext context,
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

@@ -22,7 +22,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 	public SMDeliveryTicketReceipt(	){
 	}
 	public String processReport(
-			String sConf,
+			String sDBID,
 			String sDeliveryTicketNumber,
 			String sUserName,
 			String sUserID,
@@ -41,7 +41,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) + ".processReport - user: " + sUserID + " - " + sUserFullName);
 		
@@ -54,7 +54,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 					sDeliveryTicketNumber,
 					sUserName,
 					sUserID,
-					sConf,
+					sDBID,
 					context,
 					bEmailMode
 				);
@@ -70,7 +70,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 			String sDeliveryTicketNumber,
 			String sUserName,
 			String sUserID,
-			String sConf,
+			String sDBID,
 			ServletContext context,
 			boolean bEmailMode
 	) throws Exception{
@@ -92,7 +92,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 			sFormString	+= " METHOD='POST'";
 			sFormString += " class='MAINFORM'>";
 		s += sFormString;
-		s+= printHeader(deliveryticket,sUserName,sUserID,sConf,conn,context);
+		s+= printHeader(deliveryticket,sUserName,sUserID,sDBID,conn,context);
 		s += printItemsDeliveredSection(deliveryticket);
 		
 		s += printDeliveryInformation(deliveryticket);
@@ -108,7 +108,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 			SMDeliveryTicket dt,
 			String sUser,
 			String sUserID,
-			String sConf,
+			String sDBID,
 			Connection conn,
 			ServletContext context
 	) throws Exception{
@@ -125,7 +125,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 		}
 		
 		try {
-			s += "<TD width = 33%>" + printLogoTable(dt,sUserID,sUser,sConf, context, conn, false) + "</TD>"; //don't use logo for now
+			s += "<TD width = 33%>" + printLogoTable(dt,sUserID,sUser,sDBID, context, conn, false) + "</TD>"; //don't use logo for now
 		} catch (Exception e1) {
 			throw new Exception("ERROR printing logo - " + e1.getMessage() + ".");
 		}
@@ -174,7 +174,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 	private String getFileNameFromDBA (SMDeliveryTicket dt,
 									   String sUserID, 
 									   String sUserFullName, 
-									   String sConf, 
+									   String sDBID, 
 									   ServletContext context, 
 									   Connection conn) throws Exception{
 		String SQL = "";
@@ -190,7 +190,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".sendEmail - " + sUserID
 					+ " - "
@@ -209,7 +209,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 			rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".sendEmail - " + sUserID
 					+ " - "
@@ -229,7 +229,7 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 	private String printLogoTable(SMDeliveryTicket dt,  
 								  String sUserID, 
 								  String sUserFullName, 
-								  String sConf, 
+								  String sDBID, 
 								  ServletContext context, 
 								  Connection conn, 
 								  boolean bPrintLogo) throws Exception{

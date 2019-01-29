@@ -129,10 +129,10 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 		
 	}
 	/*
-    public boolean load (ServletContext context, String sConf, String sUser){
+    public boolean load (ServletContext context, String sDBID, String sUser){
     	Connection conn = SMUtilities.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUser
     			);
@@ -194,11 +194,11 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 		return true;
     }
     
-    public boolean save_without_data_transaction (ServletContext context, String sConf, String sUser){
+    public boolean save_without_data_transaction (ServletContext context, String sDBID, String sUser){
     	
        	Connection conn = SMUtilities.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUser
     			);
@@ -305,14 +305,14 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	
     	return true;
     }
-    public boolean validate_encryption_key (ServletContext context, String sConf, String sUserID, String sUserFullName, String sDecryptKey){
+    public boolean validate_encryption_key (ServletContext context, String sDBID, String sUserID, String sUserFullName, String sDecryptKey){
     	boolean bKeyisValid = false;
     	String sSQL = "";
     	ResultSet rs = null;
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".validate_encryption_key - user: " + sUserID + " - " + sUserFullName)
 		);
@@ -492,11 +492,11 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	return bEntriesAreValid;
     }
     
- public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+ public void delete (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

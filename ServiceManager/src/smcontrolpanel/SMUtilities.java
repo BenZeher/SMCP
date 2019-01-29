@@ -568,7 +568,7 @@ public class SMUtilities extends clsServletUtilities {
 			ArrayList<String> arPermittedFunctionNames,
 			ArrayList<String> arPermittedFunctionLinks,
 			ArrayList<Long> arRequestedFunctions,
-			String sConf,
+			String sDBID,
 			PrintWriter pwOut,
 			ServletContext context
 	){
@@ -606,7 +606,7 @@ public class SMUtilities extends clsServletUtilities {
 						sLink += "?"; 
 					}
 					sLink +=
-						SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf
+						SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ "' NAME='"
 						+ arPermittedFunctionNames.get(j).replace(" ", "") + "Link"
 						+ "'>"
@@ -688,10 +688,10 @@ public class SMUtilities extends clsServletUtilities {
 		}
 	}
 
-	public static String lnViewInvoice(String sConf, String sInvoiceNumber){
+	public static String lnViewInvoice(String sDBID, String sInvoiceNumber){
 
 		//We can use this as a default link and change it in one place later if we need to:
-		String sLink = "smcontrolpanel.SMPrintInvoice?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf + "&InvoiceNumberFrom=" + sInvoiceNumber;
+		String sLink = "smcontrolpanel.SMPrintInvoice?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "&InvoiceNumberFrom=" + sInvoiceNumber;
 
 		/* Parameters, if needed later:
 		 * InvoiceNumber=123456
@@ -791,11 +791,11 @@ public class SMUtilities extends clsServletUtilities {
 		}
 	}
 	
-	public static boolean getICImportFlag(String sConf, ServletContext context){
+	public static boolean getICImportFlag(String sDBID, ServletContext context){
 
 		boolean bResult = false;
 		Connection conn = clsDatabaseFunctions.getConnection(
-				context, sConf, "MySQL", "SMUtilities.getICImportFlag");
+				context, sDBID, "MySQL", "SMUtilities.getICImportFlag");
 		if (conn == null){
 			clsServletUtilities.sysprint("SMUtilities.getICImportFlag", "SYSTEM", "Error getting connection");
 			return false;

@@ -269,7 +269,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	private boolean Delete_Group(
 			String sGroup,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
@@ -277,7 +277,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		sSQLList.add((String) SMMySQLs.Delete_Group_Users_SQL(sGroup));
 		sSQLList.add((String) SMMySQLs.Delete_Group_SQL(sGroup));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
@@ -288,13 +288,13 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		}		
 	}
 	
-	private boolean Add_Group(String sGroup, String sConf, PrintWriter pwOut){
+	private boolean Add_Group(String sGroup, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a group by this name already:
 		String sSQL = SMMySQLs.Get_Security_Group_SQL(sGroup);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This group already exists, so we can't add it:
 				pwOut.println("The " + sGroup + " group already exists - it cannot be added.<BR>");
@@ -312,7 +312,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		sSQL = SMMySQLs.Add_New_Group_SQL(sGroup);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in SMManageSecurityGroupsEdit.Add_Group class!!");

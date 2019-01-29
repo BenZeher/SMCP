@@ -95,10 +95,10 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 		}
 	}
 	
-    public boolean load (ServletContext context, String sConf, String sUser){
+    public boolean load (ServletContext context, String sDBID, String sUser){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUser
     			);
@@ -171,11 +171,11 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 		return true;
     }
     
-    public boolean save_without_data_transaction (ServletContext context, String sConf, String sUser){
+    public boolean save_without_data_transaction (ServletContext context, String sDBID, String sUser){
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUser
     			);
@@ -282,11 +282,11 @@ public class SMCriticalDateEntry extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

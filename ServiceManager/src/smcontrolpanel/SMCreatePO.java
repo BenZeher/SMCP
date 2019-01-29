@@ -151,7 +151,7 @@ public class SMCreatePO extends java.lang.Object{
     public int getNumberOfLines(){
     	return arrItemNumbers.size();
     }
-    public void validate_entry(String sConf, ServletContext context, String sUserID, String sUserFullName) throws Exception {
+    public void validate_entry(String sDBID, ServletContext context, String sUserID, String sUserFullName) throws Exception {
     	if (m_sVendorCode.compareToIgnoreCase("") == 0){
     		throw new Exception("Vendor number cannot be blank.");
     	}
@@ -167,7 +167,7 @@ public class SMCreatePO extends java.lang.Object{
 			ResultSet rsVendor = clsDatabaseFunctions.openResultSet(
 					SQL,
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".validate vendor - user: " 
 					+ sUserID
@@ -199,7 +199,7 @@ public class SMCreatePO extends java.lang.Object{
 			ResultSet rsOrder = clsDatabaseFunctions.openResultSet(
 					SQL,
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".validate order - user: " 
 					+ sUserID
@@ -235,7 +235,7 @@ public class SMCreatePO extends java.lang.Object{
     			throw new Exception("Item number on line " + i + 1 + " cannot be blank.");
     		}else{
     			ICItem item = new ICItem(arrItemNumbers.get(i));
-    			if (!item.load(context, sConf)){
+    			if (!item.load(context, sDBID)){
     				throw new Exception("Invalid item number ('" + arrItemNumbers.get(i) + "') on line " + i + 1 + ".");
     			}
     			if (item.getActive().compareToIgnoreCase("0") == 0){

@@ -287,7 +287,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 	private String getHTMLDeliveryTicketForm(
 			int iNumberOfCopies, 
 			String sDeliveryTicketNumber, 
-			String sConf,
+			String sDBID,
 			SMMasterEditAction smaction,
 			boolean bEmailMode, 
 			String sEmailTo) throws Exception{
@@ -314,7 +314,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".printProposal - user: " + smaction.getUserName()
 					);
@@ -330,7 +330,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 	 	SMLogEntry log = new SMLogEntry(smaction.getsDBID(), getServletContext());
 	 	try {
 			s += delticket.processReport(
-				sConf,
+				sDBID,
 				sDeliveryTicketNumber,
 				smaction.getUserName(),
 				smaction.getUserID(),

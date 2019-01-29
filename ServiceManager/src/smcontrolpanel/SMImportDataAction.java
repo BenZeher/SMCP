@@ -634,13 +634,13 @@ public class SMImportDataAction extends HttpServlet {
 		return numberOfRecords;
 	}
 	
-	private ArrayList<String> getPrimaryAndUniqueKey(String sConf, String sTableName) throws Exception{
+	private ArrayList<String> getPrimaryAndUniqueKey(String sDBID, String sTableName) throws Exception{
 		ArrayList<String> keys = new ArrayList<String>();
 		String sPrimaryKeyField = "";
 		String sSQL = "DESCRIBE "+sTableName+"";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 			ResultSet result = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(result.next()){
 				if(result.getString("Key").equals("PRI") || result.getString("Key").equals("UNI")){
@@ -657,13 +657,13 @@ public class SMImportDataAction extends HttpServlet {
 		return keys;
 		
 	}
-	private ArrayList<String> getPrimaryKeys(String sConf, String sTableName) throws Exception{
+	private ArrayList<String> getPrimaryKeys(String sDBID, String sTableName) throws Exception{
 		ArrayList<String> keys = new ArrayList<String>();
 		String sPrimaryKeyField = "";
 		String sSQL = "DESCRIBE "+sTableName+"";
 		Connection conn = null;
 		try {
-			conn = clsDatabaseFunctions.getConnection(getServletContext(), sConf, "MySQL", this.toString() + " SQL: " + sSQL);
+			conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", this.toString() + " SQL: " + sSQL);
 			ResultSet result = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(result.next()){
 				if(result.getString("Key").equals("PRI")){

@@ -612,7 +612,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 	private String createCommandsTable(
 			SMWorkOrderHeader wo_order, 
 			String sUserID, 
-			String sConf,
+			String sDBID,
 			String sLicenseModuleLevel){
 		String s = "";
 		
@@ -641,7 +641,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 				SMSystemFunctions.SMUnpostWorkOrders, 
 				sUserID, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				sLicenseModuleLevel)){
 				s += createUnPostButton();
 			}
@@ -804,7 +804,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 		boolean bHideLine,
 		boolean bShowItemInformationLink,
 		int iLineNumber,
-		String sConf,
+		String sDBID,
 		String sUserID,
 		String sUserFullName,
 		boolean bWorkOrderIsPosted
@@ -886,7 +886,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 				sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smic.ICDisplayItemInformation?ItemNumber=" 
 				+ orderdetail.getM_sItemNumber()
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">" + orderdetail.getM_sItemNumber() + "</A>";
 			}
 			
@@ -932,7 +932,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL,
 					getServletContext(),
-					sConf, 
+					sDBID, 
 					"MySQL",
 					SMUtilities.getFullClassName(this.toString()) + ".buildItemLine - user: " 
 					+ sUserID

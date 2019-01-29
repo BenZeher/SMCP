@@ -27,7 +27,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 								   String sUserID,
 								   String sUserFullName,
 								   Connection conn, 
-								   String sConf,
+								   String sDBID,
 								   ServletContext context) 
 							throws Exception{
 		//int iInvLineNum = 0;
@@ -163,7 +163,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 	    try{ 
 	    	Update_Order_Info_After_Credit(cInvoice, 
 	    								   conn, 
-	    								   sConf,
+	    								   sDBID,
 	    								   context,
 	    								   sUserID,
 	    								   sUserFullName);
@@ -198,7 +198,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 	
 	private void Update_Order_Info_After_Credit(SMInvoice cCreditNote, //this invoice has become credit note already
 												Connection conn,
-												String sConf,
+												String sDBID,
 												ServletContext context,
 												String sUserID,
 												String sUserFullName) throws Exception{
@@ -259,7 +259,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 	    
 	    //save credited order back to database
 	    if (!cOrder.save_order_unprotected_by_transaction(conn, 
-	    												  sConf,
+	    												  sDBID,
 	    												  context,
 	    												  sUserID,
 	    												  sUserFullName,

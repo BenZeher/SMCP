@@ -260,7 +260,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		return true;
 	}
 
-	private boolean Add_Record(String sProductType, String sConf, PrintWriter pwOut){
+	private boolean Add_Record(String sProductType, String sDBID, PrintWriter pwOut){
 
 		//First, make sure there isn't a product type with this name already:
 		String sSQL = "SELECT * FROM " + SMTablebidproducttypes.TableName
@@ -270,7 +270,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		;
 
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectName + " '" + sProductType 
@@ -292,7 +292,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		;
 		try {
 
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 			pwOut.println("Error inserting product type with SQL: "

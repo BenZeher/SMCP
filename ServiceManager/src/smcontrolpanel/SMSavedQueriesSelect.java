@@ -291,7 +291,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 			boolean bChecked, 
 			boolean bEvenRow,
 			String sUserID,
-			String sConf,
+			String sDBID,
 			boolean bAllowManagePublicQueries) throws SQLException {
 		String s = "";
 		s += " <TR>";

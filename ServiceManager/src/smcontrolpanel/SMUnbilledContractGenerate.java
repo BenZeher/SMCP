@@ -269,7 +269,7 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 		
 		doPost(request, response);
 	}
-	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes, String sConf){
+	private String getSelectedServiceTypes(ArrayList<String> arServiceTypes, String sDBID){
 		
 		String sDesc = "";
 		
@@ -277,7 +277,7 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 			+ " ORDER BY " + SMTableservicetypes.sCode;
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			String sType = "";
 			while(rs.next()){
 				sType = rs.getString(SMTableservicetypes.sCode);
@@ -295,14 +295,14 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 		
 		return sDesc;
 	}
-	private String getSelectedSalesGroups(ArrayList<String> arSalesGroups, String sConf){
+	private String getSelectedSalesGroups(ArrayList<String> arSalesGroups, String sDBID){
 		
 		String sDesc = "";
 		
 		String SQL = "SELECT * FROM " + SMTablesalesgroups.TableName 
 			+ " ORDER BY " + SMTablesalesgroups.iSalesGroupId;
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			int iGroup = 0;
 			for (int i = 0; i < arSalesGroups.size(); i++){
 				sDesc += arSalesGroups.get(i);
@@ -325,14 +325,14 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 		return sDesc;
 	}
 
-	private ArrayList<String> getSalespersonsWithNames(ArrayList<String> arSalespersons, String sConf) throws Exception{
+	private ArrayList<String> getSalespersonsWithNames(ArrayList<String> arSalespersons, String sDBID) throws Exception{
 		
 		String sDesc = "";
 		ArrayList <String>arrSalesPersonList = new ArrayList <String>(0);
 		String SQL = "SELECT * FROM " + SMTablesalesperson.TableName
 			+ " ORDER BY " + SMTablesalesperson.sSalespersonCode;
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			for (int i = 0; i < arSalespersons.size();i++){
 				rs.beforeFirst();
 				sDesc = "";

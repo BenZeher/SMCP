@@ -99,7 +99,7 @@ public class SMDisplayReminders  extends HttpServlet {
 		out.println("</BODY></HTML>");
 	}
 	
-	public String calculateReminders(ServletContext context, String sConf, String sUserID) throws Exception{
+	public String calculateReminders(ServletContext context, String sDBID, String sUserID) throws Exception{
 		String s = "";
 		iRowCounter = 0;
 		Calendar now = Calendar.getInstance();
@@ -113,7 +113,7 @@ public class SMDisplayReminders  extends HttpServlet {
     	Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(context, 
-					   sConf, 
+					   sDBID, 
 					   "MySQL",
 					   SMUtilities.getFullClassName(this.toString()) + ".getReminder - user: " + sUserID);
 		} catch (Exception e1) {

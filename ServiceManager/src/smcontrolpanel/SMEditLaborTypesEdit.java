@@ -270,14 +270,14 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
 		sSQLList.add((String) SMMySQLs.Delete_LaborType_SQL(sCode));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -288,13 +288,13 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 		}		
 	}
 	
-	private boolean Add_Record(String sCode, String sConf, PrintWriter pwOut){
+	private boolean Add_Record(String sCode, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
 		String sSQL = SMMySQLs.Get_LaborType_By_ID(sCode);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
@@ -313,7 +313,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 		sSQL = SMMySQLs.Add_New_LaborType_SQL(sCode);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

@@ -184,7 +184,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
@@ -193,7 +193,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
         String sServiceType = clsStringFunctions.StringLeft(sCode, SMTableworkperformedcodes.sCodeLength).trim();
 		sSQLList.add(SMMySQLs.Delete_WorkPerformedCode_SQL(sWPCode, sServiceType));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -204,7 +204,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 		}		
 	}
 	
-	private boolean Add_Record(String sCode, String sConf, PrintWriter pwOut){
+	private boolean Add_Record(String sCode, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a record already:
 		String sWPCode = clsStringFunctions.StringRight(sCode, SMTableworkperformedcodes.sWorkPerformedCodeLength).trim();
@@ -212,7 +212,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 		String sSQL = SMMySQLs.Get_WorkPerformedCode_By_Code(sWPCode, sServiceType);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
@@ -230,7 +230,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 		sSQL = SMMySQLs.Add_New_WorkPerformedCode_SQL(sWPCode, sServiceType);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

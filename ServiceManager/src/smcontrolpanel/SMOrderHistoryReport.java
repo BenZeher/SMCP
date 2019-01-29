@@ -164,7 +164,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 
 		return true;
 	}
-	private void printOrderDetails(String sTrimmedOrderNumber, String sConf, ServletContext context, String sUserID, String sUserFullName, PrintWriter pwOut) throws SQLException {
+	private void printOrderDetails(String sTrimmedOrderNumber, String sDBID, ServletContext context, String sUserID, String sUserFullName, PrintWriter pwOut) throws SQLException {
 		
 		String sInvoiceComments = "";
 		String sTicketComments = "";
@@ -182,7 +182,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			ResultSet rsDetails = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,	
-					sConf, 
+					sDBID, 
 					"MySQL",
 					"SMOrderHistoryReport.printOrderDetails - user: " + sUserID
 					+ " - " + sUserFullName
@@ -299,7 +299,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 	}
 	private void printChangeOrders(
 			String sTrimmedOrderNumber, 
-			String sConf,
+			String sDBID,
 			ServletContext context,
 			String sUserID,
 			String sUserFullName,
@@ -321,7 +321,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			ResultSet rsChangeOrders = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,	
-					sConf, 
+					sDBID, 
 					"MySQL",
 					"SMOrderHistoryReport.printChangeOrders - user: " + sUserID
 					+ " - "
@@ -405,7 +405,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 	}
 	private void printCriticalDates(
 			String sTrimmedOrderNumber, 
-			String sConf,
+			String sDBID,
 			ServletContext context,
 			PrintWriter pwOut) throws SQLException{
 		String SQL = "";
@@ -420,7 +420,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			+ ")"
 			+ " ORDER BY " + SMTablecriticaldates.sCriticalDate
 			;
-			ResultSet rsCriticalDates = clsDatabaseFunctions.openResultSet(SQL, context, sConf, "MySQL", this.toString() + ".printCriticalDates [1332178466]");
+			ResultSet rsCriticalDates = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printCriticalDates [1332178466]");
 
 			pwOut.println("<TABLE BORDER=0 WIDTH=100% cellspacing=0 cellpadding=1>");
 			pwOut.println("<TR>");
@@ -469,7 +469,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			throw new SQLException("Error opening critical dates query: " + e.getMessage());
 		}
 	}
-	private void printJobCostInformation(String sTrimmedOrderNumber, String sConf, ServletContext context, PrintWriter pwOut) throws SQLException{
+	private void printJobCostInformation(String sTrimmedOrderNumber, String sDBID, ServletContext context, PrintWriter pwOut) throws SQLException{
 		String SQL = "";
 		String sBackgroundColor = "";
 		String sCellStyle = "";
@@ -483,7 +483,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			+ ")"
 			+ " ORDER BY " + SMTableworkorders.datscheduleddate + ", " + SMTableworkorders.ijoborder
 			;
-			ResultSet rsJobCost = clsDatabaseFunctions.openResultSet(SQL, context, sConf, "MySQL", this.toString() + ".printJobCost [1332178467]");
+			ResultSet rsJobCost = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printJobCost [1332178467]");
 
 			pwOut.println("<TABLE BORDER=0 WIDTH=100% cellspacing=0 cellpadding=1>");
 			pwOut.println("<TR>");
@@ -646,7 +646,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 	}
 	private void printInvoices(
 			String sTrimmedOrderNumber, 
-			String sConf, 
+			String sDBID, 
 			ServletContext context, 
 			String sUser, 
 			PrintWriter pwOut,
@@ -677,7 +677,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 				+ ")"
 				;
 
-			ResultSet rsInvoices = clsDatabaseFunctions.openResultSet(SQL, context, sConf, "MySQL", this.toString() + ".printInvoices [1332178419]");
+			ResultSet rsInvoices = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printInvoices [1332178419]");
 			pwOut.println(
 			"<BR><a name=\"BILLINGSUMMARY\"><B><U>Billing Summary</U></B><BR>");
 			pwOut.println("<TABLE WIDTH=100% BORDER=1 cellspacing=0 cellpadding=1>");

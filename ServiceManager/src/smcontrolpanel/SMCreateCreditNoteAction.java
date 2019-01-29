@@ -171,7 +171,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 	}
 	
 	private void CreateCreditNote (Connection conn,
-									  String sConf,
+									  String sDBID,
 									  String sCreditNoteDate,
 									  String sInvoiceNumber,
 									  String sCreditNoteInfo,
@@ -191,7 +191,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 							        								  sUserID, 
 							        								  sUserFullName,
 							        								  conn, 
-							        								  sConf,
+							        								  sDBID,
 							        								  getServletContext());
         }catch(Exception ex){
         	if (bDebugMode){

@@ -140,7 +140,7 @@ public class SMUserLogin extends HttpServlet {
 			String sUserName, 
 			String sUserID, 
 			String sUserFullName,
-			String sConf, 
+			String sDBID, 
 			PrintWriter pwOut,
 			String sLicenseModuleLevel
 	){
@@ -182,7 +182,7 @@ public class SMUserLogin extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".buildMenus" + " UserID: " + sUserID);
 
@@ -285,7 +285,8 @@ public class SMUserLogin extends HttpServlet {
 		
 		arMenu.add(SMSystemFunctions.SMExecuteSQL);
 		
-		arMenu.add(SMSystemFunctions.SMImportData);
+		// TJR - 1/29/2019 - removed this until we can clean it up:
+		//arMenu.add(SMSystemFunctions.SMImportData);
 		
 		arMenu.add(SMSystemFunctions.SMViewSystemConfiguration);
 		
@@ -299,7 +300,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -311,7 +312,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -425,7 +426,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -437,7 +438,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -501,7 +502,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -513,7 +514,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -574,7 +575,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -586,7 +587,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -620,7 +621,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -632,7 +633,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -655,7 +656,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -667,7 +668,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -684,7 +685,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -696,7 +697,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -713,7 +714,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -725,7 +726,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -742,7 +743,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -754,7 +755,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -771,7 +772,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -783,7 +784,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -801,7 +802,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -813,7 +814,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -832,7 +833,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -844,7 +845,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -862,7 +863,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -874,7 +875,7 @@ public class SMUserLogin extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -898,7 +899,7 @@ public class SMUserLogin extends HttpServlet {
 			ResultSet rsCustomLinks = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".buildMenus" + " User: " + sUserName);
 			
@@ -973,10 +974,9 @@ public class SMUserLogin extends HttpServlet {
 			}
 			//Calculate reminders and display link if there are any reminders
 			String sUserID = (String) session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-			String sConf = (String)session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 			try{
 			SMDisplayReminders scheduleEntry = new SMDisplayReminders();
-			scheduleEntry.calculateReminders(getServletContext(), sConf, sUserID);
+			scheduleEntry.calculateReminders(getServletContext(), sDBID, sUserID);
 
 			if(scheduleEntry.getRowCounter() > 0){
 				String s = "s";

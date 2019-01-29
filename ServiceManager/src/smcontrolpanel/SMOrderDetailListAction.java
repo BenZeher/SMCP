@@ -856,7 +856,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 	public void processLineNumbersAfterSorting(
 			String strimmedordernumber,
 			HttpServletRequest request,
-			String sConf, 
+			String sDBID, 
 			ServletContext context, 
 			String sUserID) throws Exception{
 		
@@ -865,7 +865,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".updateLineNumbersAfterSorting - userID: " + sUserID);
 		} catch (Exception e) {

@@ -514,9 +514,9 @@ public class SMProposal extends Object{
 			throw new Exception("Error saving proposal - " + e.getMessage());
 		}
 	}
-	public void save (String sUser, String sUserID, String sUserFullName, ServletContext context, String sConf, String sLicenseModuleLevel) throws Exception{
+	public void save (String sUser, String sUserID, String sUserFullName, ServletContext context, String sDBID, String sLicenseModuleLevel) throws Exception{
 
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL", this.toString() + ".save - user: " 
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.toString() + ".save - user: " 
 		+ sUserID
 		+ " - "
 		+ sUserFullName
@@ -658,7 +658,7 @@ public class SMProposal extends Object{
 	}
 
 	//Requires connection since it is used as part of a data transaction in places:
-	public void delete(String sTrimmedOrderNumber, String sConf, ServletContext context, String sUser) throws Exception{
+	public void delete(String sTrimmedOrderNumber, String sDBID, ServletContext context, String sUser) throws Exception{
 
 			String SQL = "DELETE FROM " + SMTableproposals.TableName
 				+ " WHERE ("
@@ -669,7 +669,7 @@ public class SMProposal extends Object{
 				clsDatabaseFunctions.executeSQL(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".delete - user: " + sUser
 				);
@@ -680,7 +680,7 @@ public class SMProposal extends Object{
 	public void pasteOrderLines(
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers, 
-			String sConf, 
+			String sDBID, 
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName) throws Exception{
@@ -690,7 +690,7 @@ public class SMProposal extends Object{
 		}
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_strimmedordernumber(sTrimmedOrderNumber);
-		if (!order.load(context, sConf, sUserID, sUserFullName)){
+		if (!order.load(context, sDBID, sUserID, sUserFullName)){
 			throw new Exception("Could not load order - " + order.getErrorMessages());
 		}
 		//Ship the lines from the array by matching the detail numbers:
@@ -709,7 +709,7 @@ public class SMProposal extends Object{
 		}
 		//Sort by line number:
 		Collections.sort(arrDetailLines, new compareOrderDetails());
-		insertOrderLines(arrDetailLines, sTrimmedOrderNumber, context, sConf, sUserFullName);
+		insertOrderLines(arrDetailLines, sTrimmedOrderNumber, context, sDBID, sUserFullName);
 	}
 	private class compareOrderDetails implements Comparator<SMOrderDetail>{
 	    public int compare(SMOrderDetail line1, SMOrderDetail line2) {

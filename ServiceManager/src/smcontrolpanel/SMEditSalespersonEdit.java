@@ -235,14 +235,14 @@ public class SMEditSalespersonEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf,
+			String sDBID,
 			String sUser){
 		
 		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".Delete_Record - user: " + sUser));
 		} catch (Exception e) {
@@ -309,13 +309,13 @@ public class SMEditSalespersonEdit extends HttpServlet {
 		return true;
 	}
 	
-	private void Add_Record(String sCode, String sConf, PrintWriter pwOut) throws Exception{
+	private void Add_Record(String sCode, String sDBID, PrintWriter pwOut) throws Exception{
 		
 		//First, make sure there isn't a user by this name already:
 		String sSQL = SMMySQLs.Get_Salesperson_By_Salescode(sCode);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				rs.close();
@@ -327,7 +327,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 		}
 		sSQL = SMMySQLs.Add_New_Salesperson_SQL(sCode);
 		try {
-			if(!clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf)){
+			if(!clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID)){
 				throw new Exception("Could not add " + sObjectName + " '" + sCode + "' with SQL: " + sSQL);
 			}
 		}catch (SQLException ex){

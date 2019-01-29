@@ -474,7 +474,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			ArrayList<String> arrMechanicsNames,
 			ArrayList<String> arrMechanicIDs,
 			ServletContext context,
-			String sConf,
+			String sDBID,
 			String sUserID,
 			String sUserFullName
 	) throws Exception{
@@ -491,7 +491,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".loadMechanics - user: " 
 				+ sUserID
@@ -512,7 +512,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	private String createCommandsTable(
 			SMWorkOrderHeader wo_order, 
 			String sUserID, 
-			String sConf, 
+			String sDBID, 
 			String sViewFlag,
 			String sLicenseModuleLevel,
 			boolean bCommandsHaveAlreadyBeenDisplayed){
@@ -562,7 +562,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						SMSystemFunctions.SMViewPricingOnWorkOrders, 
 						sUserID, 
 						getServletContext(), 
-						sConf,
+						sDBID,
 						sLicenseModuleLevel))
 				&& (!wo_order.isWorkOrderPosted())
 		){
@@ -570,7 +570,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						SMSystemFunctions.SMZeroWorkOrderItemPrices, 
 						sUserID, 
 						getServletContext(), 
-						sConf,
+						sDBID,
 						sLicenseModuleLevel)
 					){
 				//No need to show the button unless it's turned off currently:
@@ -593,7 +593,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				SMSystemFunctions.SMInitiateMaterialReturns, 
 				sUserID, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				sLicenseModuleLevel)){
 			//If the commands have NOT already been displayed (we can't have the material returns description box appear twice):
 			if (!bCommandsHaveAlreadyBeenDisplayed){
@@ -605,7 +605,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				SMSystemFunctions.SMCreateGDriveWorkOrderFolders, 
 				sUserID, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				sLicenseModuleLevel)){
 			s += "&nbsp;" + createAndUploadFolderButton();
 		}
@@ -614,7 +614,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				SMSystemFunctions.SMViewWorkOrderDocuments, 
 				sUserID, 
 				getServletContext(), 
-				sConf,
+				sDBID,
 				sLicenseModuleLevel)){
 			
 			// TJR - 9/29/2017 - we don't want to reload the work order object here, because it may wipe out any changes to 
@@ -625,7 +625,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			// but not saved, which is what we wanted to happen.  But reloading the work order object here was wiping
 			// them out.
 			//try {
-			//	if(!wo_order.load(sConf, sUser, getServletContext())){
+			//	if(!wo_order.load(sDBID, sUser, getServletContext())){
 			//		s += "Could not load GDrive link";
 			//	}
 			//} catch (Exception e) {

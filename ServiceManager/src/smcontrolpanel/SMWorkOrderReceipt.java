@@ -30,7 +30,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 	public SMWorkOrderReceipt(	){
 	}
 	public String processReport(
-			String sConf,
+			String sDBID,
 			String sWorkOrderNumber,
 			String sUserName,
 			String sUserID,
@@ -49,7 +49,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) 
 			+ ".processReport - user: " 
@@ -67,7 +67,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 				sWorkOrderNumber,
 				sUserName,
 				sUserID,
-				sConf,
+				sDBID,
 				context,
 				bEmailMode
 			);
@@ -148,7 +148,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			SMOrderHeader order,
 			String sUser,
 			String sUserID,
-			String sConf,
+			String sDBID,
 			Connection conn,
 			ServletContext context
 	) throws Exception{
@@ -170,7 +170,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		}
 		
 		try {
-			s += "<TD width = 33%>" +  printLogoTable(wo, sUserID, sUser, sConf, context, conn, false) + "</TD>"; //don't use logo for now
+			s += "<TD width = 33%>" +  printLogoTable(wo, sUserID, sUser, sDBID, context, conn, false) + "</TD>"; //don't use logo for now
 		} catch (Exception e1) {
 			throw new Exception("ERROR printing logo - " + e1.getMessage() + ".");
 		}
@@ -257,7 +257,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 	private String getFileNameFromDBA (SMOrderHeader oh,
 			   						   String sUserID, 
 			   						   String sUserFullName, 
-			   						   String sConf, 
+			   						   String sDBID, 
 			   						   ServletContext context, 
 			   						   Connection conn) throws Exception{
 		String SQL = "";
@@ -272,7 +272,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 			SQL, 
 			context, 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) + ".sendEmail - " + sUserID
 			+ " - "
@@ -288,7 +288,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 			return sLogoFileName;
 		}
 	*/
-	private String printLogoTable(SMWorkOrderHeader wo, String sUserID, String sUserFullName, String sConf, ServletContext context, Connection conn, boolean bPrintLogo) throws Exception{
+	private String printLogoTable(SMWorkOrderHeader wo, String sUserID, String sUserFullName, String sDBID, ServletContext context, Connection conn, boolean bPrintLogo) throws Exception{
 		String s = "";
 		s += "<TABLE style= \" width:100%; border-style:none; font-family: Arial; font-size: small;\" >";
 		s += "<TR>";

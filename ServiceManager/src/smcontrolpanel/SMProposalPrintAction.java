@@ -264,7 +264,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		  );
 		  */
 	}
-	private void printProposal(HttpServletRequest req,HttpServletResponse res, PrintWriter out, String sConf, String sUserName) throws Exception{
+	private void printProposal(HttpServletRequest req,HttpServletResponse res, PrintWriter out, String sDBID, String sUserName) throws Exception{
 	    String sNumberOfCopies = "";
 	    String sProposalNumber = req.getParameter(SMProposal.Paramstrimmedordernumber);
 	    //Get the number of copies:
@@ -279,7 +279,7 @@ public class SMProposalPrintAction extends HttpServlet {
 	    	iNumberOfCopies, 
 	    	sProposalNumber, 
 	    	SMProposalForm.REQUEST_TYPE_PRINT,
-	    	sConf,
+	    	sDBID,
 	    	clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, req).compareToIgnoreCase("") != 0,
 	    	sUserName
 	    	)

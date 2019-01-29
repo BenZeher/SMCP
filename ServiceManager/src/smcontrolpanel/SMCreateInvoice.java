@@ -54,12 +54,12 @@ public class SMCreateInvoice extends java.lang.Object{
 			String sUserID, 
 			String sUserFullName,
 			Connection conn,
-			String sConf,
+			String sDBID,
 			ServletContext context) 
 					throws Exception{
 		int iInvLineNum = 0;
 		BigDecimal bdTRate = new BigDecimal("0.0000");
-		SMLogEntry log = new SMLogEntry(sConf, context); 
+		SMLogEntry log = new SMLogEntry(sDBID, context); 
 		if (bDebugMode){
 			System.out.println("[1540839462] - Starting creatInvoice function for invoice number " +cInvoice+ " from user " + sUserFullName + " at " + System.currentTimeMillis());
 			log.writeEntry(
@@ -342,7 +342,7 @@ public class SMCreateInvoice extends java.lang.Object{
 		}
 
 		if (!cOrder.save_order_unprotected_by_transaction(conn, 
-				sConf,
+				sDBID,
 				context,
 				sUserID, 
 				sUserFullName,

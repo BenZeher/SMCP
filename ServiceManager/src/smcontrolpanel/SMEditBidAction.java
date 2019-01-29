@@ -389,12 +389,12 @@ public class SMEditBidAction extends HttpServlet{
 		sTemp += "smcontrolpanel.SMCreateGDriveFolder";
 		return sTemp;
 	}
-	private SMOrderHeader loadNewOrderOrQuote(ARCustomer cus, SMBidEntry saleslead, String sConf, int iOrderType, String sUser) throws Exception{
+	private SMOrderHeader loadNewOrderOrQuote(ARCustomer cus, SMBidEntry saleslead, String sDBID, int iOrderType, String sUser) throws Exception{
 		
 		SMOrderHeader ord = new SMOrderHeader();
 		String sCurrentDate = SMUtilities.EMPTY_DATE_VALUE;
 		try {
-			clsDBServerTime st = new clsDBServerTime(sConf, sUser, getServletContext());
+			clsDBServerTime st = new clsDBServerTime(sDBID, sUser, getServletContext());
 			sCurrentDate = st.getCurrentDateTimeInSelectedFormat(SMUtilities.DATE_FORMAT_FOR_DISPLAY);
 		} catch (Exception e1) {
 			//Nothing here - just leave it blank if something fails here
@@ -488,7 +488,7 @@ public class SMEditBidAction extends HttpServlet{
 		//If we need to copy the sales lead Google Drive folder URL, do that, also:
 		SMOption opt = new SMOption();
 		try {
-			opt.load(sConf, getServletContext(), sUser);
+			opt.load(sDBID, getServletContext(), sUser);
 		} catch (Exception e) {
 			throw new Exception("Error [1441741643] reading SM Options to copy Doc folder URL - " + opt.getErrorMessage());
 		}

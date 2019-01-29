@@ -544,14 +544,14 @@ public class SMEditLocationsEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
 		sSQLList.add((String) SMMySQLs.Delete_Location_SQL(sCode));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -562,13 +562,13 @@ public class SMEditLocationsEdit extends HttpServlet {
 		}		
 	}
 	
-	private void Add_Record(String sCode, String sConf, PrintWriter pwOut) throws Exception{
+	private void Add_Record(String sCode, String sDBID, PrintWriter pwOut) throws Exception{
 		
 		//First, make sure there isn't a user by this name already:
 		String sSQL = SMMySQLs.Get_Location_By_Code(sCode);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				rs.close();
@@ -584,7 +584,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".adding new location"
 				);

@@ -536,7 +536,7 @@ public class SMMasterEditEntry  extends java.lang.Object{
 	        ResultSet rsMechanics = SMUtilities.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (2) - User: " + sUserName);
 

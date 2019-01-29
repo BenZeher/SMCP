@@ -648,14 +648,14 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		return bResult;
 	}
 	
-	private boolean validateWageScaleRecords(ServletContext context, String sConf, String sUserID, String sUserFullName ) {
+	private boolean validateWageScaleRecords(ServletContext context, String sDBID, String sUserID, String sUserFullName ) {
 		boolean bIsValid = false;
 		String sSQL = "";
     	ResultSet rs = null;
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() 
 						+ ".validateWageScaleRecords - user: " 

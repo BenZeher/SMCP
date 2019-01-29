@@ -176,14 +176,15 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 	
 	private boolean Delete_Record(String sID,
 								  PrintWriter pwOut,
-								  String sConf){
+								  String sDBID
+								  ){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
 		sSQLList.add(Delete_Sales_Group_SQL(sID));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -194,13 +195,13 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 		}		
 	}
 	
-	private boolean Add_Record(String sID, String sConf, PrintWriter pwOut){
+	private boolean Add_Record(String sID, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
 		String sSQL = Get_Sales_Group_By_ID(sID);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectName + " '" + sID + "' already exists - it cannot be added.<BR>");
@@ -218,7 +219,7 @@ public class SMEditSalesGroupsEdit extends HttpServlet {
 		sSQL = Add_New_Sales_Group_SQL(sID);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

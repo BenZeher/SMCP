@@ -121,13 +121,13 @@ public class SMMapDisplayAppointments extends HttpServlet {
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080589]");
 		return;
 	}
-	private String getMapCenterAddress(String sConf, String sUserID,String sUserFullName, ServletContext context) throws SQLException{
+	private String getMapCenterAddress(String sDBID, String sUserID,String sUserFullName, ServletContext context) throws SQLException{
 		String sCenterAddress = "";
 		String SQL = "SELECT * FROM " + SMTablecompanyprofile.TableName;
 		ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".getMapCenterAddress - userID: " 
 				+ sUserID

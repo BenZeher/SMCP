@@ -181,7 +181,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 	}
 	private String displayContractData(
 			String sOrderNum, 
-			String sConf, 
+			String sDBID, 
 			String sUserID,
 			String sUserFullName){
 
@@ -199,7 +199,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL",
 					this.toString() + ".loadChangeOrders - user: " + sUserID
 					+ " - "

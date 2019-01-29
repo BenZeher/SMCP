@@ -595,7 +595,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		
 	}
 	
-	private String isUserUsingCustomLink(String sUserID, String sCustomLinkID, String sConf){
+	private String isUserUsingCustomLink(String sUserID, String sCustomLinkID, String sDBID){
 		String s = "";
 		 try{
 		       String sSQL = "SELECT * "
@@ -606,7 +606,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				    	+ "(" + SMTableuserscustomlinks.icustomlinkid + "=" + sCustomLinkID + ")"
 				    	+ ")"
 				    	;
-		        ResultSet rsCustomLink = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		        ResultSet rsCustomLink = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	if (rsCustomLink.next()){
 	        		s = " checked='yes' ";        		
 	        	}
@@ -617,7 +617,7 @@ public class SMEditUsersEdit extends HttpServlet {
 
 		return s;
 	}
-	private String isUserInSecurityGroup(String sUserID, String sSecurityGroup, String sConf){
+	private String isUserInSecurityGroup(String sUserID, String sSecurityGroup, String sDBID){
 		String s = "";
 		 try{
 		       String sSQL = "SELECT"
@@ -629,7 +629,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		        	+ "(" +  SMTablesecurityusergroups.sSecurityGroupName + "='" + sSecurityGroup + "')"
 		        	+ ")" 
 		        ;
-		        ResultSet rsSecurityGroup = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		        ResultSet rsSecurityGroup = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	if (rsSecurityGroup.next()){
 	        		s = " checked='yes' ";        		
 	        	}
@@ -641,7 +641,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String isUserInAppointmentGroup(String sUserID, String sAppointmentGroup, String sConf){
+	private String isUserInAppointmentGroup(String sUserID, String sAppointmentGroup, String sDBID){
 		String s = "";
 		 try{
 		       String sSQL = "SELECT"
@@ -653,7 +653,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		        	+ "(" +  SMTableappointmentusergroups.sappointmentgroupname + "='" + sAppointmentGroup + "')"
 		        	+ ")" 
 		        ;
-		        ResultSet rsSecurityGroup = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		        ResultSet rsSecurityGroup = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	if (rsSecurityGroup.next()){
 	        		s = " checked='yes' ";        		
 	        	}
@@ -665,7 +665,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String isUserInAlarmSequence(String sUserID, String sAlarmSequence, String sConf){
+	private String isUserInAlarmSequence(String sUserID, String sAlarmSequence, String sDBID){
 		String s = "";
 		 try{
 		       String sSQL = "SELECT"
@@ -677,7 +677,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		        	+ "(" +  SMTablessalarmsequenceusers.lalarmsequenceid + "=" + sAlarmSequence + ")"
 		        	+ ")" 
 		        ;
-		        ResultSet rsAlarmSequences = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		        ResultSet rsAlarmSequences = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	if (rsAlarmSequences.next()){
 	        		s = " checked='yes' ";        		
 	        	}
@@ -688,7 +688,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String isDeviceUser(String sUserID, String sDevice, String sConf){
+	private String isDeviceUser(String sUserID, String sDevice, String sDBID){
 		String s = "";
 		 try{
 		       String sSQL = "SELECT"
@@ -700,7 +700,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		        	+ "(" +  SMTablessdeviceusers.ldeviceid + "='" + sDevice + "')"
 		        	+ ")" 
 		        ;
-		        ResultSet rsDevices = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+		        ResultSet rsDevices = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	if (rsDevices.next()){
 	        		s = " checked='yes' ";        		
 	        	}

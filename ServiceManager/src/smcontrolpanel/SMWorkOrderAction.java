@@ -672,7 +672,7 @@ public class SMWorkOrderAction extends HttpServlet{
 	private String getHTMLWorkOrderForm(
 			int iNumberOfCopies, 
 			String sWorkOrderNumber, 
-			String sConf,
+			String sDBID,
 			SMMasterEditAction smaction,
 			boolean bEmailMode) throws Exception{
 		String s = 
@@ -696,7 +696,7 @@ public class SMWorkOrderAction extends HttpServlet{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".printProposal - user: " + smaction.getUserName()
 					);
@@ -712,7 +712,7 @@ public class SMWorkOrderAction extends HttpServlet{
 	 		
 
 	 		
-	 		s += wor.processReport(sConf, 
+	 		s += wor.processReport(sDBID, 
 	 				sWorkOrderNumber, 
 	 				smaction.getUserName(),
 	 				smaction.getUserID(),

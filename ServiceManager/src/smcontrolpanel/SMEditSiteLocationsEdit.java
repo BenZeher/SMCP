@@ -200,14 +200,14 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 			String sCustomerShipTo,
 			String sLabel,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
 		sSQLList.add((String) SMMySQLs.Delete_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -222,14 +222,14 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 			String sCustomerNumber, 
 			String sCustomerShipTo, 
 			String sLabel, 
-			String sConf, 
+			String sDBID, 
 			PrintWriter pwOut){
 		
 		//First, make sure there isn't a record already:
 		String sSQL = SMMySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectName + " '" + sLabel + "' already exists for this customer and ship to - it cannot be added.<BR>");
@@ -246,7 +246,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 		sSQL = SMMySQLs.Add_New_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

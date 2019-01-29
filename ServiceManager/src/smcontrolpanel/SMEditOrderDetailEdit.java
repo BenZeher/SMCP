@@ -129,8 +129,8 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 					+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
 					+ detail.getM_strimmedordernumber()
 					+ "&CallingClass=" + smedit.getCallingClass()
-					+ "&Warning=" + "Could not get data connection."
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+					+ "&Warning=" + "Could not get data connection."
 			);
 			return;
 		}
@@ -197,8 +197,8 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 								+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
 								+ detail.getM_strimmedordernumber()
 								+ "&CallingClass=" + smedit.getCallingClass()
-								+ "&Warning=" + detail.getErrorMessages()
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+								+ "&Warning=" + detail.getErrorMessages()
 						);
 						return;
 					}
@@ -210,8 +210,8 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 								+ "?" + SMOrderHeader.Paramstrimmedordernumber + "=" 
 								+ detail.getM_strimmedordernumber()
 								+ "&CallingClass=" + smedit.getCallingClass()
-								+ "&Warning=" + detail.getErrorMessages()
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+								+ "&Warning=" + detail.getErrorMessages()
 						);
 						return;
 					}

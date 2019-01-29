@@ -122,7 +122,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 	}
 	private void deleteCO(
 		String sChangeOrderID, 
-		String sConf, 
+		String sDBID, 
 		String sUser, 
 		String sUserID, 
 		String sUserFullName,  
@@ -135,7 +135,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".deleteCO - user: " + sUserID + " - " + sUserFullName
 		);
@@ -161,7 +161,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 
 		return;
 	}
-	private void saveChangeOrders(String sConf, String sUser) throws Exception{
+	private void saveChangeOrders(String sDBID, String sUser) throws Exception{
 
 		//First, go through the array and format the change order numbers:
 		for (int i = 0; i < arrChangeOrders.size(); i++){
@@ -201,7 +201,7 @@ public class SMEditChangeOrdersAction extends HttpServlet{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".saveChangeOrders - user: " + sUser
 		);

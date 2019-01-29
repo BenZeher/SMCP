@@ -345,7 +345,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 			m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
 		}
     }
-    public void calculateBillingValues(ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void calculateBillingValues(ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
 
     	int iLastRow;
     	int iLastMaterialRow;
@@ -360,7 +360,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		System.out.println("In " + this.toString() + ".calculateValues - before validate_entry_fields");
     	}
 		Connection conn = clsDatabaseFunctions.getConnection(
-				context, sConf, 
+				context, sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".calculateBillingValues - user: " + sUserID + " - " + sUserFullName));
 		if (conn == null){
@@ -612,21 +612,21 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	m_arrLines.add(new SMDirectEntryLine());
     	m_arrLines.get(m_arrLines.size() - 1).setM_llinenumber(Integer.toString(m_arrLines.size()));
     }
-    public void createItemsAndAddToOrder(String sConf, 
+    public void createItemsAndAddToOrder(String sDBID, 
     		ServletContext context,  
     		String sUserName,
     		String sUserID, 
     		String sUserFullName) throws Exception{
     	
     	//try {
-		//	calculateBillingValues(context, sConf, sUser);
+		//	calculateBillingValues(context, sDBID, sUser);
 		//} catch (Exception e2) {
 		//	throw new Exception("Error calculating: " + e2.getMessage());
 		//}
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			SMUtilities.getFullClassName(this.toString()) + ".createItemsAndAddToOrder - user: " + sUserID + " - " + sUserFullName);
     	if (conn == null){

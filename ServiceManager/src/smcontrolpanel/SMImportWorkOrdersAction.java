@@ -77,7 +77,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 		String sWorkOrderID, 
 		String sLocation, 
 		String sCategory,
-		String sConf, 
+		String sDBID, 
 		String sUserID,
 		String sUserFullName,
 		boolean bDoNotShipExistingItems) throws Exception{
@@ -86,7 +86,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".importWorkOrder - user: " + sUserFullName
 			);
@@ -101,7 +101,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 			throw new Exception ("Error [1395411914] starting data transaction.");
 		}
 		try {
-			processImport(conn, sConf, sUserID, sUserFullName, sWorkOrderID, sLocation, sCategory, bDoNotShipExistingItems);
+			processImport(conn, sDBID, sUserID, sUserFullName, sWorkOrderID, sLocation, sCategory, bDoNotShipExistingItems);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080576]");
@@ -118,7 +118,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 	}
 	private void processImport(
 			Connection conn, 
-			String sConf, 
+			String sDBID, 
 			String sUserID,
 			String sUserFullName,
 			String sWorkOrderID,
@@ -130,7 +130,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 		if (bDebugMode){
 			System.out.println("[1395431097] - 1");
 		}
-		SMLogEntry log = new SMLogEntry(sConf, getServletContext());
+		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		//Import the work order:
 		SMWorkOrderHeader wo = new SMWorkOrderHeader();
 		wo.setlid(sWorkOrderID);
@@ -207,7 +207,7 @@ public class SMImportWorkOrdersAction extends HttpServlet{
 						sLocation,
 						sCategory,
 						conn, 
-						sConf,
+						sDBID,
 						getServletContext(), 
 						sUserID,
 						sUserFullName

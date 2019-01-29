@@ -105,7 +105,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 	}
 	
 	private void List_Criteria(PrintWriter pwOut, 
-							   String sConf,
+							   String sDBID,
 							   String sUser,
 							   String sUserID,
 							   String sUserFullName,
@@ -164,7 +164,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 			ResultSet rsTaxJurisdictions = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".List_Criteria - user: " 
 				+ sUserID
@@ -240,7 +240,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 			rsCostCenters = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".List_Criteria - user: " + sUserID
 				+ " - "

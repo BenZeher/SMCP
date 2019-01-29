@@ -19,7 +19,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class ASEditAlarmSequencesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String OBJECT_NAME = SSAlarmSequence.ParamObjectName;
+	private static final String OBJECT_NAME = SSAlarmSequence.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

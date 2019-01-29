@@ -30,11 +30,6 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
 	//formats
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String m_sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -52,13 +47,14 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String m_sWarning = "";
 	    /**************Get Parameters**************/
 	    String sLastActivityDate = ARUtilities.get_Request_Parameter("LastActivityDate", request);
 	  
@@ -145,22 +141,26 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     		out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Set checked customers to INACTIVE----\">");
     	}
     	
-    	if (!printList(
-    		getServletContext(),
-    		sDBID,
-    		sStartingCustomer,
-    		sEndingCustomer,
-    		datLastActivityDate,
-    		bIncludeInactives,
-    		out
-    		)){
+    	try {
+			printList(
+				getServletContext(),
+				sDBID,
+				sStartingCustomer,
+				sEndingCustomer,
+				datLastActivityDate,
+				bIncludeInactives,
+				out,
+				sUserID,
+				sUserFullName
+			);
+		} catch (Exception e) {
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + m_sWarning
+    				+ "Warning=" + e.getMessage()
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
-    	}
+		}
     		
     	if (bIncludeInactives){
     		out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Set checked customers to ACTIVE----\">");
@@ -190,15 +190,17 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
    		"<TR><TD COLSPAN=6><HR></TD><TR>");
 		
 	}
-	private boolean printList(
+	private void printList(
     		ServletContext context,
     		String sConf,
     		String sStartingCust,
     		String sEndingCust,
     		java.sql.Date datLastActivity,
     		boolean bIncInactives,
-    		PrintWriter pwOut
-    		){
+    		PrintWriter pwOut,
+    		String sUserID,
+    		String sUserFullName
+    		) throws Exception{
 
 		String SQL = "SELECT "
 			+ "NothingCurrentCustomers." + SMTablearcustomer.sCustomerNumber
@@ -300,11 +302,9 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     		pwOut.println("</TABLE><BR>");
     		pwOut.println(lCustomersPrinted + " customers printed.");
     	}catch (SQLException e){
-    		System.out.println("Error reading customers to set to inactive - " + e.getMessage() + ".");
-    		m_sWarning = "Error reading customers to set to inactive - " + e.getMessage() + ".";
-    		return false;
+    		throw new Exception("Error [1548726997] reading customers to set to inactive - " + e.getMessage() + ".");
     	}
-		return true;
+		return;
 	}
 	private String reverseSQLDateString(String sSQLDateString){
 		

@@ -110,10 +110,10 @@ public class SSController extends clsMasterEntry{
 		m_scontrollerhostname = clsManageRequestParameters.get_Request_Parameter(
 				SSConstants.QUERY_KEY_CONTROLLER_HOSTNAME, req).trim().replace("&quot;", "\"");
     }
-    public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

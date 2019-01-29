@@ -84,10 +84,10 @@ public class SSDevice extends clsMasterEntry{
 			m_sactive = "0";
 		}
     }
-    public void load (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

@@ -22,8 +22,6 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class ASAuthorizeDeviceUsersAction extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String sCompanyName = "";
-	private String sDBID = "";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -39,8 +37,8 @@ public class ASAuthorizeDeviceUsersAction extends HttpServlet {
 	    String subtitle = "";
 		
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 

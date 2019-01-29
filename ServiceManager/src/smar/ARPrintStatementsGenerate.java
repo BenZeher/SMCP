@@ -33,21 +33,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 	//A/R print statements
 
 	private static final long serialVersionUID = 1L;
-	//formats
 
-	//variables for customer total calculations
-	private BigDecimal dTotalCurrent = new BigDecimal(0);
-	private BigDecimal dTotal1st = new BigDecimal(0);
-	private BigDecimal dTotal2nd = new BigDecimal(0);
-	private BigDecimal dTotal3rd = new BigDecimal(0);
-	private BigDecimal dTotalOver = new BigDecimal(0);
-
-	private String sTempTableName = "";
-	
-	private int iCurrent;
-	private int i1st;
-	private int i2nd;
-	private int i3rd;
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -124,10 +110,11 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			
 			String sStartingCustomer = request.getParameter("StartingCustomer");
 			String sEndingCustomer = request.getParameter("EndingCustomer");
-			iCurrent = Integer.parseInt(request.getParameter("Current").trim());
-			i1st = Integer.parseInt(request.getParameter("1st").trim());
-			i2nd = Integer.parseInt(request.getParameter("2nd").trim());
-			i3rd = Integer.parseInt(request.getParameter("3rd").trim());
+			
+			int iCurrent = Integer.parseInt(request.getParameter("Current").trim());
+			int i1st = Integer.parseInt(request.getParameter("1st").trim());
+			int i2nd = Integer.parseInt(request.getParameter("2nd").trim());
+			int i3rd = Integer.parseInt(request.getParameter("3rd").trim());
 			String sAgedBy = request.getParameter("AgedBy");
 			//get selected doc types
 			ArrayList<Integer> alDocTypes = new ArrayList<Integer>(0);
@@ -166,6 +153,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				return;
 			}
 
+			String sTempTableName = "ARSTATMENTTMP" + Long.toString(System.currentTimeMillis());
 			try {
 				createTemporaryTables(
 						conn, 
@@ -180,7 +168,8 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 						sAgedBy,
 						bPrintOnlyOverCurrent,
 						bPrintZeroBalanceStatements,
-						bPrintOnlyRequireStatement
+						bPrintOnlyRequireStatement,
+						sTempTableName
 				);
 			} catch (Exception e1) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067570]");
@@ -192,7 +181,6 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				return;
 			}
 
-			//System.out.println("In " + this.toString() + ".main - created temporary tables");
 			String sSQL = "SELECT * FROM " + sTempTableName
 				+ " WHERE ("
 						+ "(dapplytodoccurrentamt != 0.00)"
@@ -204,6 +192,13 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			String sCurrentCustomer = "";
 			BigDecimal bdCreditLimit = new BigDecimal(0);
+			
+			BigDecimal dTotalCurrent = new BigDecimal(0);
+			BigDecimal dTotal1st = new BigDecimal(0);
+			BigDecimal dTotal2nd = new BigDecimal(0);
+			BigDecimal dTotal3rd = new BigDecimal(0);
+			BigDecimal dTotalOver = new BigDecimal(0);
+			
 			//System.out.println("In " + this.toString() + ".main - looping through rsBalanceList");
 			long lNumberOfRecords = 0;
 			while (rsBalanceList.next()){
@@ -213,7 +208,25 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 					if (sCurrentCustomer.compareToIgnoreCase("") != 0){
 						//Print the footer, if the record is for a new customer:
-						printCustomerFooter(out, rsBalanceList.getBigDecimal("dcreditlimit"));
+						printCustomerFooter(
+							out, 
+							rsBalanceList.getBigDecimal("dcreditlimit"),
+							dTotal1st,
+							dTotal2nd,
+							dTotal3rd,
+							dTotalOver,
+							dTotalCurrent,
+							iCurrent,
+							i1st,
+							i2nd,
+							i3rd
+						);
+						//Reset the customer totals:
+						dTotalCurrent = BigDecimal.ZERO;
+						dTotal1st = BigDecimal.ZERO;
+						dTotal2nd = BigDecimal.ZERO;
+						dTotal3rd = BigDecimal.ZERO;
+						dTotalOver = BigDecimal.ZERO;
 					}
 
 					//Print the customer header:
@@ -298,7 +311,19 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			//Print the footer for the last customer, if at least one customer was found:
 			if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-				printCustomerFooter(out, bdCreditLimit);
+				printCustomerFooter(
+					out, 
+					bdCreditLimit,
+					dTotal1st,
+					dTotal2nd,
+					dTotal3rd,
+					dTotalOver,
+					dTotalCurrent,
+					iCurrent,
+					i1st,
+					i2nd,
+					i3rd
+				);
 			}
 
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067572]");
@@ -618,7 +643,16 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 	}
 	private void printCustomerFooter(
 			PrintWriter out,
-			BigDecimal bdCreditLimit){
+			BigDecimal bdCreditLimit,
+			BigDecimal dTotal1st,
+			BigDecimal dTotal2nd,
+			BigDecimal dTotal3rd,
+			BigDecimal dTotalOver,
+			BigDecimal dTotalCurrent,
+			int iCurrent,
+			int i1st,
+			int i2nd,
+			int i3rd){
 		//End the transactions table:
 		out.println("</TABLE>");
 
@@ -682,13 +716,6 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		//Page Break:
 		out.println("<P CLASS=\"breakhere\">");
 
-		//Reset the customer totals:
-		dTotalCurrent = BigDecimal.ZERO;
-		dTotal1st = BigDecimal.ZERO;
-		dTotal2nd = BigDecimal.ZERO;
-		dTotal3rd = BigDecimal.ZERO;
-		dTotalOver = BigDecimal.ZERO;
-
 		return;
 
 	}
@@ -705,10 +732,10 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			String sAgedBy,
 			boolean bPrintOnlyOverCurrent,
 			boolean bIncludeZeroBalanceStatements,
-			boolean bPrintOnlyRequireStatement
+			boolean bPrintOnlyRequireStatement,
+			String sTempTableName
 	) throws Exception{
 
-		sTempTableName = "ARSTATMENTTMP" + Long.toString(System.currentTimeMillis());
 		String SQL;
 
 		try{

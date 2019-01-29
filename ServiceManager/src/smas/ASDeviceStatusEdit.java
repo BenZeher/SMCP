@@ -40,7 +40,6 @@ public class ASDeviceStatusEdit  extends HttpServlet {
 	public static final String PARAMETER_LOCATION_RECORDING_VALUE_ALLOWED = "ALLOWED";
 
 	private static boolean bDebugMode = false;
-	//private static final String OBJECT_NAME = SSDevice.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {

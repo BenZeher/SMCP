@@ -16,7 +16,7 @@ import smcontrolpanel.SMSystemFunctions;
 public class ASConfigureControllerAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String OBJECT_NAME = SSController.ParamObjectName + " configuration";
+	private static final String OBJECT_NAME = SSController.ParamObjectName + " configuration";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

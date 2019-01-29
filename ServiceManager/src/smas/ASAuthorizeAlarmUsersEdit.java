@@ -26,9 +26,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ASAuthorizeAlarmUsersEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUser = "";
 	
 	public static final String AUTHORIZE_USERS_BUTTON_LABEL = "Update alarm users";
 	public static final String USER_CHECKBOX_PARAMETER_PREFIX = "ALARMUSER";
@@ -50,9 +47,9 @@ public class ASAuthorizeAlarmUsersEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sAlarmSequenceID = clsManageRequestParameters.get_Request_Parameter(SMTablessalarmsequences.lid, request);
 		PrintWriter out = response.getWriter();
 		Connection conn;

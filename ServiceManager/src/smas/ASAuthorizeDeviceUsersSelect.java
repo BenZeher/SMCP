@@ -19,8 +19,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ASAuthorizeDeviceUsersSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smas.ASAuthorizeDeviceUsersEdit";
-	private static String OBJECT_NAME = "authorized device users";
+	private static final String sCalledClassName = "smas.ASAuthorizeDeviceUsersEdit";
+	private static final String OBJECT_NAME = "authorized device users";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

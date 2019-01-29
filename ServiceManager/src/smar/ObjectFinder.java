@@ -16,11 +16,9 @@ import smcontrolpanel.SMUtilities;
 
 public class ObjectFinder extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static String sCompanyName = "";
-	private static String sDBID = "";
-	public static int MAX_NUMBER_OF_RESULT_FIELDS = 20;
-	public static int MAX_NUMBER_OF_SEARCH_FIELDS = 20;
-	public static String DO_NOT_SHOW_MENU_LINK = "DONOTSHOWMENULINK";
+	public static final int MAX_NUMBER_OF_RESULT_FIELDS = 20;
+	public static final int MAX_NUMBER_OF_SEARCH_FIELDS = 20;
+	public static final String DO_NOT_SHOW_MENU_LINK = "DONOTSHOWMENULINK";
 	private static final boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -85,8 +83,8 @@ public class ObjectFinder extends HttpServlet {
 		PrintWriter out = response.getWriter();
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
 	    //Get the parameters:
 	    String sObjectName = clsManageRequestParameters.get_Request_Parameter(FinderResults.FINDER_OBJECT_NAME_PARAM, request);

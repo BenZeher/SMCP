@@ -19,8 +19,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ASEditControllersSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smas.ASEditControllersEdit";
-	private static String OBJECT_NAME = SSController.ParamObjectName;
+	private static final String sCalledClassName = "smas.ASEditControllersEdit";
+	private static final String OBJECT_NAME = SSController.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

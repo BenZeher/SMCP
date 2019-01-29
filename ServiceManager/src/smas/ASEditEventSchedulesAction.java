@@ -16,7 +16,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class ASEditEventSchedulesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String OBJECT_NAME = SSEventSchedule.ParamObjectName;
+	private static final String OBJECT_NAME = SSEventSchedule.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

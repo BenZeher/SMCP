@@ -26,9 +26,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ASAuthorizeDeviceUsersEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sDBID = "";
-	private String sCompanyName = "";
-	private String sUser = "";
 	
 	public static final String AUTHORIZE_USERS_BUTTON_LABEL = "Update device users";
 	public static final String USER_CHECKBOX_PARAMETER_PREFIX = "DEVICEUSER";
@@ -50,9 +47,9 @@ public class ASAuthorizeDeviceUsersEdit extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sDeviceID = clsManageRequestParameters.get_Request_Parameter(SMTablessdevices.lid, request);
 		PrintWriter out = response.getWriter();
 		Connection conn;

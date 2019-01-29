@@ -30,11 +30,6 @@ public class ARViewChronLogGenerate extends HttpServlet {
 	//formats
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String m_sWarning = "";
-	private String sCallingClass = "";
-	private static String sDBID = "";
-	private static String sUserID = "";
-	private static String sUserFullName = "";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -52,13 +47,14 @@ public class ARViewChronLogGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
-	    sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String m_sWarning = "";
 	    /**************Get Parameters**************/
     	String sCustomer = request.getParameter("CustomerNumber");
     	String sStartingDocumentNumber = request.getParameter("StartingDocumentNumber");
@@ -132,32 +128,36 @@ public class ARViewChronLogGenerate extends HttpServlet {
 							+ "\">Return to Accounts Receivable Main Menu</A></TD></TR></TABLE>");
     	
     	//Retrieve information
-    	if (!processReport(
-    			getServletContext(),
-    			sDBID,
-    			out,
-    			sCustomer,
-    			sStartingDocumentNumber,
-    			sEndingDocumentNumber,
-    			datStartingEventDate,
-    			datEndingEventDate,
-    			sJobNumber
-    	)){
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + m_sWarning
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-    		);			
-        	return;
-    	}else{
-    	    SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
-    	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARVIEWCHRONLOG, "REPORT", "AR View Chron Log", "[1376509289]");
-    	}
+	   try {
+		processReport(
+				getServletContext(),
+				sDBID,
+				out,
+				sCustomer,
+				sStartingDocumentNumber,
+				sEndingDocumentNumber,
+				datStartingEventDate,
+				datEndingEventDate,
+				sJobNumber,
+				sUserID,
+				sUserFullName
+			);
+	} catch (Exception e) {
+		response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+				+ "Warning=" + m_sWarning
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+		);			
+    	return;
+	}
+
+	   SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
+	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARVIEWCHRONLOG, "REPORT", "AR View Chron Log", "[1376509289]");
 
 	    out.println("</BODY></HTML>");
 	}
 	
-	private boolean processReport(
+	private void processReport(
 			ServletContext context,
 			String sConf,
 			PrintWriter pwOut,
@@ -166,8 +166,10 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			String sEndingDoc,
 			java.sql.Date datStartingDate,
 			java.sql.Date datEndingDate,
-			String sJobNumber
-		){
+			String sJobNumber,
+			String sUserID,
+			String sUserFullName
+		) throws Exception{
 		
 		String SQL = "";
 		
@@ -253,12 +255,11 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			}
 			rs.close();
 		}catch (SQLException e){
-			m_sWarning = "Error processing data for report - " + e.getMessage() + ".";
-			return false;
+			throw new Exception("Error [1548727230] processing data for report - " + e.getMessage() + ".");
 		}
 		pwOut.println("</FONT></TABLE>");
 		
-		return true;
+		return;
 	}
 	private void printHeading(PrintWriter pwOut){
 		

@@ -19,7 +19,7 @@ import sscommon.SSConstants;
 public class ASControllerDiagnosticsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static String OBJECT_NAME = SSController.ParamObjectName;
+	private static final String OBJECT_NAME = SSController.ParamObjectName;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

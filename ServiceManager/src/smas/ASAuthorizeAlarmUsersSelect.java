@@ -19,8 +19,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ASAuthorizeAlarmUsersSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smas.ASAuthorizeAlarmUsersEdit";
-	private static String OBJECT_NAME = "authorized alarm users";
+	private static final String sCalledClassName = "smas.ASAuthorizeAlarmUsersEdit";
+	private static final String OBJECT_NAME = "authorized alarm users";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

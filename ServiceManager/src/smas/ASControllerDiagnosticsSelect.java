@@ -27,8 +27,8 @@ public class ASControllerDiagnosticsSelect extends HttpServlet {
 	public static final String DIAGNOSTIC_FUNCTION_CHOICE_VIEW_PIN_MAPPINGS_LABEL = "View controller pin-to-terminal mappings";
 	public static final String DIAGNOSTIC_FUNCTION_CHOICE_TEST_MODE_LABEL = "Turn test mode on or off";
 	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "smas.ASControllerDiagnosticsEdit";
-	private static String OBJECT_NAME = SSController.ParamObjectName + " diagnostics";
+	private static final String sCalledClassName = "smas.ASControllerDiagnosticsEdit";
+	private static final String OBJECT_NAME = SSController.ParamObjectName + " diagnostics";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

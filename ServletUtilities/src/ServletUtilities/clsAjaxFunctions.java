@@ -9,7 +9,7 @@ public class clsAjaxFunctions {
 
 	public static void ajax_Update_MySQL(
 				ServletContext context, 
-				String sConf, 
+				String sDBID, 
 				String sUserFullName,
 				String SQLCommand
 				) throws Exception{
@@ -18,7 +18,7 @@ public class clsAjaxFunctions {
 				try {
 					conn = clsDatabaseFunctions.getConnectionWithException(
 						context, 
-						sConf, 
+						sDBID, 
 						"MySQL", 
 						"clsAjaxFunctions.async_Update [1529689329] - user: " + sUserFullName);
 				} catch (Exception e) {

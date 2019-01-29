@@ -183,7 +183,7 @@ public class FAEditClassEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBIB){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
@@ -196,7 +196,7 @@ public class FAEditClassEdit extends HttpServlet {
 				+ ")"
 				;
 		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf, "MySQL", this.toString());
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBIB, "MySQL", this.toString());
 			if (rs.next()){
 				pwOut.println("This class is used on some assets - it cannot be deleted.");
 				rs.close();
@@ -213,7 +213,7 @@ public class FAEditClassEdit extends HttpServlet {
 						" WHERE" +
 						" " + SMTablefaclasses.sClass + " = '" + sCode + "'");
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBIB);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -225,7 +225,7 @@ public class FAEditClassEdit extends HttpServlet {
 	}
 	
 	private boolean Add_Record(String sCode,
-							   String sConf, 
+							   String sDBIB, 
 							   PrintWriter pwOut){
 		
 		//First, make sure there isn't a class by this name already:
@@ -237,7 +237,7 @@ public class FAEditClassEdit extends HttpServlet {
 					  	" " + SMTablefaclasses.sClass + " = '" + sCode + "'";
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBIB);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sObjectClassName + " '" + sCode + "' already exists - it cannot be added.<BR>");
@@ -264,7 +264,7 @@ public class FAEditClassEdit extends HttpServlet {
 					", ''" +
 				")"; 
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBIB); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

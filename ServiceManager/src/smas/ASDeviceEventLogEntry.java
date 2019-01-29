@@ -13,7 +13,8 @@ public class ASDeviceEventLogEntry {
 
 	private Connection conn;
 	private ServletContext context;
-	private String sConf;
+	private String m_sDBID
+	;
     public ASDeviceEventLogEntry(Connection cn)
     {
     	conn = cn;
@@ -21,7 +22,7 @@ public class ASDeviceEventLogEntry {
     public ASDeviceEventLogEntry(String sDBID, ServletContext cont)
     {
     	context = cont;
-    	sConf = sDBID;
+    	m_sDBID = sDBID;
     }
 
     public void writeEntry (
@@ -108,7 +109,7 @@ public class ASDeviceEventLogEntry {
 
 		}else{
 			try {
-				clsDatabaseFunctions.executeSQL(SQL, context, sConf, "MySQL", SMUtilities.getFullClassName(this.toString()));
+				clsDatabaseFunctions.executeSQL(SQL, context, m_sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
 			} catch (Exception e) {
 				throw new Exception("Error [1459211321] writing device event log  - " + e.getMessage() + ".");
 			}

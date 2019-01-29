@@ -97,7 +97,7 @@ public class SMPriceListCode extends java.lang.Object{
 		return load(m_sPriceListCode, context, sDBID);
 	}
 
-	public boolean save (ServletContext context, String sConf){
+	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
 		String SQL =  ARSQLs.Get_PriceListCode_By_Code(m_sPriceListCode);
@@ -106,7 +106,7 @@ public class SMPriceListCode extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL,
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".save"
 			);
@@ -132,7 +132,7 @@ public class SMPriceListCode extends java.lang.Object{
 				if(!clsDatabaseFunctions.executeSQL(
 						SQL, 
 						context, 
-						sConf,
+						sDBID,
 						"MySQL",
 						this.toString() + ".save (update)")){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
@@ -163,7 +163,7 @@ public class SMPriceListCode extends java.lang.Object{
 				if(!clsDatabaseFunctions.executeSQL(
 						SQL, 
 						context, 
-						sConf,
+						sDBID,
 						"MySQL",
 						this.toString() + ".save (insert)")){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
@@ -220,7 +220,7 @@ public class SMPriceListCode extends java.lang.Object{
 		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
 		return sQueryString;
 	}
-	public void delete(String sPriceListCode, ServletContext context, String sConf) throws Exception{
+	public void delete(String sPriceListCode, ServletContext context, String sDBID) throws Exception{
 		
 		m_sErrorMessageArray.clear();
 		
@@ -231,7 +231,7 @@ public class SMPriceListCode extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".delete (1)");
 			if(!rs.next()){
@@ -249,7 +249,7 @@ public class SMPriceListCode extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (2)");
 			if(rs.next()){
@@ -270,7 +270,7 @@ public class SMPriceListCode extends java.lang.Object{
 			ResultSet rs = ARUtilities.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (3)");
 			if(rs.next()){
@@ -284,7 +284,7 @@ public class SMPriceListCode extends java.lang.Object{
 		}
 		*/
 		SQL = ARSQLs.Delete_PriceListCode_SQL(sPriceListCode);
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL", this.toString());
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.toString());
 		
 		clsDatabaseFunctions.start_data_transaction(conn);
 		Statement stmt = conn.createStatement();

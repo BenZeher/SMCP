@@ -100,7 +100,7 @@ public class ARCustomerStatistics extends Object{
 	}
 	public boolean load(
 			ServletContext context,
-			String sConf
+			String sDBID
 			){
 		
 		try{
@@ -109,7 +109,7 @@ public class ARCustomerStatistics extends Object{
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	context,
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".load");
 

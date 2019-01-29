@@ -45,11 +45,11 @@ public class SSOptions {
     	}
 	}
     
-    public void load(ServletContext context, String sConf, String sUser) throws Exception{
+    public void load(ServletContext context, String sDBID, String sUser) throws Exception{
     	Connection conn;
     	try {
     		conn = clsDatabaseFunctions.getConnectionWithException(context, 
-    			   sConf, 
+    			   sDBID, 
     			   "MySQL",
     			   SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUser);
     	} catch (Exception e) {
@@ -82,7 +82,7 @@ public class SSOptions {
     		throw new Exception(sErrors);
     	}
     }
-    public void save(ServletContext context, String sConf, String sUserName) throws Exception{
+    public void save(ServletContext context, String sDBID, String sUserName) throws Exception{
     	
     	validate_entries();
     	
@@ -94,7 +94,7 @@ public class SSOptions {
     	try {
     		if(!clsDatabaseFunctions.executeSQL(SQL, 
     				context,
-    				sConf,
+    				sDBID,
     				"MySQL",
     				this.toString() + ".save - User: " + sUserName))
     			throw new Exception("Error [1465315105] - could not save record.");

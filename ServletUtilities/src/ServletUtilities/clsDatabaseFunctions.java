@@ -48,18 +48,18 @@ public class clsDatabaseFunctions {
 		return s;
 	}
 
-	public static Connection getConnection(ServletContext context, String sConf, String sDBType, String sCallingClass){
+	public static Connection getConnection(ServletContext context, String sDBID, String sDBType, String sCallingClass){
 		try {
-			return PoolUtilities.getConnection(context, sConf, sDBType, sCallingClass);
+			return PoolUtilities.getConnection(context, sDBID, sDBType, sCallingClass);
 		}catch (Exception e){
 			System.out.println("Error [1389965763] In ServletUtilities.getConnection - " + e.getMessage());
 			return null;
 		}
 	}
 
-	public static Connection getConnectionWithException(ServletContext context, String sConf, String sDBType, String sCallingClass) throws Exception{
+	public static Connection getConnectionWithException(ServletContext context, String sDBID, String sDBType, String sCallingClass) throws Exception{
 		try {
-			return PoolUtilities.getConnection(context, sConf, sDBType, sCallingClass);
+			return PoolUtilities.getConnection(context, sDBID, sDBType, sCallingClass);
 		}catch (SQLException e){
 			throw new Exception("Error [1389965764] getting connection - " + e.getMessage());
 		}

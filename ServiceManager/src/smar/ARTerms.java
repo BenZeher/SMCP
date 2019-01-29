@@ -172,7 +172,7 @@ public class ARTerms extends java.lang.Object{
 		return load(m_sTermsCode, context, sDBID);
 	}
 
-	public boolean save (ServletContext context, String sConf){
+	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
 		String SQL = ARSQLs.Get_Terms_By_Code(m_sTermsCode);
@@ -180,7 +180,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".save");
 			if(rs.next()){
@@ -208,7 +208,7 @@ public class ARTerms extends java.lang.Object{
 						m_iDueDayOfTheMonth, 
 						m_iDueNumberOfDays
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
 				}else{
@@ -240,7 +240,7 @@ public class ARTerms extends java.lang.Object{
 						m_iDueNumberOfDays
 					);
 
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
 				}else{
@@ -344,7 +344,7 @@ public class ARTerms extends java.lang.Object{
 				
 		return sQueryString;
 	}
-	public boolean delete(String sTermsCode, ServletContext context, String sConf){
+	public boolean delete(String sTermsCode, ServletContext context, String sDBID){
 		
 		m_sErrorMessageArray.clear();
 		
@@ -355,7 +355,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".delete (1)");
 			if(!rs.next()){
@@ -377,7 +377,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".delete (2)");
 			if(rs.next()){
@@ -399,7 +399,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (3)");
 			if(rs.next()){
@@ -420,7 +420,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (4)");
 			if(rs.next()){
@@ -442,7 +442,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (5)");
 			if(rs.next()){
@@ -464,7 +464,7 @@ public class ARTerms extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (6)");
 			if(rs.next()){
@@ -482,7 +482,7 @@ public class ARTerms extends java.lang.Object{
 		
 		try{
 			SQL = ARSQLs.Delete_Terms_SQL(sTermsCode);
-			if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting terms");
 				return false;
 			}

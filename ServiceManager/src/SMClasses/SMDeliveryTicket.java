@@ -270,10 +270,10 @@ public class SMDeliveryTicket extends clsMasterEntry{
 				
     }
 
-	public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName 
     			);
@@ -371,7 +371,7 @@ public class SMDeliveryTicket extends clsMasterEntry{
     
     public void saveFromAcceptanceScreen(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUser
 			) throws Exception{
 			
@@ -379,7 +379,7 @@ public class SMDeliveryTicket extends clsMasterEntry{
 			try {
 				conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".save [1445266321] - user: " + sUser);
 			} catch (Exception e) {
@@ -435,11 +435,11 @@ public class SMDeliveryTicket extends clsMasterEntry{
     	return;
     }
     
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -700,11 +700,11 @@ public class SMDeliveryTicket extends clsMasterEntry{
 		}
     }
 
-	public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

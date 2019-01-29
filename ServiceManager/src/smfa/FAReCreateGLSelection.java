@@ -109,7 +109,7 @@ public class FAReCreateGLSelection extends HttpServlet {
 	}
 	
 	private void List_Criteria(PrintWriter pwOut, 
-							   String sConf,
+							   String sDBIB,
 							   String sUserID,
 							   String sUserFullName,
 							   HttpServletRequest req) throws Exception{
@@ -134,7 +134,7 @@ public class FAReCreateGLSelection extends HttpServlet {
         		+ "(" + SMTableglexportheaders.ssourceledger + " = '" + SMModuleTypes.FA + "')"
         	+ ") ORDER BY " + SMTableglexportheaders.lbatchnumber + " DESC"
         ;
-        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf, "MySQL", this.toString() + ".ListCriteria - user: " 
+        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBIB, "MySQL", this.toString() + ".ListCriteria - user: " 
         												+ sUserID
         												+ " - "
         												+ sUserFullName);

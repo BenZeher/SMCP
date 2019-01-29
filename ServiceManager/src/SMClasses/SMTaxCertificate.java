@@ -110,10 +110,10 @@ public class SMTaxCertificate extends clsMasterEntry{
 		
 	    m_snewrecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
-    public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -180,11 +180,11 @@ public class SMTaxCertificate extends clsMasterEntry{
 		return true;
     }
     
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -341,11 +341,11 @@ public class SMTaxCertificate extends clsMasterEntry{
 		}
     }
 
-    public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

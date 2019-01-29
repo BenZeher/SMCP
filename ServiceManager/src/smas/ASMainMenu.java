@@ -95,7 +95,7 @@ public class ASMainMenu extends HttpServlet {
 			String sUserName, 
 			String sUserID, 
 			String sUserFullName,
-			String sConf, 
+			String sDBID, 
 			PrintWriter pwOut,
 			String sLicenseModuleLevel
 	){
@@ -136,7 +136,7 @@ public class ASMainMenu extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".buildMenus - User: " 
 					+ sUserID
@@ -189,7 +189,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -201,7 +201,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -224,7 +224,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -236,7 +236,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -268,7 +268,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -280,7 +280,7 @@ public class ASMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);

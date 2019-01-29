@@ -205,7 +205,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(asset, bisNew, out, sDBID, sUserName, request, sDBID, sUserID, sUserFullName);
+	    Edit_Record(asset, bisNew, out, sDBID, sUserName, request, sUserID, sUserFullName);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -214,15 +214,14 @@ public class FAEditAssetsEdit extends HttpServlet {
 			FAAsset asset,
 			boolean bisNew,
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBIB,
 			String sUser,
 			HttpServletRequest req,
-			String sDBID,
 			String sUserID,
 			String sUserFullName
 			){
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sFAEditAssetsEditCalledClassName + "' METHOD='POST'>");
-		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBIB + "'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + SMUtilities.getFullClassName(this.toString()) + "'>");
 
 	    pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
@@ -314,7 +313,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        ResultSet rsTypes = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBIB,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (load decpreciation type table) - User: " + sUserID
 	        	+ " - "
@@ -348,7 +347,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        ResultSet rsClasses = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBIB,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (load class table) - User: " + sUserID
 	        	+ " - "
@@ -402,7 +401,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBIB,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (load location table) - User: " + sUserID
 	        	+ " - "
@@ -694,7 +693,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        ResultSet rsTypes = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBIB,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (load glaccounts table) - User: " + sUserID
 	        	+ " - "

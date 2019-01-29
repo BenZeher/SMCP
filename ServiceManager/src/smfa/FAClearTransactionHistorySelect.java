@@ -105,7 +105,7 @@ public class FAClearTransactionHistorySelect extends HttpServlet {
 	}
 	
 	private void List_Criteria(PrintWriter pwOut, 
-							   String sConf,
+							   String sDBIB,
 							   String sUser,
 							   HttpServletRequest req) throws Exception{
 

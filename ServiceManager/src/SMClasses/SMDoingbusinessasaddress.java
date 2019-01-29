@@ -90,10 +90,10 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     		}
     }
 
-	public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() 
     			+ " - user: " 
@@ -160,11 +160,11 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     }
 
     
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -265,11 +265,11 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
 		}
     }
 
-	public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

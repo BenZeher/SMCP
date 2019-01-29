@@ -96,14 +96,14 @@ public class GLCostCenter extends java.lang.Object{
 			throw new Exception("Error [1454964791] loading cost center with lid '" + m_lid + "' using SQL: " + SQL + " - " + ex.getMessage());
 		}
 	}
-    public void save(ServletContext context, String sConf, String sUserName) throws Exception{
+    public void save(ServletContext context, String sDBIB, String sUserName) throws Exception{
 		
     	//Get connection
 		Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ":save - user: " + sUserName
 			);

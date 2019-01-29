@@ -59,16 +59,16 @@ public class ARDisplayStatistics extends HttpServlet {
 	    
 		out.println("</BODY></HTML>");
 	}
-	private boolean displayStatistics (String sCustomerCode, PrintWriter pwOut, String sConf){
+	private boolean displayStatistics (String sCustomerCode, PrintWriter pwOut, String sDBID){
 		
 		ARCustomer cust = new ARCustomer(sCustomerCode);
-		if (!cust.load(getServletContext(), sConf)){
+		if (!cust.load(getServletContext(), sDBID)){
 			pwOut.println("Error loading customer.");
 			return false;
 		}
 		
 		ARCustomerStatistics custstat = new ARCustomerStatistics(sCustomerCode);
-		if (!custstat.load(getServletContext(), sConf)){
+		if (!custstat.load(getServletContext(), sDBID)){
 			pwOut.println("Error loading customer statistics.");
 			return false;
 		}
@@ -134,7 +134,7 @@ public class ARDisplayStatistics extends HttpServlet {
 
 		pwOut.println("</TR>");
 		pwOut.println("<TD><B>Retainage balance:</B> " 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(getServletContext(), sConf)) + "</TD>");
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(getServletContext(), sDBID)) + "</TD>");
 		pwOut.println("<TD><B>Credit limit:</B> " 
 				+ cust.getM_dCreditLimit() + "</TD>");
 		
@@ -145,7 +145,7 @@ public class ARDisplayStatistics extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(),
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".displayStatistics");
 			//Display the monthly statistics:

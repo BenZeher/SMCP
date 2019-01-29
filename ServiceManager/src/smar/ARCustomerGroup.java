@@ -260,7 +260,7 @@ public class ARCustomerGroup extends java.lang.Object{
 				
 		return sQueryString;
 	}
-	public boolean delete(String sCustomerGroup, ServletContext context, String sConf){
+	public boolean delete(String sCustomerGroup, ServletContext context, String sDBID){
 		
 		m_sErrorMessageArray.clear();
 		
@@ -271,7 +271,7 @@ public class ARCustomerGroup extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".delete (1)");
 			if(!rs.next()){
@@ -292,7 +292,7 @@ public class ARCustomerGroup extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (2)");
 			if(rs.next()){
@@ -310,7 +310,7 @@ public class ARCustomerGroup extends java.lang.Object{
 		
 		try{
 			SQL = ARSQLs.Delete_CustomerGroup_SQL(sCustomerGroup);
-			if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting customer");
 				return false;
 			}

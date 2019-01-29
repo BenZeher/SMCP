@@ -103,7 +103,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 			if (sCheckFormID == null){
 				out.println("Invalid " + sObjectName + " ID. Please go back and try again.");
 			}else{
-				Edit_Record(sCheckFormID, out, sDBID, false, sUserID, sUserFullName, sDBID);
+				Edit_Record(sCheckFormID, out, sDBID, false, sUserID, sUserFullName);
 			}
 		}
 		if(request.getParameter(BUTTON_SUBMIT_DELETE) != null){
@@ -164,7 +164,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 				out.println ("You chose to add a new " + sObjectName + ", but you did not enter a new " + sObjectName + " to add.");
 			}
 			else{
-				Edit_Record(sNewCode, out, sDBID, true, sUserID, sUserFullName, sDBID);
+				Edit_Record(sNewCode, out, sDBID, true, sUserID, sUserFullName);
 			}
 		}
 
@@ -174,11 +174,11 @@ public class APEditCheckFormsEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddNew,
 			String sUserID,
-			String sUserFullName,
-			String sDBID){
+			String sUserFullName
+			){
 
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 
@@ -203,7 +203,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 				rs.next();
 				iID = rs.getInt(SMTableapcheckforms.lid);
@@ -368,7 +368,7 @@ public class APEditCheckFormsEdit extends HttpServlet {
 					;
 			
 			try {
-				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sConf, "MySQL", SMUtilities.getFullClassName(this.toString()) + ".Edit_Record - user: " 
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()) + ".Edit_Record - user: " 
 			    + sUserID
 			    + " - "
 			    + sUserFullName

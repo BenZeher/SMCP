@@ -165,7 +165,7 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 	private void Edit_Record(
 			String sParameter, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBIB,
 			boolean bAddNew,
 			String sUserID,
 			String sUserFullName,
@@ -193,7 +193,7 @@ public class GLEditFinancialStatementsEdit extends HttpServlet {
 				if (bDebug){
 					System.out.println("[1534453447] SQL = " + sSQL);
 				}
-				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBIB);
 
 				rs.next();
 				iID = rs.getInt(SMTableglstatementforms.lid);

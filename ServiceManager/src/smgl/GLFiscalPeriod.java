@@ -259,7 +259,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 			throw new Exception("Error [1530825054] loading fiscal year '" + m_sifiscalyear + "' using SQL: " + SQL + " - " + ex.getMessage());
 		}
 	}
-    public void save(ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void save(ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
 		
     	//Set the user ID and full name first:
     	set_slasteditedbyuserid(sUserID);
@@ -270,7 +270,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ":save - user: " + sUserID + " - " + sUserFullName
 			);

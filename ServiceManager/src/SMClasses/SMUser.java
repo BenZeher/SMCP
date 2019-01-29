@@ -63,7 +63,7 @@ public class SMUser extends clsMasterEntry{
 		initUserEntryVariables();
         }
     
-    public SMUser(HttpServletRequest req, ServletContext context, String sConf){
+    public SMUser(HttpServletRequest req, ServletContext context, String sDBIB){
 		super(req);
 		initUserEntryVariables(); 
 		m_lid = clsManageRequestParameters.get_Request_Parameter(SMUser.Paramlid, req).trim();
@@ -88,7 +88,7 @@ public class SMUser extends clsMasterEntry{
 				+ " WHERE " + SMTablecolortable.scolorcode + " = '" 
 				+ clsManageRequestParameters.get_Request_Parameter(Paramcolorhex, req).substring(1) + "'";
 			try{
-				ResultSet rsCoor = clsDatabaseFunctions.openResultSet(sSQL, context, sConf);
+				ResultSet rsCoor = clsDatabaseFunctions.openResultSet(sSQL, context, sDBIB);
 				if (rsCoor.next()){
 					m_susercolorcoderow = Integer.toString(rsCoor.getInt(SMTablecolortable.irow));
 					m_susercolorcodecol = Integer.toString(rsCoor.getInt(SMTablecolortable.icol));
@@ -106,10 +106,10 @@ public class SMUser extends clsMasterEntry{
 		}
     }
     
-    public void load (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -214,11 +214,11 @@ public class SMUser extends clsMasterEntry{
 					+ "' - " + e.getMessage());
 		}
     }
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -337,11 +337,11 @@ public class SMUser extends clsMasterEntry{
 		}
     }
     
-    public String getIDFromUsername( ServletContext context, String sConf, String sUser) throws Exception{
+    public String getIDFromUsername( ServletContext context, String sDBIB, String sUser) throws Exception{
        	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUser
     			);
@@ -365,11 +365,11 @@ public class SMUser extends clsMasterEntry{
 		return "-1";
     }
 
-	public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

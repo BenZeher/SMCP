@@ -752,7 +752,7 @@ public class ARTransaction extends java.lang.Object{
     	}
     	return;
     }
-    public BigDecimal getNetAmount(ServletContext context, String sConf){
+    public BigDecimal getNetAmount(ServletContext context, String sDBID){
     	
     	BigDecimal bdPending = BigDecimal.ZERO;
     	
@@ -774,7 +774,7 @@ public class ARTransaction extends java.lang.Object{
     		ResultSet rs = clsDatabaseFunctions.openResultSet(
     				SQL, 
     				context, 
-    				sConf,
+    				sDBID,
     				"MySQL",
     				this.toString() + ".getNetAmount");
     		if(rs.next()){

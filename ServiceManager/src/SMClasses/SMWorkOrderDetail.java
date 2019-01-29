@@ -113,10 +113,10 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 		}
 		m_slocationcode = clsManageRequestParameters.get_Request_Parameter(SMWorkOrderDetail.Paramslocationcode, req).trim();
 	}
-    public void load (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -353,11 +353,11 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 		//System.out.println("[007] qty assigned = " + getsbdqtyassigned());
     }
     
-    public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
+    public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -365,7 +365,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
     	if (conn == null){
     		throw new Exception("Error [1391115713] opening data connection.");
     	}
-    	SMLogEntry log = new SMLogEntry(sConf, context);
+    	SMLogEntry log = new SMLogEntry(sDBIB, context);
     	try {
 			delete (conn,  sUserID, log, iSavingFromWhichScreen, context);
 		} catch (Exception e) {

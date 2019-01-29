@@ -42,10 +42,10 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
 		m_sappointmentgroupdesc  = clsManageRequestParameters.get_Request_Parameter(
 				SMTableappointmentgroups.sappointmentgroupdesc, req).trim().replace("&quot;", "\"");
     }
-    public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -98,11 +98,11 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
 		return;
     }
     
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  HttpServletRequest request) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName,  HttpServletRequest request) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);
@@ -112,7 +112,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	}
     	
     	try {
-			save_without_data_transaction (conn, context, sConf, request);
+			save_without_data_transaction (conn, context, sDBIB, request);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067676]");
 			throw new Exception(e.getMessage());
@@ -120,7 +120,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	clsDatabaseFunctions.freeConnection(context, conn, "[1547067677]");
     	
     }
-    public void save_without_data_transaction (Connection conn, ServletContext context, String sConf, HttpServletRequest request) throws Exception{
+    public void save_without_data_transaction (Connection conn, ServletContext context, String sDBIB, HttpServletRequest request) throws Exception{
 
     	try {
 			validate_entry_fields(conn);
@@ -137,7 +137,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     	 String sSQL = "SELECT " +  SMTableappointmentgroups.sappointmentgroupname
     			 + " FROM " + SMTableappointmentgroups.TableName
     			 + " WHERE (" + SMTableappointmentgroups.igroupid + " = " + getigroupid() + ")";
-    	 ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, context, sConf);
+    	 ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, context, sDBIB);
     	 
     	 	if(rs.next()){
     	 		sOrginalGroupName = rs.getString(SMTableappointmentgroups.sappointmentgroupname);
@@ -174,7 +174,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     		 }
     			  
     		    try{
-    		    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sConf) == false){
+    		    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sDBIB) == false){
     		    		throw new Exception("Could not complete update transaction - group was not updated.<BR>");
     		    	}
     		    }catch (SQLException ex){
@@ -223,11 +223,11 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
 		}
     }
 
-    public void delete (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void delete (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " " + sUserFullName
     			);

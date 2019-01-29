@@ -124,13 +124,13 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 	private void Edit_Record(
 			String sCode, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBIB,
 			boolean bAddNew,
 			String sDBID){
 	    
 		//first, add the record if it's an 'Add':
 		if (bAddNew == true){
-			if (Add_Record (sCode, sConf, pwOut) == false){
+			if (Add_Record (sCode, sDBIB, pwOut) == false){
 				pwOut.println("ERROR - Could not add " + sCode + ".<BR>");
 				return;
 			}
@@ -149,7 +149,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 	        				" " + SMTablefadepreciationtype.TableName + 
 	        			  " WHERE" +
 	        				" " + SMTablefadepreciationtype.sDepreciationType + " = '" + sCode + "'";
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBIB);
 	        
 	        rs.next();
 	        //Display fields:
@@ -204,7 +204,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 	private boolean Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBIB){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
@@ -213,7 +213,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 						" WHERE" +
 						" " + SMTablefadepreciationtype.sDepreciationType + " = '" + sCode + "'");
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBIB);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
@@ -225,7 +225,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 	}
 	
 	private boolean Add_Record(String sCode,
-							   String sConf, 
+							   String sDBIB, 
 							   PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
@@ -237,7 +237,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 					  	" " + SMTablefadepreciationtype.sDepreciationType + " = '" + sCode + "'";
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBIB);
 			if (rs.next()){
 				//This record already exists, so we can't add it:
 				pwOut.println("The " + sDepreciationTypeObjectName + " '" + sCode + "' already exists - it cannot be added.<BR>");
@@ -266,7 +266,7 @@ public class FAEditDepreciationTypeEdit extends HttpServlet {
 					" 0" +
 				")"; 
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBIB); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");

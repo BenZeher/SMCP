@@ -158,7 +158,7 @@ public class ARCustomerShipTo extends Object{
 		return load(m_sCustomerNumber, m_sShipToCode, context, sDBID);
 	}
 
-	public boolean save (ServletContext context, String sConf){
+	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
 		String SQL = ARSQLs.Get_CustomerShipTo_By_Code(m_sCustomerNumber, m_sShipToCode);
@@ -166,7 +166,7 @@ public class ARCustomerShipTo extends Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 		        	SQL, 
 		        	context, 
-		        	sConf,
+		        	sDBID,
 		        	"MySQL",
 		        	this.toString() + ".save");
 			if(rs.next()){
@@ -200,7 +200,7 @@ public class ARCustomerShipTo extends Object{
 					clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode), 
 					clsDatabaseFunctions.FormatSQLStatement(m_sState) 
 					);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
 				}else{
@@ -237,7 +237,7 @@ public class ARCustomerShipTo extends Object{
 				clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber), 
 				clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber)
 				);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
 				}else{

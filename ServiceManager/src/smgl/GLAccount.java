@@ -117,15 +117,15 @@ public class GLAccount extends java.lang.Object{
     }
     public boolean load (
     		ServletContext context,
-    		String sConf
+    		String sDBIB
     		){
     
-    	return load (m_sacctid, context, sConf);
+    	return load (m_sacctid, context, sDBIB);
     }
     public boolean load (
         	String sAccountID,
         	ServletContext context,
-        	String sConf
+        	String sDBIB
         	){
         
     	    String SQL = ARSQLs.Get_GL_Account_SQL(sAccountID);
@@ -133,7 +133,7 @@ public class GLAccount extends java.lang.Object{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     					SQL, 
     					context,
-    					sConf,
+    					sDBIB,
     					"MySQL",
     					this.toString() + ".load"); 
     			rs.next();
@@ -156,11 +156,11 @@ public class GLAccount extends java.lang.Object{
     		}
         	return true;
         }
-    public boolean save(ServletContext context, String sConf, String sUserFullName){
+    public boolean save(ServletContext context, String sDBIB, String sUserFullName){
     	String SQL = ARSQLs.Get_GL_Account_SQL(m_sacctid);
     	
 		m_sErrorMessageArray.clear();
-		if(!validateEntries(sConf, context, sUserFullName)){
+		if(!validateEntries(sDBIB, context, sUserFullName)){
 			return false;
 		}
     	
@@ -168,7 +168,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".save");
 			if(rs.next()){
@@ -192,7 +192,7 @@ public class GLAccount extends java.lang.Object{
 						m_laccountstructureid,
 						m_laccountgroupid
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE SQL: '" + SQL + "'.");
 					return false;
 				}else{
@@ -220,7 +220,7 @@ public class GLAccount extends java.lang.Object{
 						m_laccountstructureid,
 						m_laccountgroupid
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute INSERT SQL '" + SQL + "'.");
 					return false;
 				}else{
@@ -555,7 +555,7 @@ public class GLAccount extends java.lang.Object{
 		
 		return sQueryString;
 	}
-	public boolean delete(String sGLAcct, ServletContext context, String sConf){
+	public boolean delete(String sGLAcct, ServletContext context, String sDBIB){
 		
 		m_sErrorMessageArray.clear();
 		
@@ -566,7 +566,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (1)");
 			if(!rs.next()){
@@ -587,7 +587,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (2)");
 			if(rs.next()){
@@ -607,7 +607,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (3)");
 			if(rs.next()){
@@ -627,7 +627,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (4)");
 			if(rs.next()){
@@ -653,7 +653,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (5)");
 			if(rs.next()){
@@ -673,7 +673,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (6)");
 			if(rs.next()){
@@ -693,7 +693,7 @@ public class GLAccount extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (7)");
 			if(rs.next()){
@@ -711,7 +711,7 @@ public class GLAccount extends java.lang.Object{
 			if(!clsDatabaseFunctions.executeSQL(
 					SQL, 
 					context,
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".delete (8)")){
 				m_sErrorMessageArray.add("Error deleting GL Account");

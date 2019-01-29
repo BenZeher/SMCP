@@ -367,7 +367,7 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 			boolean bChecked, 
 			boolean bEvenRow,
 			String sUser,
-			String sConf,
+			String sDBID,
 			boolean bAllowManagePublicQueries) throws SQLException {
 		String s = "";
 		s += "  <TR>" + "\n";

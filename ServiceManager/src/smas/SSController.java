@@ -177,11 +177,11 @@ public class SSController extends clsMasterEntry{
 		return;
     }
     
-    public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -278,11 +278,11 @@ public class SSController extends clsMasterEntry{
 		}
     }
 
-    public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+    public void delete (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -350,15 +350,15 @@ public class SSController extends clsMasterEntry{
 		initControllerVariables();
     }
     
-    public void deleteControllerLog (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
+    public void deleteControllerLog (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
     	
-    	load(context, sConf, sUserID, sUserFullName);
+    	load(context, sDBID, sUserID, sUserFullName);
     	
     	String sRequestString = SSUtilities.buildRequestFromServerToDeleteControllerLogFile(
     		getscontrollername(),
     		getspasscode(),
     		sUser, 
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.deleteControllerLog"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.deleteControllerLog"),
     		sServerID
     	);
     	
@@ -583,11 +583,11 @@ public class SSController extends clsMasterEntry{
         	throw new Exception(sErrors);
         }
     }
-    public void configure_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
+    public void configure_without_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -714,11 +714,11 @@ public class SSController extends clsMasterEntry{
 			throw new Exception ("Error [1463689222] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
 		}
     }
-    public String getLogFile (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
+    public String getLogFile (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1463704324] loading controller = " + e2.getMessage());
 		}
@@ -731,7 +731,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.getLogFile"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.getLogFile"),
     		sServerID
     	);
     	ASClientService client = new ASClientService();
@@ -757,11 +757,11 @@ public class SSController extends clsMasterEntry{
     			SSConstants.QUERY_EQUALS_SIGN_MASK, SSConstants.QUERY_STRING_EQUALS_SYMBOL);
     	return sLogFileBuffer;
     }
-    public String getSampleCommands (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
+    public String getSampleCommands (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1464294098] loading controller = " + e2.getMessage());
 		}
@@ -774,7 +774,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.getSampleCommands"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.getSampleCommands"),
     		sServerID
     	);
     	ASClientService client = new ASClientService();
@@ -800,11 +800,12 @@ public class SSController extends clsMasterEntry{
     			SSConstants.QUERY_EQUALS_SIGN_MASK, SSConstants.QUERY_STRING_EQUALS_SYMBOL);
     	return sResponseBuffer;
     }
-    public String getTerminalMappings (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
+    public String getTerminalMappings (ServletContext context, String sDBID
+    		, String sUser, String sUserID, String sUserFullName, String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1464294100] loading controller = " + e2.getMessage());
 		}
@@ -817,7 +818,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.getTerminalMappings"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.getTerminalMappings"),
     		sServerID
     	);
     	ASClientService client = new ASClientService();
@@ -843,11 +844,11 @@ public class SSController extends clsMasterEntry{
     			SSConstants.QUERY_EQUALS_SIGN_MASK, SSConstants.QUERY_STRING_EQUALS_SYMBOL);
     	return sResponseBuffer;
     }
-    public void updateControllerVersion (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
+    public void updateControllerVersion (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1464030225] loading controller = " + e2.getMessage());
 		}
@@ -857,7 +858,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.updateControllerVersion"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.updateControllerVersion"),
     		sServerID);
     	ASClientService client = new ASClientService();
     	try {
@@ -872,11 +873,11 @@ public class SSController extends clsMasterEntry{
 
     	return;
     }
-    public void restartController (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
+    public void restartController (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1466039397] loading controller = " + e2.getMessage());
 		}
@@ -886,7 +887,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.restartController"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.restartController"),
     		sServerID);
     	ASClientService client = new ASClientService();
     	try {
@@ -901,11 +902,11 @@ public class SSController extends clsMasterEntry{
 
     	return;
     }
-    public boolean getTestModeState (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
+    public boolean getTestModeState (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1464745368] loading controller = " + e2.getMessage());
 		}
@@ -918,7 +919,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.getTestModeState"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.getTestModeState"),
     		sServerID
     	);
     	ASClientService client = new ASClientService();
@@ -940,11 +941,11 @@ public class SSController extends clsMasterEntry{
     		return false;
     	}
     }
-    public void setTestModeState (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName,  String sTestMode, String sServerID) throws Exception{
+    public void setTestModeState (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName,  String sTestMode, String sServerID) throws Exception{
 
     	//First, load the controller:
     	try {
-			load(context, sConf, sUserID, sUserFullName);
+			load(context, sDBID, sUserID, sUserFullName);
 		} catch (Exception e2) {
 			throw new Exception("Error [1464885925] loading controller = " + e2.getMessage());
 		}
@@ -954,7 +955,7 @@ public class SSController extends clsMasterEntry{
     		getscontrollername(), 
     		getspasscode(),
     		sUser,
-    		SMUtilities.getUserFullName(sUser, context, sConf, "SSController.getTestModeState"),
+    		SMUtilities.getUserFullName(sUser, context, sDBID, "SSController.getTestModeState"),
     		sTestMode,
     		sServerID
     	);

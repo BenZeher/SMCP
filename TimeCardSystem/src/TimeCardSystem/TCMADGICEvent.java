@@ -94,14 +94,14 @@ public class TCMADGICEvent extends java.lang.Object{
 				+ " - " + ex.getMessage());
 		}
 	}
-    public void save(ServletContext context, String sConf, String sUserName, HttpServletRequest req ) throws Exception{
+    public void save(ServletContext context, String sDBID, String sUserName, HttpServletRequest req ) throws Exception{
 		
     	//Get connection
 		Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ":save - user: " + sUserName
 			);

@@ -291,7 +291,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 	}
 	private int createCallSheets(
 			HttpServletRequest req,
-			String sConf,
+			String sDBID,
 			String sUserID,
 			String sUserFullName
 	)throws Exception{
@@ -315,7 +315,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		//Get a connection then start creating call sheets:
 		Connection conn = clsDatabaseFunctions.getConnection(
 			getServletContext(), 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			this.toString() + ".createCallSheets - user: " 
 			+ sUserID

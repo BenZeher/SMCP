@@ -82,14 +82,14 @@ public class TCEmployeeType extends java.lang.Object{
 				+ " - " + ex.getMessage());
 		}
 	}
-    public void save(ServletContext context, String sConf, String sUserName, HttpServletRequest req ) throws Exception{
+    public void save(ServletContext context, String sDBID, String sUserName, HttpServletRequest req ) throws Exception{
 		
     	//Get connection
 		Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ":save - user: " + sUserName
 			);
@@ -168,7 +168,7 @@ public class TCEmployeeType extends java.lang.Object{
 	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547060127]");
     }
     
-    public void updateEmployeeTypeLinksTable(String sEmployeeTypeID, ServletContext context, String sConf, HttpServletRequest req)throws Exception{
+    public void updateEmployeeTypeLinksTable(String sEmployeeTypeID, ServletContext context, String sDBID, HttpServletRequest req)throws Exception{
     	//First, start a transaction
 	    ArrayList<String> sSQLList = new ArrayList<String>(0);
 	    //First, delete all the SecurityGroupFunctions:
@@ -190,7 +190,7 @@ public class TCEmployeeType extends java.lang.Object{
 	    }
 		  
 	    try{
-	    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sConf) == false){
+	    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sDBID) == false){
 	    		throw new Exception("Could not complete update transaction - group was not updated.<BR>");
 	    	}
 	    }catch (SQLException ex){
@@ -203,7 +203,7 @@ public class TCEmployeeType extends java.lang.Object{
     	
     }
     
-    public void updateEmployeeTypeAccessTable(String sEmployeeTypeID, ServletContext context, String sConf, HttpServletRequest req)throws Exception{
+    public void updateEmployeeTypeAccessTable(String sEmployeeTypeID, ServletContext context, String sDBID, HttpServletRequest req)throws Exception{
     	//First, start a transaction
 	    ArrayList<String> sSQLList = new ArrayList<String>(0);
 	    //First, delete all the SecurityGroupFunctions:
@@ -225,7 +225,7 @@ public class TCEmployeeType extends java.lang.Object{
 	    }
 		  
 	    try{
-	    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sConf) == false){
+	    	if (clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, context, sDBID) == false){
 	    		throw new Exception("Could not complete update transaction - group was not updated.<BR>");
 	    	}
 	    }catch (SQLException ex){

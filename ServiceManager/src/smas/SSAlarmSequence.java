@@ -104,10 +104,10 @@ public class SSAlarmSequence extends clsMasterEntry{
 		m_slastdisarmedbyfullname  = clsManageRequestParameters.get_Request_Parameter(
 				SMTablessalarmsequences.slastdisarmedbyfullname, req).trim().replace("&quot;", "\"");
 	}
-	public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void load (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -246,11 +246,11 @@ public class SSAlarmSequence extends clsMasterEntry{
 		}
 	}
 
-	public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+	public void save_without_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -363,11 +363,11 @@ public class SSAlarmSequence extends clsMasterEntry{
 		}
 	}
 
-	public void delete (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void delete (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID

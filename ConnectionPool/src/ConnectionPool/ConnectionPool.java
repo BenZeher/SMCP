@@ -212,7 +212,7 @@ public class ConnectionPool implements Runnable {
 							"in ConnectionPool.getConnection, makeBackgroundConnection triggered "
 							+ "Exception with "
 							+ "sLabel = '" + sCurrentLabel + "'"
-							+ ", sConf = '" + sDbID + "'"
+							+ ", sDBID = '" + sDbID + "'"
 							+ ", sType = '" + sType + "'"
 							+ ", sCallingClass = '" + sCallingClass + "'"
 					);			

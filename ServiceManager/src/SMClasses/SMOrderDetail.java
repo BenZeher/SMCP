@@ -644,7 +644,7 @@ public class SMOrderDetail extends clsMasterEntry{
     }
     public boolean save_line_and_update_order(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserID,
 			String sUserFullName,
 			String sCompany,
@@ -654,7 +654,7 @@ public class SMOrderDetail extends clsMasterEntry{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     		context, 
-    		sConf, 
+    		sDBIB, 
     		"MySQL", 
     		this.toString() + ".save_line_and_update_order - user: " + sUserID + " - " + sUserFullName);
     	if (conn == null){
@@ -718,7 +718,7 @@ public class SMOrderDetail extends clsMasterEntry{
     		return false;
 		}
 		
-		if (!order.save_order_without_data_transaction(conn, sConf, context, sUserID, sUserFullName, false, false, "EDITEDLINE")){
+		if (!order.save_order_without_data_transaction(conn, sDBIB, context, sUserID, sUserFullName, false, false, "EDITEDLINE")){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067719]");
 			super.addErrorMessage("Cannot load detail lines on order - " + order.getErrorMessages());

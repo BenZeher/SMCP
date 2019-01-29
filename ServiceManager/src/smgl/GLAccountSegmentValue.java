@@ -71,11 +71,11 @@ public class GLAccountSegmentValue extends java.lang.Object{
     	}
 	}
     
-    public void load(String sConf, ServletContext context, String sUser) throws Exception{
+    public void load(String sDBIB, ServletContext context, String sUser) throws Exception{
     	Connection conn;
     	try {
     		conn = clsDatabaseFunctions.getConnectionWithException(context, 
-    			   sConf, 
+    			   sDBIB, 
     			   "MySQL",
     			   SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUser);
     	} catch (Exception e) {

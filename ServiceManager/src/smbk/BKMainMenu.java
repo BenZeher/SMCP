@@ -94,7 +94,7 @@ public class BKMainMenu extends HttpServlet {
 			String sUserName, 
 			String sUserID,
 			String sUserFullName,
-			String sConf, 
+			String sDBIB, 
 			PrintWriter pwOut,
 			String sLicenseModuleLevel
 	){
@@ -135,7 +135,7 @@ public class BKMainMenu extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf,
+					sDBIB,
 					"MySQL",
 					this.toString() + ".buildMenus - User: " 
 					+ sUserID
@@ -171,7 +171,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);
@@ -183,7 +183,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);
@@ -201,7 +201,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);
@@ -213,7 +213,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);
@@ -230,7 +230,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);
@@ -242,7 +242,7 @@ public class BKMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBIB,
 					pwOut,
 					getServletContext()
 			);

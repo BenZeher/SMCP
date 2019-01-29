@@ -608,7 +608,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	/*
 	public void loadDefaultLocationToDetailLines(HttpServletRequest req,  
 								ServletContext context, 
-								String sConf, 
+								String sDBID, 
 								String sUser) throws Exception{
 	//This function must be used after the work order object is loaded
 	//in order to get the default order location on the work order detail.
@@ -617,7 +617,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if(this.getstrimmedordernumber().compareToIgnoreCase("") != 0){
 				SMOrderHeader order = new SMOrderHeader();
 				order.setM_strimmedordernumber(this.getstrimmedordernumber());
-				order.load(context, sConf, sUser);
+				order.load(context, sDBID, sUser);
 				this.getDetailByIndex(i).setslocationcode(order.getM_sLocation());
 			}//else there is no default location for this detail line
 		//Load location from the request
@@ -636,19 +636,19 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 */
 	public void saveFromConfigure(
 		ServletContext context, 
-		String sConf, 
+		String sDBIB, 
 		String sUserID,
 		String sUserFullName,
 		int iSavingFromWhichScreen
 		) throws Exception{
 		//System.out.println("[001] qty assigned = " + this.getDetailByIndex(0).getsbdqtyassigned());
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".save [1438863739] - user: " + sUserID + " - " + sUserFullName);
 		} catch (Exception e) {
@@ -659,7 +659,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			throw new Exception ("Error [1391541097] - could not start data transaction.");
 		}
 		try {
-			save_from_configure_without_data_transaction(conn, sUserID, sUserFullName, log, iSavingFromWhichScreen, sConf, context);
+			save_from_configure_without_data_transaction(conn, sUserID, sUserFullName, log, iSavingFromWhichScreen, sDBIB, context);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067901]");
@@ -676,18 +676,18 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 
 	private void saveDetailSheet(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserID,
 			String sUserFullName,
 			int iSavingFromWhichScreen
 			) throws Exception{
 			
-			SMLogEntry log = new SMLogEntry(sConf, context);
+			SMLogEntry log = new SMLogEntry(sDBIB, context);
 			Connection conn = null;
 			try {
 				conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".save [1438863740] - user: " + sUserID + " - " + sUserFullName);
 			} catch (Exception e) {
@@ -714,17 +714,17 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 	public void saveFromAcceptanceScreen(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserID,
 			String sUserFullName
 			) throws Exception{
 			
-			SMLogEntry log = new SMLogEntry(sConf, context);
+			SMLogEntry log = new SMLogEntry(sDBIB, context);
 			Connection conn = null;
 			try {
 				conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".save [1438863741] - user: " + sUserID + " - " + sUserFullName);
 			} catch (Exception e) {
@@ -735,7 +735,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				throw new Exception ("Error [1430331068] - could not start data transaction.");
 			}
 			try {
-				save_acceptance_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sConf, context);
+				save_acceptance_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sDBIB, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547067799]");
@@ -751,17 +751,17 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 	public void saveFromEditScreen(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserID,
 			String sUserFullName
 			) throws Exception{
 			
-			SMLogEntry log = new SMLogEntry(sConf, context);
+			SMLogEntry log = new SMLogEntry(sDBIB, context);
 			Connection conn = null;
 			try {
 				conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".save [1438863742] - user: " + sUserID + " - " + sUserFullName);
 			} catch (Exception e) {
@@ -772,7 +772,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				throw new Exception ("Error [1430407359] - could not start data transaction.");
 			}
 			try {
-				save_edit_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sConf, context);
+				save_edit_screen_without_data_transaction(conn, sUserID, sUserFullName, log, sDBIB, context);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547067905]");
@@ -1690,7 +1690,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     
     public void ajax_Update_Left_Previous_Time(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserFullName
 			) throws Exception{
 		
@@ -1708,7 +1708,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				+ ")";
 		    try {	    	
 		    	//Update the database
-		    	clsAjaxFunctions.ajax_Update_MySQL(context, sConf, sUserFullName, SQL);
+		    	clsAjaxFunctions.ajax_Update_MySQL(context, sDBIB, sUserFullName, SQL);
 		    	
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
@@ -1718,7 +1718,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     
     public void ajax_Update_Arrived_Current_Time(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserFullName
 			) throws Exception{
 		
@@ -1736,7 +1736,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				+ ")";
 		    try {	    	
 		    	//Update the database
-		    	clsAjaxFunctions.ajax_Update_MySQL(context, sConf, sUserFullName, SQL);
+		    	clsAjaxFunctions.ajax_Update_MySQL(context, sDBIB, sUserFullName, SQL);
 		    	
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
@@ -1746,7 +1746,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     
     public void ajax_Update_Left_Current_Time(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserFullName
 			) throws Exception{
 		
@@ -1764,7 +1764,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				+ ")";
 		    try {	    	
 		    	//Update the database
-		    	clsAjaxFunctions.ajax_Update_MySQL(context, sConf, sUserFullName, SQL);
+		    	clsAjaxFunctions.ajax_Update_MySQL(context, sDBIB, sUserFullName, SQL);
 		    	
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
@@ -1774,7 +1774,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     
     public void ajax_Update_Arrived_Next_Time(
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUserFullName
 			) throws Exception{
 		
@@ -1792,7 +1792,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				+ ")";
 		    try {	    	
 		    	//Update the database
-		    	clsAjaxFunctions.ajax_Update_MySQL(context, sConf, sUserFullName, SQL);
+		    	clsAjaxFunctions.ajax_Update_MySQL(context, sDBIB, sUserFullName, SQL);
 		    	
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
@@ -1802,7 +1802,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     
 	public void post_without_data_transaction (
 		ServletContext context, 
-		String sConf, 
+		String sDBIB, 
 		String sUserID, 
 		String sUserFullName,
 		int iSavingFromWhichScreen) throws Exception{
@@ -1810,13 +1810,13 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			throw new Exception("This work order was already posted on " + getdattimeposted() + ".");
 		}
 		//try {
-		//	save(context, sConf, sUser, iSavingFromWhichScreen);
+		//	save(context, sDBID, sUser, iSavingFromWhichScreen);
 		//} catch (Exception e) {
 		//	throw new Exception(e.getMessage());
 		//
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -1872,7 +1872,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
         		;
     	}
 
-   		SMLogEntry log = new SMLogEntry(sConf, context);
+   		SMLogEntry log = new SMLogEntry(sDBIB, context);
 
 		try {
 			clsDatabaseFunctions.executeSQL(sSQL, conn);
@@ -2132,14 +2132,14 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		return;
 	}
 	public boolean load (
-		String sConf,
+		String sDBIB,
 		String sUserFullName,
 		ServletContext context
 	) throws Exception{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) + ".load [1438863883] - user: " + sUserFullName);
 		boolean bResult = false;
@@ -2227,7 +2227,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			}
 			return true;
 		}
-	public void updateMechanicInfoFromMechID(ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void updateMechanicInfoFromMechID(ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
 		String SQL = "SELECT"
 			+ " " + SMTablemechanics.lid
 			+ ", " + SMTablemechanics.sMechFullName
@@ -2240,7 +2240,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".updateMechanicInfoFromMechID - user: " 
 				+ sUserID
@@ -2790,15 +2790,15 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
     	return;
     }
-    public void delete(ServletContext context, String sConf, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
+    public void delete(ServletContext context, String sDBIB, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
     	//If the work order has been posted, we cannot delete it:
     	if (isWorkOrderPosted()){
     		throw new Exception("This work order has been posted and cannot be deleted.");
     	}
-    	SMLogEntry log = new SMLogEntry(sConf, context);
+    	SMLogEntry log = new SMLogEntry(sDBIB, context);
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			SMUtilities.getFullClassName(this.toString()) + ".delete [1438863884] - user: " + sUserID + " - " + sUserFullName);
     	if (conn == null){
@@ -2975,7 +2975,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	orderheader.updateLinePrice(orderdetail, conn);
     	return new BigDecimal(orderdetail.getM_dExtendedOrderPrice().replace(",",""));
     }
-    public void unpostWorkOrder_without_data_transaction(ServletContext context, String sConf, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
+    public void unpostWorkOrder_without_data_transaction(ServletContext context, String sDBIB, String sUserID, String sUserFullName, int iSavingFromWhichScreen) throws Exception{
 		if(getsposted().compareToIgnoreCase("0") == 0){
 			throw new Exception("This work order is not posted.");
 		}
@@ -2991,12 +2991,12 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     			+ "(" + SMTableworkorders.lid + " = " + getlid() + ")"
     		+ ")"
     		;
-    	SMLogEntry log = new SMLogEntry(sConf, context);
+    	SMLogEntry log = new SMLogEntry(sDBIB, context);
 		try {
 			clsDatabaseFunctions.executeSQL(
 				SQL, 
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".post_without_data_transaction - user: " + sUserID + " - " + sUserFullName);
 		} catch (Exception e) {

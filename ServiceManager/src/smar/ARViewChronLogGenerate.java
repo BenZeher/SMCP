@@ -159,7 +159,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 	
 	private void processReport(
 			ServletContext context,
-			String sConf,
+			String sDBID,
 			PrintWriter pwOut,
 			String sCust,
 			String sStartingDoc,
@@ -239,7 +239,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".processReport - User: " + sUserID
 					+ " - "

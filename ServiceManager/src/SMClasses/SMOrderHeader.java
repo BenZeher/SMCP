@@ -769,10 +769,10 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 	}
 
-	public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean load (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".load - user: " + sUserID + " - " + sUserFullName + "   [1332178334] "
 		);
@@ -965,7 +965,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		return true;
 	}
-	public boolean cancelOrder (String sTrimmedOrderNumber, ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean cancelOrder (String sTrimmedOrderNumber, ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 		boolean bResult = true;
 
 		String SQL = "SELECT"
@@ -979,7 +979,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".cancelOrder - user: " 
 				+ sUserID
@@ -1016,14 +1016,14 @@ public class SMOrderHeader extends clsMasterEntry{
 				clsDatabaseFunctions.executeSQL(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".cancelOrder - user: " + sUserID + " - " + sUserFullName);
 			} catch (SQLException e) {
 				super.addErrorMessage("Error setting canceled date - with SQL: " + SQL + e.getMessage());
 				bResult = false;
 			}
-			SMLogEntry log = new SMLogEntry(sConf, context);
+			SMLogEntry log = new SMLogEntry(sDBIB, context);
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CANCELORDER, "Order was canceled", SQL, "[1376509290]");
 		}
 		
@@ -1033,7 +1033,7 @@ public class SMOrderHeader extends clsMasterEntry{
 					sTrimmedOrderNumber,
 					sUserID,
 					sUserFullName,
-					sConf, 
+					sDBIB, 
 					context, 
 					false
 				);
@@ -1045,7 +1045,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		return bResult;
 	}
-	public boolean uncancelOrder (String sTrimmedOrderNumber, ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean uncancelOrder (String sTrimmedOrderNumber, ServletContext context, String sDBIB, String sUserID, String sUserFullName){
 		boolean bResult = true;
 
 		String SQL = "SELECT"
@@ -1059,7 +1059,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".uncancelOrder - user: " 
 				+ sUserID
@@ -1095,7 +1095,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				clsDatabaseFunctions.executeSQL(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".cancelOrder - user: " + sUserID + " - " + sUserFullName);
 			} catch (SQLException e) {
@@ -1103,7 +1103,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				bResult = false;
 			}
 		}
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_UNCANCELORDER, "Order was UNcanceled", SQL, "[1376509291]");
 		if (bResult){
 			try {
@@ -1111,7 +1111,7 @@ public class SMOrderHeader extends clsMasterEntry{
 					sTrimmedOrderNumber,
 					sUserID, 
 					sUserFullName,
-					sConf, 
+					sDBIB, 
 					context, 
 					true
 				);
@@ -1127,11 +1127,11 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sTrimmedOrderNumber,
 			String sUserID,
 			String sUserFullName,
-			String sConf,
+			String sDBIB,
 			ServletContext context,
 			boolean bUncanceled) throws Exception{
 		setM_strimmedordernumber(sTrimmedOrderNumber);
-		if (!load(context, sConf, sUserID, sUserFullName)){
+		if (!load(context, sDBIB, sUserID, sUserFullName)){
 			throw new Exception(getErrorMessages());
 		}
 		//Notify any specified users that a new customer was built:
@@ -1165,7 +1165,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rsNotify = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".mailCancellationNotification - rsNotify - user: " + sUserID + " - " + sUserFullName);
 			while(rsNotify.next()){
@@ -1191,7 +1191,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".mailCancellationNotification - rsSalesperson - user: " +  sUserID + " - " + sUserFullName);
 			if (rsSalesperson.next()){
@@ -1208,7 +1208,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rsCompany = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".mailCancellationNotification - rsCompany - user: " +  sUserID + " - " + sUserFullName);
 			if (rsCompany.next()){
@@ -1223,7 +1223,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rsOptions = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".mailCancellationNotification - rsOptions - user: " +  sUserID + " - " + sUserFullName);
 			if(rsOptions.next()){
@@ -1356,10 +1356,10 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		return true;
 	}
-	public boolean loadFieldInfo (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName){
+	public boolean loadFieldInfo (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName){
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".loadFieldInfo - user: " + sUserID 
 				 + " - "
@@ -1453,7 +1453,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	
 	public boolean save_order_totals_without_data_transaction (
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUser,
 			String sUserID,
 			String sUserFullName,
@@ -1461,7 +1461,7 @@ public class SMOrderHeader extends clsMasterEntry{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".save_order_totals_without_data_transaction - user: " 
 				+ sUserID
@@ -1474,14 +1474,14 @@ public class SMOrderHeader extends clsMasterEntry{
 			return false;
 		}
 
-		boolean bResult = save_order_totals_without_data_transaction (conn, sConf, context, sUserID, sUserFullName, sCompany);
+		boolean bResult = save_order_totals_without_data_transaction (conn, sDBIB, context, sUserID, sUserFullName, sCompany);
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067743]");
 		return bResult;	
 
 	}
 	public boolean save_order_without_data_transaction (
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context,
 			String sUserID, 
 			String sUserFullName, 
@@ -1566,7 +1566,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		if (!bIsNewOrder){
 			try {
-				checkConcurrency(sConf, context);
+				checkConcurrency(sDBIB, context);
 			} catch (SQLException e1) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				super.addErrorMessage("Could not save - " + e1.getMessage());
@@ -1588,7 +1588,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		return true;
 	}
 	public boolean save_order_unprotected_by_transaction (Connection conn, 
-														  String sConf,
+														  String sDBIB,
 														  ServletContext context,
 														  String sUserID, 
 														  String sUserFullName,
@@ -1615,7 +1615,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (SQLException e) {
 			super.addErrorMessage("Error saving order - " + e.getMessage());
 			return false;
@@ -1626,7 +1626,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	
 	public boolean save_order_totals_without_data_transaction (
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context,
 			String sUserID, 
 			String sUserFullName, 
@@ -1683,7 +1683,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			super.addErrorMessage("Error saving - " + e1.getMessage());
@@ -2109,7 +2109,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			throw new SQLException("Error saving SMOptions - " + e.getMessage());
 		}
 	}
-	private void checkConcurrency(String sConf, ServletContext context)
+	private void checkConcurrency(String sDBIB, ServletContext context)
 		throws SQLException{
 		
 		String sConcurrencyError = "";
@@ -2128,7 +2128,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			System.out.println("[1332266299]:" + clsDateAndTimeConversions.now("yyyyMMdd HH:mm:ss:SSS") + SQL);
 		}
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sConf, "MySQL", this.toString() + ".checkConcurrency(1)");
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBIB, "MySQL", this.toString() + ".checkConcurrency(1)");
 			if (rs.next()){
 				//If the STORED values for the last edit date and the last edit time don't match what we've loaded
 				//in this class, then throw an exception:
@@ -2530,7 +2530,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	}
 	public boolean saveFieldInfo_without_data_transaction (
 			ServletContext context, 
-			String sConf, 
+			String sDBIB, 
 			String sUser, 
 			String sUserID,
 			String sUserFullName,
@@ -2538,7 +2538,7 @@ public class SMOrderHeader extends clsMasterEntry{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				this.toString() + ".saveFieldInfo_without_data_transaction - user: " 
 				+ sUserID
@@ -3312,7 +3312,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	public void processLineDeletions(
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers, 
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3324,7 +3324,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineDeletions - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -3333,7 +3333,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		
 		String sDeletedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
@@ -3341,7 +3341,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			sDeletedDetailLines += sDetailNumbers.get(i) + ", ";
 		}
 		try {
-			deleteLines(sDetailNumbers, conn, sConf, context, sUserID, sUserFullName);
+			deleteLines(sDetailNumbers, conn, sDBIB, context, sUserID, sUserFullName);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -3368,7 +3368,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	private void deleteLines(
 			ArrayList<String>sDetailNumbers, 
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3483,7 +3483,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException("Error saving - " + e1.getMessage());
@@ -3500,7 +3500,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	public void processLineUnships(
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers, 
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -3513,7 +3513,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineUnships - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -3522,13 +3522,13 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sUnshippedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sUnshippedDetailLines += sDetailNumbers.get(i) + ", ";
 		}
 		try {
-			unshipLines(sDetailNumbers, conn, sConf, context, sUserID, sUserFullName);
+			unshipLines(sDetailNumbers, conn, sDBIB, context, sUserID, sUserFullName);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -3554,7 +3554,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	private void unshipLines(
 			ArrayList<String>sDetailNumbers, 
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3616,7 +3616,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException("Error saving - " + e1.getMessage());
@@ -3633,7 +3633,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	public void processLineShips(
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers,
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -3646,7 +3646,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineShips - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -3655,13 +3655,13 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sShippedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sShippedDetailLines += sDetailNumbers.get(i) + ", ";
 		}
 		try {
-			shipLines(sDetailNumbers, conn, sConf, context, sUserID, sUserFullName);
+			shipLines(sDetailNumbers, conn, sDBIB, context, sUserID, sUserFullName);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -3687,7 +3687,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	private void shipLines(
 			ArrayList<String>sDetailNumbers,
 			Connection conn, 
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3757,7 +3757,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException("Error Error [1395408958] saving - " + e1.getMessage());
@@ -3783,7 +3783,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sLocation,
 			String sCategory,
 			Connection conn, 
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3892,7 +3892,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			throw new SQLException("Error [1395408968] saving - " + e1.getMessage());
 		}
@@ -3901,7 +3901,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	public void processLineItemCreations(
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers, 
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -3913,7 +3913,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineItemCreations - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -3922,13 +3922,13 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sItemCreatedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sItemCreatedDetailLines += sDetailNumbers.get(i).trim() + ", ";
 		}
 		try {
-			createItemsForLines(sDetailNumbers, conn, sConf, context, sUserFullName, sUserID);
+			createItemsForLines(sDetailNumbers, conn, sDBIB, context, sUserFullName, sUserID);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -3954,7 +3954,7 @@ public class SMOrderHeader extends clsMasterEntry{
 	private void createItemsForLines(
 			ArrayList<String>sDetailNumbers, 
 			Connection conn, 
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserFullName,
 			String sUserID
@@ -4067,7 +4067,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException("Error saving - " + e1.getMessage());
@@ -4085,7 +4085,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers,
 			String sLineNumberToMoveAbove,
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -4098,7 +4098,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineMoves - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -4107,13 +4107,13 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sMovedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sMovedDetailLines += sDetailNumbers.get(i) + ", ";
 		}
 		try {
-			moveLines(sDetailNumbers, sLineNumberToMoveAbove, conn, sConf, context, sUserID, sUserFullName);
+			moveLines(sDetailNumbers, sLineNumberToMoveAbove, conn, sDBIB, context, sUserID, sUserFullName);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -4141,7 +4141,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ArrayList<String>sDetailNumbersOfLinesToBeMoved,
 			String sLineNumberToMoveAbove,
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context,
 			String sUserID,
 			String sUserFullName
@@ -4245,7 +4245,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error saving order with moved lines - " + e1.getMessage());
@@ -4263,7 +4263,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers,
 			String sLineNumberToCopyAbove,
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -4276,7 +4276,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".processLineMoves - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -4285,13 +4285,13 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sCopiedDetailLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sCopiedDetailLines += sDetailNumbers.get(i) + ", ";
 		}
 		try {
-			copyLines(sDetailNumbers, sLineNumberToCopyAbove, conn, sConf, context, sUserID, sUserFullName);
+			copyLines(sDetailNumbers, sLineNumberToCopyAbove, conn, sDBIB, context, sUserID, sUserFullName);
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
@@ -4319,7 +4319,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ArrayList<String>sDetailNumbers,
 			String sLineNumberToCopyAbove,
 			Connection conn,
-			String sConf,
+			String sDBIB,
 			ServletContext context,
 			String sUserID,
 			String sUserFullName
@@ -4431,7 +4431,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		//Check the 'LASTEDIT' in the stored record against this one:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error saving order with copied lines - " + e1.getMessage());
@@ -4450,7 +4450,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sTrimmedOrderNumber,
 			ArrayList<String>sDetailNumbers,
 			String sSelectedMechanicID,
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -4462,7 +4462,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".setMechanics - user: " + sUser);
 		if (conn == null){
@@ -4471,7 +4471,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sSelectedLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sSelectedLines += sDetailNumbers.get(i) + ", ";
@@ -4506,7 +4506,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				sMechanicInitials,
 				sMechanicFullName,
 				conn,
-				sConf,
+				sDBIB,
 				context, 
 				sUserID,
 				sUserFullName);
@@ -4538,7 +4538,7 @@ public class SMOrderHeader extends clsMasterEntry{
 							  String sMechInit,
 							  String sMechName,
 							  Connection conn, 
-							  String sConf,
+							  String sDBIB,
 							  ServletContext context, 
 							  String sUserID,
 							  String sUserFullName
@@ -4591,7 +4591,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		//Check the 'LASTEDIT' in the stored record against this one with a NEW CONNECTION:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException(e1.getMessage());
@@ -4607,7 +4607,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ArrayList<String>sDetailNumbers,
 			String sSelectedRepriceMethod,
 			String sRepriceAmt,
-			String sConf, 
+			String sDBIB, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -4625,7 +4625,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			this.toString() + ".setMechanics - user: " + sUserID + " - " + sUserFullName);
 		if (conn == null){
@@ -4634,7 +4634,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
 		
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBIB, context);
 		String sSelectedLines = "";
 		for (int i = 0; i < sDetailNumbers.size(); i++){
 			sSelectedLines += sDetailNumbers.get(i) + ", ";
@@ -4645,7 +4645,7 @@ public class SMOrderHeader extends clsMasterEntry{
 					sSelectedRepriceMethod,
 					sRepriceAmt,
 					conn,
-					sConf,
+					sDBIB,
 					context, 
 					sUserID,
 					sUserFullName);
@@ -4675,7 +4675,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			String sRepriceMethod,
 			String sRepriceAmt,
 			Connection conn, 
-			String sConf,
+			String sDBIB,
 			ServletContext context, 
 			String sUserID,
 			String sUserFullName
@@ -4848,7 +4848,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		//Check the 'LASTEDIT' in the stored record against this one with a NEW CONNECTION:
 		try {
-			checkConcurrency(sConf, context);
+			checkConcurrency(sDBIB, context);
 		} catch (Exception e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new SQLException(e1.getMessage());
@@ -4935,12 +4935,12 @@ public class SMOrderHeader extends clsMasterEntry{
 		sotc.calculateSalesTax();
 		return sotc.getTotalSalesTaxBase();
 	}
-	public void updateLinePrice(SMOrderDetail line, String sConf, String sUser, ServletContext context) throws Exception{
+	public void updateLinePrice(SMOrderDetail line, String sDBIB, String sUser, ServletContext context) throws Exception{
 		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".updateLinePrice - user: " + sUser
 			);
@@ -6969,7 +6969,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			return false;
 		}  	
     }
-    public String checkOrderForDiscrepancies(String sConf, ServletContext context, String sUserID, String sUserFullName) throws Exception{
+    public String checkOrderForDiscrepancies(String sDBIB, ServletContext context, String sUserID, String sUserFullName) throws Exception{
     	String sReturn = "";
     	//First, check to see if the price list code is valid:
     	//If this is a quote with no customer on it, then bypass this check:
@@ -6991,7 +6991,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBIB, 
 					"MySQL", 
 					this.toString() + ".checkOrderForDiscrepancies - user: " 
 					+ sUserID

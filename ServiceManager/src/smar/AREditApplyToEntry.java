@@ -338,14 +338,14 @@ public class AREditApplyToEntry extends HttpServlet {
 			boolean bEditable,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	)throws Exception{
 		
 		pwOut.println("<B>" + SMBatchTypes.Get_Batch_Type(Integer.parseInt(entryInput.getsBatchType())) + "</B>");
 		pwOut.println(" batch number: <B>" + entryInput.getsBatchNumber() + "</B>;");
 		//Get the batch total:
 		ARBatch batch = new ARBatch(entryInput.getsBatchNumber());
-		pwOut.println(" batch total: <B>" + batch.sTotalAmount(context, sConf) + "</B>;");
+		pwOut.println(" batch total: <B>" + batch.sTotalAmount(context, sDBID) + "</B>;");
 		
         if (entryInput.getsEntryNumber().equalsIgnoreCase("-1")){
         	pwOut.println(" entry number: <B>NEW</B>.  ");
@@ -360,14 +360,14 @@ public class AREditApplyToEntry extends HttpServlet {
 
     	sCustomerNumber = entryInput.getsCustomerNumber();
     	ARCustomer m_Customer = new ARCustomer(entryInput.getsCustomerNumber());
-		if (! m_Customer.load(context, sConf)){
+		if (! m_Customer.load(context, sDBID)){
 			throw new Exception("Could not load customer: " + entryInput.getsCustomerNumber());
 		}else{
 			sCustomerName = m_Customer.getM_sCustomerName();
 			
 			//If it's a new entry, set the default control account:
 			if (entryInput.getsEntryNumber().equalsIgnoreCase("-1")){
-				entryInput.setControlAcct(m_Customer.getARControlAccount(context, sConf));
+				entryInput.setControlAcct(m_Customer.getARControlAccount(context, sDBID));
 
 			}
 		}
@@ -393,7 +393,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			boolean bEditable,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 		
 		pwOut.println("<TABLE BORDER=1 WIDTH=100% CELLSPACING=2 style=\"font-size:75%\">");
@@ -484,7 +484,7 @@ public class AREditApplyToEntry extends HttpServlet {
 	    	pwOut.println("<TD>Order #: " 
 	    			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 	    			+ entryInput.getsOrderNumber() 
-	    			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+	    			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 	    			+ "\">" + entryInput.getsOrderNumber() + "</A></TD>");
     	}else{
     		pwOut.println("<TD>&nbsp;</TD>");
@@ -601,7 +601,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			PrintWriter pwOut,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 		
         //Display the line header:
@@ -634,7 +634,7 @@ public class AREditApplyToEntry extends HttpServlet {
         	
 			if (line.getDocAppliedToID().compareTo("-1") != 0){
 				ARTransaction trans = new ARTransaction(line.getDocAppliedToID());
-				if(!trans.load(context, sConf)){
+				if(!trans.load(context, sDBID)){
 					pwOut.println("Error loading transaction with ID: " + line.getDocAppliedToID());
 					//System.out.println("In AREditApplyToEntry - Error loading transaction with ID: " + line.getDocAppliedToID());
 					return false;
@@ -652,7 +652,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					pwOut.println(
 							"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 							+ sOrderNumber 
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 							+ "\">" + sOrderNumber + "</A>"
 					);
 				}else{
@@ -669,7 +669,7 @@ public class AREditApplyToEntry extends HttpServlet {
 				pwOut.println("</TD>");
 				//Net amount
 				pwOut.println("<TD ALIGN=RIGHT>");
-				pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf)));
+				pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 				pwOut.println("</TD>");
 			}else{
 				pwOut.println("&nbsp;");
@@ -714,7 +714,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			PrintWriter pwOut,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 
 		//We want these to be empty in these lines:
@@ -761,7 +761,7 @@ public class AREditApplyToEntry extends HttpServlet {
         	pwOut.println("<TD>");
 
 			pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-				+ SMUtilities.lnViewInvoice(sConf, line.getDocAppliedTo() )
+				+ SMUtilities.lnViewInvoice(sDBID, line.getDocAppliedTo() )
 	    		+ "\">"
 	    		+ line.getDocAppliedTo()
 	    		+ "</A>");
@@ -779,7 +779,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			
 			if(!line.getDocAppliedToID().equalsIgnoreCase("-1")){
 				ARTransaction trans = new ARTransaction(line.getDocAppliedToID());
-				if(!trans.load(context, sConf)){
+				if(!trans.load(context, sDBID)){
 					pwOut.println("Error loading transaction with ID: " + line.getDocAppliedToID());
 					//System.out.println("In AREditApplyToEntry - Error loading transaction with ID: " + line.getDocAppliedToID());
 					return false;
@@ -788,7 +788,7 @@ public class AREditApplyToEntry extends HttpServlet {
 				sOrderNumber = trans.getOrderNumber();
 				sOriginalAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdOriginalAmount());
 				sCurrentAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount());
-				sNetAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf));
+				sNetAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID));
 			}
 			
 			//Doc type:
@@ -802,7 +802,7 @@ public class AREditApplyToEntry extends HttpServlet {
 				pwOut.println(
 						"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 						+ sOrderNumber 
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 						+ "\">" + sOrderNumber + "</A>"
 				);
 			}else{
@@ -991,7 +991,7 @@ public class AREditApplyToEntry extends HttpServlet {
         	ResultSet rs = clsDatabaseFunctions.openResultSet(
         		sSQL, 
         		context, 
-        		sConf,
+        		sDBID,
         		"MySQL",
         		"AREditApplyToEntry.displayTransactionLines (1)");
 	        
@@ -1014,10 +1014,10 @@ public class AREditApplyToEntry extends HttpServlet {
 					String sLineGLAcct = entryInput.getsControlAcct();
 					if (iDocType == ARDocumentTypes.PREPAYMENT){
 						ARCustomer cust = new ARCustomer(entryInput.getsCustomerNumber());
-						if (!cust.load(context, sConf)){
+						if (!cust.load(context, sDBID)){
 							return false;
 						}
-						sLineGLAcct = cust.getARPrepayLiabilityAccount(context, sConf);
+						sLineGLAcct = cust.getARPrepayLiabilityAccount(context, sDBID);
 					}
 
 		        	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
@@ -1034,7 +1034,7 @@ public class AREditApplyToEntry extends HttpServlet {
 							+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6)
 							+ "\" >" 
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-							+ SMUtilities.lnViewInvoice(sConf, sDocNumber )
+							+ SMUtilities.lnViewInvoice(sDBID, sDocNumber )
 				    		+ "\">"
 				    		+ sDocNumber
 				    		+ "</A>"
@@ -1057,7 +1057,7 @@ public class AREditApplyToEntry extends HttpServlet {
 						pwOut.println(
 								"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 								+ sOrderNumber 
-								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" + sOrderNumber + "</A>"
 						);
 					}else{
@@ -1077,12 +1077,12 @@ public class AREditApplyToEntry extends HttpServlet {
 					//Net:
 					pwOut.println("<TD ALIGN=RIGHT>");
 					ARTransaction trans = new ARTransaction(Long.toString(rs.getLong(SMTableartransactions.lid)));
-					if(!trans.load(context, sConf)){
+					if(!trans.load(context, sDBID)){
 						pwOut.println("Error loading transaction with ID: " + trans.getsTransactionID());
 						//System.out.println("In ARCreateEntryForm - Error loading existing invoices: transaction with ID: " + trans.getsTransactionID());
 						return false;
 					}
-					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf)));
+					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 					pwOut.println("</TD>");
 					
 		        	//Amount:

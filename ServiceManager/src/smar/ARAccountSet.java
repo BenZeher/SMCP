@@ -147,7 +147,7 @@ public class ARAccountSet extends java.lang.Object{
 		return load(m_sAcctSetCode, context, sDBID);
 	}
 
-	public boolean save (ServletContext context, String sConf){
+	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
 		String SQL = ARSQLs.Get_AcctSet_By_Code(m_sAcctSetCode);
@@ -155,7 +155,7 @@ public class ARAccountSet extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".save");
 			if(rs.next()){
@@ -184,7 +184,7 @@ public class ARAccountSet extends java.lang.Object{
 						clsDatabaseFunctions.FormatSQLStatement(m_sWriteOffAcct), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct)
 						);
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
 				}else{
@@ -217,7 +217,7 @@ public class ARAccountSet extends java.lang.Object{
 						clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct)
 					);
 
-				if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
 				}else{
@@ -337,7 +337,7 @@ public class ARAccountSet extends java.lang.Object{
 		sQueryString += "&" + ParamsCashAcct + "=" + ARUtilities.URLEncode(m_sCashAcct);
 		return sQueryString;
 	}
-	public boolean delete(String sAcctSetCode, ServletContext context, String sConf){
+	public boolean delete(String sAcctSetCode, ServletContext context, String sDBID){
 		
 		m_sErrorMessageArray.clear();
 		
@@ -348,7 +348,7 @@ public class ARAccountSet extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context,
-				sConf,
+				sDBID,
 				"MySQL",
 				this.toString() + ".delete (1)");
 			if(!rs.next()){
@@ -370,7 +370,7 @@ public class ARAccountSet extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (2)");
 			if(rs.next()){
@@ -392,7 +392,7 @@ public class ARAccountSet extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (3)");
 			if(rs.next()){
@@ -414,7 +414,7 @@ public class ARAccountSet extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context,
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".delete (4)");
 			if(rs.next()){
@@ -432,7 +432,7 @@ public class ARAccountSet extends java.lang.Object{
 		
 		try{
 			SQL = ARSQLs.Delete_AcctSet_SQL(sAcctSetCode);
-			if(!clsDatabaseFunctions.executeSQL(SQL, context, sConf)){
+			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting account set");
 				return false;
 			}

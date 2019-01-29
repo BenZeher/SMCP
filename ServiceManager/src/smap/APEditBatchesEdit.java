@@ -164,7 +164,7 @@ public class APEditBatchesEdit extends HttpServlet {
            		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Re-create export file</A><BR><BR>\n");
         }
 		
-	    Edit_Record(batch, sUserID, out, request, sDBID, false, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL), sDBID);
+	    Edit_Record(batch, sUserID, out, request, sDBID, false, (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 		out.println("</BODY></HTML>\n");
 		
 	}
@@ -174,10 +174,9 @@ public class APEditBatchesEdit extends HttpServlet {
 			String sUserID,
 			PrintWriter pwOut, 
 			HttpServletRequest req,
-			String sConf,
+			String sDBID,
 			boolean bAddNew,
-			String sLicenseModuleLevel,
-			String sDBID){
+			String sLicenseModuleLevel){
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesAction' METHOD='POST'>\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
@@ -199,7 +198,7 @@ public class APEditBatchesEdit extends HttpServlet {
         //Date last maintained:
         pwOut.println("<B>" + SMTableapbatches.getBatchTypeLabel(Integer.parseInt(batch.getsbatchtype())) + "</B> batch\n");
         pwOut.println(" last edited <B>" + batch.getslasteditdate() + "</B>\n");
-        pwOut.println(" by user <B>" + SMUtilities.getFullNamebyUserID(batch.getllasteditedby(), getServletContext(), sConf, "") + "</B><BR>\n");
+        pwOut.println(" by user <B>" + SMUtilities.getFullNamebyUserID(batch.getllasteditedby(), getServletContext(), sDBID, "") + "</B><BR>\n");
         pwOut.println("Batch Date: <B>"+ batch.getsbatchdate() + "</B>\n");
         pwOut.println("     Status: <B>"+ batch.getsbatchstatuslabel() + "</B>\n");
         
@@ -453,7 +452,7 @@ public class APEditBatchesEdit extends HttpServlet {
 			try {
 				conn = clsDatabaseFunctions.getConnectionWithException(
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString() + ".Edit_Record - userID: " + sUserID)
 				);

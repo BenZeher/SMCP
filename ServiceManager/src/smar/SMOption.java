@@ -188,12 +188,12 @@ public class SMOption {
     		return false;
     	}
 	}
-    public void load(String sConf, ServletContext context, String sUserID) throws Exception{
+    public void load(String sDBID, ServletContext context, String sUserID) throws Exception{
     	Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".load - userID: " + sUserID);
 		} catch (Exception e) {
@@ -295,7 +295,7 @@ public class SMOption {
 			throw new Exception("Error saving SMOption with SQL: " + SQL + " - " + e.getMessage());
 		}
     }
-    public void saveEditableFields(ServletContext context, String sConf, String sUserName) throws Exception{
+    public void saveEditableFields(ServletContext context, String sDBID, String sUserName) throws Exception{
     	
     	try {
 			validate_entries();
@@ -357,7 +357,7 @@ public class SMOption {
     	try {
     		if(!clsDatabaseFunctions.executeSQL(SQL, 
     				context,
-    				sConf,
+    				sDBID,
     				"MySQL",
     				this.toString() + ".saveEditableFields - User: " + sUserName)){
     			throw new Exception ("Error [1457451814] - Could not update smoptions record with SQL: " + SQL + ".");

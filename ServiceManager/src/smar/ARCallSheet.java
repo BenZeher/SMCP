@@ -89,10 +89,10 @@ public class ARCallSheet extends clsMasterEntry{
 
 	}
 
-	public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -195,14 +195,14 @@ public class ARCallSheet extends clsMasterEntry{
 
 	public boolean save_without_data_transaction (
 			ServletContext context, 
-			String sConf, 
+			String sDBID, 
 			String sUserID,
 			String sUserFullName,
 			String sCompany){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -378,11 +378,11 @@ public class ARCallSheet extends clsMasterEntry{
 		return true;
 	}
 
-	public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID

@@ -192,7 +192,7 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
 	}
 	private void printList(
     		ServletContext context,
-    		String sConf,
+    		String sDBID,
     		String sStartingCust,
     		String sEndingCust,
     		java.sql.Date datLastActivity,
@@ -269,7 +269,7 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     		ResultSet rs = clsDatabaseFunctions.openResultSet(
     				SQL, 
     				context,
-    				sConf,
+    				sDBID,
     				"MySQL",
     				this.toString() + ".printList - User: " + sUserID
     				+ " - "

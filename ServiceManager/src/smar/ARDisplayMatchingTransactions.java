@@ -181,7 +181,6 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	        			clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount).negate()),
 	        			rs.getString(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sdescription),
 	        			rs.getLong(SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid),
-	        			sDBID,
 	        			sUserID,
 	        			sUserFullName
         			));
@@ -207,7 +206,7 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	private static String Build_Row (
 			PrintWriter pwout,
 			ServletContext context,
-			String sConf,
+			String sDBID,
 			String sTransactionDate,
 			long lDocID,
 			String sDocNumber,
@@ -215,7 +214,6 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 			String sAmount,
 			String sDocDesc,
 			long lParentTransactionID,
-			String sDBID,
 			String sUserID,
 			String sUserFullName
 			){

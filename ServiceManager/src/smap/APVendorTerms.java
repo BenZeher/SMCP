@@ -108,10 +108,10 @@ public class APVendorTerms extends clsMasterEntry{
        	
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
-    public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -188,14 +188,14 @@ public class APVendorTerms extends clsMasterEntry{
     
     public boolean save_without_data_transaction 
     			   (ServletContext context, 
-    				String sConf, 
+    				String sDBID, 
     				String sUser, 
     				String sUserID, 
     				String sUserFullName){
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -277,11 +277,11 @@ public class APVendorTerms extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

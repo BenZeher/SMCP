@@ -106,10 +106,10 @@ public class SSEventSchedule extends clsMasterEntry{
 		m_sdaysoftheweek = Integer.toString(iDaysOfWeekTotal);
 		
 	}
-	public void load (ServletContext context, String sConf, String sUserID, String sUserFullName) throws Exception{
+	public void load (ServletContext context, String sDBID, String sUserID, String sUserFullName) throws Exception{
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -223,11 +223,11 @@ public class SSEventSchedule extends clsMasterEntry{
 		}
 	}
 
-	public void save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID , String sUserFullName) throws Exception{
+	public void save_without_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID , String sUserFullName) throws Exception{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -429,11 +429,11 @@ public class SSEventSchedule extends clsMasterEntry{
 		}
 	}
 	
-	public void delete (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+	public void delete (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + " - user: " 
 				+ sUserID
@@ -877,7 +877,7 @@ public class SSEventSchedule extends clsMasterEntry{
 		arrEventScheduleDetails.add(detail);
 	}
 
-	public void removeEventScheduleDetail(String sDetailID, ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+	public void removeEventScheduleDetail(String sDetailID, ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName) throws Exception{
 		
 		//Must make the schedule inactive before removing devices:
 		if (getsactive().compareToIgnoreCase("1") == 0){
@@ -888,7 +888,7 @@ public class SSEventSchedule extends clsMasterEntry{
 			if (arrEventScheduleDetails.get(i).getslid().compareToIgnoreCase(sDetailID) == 0){
 				Connection conn = clsDatabaseFunctions.getConnection(
 						context, 
-						sConf, 
+						sDBID, 
 						"MySQL", 
 						this.toString() + " - user: " 
 						+ sUserID

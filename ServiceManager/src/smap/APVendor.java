@@ -183,10 +183,10 @@ public class APVendor extends clsMasterEntry{
 		}	
 		m_ivendorgroupid = clsManageRequestParameters.get_Request_Parameter(Paramivendorgroupid, req).trim();
 	}
-    public boolean load (ServletContext context, String sConf, String sUserID , String sUserFullname){
+    public boolean load (ServletContext context, String sDBID, String sUserID , String sUserFullname){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -280,7 +280,7 @@ public class APVendor extends clsMasterEntry{
     
     public boolean save_without_data_transaction (
     		ServletContext context, 
-    		String sConf, 
+    		String sDBID, 
     		String sUser,
     		String sUserID,
     		String sUserFullName,
@@ -289,7 +289,7 @@ public class APVendor extends clsMasterEntry{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -670,13 +670,13 @@ public class APVendor extends clsMasterEntry{
 			}
 			return;
 	}
-    public void delete (ServletContext context, String sConf, String sUser) throws Exception{
+    public void delete (ServletContext context, String sDBID, String sUser) throws Exception{
     	
     	Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + " - user: " + sUser
 					);

@@ -236,11 +236,11 @@ public class SMReminders extends java.lang.Object{
         	}
     	}
     
-    public void load(ServletContext context, String sConf, String sUser) throws Exception{
+    public void load(ServletContext context, String sDBIB, String sUser) throws Exception{
     	Connection conn;
     	try {
     		conn = clsDatabaseFunctions.getConnectionWithException(context, 
-    			   sConf, 
+    			   sDBIB, 
     			   "MySQL",
     			   SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUser);
     	} catch (Exception e) {
@@ -257,13 +257,13 @@ public class SMReminders extends java.lang.Object{
     }
     
 
-    public boolean save(ServletContext context, String sConf, String sUserID, String sUserFullName, String sStartDate){
+    public boolean save(ServletContext context, String sDBIB, String sUserID, String sUserFullName, String sStartDate){
     	m_sErrorMessageArray.clear();
 		
     	//Get connection
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) 
 			+ ":save - user: " + sUserID
@@ -564,11 +564,11 @@ private void updateRemindersTable(Connection conn,ServletContext context, String
 	return;
 }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - " + sUserFullName
     			);

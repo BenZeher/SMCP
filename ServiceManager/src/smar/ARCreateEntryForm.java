@@ -31,7 +31,7 @@ public class ARCreateEntryForm {
 			boolean bEditable,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf,
+			String sDBID,
 			String sCallingClass,
 			String sApplyToDocNumber,
 			String sApplyToDocID
@@ -42,12 +42,12 @@ public class ARCreateEntryForm {
 		
 	    //Start the entry edit form:
 		pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(context) + "smar.AREntryUpdate' METHOD='POST'>");
-		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sConf + "'>");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		//Record the hidden fields for the entry edit form:
 	    storeHiddenFieldsOnForm (pwOut, bEditable, entryInput, sCallingClass, sApplyToDocID);
         //Display the entry header fields:
-	    displayEntryHeaderFields (pwOut, bEditable, entryInput, context, sConf);
-	    if (!loadGLList(context, sConf)){
+	    displayEntryHeaderFields (pwOut, bEditable, entryInput, context, sDBID);
+	    if (!loadGLList(context, sDBID)){
 	    	//System.out.println("In ARCreateentryForm - error loading GL list");
 	    	return false;
 	    }
@@ -55,9 +55,9 @@ public class ARCreateEntryForm {
 	    //Get the default GLs here:
 	    if (entryInput.getsCustomerNumber().compareToIgnoreCase("") != 0){
 	    	ARCustomer cus = new ARCustomer (entryInput.getsCustomerNumber());
-	    	sDefaultARControlAcct = cus.getARControlAccount(context, sConf);
-	    	sDefaultPrepayAcct = cus.getARPrepayLiabilityAccount(context, sConf);
-	        sDefaultCashAcct = cus.getCashAccount(context, sConf);
+	    	sDefaultARControlAcct = cus.getARControlAccount(context, sDBID);
+	    	sDefaultPrepayAcct = cus.getARPrepayLiabilityAccount(context, sDBID);
+	        sDefaultCashAcct = cus.getCashAccount(context, sDBID);
 	    }
         if (bEditable){
         	displayEditableEntryFields (
@@ -67,18 +67,18 @@ public class ARCreateEntryForm {
         		sApplyToDocNumber, 
         		sApplyToDocID,
         		context, 
-        		sConf);
+        		sDBID);
         }
         
         //Else, if the record is NOT editable:
         else{
-        	displayNonEditableEntryFields (pwOut, entryInput, sApplyToDocNumber, sApplyToDocID, sConf, context);
+        	displayNonEditableEntryFields (pwOut, entryInput, sApplyToDocNumber, sApplyToDocID, sDBID, context);
         }
 	    //Now display the transaction lines:
 	    //If it's not editable, just show the current applied lines:
 	    if (! bEditable){
 	    	pwOut.println("<B>Line distribution:</B><BR>");
-	    	Display_NONEditable_Lines(pwOut, entryInput, context, sConf);
+	    	Display_NONEditable_Lines(pwOut, entryInput, context, sDBID);
 	    }else{
 	    	if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
 	    		//pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamNumberOfLines + "\" VALUE=1>");
@@ -115,7 +115,7 @@ public class ARCreateEntryForm {
 			    		sApplyToDocNumber, 
 			    		sApplyToDocID,
 			    		context,
-			    		sConf
+			    		sDBID
 			    		)){
 			    	//System.out.println("In ARCreateentryForm - error displaying transaction lines");
 			    	return false;
@@ -160,7 +160,7 @@ public class ARCreateEntryForm {
 			boolean bEditable,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 		
 		int iBatchType = -1;
@@ -174,7 +174,7 @@ public class ARCreateEntryForm {
 		pwOut.println(" batch number: <B>" + entryInput.getsBatchNumber() + "</B>;");
 		//Get the batch total:
 		ARBatch batch = new ARBatch(entryInput.getsBatchNumber());
-		pwOut.println(" batch total: <B>" + batch.sTotalAmount(context, sConf) + "</B>;");
+		pwOut.println(" batch total: <B>" + batch.sTotalAmount(context, sDBID) + "</B>;");
 		
         if (entryInput.getsEntryNumber().equalsIgnoreCase("-1")){
         	pwOut.println(" entry number: <B>NEW</B>.  ");
@@ -192,7 +192,7 @@ public class ARCreateEntryForm {
 	    }else{
 	    	sCustomerNumber = entryInput.getsCustomerNumber();
 	    	ARCustomer m_Customer = new ARCustomer(entryInput.getsCustomerNumber());
-			if (! m_Customer.load(context, sConf)){
+			if (! m_Customer.load(context, sDBID)){
 				sCustomerName = "";
 			}else{
 				sCustomerName = m_Customer.getM_sCustomerName();
@@ -204,18 +204,18 @@ public class ARCreateEntryForm {
 							(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING))
 							|| (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING))
 						){
-						String sCashAcct = m_Customer.getCashAccount(context, sConf);
+						String sCashAcct = m_Customer.getCashAccount(context, sDBID);
 						//If there is no cash account, we have to leave the control acct in the class
 						//alone, since the user sould have selected one and we want to keep that:
 						if (sCashAcct.compareToIgnoreCase("") != 0){
-							entryInput.setControlAcct(m_Customer.getCashAccount(context, sConf));
+							entryInput.setControlAcct(m_Customer.getCashAccount(context, sDBID));
 						}
 					}else{
 						//If it's a retainage entry, the control account should be the retainage acct:
 						if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
-							entryInput.setControlAcct(m_Customer.getARRetainageAccount(context, sConf));
+							entryInput.setControlAcct(m_Customer.getARRetainageAccount(context, sDBID));
 						}else{
-							entryInput.setControlAcct(m_Customer.getARControlAccount(context, sConf));
+							entryInput.setControlAcct(m_Customer.getARControlAccount(context, sDBID));
 						}
 					}
 				}
@@ -244,7 +244,7 @@ public class ARCreateEntryForm {
 			String sApplyToDoc,
 			String sApplyToID,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 		
 		pwOut.println("<TABLE BORDER=1 WIDTH=100% CELLSPACING=2 style=\"font-size:75%\">");
@@ -427,7 +427,7 @@ public class ARCreateEntryForm {
     	        ResultSet rsTerms = clsDatabaseFunctions.openResultSet(
     	        	sSQL, 
     	        	context, 
-    	        	sConf,
+    	        	sDBID,
     	        	"MySQL",
     	        	"ARCreateEntryForm.displayEditableEntryFields");
     	        
@@ -537,7 +537,7 @@ public class ARCreateEntryForm {
         ){
         	pwOut.println("<TD>Apply-to doc: ");
 			pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-					+ SMUtilities.lnViewInvoice(sConf, m_sApplyToDoc )
+					+ SMUtilities.lnViewInvoice(sDBID, m_sApplyToDoc )
 		    		+ "\">"
 		    		+ m_sApplyToDoc
 		    		+ "</A>");
@@ -574,7 +574,7 @@ public class ARCreateEntryForm {
         	pwOut.println("<TD>Order #: " 
         			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
         			+ entryInput.getsOrderNumber() 
-        			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+        			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
         			+ "\">" + entryInput.getsOrderNumber() + "</A></TD>");
         }
 
@@ -639,7 +639,7 @@ public class ARCreateEntryForm {
 			AREntryInput entryInput,
 			String sApplyToDoc,
 			String sApplyToID,
-			String sConf,
+			String sDBID,
 			ServletContext context
 	){
 
@@ -712,7 +712,7 @@ public class ARCreateEntryForm {
         ){
         	pwOut.println("<TD>Apply-to doc: ");
     		pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-    				+ SMUtilities.lnViewInvoice(sConf, m_sApplyToDoc )
+    				+ SMUtilities.lnViewInvoice(sDBID, m_sApplyToDoc )
     	    		+ "\">"
     	    		+ m_sApplyToDoc
     	    		+ "</A>");
@@ -732,7 +732,7 @@ public class ARCreateEntryForm {
         	pwOut.println("<TD>Order #: " 
         			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
         			+ entryInput.getsOrderNumber() 
-        			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+        			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
         			+ "\">" + entryInput.getsOrderNumber() + "</A></TD>");
         }
 
@@ -796,7 +796,7 @@ public class ARCreateEntryForm {
 			PrintWriter pwOut,
 			AREntryInput entryInput,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 		
         //Display the line header:
@@ -812,7 +812,7 @@ public class ARCreateEntryForm {
         		pwOut.println(
         				"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
         				+ line.getApplyToOrderNumber() 
-        				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+        				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
         				+ "\">" + line.getApplyToOrderNumber() + "</A>"
         		);
         		}else{
@@ -828,7 +828,7 @@ public class ARCreateEntryForm {
 		    			pwOut.println(line.getDocAppliedTo());
         			}else{
 		    			pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-								+ SMUtilities.lnViewInvoice(sConf, line.getDocAppliedTo() )
+								+ SMUtilities.lnViewInvoice(sDBID, line.getDocAppliedTo() )
 					    		+ "\">"
 					    		+ line.getDocAppliedTo()
 					    		+ "</A>");
@@ -848,7 +848,7 @@ public class ARCreateEntryForm {
     		if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
     			if (line.getDocAppliedToID().compareTo("-1") != 0){
 					ARTransaction trans = new ARTransaction(line.getDocAppliedToID());
-					if(!trans.load(context, sConf)){
+					if(!trans.load(context, sDBID)){
 						pwOut.println("Error loading transaction with ID: " + line.getDocAppliedToID());
 						//System.out.println("In ARCreateEntryForm - Error loading transaction with ID: " + line.getDocAppliedToID());
 						return false;
@@ -866,7 +866,7 @@ public class ARCreateEntryForm {
 						pwOut.println(
 								"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 								+ sOrderNumber 
-								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" + sOrderNumber + "</A>"
 						);
 					}else{
@@ -883,7 +883,7 @@ public class ARCreateEntryForm {
 					pwOut.println("</TD>");
 					//Net amount
 					pwOut.println("<TD ALIGN=RIGHT>");
-					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf)));
+					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 					pwOut.println("</TD>");
     			}else{
     				//If it's unapplied:
@@ -943,7 +943,7 @@ public class ARCreateEntryForm {
 			String sApplyToDocNumber,
 			String sApplyToDocID,
 			ServletContext context,
-			String sConf
+			String sDBID
 	){
 
 		String m_sApplyToDocNumber = sApplyToDocNumber;
@@ -1037,7 +1037,7 @@ public class ARCreateEntryForm {
         		if(line.getApplyToOrderNumber().trim().length() > 0){
         		pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
         		+ line.getApplyToOrderNumber() 
-        		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+        		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
         		+ "\">" + line.getApplyToOrderNumber() + "</A>");
         		}else{
         			pwOut.println("&nbsp;");
@@ -1049,7 +1049,7 @@ public class ARCreateEntryForm {
         			|| entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.CREDIT_STRING)
         		){
         			pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-						+ SMUtilities.lnViewInvoice(sConf, line.getDocAppliedTo() )
+						+ SMUtilities.lnViewInvoice(sDBID, line.getDocAppliedTo() )
 			    		+ "\">"
 			    		+ line.getDocAppliedTo()
 			    		+ "</A>");
@@ -1074,7 +1074,7 @@ public class ARCreateEntryForm {
 				
 				if(!line.getDocAppliedToID().equalsIgnoreCase("-1")){
 					ARTransaction trans = new ARTransaction(line.getDocAppliedToID());
-					if(!trans.load(context, sConf)){
+					if(!trans.load(context, sDBID)){
 						pwOut.println("Error loading transaction with ID: " + line.getDocAppliedToID());
 						//System.out.println("In ARCreateEntryForm - Error loading transaction with ID: " + line.getDocAppliedToID());
 						return false;
@@ -1083,7 +1083,7 @@ public class ARCreateEntryForm {
 					sOrderNumber = trans.getOrderNumber();
 					sOriginalAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdOriginalAmount());
 					sCurrentAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount());
-					sNetAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf));
+					sNetAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID));
 				}
 				
 				//Doc Type:
@@ -1097,7 +1097,7 @@ public class ARCreateEntryForm {
 					pwOut.println(
 							"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 							+ sOrderNumber 
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 							+ "\">" + sOrderNumber + "</A>"
 					);
 				}else{
@@ -1264,7 +1264,7 @@ public class ARCreateEntryForm {
 				}else{
 					if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.CREDIT_STRING)){
 			    		pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-			    			+ SMUtilities.lnViewInvoice(sConf, m_sApplyToDocNumber )
+			    			+ SMUtilities.lnViewInvoice(sDBID, m_sApplyToDocNumber )
 			    	    	+ "\">"
 			    	    	+ m_sApplyToDocNumber
 			    	    	+ "</A>");
@@ -1389,7 +1389,7 @@ public class ARCreateEntryForm {
 	        	ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		context, 
-	        		sConf,
+	        		sDBID,
 	        		"MySQL",
 	        		"ARCreateEntryForm.displayTransactionLines");
 		        
@@ -1415,7 +1415,7 @@ public class ARCreateEntryForm {
 								+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6)
 								+ "\" >" 
 								+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
-								+ SMUtilities.lnViewInvoice(sConf, sDocNumber )
+								+ SMUtilities.lnViewInvoice(sDBID, sDocNumber )
 					    		+ "\">"
 					    		+ sDocNumber
 					    		+ "</A>"
@@ -1438,7 +1438,7 @@ public class ARCreateEntryForm {
 							pwOut.println(
 									"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 									+ sOrderNumber 
-									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sConf 
+									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 									+ "\">" + sOrderNumber + "</A>"
 							);
 						}else{
@@ -1460,12 +1460,12 @@ public class ARCreateEntryForm {
 						//Net:
 						pwOut.println("<TD ALIGN=RIGHT>");
 						ARTransaction trans = new ARTransaction(Long.toString(rs.getLong(SMTableartransactions.lid)));
-						if(!trans.load(context, sConf)){
+						if(!trans.load(context, sDBID)){
 							pwOut.println("Error loading transaction with ID: " + trans.getsTransactionID());
 							//System.out.println("In ARCreateEntryForm - Error loading existing invoices: transaction with ID: " + trans.getsTransactionID());
 							return false;
 						}
-						pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sConf)));
+						pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 						pwOut.println("</TD>");
 						
 						pwOut.println("<TD>");

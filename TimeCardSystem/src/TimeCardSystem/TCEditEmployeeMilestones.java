@@ -369,7 +369,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 	}
 	
 	
-	private void SaveEmployeeMilestone(HttpServletRequest request, ServletContext context, String sConf, String sUserName) throws Exception {
+	private void SaveEmployeeMilestone(HttpServletRequest request, ServletContext context, String sDBID, String sUserName) throws Exception {
 		//Define all variables to be saved
 		String sEmployeeTypeID = ""; 
 		String sEmployeeID = clsManageRequestParameters.get_Request_Parameter(TCSTableEmployeeMilestones.sEmployeeID, request);;
@@ -412,7 +412,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ":save - user: " + sUserName
 			);
@@ -424,7 +424,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		String sSQL = TimeCardSQLs.Get_Employee_Info_SQL(sEmployeeID);
 		ResultSet rsEmployee;	
 		try {
-			rsEmployee = clsDatabaseFunctions.openResultSet(sSQL, context, sConf);
+			rsEmployee = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
 		}catch (Exception e){
 			throw new Exception(e.getMessage());
 		}	
@@ -442,7 +442,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		ResultSet rsRecordedByEmployee;
 		
 		try {
-			rsRecordedByEmployee = clsDatabaseFunctions.openResultSet(sSQL, context, sConf);
+			rsRecordedByEmployee = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
 		}catch (Exception e){
 			throw new Exception(e.getMessage());
 		}	
@@ -460,7 +460,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		ResultSet rsMilestone;
 		
 		try {
-			rsMilestone = clsDatabaseFunctions.openResultSet(sSQL, context, sConf);
+			rsMilestone = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
 		}catch (Exception e){
 			throw new Exception(e.getMessage());
 		}	

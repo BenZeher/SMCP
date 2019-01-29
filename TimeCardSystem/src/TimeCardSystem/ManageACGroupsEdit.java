@@ -140,12 +140,12 @@ public class ManageACGroupsEdit extends HttpServlet {
 	private void Edit_Group(
 			String sGroup, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			boolean bAddGroup){
 	    
 		//first, add the group if it's an 'Add':
 		if (bAddGroup == true){
-			if (Add_Group (sGroup, sConf, pwOut) == false){
+			if (Add_Group (sGroup, sDBID, pwOut) == false){
 				pwOut.println("ERROR - Could not add group " + sGroup + ".<BR>");
 				return;
 			}
@@ -165,10 +165,10 @@ public class ManageACGroupsEdit extends HttpServlet {
 		try{
 			//First get a list of all the security functions:
 	        String sSQL = TimeCardSQLs.Get_Access_Control_Function_List();
-	        ResultSet rsFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        sSQL = TimeCardSQLs.Get_Access_Control_Group_Functions_SQL(sGroup);
-	        ResultSet rsGroupFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsGroupFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
 	        ArrayList<String> sFunctionTable = new ArrayList<String>(0);
@@ -204,10 +204,10 @@ public class ManageACGroupsEdit extends HttpServlet {
 		try{
 			//First get a list of all the users:
 	        String sSQL = TimeCardSQLs.Get_Employee_List_SQL(false);
-	        ResultSet rsEmployees = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsEmployees = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        sSQL = TimeCardSQLs.Get_Access_Control_Group_Users_SQL(sGroup);
-	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
         	while (rsEmployees.next()){
@@ -238,7 +238,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 	private boolean Delete_Group(
 			String sGroup,
 			PrintWriter pwOut,
-			String sConf){
+			String sDBID){
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
@@ -246,7 +246,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		sSQLList.add((String) TimeCardSQLs.Delete_Group_Users_SQL(sGroup));
 		sSQLList.add((String) TimeCardSQLs.Delete_Group_SQL(sGroup));
 		try {
-			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sConf);
+			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
@@ -257,13 +257,13 @@ public class ManageACGroupsEdit extends HttpServlet {
 		}		
 	}
 	
-	private boolean Add_Group(String sGroup, String sConf, PrintWriter pwOut){
+	private boolean Add_Group(String sGroup, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a group by this name already:
 		String sSQL = TimeCardSQLs.Get_Access_Control_Group_SQL(sGroup);
 		
 		try{
-			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sConf);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			if (rs.next()){
 				//This group already exists, so we can't add it:
 				pwOut.println("The " + sGroup + " group already exists - it cannot be added.<BR>");
@@ -280,7 +280,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		sSQL = TimeCardSQLs.Add_New_Group_SQL(sGroup);
 		try {
 			
-			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
 	    	System.out.println("Error in ManageACGroupsEdit.Add_Group class!!");

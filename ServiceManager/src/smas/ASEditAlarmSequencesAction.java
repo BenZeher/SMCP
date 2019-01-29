@@ -283,13 +283,13 @@ public class ASEditAlarmSequencesAction extends HttpServlet{
 	    }
 		return;
 	}
-	private void loadTriggerDevices(SSAlarmSequence entry, String sConf, String sUser) throws Exception{
+	private void loadTriggerDevices(SSAlarmSequence entry, String sDBID, String sUser) throws Exception{
 
 		Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".loadTriggerDevices - user: " + sUser));
 		} catch (Exception e1) {
@@ -304,13 +304,13 @@ public class ASEditAlarmSequencesAction extends HttpServlet{
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067606]");
 	}
-	private void loadActivationDevices(SSAlarmSequence entry, String sConf, String sUser) throws Exception{
+	private void loadActivationDevices(SSAlarmSequence entry, String sDBID, String sUser) throws Exception{
 
 		Connection conn;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".loadActivationDevices - user: " + sUser));
 		} catch (Exception e1) {

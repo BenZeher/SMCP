@@ -91,11 +91,11 @@ public class APDistributionCode extends java.lang.Object{
         	}
     	}
     
-    public void load(String sConf, ServletContext context, String sUser) throws Exception{
+    public void load(String sDBID, ServletContext context, String sUser) throws Exception{
     	Connection conn;
     	try {
     		conn = clsDatabaseFunctions.getConnectionWithException(context, 
-    			   sConf, 
+    			   sDBID, 
     			   "MySQL",
     			   SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUser);
     	} catch (Exception e) {
@@ -139,13 +139,13 @@ public class APDistributionCode extends java.lang.Object{
     	}
     }
 
-    public boolean saveEditableFields(ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean saveEditableFields(ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	m_sErrorMessageArray.clear();
 		
     	//Get connection
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBID, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) 
 			+ ":saveEditableFields - user: " 

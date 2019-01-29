@@ -201,11 +201,11 @@ public class AREditBatchesUpdate extends HttpServlet{
 	}
 }
 
-    private boolean save_batch(ARBatch batch, ServletContext context, String sConf, String sUserID, String sUserFullName){
+    private boolean save_batch(ARBatch batch, ServletContext context, String sDBID, String sUserID, String sUserFullName){
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf,
+			sDBID,
 			"MySQL",
 			this.toString() + ".save_batch - User: " 
 			+ sUserID

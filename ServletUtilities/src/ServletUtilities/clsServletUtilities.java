@@ -811,7 +811,7 @@ public class clsServletUtilities {
 		return ConnectionPool.WebContextParameters.getURLLinkBase(context);
 	}
 	
-	public static String getInitBackGroundColor(ServletContext context, String sConf){
+	public static String getInitBackGroundColor(ServletContext context, String sDBID){
 		
 		String sBackGroundColor = "#" + DEFAULT_BK_COLOR;
 		String SQL = "SELECT"
@@ -822,7 +822,7 @@ public class clsServletUtilities {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				"ServletUtilities.getInitBackGroundColor"
 				+ " [1331736814]"
@@ -1358,9 +1358,9 @@ public class clsServletUtilities {
 	
 	public static String getPlacesAPIIncludeString (
 			ServletContext context, 
-			String sConf){
+			String sDBID){
 		
-		 String sAPIKey = getPlacesAPIKey(context, sConf);
+		 String sAPIKey = getPlacesAPIKey(context, sDBID);
 		if(sAPIKey.compareToIgnoreCase("") == 0) {
 			return "";
 		}else {
@@ -1370,7 +1370,7 @@ public class clsServletUtilities {
 	
 	public static String getPlacesAPIKey (
 			ServletContext context, 
-			String sConf){
+			String sDBID){
 		
 		String sAPIKey = "";
 		String sUsePlacesAPI = "0";
@@ -1383,7 +1383,7 @@ public class clsServletUtilities {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					"ServletUtilities.getPlacesAPIKey"
 					+ " [133173634567]"

@@ -123,12 +123,12 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 			}
 		}
 	}
-	public void save(ServletContext context, String sConf, String sUser) throws Exception{
+	public void save(ServletContext context, String sDBIB, String sUser) throws Exception{
 		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".save - user: " + sUser);
 		} catch (Exception e) {
@@ -264,7 +264,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
     	}
     	return;
     }
-	public void post_without_data_transaction (ServletContext context, String sConf, String sUser) throws Exception{
+	public void post_without_data_transaction (ServletContext context, String sDBIB, String sUser) throws Exception{
 		if(get_iposted().compareToIgnoreCase("1") == 0){
 			throw new Exception("This statement is already posted.");
 		}
@@ -273,7 +273,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
-				sConf, 
+				sDBIB, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString() + ".post_without_datatransaction - user: " + sUser));
 		} catch (Exception e1) {
@@ -392,7 +392,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		}
 	}
 	public void load (
-		String sConf,
+		String sDBIB,
 		String sUserID,
 		String sUserFullName,
 		ServletContext context
@@ -400,7 +400,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf, 
+			sDBIB, 
 			"MySQL", 
 			SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUserID + " " + sUserFullName);
 		try {
@@ -595,11 +595,11 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
     	return;
     }
 
-    public void delete(ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName) throws Exception{
+    public void delete(ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBIB, 
     			"MySQL", 
     			SMUtilities.getFullClassName(this.toString()) + ".delete - user: " + sUserID + " " + sUserFullName);
     	if (conn == null){

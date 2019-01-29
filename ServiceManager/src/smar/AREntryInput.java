@@ -401,7 +401,7 @@ public class AREntryInput extends java.lang.Object{
 		}
 		return s;
 	}
-	public boolean loadToEntry (AREntry entry, ServletContext context, String sConf){
+	public boolean loadToEntry (AREntry entry, ServletContext context, String sDBID){
 		
 		boolean bEntriesAreValid = true;
 		//clearErrorMessages();
@@ -526,13 +526,13 @@ public class AREntryInput extends java.lang.Object{
 			for (int i = 0; i < m_LineInputArray.size(); i ++){
 				if (entry.sDocumentType().equalsIgnoreCase(ARDocumentTypes.APPLYTO_STRING)){
 					//Load the lines as apply-to lines
-					if(!loadToApplyToLine(i, entry, context, sConf)){
+					if(!loadToApplyToLine(i, entry, context, sDBID)){
 						bEntriesAreValid = false;
 					}
 				}
 				if (entry.sDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
 					//Load the lines as cash lines
-					if(!loadToCashLine(i, entry, context, sConf)){
+					if(!loadToCashLine(i, entry, context, sDBID)){
 						bEntriesAreValid = false;
 					}
 				}
@@ -647,7 +647,7 @@ public class AREntryInput extends java.lang.Object{
 		}
 		return bEntriesAreValid;
 	}
-	private boolean loadToCashLine(int iLineIndex, AREntry entry, ServletContext context, String sConf){
+	private boolean loadToCashLine(int iLineIndex, AREntry entry, ServletContext context, String sDBID){
 
 		boolean bEntriesAreValid = true;
 		
@@ -673,7 +673,7 @@ public class AREntryInput extends java.lang.Object{
 			}
 		}else{
 			ARTransaction trans = new ARTransaction(m_LineInputArray.get(iLineIndex).getDocAppliedToID());
-			if (!trans.load(context, sConf)){
+			if (!trans.load(context, sDBID)){
 				line.setAmountString("0.00");
 			}else{
 				BigDecimal bdCurrentAmount = trans.getdCurrentAmount();
@@ -724,7 +724,7 @@ public class AREntryInput extends java.lang.Object{
 					m_sCustomerNumber, 
 					line.sDocAppliedTo(),
 					context, 
-					sConf)
+					sDBID)
 				){
 					bEntriesAreValid = false;
 					m_sErrorMessageArray.add("Could not load apply-to doc " + line.sDocAppliedTo()
@@ -749,7 +749,7 @@ public class AREntryInput extends java.lang.Object{
 		}
 		return bEntriesAreValid;
 	}
-	private boolean loadToApplyToLine(int iLineIndex, AREntry entry, ServletContext context, String sConf){
+	private boolean loadToApplyToLine(int iLineIndex, AREntry entry, ServletContext context, String sDBID){
 
 		boolean bEntriesAreValid = true;
 		
@@ -768,7 +768,7 @@ public class AREntryInput extends java.lang.Object{
 			}
 		}else{
 			ARTransaction trans = new ARTransaction(m_LineInputArray.get(iLineIndex).getDocAppliedToID());
-			if (!trans.load(context, sConf)){
+			if (!trans.load(context, sDBID)){
 				line.setAmountString("0.00");
 			}else{
 				line.setAmountString(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount()));
@@ -820,7 +820,7 @@ public class AREntryInput extends java.lang.Object{
 					m_sCustomerNumber, 
 					line.sDocAppliedTo(),
 					context, 
-					sConf)
+					sDBID)
 				){
 					bEntriesAreValid = false;
 					m_sErrorMessageArray.add("Could not load apply-to doc " + line.sDocAppliedTo()
@@ -829,7 +829,7 @@ public class AREntryInput extends java.lang.Object{
 				}else{
 					line.sDocAppliedToId(trans.getsTransactionID());
 					ARCustomer cust = new ARCustomer(m_sCustomerNumber);
-					if (!cust.load(context, sConf)){
+					if (!cust.load(context, sDBID)){
 						bEntriesAreValid = false;
 						m_sErrorMessageArray.add("Could not load customer to check apply-to doc " + line.sDocAppliedTo()
 							+ " for customer " + m_sCustomerNumber
@@ -838,10 +838,10 @@ public class AREntryInput extends java.lang.Object{
 						String sGLAcct = "";
 						if (trans.getiDocType() == ARDocumentTypes.PREPAYMENT){
 							//If it's a prepay, then the GL Acct is the Customer Deposit account:
-							sGLAcct = cust.getARPrepayLiabilityAccount(context, sConf);
+							sGLAcct = cust.getARPrepayLiabilityAccount(context, sDBID);
 						}else{
 							//If it's NOT a prepay, then the GL acct is just the AR account:
-							sGLAcct = cust.getARControlAccount(context, sConf);
+							sGLAcct = cust.getARControlAccount(context, sDBID);
 						}
 						line.sGLAcct(sGLAcct);
 					}

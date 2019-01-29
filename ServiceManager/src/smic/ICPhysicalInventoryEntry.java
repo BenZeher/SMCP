@@ -98,8 +98,8 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 				ICPhysicalInventoryEntry.ParamLocation, req).trim().toUpperCase();
 	}
 
-	public boolean load(ServletContext context, String sConf, String sUserID, String sUserFullName) {
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",
+	public boolean load(ServletContext context, String sDBID, String sUserID, String sUserFullName) {
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL",
 				this.toString() + " - user: " 
 		+ sUserID
 		+ " - "
@@ -167,9 +167,9 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 	}
 
 	public boolean save_with_data_transaction(ServletContext context,
-			String sConf, String sUserID, String sUserFullName) {
+			String sDBID, String sUserID, String sUserFullName) {
 
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL",
 				this.toString() + " - user: " 
 		+ sUserID
 		+ " - "
@@ -185,7 +185,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		try {
 			option.checkAndUpdatePostingFlagWithoutConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				clsServletUtilities.getFullClassName(this.toString()) + ".save_with_data_transaction", 
 				sUserFullName, 
 				"SAVING PHYSICAL INVENTORY");
@@ -196,7 +196,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			try {
-				option.resetPostingFlagWithoutConnection(context, sConf);
+				option.resetPostingFlagWithoutConnection(context, sDBID);
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
@@ -210,7 +210,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			try {
-				option.resetPostingFlagWithoutConnection(context, sConf);
+				option.resetPostingFlagWithoutConnection(context, sDBID);
 			} catch (Exception e) {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
@@ -219,7 +219,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 			return false;
 		}
 		try {
-			option.resetPostingFlagWithoutConnection(context, sConf);
+			option.resetPostingFlagWithoutConnection(context, sDBID);
 		} catch (Exception e) {
 			//We won't stop for this, but the next user will have to clear the IC posting flag
 		}
@@ -1021,9 +1021,9 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		return true;
 	}
 	*/
-	public boolean delete(ServletContext context, String sConf, String sUserID, String sUserFullName) {
+	public boolean delete(ServletContext context, String sDBID, String sUserID, String sUserFullName) {
 
-		Connection conn = clsDatabaseFunctions.getConnection(context, sConf, "MySQL",
+		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL",
 				this.toString() + " - user: " + sUserID
 				+ " - "
 				+ sUserFullName

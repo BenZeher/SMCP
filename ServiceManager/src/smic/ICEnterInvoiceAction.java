@@ -428,7 +428,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 	    }
 		return;
 	}
-	private void updateVendorOnReceipt(HttpServletRequest req, String sConf, String sUser, String sUserID, String sUserFullName, String sVendor) throws Exception{
+	private void updateVendorOnReceipt(HttpServletRequest req, String sDBID, String sUser, String sUserID, String sUserFullName, String sVendor) throws Exception{
 		if (req.getParameter(ICEnterInvoiceEdit.UPDATE_VENDOR_CONFIRM_CHECKBOX) == null){
 			throw new Exception("You chose to update the vendor on this receipt, but did not check the box to confirm.");
 		}
@@ -441,25 +441,25 @@ public class ICEnterInvoiceAction extends HttpServlet{
 		}
 		ICPOReceiptHeader porec = new ICPOReceiptHeader();
 		porec.setsID(sReceiptID);
-		if (!porec.load(getServletContext(), sConf, sUserID, sUserFullName)){
+		if (!porec.load(getServletContext(), sDBID, sUserID, sUserFullName)){
 			throw new Exception("Could not load receipt number: '" + sReceiptID + "'.");
 		}
 		ICPOHeader pohead = new ICPOHeader();
 		pohead.setsID(porec.getspoheaderid());
-		if (!pohead.load(getServletContext(), sConf, sUserID, sUserFullName)){
+		if (!pohead.load(getServletContext(), sDBID, sUserID, sUserFullName)){
 			throw new Exception("Could not load PO #" + porec.getspoheaderid() + " to update vendor.");
 		}
 		String sOriginalVendor = pohead.getsvendor();
 		String sOriginalVendorName = pohead.getsvendorname();
 		
 		try {
-			pohead.updateVendor(sVendor, getServletContext(), sConf, sUserID, sUserFullName);
+			pohead.updateVendor(sVendor, getServletContext(), sDBID, sUserID, sUserFullName);
 		} catch (Exception e) {
 			throw new Exception("Error updating vendor - " + e.getMessage());
 		}
 		
 		//Create a log entry detailing the change:
-		SMLogEntry log = new SMLogEntry(sConf, getServletContext());
+		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 			sUserID, 
 			UPDATE_VENDOR_LOG_ENTRY, 

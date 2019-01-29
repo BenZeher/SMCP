@@ -30,8 +30,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditItemsEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sItemObjectName = "Item";
-	private static String sICEditItemsEditCalledClassName = "ICEditItemsAction";
+	private static final String sItemObjectName = "Item";
+	private static final String sICEditItemsEditCalledClassName = "ICEditItemsAction";
 
 	private boolean bCreatingAnItemFromPO;
 	public void doPost(HttpServletRequest request,
@@ -265,7 +265,7 @@ public class ICEditItemsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(item, out, sDBID, sUserFullName, bCreatingAnItemFromPO, request, sDBID, sUserID);
+	    Edit_Record(item, out, sDBID, sUserFullName, bCreatingAnItemFromPO, request, sUserID);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -273,11 +273,10 @@ public class ICEditItemsEdit extends HttpServlet {
 	private void Edit_Record(
 			ICItem item, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			String sUserFullName,
 			boolean bCreatingItemFromPO,
 			HttpServletRequest req,
-			String sDBID,
 			String sUserID
 			){
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sICEditItemsEditCalledClassName + "' METHOD='POST'>");
@@ -468,7 +467,7 @@ public class ICEditItemsEdit extends HttpServlet {
 	        ResultSet rsCategories = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (2) - User: " 
 	        	+ sUserID
@@ -503,7 +502,7 @@ public class ICEditItemsEdit extends HttpServlet {
 	        ResultSet rsPriceListCodes = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record (3) - User: " 
 	        	+ sUserID
@@ -806,7 +805,7 @@ public class ICEditItemsEdit extends HttpServlet {
         	//System.out.println("[1382549750] SQL = " + sSQL);
 	        ResultSet rsQtyAtLocations = clsDatabaseFunctions.openResultSet(sSQL, 
 			  getServletContext(), 
-			  sConf,
+			  sDBID,
 			  "MySQL",
 			  this.toString() + ".Edit_Record (3) - User: " 
 			  + sUserID

@@ -196,7 +196,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 
-	    Edit_Record(acctset, out, sDBID, sUserID, sUserFullName, sDBID);
+	    Edit_Record(acctset, out, sDBID, sUserID, sUserFullName);
 		
 		out.println("</BODY></HTML>");
 	}
@@ -204,10 +204,9 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 	private void Edit_Record(
 			ICAccountSet acctset, 
 			PrintWriter pwOut, 
-			String sConf,
+			String sDBID,
 			String sUserID,
-			String sUserFullName,
-			String sDBID
+			String sUserFullName
 			){
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + sEditAccountSetsCalledClassName + "' METHOD='POST'>");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
@@ -312,7 +311,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
-	        	sConf,
+	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".Edit_Record - User: " 
 	        	+ sUserID

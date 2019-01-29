@@ -312,10 +312,10 @@ public class ICPOInvoice extends clsMasterEntry{
 
 	}
 
-	public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+	public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".load - user: " 
 				+ sUserID
@@ -536,7 +536,7 @@ public class ICPOInvoice extends clsMasterEntry{
 
 		return sLineTotal;
 	}
-	public boolean save_with_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName){
+	public boolean save_with_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName){
 
 		if (
 				(m_sexportsequencenumber.compareToIgnoreCase("0") != 0)
@@ -549,7 +549,7 @@ public class ICPOInvoice extends clsMasterEntry{
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".save_with_data_transaction - user: " + sUserID
 				+ " - " + sUserFullName
@@ -571,7 +571,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			return false;
 		}
 
-		SMLogEntry log = new SMLogEntry(sConf, context);
+		SMLogEntry log = new SMLogEntry(sDBID, context);
 		if(!save_without_data_transaction (conn, sUser, log)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080917]");
@@ -908,7 +908,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		//log.writeEntry(sUser, SMLogEntry.LOG_OPERATION_UPDATEINVNUMONRECEIPT, "Successfully updated invoice ID's", SQL, "[1376509409]");
 		return true;
 	}
-	public boolean addReceiptLines(String sReceiptID, ServletContext context, String sConf, String sUser){
+	public boolean addReceiptLines(String sReceiptID, ServletContext context, String sDBID, String sUser){
 		
 		boolean bResult = true;
 		sReceiptID = sReceiptID.trim();
@@ -941,7 +941,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			ResultSet rsReceipts = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".addReceiptLines, checking vendor - user: " + sUser
 			);
@@ -980,7 +980,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".addReceiptLines - user: " + sUser 
 			);
@@ -1073,11 +1073,11 @@ public class ICPOInvoice extends clsMasterEntry{
 
 		return bdLineInvoicedCostTotal;
 	}
-	public boolean delete (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName){
+	public boolean delete (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName){
 
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".delete - user: " 
 				+ sUserID

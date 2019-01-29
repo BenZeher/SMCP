@@ -243,11 +243,11 @@ public class ICOption extends Thread{
     	}
 	}
     
-    public void load(String sConf, ServletContext context, String sUser) throws Exception{
+    public void load(String sDBID, ServletContext context, String sUser) throws Exception{
     	Connection conn;
     	try {
     		conn = clsDatabaseFunctions.getConnectionWithException(context, 
-    			   sConf, 
+    			   sDBID, 
     			   "MySQL",
     			   SMUtilities.getFullClassName(this.toString()) + ".load - user: " + sUser);
     	} catch (Exception e) {
@@ -264,7 +264,7 @@ public class ICOption extends Thread{
     	clsDatabaseFunctions.freeConnection(context, conn, "[1547080875]");
     }
 
-    public boolean saveEditableFields(ServletContext context, String sConf, String sUserName){
+    public boolean saveEditableFields(ServletContext context, String sDBID, String sUserName){
     	
     	//Only re-sets the fields that can be edited from the 'Edit Options' screen:
     	
@@ -274,7 +274,7 @@ public class ICOption extends Thread{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".saveEditableFields - user: sUserName");
 			if (rs.next()){
@@ -293,7 +293,7 @@ public class ICOption extends Thread{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".saveEditableFields - user: sUserName");
 			if (rs.next()){
@@ -331,7 +331,7 @@ public class ICOption extends Thread{
     	try {
     		if(!clsDatabaseFunctions.executeSQL(SQL, 
     				context,
-    				sConf,
+    				sDBID,
     				"MySQL",
     				this.toString() + ".saveEditableFields - User: " + sUserName)){
     			m_serrormessage = "Could not update icoptions record";

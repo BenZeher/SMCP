@@ -296,7 +296,7 @@ public class ICEditReceiptLineEdit  extends HttpServlet {
 	}
 	private void loadPOLineData(
 			ICPOReceiptLine line, 
-			String sConf, 
+			String sDBID, 
 			String sUser, 
 			boolean bAddingNewReceiptLine) throws SQLException{
 	    //Load information from the po line so we can populate the receipt line data:
@@ -311,7 +311,7 @@ public class ICEditReceiptLineEdit  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".loadPOLineData - user: " + sUser
 					);

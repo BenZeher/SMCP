@@ -191,7 +191,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 	private void Delete_Record(
 			String sCode,
 			PrintWriter pwOut,
-			String sConf,
+			String sDBID,
 			String sUser) throws Exception{
 		
 		//Include all the SQLs needed to delete a record:
@@ -202,7 +202,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 			clsDatabaseFunctions.executeSQL(
 				SQL, 
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".Delete_Record - user: " + sUser);
 		}catch (SQLException ex){
@@ -211,7 +211,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 	}
 	
 	private void Add_Record(String sCode,
-	   String sConf, 
+	   String sDBID, 
 	   PrintWriter pwOut,
 	   String sUser) throws Exception{
 		
@@ -227,7 +227,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					sSQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".Add_Record - user: " + sUser);
 			if (rs.next()){
@@ -252,7 +252,7 @@ public class ICEditPOShipViasEdit extends HttpServlet {
 			+ ")"
 		; 
 		try {
-			clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sConf); 
+			clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 		}catch (SQLException ex){
 			throw new Exception("Error inserting new ship via with SQL: " + sSQL + " - " + ex.getMessage() + ".<BR>");
 		}

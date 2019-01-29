@@ -46,10 +46,10 @@ public class ICVendorItem extends clsMasterEntry{
 		initBidVariables();
         }
 
-    public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -194,11 +194,11 @@ public class ICVendorItem extends clsMasterEntry{
     	
     	return true;
     }
-    public boolean save_without_data_transaction (ServletContext context, String sConf, String sUser,  String sUserID, String sUserFullName){
+    public boolean save_without_data_transaction (ServletContext context, String sDBID, String sUser,  String sUserID, String sUserFullName){
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -268,11 +268,11 @@ public class ICVendorItem extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

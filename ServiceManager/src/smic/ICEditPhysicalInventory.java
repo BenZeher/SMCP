@@ -150,7 +150,6 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 					getServletContext(), 
 					smedit.getsDBID(), 
 					smedit.getUserName(), 
-					smedit.getsDBID(),
 					smedit.getPWOut()
 			);
 	    }
@@ -432,9 +431,8 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 			String sLocation,
 			String sPhysicalInventoryStatus,
 			ServletContext context, 
-			String sConf, 
+			String sDBID, 
 			String sUser,
-			String sDBID,
 			PrintWriter out){
 		
 		//List entry counts here:
@@ -461,7 +459,7 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				SMUtilities.getFullClassName(this.toString()) + ".createCountList - user: " + sUser
 			);

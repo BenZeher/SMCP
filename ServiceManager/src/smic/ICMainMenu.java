@@ -98,7 +98,7 @@ public class ICMainMenu extends HttpServlet {
 			boolean bMobileView,
 			String sUserName, 
 			String sUserID,
-			String sConf, 
+			String sDBID, 
 			PrintWriter pwOut,
 			String sLicenseModuleLevel
 	){
@@ -139,7 +139,7 @@ public class ICMainMenu extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf,
+					sDBID,
 					"MySQL",
 					this.toString() + ".buildMenus - User: " + sUserName);
 
@@ -179,7 +179,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -191,7 +191,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -218,7 +218,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -230,7 +230,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -250,7 +250,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -262,7 +262,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -289,7 +289,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);
@@ -301,7 +301,7 @@ public class ICMainMenu extends HttpServlet {
 					arPermittedFunctionNames,
 					arPermittedFunctionLinks,
 					arMenu,
-					sConf,
+					sDBID,
 					pwOut,
 					getServletContext()
 			);

@@ -1127,7 +1127,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	}
 	private String getPOID(
 			String sReceiptID, 
-			String sConf, 
+			String sDBID, 
 			ServletContext context, 
 			String sUser,
 			String sUserID,
@@ -1136,7 +1136,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		String s = "PONOTFOUND";
 		ICPOReceiptHeader rec = new ICPOReceiptHeader();
 		rec.setsID(sReceiptID);
-		if(!rec.load(context, sConf, sUserID, sUserFullName)){
+		if(!rec.load(context, sDBID, sUserID, sUserFullName)){
 			return s;
 		}else{
 			return rec.getspoheaderid();

@@ -117,7 +117,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
     	return;
 	}
 	
-	private boolean deleteInactives(ServletContext context, String sConf, Date datDeleteDate, String sUserID, String sUserFullName, String sWarning){	
+	private boolean deleteInactives(ServletContext context, String sDBID, Date datDeleteDate, String sUserID, String sUserFullName, String sWarning){	
 	
 		sWarning = "";
 		iDeleteInactiveItemsItemCounter = 0;
@@ -139,7 +139,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 		try{
 			Connection conn = clsDatabaseFunctions.getConnection(
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".deleteInactives - User: " + sUserID
 					+ " - "

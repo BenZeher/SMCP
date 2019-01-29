@@ -189,11 +189,11 @@ public class ICEditBatchesUpdate extends HttpServlet{
 	    }
     }
 
-    private boolean save_batch(ICEntryBatch batch, ServletContext context, String sConf, String sUserFullName, String sUserID){
+    private boolean save_batch(ICEntryBatch batch, ServletContext context, String sDBID, String sUserFullName, String sUserID){
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
-			sConf,
+			sDBID,
 			"MySQL",
 			this.toString() + ".save_batch - User: " + sUserFullName);
 		if (conn == null){

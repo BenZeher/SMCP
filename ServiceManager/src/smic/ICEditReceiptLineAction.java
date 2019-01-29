@@ -145,7 +145,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
 	}
 	private void processSave(
 			ICPOReceiptLine line, 
-			String sConf, 
+			String sDBID, 
 			String sUser,
 			String sUserID,
 			String sUserFullName,
@@ -156,7 +156,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
     	ICOption options = new ICOption();
     	try {
     		options.checkAndUpdatePostingFlagWithoutConnection(getServletContext(), 
-				sConf, 
+				sDBID, 
 				clsServletUtilities.getFullClassName(this.toString() + ".processSave"), 
 				sUserFullName, 
 				"EDIT RECEIPT LINE");
@@ -164,17 +164,17 @@ public class ICEditReceiptLineAction extends HttpServlet{
 			throw new Exception("Error checking options flag - " + e1.getMessage() + ".");
 		}
     	try{
-    		editReceiptLine(line,sConf,sUser,sUserID,sUserFullName,sReceiptLastUpdatedTime,sReceiptLstUpdatedFunction,sReceiptLastUpdatedByFullName);
+    		editReceiptLine(line,sDBID,sUser,sUserID,sUserFullName,sReceiptLastUpdatedTime,sReceiptLstUpdatedFunction,sReceiptLastUpdatedByFullName);
     	} catch (Exception e1){
-    		options.resetPostingFlagWithoutConnection(getServletContext(), sConf);
+    		options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
     		throw new Exception("Error editing receipt line - "+e1.getMessage()+".");
     	}
-    	options.resetPostingFlagWithoutConnection(getServletContext(), sConf);
+    	options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
     	
 	}
 	public void editReceiptLine(
 			ICPOReceiptLine line, 
-			String sConf, 
+			String sDBID, 
 			String sUser,
 			String sUserID,
 			String sUserFullName,
@@ -184,7 +184,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
 		//Can't save if somehow the receipt has already been posted to inventory:
     	ICPOReceiptHeader rcpt = new ICPOReceiptHeader();
     	rcpt.setsID(line.getsreceiptheaderid());
-    	if (!rcpt.load(getServletContext(), sConf, sUserID, sUserFullName)){
+    	if (!rcpt.load(getServletContext(), sDBID, sUserID, sUserFullName)){
     		throw new Exception("Could not read receipt ID " + line.getsreceiptheaderid() + " - " + rcpt.getErrorMessages() + ".");
     	}
     	if (rcpt.getspostedtoic().compareToIgnoreCase("1") == 0){
@@ -203,7 +203,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
 
     	if(!line.save_without_data_transaction(
 				getServletContext(), 
-				sConf, 
+				sDBID, 
 				sUser,
 				sUserID,
 				sUserFullName,

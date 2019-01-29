@@ -196,7 +196,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 	}
 	private void saveLine(
 			ServletContext context, 
-			String sConf, 
+			String sDBID, 
 			String sUserID,
 			String sUserFullName
 		) throws Exception{
@@ -204,7 +204,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		String sWarning = "";
 		
 		ICEntry entry = new ICEntry();
-		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sConf)){
+		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				sWarning += "\n" + entry.getErrorMessage().get(i);
 			}
@@ -215,7 +215,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 					context, 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					this.toString() + ".saveLine - User: " 
 					+ sUserID
@@ -329,7 +329,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		
 		//Finally, load the line again into the class:
 		m_Line = new ICEntryLine();
-		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sConf)){
+		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sDBID)){
 			sWarning += "\n" + m_Line.getErrorMessage();
 			throw new Exception("Error [1531849449] reloading saved line - " + sWarning);
 		}

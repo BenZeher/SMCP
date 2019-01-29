@@ -159,7 +159,7 @@ public class ICItemPriceEdit extends HttpServlet {
 	private boolean readItemPriceRecord(
 			String sItem, 
 			String sPriceCode, 
-			String sConf, 
+			String sDBID, 
 			String sUser) throws SQLException{
 		
 		String SQL = "SELECT"
@@ -174,7 +174,7 @@ public class ICItemPriceEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".validateItem - user: " + sUser
 					);
@@ -258,7 +258,7 @@ public class ICItemPriceEdit extends HttpServlet {
 				);
 		
 	}
-	private boolean validateItem(String sItem, String sConf, String sUser){
+	private boolean validateItem(String sItem, String sDBID, String sUser){
 		
 		String SQL = "SELECT"
 			+ " " + SMTableicitems.sItemNumber
@@ -272,7 +272,7 @@ public class ICItemPriceEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".validateItem - user: " + sUser
 					);
@@ -287,7 +287,7 @@ public class ICItemPriceEdit extends HttpServlet {
 			return false;
 		}
 	}
-	private boolean validatePriceCode(String sPriceCode, String sConf, String sUser){
+	private boolean validatePriceCode(String sPriceCode, String sDBID, String sUser){
 		
 		String SQL = "SELECT"
 			+ " " + SMTablepricelistcodes.spricelistcode
@@ -301,7 +301,7 @@ public class ICItemPriceEdit extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
-					sConf, 
+					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".validatePriceCode - user: " + sUser
 					);

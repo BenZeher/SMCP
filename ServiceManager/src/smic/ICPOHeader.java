@@ -201,10 +201,10 @@ public class ICPOHeader extends clsMasterEntry{
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
 	}
-    public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -327,11 +327,11 @@ public class ICPOHeader extends clsMasterEntry{
 		return true;
     }
     
-    public boolean save_without_data_transaction (ServletContext context, String sConf, String sUserID, String sUserFullName, boolean bForceSave){
+    public boolean save_without_data_transaction (ServletContext context, String sDBID, String sUserID, String sUserFullName, boolean bForceSave){
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID
     			+" - "
@@ -699,11 +699,11 @@ public class ICPOHeader extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

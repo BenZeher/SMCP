@@ -61,10 +61,10 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
 		m_datcreated = 
 			clsManageRequestParameters.get_Request_Parameter(ICPhysicalCountLineEntry.ParamdatCreated, req).trim();
 	}
-    public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID
@@ -133,14 +133,14 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     
     public boolean save_without_data_transaction (
     	ServletContext context, 
-    	String sConf, 
+    	String sDBID, 
     	String sUserID, 
     	String sUserFullName,
     	boolean bAddNewItems){
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID
     			+ " - "
@@ -285,11 +285,11 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " 
     			+ sUserID

@@ -174,13 +174,13 @@ public class ICShipmentLineUpdate extends HttpServlet{
 	}
 	private boolean saveLine(
 			ServletContext context, 
-			String sConf, 
+			String sDBID, 
 			String sUserID,
 			String sUserFullName
 		){
 		
 		ICEntry entry = new ICEntry();
-		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sConf)){
+		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
 				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
@@ -188,7 +188,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 		}
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
-				sConf, 
+				sDBID, 
 				"MySQL", 
 				this.toString() + ".saveLine - User: " 
 				+ sUserID
@@ -316,7 +316,7 @@ public class ICShipmentLineUpdate extends HttpServlet{
 		
 		//Finally, load the line again into the class:
 		m_Line = new ICEntryLine();
-		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sConf)){
+		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sDBID)){
 			m_sWarning = m_sWarning + "\n" + m_Line.getErrorMessage();
 			return false;
 		}

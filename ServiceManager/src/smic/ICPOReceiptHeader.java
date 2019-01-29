@@ -101,10 +101,10 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		m_slastupdatedprocess = clsManageRequestParameters.get_Request_Parameter(ICPOReceiptHeader.Paramslastupdatedprocess, req);
 		
 	}
-    public boolean load (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + ".load - user: " + sUserID
     			+ " - "
@@ -186,13 +186,13 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		return true;
     }
     
-    public boolean save_without_data_transaction (ServletContext context, String sConf, String sUser, String sUserID, String sUserFullName){
+    public boolean save_without_data_transaction (ServletContext context, String sDBID, String sUser, String sUserID, String sUserFullName){
     	
     	//We have to check for record concurrency OUTSIDE of a data transaction or the timestamp field ('dattimelastupdated') might be inaccurate:
         try {
  			checkRecordConcurrency(
  				context,
- 			    sConf,
+ 			    sDBID,
  			    sUser);
  		} catch (Exception e) {
  			super.addErrorMessage(e.getMessage());
@@ -201,7 +201,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + ".save_without_data_transaction - user: " + sUserID
     			+ " - "
@@ -331,11 +331,11 @@ public class ICPOReceiptHeader extends clsMasterEntry{
     	return true;
     }
 
-    public boolean delete (ServletContext context, String sConf, String sUserID, String sUserFullName){
+    public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sConf, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + ".delete - user: " + sUserID
     			+ " - "

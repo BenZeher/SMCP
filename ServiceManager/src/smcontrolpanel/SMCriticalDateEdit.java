@@ -260,7 +260,7 @@ public class SMCriticalDateEdit  extends HttpServlet {
 					+ " " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname
-					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate
+					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate + ""
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
 					+ " FROM " + SMTableicpoheaders.TableName
 					+ " WHERE " +  SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid + " = '" + entry.getdocnumber() + "'";
@@ -325,10 +325,12 @@ public class SMCriticalDateEdit  extends HttpServlet {
 					}
 					
 					if( iType == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
+						System.out.println("I'm Here!!");
+						System.out.println("Date in data:" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate)));
 						s +="<TR><TD ALIGN=RIGHT><b>Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Number: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Status: </b></TD><TD ALIGN=LEFT>" + SMTableicpoheaders.getStatusDescription(rsInfo.getInt((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus))) + "</TD></TR>"; 
-						s +="<TR><TD ALIGN=RIGHT><b>Expected: </b></TD><TD ALIGN=LEFT>" + clsDateAndTimeConversions.utilDateToString(rsInfo.getDate((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate)), "M/d/yyyy") + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Expected: </b></TD><TD ALIGN=LEFT>" + clsDateAndTimeConversions.resultsetDateStringToString(rsInfo.getString(SMTableicpoheaders.datexpecteddate)) + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>PO Number: </b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
 							+ SMUtilities.getURLLinkBase(getServletContext()) 
 							+ "smic.ICEditPOEdit?lid=" 

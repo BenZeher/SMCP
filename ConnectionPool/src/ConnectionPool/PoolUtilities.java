@@ -19,7 +19,7 @@ public class PoolUtilities {
 	private static final String MYSQL_DRIVER_CLASS_NAME = "com.mysql.jdbc.Driver";
 	private static final String MYSQL_DEFAULT_PORT = "3306";
 	private static final String MYSQL_DATABASE_TYPE = "MySQL";
-	private static final String MYSQL_CONNECT_STRING = "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
+	private static final String MYSQL_CONNECT_STRING = "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True"; //&zeroDateTimeBehavior=round";
 	private static boolean bDebugMode = false;
 
 	protected static LabelledConnection OpenDatabaseConnection(

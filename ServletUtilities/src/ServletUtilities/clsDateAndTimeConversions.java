@@ -198,6 +198,8 @@ public class clsDateAndTimeConversions {
 		}
 	}
 
+	//NOTE: This function will throw an exception for 0000-00-00 date using MySQL Connector/J 3.1 and later versions 
+	//Use resultsetDateStringToString if zero dates are being passed to this function.
 	public static String utilDateToString (java.util.Date d, String sDateFormat){
 	
 		Calendar cal = new GregorianCalendar();

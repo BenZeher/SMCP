@@ -672,7 +672,8 @@ public class SMInvoice extends clsMasterEntry{//java.lang.Object{
     			clsDatabaseFunctions.FormatSQLStatement(line.getM_sMechInitial()), 
     			clsDatabaseFunctions.FormatSQLStatement(line.getM_sMechFullName()), 
     			clsDatabaseFunctions.FormatSQLStatement(line.getM_sLabel()),
-    			Integer.toString(line.getM_iSuppressDetailOnInvoice())
+    			Integer.toString(line.getM_iSuppressDetailOnInvoice()),
+    			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(line.getM_dExpensedCost()) 
     	);
     	try{
     		clsDatabaseFunctions.executeSQL(SQL, conn);

@@ -16,6 +16,7 @@ import SMClasses.SMLogEntry;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMTax;
+import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTablearterms;
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableinvoicedetails;
@@ -230,6 +231,20 @@ public class SMCreateInvoice extends java.lang.Object{
 					cInvDetail.set_iLaborItem(Integer.parseInt(item.getLaborItem()));
 				}
 				
+				//Calculate assumed (average) cost of the item. 
+				cInvDetail.setM_dExpensedCost(new BigDecimal(0.00));
+				//if the item is expensed "non-stock".
+				if(Integer.parseInt(cOrdDetail.getM_iIsStockItem()) == 0) {
+					//Average the cost of the item from all receipts currently in the system
+					try{
+					cInvDetail.setM_dExpensedCost(Calculate_Invoice_Detail_Expensed_Cost(cOrdDetail.getM_sItemNumber(), conn));
+					}catch (Exception e){
+						throw new Exception ("Failed to calculateinvoice detail expensed cost for item " 
+								+ cOrdDetail.getM_sItemNumber() + " - " + e.getMessage());
+					}
+				}
+				
+				//Add detail line to the invoice.
 				cInvoice.Add_Detail(cInvDetail);
 			}
 		}
@@ -411,6 +426,30 @@ public class SMCreateInvoice extends java.lang.Object{
 		return;
 
 	}
+	
+	private BigDecimal Calculate_Invoice_Detail_Expensed_Cost(String sItemNumber, Connection conn) throws Exception{
+		
+		BigDecimal bdExpensedCost = new BigDecimal(0.00);
+		String sSQL = "SELECT " + SMTableaptransactionlines.sitemnumber
+			+ ", AVG(" + SMTableaptransactionlines.bdamount + " / " + SMTableaptransactionlines.bdqtyreceived + ") AS AVGCOST"
+			+ " FROM " + SMTableaptransactionlines.TableName
+			+ " WHERE (" + SMTableaptransactionlines.sitemnumber + " = '" + sItemNumber + "')"
+			+ " GROUP BY " + SMTableaptransactionlines.sitemnumber
+			;
+
+		try{
+			ResultSet rsExpensedCost = clsDatabaseFunctions.openResultSet(sSQL, conn);		    
+			if (rsExpensedCost.next()){
+				bdExpensedCost = rsExpensedCost.getBigDecimal("AVGCOST");
+			}
+			rsExpensedCost.close();
+		}catch (SQLException ex){
+			throw new Exception("Error in Calculate_Invoice_Detail_Expensed_Cost: " + ex.getMessage());
+		}
+		
+		return bdExpensedCost;
+	}
+
 	public static void Calculate_Invoice_Due_Date(String sTermCode,
 			Date datDocDate,
 			Connection conn) throws SQLException{

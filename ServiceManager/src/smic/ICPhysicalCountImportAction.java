@@ -42,16 +42,14 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static final int FIELD_QTY = 1;
 	
 	//Member variables for the count:
-	private static String m_sPhysicalInventoryID = "";
-	private static String m_sCountID = "";
-	private static String m_sCountDesc = "";
+	
+
 	//private static String m_sValidStartingItem = ""; //TJR - removed these 10/1/2018
 	//private static String m_sValidEndingItem = "";
     
-	private static String sPhysicalCountImportStatus = "";
-	private static String sPhysicalCountImportError = "";
-	private static String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
+	private static final String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
 	private static boolean bDebugMode = false;
+	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -78,174 +76,48 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 
 	    
-	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
-	    		+ request.getContentType()
-	    		+ " - getRequestURI: "
-	    		+ request.getRequestURI()
-	    	);
-
-			Enumeration<?> headerNames = request.getHeaderNames();
-	    	while (headerNames.hasMoreElements()){
-	    		String sHeaderName = headerNames.nextElement().toString();
-	    		if (bDebugMode){
-	    			System.out.println("headerName = " + sHeaderName);
-	    			System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
-	    		}
-	    	}
-	    }
-	    
-	    if (!processRequest(CurrentSession, request, out, sDBID,sUserID,sUserFullName)){
-			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
-					+ "?Warning=" + sPhysicalCountImportError
-					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);
-			}		
-			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
-					+ "?Warning=" + sPhysicalCountImportError
-					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			);
-	    }else{
-	    	sPhysicalCountImportStatus = "Import completed without errors.";
-			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
-					+ "?Status=" + sPhysicalCountImportStatus
-					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID				
-				);
-			}
-	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
-					+ "?Status=" + sPhysicalCountImportStatus
-					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			);
-	    }
-		
-		return;
-	}
-	private boolean createTempImportFileFolder(String sTempFileFolder){
-	    File dir = new File(sTempFileFolder);
-	    if (dir.exists()) {
-	      return true;
-	    }
-	    
-	    //Need to create the path:
-	    try{
-	        // Create one directory
-	        if (!new File(sTempFileFolder).mkdir()) {
-	        	this.addToErrorMessage("<BR>Error creating temp upload folder.");
-	        	return false;
-	        }    
-        }catch (Exception e){//Catch exception if any
-        	this.addToErrorMessage("<BR>Error creating temp upload folder: " + e.getMessage() + ".");
-	    }
-	    return true;
-	}
-	private boolean processRequest(
-			HttpSession ses, 
-			HttpServletRequest req,
-			PrintWriter pwOut,
-			String sDBID,
-			String sUserID,
-			String sUserFullName
-			){
-
-    	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
-			+ System.getProperty("file.separator")
-			+ "iccountuploads"
-		;
-
-    	//If the folder has not been created, create it now:
-		if (!createTempImportFileFolder(sTempFilePath)){
-			return false;
-		}
-    	
-		//First, remove any temporary files:
-		if (!deleteCurrentTempImportFiles(sTempFilePath)){
-			return false;
-		}
-
-		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
-		}
-		
-		boolean bResult = writeFileAndProcess(
-			sTempFilePath, 
-			ses, 
-			req, 
-			pwOut, 
-			sDBID,
-			sUserID,
-			sUserFullName);
-		deleteCurrentTempImportFiles(sTempFilePath);
-		return bResult;
-		
-	}
-	@SuppressWarnings("unchecked")
-	private boolean writeFileAndProcess(
-			String sTempImportFilePath,
-			HttpSession ses, 
-			HttpServletRequest req,
-			PrintWriter pwOut,
-			String sDBID,
-			String sUserID,
-			String sUserFullName
-	){
-		//Check to see if the file has a header row:
+	    String sPhysicalInventoryID = "";
+		String m_sCountDesc = "";
 		boolean bIncludesHeaderRow = false;
-		boolean bAddNewItems = false;
-		
-	    //Read the file from the request:
+	    boolean bAddNewItems = false;
+	    FileItem m_uploadedFile = null;
+	    
+	    //Get the form variables here:
         DiskFileItemFactory factory = new DiskFileItemFactory();
         // maximum size that will be stored in memory
         factory.setSizeThreshold(4196);
         // the location for saving data that is larger than getSizeThreshold()
-        factory.setRepository(new File(sTempImportFilePath));
         ServletFileUpload upload = new ServletFileUpload(factory);
         // maximum size before a FileUploadException will be thrown
         upload.setSizeMax(1000000);
-        boolean isMultipart = ServletFileUpload.isMultipartContent(req);
+        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
         
         if (bDebugMode){
         	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
         }
 		List<FileItem> fileItems = null;
 		try {
-			fileItems = upload.parseRequest(req);
+			fileItems = upload.parseRequest(request);
 		} catch (FileUploadException e1) {
-			this.addToErrorMessage("<BR>"
-				+ "Error on upload.parseRequest: " + e1.getMessage());
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+				System.out.println("Error [1548956116] In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
 			}
-			e1.printStackTrace();
-			return false;
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Warning=" + "Error [1548960605] - " + e1.getMessage()
+					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);
+			return;
 		}
 		Iterator<FileItem> iter = fileItems.iterator();
-		String fileName = "ICIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 		while (iter.hasNext()) {
-		    FileItem item = (FileItem) iter.next();
+			FileItem item = null;
+		    item = (FileItem) iter.next();
 		    if (item.isFormField()) {
-		    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sICPhysicalCountImportActionCallingClass = item.getString();
-					if (bDebugMode){
-						System.out.println(
-							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sICPhysicalCountImportActionCallingClass + "."); 
-					}		
-		    	}
+		    	
 		    	if (item.getFieldName().compareToIgnoreCase(ICPhysicalCountEntry.ParamDesc) == 0){
 		    		m_sCountDesc = item.getString();		    		
 					if (bDebugMode){
@@ -256,12 +128,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					}
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(ICPhysicalInventoryEntry.ParamID) == 0){
-		    		m_sPhysicalInventoryID = item.getString();
+		    		sPhysicalInventoryID = item.getString();
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
-							+ ICPhysicalInventoryEntry.ParamID + " = " + m_sPhysicalInventoryID + "."); 
+							+ ICPhysicalInventoryEntry.ParamID + " = " + sPhysicalInventoryID + "."); 
 					}
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(
@@ -285,22 +157,185 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 							}
 		    	}
 		    	
-		    } else {
+		    }else{
 		    	//It's a file - 
-		    	FileItem fi = item;
-		    	//String fileName = fi.getName();
-		    	
-		        // write the file
-		        try {
-					fi.write(new File(sTempImportFilePath, fileName));
-				} catch (Exception e) {
-					this.addToErrorMessage("<BR>"
-						+ "Error writing temporary file: " + e.getMessage());
-					System.out.println("In " + this.toString() + " error on fi.write: " + e.getMessage());
-					return false;
-				}
-				//InputStream uploadedStream = item.getInputStream();
+		    	m_uploadedFile = item;
 		    }
+	    	
+		}
+	    
+	    if (bDebugMode){
+	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
+	    		+ request.getContentType()
+	    		+ " - getRequestURI: "
+	    		+ request.getRequestURI()
+	    	);
+
+			Enumeration<?> headerNames = request.getHeaderNames();
+	    	while (headerNames.hasMoreElements()){
+	    		String sHeaderName = headerNames.nextElement().toString();
+	    		if (bDebugMode){
+	    			System.out.println("headerName = " + sHeaderName);
+	    			System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
+	    		}
+	    	}
+	    }
+	    
+	    try {
+			processRequest(
+				CurrentSession, 
+				request, 
+				out, 
+				sDBID,
+				sUserID,
+				sUserFullName, 
+				sPhysicalInventoryID, 
+				bIncludesHeaderRow, 
+				bAddNewItems,
+				m_sCountDesc,
+				m_uploadedFile);
+		} catch (Exception e) {
+			if (bDebugMode){
+				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Warning=" + e.getMessage()
+					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+			}		
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+					+ "?Warning=" + e.getMessage()
+					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+					+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);
+			return;
+		}
+	    
+    	String sPhysicalCountImportStatus = "Import completed without errors.";
+		if (bDebugMode){
+			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
+				+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+				+ "?Status=" + sPhysicalCountImportStatus
+				+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+				+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
+				+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID				
+			);
+		}
+    	response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
+				+ "?Status=" + sPhysicalCountImportStatus
+				+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+				+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
+				+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+		);
+		
+		return;
+	}
+	private void createTempImportFileFolder(String sTempFileFolder) throws Exception{
+	    File dir = new File(sTempFileFolder);
+	    if (dir.exists()) {
+	      return;
+	    }
+	    
+	    //Need to create the path:
+	    try{
+	        // Create one directory
+	        if (!new File(sTempFileFolder).mkdir()) {
+	        	throw new Exception("<BR>Error [1548955603] creating temp upload folder.");
+	        }    
+        }catch (Exception e){//Catch exception if any
+        	throw new Exception("<BR>Error [1548955604] creating temp upload folder: " + e.getMessage() + ".");
+	    }
+	    return;
+	}
+	private void processRequest(
+			HttpSession ses, 
+			HttpServletRequest req,
+			PrintWriter pwOut,
+			String sDBID,
+			String sUserID,
+			String sUserFullName,
+			String sPhysicalInventoryID,
+			boolean bIncludesHeaderRow,
+			boolean bAddNewItems,
+			String sCountDesc,
+			FileItem fUploadedFile
+			) throws Exception{
+
+    	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
+			//+ System.getProperty("file.separator")
+			+ "iccountuploads"
+		;
+
+    	//If the folder has not been created, create it now:
+		try {
+			createTempImportFileFolder(sTempFilePath);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+    	
+		//First, remove any temporary files:
+		try {
+			deleteCurrentTempImportFiles(sTempFilePath);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+
+		if (bDebugMode){
+			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
+		}
+		
+		try {
+			writeFileAndProcess(
+				sTempFilePath, 
+				ses, 
+				req, 
+				pwOut, 
+				sDBID,
+				sUserID,
+				sUserFullName,
+				sPhysicalInventoryID,
+				bIncludesHeaderRow,
+				bAddNewItems,
+				sCountDesc,
+				fUploadedFile);
+		} catch (Exception e1) {
+			throw new Exception("Error [1548956216] processing import - " + e1.getMessage());
+		}
+		
+		try {
+			deleteCurrentTempImportFiles(sTempFilePath);
+		} catch (Exception e) {
+			throw new Exception(e.getMessage());
+		}
+		return;
+		
+	}
+	private void writeFileAndProcess(
+			String sTempImportFilePath,
+			HttpSession ses, 
+			HttpServletRequest req,
+			PrintWriter pwOut,
+			String sDBID,
+			String sUserID,
+			String sUserFullName,
+			String sPhysicalInventoryID,
+			boolean bIncludesHeaderRow,
+			boolean bAddNewItems,
+			String sCountDesc,
+			FileItem fUploadedFile
+	) throws Exception{
+
+
+		String fileName = "ICIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+        try {
+			fUploadedFile.write(new File(sTempImportFilePath, fileName));
+		} catch (Exception e) {
+			//System.out.println("Error [1548956219]  error on fi.write: " + e.getMessage());
+			throw new Exception("Error [1548956218] writing temporary file: " + e.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -313,8 +348,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
-		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems, sDBID, sUserID, sUserFullName)){
-			return false;
+		
+		try {
+			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems, sDBID, sUserID, sUserFullName, sPhysicalInventoryID);
+		} catch (Exception e1) {
+			throw new Exception("Error [1548956218] validating import file - " + e1.getMessage());
 		}
 		
 		//Get a connection:
@@ -332,39 +370,50 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			System.out.println("In " + this.toString() + ".writeFileAndProcess got a connection");
 		}
 		
-		boolean bResult = true;
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			this.addToErrorMessage("Could not start data transaction.");
-			bResult =  false;
+			throw new Exception("Error [1548956219] starting data transaction - ");
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
+			System.out.println("Error [1548956219] In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
 		
 		//We'll need a physical inventory object to process the file:
 		ICPhysicalInventoryEntry objICPhysicalInventoryEntry = new ICPhysicalInventoryEntry();
 		
-		objICPhysicalInventoryEntry.slid(m_sPhysicalInventoryID);
+		objICPhysicalInventoryEntry.slid(sPhysicalInventoryID);
 		if (!objICPhysicalInventoryEntry.load(conn)){
-			this.addToErrorMessage("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1548956220]");
+			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
 		}
 		
-		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, bAddNewItems, objICPhysicalInventoryEntry,sDBID,sUserID,sUserFullName)){
+		try {
+			insertRecords(
+				sTempImportFilePath, 
+				fileName, 
+				conn, 
+				bIncludesHeaderRow, 
+				bAddNewItems, 
+				objICPhysicalInventoryEntry,
+				sDBID,
+				sUserID,
+				sUserFullName,
+				sPhysicalInventoryID,
+				sCountDesc);
+		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			bResult = false;
-		}else{
-			if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-				this.addToErrorMessage("Could not commit data transaction.");
-				bResult = false;
-			}
+			throw new Exception("Error [1538513251] inserting records - " + e.getMessage());
+		}
+		
+		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
+			throw new Exception("Error [1538513252] Could not commit data transaction.");
 		}
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080880]");
-		return bResult;
+		return;
 
 	}
-	private boolean insertRecords(
+	private void insertRecords(
 			String sFilePath, 
 			String sFileName, 
 			Connection conn, 
@@ -373,48 +422,68 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			ICPhysicalInventoryEntry objICPhysicalInventoryEntry,
 			String sDBID,
 			String sUserID,
-			String sUserFullName
-			){
-		if (!insertCount(conn, sDBID, sUserID, sUserFullName)){
-			return false;
+			String sUserFullName,
+			String sPhysicalInventoryID,
+			String sCountDesc
+			) throws Exception{
+		
+		String sCountID = "";
+		try {
+			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
+		} catch (Exception e) {
+			throw new Exception("Error [1548956704] inserting count - " + e.getMessage());
 		}
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".insertRecords going into insertCountLines");
 		}
-		if (!insertCountLines(sFilePath, sFileName, conn, bFileIncludesHeaderRow, bAddNewItems, objICPhysicalInventoryEntry)){
-			return false;
+
+		try {
+			insertCountLines(
+				sFilePath, 
+				sFileName, 
+				conn, 
+				bFileIncludesHeaderRow, 
+				bAddNewItems, 
+				objICPhysicalInventoryEntry, 
+				sPhysicalInventoryID,
+				sCountID);
+		} catch (Exception e) {
+			throw new Exception("Error [1548957068] inserting lines from the count - " + e.getMessage());
 		}
-		return true;
+		
+		return;
 	}
-	private boolean insertCount(
+	private String insertCount(
 			Connection conn,
 			String sDBID,
 			String sUserID,
-			String sUserFullName
-	){
+			String sUserFullName,
+			String sPhysicalInventoryID,
+			String sCountDesc
+	) throws Exception{
 		
 		ICPhysicalCountEntry count = new ICPhysicalCountEntry();
 		count.setsCreatedByID(sUserID);
 		count.setsCreatedByFullName(sUserFullName);
-		count.setsDescription(m_sCountDesc);
-		count.setsPhysicalInventoryID(m_sPhysicalInventoryID);
+		count.setsDescription(sCountDesc);
+		count.setsPhysicalInventoryID(sPhysicalInventoryID);
 
 		if (!count.save_without_data_transaction(conn, sUserID, sUserFullName)){
-			this.addToErrorMessage("<BR>" + "Could not save count - " + count.getErrorMessages());
-			return false;
+			throw new Exception("Error [1548956615] - Could not save count - " + count.getErrorMessages());
 		}else{
-			m_sCountID = count.slid();
-			return true;
+			return count.slid();
 		}
 	}
-	private boolean insertCountLines(
+	private void insertCountLines(
 			String sFilePath,
 			String sFileName,
 			Connection conn,
 			boolean bFileIncludesHeaderRow,
 			boolean bAddNewItems,
-			ICPhysicalInventoryEntry objICPhysicalInventoryEntry
-	){
+			ICPhysicalInventoryEntry objICPhysicalInventoryEntry,
+			String sPhysicalInventoryID,
+			String sCountID
+	) throws Exception{
 		
 		BufferedReader br = null;
 		try {
@@ -454,14 +523,13 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					}
 					
 					ICPhysicalCountLineEntry countline = new ICPhysicalCountLineEntry();
-					countline.setsCountID(m_sCountID);
+					countline.setsCountID(sCountID);
 					countline.setsItemNumber(sItem);
-					countline.setsPhysicalInventoryID(m_sPhysicalInventoryID);
+					countline.setsPhysicalInventoryID(sPhysicalInventoryID);
 					countline.setsQty(sQty);
 	
 					if(!countline.save_without_data_transaction(conn, bAddNewItems)){
-						this.addToErrorMessage("Error [1538512163] - Could not save line " + iLineCounter + " - " + countline.getErrorMessages());
-						return false;
+						throw new Exception("Error [1538512163] - Could not save line " + iLineCounter + " - " + countline.getErrorMessages());
 					}
 					
 					//Add any NEW items
@@ -471,24 +539,20 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				}
 			}
 		} catch (FileNotFoundException ex) {
-			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".");
-			return false;
+			throw new Exception("Error [1548956904] - File not found error reading file:= " + ex.getMessage() + ".");
 		} catch (IOException ex) {
-			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-			return false;
+			throw new Exception("Error [1548956905] - IO exception error reading file:= " + ex.getMessage() + ".");
 		} catch (Exception ex) {
-			this.addToErrorMessage("<BR>" + ex.getMessage() + ".");
-			return false;
+			throw new Exception("Error [1548956906] - " + ex.getMessage());
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-				return false;
+				throw new Exception("Error [1548956906] IO exception error reading file:= " + ex.getMessage() + ".");
 			}
 		}
-		return true;
+		return;
 	}
 	private String stripSuffix(String sItemNum){
 		String sReturnString = sItemNum;
@@ -500,14 +564,13 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		
 		return sReturnString;
 	}
-	private boolean deleteCurrentTempImportFiles(String sTempImportFilePath){
+	private void deleteCurrentTempImportFiles(String sTempImportFilePath) throws Exception{
 		
-		boolean bDeletionSuccessful = true;
-		
+		//TODO - uncomment this:
+		/*
 	    File dir = new File(sTempImportFilePath);
 	    if (!dir.exists()) {
-	    	this.addToErrorMessage("<BR>Temp import file directory does not exist: " + sTempImportFilePath);
-	      return false;
+	    	throw new Exception("<BR>Error [[1548955604]] Temp import file directory does not exist: " + sTempImportFilePath);
 	    }
 	    String[] info = dir.list();
 	    for (int i = 0; i < info.length; i++) {
@@ -516,20 +579,29 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	        continue;
 	      }
 	      if (!n.delete()){
-	    	  this.addToErrorMessage("Unable to delete " + sTempImportFilePath + info[i]);
-	    	  bDeletionSuccessful = false;
+	    	  throw new Exception("<BR>Error [[1548955604]] Unable to delete " + sTempImportFilePath + info[i]);
 	      } 
 	    }
-	    return bDeletionSuccessful;
+	    */
+	    return;
 
 	}
-	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName) {
+	private void validateFile(
+		String sFilePath, 
+		String sFileName, 
+		boolean bFileIncludesHeaderRow, 
+		boolean bAddNewItems, 
+		String sDBID, 
+		String sUserID, 
+		String sUserFullName,
+		String sPhysicalInventoryID) throws Exception {
 
 		BufferedReader br = null;
-		boolean bResult = true;
+		String sFullFileName = "";
 		try {
-
-			br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
+			sFullFileName = sFilePath + System.getProperty("file.separator") + sFileName;
+			//System.out.println("[1548962601] sFullFileName = '" + sFullFileName + "'.");
+			br = new BufferedReader(new FileReader(sFullFileName));
 			String line = null;
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
@@ -548,53 +620,75 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				//Otherwise, if it's NOT the first row of a file with a header row, process:
 				}else{
 					int iFieldCounter = 0;
+					
 					String[] fields = line.split(",");
+					//System.out.println("[1548962801] - line = '" + line + "'");
+					
 					for (String sDelimitedField : fields) {
+						
+						//System.out.println("[1548962802] - field = '" + sDelimitedField + "'");
+						
 						if (iFieldCounter > NUMBER_OF_FIELDS_PER_LINE){
 							//Allow additional fields, just ignore them:
 							//this.addToErrorMessage("<BR>Line number " + iLineCounter + " has more than " 
 							//	+ NUMBER_OF_FIELDS_PER_LINE + " fields in it.");
 							//bResult = false;
 						}else{
-							if (!validateImportField(
-									iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""), bAddNewItems, sDBID,sUserID,sUserFullName)){
-								bResult = false;
+						
+							
+							try {
+								validateImportField(
+										iLineCounter, 
+										iFieldCounter, 
+										sDelimitedField.trim().replace("\"", ""),
+										bAddNewItems, 
+										sDBID,
+										sUserID,
+										sUserFullName,
+										sPhysicalInventoryID);
+							} catch (Exception e) {
+								br.close();
+								throw new Exception("Error [1548957655] validating import file - " + e.getMessage());
 							}
-						}
-						iFieldCounter++;
-					}
+							iFieldCounter++;
+						} // end else
+					} //End 'for'
 					if (iFieldCounter < NUMBER_OF_FIELDS_PER_LINE){
-						this.addToErrorMessage("<BR>Line number " + iLineCounter + " has less than " 
-							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it.");
-						bResult = false;
+						br.close();
+						throw new Exception("Error [1548957349] - Line number " + iLineCounter + " has less than " 
+							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it ('" + line + "').");
 					}
 				}
 			}
 			if (iLineCounter == 0){
-				this.addToErrorMessage("<BR>The file has no lines in it.");
-				bResult = false;
+				br.close();
+				throw new Exception("Error [1548957144] - The file has no lines in it.");
 			}
 		} catch (FileNotFoundException ex) {
-			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".");
-			bResult = false;
+			throw new Exception("Error [1548957164] - File '" 
+					+ sFullFileName + "' not found - " + ex.getMessage() + ".");
 		} catch (IOException ex) {
-			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-			bResult = false;
-		} finally {
 			try {
 				if (br != null)
 					br.close();
-			} catch (IOException ex) {
-				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-				bResult = false;
+			} catch (IOException e) {
+				throw new Exception("Error [1548957154] IO exception error reading file:= " + e.getMessage() + ".");
 			}
+			throw new Exception("Error [15489571744] IO exception error reading file '" + sFullFileName + "'- " + ex.getMessage() + ".");
 		}
-		return bResult;
+		br.close();
+		return;
 	}
 
-	private boolean validateImportField (int iLineNumber, int iFieldIndex, String sField, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName){
-		
-		boolean bResult = true;
+	private void validateImportField (
+			int iLineNumber, 
+			int iFieldIndex, 
+			String sField, 
+			boolean bAddNewItems, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String sPhysicalInventoryID) throws Exception{
 		
 		//Strip off any quotation marks:
 		sField = sField.replace("\"", "");
@@ -609,27 +703,32 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				BigDecimal bdqty = new BigDecimal(sField);
 				//Allow zero quantities, but nothing less
 				if (bdqty.compareTo(BigDecimal.ZERO) < 0){
-					this.addToErrorMessage("<BR>Invalid qty ('" + sField + "') on line " + iLineNumber + ".");
-					bResult = false;
+					throw new Exception("Error [1548957509] - Invalid qty ('" + sField + "') on line " + iLineNumber + ".");
 				}
 			} catch (Exception e) {
-				this.addToErrorMessage("<BR>Invalid qty ('" + sField + "') on line " + iLineNumber + ".");
-	        	bResult = false;
+				throw new Exception(e.getMessage());
 			}
 		}
 		if (iFieldIndex == FIELD_ITEM){
 			//Make sure it's a valid item in the range from the physical inventory:
 			sField = stripSuffix(sField);
 			//System.out.println(sFieldBefore + " - " + sField);
-			if (!validateItemNumber(iLineNumber, sField, bAddNewItems, sDBID, sUserID, sUserFullName)){
-				bResult = false;
+			try {
+				validateItemNumber(iLineNumber, sField, bAddNewItems, sDBID, sUserID, sUserFullName, sPhysicalInventoryID);
+			} catch (Exception e) {
+				throw new Exception("Error [1548958965] validating - " + e.getMessage());
 			}
 		}
-		return bResult;
+		return;
 	}
-	private boolean validateItemNumber(int iLineNumber, String sItem, boolean bAddNewItems, String sDBID, String sUserID, String sUserFullName){
-		
-		boolean bResult = true;
+	private void validateItemNumber(
+			int iLineNumber, 
+			String sItem, 
+			boolean bAddNewItems, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String sPhysicalInventoryID) throws Exception{
 		
 		//Make sure it's in the range for the physical inventory:
 		String SQL = "";
@@ -639,7 +738,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				+ " WHERE (" 
 					+ " " + SMTableicinventoryworksheet.sitemnumber + " = '" + sItem + "'"
 					+ " AND" 
-					+ " " + SMTableicinventoryworksheet.lphysicalinventoryid + " = " + m_sPhysicalInventoryID
+					+ " " + SMTableicinventoryworksheet.lphysicalinventoryid + " = " + sPhysicalInventoryID
 				+ ")"
 				;
 			if (bDebugMode){
@@ -655,15 +754,14 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 						);
 				
 				if (!rs.next()){
-					this.addToErrorMessage("<BR>Invalid item number ('" + sItem + "') on line number " + iLineNumber + ""
-							+ " - item is not included in this physical inventory. [Error: 1344008030]");
-					bResult = false;
+					rs.close();
+					throw new Exception("Error [1344008030] - Invalid item number ('" + sItem + "') on line number " + iLineNumber + ""
+							+ " - item is not included in this physical inventory.");
 				}
 				rs.close();
 			} catch (SQLException e) {
-				this.addToErrorMessage("<BR>SQL Error validating item number ('" + sItem + "') on line number " 
+				throw new Exception("Error [1548958827] - SQL Error validating item number ('" + sItem + "') on line number " 
 				+ iLineNumber + " with SQL - " + SQL + " - " + e.getMessage() + ".");
-				bResult = false;
 			}
 		}
 		
@@ -687,30 +785,18 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					);
 			
 			if (!rs.next()){
-				this.addToErrorMessage("<BR>Invalid item number ('" + sItem + "') on line number " + iLineNumber + ". [Error: 1344008064]");
-				bResult = false;
+				rs.close();
+				throw new Exception("Error [1344008064] - Invalid item number ('" + sItem + "') on line number " + iLineNumber + ".");
 			}
 			rs.close();
 		} catch (SQLException e) {
-			this.addToErrorMessage("<BR>SQL Error validating item number ('" + sItem + "') on line number " 
+			throw new Exception("Error [1344008094] - SQL Error validating item number ('" + sItem + "') on line number " 
 			+ iLineNumber + " - " + e.getMessage() + ".");
-			bResult = false;
 		}
 		
-		return bResult;
+		return;
 	}
 
-	private void addToErrorMessage(String sMsg){
-		
-		if (sPhysicalCountImportError.length() > 900){
-			sPhysicalCountImportError = sPhysicalCountImportError.substring(0, 900) + " . . . (remaining errors truncated).";
-		}else{
-			sPhysicalCountImportError += sMsg;
-		}
-		if (bDebugMode){
-			clsServletUtilities.sysprint(this.toString(), "ICCOUNTIMPORT", sMsg);
-		}
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

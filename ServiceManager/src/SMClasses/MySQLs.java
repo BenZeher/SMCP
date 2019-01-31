@@ -1237,7 +1237,8 @@ public class MySQLs {
 			String sMechInitial,
 			String sMechFullName,
 			String sLabel,
-			String sSuppressDetailOnInvoice
+			String sSuppressDetailOnInvoice,
+			String bdExpensedCost
 			){
 		SQL = "INSERT INTO "  + SMTableinvoicedetails.TableName
 			+ "("
@@ -1268,6 +1269,7 @@ public class MySQLs {
 				+ ", " + SMTableinvoicedetails.sRevenueGLAcct
 				+ ", " + SMTableinvoicedetails.sUnitOfMeasure
 				+ ", " + SMTableinvoicedetails.isuppressdetailoninvoice
+				+ ", " + SMTableinvoicedetails.bdexpensedcost
 			+ ") VALUES ("
 				+ dExtendedCost
 				+ ", " + dExtendedPrice
@@ -1296,6 +1298,7 @@ public class MySQLs {
 				+ ", '" + sRevenueGLAcct + "'"
 				+ ", '" + sUnitOfMeasure + "'"
 				+ ", " + sSuppressDetailOnInvoice
+				+ ", " + bdExpensedCost
 			+ ")";
 		//System.out.println("Insert_Invoice_Details = " + SQL);
 		return SQL;

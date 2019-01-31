@@ -31,6 +31,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
 	private String m_sInventoryGLAcct;
 	private String m_sExpenseGLAcct;
 	private String m_sRevenueGLAcct;
+	private BigDecimal m_dExpensedCost;
 	private BigDecimal m_dExtendedCost;
 	private BigDecimal m_dExtendedPriceAfterDiscount;
 	private BigDecimal m_dLineSalesTaxAmount;
@@ -65,6 +66,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
     	m_sInventoryGLAcct = "";
     	m_sExpenseGLAcct = "";
     	m_sRevenueGLAcct = "";
+    	m_dExpensedCost = new BigDecimal(0);
     	m_dExtendedCost = new BigDecimal(0);
     	m_dExtendedPriceAfterDiscount = new BigDecimal(0);
     	m_dLineSalesTaxAmount = new BigDecimal(0);
@@ -112,6 +114,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
 				m_sInventoryGLAcct = rs.getString(SMTableinvoicedetails.sInventoryGLAcct);
 				m_sExpenseGLAcct = rs.getString(SMTableinvoicedetails.sExpenseGLAcct);
 				m_sRevenueGLAcct = rs.getString(SMTableinvoicedetails.sExpenseGLAcct);
+				m_dExpensedCost = rs.getBigDecimal(SMTableinvoicedetails.bdexpensedcost);
 				m_dExtendedCost = rs.getBigDecimal(SMTableinvoicedetails.dExtendedCost);
 				m_dExtendedPriceAfterDiscount = rs.getBigDecimal(SMTableinvoicedetails.dExtendedPriceAfterDiscount);
 				m_dLineSalesTaxAmount = rs.getBigDecimal(SMTableinvoicedetails.bdlinesalestaxamount);
@@ -163,6 +166,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
     		+ ", " + SMTableinvoicedetails.sInventoryGLAcct
     		+ ", " + SMTableinvoicedetails.sRevenueGLAcct
     		+ ", " + SMTableinvoicedetails.sExpenseGLAcct
+    		+ ", " + SMTableinvoicedetails.bdexpensedcost
     		+ ", " + SMTableinvoicedetails.dExtendedCost
     		+ ", " + SMTableinvoicedetails.dExtendedPriceAfterDiscount
     		+ ", " + SMTableinvoicedetails.bdlinesalestaxamount
@@ -192,6 +196,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sInventoryGLAcct) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sRevenueGLAcct) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sExpenseGLAcct) + "'"
+    		+ ", " + m_dExpensedCost
     		+ ", " + m_dExtendedCost
     		+ ", " + m_dExtendedPriceAfterDiscount
     		+ ", " + m_dLineSalesTaxAmount
@@ -224,6 +229,7 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
 			+ ", " + SMTableinvoicedetails.sInventoryGLAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sInventoryGLAcct) + "'"
 			+ ", " + SMTableinvoicedetails.sExpenseGLAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sExpenseGLAcct) + "'"
 			+ ", " + SMTableinvoicedetails.sRevenueGLAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sRevenueGLAcct) + "'"
+			+ ", " + SMTableinvoicedetails.bdexpensedcost + " = " + m_dExpensedCost
 			+ ", " + SMTableinvoicedetails.dExtendedCost + " = " + m_dExtendedCost
 			+ ", " + SMTableinvoicedetails.dExtendedPriceAfterDiscount + " = " + m_dExtendedPriceAfterDiscount
 			+ ", " + SMTableinvoicedetails.bdlinesalestaxamount + " = " + m_dLineSalesTaxAmount
@@ -397,6 +403,14 @@ public class SMInvoiceDetail extends clsMasterEntry{ //java.lang.Object{
 
 	public void setM_dExtendedCost(BigDecimal extendedCost) {
 		m_dExtendedCost = extendedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
+	}
+	
+	public BigDecimal getM_dExpensedCost() {
+		return m_dExpensedCost;
+	}
+
+	public void setM_dExpensedCost(BigDecimal expensedCost) {
+		m_dExpensedCost = expensedCost.setScale(2, BigDecimal.ROUND_HALF_UP);
 	}
 
 	public BigDecimal getM_dExtendedPriceAfterDiscount() {

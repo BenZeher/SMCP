@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1351;
+	private static final int m_CurrentDatabaseVersion = 1352;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "1/29/2019";
+	private static final String m_sLastRevisionDate = "1/30/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -13831,6 +13831,15 @@ public class SMUpdateData extends java.lang.Object{
 			case 1350:
 				//Added by BJZ 1/16/2019
 				SQL = "UPDATE proposalphrases SET mproposalphrase=REPLACE(mproposalphrase,'\\r','')";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+			
+			//BEGIN CASE
+			case 1351:
+				//Added by BJZ 1/16/2019
+				SQL = "ALTER TABLE  invoicedetails ADD bdexpensedcost  decimal(17,2) NOT NULL default '0.00' COMMENT 'The average cost of non-stock items at the time the invoice is created.'";
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;

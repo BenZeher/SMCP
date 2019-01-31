@@ -21,6 +21,7 @@ public class SMTableinvoicedetails {
 	public static final String sExpenseGLAcct = "sExpenseGLAcct";
 	public static final String sRevenueGLAcct = "sRevenueGLAcct";
 	public static final String dExtendedCost = "dExtendedCost";
+	public static final String bdexpensedcost = "bdexpensedcost";
 	public static final String dExtendedPriceAfterDiscount = "dExtendedPriceAfterDiscount";  //KEEP THIS - WE NEED IT!
 	public static final String bdlinesalestaxamount = "bdlinesalestaxamount";  //TJR - 1/21/2016 - changed this name and type - also changed name again on 2/4/2016
 	public static final String iMatchingInvoiceLineNumber = "iMatchingInvoiceLineNumber";

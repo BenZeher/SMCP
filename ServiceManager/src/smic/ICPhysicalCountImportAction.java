@@ -41,8 +41,6 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static final int FIELD_ITEM = 0;
 	private static final int FIELD_QTY = 1;
 	
-	//Member variables for the count:
-	
 
 	//private static String m_sValidStartingItem = ""; //TJR - removed these 10/1/2018
 	//private static String m_sValidEndingItem = "";

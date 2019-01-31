@@ -41,10 +41,6 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static final int FIELD_ITEM = 0;
 	private static final int FIELD_QTY = 1;
 	
-
-	//private static String m_sValidStartingItem = ""; //TJR - removed these 10/1/2018
-	//private static String m_sValidEndingItem = "";
-    
 	private static final String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
 	private static boolean bDebugMode = false;
 	@SuppressWarnings("unchecked")

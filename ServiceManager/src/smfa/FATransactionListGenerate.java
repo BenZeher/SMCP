@@ -5,6 +5,9 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,6 +21,7 @@ import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import smcontrolpanel.SMViewTruckScheduleSelection;
 
 public class FATransactionListGenerate extends HttpServlet {
 
@@ -30,7 +34,6 @@ public class FATransactionListGenerate extends HttpServlet {
 					throws ServletException, IOException {
 		
 		String sWarning = "";
-		String sCallingClass = "";
 		boolean bSelectByCategory = false;
 
 		response.setContentType("text/html");
@@ -46,7 +49,7 @@ public class FATransactionListGenerate extends HttpServlet {
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
 		String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-		
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	   
 
@@ -79,7 +82,24 @@ public class FATransactionListGenerate extends HttpServlet {
 		sEndingFY = clsManageRequestParameters.get_Request_Parameter("ENDFISCALYEAR", request);
 		sEndingFP = clsManageRequestParameters.get_Request_Parameter("ENDFISCALPERIOD", request);
 
-
+		ArrayList<String> arrLocations = new ArrayList<String>(0);
+	    Enumeration<String> paramLocationNames = request.getParameterNames();
+	    String sParamLocationName = "";
+	    String sLocationMarker = FATransactionListSelect.LOCATION_PARAMETER;
+	    while(paramLocationNames.hasMoreElements()) {
+	    	sParamLocationName = paramLocationNames.nextElement();
+		  if (sParamLocationName.contains(sLocationMarker)){
+			  arrLocations.add(sParamLocationName.substring(
+					  sParamLocationName.indexOf(sLocationMarker) + sLocationMarker.length()));
+		  }
+	    }
+	    Collections.sort(arrLocations);
+		
+	    if (arrLocations.size() == 0){
+    		sWarning += "  You must select at least one location.";
+    		redirectAfterError(response, sCallingClass, sWarning, sDBID, bSelectByCategory, arrLocations);
+			return;
+	    }
 
 		String sReportTitle = "Transaction List for " + sCompanyName;
 
@@ -122,7 +142,7 @@ public class FATransactionListGenerate extends HttpServlet {
 				);
 		if (conn == null){
 			sWarning = "Unable to get data connection.";
-			redirectAfterError(response, sCallingClass, sWarning, sDBID, bSelectByCategory);
+			redirectAfterError(response, sCallingClass, sWarning, sDBID, bSelectByCategory, arrLocations);
 			return;
 		}
 
@@ -141,7 +161,8 @@ public class FATransactionListGenerate extends HttpServlet {
 				bShowDetails,
 				out,
 				getServletContext(),
-				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+				arrLocations)){
 			out.println("Could not print report - " + list.getErrorMessageString());
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067480]");
@@ -155,7 +176,13 @@ public class FATransactionListGenerate extends HttpServlet {
 		doPost(request, response);
 	}
 
-	private void redirectAfterError(HttpServletResponse res, String sCallingClass, String sWarning, String sDBID, boolean bSelectByCategory){
+	private void redirectAfterError(
+			HttpServletResponse res, 
+			String sCallingClass, 
+			String sWarning, 
+			String sDBID, 
+			boolean bSelectByCategory,
+			ArrayList<String>arrLocations){
 
 		String sRedirect =
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -167,6 +194,11 @@ public class FATransactionListGenerate extends HttpServlet {
 		}
 
 		sRedirect += "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		
+		for (int i = 0; i < arrLocations.size(); i++){
+			sRedirect += "&" + FATransactionListSelect.LOCATION_PARAMETER + arrLocations.get(i) + "=Y";
+		}
+		
 		try {
 			res.sendRedirect(sRedirect);
 		} catch (IOException e) {

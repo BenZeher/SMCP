@@ -2,6 +2,7 @@ package smfa;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Calendar;
 
@@ -15,13 +16,17 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMTablelocations;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
 public class FATransactionListSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	public static final String LOCATION_PARAMETER = "LOCATION";
+	private static final String CHECKBOX_LABEL = "CHECKBOXLABEL";
 	//private static String sObjectName = "Asset";
 	
 	public void doPost(HttpServletRequest request,
@@ -64,6 +69,7 @@ public class FATransactionListSelect extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa." + sCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+	    out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
 	    try{
 	    	List_Criteria(out, sDBID, sUserName, request);
 	    }catch (Exception e){
@@ -108,7 +114,7 @@ public class FATransactionListSelect extends HttpServlet {
 	}
 	
 	private void List_Criteria(PrintWriter pwOut, 
-							   String sDBIB,
+							   String sDBID,
 							   String sUser,
 							   HttpServletRequest req) throws Exception{
 
@@ -236,7 +242,58 @@ public class FATransactionListSelect extends HttpServlet {
         		+ "<TD ALIGN=LEFT>&nbsp;</TD>"
         		+ "</TR>"
         		);
+        
+        //Locations:
        
+		try{
+			//select location
+			String sSQL = "SELECT"
+				+ " " + SMTablelocations.sLocation
+				+ ", " + SMTablelocations.sLocationDescription
+				+ " FROM " + SMTablelocations.TableName
+				//+ " WHERE ("
+				//	+ "(" + SMTablelocations.ishowintruckschedule + " = 1)"
+				//+ ")"
+				+ " ORDER BY "  + SMTablelocations.sLocation
+			;
+			ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID, 
+					"MySQL", 
+					"smfal.FATransactionListSelect");
+			pwOut.println("\n  <TR>\n"
+				+ "    <TD ALIGN=RIGHT VALIGN=TOP><H4>ONLY show assets assigned to these locations:&nbsp;</H4></TD>\n"
+				+ "    <TD>\n");
+			String sChecked = "";
+			while(rsLocations.next()){
+				String sLocation = rsLocations.getString(SMTablelocations.TableName + "." 
+					+ SMTablelocations.sLocation).trim();
+				pwOut.println(
+					"<LABEL NAME=\"" + CHECKBOX_LABEL + sLocation + "\"" + ">"	
+					+ "<INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAMETER 
+					+ sLocation + "\""
+				);
+				if (
+					(req.getParameter(LOCATION_PARAMETER + sLocation) != null)
+				){
+					sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+				}else{
+					sChecked = "";
+				}
+				pwOut.println(" " + sChecked + " "
+					+ " width=0.25>" 
+					+ sLocation + " - "
+					+ rsLocations.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription) + "<BR>" + "\n");
+				pwOut.println("</LABEL>" + "\n");
+			}
+			rsLocations.close();
+			pwOut.println("    <TD>&nbsp;</TD>\n");
+			pwOut.println("</TR>");
+		} catch(Exception e){
+			pwOut.println("<BR><FONT COLOR=RED><B>Error [] reading locations - " + e.getMessage() + ".</B></FONT><BR>");
+		}
+        
         pwOut.println("</TABLE>");
         
         //pwOut.println("<BR>");

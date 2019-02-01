@@ -34,7 +34,8 @@ public class FAAssetList extends java.lang.Object{
 			PrintWriter out,
 			ServletContext context,
 			String sLicenseModuleLevel,
-			ArrayList<String>arrClasses
+			ArrayList<String>arrClasses,
+			ArrayList<String>arrLocations
 			){
 
 		if (arrClasses.size() == 0){
@@ -121,10 +122,24 @@ public class FAAssetList extends java.lang.Object{
 			}
 		}
 		SQL += ")";
+		
+		//Include only the locations selected:
+		SQL += " AND (";
+		for (int i = 0; i < arrLocations.size(); i++){
+			if (i == 0){
+				SQL += "(" + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " = '" + arrLocations.get(i) + "')";
+			}else{
+				SQL += " OR (" + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " = '" + arrLocations.get(i) + "')";
+			}
+		}
+		SQL += ")";
+		
+		
 		//End the 'WHERE' clause:
 			SQL += ")";
 			
 		SQL += " ORDER BY " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + ", " + 
+				SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + ", " +
 				SMTablefamaster.TableName + "." + SMTablefamaster.datAcquisitionDate +
 				", " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber;
 		
@@ -161,7 +176,9 @@ public class FAAssetList extends java.lang.Object{
 
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-			Print_Column_Header(out);
+			if (bShowDetail){
+				Print_Column_Header(out);
+			}
 
 			while(rs.next()){
 				if (sCurrentClass.length() == 0){
@@ -318,9 +335,11 @@ public class FAAssetList extends java.lang.Object{
 			;
 		}
 		out.println("  <TR>\n"
+			+ "    <TD ALIGN=LEFT>" + sLocation + "</TD>\n"	
 			+ "    <TD ALIGN=RIGHT>" + clsDateAndTimeConversions.resultsetDateStringToString(sAcquisitionDate) + "</TD>\n"
 			+ "    <TD ALIGN=RIGHT>" + sAssetLink + "</TD>\n"
 			+ "    <TD ALIGN=LEFT>" + sDesc + "</TD>\n"
+			+ "    <TD ALIGN=LEFT>" + sSerialNumber + "</TD>\n"
 			+ "    <TD ALIGN=LEFT>" + sDepType + "</TD>\n"
 			+ "    <TD ALIGN=RIGHT>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
 			+ "    <TD ALIGN=RIGHT>" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
@@ -329,8 +348,6 @@ public class FAAssetList extends java.lang.Object{
 			+ "    <TD ALIGN=RIGHT>" + bdCostOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
 			+ "    <TD ALIGN=RIGHT>" + bdAccuDepOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
 			+ "    <TD ALIGN=RIGHT>" + bdCurrentValueofNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=LEFT>" + sSerialNumber + "</TD>\n"
-			+ "    <TD ALIGN=LEFT>" + sLocation + "</TD>\n"
 			+ "  </TR>\n");
 
 	}
@@ -338,9 +355,11 @@ public class FAAssetList extends java.lang.Object{
 	private void Print_Column_Header(PrintWriter out){
 
 		out.println("  <TR style= \"background-color: black; color: white; \">\n" 
+			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Location</TD>\n"
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Date Acquired</TD>\n" 
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Asset#</TD>\n" 
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Description</TD>\n" 
+			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Serial Number</TD>\n"
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Dep. Type</TD>\n" 
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Cost</TD>\n" 
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> YTD Dep.</TD>\n" 
@@ -349,8 +368,6 @@ public class FAAssetList extends java.lang.Object{
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Cost Of Non-Disposed Assets</TD>\n"
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Accu. Dep. Of Non-Disposed Assets</TD>\n"
 			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Book Value. Of Non-Disposed Assets</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Serial Number</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Location</TD>\n" 
 			+ "  </TR>\n");
 	}
 
@@ -367,9 +384,9 @@ public class FAAssetList extends java.lang.Object{
 			PrintWriter out){
 
 		out.println("  <TR>\n" 
-			+ "    <TD COLSPAN=11><HR></TD>\n" 
+			+ "    <TD COLSPAN=13><HR></TD>\n" 
 			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD COLSPAN=2>&nbsp;</TD>\n" 
+			+ "    <TD COLSPAN=4>&nbsp;</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>YTD Purchases</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>YTD Disposed</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>Cost</TD>\n" 
@@ -380,7 +397,7 @@ public class FAAssetList extends java.lang.Object{
 			+ "    <TD ALIGN=RIGHT>Accu. Depreciation Of Non-Disposed Assets</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>Book Value Of Non-Disposed Assets</TD>\n" 
 			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD  ALIGN=RIGHT COLSPAN=2>Subtotal for class " + sClass + ": </TD>\n" 
+			+ "    <TD  ALIGN=RIGHT COLSPAN=4>Subtotal for class " + sClass + ": </TD>\n" 
 			+ "    <TD ALIGN=RIGHT>" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
 			+ "    <TD ALIGN=RIGHT>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
@@ -408,11 +425,11 @@ public class FAAssetList extends java.lang.Object{
 			PrintWriter out){
 
 		out.println("  <TR>\n" 
-			+ "    <TD COLSPAN=11>&nbsp;</TD>\n" 
+			+ "    <TD COLSPAN=13>&nbsp;</TD>\n" 
 			+ "</TR>\n  <TR>\n" 
-			+ "    <TD COLSPAN=11><HR></TD>\n" 
+			+ "    <TD COLSPAN=13><HR></TD>\n" 
 			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD ALIGN=RIGHT COLSPAN=2><FONT SIZE=3><B>GRAND TOTALS:</B></FONT></TD>\n" 
+			+ "    <TD ALIGN=RIGHT COLSPAN=4><FONT SIZE=3><B>GRAND TOTALS:</B></FONT></TD>\n" 
 			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
 			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
 			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 

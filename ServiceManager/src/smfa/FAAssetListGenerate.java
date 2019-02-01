@@ -63,17 +63,24 @@ public class FAAssetListGenerate extends HttpServlet {
 			bShowDetails = true;
 		}
 
-		//Get the classes we wish to include:
+		//Get the classes and locations we wish to include:
 		ArrayList<String>arrClasses = new ArrayList<String>(0);
+		ArrayList<String>arrLocations = new ArrayList<String>(0);
 		//Now add back in all the authorized users for this device:
 		Enumeration<?> paramNames = request.getParameterNames();
-		String sUserMarker = FAAssetListSelect.ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM;
+		String sClassMarker = FAAssetListSelect.ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM;
+		String sLocationMarker = FAAssetListSelect.ASSET_LIST_SELECT_LOCATION_CHECKBOX_PARAM;
 		while(paramNames.hasMoreElements()) {
 			String sParamName = (String)paramNames.nextElement();
-			if (sParamName.contains(sUserMarker)){
-				String sClass = (sParamName.substring(sParamName.indexOf(sUserMarker) + sUserMarker.length()));
+			if (sParamName.contains(sClassMarker)){
+				String sClass = (sParamName.substring(sParamName.indexOf(sClassMarker) + sClassMarker.length()));
 				arrClasses.add(sClass);
 			}
+			if (sParamName.contains(sLocationMarker)){
+				String sLocation = (sParamName.substring(sParamName.indexOf(sLocationMarker) + sLocationMarker.length()));
+				arrLocations.add(sLocation);
+			}
+			
 		}
 
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CALLINGCLASS", request);
@@ -103,11 +110,11 @@ public class FAAssetListGenerate extends HttpServlet {
 				+ "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
 				+ "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3><B>" + sReportTitle 
 				+ " showing YTD values for fiscal year " + sFiscalYear
-				+ "</B></FONT></TD></TR>"
+				+ "</B></FONT></TD></TR>" + "\n"
 				;
 
-		sHeading += "<TR>"
-				+ "<TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3>";
+		sHeading += "  <TR>" + "\n"
+				+ "    <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3>";
 
 		if (bIncludeDisposed){
 			sHeading += "<B>INCLUDING</B>";
@@ -129,9 +136,12 @@ public class FAAssetListGenerate extends HttpServlet {
 			sHeading += "<B>NOT SHOWING</B>";
 		}
 		sHeading += " details.";
+		
+		sHeading += "</TD>" + "\n";
+		sHeading += "  </TR>" + "\n";
 
-		sHeading += "<TR>"
-				+ "<TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3>";
+		sHeading += "  <TR>"
+				+ "    <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3>";
 
 		sHeading += " Including <B>ONLY</B> these classes: <B>";
 		for (int i = 0; i < arrClasses.size(); i++){
@@ -143,9 +153,27 @@ public class FAAssetListGenerate extends HttpServlet {
 		}
 
 		sHeading += "</FONT>"
-				+ "</TD>"
-				+ "</TR>"
-				+ "</TABLE>";
+				+ "</TD>" + "\n"
+				+ "  </TR>" + "\n";
+		
+		sHeading += "  <TR>" + "\n"
+				+ "    <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=3>";
+
+		//Location
+		sHeading += " Including <B>ONLY</B> assets assigned to these locations: <B>";
+		for (int i = 0; i < arrLocations.size(); i++){
+			if (i == arrLocations.size() - 1){
+				sHeading += arrLocations.get(i) + ".</B>";
+			}else{
+				sHeading += arrLocations.get(i) + ", ";
+			}
+		}
+
+		sHeading += "</FONT>"
+				+ "</TD>" + "\n"
+				+ "  </TR>" + "\n";
+				
+		sHeading += "</TABLE>" + "\n";
 		
 		out.println(sHeading);
 		
@@ -192,7 +220,8 @@ public class FAAssetListGenerate extends HttpServlet {
 				out,
 				getServletContext(),
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				arrClasses)){
+				arrClasses,
+				arrLocations)){
 			out.println("Could not print report - " + list.getErrorMessageString());
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067470]");

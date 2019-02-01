@@ -325,7 +325,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 			s += "<INPUT TYPE=HIDDEN NAME\""+SMWorkOrderHeader.Paramsdbaworkorderlogo+"\" VALUE=\""
 					+getWorkOrderLogo(sm,orderheader.getM_idoingbusinessasaddressid())+ "\"> \n"; 
 		}catch(Exception e) {
-			throw new Exception("ERROR [] unable to get work order receipt logo "+e.getMessage());
+			throw new Exception("ERROR [1549052144] unable to get work order receipt logo "+e.getMessage());
 		}
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Parammmanagernotes + "\" VALUE=\"" 

@@ -18,6 +18,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablefaclasses;
 import SMDataDefinition.SMTablefatransactions;
+import SMDataDefinition.SMTablelocations;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
@@ -26,6 +27,7 @@ public class FAAssetListSelect extends HttpServlet {
 	public static final String ASSET_LIST_SELECT_FISCALYEARSELECTION = "FISCALYRSELECT";
 	public static final String ASSET_LIST_SELECT_NO_TRANSACTIONS_AVAILABLE = "NOTRANSACTIONSAVAILABLE";
 	public static final String ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM = "CLASSCHECKBOXPARAM";
+	public static final String ASSET_LIST_SELECT_LOCATION_CHECKBOX_PARAM = "LOCATIONCHECKBOXPARAM";
 	private static final long serialVersionUID = 1L;
 
 	public void doPost(HttpServletRequest request,
@@ -71,9 +73,9 @@ public class FAAssetListSelect extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='CALLINGCLASS' VALUE='" + SMUtilities.getFullClassName(this.toString()) + "'>");
 	    String sOutPut = "<P><B>This function will print a list of all assets.</B></P>";
-		sOutPut = sOutPut + "<INPUT TYPE=CHECKBOX NAME='INCLUDEDISPOSED'> Include disposed assets on the list.<BR>";
-		sOutPut = sOutPut + "<INPUT TYPE=CHECKBOX NAME='INCLUDENONDISPOSED'> Include non-disposed assets on the list.<BR>";
-		sOutPut = sOutPut + "<INPUT TYPE=CHECKBOX NAME='SHOWDETAILS'> Show details.<BR>";
+		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDEDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDEDISPOSED'> Include disposed assets on the list.</LABEL><BR>";
+		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDENONDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDENONDISPOSED'> Include non-disposed assets on the list.</LABEL><BR>";
+		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDENONDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDENONDISPOSED'> Show details.</LABEL><BR>";
 		
 		sOutPut += "<BR>Show year-to-date values for fiscal year:&nbsp;"
 			+ "<SELECT NAME = \"" + ASSET_LIST_SELECT_FISCALYEARSELECTION + "\">";
@@ -110,11 +112,12 @@ public class FAAssetListSelect extends HttpServlet {
 			ResultSet rsFAClasses = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID, "MySQL", this.toString() + ".doPost - getting classes");
 			while (rsFAClasses.next()){
 				sClassTable.add(
-					"<INPUT TYPE=CHECKBOX " 
+					"<LABEL NAME = 'LABEL" + rsFAClasses.getString(SMTablefaclasses.sClass) + "'><INPUT TYPE=CHECKBOX " 
 					+ clsServletUtilities.CHECKBOX_CHECKED_STRING
 					+ " NAME=\"" + ASSET_LIST_SELECT_CLASS_CHECKBOX_PARAM +  rsFAClasses.getString(SMTablefaclasses.sClass) + "\">" 
 					+ rsFAClasses.getString(SMTablefaclasses.sClass) 
 					+ " - " + rsFAClasses.getString(SMTablefaclasses.sClassDescription)
+					+ "</LABEL>" + "\n"
 				);
 			}
 			rsFAClasses.close();
@@ -122,9 +125,47 @@ public class FAAssetListSelect extends HttpServlet {
 			sOutPut += "Error [1484925441] reading FA classes with SQL: " + SQL + " - " + e.getMessage();
 		}
     	//Print the table:
-		sOutPut = sOutPut + "<BR><BR><I><U>Show <B>ONLY</B> assets from these classes:</U></I><BR><BR>";
+		sOutPut = sOutPut + "<BR><BR><I><U><B>ONLY</B> show assets from these classes:</U></I><BR><BR>";
     	sOutPut = sOutPut + SMUtilities.Build_HTML_Table(4, sClassTable,1,true);		
 		
+    	
+        //Locations:
+    	ArrayList<String> sLocationTable = new ArrayList<String>(0);
+    	String sLocationSQL = "";
+		try{
+			//select location
+			sLocationSQL = "SELECT"
+				+ " " + SMTablelocations.sLocation
+				+ ", " + SMTablelocations.sLocationDescription
+				+ " FROM " + SMTablelocations.TableName
+				+ " ORDER BY "  + SMTablelocations.sLocation
+			;
+			ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+					sLocationSQL, 
+					getServletContext(), 
+					sDBID, 
+					"MySQL", 
+					"smfa.FAAssetListSelect");
+			//String sChecked = "";
+			while(rsLocations.next()){
+				sLocationTable.add("<LABEL NAME = 'LABEL" + rsLocations.getString(SMTablelocations.sLocation) + "'><INPUT TYPE=CHECKBOX " 
+				+ clsServletUtilities.CHECKBOX_CHECKED_STRING
+				+ " NAME=\"" + ASSET_LIST_SELECT_LOCATION_CHECKBOX_PARAM + rsLocations.getString(SMTablelocations.sLocation) + "\">" 
+				+ rsLocations.getString(SMTablelocations.sLocation) 
+				+ " - " + rsLocations.getString(SMTablelocations.sLocationDescription)
+				+ "</LABEL>"
+				);
+			}
+			rsLocations.close();
+			
+	    	//Print the table:
+			sOutPut = sOutPut + "<BR><BR><I><U><B>ONLY</B> show assets assigned to these locations:</U></I><BR><BR>";
+	    	sOutPut = sOutPut + SMUtilities.Build_HTML_Table(1, sLocationTable, 1 ,true);	
+
+		} catch(Exception e){
+			sOutPut += "Error [1549052882] reading FA classes with SQL: " + sLocationSQL + " - " + e.getMessage();
+		}
+    	
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitList' VALUE='List assets' STYLE='width: 2.00in; height: 0.24in'>";
 		
 		sOutPut = sOutPut + "</FORM>";

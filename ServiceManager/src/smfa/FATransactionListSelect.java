@@ -291,7 +291,7 @@ public class FATransactionListSelect extends HttpServlet {
 			pwOut.println("    <TD>&nbsp;</TD>\n");
 			pwOut.println("</TR>");
 		} catch(Exception e){
-			pwOut.println("<BR><FONT COLOR=RED><B>Error [] reading locations - " + e.getMessage() + ".</B></FONT><BR>");
+			pwOut.println("<BR><FONT COLOR=RED><B>Error [1549052143] reading locations - " + e.getMessage() + ".</B></FONT><BR>");
 		}
         
         pwOut.println("</TABLE>");

@@ -170,7 +170,7 @@ public class GLOptions extends java.lang.Object{
         			return true;
         		}
         	}catch (SQLException e){
-        		m_sErrorMessageArray.add("SQL Error []1522772563] reading AP options record: " + e.getMessage());
+        		m_sErrorMessageArray.add("SQL Error [1522772563] reading AP options record: " + e.getMessage());
         		return false;
         	}
     	}

@@ -21,27 +21,27 @@ import TCSDataDefinition.TCTablesavedqueries;
 public class TCQuerySelect  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String PARAM_EXPORTOPTIONS = "EXPORTOPTIONS";
-	public static String EXPORT_COMMADELIMITED_VALUE = "COMMADELIMITED";
-	public static String EXPORT_HTML_VALUE = "HTML";
-	public static String EXPORT_NOEXPORT_VALUE = "NOEXPORT";
-	public static String EXPORT_COMMADELIMITED_LABEL = "Comma delimited file";
-	public static String EXPORT_HTML_LABEL = "HTML (web page) file";
-	public static String EXPORT_NOEXPORT_LABEL = "Do not export - display on screen";
-	public static String PARAM_QUERYID = "QUERYID";
-	public static String PARAM_QUERYTITLE = "QUERYTITLE";
-	public static String PARAM_QUERYSTRING = "QUERYSTRING";
-	public static String PARAM_RAWQUERYSTRING = "RAWQUERYSTRING";
-	public static String PARAM_SYSTEMQUERYID = "SYSTEMQUERYID";
-	public static String PARAM_PWFORQUICKLINK = "PWFORQUICKLINK";
-	public static String PARAM_FONTSIZE = "FONTSIZE";
-	public static String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
-	public static String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
-	public static String PARAM_TOTALNUMERICFIELDS = "TOTALNUMERICFIELDS";
-	public static String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
-	public static String PARAM_HIDEHEADERFOOTER = "HIDEHEADERFOOTER";
-	public static String PARAM_HIDECOLUMNLABELS = "HIDECOLUMNLABELS";
-	private static String CALLED_CLASS_NAME = "TimeCardSystem.TCQueryParameters";
+	public static final String PARAM_EXPORTOPTIONS = "EXPORTOPTIONS";
+	public static final String EXPORT_COMMADELIMITED_VALUE = "COMMADELIMITED";
+	public static final String EXPORT_HTML_VALUE = "HTML";
+	public static final String EXPORT_NOEXPORT_VALUE = "NOEXPORT";
+	public static final String EXPORT_COMMADELIMITED_LABEL = "Comma delimited file";
+	public static final String EXPORT_HTML_LABEL = "HTML (web page) file";
+	public static final String EXPORT_NOEXPORT_LABEL = "Do not export - display on screen";
+	public static final String PARAM_QUERYID = "QUERYID";
+	public static final String PARAM_QUERYTITLE = "QUERYTITLE";
+	public static final String PARAM_QUERYSTRING = "QUERYSTRING";
+	public static final String PARAM_RAWQUERYSTRING = "RAWQUERYSTRING";
+	public static final String PARAM_SYSTEMQUERYID = "SYSTEMQUERYID";
+	public static final String PARAM_PWFORQUICKLINK = "PWFORQUICKLINK";
+	public static final String PARAM_FONTSIZE = "FONTSIZE";
+	public static final String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
+	public static final String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
+	public static final String PARAM_TOTALNUMERICFIELDS = "TOTALNUMERICFIELDS";
+	public static final String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
+	public static final String PARAM_HIDEHEADERFOOTER = "HIDEHEADERFOOTER";
+	public static final String PARAM_HIDECOLUMNLABELS = "HIDECOLUMNLABELS";
+	private static final String CALLED_CLASS_NAME = "TimeCardSystem.TCQueryParameters";
 
 	
 	public void doPost(HttpServletRequest request,

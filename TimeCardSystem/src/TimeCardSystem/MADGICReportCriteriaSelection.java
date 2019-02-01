@@ -19,11 +19,11 @@ public class MADGICReportCriteriaSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String UNCHECKALLDEPTSBUTTON = "UnCheckAllDepts";
-	private static String UNCHECKALLDEPTSLABEL = "UNCHECK All Departments";
-	private static String CHECKALLDEPTSBUTTON = "CheckAllDepts";
-	private static String CHECKALLDEPTSSLABEL = "CHECK All Departments";
-	private static String FORM_NAME = "MAINFORM";
+	private static final String UNCHECKALLDEPTSBUTTON = "UnCheckAllDepts";
+	private static final String UNCHECKALLDEPTSLABEL = "UNCHECK All Departments";
+	private static final String CHECKALLDEPTSBUTTON = "CheckAllDepts";
+	private static final String CHECKALLDEPTSSLABEL = "CHECK All Departments";
+	private static final String FORM_NAME = "MAINFORM";
 
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)

@@ -33,15 +33,15 @@ public class TCEditMADGICEventsEdit extends HttpServlet {
 	public static final String CONFIRM_DELETE_CHECKBOX_NAME = "CONFIRMDELETE";
 	public static final String ACTIVE_EMPLOYEE_CHECKBOX_PREFIX = "ACTIVEEMPLOYEECHECKBOX1";
 	public static final String INACTIVE_EMPLOYEE_CHECKBOX_PREFIX = "INACTIVEEMPLOYEECHECKBOX0";
-	private static String UNCHECKALLEMPLOYEESBUTTON = "UnCheckAllEmployees";
-	private static String UNCHECKALLEMPLOYEESLABEL = "UNCHECK All Employees";
-	private static String CHECKALLEMPLOYEESBUTTON = "CheckAllEmployees";
-	private static String CHECKALLEMPLOYEESLABEL = "CHECK All Employees";
-	private static String INACTIVE_EMPLOYEES_TABLE_DIV = "INACTIVEEMPLOYEESDIV";
-	private static String SHOWINACTIVEEMPLOYEESBUTTON = "ShowInactiveEmployees";
-	private static String SHOWINACTIVEEMPLOYEESLABEL = "Display INACTIVE Employees";
-	private static String HIDEINACTIVEEMPLOYEESBUTTON = "HideInactiveEmployees";
-	private static String HIDEINACTIVEEMPLOYEESLABEL = "Hide INACTIVE Employees";
+	private static final String UNCHECKALLEMPLOYEESBUTTON = "UnCheckAllEmployees";
+	private static final String UNCHECKALLEMPLOYEESLABEL = "UNCHECK All Employees";
+	private static final String CHECKALLEMPLOYEESBUTTON = "CheckAllEmployees";
+	private static final String CHECKALLEMPLOYEESLABEL = "CHECK All Employees";
+	private static final String INACTIVE_EMPLOYEES_TABLE_DIV = "INACTIVEEMPLOYEESDIV";
+	private static final String SHOWINACTIVEEMPLOYEESBUTTON = "ShowInactiveEmployees";
+	private static final String SHOWINACTIVEEMPLOYEESLABEL = "Display INACTIVE Employees";
+	private static final String HIDEINACTIVEEMPLOYEESBUTTON = "HideInactiveEmployees";
+	private static final String HIDEINACTIVEEMPLOYEESLABEL = "Hide INACTIVE Employees";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

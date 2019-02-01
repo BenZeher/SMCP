@@ -36,9 +36,8 @@ public class TCQueryGenerate extends HttpServlet {
 	public static final String SAVE_AS_PUBLIC_BUTTON_LABEL = "Save public query";
 	
 	//formats
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
-	private String sCallingClass = "";
 	private boolean bDebugMode = false;
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
@@ -124,7 +123,7 @@ public class TCQueryGenerate extends HttpServlet {
 		}
 		
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
-	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	   
 		String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(TCQuerySelect.PARAM_QUERYTITLE, request);
 		String sQueryID = clsManageRequestParameters.get_Request_Parameter(TCQuerySelect.PARAM_QUERYID, request);
@@ -404,27 +403,29 @@ public class TCQueryGenerate extends HttpServlet {
 		}
     	TCCustomQuery qry = new TCCustomQuery();
     	//Font sizes:
-    	if (!qry.processReport(
-    			conn, 
-    			sQueryID,
-    			sQueryTitle, 
-    			sQueryString,
-    			sRawQueryString,
-    			"", 
-    			sUserID, 
-    			out, 
-    			bExportAsCommaDelimited,
-    			bIncludeBorder,
-    			sFontSize,
-    			bAlternateRowColors,
-    			bTotalNumericFields,
-    			bShowSQLCommand,
-    			bHideHeaderFooter,
-    			bHideColumnLabels,
-    			getServletContext())){
+    	try {
+			qry.processReport(
+					conn, 
+					sQueryID,
+					sQueryTitle, 
+					sQueryString,
+					sRawQueryString,
+					"", 
+					sUserID, 
+					out, 
+					bExportAsCommaDelimited,
+					bIncludeBorder,
+					sFontSize,
+					bAlternateRowColors,
+					bTotalNumericFields,
+					bShowSQLCommand,
+					bHideHeaderFooter,
+					bHideColumnLabels,
+					getServletContext());
+		} catch (Exception e) {
+			out.println("Could not print query '" + sQueryString + "' - " + e.getMessage());
+		}
     		
-    		out.println("Could not print query '" + sQueryString + "' - " + qry.getErrorMessage());
-    	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060173]");
 	    out.println("</BODY></HTML>");
 	}

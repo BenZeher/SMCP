@@ -22,12 +22,12 @@ import TCSDataDefinition.TCSTablecompanyprofile;
 public class TCDisplayDataDefs  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String PARAM_COMMADELIMITED = "COMMADELIMITED";
-	public static String PARAM_QUERYTITLE = "QUERYTITLE";
-	public static String PARAM_QUERYSTRING = "QUERYSTRING";
-	public static String PARAM_FONTSIZE = "FONTSIZE";
-	public static String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
-	public static String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
+	public static final String PARAM_COMMADELIMITED = "COMMADELIMITED";
+	public static final String PARAM_QUERYTITLE = "QUERYTITLE";
+	public static final String PARAM_QUERYSTRING = "QUERYSTRING";
+	public static final String PARAM_FONTSIZE = "FONTSIZE";
+	public static final String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
+	public static final String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
 
 	private String sDBID = "";
 	public void doPost(HttpServletRequest request,

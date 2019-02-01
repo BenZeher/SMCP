@@ -19,11 +19,11 @@ public class MilestonesReportCriteriaSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static String UNCHECKALLTYPESBUTTON = "UnCheckAllType";
-	private static String UNCHECKALLTYPESABEL = "UNCHECK All Employee Types";
-	private static String CHECKALLTYPESBUTTON = "CheckAllTypes";
-	private static String CHECKALLTYPESSLABEL = "CHECK All Employee Types";
-	private static String FORM_NAME = "MAINFORM";
+	private static final String UNCHECKALLTYPESBUTTON = "UnCheckAllType";
+	private static final String UNCHECKALLTYPESABEL = "UNCHECK All Employee Types";
+	private static final String CHECKALLTYPESBUTTON = "CheckAllTypes";
+	private static final String CHECKALLTYPESSLABEL = "CHECK All Employee Types";
+	private static final String FORM_NAME = "MAINFORM";
 
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)

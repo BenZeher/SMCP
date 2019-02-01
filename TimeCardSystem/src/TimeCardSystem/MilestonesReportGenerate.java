@@ -44,7 +44,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 	public static final String PARAM_CHECKBOX_SHOW_DETAILS = "Show Details";
 
 	public static final String INCOMPLETE_MILESTONE_TEXT = "Incomplete";
-	private static int TABLE_COLUMN_SPAN = 3;
+	private static final int TABLE_COLUMN_SPAN = 3;
 	
 	//private static final String COLOR_LIGHT_BLUE = "#4d94ff"; //"#e6ffff";
 	private static final String COLOR_LIGHT_LIGHT_BLUE = "#99c2ff"; //"#ccffff";

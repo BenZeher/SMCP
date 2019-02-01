@@ -45,21 +45,21 @@ public class MADGICReportGenerate extends HttpServlet {
 	public static final String PARAM_USE_CURRENT_USER_FOR_EMPLOYEE_ID = "USECURRENTUSERFOREMPLOYEEID";
 	public static final String PARAM_CHECKBOX_SHOW_DETAILS = "Show Details";
 	public static final String MADGIC_REPORT_FORM_NAME = "MADGICCRITERIAFORM";
-	private static int POINT_VALUE_FOR_REGULAR_DAY_WORKED = 8;
-	private static int POINT_VALUE_FOR_BEEPER_CALL_WORKED = 10;
-	private static int POINT_VALUE_FOR_NIGHT_JOB_WORKED = 10;
-	private static int POINT_VALUE_FOR_WEEKEND_WORKED = 10;
-	private static int POINT_VALUE_FOR_HOLIDAY_WORKED = 8;
-	private static int POINT_VALUE_FOR_DAY_PAID_PER_MANAGER = 8;
-	private static int POINT_VALUE_FOR_JURY_DUTY_DAY = 8;
-	private static int POINT_VALUE_FOR_PERSONAL_BUSINESS_EXCUSED = 8;
-	private static int POINT_VALUE_FOR_ALLOWED_LATE_DAY = 4;
-	private static int POINT_VALUE_FOR_LEAVE_TYPE_VACATION = 8;
-	private static int POINT_VALUE_FOR_LEAVE_TYPE_PERSONAL_TIME_OFF_EXCUSED = 8;
-	private static int POINT_VALUE_FOR_LEAVE_TYPE_PERSONAL_TIME_OFF_NOT_EXCUSED = 0;
-	private static int STARTING_POINT_VALUE_CREDIT = 100;
+	private static final int POINT_VALUE_FOR_REGULAR_DAY_WORKED = 8;
+	private static final int POINT_VALUE_FOR_BEEPER_CALL_WORKED = 10;
+	private static final int POINT_VALUE_FOR_NIGHT_JOB_WORKED = 10;
+	private static final int POINT_VALUE_FOR_WEEKEND_WORKED = 10;
+	private static final int POINT_VALUE_FOR_HOLIDAY_WORKED = 8;
+	private static final int POINT_VALUE_FOR_DAY_PAID_PER_MANAGER = 8;
+	private static final int POINT_VALUE_FOR_JURY_DUTY_DAY = 8;
+	private static final int POINT_VALUE_FOR_PERSONAL_BUSINESS_EXCUSED = 8;
+	private static final int POINT_VALUE_FOR_ALLOWED_LATE_DAY = 4;
+	private static final int POINT_VALUE_FOR_LEAVE_TYPE_VACATION = 8;
+	private static final int POINT_VALUE_FOR_LEAVE_TYPE_PERSONAL_TIME_OFF_EXCUSED = 8;
+	private static final int POINT_VALUE_FOR_LEAVE_TYPE_PERSONAL_TIME_OFF_NOT_EXCUSED = 0;
+	private static final int STARTING_POINT_VALUE_CREDIT = 100;
 
-	private static int ALLOWED_NUMBER_OF_LATES = 3;
+	private static final int ALLOWED_NUMBER_OF_LATES = 3;
 	
 	//Entry types - these are data dependent.  That means the values could change any time!!!:
 	public static final int ENTRY_TYPE_REGULAR_WORKED_DAY = 0;

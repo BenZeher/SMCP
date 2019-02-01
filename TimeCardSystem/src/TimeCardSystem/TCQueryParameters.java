@@ -24,8 +24,8 @@ import TCSDataDefinition.TCSTablecompanyprofile;
 public class TCQueryParameters  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String QUERYPARAMBASE = "QPBASE";
-	public static String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
+	public static final String QUERYPARAMBASE = "QPBASE";
+	public static final String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
 	private static final String CALLED_CLASS_NAME = "TimeCardSystem.TCQueryGenerate";
 	private static final String SUBMIT_BUTTON_VALUE = "Process query";
 

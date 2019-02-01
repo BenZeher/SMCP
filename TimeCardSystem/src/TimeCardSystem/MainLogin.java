@@ -21,7 +21,7 @@ public class MainLogin extends HttpServlet {
 	public static final String MILESTONES_LOGIN_PARAM = "milestones";
 	
 	private static final long serialVersionUID = 1L;
-	public static String CLASS_NAME = "TimeCardSystem.MainLogin";
+	public static final String CLASS_NAME = "TimeCardSystem.MainLogin";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

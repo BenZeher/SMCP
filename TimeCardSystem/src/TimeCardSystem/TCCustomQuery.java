@@ -18,31 +18,29 @@ import ServletUtilities.clsStringFunctions;
 
 public class TCCustomQuery extends java.lang.Object{
 
-	public static String SESSIONTAG_VARIABLE = "*SESSIONTAG*";
-	public static String USER_VARIABLE = "*USER*";
-	public static String LINKBASE_VARIABLE = "*LINKBASE*";
-	public static String DATEPICKER_PARAM_VARIABLE = "*DATEPICKER*";
-	public static String DATEPICKER_TODAY_PARAM_VARIABLE = "TODAY";
-	public static String DATEPICKER_FIRSTDAYOFYEAR_PARAM_VARIABLE = "FIRSTDAYOFYEAR";
-	public static String DATEPICKER_FIRSTDAYOFMONTH_PARAM_VARIABLE = "FIRSTDAYOFMONTH";
-	public static String DATEPICKER_LASTDAYOFYEAR_PARAM_VARIABLE = "LASTDAYOFYEAR";
-	public static String DATEPICKER_LASTDAYOFMONTH_PARAM_VARIABLE = "LASTDAYOFMONTH";
-	public static String DROPDOWN_PARAM_VARIABLE = "*DROPDOWNLIST*";
-	public static String SETVARIABLECOMMAND = "*SETVARIABLES*";
-	public static String STARTINGPARAMDELIMITER = "[[";
-	public static String ENDINGPARAMDELIMITER = "]]";
-	public static String STARTINGPARAMDATADELIMITER = "{";
-	public static String ENDINGPARAMDATADELIMITER = "}";
+	public static final String SESSIONTAG_VARIABLE = "*SESSIONTAG*";
+	public static final String USER_VARIABLE = "*USER*";
+	public static final String LINKBASE_VARIABLE = "*LINKBASE*";
+	public static final String DATEPICKER_PARAM_VARIABLE = "*DATEPICKER*";
+	public static final String DATEPICKER_TODAY_PARAM_VARIABLE = "TODAY";
+	public static final String DATEPICKER_FIRSTDAYOFYEAR_PARAM_VARIABLE = "FIRSTDAYOFYEAR";
+	public static final String DATEPICKER_FIRSTDAYOFMONTH_PARAM_VARIABLE = "FIRSTDAYOFMONTH";
+	public static final String DATEPICKER_LASTDAYOFYEAR_PARAM_VARIABLE = "LASTDAYOFYEAR";
+	public static final String DATEPICKER_LASTDAYOFMONTH_PARAM_VARIABLE = "LASTDAYOFMONTH";
+	public static final String DROPDOWN_PARAM_VARIABLE = "*DROPDOWNLIST*";
+	public static final String SETVARIABLECOMMAND = "*SETVARIABLES*";
+	public static final String STARTINGPARAMDELIMITER = "[[";
+	public static final String ENDINGPARAMDELIMITER = "]]";
+	public static final String STARTINGPARAMDATADELIMITER = "{";
+	public static final String ENDINGPARAMDATADELIMITER = "}";
 	
-	private String m_sErrorMessage;
 	private boolean bDebugMode = false;
 	
 	public TCCustomQuery(
 	){
-		m_sErrorMessage = "";
 	}
 	
-	public boolean processReport(
+	public void processReport(
 			Connection conn,
 			String sQueryID,
 			String sQueryTitle,
@@ -60,7 +58,7 @@ public class TCCustomQuery extends java.lang.Object{
 			boolean bHideHeaderFooter,
 			boolean bHideColumnLabels,
 			ServletContext context
-	){
+	) throws Exception{
 
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " bTotalNumericFields = " + bTotalNumericFields);
@@ -102,8 +100,7 @@ public class TCCustomQuery extends java.lang.Object{
 		try {
 			sQueryString = processSetCommands(sQueryString, conn);
 		} catch (Exception e1) {
-			m_sErrorMessage = "Error [1433866016] processing 'SET' commands - " + e1.getMessage();
-			return false;
+			throw new Exception("Error [1433866016] processing 'SET' commands - " + e1.getMessage());
 		}
 		
 		//System.out.println("[1457987417] sQueryString = '" + sQueryString + "'");
@@ -227,8 +224,7 @@ public class TCCustomQuery extends java.lang.Object{
 				out.flush();
 				out.close();
 			}catch (SQLException e){
-				m_sErrorMessage = "Error reading resultset - " + e.getMessage();
-				return false;
+				throw new Exception("Error [1548984363] reading resultset - " + e.getMessage());
 			}
 
 		}else{
@@ -444,8 +440,7 @@ public class TCCustomQuery extends java.lang.Object{
 
 				}
 			}catch(SQLException e){
-				m_sErrorMessage = "Error reading resultset - " + e.getMessage();
-				return false;
+				throw new Exception("Error [1548984364] reading resultset - " + e.getMessage());
 			}
 			
 			if(!bHideHeaderFooter){
@@ -471,7 +466,7 @@ public class TCCustomQuery extends java.lang.Object{
 
 			}
 		}
-		return true;
+		return;
 	}
 	private String getFieldValue(
 		ResultSet rs, 
@@ -479,7 +474,7 @@ public class TCCustomQuery extends java.lang.Object{
 		boolean bOutputToCSV,
 		String sSQL,
 		String sUser
-		) throws SQLException{
+		) throws Exception{
 		String sFieldValue = "";
 
 		int iType = rs.getMetaData().getColumnType(iFieldIndex);
@@ -563,11 +558,10 @@ public class TCCustomQuery extends java.lang.Object{
 				sFieldValue = rs.getTimestamp(iFieldIndex).toString();
 			}
 		}catch (Exception e){ 
-			m_sErrorMessage = "Error [1418229759] reading resultset from SQL: " + sSQL 
-				+ ", field index '" + iFieldIndex + "' - " + e.getMessage();
-			clsServletUtilities.sysprint(this.toString(), sUser, m_sErrorMessage);
-			System.out.println(m_sErrorMessage);
-			return m_sErrorMessage;
+			clsServletUtilities.sysprint(this.toString(), sUser, "Error [1418229759] reading resultset from SQL: " + sSQL 
+					+ ", field index '" + iFieldIndex + "' - " + e.getMessage());
+			throw new Exception("Error [1418229759] reading resultset from SQL: " + sSQL 
+					+ ", field index '" + iFieldIndex + "' - " + e.getMessage());
 		}
 
 			break;
@@ -662,8 +656,5 @@ public class TCCustomQuery extends java.lang.Object{
 		} catch (Exception e) {
 			throw new Exception("Error [1433865481] checking for set variable command in parameter string '" + sParameter + "' - " + e.getMessage());
 		}
-	}
-	public String getErrorMessage (){
-		return m_sErrorMessage;
 	}
 }

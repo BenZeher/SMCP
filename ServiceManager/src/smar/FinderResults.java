@@ -29,7 +29,7 @@ import smic.ICPOReceiptHeader;
 
 public class FinderResults extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private boolean bDebugMode = false;
+	private boolean bDebugMode = true;
 	
 	public static final String FINDER_OBJECT_NAME_PARAM = "ObjectName";
 	public static final String FINDER_RESULT_CLASS_PARAM = "ResultClass";
@@ -45,11 +45,19 @@ public class FinderResults extends HttpServlet {
 	public static final String SEARCH_ITEM = "Item";
 	public static final String SEARCH_MOSTUSEDITEMS = "Items Listed By Usage";
 	public static final String SEARCH_NONDEDICATEDITEMS = "Non-dedicated Items";
+	public static final String SEARCH_ITEMS_SHOWING_LOCATION_QTYS = "Items Listing Qtys By Location";
+	public static final String SEARCH_ACTIVE_ITEM = "ACTIVE Item";
 	public static final String COMPLETE_BILL_TO_ADDRESS = "COMPLETEBILLTOADDRESS";
 	public static final String COMPLETE_SHIP_TO_ADDRESS = "COMPLETESHIPTOADDRESS";
 	public static final String UNINVOICED_PO_RECEIPT_OBJECT = "Uninvoiced PO Receipt";
 	public static final String ITEMS_WITH_VENDOR_ITEMS = "Items With Vendor Item Numbers";
 	public static final String ASSET = "Asset";
+	
+	//These are reserved field names, which are used as aliases for more complex field calculations:
+	public static final String ITEM_LOCATION_QTY_OH = "ITEMLOCATIONQTYONHAND";
+	public static final String ITEM_NON_STOCK_FLAG = "ITEMNONSTOCKFLAG";
+	
+	
 	//This is used if we want to further limit the query - for example by stipulating only one particular vendor when we are searching for AP transactions, etc.
 	public static final String ADDITIONAL_WHERE_CLAUSE_PARAMETER = "ADDITIONALWHERECLAUSE";
 	//This is used to give the finder box a special title, e.g.: 'List of AP Transactions for vendor number OHD02'
@@ -240,6 +248,17 @@ public class FinderResults extends HttpServlet {
 					sSearchType,
 					sSearchField,
 					sSearchText
+			);
+			bUsedSpecialSQL = true;
+		}
+		
+		if (sObjectName.equalsIgnoreCase(SEARCH_ITEMS_SHOWING_LOCATION_QTYS)){
+			sSQL = buildItemsWithLocationQtysSQLStatement(
+					sResultListFields,
+					sSearchType,
+					sSearchField,
+					sSearchText,
+					clsManageRequestParameters.get_Request_Parameter(FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER, request)
 			);
 			bUsedSpecialSQL = true;
 		}
@@ -1038,6 +1057,11 @@ public class FinderResults extends HttpServlet {
 		//We assume there is always at least one field:
 		sSQL += sResultListFields.get(0);
 		for (int i = 1; i < sResultListFields.size(); i++){
+			if (sResultListFields.get(i).compareToIgnoreCase(ITEM_NON_STOCK_FLAG) == 0){
+				sSQL += ", IF(" + SMTableicitems.TableName + "." + SMTableicitems.inonstockitem + " = 0, 'STOCK', '<B>NON</B>-STOCK'" 
+					+ ") AS " + ITEM_NON_STOCK_FLAG;
+				continue;
+			}
 			sSQL += ", " + sResultListFields.get(i);
 		}
 
@@ -1070,6 +1094,67 @@ public class FinderResults extends HttpServlet {
 		return sSQL;
 	}
 	
+	private String buildItemsWithLocationQtysSQLStatement(
+			ArrayList<String> sResultListFields,
+			String sSearchType,
+			String sSearchField,
+			String sSearchText,
+			String sAdditionalWhereParameter){
+		String sSQL = "";
+
+		//Construct the SQL statement to be used for the search:
+		sSQL = " SELECT ";
+		//We assume there is always at least one field:
+		sSQL += sResultListFields.get(0);
+		for (int i = 1; i < sResultListFields.size(); i++){
+			if (sResultListFields.get(i).compareToIgnoreCase(ITEM_LOCATION_QTY_OH) == 0){
+				sSQL += ", IF(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand + " IS NULL, 0.0000, " 
+					+ SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand + ") AS " + ITEM_LOCATION_QTY_OH;
+				continue;
+			}
+			if (sResultListFields.get(i).compareToIgnoreCase(ITEM_NON_STOCK_FLAG) == 0){
+				sSQL += ", IF(" + SMTableicitems.TableName + "." + SMTableicitems.inonstockitem + " = 0, 'STOCK', '<B>NON</B>-STOCK'" 
+					+ ") AS " + ITEM_NON_STOCK_FLAG;
+				continue;
+			}
+			sSQL += ", " + sResultListFields.get(i);
+		}
+
+		sSQL += " FROM " + SMTableicitems.TableName + " LEFT JOIN"
+			+ " " + SMTableicitemlocations.TableName + " ON "
+			+ SMTableicitems.TableName + "." + SMTableicitems.sItemNumber + " = "
+			+ SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sItemNumber
+			+ " WHERE ("
+			;
+		if (sSearchType.compareToIgnoreCase("Beginning with") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Containing") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'%" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Exactly matching") == 0){
+			sSQL += "(" + sSearchField + " = " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "')";
+		}
+		
+		//If there are any additional limiting 'where' qualifiers passed in:
+		if (sAdditionalWhereParameter.compareToIgnoreCase("") != 0){
+			sSQL += " AND (" + sAdditionalWhereParameter + ")";
+		}
+
+		sSQL += ")";
+		
+		sSQL += " ORDER BY " + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber 
+		+ " ASC";
+		
+		if (bDebugMode){
+			System.out.println("[1549042834] In " + this.toString() + ".buildItemsWithLocationQtysSQLStatement - SQL = " + sSQL);
+		}
+		return sSQL;
+	}
+	
 	private String buildItemWithVendorItemSQLStatement(
 			ArrayList<String> sResultListFields,
 			String sSearchType,
@@ -1082,6 +1167,11 @@ public class FinderResults extends HttpServlet {
 		//We assume there is always at least one field:
 		sSQL += sResultListFields.get(0);
 		for (int i = 1; i < sResultListFields.size(); i++){
+			if (sResultListFields.get(i).compareToIgnoreCase(ITEM_NON_STOCK_FLAG) == 0){
+				sSQL += ", IF(" + SMTableicitems.TableName + "." + SMTableicitems.inonstockitem + " = 0, 'STOCK', '<B>NON</B>-STOCK'" 
+					+ ") AS " + ITEM_NON_STOCK_FLAG;
+				continue;
+			}
 			sSQL += ", " + sResultListFields.get(i);
 		}
 
@@ -1128,6 +1218,11 @@ public class FinderResults extends HttpServlet {
 		//We assume there is always at least one field:
 		sSQL += sResultListFields.get(0);
 		for (int i = 1; i < sResultListFields.size(); i++){
+			if (sResultListFields.get(i).compareToIgnoreCase(ITEM_NON_STOCK_FLAG) == 0){
+				sSQL += ", IF(" + SMTableicitems.TableName + "." + SMTableicitems.inonstockitem + " = 0, 'STOCK', '<B>NON</B>-STOCK'" 
+					+ ") AS " + ITEM_NON_STOCK_FLAG;
+				continue;
+			}
 			sSQL += ", " + sResultListFields.get(i);
 		}
 
@@ -1450,7 +1545,7 @@ public class FinderResults extends HttpServlet {
 		if (sObject.equalsIgnoreCase(SEARCH_ITEM)){
 			sTable = SMTableicitems.TableName;
 		}
-		if (sObject.equalsIgnoreCase("ACTIVE Item")){
+		if (sObject.equalsIgnoreCase(SEARCH_ACTIVE_ITEM)){
 			sTable = SMTableicitems.TableName;
 		}
 		if (sObject.equalsIgnoreCase("SalesContact")){
@@ -1581,7 +1676,7 @@ public class FinderResults extends HttpServlet {
 		}
 		
 		//If we are searching for an inventory item, but only want ACTIVE items, add this qualifier:
-		if (sObject.compareToIgnoreCase("ACTIVE Item") == 0){
+		if (sObject.compareToIgnoreCase(SEARCH_ACTIVE_ITEM) == 0){
 			sSQL += " AND (" + SMTableicitems.TableName + "." + SMTableicitems.iActive + " = 1)"; 
 		}
 

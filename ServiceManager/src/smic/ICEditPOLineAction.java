@@ -19,6 +19,7 @@ import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableglaccounts;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smar.FinderResults;
 
 public class ICEditPOLineAction extends HttpServlet{
 
@@ -43,7 +44,7 @@ public class ICEditPOLineAction extends HttpServlet{
 			String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&ObjectName=" + "ACTIVE Item"
+				+ "&ObjectName=" + FinderResults.SEARCH_ACTIVE_ITEM
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
 				+ "&ReturnField=" + "FOUND" + ICPOLine.Paramsitemnumber

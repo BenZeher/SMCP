@@ -9,20 +9,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import smar.FinderResults;
 import smar.SMOption;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMLogEntry;
 import SMClasses.SMMaterialReturn;
+import SMClasses.SMOrderDetail;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
+import SMDataDefinition.SMTableicitemlocations;
+import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorderdetailsheets;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsEmailInlineHTML;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -367,6 +372,52 @@ public class SMWorkOrderAction extends HttpServlet{
 	    		SMWorkOrderEdit.FINDITEM_COMMAND_VALUE_BASE) == 0){
 	    		//Get the line number from the command string:
 	    		String sLineNumber = sCommandValue.substring(SMWorkOrderEdit.FINDITEM_COMMAND_VALUE_BASE.length(), sCommandValue.length());
+	    		
+	    		//Now get the location of that line:
+	    		String sLineLocation = "";
+	    		
+	    		/*
+	    		clsManageRequestParameters.get_Request_Parameter(
+						SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+						+ clsStringFunctions.PadLeft(Integer.toString(i), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
+						+  SMWorkOrderDetail.Paramslocationcode,
+						req).replace("&quot;", "\"")
+	    		*/
+	    		
+	    		sLineLocation = clsManageRequestParameters.get_Request_Parameter(
+						SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER + sLineNumber + SMWorkOrderDetail.Paramslocationcode,
+						request).replace("&quot;", "\"");
+	    		
+	    		String sRedirectString = 
+    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+						+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
+						+ "&ObjectName=" + smar.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
+						+ "&ResultClass=FinderResults"
+						+ "&SearchingClass=" + smaction.getCallingClass()
+						+ "&ReturnField=" 
+						+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
+						+ sLineNumber 
+						+ SMWorkOrderDetail.Paramsitemnumber
+						
+						+ SMFinderFunctions.getStdITEMWithQtysSearchAndResultString(sLineLocation)
+
+						+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=(" 
+							+ "(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " = '" + sLineLocation + "')"
+							+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
+						+ ")"
+						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
+						+ " &" + FinderResults.FINDER_BOX_TITLE + "=NON-DEDICATED items <I>showing qtys for location : '" + sLineLocation + "'</I>. +\n"
+						
+						+ "&ParameterString="
+						+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+						+ "*" + SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
+						+ "*" + SMWorkOrderEdit.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
+						+ "*" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request) 				
+		    	;
+		    				
+	    				
+	    		/*
 				String sRedirectString = 
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -379,34 +430,14 @@ public class SMWorkOrderAction extends HttpServlet{
 					+  SMWorkOrderDetail.Paramsitemnumber
 					
 					+ SMFinderFunctions.getStdITEMSearchAndResultString()
-					
-					/*
-					+ "&SearchField1=" + SMTableicitems.sItemDescription
-					+ "&SearchFieldAlias1=Description"
-					+ "&SearchField2=" + SMTableicitems.sItemNumber
-					+ "&SearchFieldAlias2=Item%20No."
-					+ "&SearchField3=" + SMTableicitems.sComment1
-					+ "&SearchFieldAlias3=Comment%201"
-					+ "&SearchField4=" + SMTableicitems.sComment2
-					+ "&SearchFieldAlias4=Comment%202"
-					+ "&ResultListField1="  + SMTableicitems.sItemNumber
-					+ "&ResultHeading1=Item%20No."
-					+ "&ResultListField2="  + SMTableicitems.sItemDescription
-					+ "&ResultHeading2=Description"
-					+ "&ResultListField3="  + SMTableicitems.sCostUnitOfMeasure
-					+ "&ResultHeading3=Cost%20Unit"
-					+ "&ResultListField4="  + SMTableicitems.inonstockitem
-					+ "&ResultHeading4=Non-stock?"
-					+ "&ResultListField5="  + SMTableicitems.sPickingSequence
-					+ "&ResultHeading5=Picking%20Sequence"
-					*/
-					
+
 					+ "&ParameterString="
 					+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 					+ "*" + SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
 					+ "*" + SMWorkOrderEdit.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
 					+ "*" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request)
 				;
+				*/
 				smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
 				redirectProcess(sRedirectString, response);
 				return;

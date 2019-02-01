@@ -12,11 +12,15 @@ import javax.servlet.http.HttpServletResponse;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableicitemlocations;
+import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
+import smar.FinderResults;
 
 public class SMEditOrderDetailAction extends HttpServlet{
 	
@@ -127,33 +131,20 @@ public class SMEditOrderDetailAction extends HttpServlet{
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
-				+ "&ObjectName=" + "ACTIVE Item"
+				+ "&ObjectName=" + FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
 				+ "&ReturnField=" + SMOrderDetail.ParamsItemNumber
 				
-				+ SMFinderFunctions.getStdITEMSearchAndResultString()
+				+ SMFinderFunctions.getStdITEMWithQtysSearchAndResultString(detail.getM_sLocationCode())
+
+				+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=(" 
+					+ "(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " = '" + detail.getM_sLocationCode() + "')"
+					+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
+				+ ")"
+				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.iActive + " = 1)"
 				
-				/*
-				+ "&SearchField1=" + SMTableicitems.sItemDescription
-				+ "&SearchFieldAlias1=Description"
-				+ "&SearchField2=" + SMTableicitems.sItemNumber
-				+ "&SearchFieldAlias2=Item%20No."
-				+ "&SearchField3=" + SMTableicitems.sComment1
-				+ "&SearchFieldAlias3=Comment%201"
-				+ "&SearchField4=" + SMTableicitems.sComment2
-				+ "&SearchFieldAlias4=Comment%202"
-				+ "&ResultListField1="  + SMTableicitems.sItemNumber
-				+ "&ResultHeading1=Item%20No."
-				+ "&ResultListField2="  + SMTableicitems.sItemDescription
-				+ "&ResultHeading2=Description"
-				+ "&ResultListField3="  + SMTableicitems.sCostUnitOfMeasure
-				+ "&ResultHeading3=Cost%20Unit"
-				+ "&ResultListField4="  + SMTableicitems.inonstockitem
-				+ "&ResultHeading4=Non-stock?"
-				+ "&ResultListField5="  + SMTableicitems.sPickingSequence
-				+ "&ResultHeading5=Picking%20Sequence"
-				*/
+				+ " &" + FinderResults.FINDER_BOX_TITLE + "=ACTIVE items <I>showing qtys for location : '" + detail.getM_sLocationCode() + "'</I>. +\n"
 				
 				+ "&ParameterString="
 				+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -183,33 +174,19 @@ public class SMEditOrderDetailAction extends HttpServlet{
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
-				+ "&ObjectName=" + smar.FinderResults.SEARCH_NONDEDICATEDITEMS
+				+ "&ObjectName=" + smar.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
 				+ "&ReturnField=" + SMOrderDetail.ParamsItemNumber
 
-				+ SMFinderFunctions.getStdITEMSearchAndResultString()
-				
-				/*
-				+ "&SearchField1=" + SMTableicitems.sItemDescription
-				+ "&SearchFieldAlias1=Description"
-				+ "&SearchField2=" + SMTableicitems.sItemNumber
-				+ "&SearchFieldAlias2=Item%20No."
-				+ "&SearchField3=" + SMTableicitems.sComment1
-				+ "&SearchFieldAlias3=Comment%201"
-				+ "&SearchField4=" + SMTableicitems.sComment2
-				+ "&SearchFieldAlias4=Comment%202"
-				+ "&ResultListField1="  + SMTableicitems.sItemNumber
-				+ "&ResultHeading1=Item%20No."
-				+ "&ResultListField2="  + SMTableicitems.sItemDescription
-				+ "&ResultHeading2=Description"
-				+ "&ResultListField3="  + SMTableicitems.sCostUnitOfMeasure
-				+ "&ResultHeading3=Cost%20Unit"
-				+ "&ResultListField4="  + SMTableicitems.inonstockitem
-				+ "&ResultHeading4=Non-stock?"
-				+ "&ResultListField5="  + SMTableicitems.sPickingSequence
-				+ "&ResultHeading5=Picking%20Sequence"				
-				*/
+				+ SMFinderFunctions.getStdITEMWithQtysSearchAndResultString(detail.getM_sLocationCode())
+
+				+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=(" 
+					+ "(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " = '" + detail.getM_sLocationCode() + "')"
+					+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
+				+ ")"
+				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
+				+ " &" + FinderResults.FINDER_BOX_TITLE + "=ACTIVE, NON-DEDICATED items <I>showing qtys for location : '" + detail.getM_sLocationCode() + "'</I>. +\n"
 				
 				+ "&ParameterString="
 				+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()

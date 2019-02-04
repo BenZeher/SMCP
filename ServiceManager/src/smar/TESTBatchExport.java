@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 
 import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
@@ -126,13 +127,13 @@ public class TESTBatchExport extends HttpServlet{
 				//Skip the update if the value is Zero
 				if(bUpdate) {
 					 
-			        String sSQLUpdate = "UPDATE " + SMTabletempExpensedCost 
+			        String sSQLUpdate = "UPDATE " + SMTableinvoicedetails.TableName 
 			        				+ " SET"
-			        				+ " " + "bdexpensedcost" + " = " + bdExpensedCost.toString()
+			        				+ " " + SMTableinvoicedetails.bdexpensedcost + " = " + bdExpensedCost.toString()
 			        				+ " WHERE(" 
-			        				+ " (sInvoiceNumber" + " = '" +rsTempTable.getString("sInvoiceNumber") + "')"
+			        				+ " (" +SMTableinvoicedetails.sInvoiceNumber+ " = '" +rsTempTable.getString("sInvoiceNumber") + "')"
 			        				+ " AND "
-			        				+ " (" + "iLineNumber = " + Integer.toString(rsTempTable.getInt("iLineNumber")) + ")"
+			        				+ " (" + SMTableinvoicedetails.iLineNumber + " = "  + Integer.toString(rsTempTable.getInt("iLineNumber")) + ")"
 			        				
 			        				+ ")";
 			        try{

@@ -10,7 +10,6 @@ import java.util.HashMap;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableicitems;
@@ -227,7 +226,7 @@ public class SMSalesTaxReport {
 			
 			+ ", IF(" + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.iIsStockItem + " = 1" 
 				+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedCost 
-				+ ", IF(NONSTOCKCOSTSQUERY.AVGCOST IS NOT NULL, NONSTOCKCOSTSQUERY.AVGCOST * " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dQtyShipped + ", 0.00)" 
+				+ ", ROUND(" + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.bdexpensedcost + " * " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dQtyShipped + ",2)" 
 			+ ") AS EXTENDEDCOST"
 			;
 		
@@ -258,7 +257,7 @@ public class SMSalesTaxReport {
 				+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iCostCenterID + "=" + SMTablecostcenters.TableName + "." + SMTablecostcenters.lid
 			;
 		}
-		
+/*		
 		SQL += " LEFT JOIN " 
 			+ "( SELECT"
 				+ " " + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.sitemnumber + " AS ITEMNUM"
@@ -272,7 +271,7 @@ public class SMSalesTaxReport {
 			+ ") AS NONSTOCKCOSTSQUERY"
 			+ " ON NONSTOCKCOSTSQUERY.ITEMNUM = " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber
 		;
-
+*/
 		SQL += " WHERE ("
 			+ "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(sStartingDate) + " 00:00:00')"
 			+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(sEndingDate) + " 23:59:59')"

@@ -3,6 +3,9 @@ import java.math.BigDecimal;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.http.HttpServlet;
 
@@ -21,11 +24,11 @@ public class TESTBatchExport extends HttpServlet{
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
-		String sURL = "localhost"; //Google Cloud SQL = 35.243.211.251
-		String sDBID = "servmgr1"; //servmgr1 - default
+		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.211.251
+		String sDBID = "servmgr3"; //servmgr1 - default
 		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
-		String sUser = "smuser";//"smuser7sT559";
-		String sPassword = "smuser";//"kJ26D3G9bvK8";
+		String sUser = "root";//"smuser7sT559";
+		String sPassword = "x14r7uidfDgvC4th";//"kJ26D3G9bvK8";
 		
 		//OHD Tampa settings:
 		/*
@@ -79,7 +82,7 @@ public class TESTBatchExport extends HttpServlet{
 			int iterator = 0;
 			while (rsTempTable.next()){
 				iterator++;
-				System.out.println(Integer.toString(iterator));
+
 				BigDecimal bdExpensedCost = new BigDecimal(0.00);
 				boolean bUpdate = false;
 				
@@ -96,20 +99,16 @@ public class TESTBatchExport extends HttpServlet{
 				//		+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.idoctype + " = " + "0" + ")"
 							+ " AND "	
 							+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.datdocdate + " <= '" + rsTempTable.getString("datInvoiceDate") + "')"
+			//				+ " AND "
+			//				+ " (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.datdocdate + " > '" + rsTempTable.getString("datInvoiceDateMinusThreeYears") + "')"
 						+ ")"
 						+ " GROUP BY (" + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.sitemnumber + ")"
 						;
 				try{
 					ResultSet rsAPTransactionsAvg = clsDatabaseFunctions.openResultSet(sSQL, conn);		    
-					
 					if (rsAPTransactionsAvg.next()){
 						bdExpensedCost = rsAPTransactionsAvg.getBigDecimal("AVGCOST");
-						System.out.println("Average Cost for item '" + rsTempTable.getString("sItemNumber") + "' = " +  bdExpensedCost.toString());
 						bUpdate = true;
-					}
-					
-					if (rsAPTransactionsAvg.next()){
-						System.out.println("Mutiple lines with query. Expecting only one line... " );
 					}
 					
 	
@@ -118,6 +117,12 @@ public class TESTBatchExport extends HttpServlet{
 					System.out.println("Error in Calculate_Invoice_Detail_Expensed_Cost: " + ex.getMessage());
 				}
 				
+				//Log every 1000th iteration
+				if(iterator%1000 == 0) {
+					DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+					Date date = new Date();
+					System.out.println("Record number: " + Integer.toString(iterator) + " Time: " + dateFormat.format(date));;
+				}
 				//Skip the update if the value is Zero
 				if(bUpdate) {
 					 

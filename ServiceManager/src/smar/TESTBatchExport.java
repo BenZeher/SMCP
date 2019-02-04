@@ -76,64 +76,66 @@ public class TESTBatchExport extends HttpServlet{
 			
 			//Loop through the entire temp table containing all invoice detail of non-stock items and corresponding invoice date
 			System.out.println("Looping through invoice detail in temp table...");
+			int iterator = 0;
 			while (rsTempTable.next()){
-				
+				iterator++;
+				System.out.println(Integer.toString(iterator));
 				BigDecimal bdExpensedCost = new BigDecimal(0.00);
-				
+				boolean bUpdate = false;
 				
 				//Execute average per invoice line in temp table
-				String sSQL = "SELECT " + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.sitemnumber
-						+ ", " + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdamount 
-						+ ", " + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdqtyreceived 
+				String sSQL = "SELECT " + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.sitemnumber
+						+ ", ROUND(AVG(" + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdamount 
+						+ " / " + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdqtyreceived + "),2) AS AVGCOST"
 						+ " FROM " + SMTableaptransactionlines.TableName
 						+ " LEFT JOIN " + SMTableaptransactions.TableName + " ON " + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid 
 						+ " = " + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.ltransactionheaderid
 						+ " WHERE ("
 						+ "(" + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.sitemnumber + " = '" + rsTempTable.getString("sItemNumber") +  "')"
-							+ " AND "
-							+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.idoctype + " = '" + "0" + "')"
+				//			+ " AND "
+				//		+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.idoctype + " = " + "0" + ")"
 							+ " AND "	
 							+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.datdocdate + " <= '" + rsTempTable.getString("datInvoiceDate") + "')"
 						+ ")"
+						+ " GROUP BY (" + SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.sitemnumber + ")"
 						;
 				try{
-					ResultSet rsAPTransactions = clsDatabaseFunctions.openResultSet(sSQL, conn);		    
+					ResultSet rsAPTransactionsAvg = clsDatabaseFunctions.openResultSet(sSQL, conn);		    
 					
-					BigDecimal bdQty = new BigDecimal(0.00);
-					BigDecimal bdAmount = new BigDecimal(0.00);
-					while (rsAPTransactions.next()){
-						bdAmount.add(rsAPTransactions.getBigDecimal(SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdamount));
-						bdQty.add(rsAPTransactions.getBigDecimal(SMTableaptransactionlines.TableName + "." +SMTableaptransactionlines.bdqtyreceived));
-
-					}
-					if(bdQty.compareTo(BigDecimal.valueOf(0.00)) < 1 ) {
-						bdExpensedCost = new BigDecimal(0.00);
-					}else {
-						bdExpensedCost = bdAmount.divide(bdQty);
+					if (rsAPTransactionsAvg.next()){
+						bdExpensedCost = rsAPTransactionsAvg.getBigDecimal("AVGCOST");
+						System.out.println("Average Cost for item '" + rsTempTable.getString("sItemNumber") + "' = " +  bdExpensedCost.toString());
+						bUpdate = true;
 					}
 					
+					if (rsAPTransactionsAvg.next()){
+						System.out.println("Mutiple lines with query. Expecting only one line... " );
+					}
 					
-					rsAPTransactions.close();
+	
+					rsAPTransactionsAvg.close();
 				}catch (SQLException ex){
 					System.out.println("Error in Calculate_Invoice_Detail_Expensed_Cost: " + ex.getMessage());
 				}
 				
-
-				 //after invoice is created, reset deposit on order.
-		        String sSQLUpdate = "UPDATE " + SMTabletempExpensedCost 
-		        				+ " SET"
-		        				+ " " + "bdexpensedcost" + " = " + bdExpensedCost.toString()
-		        				+ " WHERE(" 
-		        				+ " (sInvoiceNumber" + " = '" +rsTempTable.getString("sInvoiceNumber") + "')"
-		        				+ " AND "
-		        				+ " (" + "iLineNumber = " + Integer.toString(rsTempTable.getInt("iLineNumber")) + ")"
-		        				
-		        				+ ")";
-		        try{
-		        	clsDatabaseFunctions.executeSQL(sSQLUpdate, conn);
-		        }catch(SQLException ex){
-		        		System.out.println("Error!! - " + ex.getMessage());
-		        }
+				//Skip the update if the value is Zero
+				if(bUpdate) {
+					 
+			        String sSQLUpdate = "UPDATE " + SMTabletempExpensedCost 
+			        				+ " SET"
+			        				+ " " + "bdexpensedcost" + " = " + bdExpensedCost.toString()
+			        				+ " WHERE(" 
+			        				+ " (sInvoiceNumber" + " = '" +rsTempTable.getString("sInvoiceNumber") + "')"
+			        				+ " AND "
+			        				+ " (" + "iLineNumber = " + Integer.toString(rsTempTable.getInt("iLineNumber")) + ")"
+			        				
+			        				+ ")";
+			        try{
+			        	clsDatabaseFunctions.executeSQL(sSQLUpdate, conn);
+			        }catch(SQLException ex){
+			        		System.out.println("Error Updating!! - " + ex.getMessage());
+			        }
+				}
 			}
 		
 		rsTempTable.close();

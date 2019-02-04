@@ -35,7 +35,7 @@ public class SMTableicitems {
 	public static final String ihideoninvoicedefault = "ihideoninvoicedefault";
 	public static final String sworkordercomment = "sworkordercomment";
 	public static final String icannotbepurchased = "icannotbepurchased";
-	public static final String icannotbesold = "icannotbesoldd";
+	public static final String icannotbesold = "icannotbesold";
 	
 	//Field Lengths:
 	public static final int sItemNumberLength = 24;

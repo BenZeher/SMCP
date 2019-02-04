@@ -1031,7 +1031,7 @@ public class ICItem extends Object{
 		if (m_icannotbepurchased.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramicannotbepurchased + "=" + m_icannotbepurchased;
 		}
-		if (m_icannotbepurchased.compareToIgnoreCase("1") == 0){
+		if (m_icannotbesold.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramicannotbesold + "=" + m_icannotbesold;
 		}
 		if (m_sLaborItem.compareToIgnoreCase("1") == 0){
@@ -1560,10 +1560,10 @@ public class ICItem extends Object{
 		m_icannotbepurchased = sCannotBePurchased;
 	}
 	public String getCannotBeSoldFlag() {
-		return m_icannotbepurchased;
+		return m_icannotbesold;
 	}
 	public void setCannotBeSoldFlag(String sCannotBeSold) {
-		m_icannotbepurchased = sCannotBeSold;
+		m_icannotbesold = sCannotBeSold;
 	}
 	public void setActive(String sActive) {
 		m_sActive = sActive;

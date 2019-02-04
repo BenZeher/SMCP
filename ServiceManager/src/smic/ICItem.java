@@ -52,6 +52,7 @@ public class ICItem extends Object{
 	public static final String ParamHideOnInvoiceDefault = "HideOnInvoiceDefault";
 	public static final String Paramsworkordercomment = "sworkordercomment";
 	public static final String Paramicannotbepurchased = "icannotbepurchased";
+	public static final String Paramicannotbesold = "icannotbesold";
 	
 	//This is the length of the prefix that is used in the item number when a new item is created from the order entry system:
 	public static final int DEDICATEDITEMPREFIXLENGTH = 3;
@@ -86,6 +87,7 @@ public class ICItem extends Object{
 	private String m_sHideOnInvoiceDefault;
 	private String m_sworkordercomment;
 	private String m_icannotbepurchased;
+	private String m_icannotbesold;
 	private boolean bDebugMode = false;
 
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
@@ -118,6 +120,7 @@ public class ICItem extends Object{
 		m_sMostRecentCost = "0.0000";
 		m_sLaborItem = "0";
 		m_icannotbepurchased = "0";
+		m_icannotbesold = "0";
 		m_sNonStockItem = "0";
 		m_sNumberOfLabels = "1.0000";
 		m_sSuppressItemQtyLookup = "0";
@@ -175,6 +178,11 @@ public class ICItem extends Object{
 		}else {
 			m_icannotbepurchased = "1";
 		}
+		if(req.getParameter(ICItem.Paramicannotbesold) == null) {
+			m_icannotbesold = "0";
+		}else {
+			m_icannotbesold = "1";
+		}
 		if(req.getParameter(ICItem.ParamNonStockItem) == null){
 			m_sNonStockItem = "0";
 		}else{
@@ -230,9 +238,10 @@ public class ICItem extends Object{
 			Connection conn
 	){
 		m_sErrorMessageArray.clear();
+		String sSQL = "";
 		try{
 			//Get the record to edit:
-			String sSQL = "SELECT * FROM " + SMTableicitems.TableName
+			sSQL = "SELECT * FROM " + SMTableicitems.TableName
 			+ " WHERE ("
 			+ SMTableicitems.sItemNumber + " = '" + sItemNumber + "'"
 			+	")"
@@ -247,10 +256,7 @@ public class ICItem extends Object{
 			}
 
 		}catch (SQLException ex){
-			System.out.println("Error in load function!!");
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("SQL: " + ex.getErrorCode());
+			m_sErrorMessageArray.add("Error [1549305132] - couldn't load item with SQL: '" + sSQL + "' - " + ex.getMessage());
 			return false;
 		}
 	}
@@ -285,6 +291,7 @@ public class ICItem extends Object{
 						rs.getBigDecimal(SMTableicitems.bdmostrecentcost));
 				m_sLaborItem = Integer.toString(rs.getInt(SMTableicitems.ilaboritem));
 				m_icannotbepurchased = Integer.toString(rs.getInt(SMTableicitems.icannotbepurchased));
+				m_icannotbesold = Integer.toString(rs.getInt(SMTableicitems.icannotbesold));
 				m_sNonStockItem = Integer.toString(rs.getInt(SMTableicitems.inonstockitem));
 				m_sNumberOfLabels = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdnumberoflabels));
@@ -414,6 +421,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.iActive + " = " + m_sActive
 				+ ", " + SMTableicitems.ilaboritem + " = " + m_sLaborItem
 				+ ", " + SMTableicitems.icannotbepurchased + " = " + m_icannotbepurchased
+				+ ", " + SMTableicitems.icannotbesold + " = " + m_icannotbesold
 				+ ", " + SMTableicitems.inonstockitem + " = " + m_sNonStockItem
 				+ ", " + SMTableicitems.isuppressitemqtylookup + " = " + m_sSuppressItemQtyLookup
 				+ ", " + SMTableicitems.ihideoninvoicedefault + " = " + m_sHideOnInvoiceDefault
@@ -482,6 +490,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.iActive
 				+ ", " + SMTableicitems.ilaboritem 
 				+ ", " + SMTableicitems.icannotbepurchased
+				+ ", " + SMTableicitems.icannotbesold
 				+ ", " + SMTableicitems.inonstockitem
 				+ ", " + SMTableicitems.isuppressitemqtylookup
 				+ ", " + SMTableicitems.ihideoninvoicedefault
@@ -514,6 +523,7 @@ public class ICItem extends Object{
 				+ ", " + m_sActive
 				+ ", " + m_sLaborItem
 				+ ", " + m_icannotbepurchased
+				+ ", " + m_icannotbesold
 				+ ", " + m_sNonStockItem
 				+ ", " + m_sSuppressItemQtyLookup
 				+ ", " + m_sHideOnInvoiceDefault
@@ -966,6 +976,16 @@ public class ICItem extends Object{
 					+ SMTableicitems.sworkordercommentLength + " characters.");
 			bEntriesAreValid = false;
 		}
+		
+		if ((m_icannotbepurchased.compareToIgnoreCase("0") != 0) && (m_icannotbepurchased.compareToIgnoreCase("1") != 0)){
+			m_sErrorMessageArray.add("'cannot be purchased' value ('" + m_icannotbepurchased + "' is invalid.");
+			bEntriesAreValid = false;
+		}
+		if ((m_icannotbesold.compareToIgnoreCase("0") != 0) && (m_icannotbesold.compareToIgnoreCase("1") != 0)){
+			m_sErrorMessageArray.add("'cannot be sold' value ('" + m_icannotbesold + "' is invalid.");
+			bEntriesAreValid = false;
+		}
+		
 		if (m_sMostRecentCost.trim().compareToIgnoreCase("") == 0){
 			m_sMostRecentCost = "0.0000";
 		}else{
@@ -1010,6 +1030,9 @@ public class ICItem extends Object{
 		}
 		if (m_icannotbepurchased.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramicannotbepurchased + "=" + m_icannotbepurchased;
+		}
+		if (m_icannotbepurchased.compareToIgnoreCase("1") == 0){
+			sQueryString += "&" + Paramicannotbesold + "=" + m_icannotbesold;
 		}
 		if (m_sLaborItem.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + ParamLaborItem + "=" + m_sLaborItem;
@@ -1533,8 +1556,14 @@ public class ICItem extends Object{
 	public String getCannotBePurchasedFlag() {
 		return m_icannotbepurchased;
 	}
-	public void setCannotBePurchased(String sPurchase) {
-		m_icannotbepurchased = sPurchase;
+	public void setCannotBePurchasedFlag(String sCannotBePurchased) {
+		m_icannotbepurchased = sCannotBePurchased;
+	}
+	public String getCannotBeSoldFlag() {
+		return m_icannotbepurchased;
+	}
+	public void setCannotBeSoldFlag(String sCannotBeSold) {
+		m_icannotbepurchased = sCannotBeSold;
 	}
 	public void setActive(String sActive) {
 		m_sActive = sActive;

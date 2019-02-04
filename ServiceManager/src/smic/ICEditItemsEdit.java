@@ -428,6 +428,20 @@ public class ICEditItemsEdit extends HttpServlet {
 			)
 		);
 
+		//Cannot be Sold?
+	    if (item.getCannotBeSoldFlag().compareToIgnoreCase("1") == 0){
+	    	iTrueOrFalse = 1;
+	    }else{
+	    	iTrueOrFalse = 0;
+	    }
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
+	    	ICItem.Paramicannotbesold, 
+			iTrueOrFalse, 
+			"Prevent selling?", 
+			"If checked, this item will not be allowed to be placed on orders or work orders."
+			)
+		);
+	    
 		//Suppress item qty lookup?
 	    iTrueOrFalse = 0;
 	    if (item.getSuppressItemQtyLookup().compareToIgnoreCase("1") == 0){

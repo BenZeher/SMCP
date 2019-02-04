@@ -535,8 +535,12 @@ public class ICDisplayItemInformation extends HttpServlet {
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");
 				pwOut.println("<TD><FONT SIZE = 2><B>Can be purchased through the PO system? </B>");
-				String sPurchase = rsItem.getInt(SMTableicitems.icannotbepurchased) == 0 ? "YES" : "NO";
-				pwOut.println(" "+sPurchase);
+				String sCanBePurchased = rsItem.getInt(SMTableicitems.icannotbepurchased) == 0 ? "YES" : "NO";
+				pwOut.println(" "+sCanBePurchased);
+				pwOut.println("</FONT></TD>");
+				pwOut.println("<TD><FONT SIZE = 2><B>Can be sold and invoiced through the sales order system? </B>");
+				String sCanBeSold = rsItem.getInt(SMTableicitems.icannotbesold) == 0 ? "YES" : "NO";
+				pwOut.println(" "+sCanBeSold);
 				pwOut.println("</FONT></TD>");
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");

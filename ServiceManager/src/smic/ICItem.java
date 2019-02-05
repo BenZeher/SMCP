@@ -262,6 +262,7 @@ public class ICItem extends Object{
 	}
 
 	private boolean loadFromResultSet(ResultSet rs){
+		
 		try{
 			if (rs.next()){
 				m_sItemNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sItemNumber));
@@ -307,12 +308,9 @@ public class ICItem extends Object{
 				return false;
 			}
 		}catch(SQLException ex){
-			System.out.println("Error in loadFromResultSet function!!");
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("SQL: " + ex.getErrorCode());
+			m_sErrorMessageArray.add("Error [1549305232] - couldn't load item - " + ex.getMessage());
+			return false;
 		}
-		return true;
 	}
 	public boolean load(
 			ServletContext context, 

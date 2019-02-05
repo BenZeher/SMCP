@@ -152,10 +152,9 @@ public class SMOrderDetail extends clsMasterEntry{
 		}
 		m_bdestimatedunitcost = clsManageRequestParameters.get_Request_Parameter(SMOrderDetail.Parambdestimatedunitcost, req).trim();
 	}
-    public boolean validate_line(Connection conn){
+    public boolean validate_line(Connection conn) {
     	boolean bLineIsValid = true;
     	String SQL = "";
-    	
     	SMOrderHeader order = new SMOrderHeader();
     	order.setM_strimmedordernumber(getM_strimmedordernumber());
     	if (!order.load(conn)){
@@ -204,14 +203,19 @@ public class SMOrderDetail extends clsMasterEntry{
      	if (bdQtyOrdered.compareTo(BigDecimal.ZERO) > 0){
 		 	ICItem item = new ICItem(m_sItemNumber);
 	        if (!item.load(conn)){
-	   	       	super.addErrorMessage("Invalid item number: '" + m_sItemNumber + "'.");
-	   	       	bLineIsValid = false;
-	   	       	return bLineIsValid;
+	        	super.addErrorMessage("Invalid item number: '" + m_sItemNumber + "'.");
+	        	return false;
 	        }
 	        if (item.getNonStockItem().compareToIgnoreCase("0") == 0){
 	        	m_iIsStockItem = "1";
 	        }else{
 	        	m_iIsStockItem = "0";
+	        }
+	        
+	        //Make sure that it is a 'sellable' item:
+	        if (item.getCannotBeSoldFlag().compareToIgnoreCase("1") == 0){
+	        	super.addErrorMessage("Item number: '" + m_sItemNumber + "  is not configured as a sellable item.");
+	        	return false;
 	        }
      	}
      	if (

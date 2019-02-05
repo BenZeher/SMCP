@@ -527,6 +527,12 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 	            	bValid = false;
 	       	       	sErrors += "Item number: '" + m_sitemnumber + "' is an INACTIVE item.  ";
 	            }
+	            
+	            if (item.getCannotBeSoldFlag().compareToIgnoreCase("1") == 0){
+	            	bValid = false;
+	       	       	sErrors += "Item number: '" + m_sitemnumber + "' is not configured as a sellable item.  ";
+	            }
+	            
 	            //Update the item number, this makes it uppercase, typically, for example:
 	            setsitemnumber(item.getItemNumber());
 	            setsitemdesc(getsitemdesc().trim());

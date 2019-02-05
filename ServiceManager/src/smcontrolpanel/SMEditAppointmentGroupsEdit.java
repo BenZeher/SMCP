@@ -141,22 +141,19 @@ public class SMEditAppointmentGroupsEdit  extends HttpServlet {
 		ArrayList<String> sUserTable = new ArrayList<String>(0);
 		try{
 			//First get a list of all active users AND inactive users that may still might be in appointment group(s):
-	        String sSQL = "SELECT ALLUSERS." + SMTableusers.lid 
-	        		+ ", ALLUSERS. " + SMTableusers.sUserFirstName
-	        		+ ", ALLUSERS." + SMTableusers.sUserLastName
-	        		+ " FROM "
-	        		+ "   (SELECT * FROM " + SMTableusers.TableName
-	        		+ "   LEFT JOIN " + SMTableappointmentusergroups.TableName 
-	        		+ "   ON " + SMTableusers.TableName + "." + SMTableusers.lid + "=" + SMTableappointmentusergroups.TableName + "." + SMTableappointmentusergroups.luserid
-	        		+ "   UNION ALL "
-	        		+ "   SELECT * FROM " + SMTableusers.TableName
-	        		+ "   RIGHT JOIN " + SMTableappointmentusergroups.TableName 
-	        		+ "   ON " + SMTableusers.TableName + "." + SMTableusers.lid + "=" + SMTableappointmentusergroups.TableName + "." + SMTableappointmentusergroups.luserid
-	        		+ "   WHERE " + SMTableusers.lid + " IS NULL) AS ALLUSERS "
-	        		+ " WHERE ((" + "ALLUSERS." + SMTableusers.iactive + "=1) OR (" + "ALLUSERS." + SMTableappointmentusergroups.luserid + " != 0))"
-	        		+ " ORDER BY " + "ALLUSERS." + SMTableusers.sUserFirstName
+	        String sSQL = "SELECT DISTINCT " + SMTableusers.lid
+	        		+ ", " + SMTableusers.sUserFirstName
+	        		+ ", " + SMTableusers.sUserLastName
+	        		+ " FROM " + SMTableusers.TableName
+	        		+ " LEFT JOIN " + SMTableappointmentusergroups.TableName 
+	        		+ " ON " + SMTableusers.TableName + "." + SMTableusers.lid 
+	        		+ " = " + SMTableappointmentusergroups.TableName + "." + SMTableappointmentusergroups.luserid
+	        		+ " WHERE ("
+	        		+ " (" + SMTableusers.iactive + "=1) "
+	        		+ "OR (" +SMTableappointmentusergroups.sappointmentgroupname + "=\"" + entry.getsappointmentgroupname() + "\")"
+	        				+ ")"
+	        		+ " ORDER BY " + SMTableusers.sUserFirstName
 	        		;
-
 	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());
         	
 	        sSQL = SMMySQLs.Get_Appointment_Group_Users_SQL(entry.getsappointmentgroupname());

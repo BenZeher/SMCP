@@ -20,9 +20,7 @@ import java.sql.Connection;
 public class ICConvertFromACCPACAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sICConvertFromACCPACActionWarning = "";
-	private String sICConvertFromACCPACActionStatus = "";
-	private String sICConvertFromACCPACActionCallingClass = "";
+	
 
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -37,6 +35,11 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 		){
 			return;
 		}
+		
+		String sICConvertFromACCPACActionWarning = "";
+		String sICConvertFromACCPACActionStatus = "";
+		String sICConvertFromACCPACActionCallingClass = "";
+		
 	    response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		
@@ -50,48 +53,6 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 	    sICConvertFromACCPACActionCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    /**************Get Parameters**************/
 
-	    /*
-	    //TEST:
-    	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
-    			   "Transitional//EN\">" +
-    		       "<HTML>" +
-    		       "<HEAD><TITLE>" + "TEST1" + "</TITLE></HEAD>\n<BR>" + 
-    			   "<BODY BGCOLOR=\"#FFFFFF\">" +
-    			   "</BODY>" + 
-    			   "TEST1" +
-    			   "</HTML>"
-    			   );
-    	out.flush();
-    	response.flushBuffer();
-    	response.
-    	//timer code here:
-    	long lStartTime = System.currentTimeMillis();
-    	while (System.currentTimeMillis() < lStartTime + 2000){
-    		//just loop
-    	}
-    	
-    	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
- 			   "Transitional//EN\">" +
- 		       "<HTML>" +
- 		       "<HEAD><TITLE>" + "TEST2" + "</TITLE></HEAD>\n<BR>" + 
- 			   "<BODY BGCOLOR=\"#FFFFFF\">" +
- 			   "</BODY>" + 
-			   "TEST2" +
- 			   "</HTML>"
- 			   );
-    	response.flushBuffer();
-    	return;
-    	/*
-    	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
- 			   "Transitional//EN\">" +
- 		       "<HTML>" +
- 		       "<HEAD><TITLE>" + "TEST3" + "</TITLE></HEAD>\n<BR>" + 
- 			   "<BODY BGCOLOR=\"#FFFFFF\">" +
- 			   "</BODY>" + 
- 			   "</HTML>"
- 			   );
-
-	    */
 	    
     	//Customized title
     	String sTitle = "IC Convert ACCPAC Data";
@@ -271,14 +232,18 @@ public class ICConvertFromACCPACAction extends HttpServlet {
     	}
     	
     	if (bConvertAll){
-	    	if (!convertAll(conv, conn, conACCPAC,  sUserID, out)){
-	    	}else{
-	    		sICConvertFromACCPACActionStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
+	    	
+    		try {
+    			convertAll(conv, conn, conACCPAC,  sUserID, out);
+    			sICConvertFromACCPACActionStatus = "Successfully converted IC data from ACCPAC<BR>Events completed:";
 	    		for (int i = 0; i < conv.getStatusMessages().size(); i++){
 	    			sICConvertFromACCPACActionStatus += conv.getStatusMessages().get(i) + "<BR>";
 	    		}
-	    		sICConvertFromACCPACActionWarning = "";
-	    	}
+    		}catch(Exception e) {
+    			sICConvertFromACCPACActionWarning = e.getMessage();
+    		}
+	    	
+	    		
     	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080806]");
     	clsDatabaseFunctions.freeConnection(getServletContext(), conACCPAC, "[1547080807]");
@@ -290,38 +255,28 @@ public class ICConvertFromACCPACAction extends HttpServlet {
 		);			
     	return;    		
 	}
-	private boolean convertAll(
+	private void convertAll(
 			ICConvertACCPAC conv,
 			Connection conn, 
 			Connection conACCPAC, 
 			String sUserID, 
 			PrintWriter out
-			){
+			) throws Exception{
 		
 		if (!conv.convertICData(conn, conACCPAC,  sUserID, out)){
-    		sICConvertFromACCPACActionWarning = "Error converting IC data: " + conv.getErrorMessage();
-    		sICConvertFromACCPACActionStatus = "";
-    		return false;
+    		throw new Exception("Error converting IC data: " + conv.getErrorMessage());
     	}
 		
 		if (!conv.convertPOHeaderData(conn, conACCPAC, sUserID, out)){
-    		sICConvertFromACCPACActionWarning = "Error converting po header data: " + conv.getErrorMessage();
-    		sICConvertFromACCPACActionStatus = "";
-    		return false;
+			throw new Exception("Error converting po header data: " + conv.getErrorMessage());
     	}
 		
 		if (!conv.convertPOLineData(conn, conACCPAC, sUserID, out)){
-    		sICConvertFromACCPACActionWarning = "Error converting PO line data: " + conv.getErrorMessage();
-    		sICConvertFromACCPACActionStatus = "";
-    		return false;
+			throw new Exception("Error converting PO line data: " + conv.getErrorMessage());
     	}
 
 		if (!conv.convertPOReceiptData(conn, conACCPAC, sUserID, out)){
-    		sICConvertFromACCPACActionWarning = "Error converting po receipt data: " + conv.getErrorMessage();
-    		sICConvertFromACCPACActionStatus = "";
-    		return false;
+			throw new Exception("Error converting po receipt data: " + conv.getErrorMessage());
     	}
-
-		return true;
 	}
 }

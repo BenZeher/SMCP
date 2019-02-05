@@ -20,7 +20,7 @@ import javax.servlet.http.HttpSession;
 public class ICEditAdjustmentEntry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String sAdjustmentEntryObjectName = "Adustment Entry";
+	private static final String sAdjustmentEntryObjectName = "Adustment Entry";
 	
 	private String m_sBatchNumber;
 	private String m_sEntryNumber;
@@ -51,7 +51,7 @@ public class ICEditAdjustmentEntry extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " + (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:

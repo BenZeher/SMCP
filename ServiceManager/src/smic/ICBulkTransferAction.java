@@ -30,16 +30,16 @@ public class ICBulkTransferAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static String PARAM_BULK_TANSFER_UOMMARKER = "UNITOFMEASURE";
-	public static String PARAM_BULK_TANSFER_ITEMDESCMARKER = "ITEMDESC";
-	public static String PARAM_BULK_TANSFER_FROMLOCATIONQTYONHANDMARKER = "FROMLOCQTYOH";
-	public static String PARAM_BULK_TANSFER_TOLOCATIONQTYONHANDMARKER = "TOLOCQTYOH";
-	public static String PARAM_BULK_TANSFER_ADD_ROWS = "ADDROWS";
-	public static int BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD = 10;
-	public static String PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS = "TOTALNUMBEROFROWS";
-	public static String PARAM_BULK_TANSFER_CALLINGCLASS = "CALLINGCLASS";
-	public static String PARAM_BULK_TANSFER_SHOWINFOFIELDS = "SHOWINFOFIELDS";
-	public static String SESSION_OBJECT_TRANSFER_ENTRY = "BULKTRANSFERENTRY";
+	public static final String PARAM_BULK_TANSFER_UOMMARKER = "UNITOFMEASURE";
+	public static final String PARAM_BULK_TANSFER_ITEMDESCMARKER = "ITEMDESC";
+	public static final String PARAM_BULK_TANSFER_FROMLOCATIONQTYONHANDMARKER = "FROMLOCQTYOH";
+	public static final String PARAM_BULK_TANSFER_TOLOCATIONQTYONHANDMARKER = "TOLOCQTYOH";
+	public static final String PARAM_BULK_TANSFER_ADD_ROWS = "ADDROWS";
+	public static final int BULK_TANSFER_NUMBER_OF_ROWS_TO_ADD = 10;
+	public static final String PARAM_BULK_TANSFER_TOTAL_NUMBER_OF_ROWS = "TOTALNUMBEROFROWS";
+	public static final String PARAM_BULK_TANSFER_CALLINGCLASS = "CALLINGCLASS";
+	public static final String PARAM_BULK_TANSFER_SHOWINFOFIELDS = "SHOWINFOFIELDS";
+	public static final String SESSION_OBJECT_TRANSFER_ENTRY = "BULKTRANSFERENTRY";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

@@ -31,7 +31,7 @@ public class ICBulkTransferEdit  extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static final String DARK_ROW_BG_COLOR = "#cceeff";
 	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
-	private static String sICBulkTransferEditCalledClassName = "ICBulkTransferAction";
+	private static final String sICBulkTransferEditCalledClassName = "ICBulkTransferAction";
 	public static final int INITIAL_NUMBER_OF_ROWS = 25;
 	public static final String PARAM_COMMAND = "COMMAND";
 	public static final String PARAM_COMMAND_CREATE = "CREATEBATCH";

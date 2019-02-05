@@ -47,9 +47,7 @@ import smcontrolpanel.SMUtilities;
 public class ICDisplayItemInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sICDisplayItemInformationWarning = "";
 
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -65,6 +63,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 		{
 			return;
 		}
+		String sICDisplayItemInformationWarning = "";
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);

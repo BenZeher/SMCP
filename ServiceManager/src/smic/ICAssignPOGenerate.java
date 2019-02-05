@@ -19,15 +19,12 @@ import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableicpoheaders;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
 public class ICAssignPOGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sICAssignPOGenerateWarning = "";
-	private String sICAssignPOGenerateAssignedDate = "";
-	private String sICAssignPOGenerateAssignedNumber = "";
+
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
@@ -36,6 +33,10 @@ public class ICAssignPOGenerate extends HttpServlet {
 		if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ICAssignPO)){
 			return;
 		}
+		
+		String sICAssignPOGenerateWarning = "";
+		String sICAssignPOGenerateAssignedNumber = "";
+		
 	    response.setContentType("text/html");
 		
 	    //Get the session info:
@@ -87,22 +88,30 @@ public class ICAssignPOGenerate extends HttpServlet {
 		
 		//If we determine that this is a duplicate request, don't display anything on the screen, just
 		//return:
-		if (checkForDuplicateRequest(sUserID, sUserFullName, sPOComment, conn, log)){
+
+		try {
+			checkForDuplicateRequest(sUserID, sUserFullName, sPOComment, conn, log);
+		}catch(SQLException e1) {
+			//In this case, we just assume it's not a duplicate and let it go on.
+		}catch (Exception e2){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080769]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
+    				+ "Warning=" + clsServletUtilities.URLEncode(e2.getMessage())
     				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);
 			return;
 		}
 		
-		if (!insertPOHeader(sUserFullName, sUserID, sPOComment, conn)){
+		
+		try {
+			sICAssignPOGenerateAssignedNumber = insertPOHeader( sUserFullName, sUserID, sPOComment, conn, sICAssignPOGenerateAssignedNumber);
+		}catch (Exception e){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080770]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + clsServletUtilities.URLEncode(sICAssignPOGenerateWarning)
+    				+ "Warning=" + clsServletUtilities.URLEncode(e.getMessage())
     				+ "&" + ICPOHeader.Paramscomment + "=" + clsServletUtilities.URLEncode(sPOComment)
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
         		);			
@@ -142,12 +151,12 @@ public class ICAssignPOGenerate extends HttpServlet {
     		);			
         return;    	
 	}
-	private boolean checkForDuplicateRequest(
+	private void checkForDuplicateRequest(
 			String sUserID, 
 			String sFullName, 
 			String sPOComment, 
 			Connection conn,
-			SMLogEntry log){
+			SMLogEntry log) throws Exception, SQLException{
 		//First check to make sure this exact request wasn't recently completed:
 		String SQL = "SELECT"
 			+ " " + SMTableicpoheaders.datassigned
@@ -170,14 +179,12 @@ public class ICAssignPOGenerate extends HttpServlet {
 			rs.close();
 		} catch (SQLException e1) { 
 			//System.out.println("ERROR checking for dupes with SQL:" + SQL + " - " + e1.getMessage());
-			sICAssignPOGenerateWarning = "Could not verify PO information - " + e1.getMessage();
-			//In this case, we just assume it's not a duplicate and let it go on.
-			return false;
+			throw new SQLException("Could not verify PO information - " + e1.getMessage());
 		}
 
 		//If tcNow is still zero, there was no similar record and we can just return false:
 		if (tcNow.getTime() == 0L){
-			return false;
+			return;
 		}
 		//System.out.println("now = " + tcNow.getTime() + ", assigned time = " + tcAssigned.getTime());
 		long lTimeDifferenceInMinutes = tcNow.getTime() - tcAssigned.getTime();
@@ -187,8 +194,6 @@ public class ICAssignPOGenerate extends HttpServlet {
 		long diffMinutes = lTimeDifferenceInMinutes / (60 * 1000);
 		//System.out.println("diffMinutes = " + diffMinutes);
 		if (diffMinutes < 5){
-			sICAssignPOGenerateWarning = "This request appears to be a duplicate.  Clicking the 'Back' button in your browser"
-				+ " may show you the PO number that was already assigned.";
 			log.writeEntry(
 					sUserID, 
 					SMLogEntry.LOG_OPERATION_ICASSIGNPO, 
@@ -196,11 +201,17 @@ public class ICAssignPOGenerate extends HttpServlet {
 					"Comment was: '" + sPOComment + "'",
 					"[1376509372]")
 			;
-			return true;
+			throw new Exception("This request appears to be a duplicate.  Clicking the 'Back' button in your browser"
+					+ " may show you the PO number that was already assigned.");
 		}
-		return false;
+		return;
 	}
-	private boolean insertPOHeader( String sUserFullName, String sUserID, String sPOComment, Connection conn){
+	private String insertPOHeader( 
+			String sUserFullName, 
+			String sUserID, 
+			String sPOComment, 
+			Connection conn,
+			String sICAssignPOGenerateAssignedNumber) throws Exception, SQLException{
 		
     	String SQL = "INSERT INTO " + SMTableicpoheaders.TableName + "("
 		+ SMTableicpoheaders.sassignedtofullname
@@ -225,11 +236,10 @@ public class ICAssignPOGenerate extends HttpServlet {
     	//System.out.println("[1395093960] SQL = " + SQL);
 		try {
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				sICAssignPOGenerateWarning = "Could not insert PO to get a number.";
+				throw new Exception("Could not insert PO to get a number.");
 			}
 		} catch (SQLException e) {
-			sICAssignPOGenerateWarning = "Could not insert PO record - " + e.getMessage() + ".";
-			return false;
+			throw new SQLException("Could not insert PO record - " + e.getMessage() + ".");
 		}
 
 		//Get the po number:
@@ -237,16 +247,15 @@ public class ICAssignPOGenerate extends HttpServlet {
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rs.next()){
-				sICAssignPOGenerateWarning = "Could not read PO ID.";
 				rs.close();
-				return false;
+				throw new Exception("Could not read PO ID.");
 			}else{
 				sICAssignPOGenerateAssignedNumber = Long.toString(rs.getLong(1));
 				rs.close();
 			}
 		} catch (SQLException e) {
-			sICAssignPOGenerateWarning = "Could not read PO ID - " + e.getMessage();
-			return false;
+			throw new SQLException("Could not read PO ID - " + e.getMessage());
+
 		}
 		
 		//Finally, read the time from the assigned PO:
@@ -260,19 +269,14 @@ public class ICAssignPOGenerate extends HttpServlet {
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rs.next()){
-				sICAssignPOGenerateWarning = "Could not read PO assigned date.";
 				rs.close();
-				return false;
-			}else{
-				sICAssignPOGenerateAssignedDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
-					rs.getString(SMTableicpoheaders.datassigned));
-				rs.close();
+				throw new Exception("Could not read PO assigned date.");
 			}
 		} catch (SQLException e) {
-			sICAssignPOGenerateWarning = "Could not read PO assigned date - " + e.getMessage();
-			return false;
+			throw new SQLException("Could not read PO assigned date - " + e.getMessage());
+
 		}
 		
-		return true;
+		return sICAssignPOGenerateAssignedNumber;
 	}
 }

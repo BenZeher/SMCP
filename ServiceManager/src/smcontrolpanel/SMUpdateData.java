@@ -13848,7 +13848,7 @@ public class SMUpdateData extends java.lang.Object{
 			//BEGIN CASE
 			case 1352:
 				//Added by TJR 2/4/2019
-				SQL = "ALTER TABLE icitems  ADD icannotbesold int(11) NOT NULL DEFAULT 0; ";
+				SQL = "ALTER TABLE icitems  ADD icannotbesold int(11) NOT NULL DEFAULT '0'; ";
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;

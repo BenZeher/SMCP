@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableorderdetails;
@@ -143,6 +142,7 @@ public class SMEditOrderDetailAction extends HttpServlet{
 					+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
 				+ ")"
 				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.iActive + " = 1)"
+				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.icannotbesold + " = 0)"
 				
 				+ " &" + FinderResults.FINDER_BOX_TITLE + "=ACTIVE items <I>showing qtys for location : '" + detail.getM_sLocationCode() + "'</I>. +\n"
 				
@@ -186,6 +186,8 @@ public class SMEditOrderDetailAction extends HttpServlet{
 					+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
 				+ ")"
 				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
+				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.icannotbesold + " = 0)"
+				
 				+ " &" + FinderResults.FINDER_BOX_TITLE + "=ACTIVE, NON-DEDICATED items <I>showing qtys for location : '" + detail.getM_sLocationCode() + "'</I>. +\n"
 				
 				+ "&ParameterString="

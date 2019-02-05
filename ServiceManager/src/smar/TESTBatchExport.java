@@ -12,10 +12,7 @@ import javax.servlet.http.HttpServlet;
 import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableinvoicedetails;
-import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsStringFunctions;
-import smic.ICPOReceiptHeader;
 
 public class TESTBatchExport extends HttpServlet{
 

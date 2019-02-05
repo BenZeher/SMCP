@@ -15,7 +15,6 @@ import ConnectionPool.WebContextParameters;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMLogEntry;
 import SMClasses.SMMaterialReturn;
-import SMClasses.SMOrderDetail;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
@@ -27,7 +26,6 @@ import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorderdetailsheets;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsEmailInlineHTML;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -407,6 +405,7 @@ public class SMWorkOrderAction extends HttpServlet{
 							+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
 						+ ")"
 						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
+						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.icannotbesold + " = 0)"
 						+ " &" + FinderResults.FINDER_BOX_TITLE + "=NON-DEDICATED items <I>showing qtys for location : '" + sLineLocation + "'</I>. +\n"
 						
 						+ "&ParameterString="

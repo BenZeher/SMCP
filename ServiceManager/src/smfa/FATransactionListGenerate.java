@@ -21,7 +21,6 @@ import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
-import smcontrolpanel.SMViewTruckScheduleSelection;
 
 public class FATransactionListGenerate extends HttpServlet {
 

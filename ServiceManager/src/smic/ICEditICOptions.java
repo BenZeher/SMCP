@@ -20,17 +20,18 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class ICEditICOptions extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private String m_sWarning;
-	private ICOptionInput m_OptionInput;
-	
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
-	private boolean m_bInputLoaded = false;
+
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
 
+		String m_sWarning;
+		ICOptionInput m_OptionInput;
+		PrintWriter m_pwOut;
+		HttpServletRequest m_hsrRequest;
+		boolean m_bInputLoaded = false;
+		
 		m_hsrRequest = request;
 		//Get the session info:
 		HttpSession CurrentSession = m_hsrRequest.getSession(true);
@@ -58,18 +59,58 @@ public class ICEditICOptions extends HttpServlet {
 			return;
 		}
 
-		//Try to load an object from which to build the form:
-		if (!loadICOptionInput(sDBID)){
-			m_pwOut.println(
-					"<META http-equiv='Refresh' content='0;URL=" 
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu"
-					+ "?Warning=" + m_sWarning
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "'>"		
-			);
-			return;
-		}
+		//If the class has been passed an AREntryInput query string, just load from that:
+		if (m_bInputLoaded){
+			m_OptionInput = new ICOptionInput(m_hsrRequest);
+		}else{
+			//Have to construct the AREntryInput object here:
+			m_OptionInput = new ICOptionInput();
+			//Load the existing entry:
+			ICOption option = new ICOption();
 
+			Connection conn = clsDatabaseFunctions.getConnection(
+					getServletContext(), sDBID, "MySQL", "smic.ICEditICOptions");
+			if (conn == null){
+				m_sWarning = "Could not load icoptions record - connection = null";
+				m_pwOut.println(
+						"<META http-equiv='Refresh' content='0;URL=" 
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu"
+						+ "?Warning=" + m_sWarning
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "'>"		
+						);
+				return;
+			}	
+			if (!option.load(conn)){
+				m_sWarning = "Could not load icoptions record - option.load() failed: " + option.getErrorMessage();
+				//free the connection
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080826]");
+				m_pwOut.println(
+						"<META http-equiv='Refresh' content='0;URL=" 
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu"
+						+ "?Warning=" + m_sWarning
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "'>"		
+						);
+				return;
+			}
+			if (!m_OptionInput.loadFromICOptionClass(option)){
+				m_sWarning = "Could not load IC option input from IC Option record";
+				//free the connection
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080827]");
+				m_pwOut.println(
+						"<META http-equiv='Refresh' content='0;URL=" 
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu"
+						+ "?Warning=" + m_sWarning
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "'>"		
+						);
+				return;
+
+			}
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080828]");
+		}
+		
 		String title;
 		String subtitle = "";
 		title = "Edit Inventory Options";
@@ -91,7 +132,7 @@ public class ICEditICOptions extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Inventory Main Menu</A><BR>");
 
-		if (!createEntryScreen(sDBID)){
+		if (!createEntryScreen(m_OptionInput, m_pwOut, sDBID)){
 			m_pwOut.println(
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditICOptions"
@@ -105,7 +146,13 @@ public class ICEditICOptions extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadICOptionInput(String sDBID){
+
+	/*
+	private boolean loadICOptionInput(
+			HttpServletRequest m_hsrRequest, 
+			ICOptionInput m_OptionInput, 
+			boolean m_bInputLoaded, 
+			String sDBID) throws Exception{
 
 		//If the class has been passed an AREntryInput query string, just load from that:
 		if (m_bInputLoaded){
@@ -119,27 +166,24 @@ public class ICEditICOptions extends HttpServlet {
 			Connection conn = clsDatabaseFunctions.getConnection(
 					getServletContext(), sDBID, "MySQL", "smic.ICEditICOptions");
 			if (conn == null){
-				m_sWarning = "Could not load icoptions record - connection = null";
-				return false;
+				throw new Exception("Could not load icoptions record - connection = null");
 			}	
 			if (!option.load(conn)){
-				m_sWarning = "Could not load icoptions record - option.load() failed: " + option.getErrorMessage();
-				//free the connection
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080826]");
-				return false;
+				throw new Exception("Could not load icoptions record - option.load() failed: " + option.getErrorMessage());
 			}
 			if (!m_OptionInput.loadFromICOptionClass(option)){
-				m_sWarning = "Could not load IC option input from IC Option record";
-				//free the connection
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080827]");
-				return false;
+				throw new Exception("Could not load IC option input from IC Option record");
+				
 
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080828]");
 		}
 		return true;
 	}
-	private boolean createEntryScreen(String sDBID){
+	*/
+	private boolean createEntryScreen(ICOptionInput m_OptionInput, PrintWriter m_pwOut, String sDBID){
 		//Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) 

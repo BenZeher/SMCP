@@ -25,12 +25,13 @@ public class ICEditBatchesUpdate extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static final String sBatchObjectName = "Batch";
-	private static String m_EditBatchesUpdateWarning = "";
+	
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
+	String m_EditBatchesUpdateWarning = "";
 	String sBatchNumber = request.getParameter("BatchNumber");
 	PrintWriter out = response.getWriter();
 	if (!SMAuthenticate.authenticateSMCPCredentials(
@@ -151,7 +152,8 @@ public class ICEditBatchesUpdate extends HttpServlet{
 	}
 	
 	//Otherwise, we need to save the batch
-    if (Validate_Batch(batch, request, out)){
+    try {
+    	Validate_Batch(batch, request, out);
     	if (save_batch(batch, getServletContext(), sDBID, sUserFullName, sUserID)){
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
@@ -174,15 +176,16 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		    		+ "'>");
 			out.println("</BODY></HTML>");
     	}
-    }
-    else{
+    
+    
+    }catch (Exception e){
     	//Invalid entries:
 		out.println("<META http-equiv='Refresh' content='" + "10" + ";URL=" 
 	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 	    		+ "?BatchNumber=" + batch.sBatchNumber()
 	    		+ "&BatchType=" + batch.sBatchType()
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    		+ "&Warning=" + m_EditBatchesUpdateWarning
+	    		+ "&Warning=" + e.getMessage()
 	    		+ "'>");
 		out.println("</BODY></HTML>");
 	    return;
@@ -216,12 +219,11 @@ public class ICEditBatchesUpdate extends HttpServlet{
 			return true;
 		}
     }
-	private static boolean Validate_Batch(ICEntryBatch batch, HttpServletRequest req, PrintWriter pwOut){
+	private static void Validate_Batch(ICEntryBatch batch, HttpServletRequest req, PrintWriter pwOut) throws Exception{
 		
 		if (!clsDateAndTimeConversions.IsValidDateString("MM/dd/yyyy", req.getParameter(ICEntryBatch.datbatchdate))){
 			pwOut.println("Invalid batch date passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Invalid batch date passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch date passed");
 		}
 
 		java.sql.Date datBatchDate = null;
@@ -230,37 +232,31 @@ public class ICEditBatchesUpdate extends HttpServlet{
 				"MM/dd/yyyy", req.getParameter(ICEntryBatch.datbatchdate));
 		} catch (ParseException e) {
 			pwOut.println("Invalid batch date passed<BR>");
-			m_EditBatchesUpdateWarning = "Error:[1423767376] Invalid batch date: '" + datBatchDate + "' - " + e.getMessage();
-			return false;
+			throw new Exception("Error:[1423767376] Invalid batch date: '" + datBatchDate + "' - " + e.getMessage());
 		}
 		
 		if (! batch.setBatchDate(clsDateAndTimeConversions.utilDateToString(datBatchDate, "yyyy-MM-dd"))){
 			pwOut.println("Invalid batch date passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Invalid batch date passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch date passed");
 		}
 		
 		if (req.getParameter(ICEntryBatch.ibatchstatus) == null){
 			pwOut.println("Null batch status passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Null batch status passed";
-			return false;
+			throw new Exception("WARNING: Null batch status passed");
 		}
 		if (! batch.sBatchStatus(req.getParameter(ICEntryBatch.ibatchstatus))){
 			pwOut.println("Invalid batch status passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Invalid batch status passed";
-			return false;
+			throw new Exception("WARNING: Invalid batch status passed");
 		}
 		if (req.getParameter(ICEntryBatch.screatedbyfullname) == null){
 			pwOut.println("Null 'created by fullname' passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Null 'created by fullname' passed";
-			return false;
+			throw new Exception("WARNING: Null 'created by fullname' passed");
 		}
 		batch.sSetCreatedByFullName(req.getParameter(ICEntryBatch.screatedbyfullname));
 		
 		if (req.getParameter(ICEntryBatch.lcreatedbyid) == null){
 			pwOut.println("Null 'created by ID' passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Null 'created by ID' passed";
-			return false;
+			throw new Exception("WARNING: Null 'created by ID' passed");
 		}
 		batch.sSetCreatedByID(req.getParameter(ICEntryBatch.lcreatedbyid));
 		
@@ -268,11 +264,9 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		
 		if (req.getParameter(ICEntryBatch.sbatchdescription) == null){
 			pwOut.println("Null description passed<BR>");
-			m_EditBatchesUpdateWarning = "WARNING: Null description passed";
-			return false;
+			throw new Exception("WARNING: Null description passed");
 		}	
 		batch.sBatchDescription(req.getParameter(ICEntryBatch.sbatchdescription));
-		return true;
 	}
 	
 	public void doGet(HttpServletRequest request,

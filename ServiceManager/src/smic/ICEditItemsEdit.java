@@ -33,12 +33,13 @@ public class ICEditItemsEdit extends HttpServlet {
 	private static final String sItemObjectName = "Item";
 	private static final String sICEditItemsEditCalledClassName = "ICEditItemsAction";
 
-	private boolean bCreatingAnItemFromPO;
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		bCreatingAnItemFromPO = false;
+		boolean bCreatingAnItemFromPO = false;
+		
 		PrintWriter out = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 

@@ -27,8 +27,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditCategoriesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sCategoryObjectName = "Category";
-	private static String sICEditCategoriesEditCalledClassName = "ICEditCategoriesAction";
+	private static final String sCategoryObjectName = "Category";
+	private static final String sICEditCategoriesEditCalledClassName = "ICEditCategoriesAction";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

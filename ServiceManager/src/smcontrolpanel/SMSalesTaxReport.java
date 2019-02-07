@@ -1540,7 +1540,7 @@ public class SMSalesTaxReport {
 			+ " for <B>STOCK</B> items, this is the actual inventoried cost for this item, recorded through the"
 			+ " purchase order and Accounts Payable system and costed at the time of sale."
 			+ "  For <B>NON-STOCK</B> ('expensed') items, this is the average cost for this item"
-			+ " found on invoices in the Accounts Payable system."
+			+ " found on invoices in the Accounts Payable system at the time the invoice was originally generated."
 			;		
 		s += "<br><a name=\"taxablecost\"><SUP>2</SUP></a><B>TAXABLE INVENTORY COST </B>: "
 			+ " the cost basis for purchase tax (or 'use' tax).  If the item itself is not 'Taxable' "

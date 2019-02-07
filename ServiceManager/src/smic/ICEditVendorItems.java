@@ -27,22 +27,21 @@ import ServletUtilities.clsStringFunctions;
 public class ICEditVendorItems extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String EDITVENDORITEM_SUBMIT_BUTTON = "SubmitEdit";
-	public static String EDITVENDORITEM_SUBMIT_LABEL = "Update vendor items";
-	public static String NEWVENDOR_NAME = "NEWVENDOR";
-	public static String NEWVENDORITEM_NAME = "NEWITEM";
-	public static String NEWVENDORCOST_NAME = "NEWCOST";
-	public static String NEWVENDORITEMCOMMENT_NAME = "NEWCOMMENT";
-	public static String EDITINGSINGLEVENDOR_PARAM = "EDITINGSINGLEVENDOR";
-	public static String INITIATED_FROM_PO_PARAM = "INITIATEDFROMPO";
-	public static String ITEMNUMBER = "ITEMNUMBER";
-	public static String VENDOR_PARAMETER_MARKER = "VENDORACCT";
-	public static String VENDORITEM_PARAMETER_MARKER = "VENDORITEM";
-	public static String VENDORCOST_PARAMETER_MARKER = "VENDORCOST";
-	public static String VENDORITEMCOMMENT_PARAMETER_MARKER = "VENDORCOMMENT";
-	public static String NUMBEROFCURRENTRECORDS_PARAMETER = "NUMBEROFCURRENTRECORDS";
-	
-	private static String sICEditVendorItemsCalledClassName = "ICEditVendorItemsAction";
+	public static final String EDITVENDORITEM_SUBMIT_BUTTON = "SubmitEdit";
+	public static final String EDITVENDORITEM_SUBMIT_LABEL = "Update vendor items";
+	public static final String NEWVENDOR_NAME = "NEWVENDOR";
+	public static final String NEWVENDORITEM_NAME = "NEWITEM";
+	public static final String NEWVENDORCOST_NAME = "NEWCOST";
+	public static final String NEWVENDORITEMCOMMENT_NAME = "NEWCOMMENT";
+	public static final String EDITINGSINGLEVENDOR_PARAM = "EDITINGSINGLEVENDOR";
+	public static final String INITIATED_FROM_PO_PARAM = "INITIATEDFROMPO";
+	public static final String ITEMNUMBER = "ITEMNUMBER";
+	public static final String VENDOR_PARAMETER_MARKER = "VENDORACCT";
+	public static final String VENDORITEM_PARAMETER_MARKER = "VENDORITEM";
+	public static final String VENDORCOST_PARAMETER_MARKER = "VENDORCOST";
+	public static final String VENDORITEMCOMMENT_PARAMETER_MARKER = "VENDORCOMMENT";
+	public static final String NUMBEROFCURRENTRECORDS_PARAMETER = "NUMBEROFCURRENTRECORDS";
+	private static final String sICEditVendorItemsCalledClassName = "ICEditVendorItemsAction";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

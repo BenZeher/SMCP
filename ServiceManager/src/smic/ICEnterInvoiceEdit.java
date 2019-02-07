@@ -13,9 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import SMClasses.MySQLs;
 import SMDataDefinition.SMTableaptransactions;
-import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicpoinvoicelines;
 import SMDataDefinition.SMTableicvendorterms;
@@ -80,10 +78,6 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	public static String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
 	
 	private boolean bDebugMode = false;
-
-	//We'll use these to store the GL List, so we don't have to load it several times:
-    private ArrayList<String> m_sGLValues = new ArrayList<String>();
-    private ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
 	
     private int iNumberOfDetailColumns;
     
@@ -326,8 +320,6 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 			boolean bPrintPurchaseOrdersAllowed,
 			HttpServletRequest req
 			) throws SQLException{
-		
-		loadGLList(sm);
 		
 		String s = "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
 		
@@ -1338,36 +1330,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		+ "\" VALUE=\"" + line.getsexpenseaccount() + "\">"
 		;
 	}
-	private boolean loadGLList(SMMasterEditEntry smedit){
-        m_sGLValues.clear();
-        m_sGLDescriptions.clear();
-        try{
-	        String sSQL = MySQLs.Get_GL_Account_List_SQL(false);
 
-	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	smedit.getsDBID(),
-		        	"MySQL",
-		        	this.toString() + ".loadGLList (1) - User: " + smedit.getUserName());
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsGLAccts.next()){
-	        	m_sGLValues.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim());
-	        	m_sGLDescriptions.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim() + " - " + (String) rsGLAccts.getString(SMTableglaccounts.sDesc).trim());
-			}
-	        rsGLAccts.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

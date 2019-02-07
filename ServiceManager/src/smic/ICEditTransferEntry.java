@@ -20,24 +20,13 @@ import javax.servlet.http.HttpSession;
 public class ICEditTransferEntry extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-
-	private static String sObjectName = "Transfer Entry";
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sEditable;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private ICEntry m_Entry;
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
-	private boolean m_bIsNewEntry = false;
-	private boolean m_bEditable = false;
+	private static final String sObjectName = "Transfer Entry";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		m_pwOut = response.getWriter();
+		PrintWriter m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 
@@ -55,6 +44,17 @@ public class ICEditTransferEntry extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
+	    //Local Variables
+	    String m_sBatchNumber;
+		String m_sEntryNumber;
+		String m_sEditable;
+		String m_sBatchType;
+		String m_sWarning;
+		ICEntry m_Entry;
+		HttpServletRequest m_hsrRequest = request;
+		boolean m_bIsNewEntry = false;
+		boolean m_bEditable = false;
+		
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
 		m_Entry = (ICEntry) CurrentSession.getAttribute("EntryInput");
 		//System.out.println("In " + this.toString() + " m_Entry = " + m_Entry);
@@ -63,22 +63,56 @@ public class ICEditTransferEntry extends HttpServlet {
 	    
 		//Also get rid of any lines in the session:
 		CurrentSession.removeAttribute("EntryLine");
-		m_hsrRequest = request;
-	    get_request_parameters();
 	    
+		if (m_hsrRequest.getParameter("EntryNumber") != null){
+			//System.out.println("In " + this.toString() + " != null");
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest).equalsIgnoreCase("-1")){
+				//System.out.println("In " + this.toString() + " = -1");
+				m_bIsNewEntry = true; 
+			}else{
+				//System.out.println("In " + this.toString() + " != -1");
+				m_bIsNewEntry = false;
+			}
+		}else{
+			m_bIsNewEntry = true;
+			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
+		}
+
+		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
+		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
+		m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", m_hsrRequest);
+		if (m_sEditable.compareToIgnoreCase("Yes") == 0){
+			m_bEditable = true;
+		}else {
+			m_bEditable = false;
+		}
+		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
+		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
+		
 		//Try to load an ICEntryInput object from which to build the form:
-		if (!loadICEntryInput( sDBID, sUserID, sUserFullName)){
-			response.sendRedirect(
+	    try {
+	    	loadICEntryInput(
+					m_Entry,
+					m_sBatchNumber,
+					m_sBatchType,
+					m_sEntryNumber,
+					m_bIsNewEntry,
+					sDBID, 
+					sUserID, 
+					sUserFullName
+					);
+	    }catch(Exception e) {
+	    	response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit"
 					+ "?BatchNumber=" + m_sBatchNumber
 					+ "&BatchType=" + m_sBatchType
 					+ "&Warning=" + m_sWarning
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=Could not process entry - " + m_sWarning
+					+ "&Warning=Could not process entry - " + e.getMessage()
 				);
 			
 			return;
-		}
+	    }
 
 	    String title;
 	    String subtitle = "";
@@ -107,7 +141,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    		+ "\">Return to Edit Batch " + m_Entry.sBatchNumber() + "</A><BR><BR>");
 
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromEntryInput( sDBID, sUserID, sUserFullName)){
+		if (!createFormFromEntryInput( m_pwOut, m_Entry, m_bEditable, sDBID, sUserID, sUserFullName)){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit"
 					+ "?BatchNumber=" + m_Entry.sBatchNumber()
@@ -121,7 +155,15 @@ public class ICEditTransferEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean loadICEntryInput(String sDBID, String sUserID, String sUserFullName){
+	private void loadICEntryInput(
+			ICEntry m_Entry,
+			String m_sBatchNumber,
+			String m_sBatchType,
+			String m_sEntryNumber,
+			boolean m_bIsNewEntry,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName) throws Exception{
 		
 		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
 		if (m_Entry == null){
@@ -153,41 +195,44 @@ public class ICEditTransferEntry extends HttpServlet {
 				//Load the existing entry:
 				
 				if (!m_Entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
-			    	m_sWarning = "Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber;
-			    	m_sWarning += "\n" + m_Entry.getErrorMessage();
-			    	return false;
+			    	throw new Exception("Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber
+			    	 + "\n" + m_Entry.getErrorMessage());
 				}
 				//System.out.println("In " + this.toString() + ".loadICEntryInput - dump: " + m_Entry.read_out_debug_data());
 			}
-		}
-		
-		return true;
+		}	
 	}
-	private boolean createFormFromEntryInput(String sDBID, String sUserID, String sUserFullName){
+	private boolean createFormFromEntryInput(
+			PrintWriter m_pwOut, 
+			ICEntry m_Entry, 
+			boolean m_bEditable, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEntryUpdate' METHOD='POST'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		//Record the hidden fields for the entry edit form:
-	    storeHiddenFieldsOnForm ();
+	    storeHiddenFieldsOnForm (m_pwOut, m_Entry, m_bEditable);
 
         //Display the entry header fields:
-	    displayEntryHeaderFields ();
+	    displayEntryHeaderFields (m_pwOut, m_Entry, m_bEditable);
    
         if (m_bEditable){
-        	displayEditableEntryFields ();
+        	displayEditableEntryFields (m_pwOut, m_Entry);
         }
         //Else, if the record is NOT editable:
         else{
-        	displayNonEditableEntryFields ();
+        	displayNonEditableEntryFields (m_pwOut, m_Entry);
         }
         
 	    //Now display the transaction lines:
         //Display the line header:
-	    Display_Line_Header();
+	    Display_Line_Header(m_pwOut);
 
 	    //Display all the current transaction lines:
-	    if (!displayLines(m_bEditable, sDBID, sUserID, sUserFullName)){
+	    if (!displayLines(m_pwOut, m_Entry, m_bEditable, sDBID, sUserID, sUserFullName)){
 	    	return false;
 	    }
 	    
@@ -218,7 +263,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    
 		return true;
 	}
-	private void storeHiddenFieldsOnForm(){
+	private void storeHiddenFieldsOnForm(PrintWriter m_pwOut, ICEntry m_Entry, boolean m_bEditable){
 		
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICEntry.ParamBatchNumber + "\" VALUE=\"" + m_Entry.sBatchNumber() + "\">");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ICEntry.ParamEntryNumber + "\" VALUE=\"" + m_Entry.sEntryNumber() + "\">");
@@ -238,7 +283,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    	+ Long.toString(m_Entry.lNumberOfLines()) + ">");
 	    m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" + "ICEditTransferEntry" + "\">");
 	}
-	private void displayEntryHeaderFields (){
+	private void displayEntryHeaderFields (PrintWriter m_pwOut, ICEntry m_Entry, boolean m_bEditable){
 		int iBatchType = 0;
 		try {
 			iBatchType = Integer.parseInt(m_Entry.sBatchType());
@@ -263,7 +308,7 @@ public class ICEditTransferEntry extends HttpServlet {
 	    	m_pwOut.println("  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
         }
 	}
-	private void displayEditableEntryFields(){
+	private void displayEditableEntryFields(PrintWriter m_pwOut, ICEntry m_Entry){
 		
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 		
@@ -301,7 +346,7 @@ public class ICEditTransferEntry extends HttpServlet {
         m_pwOut.println("</TABLE>");
 	}
 
-	public void displayNonEditableEntryFields (){
+	public void displayNonEditableEntryFields (PrintWriter m_pwOut, ICEntry m_Entry){
 
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 		
@@ -329,7 +374,7 @@ public class ICEditTransferEntry extends HttpServlet {
 		m_pwOut.println("</TR>");
 		m_pwOut.println("</TABLE>");
 	}
-	private void Display_Line_Header(){
+	private void Display_Line_Header(PrintWriter m_pwOut){
 		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2>");
 		m_pwOut.println("<TR>");
 		m_pwOut.println("<TD><FONT SIZE=2><B><U>Line #</B></U></FONT></TD>");
@@ -342,7 +387,7 @@ public class ICEditTransferEntry extends HttpServlet {
 		m_pwOut.println("<TD><FONT SIZE=2><B><U>Description</B></U></FONT></TD>");
 		m_pwOut.println("</TR>");
 	}
-	private boolean displayLines(boolean bEditable, String sDBID, String sUserID, String sUserFullName){
+	private boolean displayLines(PrintWriter m_pwOut, ICEntry m_Entry, boolean bEditable, String sDBID, String sUserID, String sUserFullName){
 		
         //Display the line header:
         for (int i = 0; i < m_Entry.getLineCount(); i++){
@@ -407,34 +452,6 @@ public class ICEditTransferEntry extends HttpServlet {
         m_pwOut.println("</TABLE>");
 
 		return true;
-	}
-	private void get_request_parameters(){
- 
-		if (m_hsrRequest.getParameter("EntryNumber") != null){
-			//System.out.println("In " + this.toString() + " != null");
-			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest).equalsIgnoreCase("-1")){
-				//System.out.println("In " + this.toString() + " = -1");
-				m_bIsNewEntry = true; 
-			}else{
-				//System.out.println("In " + this.toString() + " != -1");
-				m_bIsNewEntry = false;
-			}
-		}else{
-			m_bIsNewEntry = true;
-			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
-		}
-
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", m_hsrRequest);
-		if (m_sEditable.compareToIgnoreCase("Yes") == 0){
-			m_bEditable = true;
-		}else {
-			m_bEditable = false;
-		}
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-		
 	}
 
 	public void doGet(HttpServletRequest request,

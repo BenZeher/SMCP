@@ -25,28 +25,14 @@ import smcontrolpanel.SMUtilities;
 
 public class ICEditTransferLine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
-	private static String sObjectName = "Line";
-	
-	private ICEntryLine m_line;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
+	private static final String sObjectName = "Line";
 	public static final String DISPLAY_QTYS_PARAM = "DISPLAYITEMQTYS";
-	//We'll use these to store the location List, so we don't have to load it several times:
-    private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-    private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
-    private boolean m_bDisplayQtys = false;
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		m_pwOut = response.getWriter();
+		PrintWriter m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 
@@ -55,7 +41,8 @@ public class ICEditTransferLine extends HttpServlet {
 		{
 			return;
 		}
-
+		HttpServletRequest m_hsrRequest = request;
+		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
@@ -64,8 +51,15 @@ public class ICEditTransferLine extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
-		m_hsrRequest = request;
-	    get_request_parameters();
+	    
+	    //local variables
+		ICEntryLine m_line;
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
+		boolean m_bDisplayQtys = clsManageRequestParameters.get_Request_Parameter(DISPLAY_QTYS_PARAM, m_hsrRequest).compareToIgnoreCase("") != 0;
 	    
 	    //Try to load the line:
 	    if (CurrentSession.getAttribute("EntryLine") != null){
@@ -119,7 +113,19 @@ public class ICEditTransferLine extends HttpServlet {
 	    		+ "\">Return to Edit Entry " + m_sEntryNumber + "</A><BR><BR>");
 		
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput(sDBID, sUserID, sUserFullName)){
+		if (!createFormFromLineInput(
+				m_pwOut,
+				m_sBatchNumber, 
+				m_sEntryNumber,
+				m_sLineNumber, 
+				m_sBatchType, 
+				m_line, 
+				m_hsrRequest, 
+				m_bDisplayQtys,
+				sDBID, 
+				sUserID, 
+				sUserFullName)
+				){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditTransferEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -134,7 +140,18 @@ public class ICEditTransferLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
+	private boolean createFormFromLineInput(
+			PrintWriter m_pwOut,
+			String m_sBatchNumber,
+			String m_sEntryNumber,
+			String m_sLineNumber,
+			String m_sBatchType,
+			ICEntryLine m_line,
+			HttpServletRequest m_hsrRequest,
+			boolean m_bDisplayQtys,
+			String sDBID,
+			String sUserID, 
+			String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICTransferLineUpdate' METHOD='POST'>");
@@ -146,9 +163,42 @@ public class ICEditTransferLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + "ICEditTransferLine" + "'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
-	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
-	    	return false;
-	    }
+	    
+		//Load Locations
+		ArrayList<String> m_sLocationValues = new ArrayList<String>();
+	    ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+		m_sLocationValues.clear();
+        m_sLocationDescriptions.clear();
+        try{
+	        String sSQL = "SELECT "
+	        	+ SMTablelocations.sLocation
+	        	+ ", " + SMTablelocations.sLocationDescription
+	        	+ " FROM " + SMTablelocations.TableName
+	        	+ " ORDER BY " + SMTablelocations.sLocation;
+
+	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	sDBID,
+		        	"MySQL",
+		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsLocations.next()){
+	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+	        	m_sLocationDescriptions.add(
+	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+			}
+	        rsLocations.close();
+
+		}catch (SQLException ex){
+	    	System.out.println("Error in " + this.toString()+ " class!!");
+	        System.out.println("SQLException: " + ex.getMessage());
+	        System.out.println("SQLState: " + ex.getSQLState());
+	        System.out.println("SQL: " + ex.getErrorCode());
+			return false;
+		}
 
     	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
     			+ ICEntryLine.ParamLineEntryID 
@@ -359,7 +409,7 @@ public class ICEditTransferLine extends HttpServlet {
 	    
 	    if (m_bDisplayQtys){
 	    	try {
-				displayQtys(sDBID, sUserID, sUserFullName);
+				displayQtys(m_pwOut, m_line, sDBID, sUserID, sUserFullName);
 			} catch (Exception e) {
 				m_pwOut.println("<FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT>");
 			}
@@ -367,53 +417,12 @@ public class ICEditTransferLine extends HttpServlet {
 		return true;
 	}
 
-	private void get_request_parameters(){
- 
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-		m_bDisplayQtys = clsManageRequestParameters.get_Request_Parameter(DISPLAY_QTYS_PARAM, m_hsrRequest).compareToIgnoreCase("") != 0;
-	}
-
-	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
-        m_sLocationValues.clear();
-        m_sLocationDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTablelocations.sLocation
-	        	+ ", " + SMTablelocations.sLocationDescription
-	        	+ " FROM " + SMTablelocations.TableName
-	        	+ " ORDER BY " + SMTablelocations.sLocation;
-
-	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsLocations.next()){
-	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-	        	m_sLocationDescriptions.add(
-	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-	        rsLocations.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
-	private void displayQtys(String sDBID, String sUserID, String sUserFullName) throws Exception{
+	private void displayQtys(
+			PrintWriter m_pwOut,
+			ICEntryLine m_line,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName) throws Exception{
 		ICItem item = new ICItem(m_line.sItemNumber());
 		if (!item.load(getServletContext(), sDBID)){
 			m_pwOut.println("<FONT COLOR=RED><B>Can't display quantities for item number '" + m_line.sItemNumber() 

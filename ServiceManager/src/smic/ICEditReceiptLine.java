@@ -26,7 +26,7 @@ import smcontrolpanel.SMUtilities;
 public class ICEditReceiptLine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String sObjectName = "Line";
+	private static final String sObjectName = "Line";
 	
 	private ICEntryLine m_line;
 	private String m_sBatchNumber;

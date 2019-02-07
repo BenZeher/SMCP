@@ -20,12 +20,7 @@ import smcontrolpanel.SMUtilities;
 public class ICEntryUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private ICEntry m_Entry;
-	//HttpServletRequest parameters:
-	private String m_sDelete;
-	private String m_sConfirmDelete;
-	private String m_sCallingClass;
-	private String m_sWarning;
+	
 	
 
 	public void doPost(HttpServletRequest request,
@@ -50,12 +45,21 @@ public class ICEntryUpdate extends HttpServlet{
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
     
+	    //local variables 
+	    ICEntry m_Entry;
+		String m_sDelete;
+		String m_sConfirmDelete;
+		String m_sCallingClass;
+		
 	    //If there's an entry input object in the session, get rid of it:
 	    CurrentSession.removeAttribute("EntryInput");
 	    CurrentSession.removeAttribute("EntryLine");
 	    
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
+		m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", request);
+		m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", request);
+		m_Entry = new ICEntry(request);
+		m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    
 		String subtitle = "";
 		String title = "";
@@ -82,7 +86,19 @@ public class ICEntryUpdate extends HttpServlet{
 			return;
 		}
     	try {
-			processUpdate(request,response,out,title,CurrentSession,subtitle, sDBID, sCompanyName, sUserID);
+			processUpdate(
+					request,
+					response,
+					out,
+					title,
+					CurrentSession,
+					subtitle, 
+					sDBID, 
+					sCompanyName, 
+					sUserID, 
+					m_sDelete, 
+					m_sConfirmDelete, 
+					m_Entry);
 		} catch (Exception e1) {
 	    	try {
 				options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
@@ -118,7 +134,8 @@ public class ICEntryUpdate extends HttpServlet{
 		return;
 	}
 	
-	private  void processUpdate(HttpServletRequest request,
+	private  void processUpdate(
+			HttpServletRequest request,
 			HttpServletResponse response,
 			PrintWriter out,
 			String title,
@@ -126,7 +143,10 @@ public class ICEntryUpdate extends HttpServlet{
 			String subtitle,
 			String sDBID,
 			String sCompanyName,
-			String sUserID) throws Exception {
+			String sUserID,
+			String m_sDelete,
+			String m_sConfirmDelete,
+			ICEntry m_Entry) throws Exception {
 		//Process if it's a 'delete':
 		if (!m_sDelete.equalsIgnoreCase("")){
 			if (m_sConfirmDelete.equalsIgnoreCase("")){
@@ -168,15 +188,16 @@ public class ICEntryUpdate extends HttpServlet{
 		
 		//System.out.println("In " + this.toString() + " - m_Entry dump: " + m_Entry.read_out_debug_data());
 		
-		if (!save_entry(getServletContext(), sDBID, sUserID)){
-			throw new Exception("Error [1530897648] Could not process entry - " + m_sWarning);
-	    //If the entry CAN be processed, load the successful entry back into the EntryInput class, and 
-	    //allow the entry editor to display it:
+		try {
+			save_entry(m_Entry, getServletContext(), sDBID, sUserID);
+		}catch (Exception e) {
+			throw new Exception("Error [1530897648] Could not process entry - " + e.getMessage());
 		}
+
 		return;
 	}
 	
-	private boolean save_entry(ServletContext context, String sDBID, String sUserID){
+	private void save_entry(ICEntry m_Entry, ServletContext context, String sDBID, String sUserID) throws Exception{
 		//Need a connection here for the data transaction:
 		Connection conn = clsDatabaseFunctions.getConnection(
 			context, 
@@ -184,14 +205,12 @@ public class ICEntryUpdate extends HttpServlet{
 			"MySQL",
 			this.toString() + ".save_entry");
 		if (conn == null){
-			m_sWarning = "could not get connection to save entry.";
-			return false;
+			throw new Exception("could not get connection to save entry.");
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080861]");
-			m_sWarning = "could not start data transaction";
-			return false;
+			throw new Exception("could not start data transaction");
 		}
 		
 		//We do not allow zero amount lines here:
@@ -201,29 +220,18 @@ public class ICEntryUpdate extends HttpServlet{
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080862]");
 			if (m_Entry.getErrorMessage().size() == 0){
-				m_sWarning = "unspecified error in entry class saving entry";
+				throw new Exception("unspecified error in entry class saving entry");
 			}else{
-				for (int i = 0; i < m_Entry.getErrorMessage().size(); i++){
-					m_sWarning = m_Entry.getErrorMessage().get(i) + "\n";
+				for (int i = 0; i < m_Entry.getErrorMessage().size();){
+					throw new Exception(m_Entry.getErrorMessage().get(i) + "\n");
 				}
-			}
-			return false;			
-			
+			}								
 		}else{
 			clsDatabaseFunctions.commit_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080863]");
-			return true;
 		}
 	}
 
-	private void getRequestParameters(
-    	HttpServletRequest req){
-
-		m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", req);
-		m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", req);
-		m_Entry = new ICEntry(req);
-		m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", req);
-	}
 	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

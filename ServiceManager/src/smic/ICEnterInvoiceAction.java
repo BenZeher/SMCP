@@ -23,6 +23,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
 	private static final String UPDATE_VENDOR_LOG_ENTRY = "UPDATEVENDORONPO";
+	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

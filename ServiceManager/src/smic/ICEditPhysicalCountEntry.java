@@ -22,9 +22,7 @@ import smcontrolpanel.SMUtilities;
 public class ICEditPhysicalCountEntry extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-
-	private static String sObjectName = "Batch Entry";
-	
+	private static final String sObjectName = "Batch Entry";	
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

@@ -26,14 +26,9 @@ public class ICEditPhysicalCountLine extends HttpServlet {
 	public static final String PARAM_INCLUDE_NEW_ITEMS = "ADDNEWITEMS";
 	
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
-	private ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-
-		// PrintWriter debug_out = new PrintWriter(System.out);
-		// SMUtilities.printRequestParameters(debug_out, request);
 
 		ICPhysicalCountLineEntry entry = new ICPhysicalCountLineEntry(request);
 		SMMasterEditEntry smedit = new SMMasterEditEntry(request, response,
@@ -130,7 +125,37 @@ public class ICEditPhysicalCountLine extends HttpServlet {
 		);
 		
 		//Load the GL accts and locations:
-		if (!loadGLAccountList(smedit.getsDBID(), smedit.getUserName())){
+		ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
+		ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
+        m_sGLAccountValues.clear();
+        m_sGLAccountDescriptions.clear();
+        try{
+	        String sSQL = "SELECT "
+	        	+ SMTableglaccounts.sAcctID
+	        	+ ", " + SMTableglaccounts.sDesc
+	        	+ " FROM " + SMTableglaccounts.TableName
+	        	+ " WHERE ("
+        			+ SMTableglaccounts.lActive + " = 1"
+        		+ ")"
+	        	+ " ORDER BY " + SMTableglaccounts.sAcctID;
+
+	        ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	smedit.getsDBID(),
+		        	"MySQL",
+		        	this.toString() + ".loadGLAccountList (1) - User: " + smedit.getUserName());
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsGLAccounts.next()){
+	        	m_sGLAccountValues.add((String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim());
+	        	m_sGLAccountDescriptions.add(
+	        		(String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim() 
+	        			+ " - " + (String) rsGLAccounts.getString(SMTableglaccounts.sDesc).trim());
+			}
+	        rsGLAccounts.close();
+
+		}catch (SQLException ex){
 			String sError = "Could not load GL accounts.";
 			response.sendRedirect("" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass() + "?"
 					+ ICPhysicalCountLineEntry.ParamID + "=" + entry.slid()
@@ -341,45 +366,7 @@ public class ICEditPhysicalCountLine extends HttpServlet {
 		s += "</TABLE>";
 		return s;
 	}
-	private boolean loadGLAccountList(String sDBID, String sUserName){
-        m_sGLAccountValues.clear();
-        m_sGLAccountDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTableglaccounts.sAcctID
-	        	+ ", " + SMTableglaccounts.sDesc
-	        	+ " FROM " + SMTableglaccounts.TableName
-	        	+ " WHERE ("
-        			+ SMTableglaccounts.lActive + " = 1"
-        		+ ")"
-	        	+ " ORDER BY " + SMTableglaccounts.sAcctID;
 
-	        ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadGLAccountList (1) - User: " + sUserName);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsGLAccounts.next()){
-	        	m_sGLAccountValues.add((String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim());
-	        	m_sGLAccountDescriptions.add(
-	        		(String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim() 
-	        			+ " - " + (String) rsGLAccounts.getString(SMTableglaccounts.sDesc).trim());
-			}
-	        rsGLAccounts.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
 	public void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
 

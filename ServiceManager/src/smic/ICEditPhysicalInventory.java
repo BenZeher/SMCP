@@ -26,16 +26,11 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class ICEditPhysicalInventory  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-	private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
-		
-		//PrintWriter debug_out = new PrintWriter(System.out);
-		//SMUtilities.printRequestParameters(debug_out, request);
-		
+
 		ICPhysicalInventoryEntry entry = new ICPhysicalInventoryEntry(request);
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
@@ -249,11 +244,38 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 	private String getEditHTML(SMMasterEditEntry sm, ICPhysicalInventoryEntry entry) throws SQLException{
 
 		String s = "";
-		
-		if (!loadLocationList(sm.getsDBID(), sm.getUserName())){
-			s += "Could not load locations.";
-			return s;
-		}
+		//Load locations
+		ArrayList<String> m_sLocationValues = new ArrayList<String>();
+		ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+		 m_sLocationValues.clear();
+	        m_sLocationDescriptions.clear();
+	        try{
+		        String sSQL = "SELECT "
+		        	+ SMTablelocations.sLocation
+		        	+ ", " + SMTablelocations.sLocationDescription
+		        	+ " FROM " + SMTablelocations.TableName
+		        	+ " ORDER BY " + SMTablelocations.sLocation;
+
+		        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+			        	sSQL, 
+			        	getServletContext(), 
+			        	sm.getsDBID(),
+			        	"MySQL",
+			        	this.toString() + ".loadLocationList (1) - User: " + sm.getUserName());
+		        
+				//Print out directly so that we don't waste time appending to string buffers:
+		        while (rsLocations.next()){
+		        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+		        	m_sLocationDescriptions.add(
+		        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+		        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+				}
+		        rsLocations.close();
+
+			}catch (SQLException ex){
+				s += "Could not load locations.";
+				return s;
+			}
 		
 		s += "<TABLE BORDER=1>";
 		
@@ -390,42 +412,7 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 		s += "</TABLE>";
 		return s;
 	}
-	private boolean loadLocationList(String sDBID, String sUserName){
-        m_sLocationValues.clear();
-        m_sLocationDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTablelocations.sLocation
-	        	+ ", " + SMTablelocations.sLocationDescription
-	        	+ " FROM " + SMTablelocations.TableName
-	        	+ " ORDER BY " + SMTablelocations.sLocation;
-
-	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserName);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsLocations.next()){
-	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-	        	m_sLocationDescriptions.add(
-	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-	        rsLocations.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
+	
 	private void createCountList(
 			String sPhysicalInventoryID,
 			String sLocation,

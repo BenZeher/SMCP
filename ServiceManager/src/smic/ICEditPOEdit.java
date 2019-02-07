@@ -41,9 +41,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICEditPOEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String FOUND_VENDOR_PARAMETER = "FOUND" + ICPOHeader.Paramsvendor;
+	public static final String FOUND_VENDOR_PARAMETER = "FOUND" + ICPOHeader.Paramsvendor;
 	public static final String FIND_VENDOR_BUTTON_NAME = "Find Vendor";
-	public static String SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE = "*** Use customized ship via  ***";
+	public static final String SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE = "*** Use customized ship via  ***";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 //	public static final String CREATE_DOCUMENT_FOLDER_COMMAND_VALUE = "CREATEDOCFOLDER";
 //	public static final String CREATE_DOCUMENT_FOLDER_BUTTON_LABEL = "Create document folder in Google Drive";

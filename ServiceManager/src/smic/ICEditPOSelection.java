@@ -18,7 +18,7 @@ import SMDataDefinition.SMTableicporeceiptheaders;
 public class ICEditPOSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sICEditPOSelectionCalledClassName = "smic.ICEditPOEdit";
+	private static final String sICEditPOSelectionCalledClassName = "smic.ICEditPOEdit";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

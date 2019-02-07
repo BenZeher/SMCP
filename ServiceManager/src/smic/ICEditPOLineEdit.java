@@ -43,12 +43,10 @@ public class ICEditPOLineEdit  extends HttpServlet {
 	public static String UPDATE_LABEL = "Save line";
 	
 	//We'll use these to store the GL List, so we don't have to load it several times:
-    private ArrayList<String> m_sGLValues = new ArrayList<String>();
-    private ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
+   
     
 	//We'll use these to store the location List, so we don't have to load it several times:
-    private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-    private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+    
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -131,8 +129,90 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		//We're going to create our own button instead:
 		smedit.setbIncludeUpdateButton(false);
 		
-	    try {
-			smedit.createEditPage(getEditHTML(smedit, entry), "");
+		
+		//Load gl accounts
+		ArrayList<String> m_sGLValues = new ArrayList<String>();
+		ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
+		m_sGLValues.clear();
+        m_sGLDescriptions.clear();
+        try{
+	        String sSQL = "SELECT" 
+	        	+ " " + SMTableglaccounts.sAcctID 
+	        	+ ", " + SMTableglaccounts.sDesc 
+	        	+ " FROM " + SMTableglaccounts.TableName
+	        	+ " WHERE ("
+    				+ "(" + SMTableglaccounts.lActive + " = 1)"
+    				+ " AND (" + SMTableglaccounts.iallowaspoexpense + " = 1)"
+    			+ ")"
+    			+ " ORDER BY " + SMTableglaccounts.sAcctID;
+
+	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	smedit.getsDBID(),
+		        	"MySQL",
+		        	this.toString() + ".loadGLList (1) - User: " + smedit.getUserName());
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsGLAccts.next()){
+	        	m_sGLValues.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim());
+	        	m_sGLDescriptions.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim() + " - " + (String) rsGLAccts.getString(SMTableglaccounts.sDesc).trim());
+			}
+	        rsGLAccts.close();
+
+		}catch (SQLException ex){
+			String sError = "Could not load glaccounts - " + ex.getMessage();
+			response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+				+ "?" + ICPOHeader.Paramsponumber + "=" + sPONumber
+				+ "&Warning=Could not glaccounts - " + sError
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+			);
+				return;
+		}
+		
+        //Load locations
+        ArrayList<String> m_sLocationValues = new ArrayList<String>();
+        ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+        m_sLocationValues.clear();
+        m_sLocationDescriptions.clear();
+        try{
+	        String sSQL = "SELECT "
+	        	+ SMTablelocations.sLocation
+	        	+ ", " + SMTablelocations.sLocationDescription
+	        	+ " FROM " + SMTablelocations.TableName
+	        	+ " ORDER BY " + SMTablelocations.sLocation;
+
+	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	smedit.getsDBID(),
+		        	"MySQL",
+		        	this.toString() + ".loadLocationList (1) - User: " + smedit.getUserName());
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsLocations.next()){
+	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+	        	m_sLocationDescriptions.add(
+	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+			}
+	        rsLocations.close();
+
+		}catch (SQLException ex){
+			String sError = "Could not load locations - " + ex.getMessage();
+			response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
+				+ "?" + ICPOHeader.Paramsponumber + "=" + sPONumber
+				+ "&Warning=Could not locatinos - " + sError
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
+			);
+				return;
+		}
+		
+
+		try {
+			smedit.createEditPage(getEditHTML(smedit, entry, m_sGLValues, m_sGLDescriptions, m_sLocationValues, m_sLocationDescriptions), "");
 		} catch (SQLException e) {
     		String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
@@ -146,14 +226,14 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		
 	    return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, ICPOLine entry) throws SQLException{
+	private String getEditHTML(
+			SMMasterEditEntry sm, 
+			ICPOLine entry,
+			ArrayList<String> m_sGLValues,
+			ArrayList<String> m_sGLDescriptions,
+			ArrayList<String> m_sLocationValues,
+			ArrayList<String> m_sLocationDescriptions) throws SQLException{
 		String s = "";
-	    try {
-			loadGLList(sm);
-		} catch (Exception e1) {
-			s += "<BR><FONT COLOR=RED>" + e1.getMessage() + "<BR>";
-		}
-	    loadLocationList(sm);
 
 	    s = "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
 		
@@ -628,80 +708,6 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		;
 		
 		return s;
-	}
-	private void loadGLList(SMMasterEditEntry smedit) throws Exception{
-        m_sGLValues.clear();
-        m_sGLDescriptions.clear();
-        try{
-	        String sSQL = "SELECT" 
-	        	+ " " + SMTableglaccounts.sAcctID 
-	        	+ ", " + SMTableglaccounts.sDesc 
-	        	+ " FROM " + SMTableglaccounts.TableName
-	        	+ " WHERE ("
-    				+ "(" + SMTableglaccounts.lActive + " = 1)"
-    				+ " AND (" + SMTableglaccounts.iallowaspoexpense + " = 1)"
-    			+ ")"
-    			+ " ORDER BY " + SMTableglaccounts.sAcctID;
-
-	        ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	smedit.getsDBID(),
-		        	"MySQL",
-		        	this.toString() + ".loadGLList (1) - User: " + smedit.getUserName());
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsGLAccts.next()){
-	        	m_sGLValues.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim());
-	        	m_sGLDescriptions.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim() + " - " + (String) rsGLAccts.getString(SMTableglaccounts.sDesc).trim());
-			}
-	        rsGLAccts.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error [1423232986] in " + this.toString()+ ".loadGLList - user: " + smedit.getUserName()
-	    		+ ", getServletContext() = " + getServletContext().toString() + ", smedit.getsDBID = '" + smedit.getsDBID() + "', "
-	    		+ " exception message: " + ex.getMessage()
-	    	);
-			throw new Exception("Error [1423232987] in " + this.toString()+ ".loadGLList - user: " + smedit.getUserName()
-		    		+ ", getServletContext() = " + getServletContext().toString() + ", smedit.getsDBID = '" + smedit.getsDBID() + "', "
-		    		+ " exception message: " + ex.getMessage());
-		}
-	}
-	private boolean loadLocationList(SMMasterEditEntry smedit){
-        m_sLocationValues.clear();
-        m_sLocationDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTablelocations.sLocation
-	        	+ ", " + SMTablelocations.sLocationDescription
-	        	+ " FROM " + SMTablelocations.TableName
-	        	+ " ORDER BY " + SMTablelocations.sLocation;
-
-	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	smedit.getsDBID(),
-		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + smedit.getUserName());
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsLocations.next()){
-	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-	        	m_sLocationDescriptions.add(
-	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-	        rsLocations.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
 	}
 
 	public void doGet(HttpServletRequest request,

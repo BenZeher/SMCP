@@ -32,10 +32,10 @@ public class ICEditReceiptEdit  extends HttpServlet {
 
 	private boolean bDebugMode = false;
 	
-	public static String SUBMIT_BUTTON_RECEIVE_ALL = "RECEIVE_ALL";
-	public static String SUBMIT_BUTTON_RECEIVE_ALL_LABEL = "Receive all outstanding lines";
-	public static String SUBMIT_BUTTON_RECEIVE_OUTSTANDING = "RECEIVE_OUTSTANDING";
-	public static String SUBMIT_BUTTON_RECEIVE_OUTSTANDING_LABEL = "Receive this line";
+	public static final String SUBMIT_BUTTON_RECEIVE_ALL = "RECEIVE_ALL";
+	public static final String SUBMIT_BUTTON_RECEIVE_ALL_LABEL = "Receive all outstanding lines";
+	public static final String SUBMIT_BUTTON_RECEIVE_OUTSTANDING = "RECEIVE_OUTSTANDING";
+	public static final String SUBMIT_BUTTON_RECEIVE_OUTSTANDING_LABEL = "Receive this line";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

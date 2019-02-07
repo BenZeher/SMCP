@@ -23,7 +23,7 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//Localhost settings:
 		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.211.251
-		String sDBID = "servmgr3"; //servmgr1 - default
+		String sDBID = "servmgr1"; //servmgr1 - default
 		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
 		String sUser = "root";//"smuser7sT559";
 		String sPassword = "x14r7uidfDgvC4th";//"kJ26D3G9bvK8";

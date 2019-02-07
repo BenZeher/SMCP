@@ -20,8 +20,8 @@ import ServletUtilities.clsDatabaseFunctions;
 public class ICEditPOShipViasSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sPOShipViaObjectName = "PO Ship Via";
-	private static String sICEditPOShipViasSelectCalledClassName = "ICEditPOShipViasEdit";
+	private static final String sPOShipViaObjectName = "PO Ship Via";
+	private static final String sICEditPOShipViasSelectCalledClassName = "ICEditPOShipViasEdit";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

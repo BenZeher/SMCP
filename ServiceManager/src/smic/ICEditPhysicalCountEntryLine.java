@@ -26,29 +26,22 @@ import smcontrolpanel.SMUtilities;
 public class ICEditPhysicalCountEntryLine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	private static String sObjectName = "Line";
+	private static final String sObjectName = "Line";
 	
-	private ICEntryLine m_line;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
+
 
 	//We'll use these to store the location List, so we don't have to load it several times:
-    private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-    private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+    //private ArrayList<String> m_sLocationValues = new ArrayList<String>();
+    //private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
     
     //Cost bucket array lists:
-    private ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
-    private ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
+    //private ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
+    //private ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
-
+		PrintWriter m_pwOut;
 		m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
@@ -66,9 +59,20 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    
+		ICEntryLine m_line;
+		HttpServletRequest m_hsrRequest = request;
+		//Load parameters from request.
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
+		ArrayList<String> m_sLocationValues = new ArrayList<String>();
+	    ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+	    ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
+	    ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
 		
-		m_hsrRequest = request;
-	    get_request_parameters();
 	    
 	    //Try to load the line:
 	    if (CurrentSession.getAttribute("EntryLine") != null){
@@ -121,8 +125,110 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 				+ "&Warning="
 	    		+ "\">Return to Edit Entry " + m_sEntryNumber + "</A><BR><BR>");
 		
+		//Load the locations
+	    m_sLocationValues.clear();
+	    m_sLocationDescriptions.clear();
+	    	try{
+	    		String sSQL = "SELECT "
+	    			+ SMTablelocations.sLocation
+		        	+ ", " + SMTablelocations.sLocationDescription
+		        	+ " FROM " + SMTablelocations.TableName
+		        	+ " ORDER BY " + SMTablelocations.sLocation;
+
+		        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+		        		sSQL, 
+		        		getServletContext(), 
+			        	sDBID,
+			        	"MySQL",
+			        	this.toString() + ".loadLocationList (1) - User: " + sUserID
+			        	+ " - "
+			        	+ sUserFullName
+		        		);
+		        
+				//Print out directly so that we don't waste time appending to string buffers:
+		        while (rsLocations.next()){
+		        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+		        	m_sLocationDescriptions.add(
+		        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+		        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+				}
+		        rsLocations.close();
+
+			}catch (SQLException ex){
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountEntry"
+						+ "?BatchNumber=" + m_sBatchNumber
+						+ "&EntryNumber" + m_sEntryNumber
+						+ "&BatchType=" + m_sBatchType
+						+ "Editable=Yes"
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "&Warning=Could not load locations - " + ex.getMessage()
+					);
+				return;
+			}
+	        
+	   //Load GL Accounts
+	   m_sGLAccountValues.clear();
+	   m_sGLAccountDescriptions.clear();
+	   		try{
+		        String sSQL = "SELECT "
+		        	+ SMTableglaccounts.sAcctID
+		        	+ ", " + SMTableglaccounts.sDesc
+		        	+ " FROM " + SMTableglaccounts.TableName
+		        	+ " WHERE ("
+		        		+ SMTableglaccounts.lActive + " = 1"
+		        	+ ")"
+		        	+ " ORDER BY " + SMTableglaccounts.sAcctID;
+
+		        ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
+			        	sSQL, 
+			        	getServletContext(), 
+			        	sDBID,
+			        	"MySQL",
+			        	this.toString() + ".loadGLAccountList (1) - User: " + sUserID
+			        	+ " - "
+			        	+ sUserFullName
+		        		);
+		        
+				//Print out directly so that we don't waste time appending to string buffers:
+		        while (rsGLAccounts.next()){
+		        	m_sGLAccountValues.add((String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim());
+		        	m_sGLAccountDescriptions.add(
+		        		(String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim() 
+		        			+ " - " + (String) rsGLAccounts.getString(SMTableglaccounts.sDesc).trim());
+				}
+		        rsGLAccounts.close();
+
+			}catch (SQLException ex){
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountEntry"
+						+ "?BatchNumber=" + m_sBatchNumber
+						+ "&EntryNumber" + m_sEntryNumber
+						+ "&BatchType=" + m_sBatchType
+						+ "Editable=Yes"
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ "&Warning=Could not load gl acccounts - " + ex.getMessage()
+					);
+				return;
+			}    
+		
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput( sDBID, sUserID, sUserFullName)){
+		if (!createFormFromLineInput(
+				m_pwOut, 
+				m_sBatchNumber,
+				m_sEntryNumber, 
+				m_sLineNumber, 
+				m_sBatchType, 
+				m_line,
+				m_hsrRequest,
+				m_sLocationValues,
+				m_sLocationDescriptions,
+				m_sGLAccountValues,
+				m_sGLAccountDescriptions,
+				sDBID,
+				sUserID, 
+				sUserFullName)){
+			
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -137,7 +243,21 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
+	private boolean createFormFromLineInput(
+			PrintWriter m_pwOut, 
+			String m_sBatchNumber,
+			String m_sEntryNumber,
+			String m_sLineNumber,
+			String m_sBatchType,
+			ICEntryLine m_line,
+			HttpServletRequest m_hsrRequest,
+			ArrayList<String> m_sLocationValues,
+			ArrayList<String> m_sLocationDescriptions,
+			ArrayList<String> m_sGLAccountValues,
+			ArrayList<String> m_sGLAccountDescriptions,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICPhysicalCountLineUpdate' METHOD='POST'>");
@@ -149,13 +269,6 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + "ICEditPhysicalCountEntryLine" + "'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
-
-	    if (!loadGLAccountList(sDBID, sUserID, sUserFullName)){
-	    	return false;
-	    }
-	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
-	    	return false;
-	    }
 
     	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
     			+ ICEntryLine.ParamLineEntryID 
@@ -401,97 +514,7 @@ public class ICEditPhysicalCountEntryLine extends HttpServlet {
 
 		return true;
 	}
-
-	private void get_request_parameters(){
- 
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-		
-	}
-	private boolean loadGLAccountList(String sDBID, String sUserID, String sUserFullName){
-        m_sGLAccountValues.clear();
-        m_sGLAccountDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTableglaccounts.sAcctID
-	        	+ ", " + SMTableglaccounts.sDesc
-	        	+ " FROM " + SMTableglaccounts.TableName
-	        	+ " WHERE ("
-	        		+ SMTableglaccounts.lActive + " = 1"
-	        	+ ")"
-	        	+ " ORDER BY " + SMTableglaccounts.sAcctID;
-
-	        ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadGLAccountList (1) - User: " + sUserID
-		        	+ " - "
-		        	+ sUserFullName
-	        		);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsGLAccounts.next()){
-	        	m_sGLAccountValues.add((String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim());
-	        	m_sGLAccountDescriptions.add(
-	        		(String) rsGLAccounts.getString(SMTableglaccounts.sAcctID).trim() 
-	        			+ " - " + (String) rsGLAccounts.getString(SMTableglaccounts.sDesc).trim());
-			}
-	        rsGLAccounts.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
-	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
-        m_sLocationValues.clear();
-        m_sLocationDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTablelocations.sLocation
-	        	+ ", " + SMTablelocations.sLocationDescription
-	        	+ " FROM " + SMTablelocations.TableName
-	        	+ " ORDER BY " + SMTablelocations.sLocation;
-
-	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserID
-		        	+ " - "
-		        	+ sUserFullName
-	        		);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsLocations.next()){
-	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-	        	m_sLocationDescriptions.add(
-	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-	        rsLocations.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
+	
 		public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

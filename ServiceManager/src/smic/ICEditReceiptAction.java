@@ -16,10 +16,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
 public class ICEditReceiptAction extends HttpServlet{
-;
-	String sWarning = "";
-	String sStatus = "";
-	String sReceiptHeaderId = "";
+	
 	
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
@@ -40,6 +37,9 @@ public class ICEditReceiptAction extends HttpServlet{
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.ICEditReceipts)){return;}
 	    //Read the entry fields from the request object:
 		ICPOReceiptHeader entry = new ICPOReceiptHeader(request);
+		
+		String sWarning = "";
+		String sStatus = "";
 		
 		//**********************************************************
 		//Special cases:
@@ -92,8 +92,8 @@ public class ICEditReceiptAction extends HttpServlet{
     			//	System.out.println("In " + this.toString() + ".doPost - sPOLineID = " + sPOLineID);
     			//}
     			
-    			String sWarning = "";
-    			String sStatus = "PO line was successfully received.";
+    			sWarning = "";
+    			sStatus = "PO line was successfully received.";
     			
     			try {
 					entry.checkToReceiveQtyRemainingOnPOLine(
@@ -186,7 +186,7 @@ public class ICEditReceiptAction extends HttpServlet{
 				smaction.getCurrentSession().setAttribute(ICPOReceiptHeader.ParamObjectName, entry);
 				sWarning = "Could not receive all - " + e2.getMessage();
 				sStatus = "";
-				sReceiptHeaderId = ICPOReceiptHeader.Paramlid + "=" + entry.getsID();
+				
 			}
 			if (smaction.getOriginalURL().trim().compareToIgnoreCase("") != 0){
 				smaction.returnToOriginalURL();

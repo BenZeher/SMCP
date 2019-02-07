@@ -30,37 +30,14 @@ public class ICEditAdjustmentLine extends HttpServlet {
 
 	public static final String UPDATE_COST_BUCKETS_COMMAND = "UpdateCostBuckets";
 	public static final String SUBMIT_UPDATE_COST_BUCKETS_COMMAND = "SubmitCostBucketUpdate";
-	
-	private static String sAdjustmentLineObjectName = "Line";
-
-	private ICEntryLine m_line;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private PrintWriter m_pwOut;
-	private String m_sUpdateCostBuckets;
-	private HttpServletRequest m_hsrRequest;
-
-	//We'll use these to store the GL List, so we don't have to load it several times:
-	private ArrayList<String> m_sGLValues = new ArrayList<String>();
-	private ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
-
-	//We'll use these to store the location List, so we don't have to load it several times:
-	private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-	private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
-
-	//Cost bucket array lists:
-	private ArrayList<String> m_sCostBucketValues = new ArrayList<String>();
-	private ArrayList<String> m_sCostBucketDescriptions = new ArrayList<String>();
+	private static final String sAdjustmentLineObjectName = "Line";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
 
 		long lCostingMethod = 0;
-
+		PrintWriter m_pwOut;
 		m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
@@ -78,9 +55,17 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 						+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-
-		m_hsrRequest = request;
-		get_request_parameters();
+		
+		ICEntryLine m_line;
+		
+		HttpServletRequest m_hsrRequest = request;
+		//load parameters from request
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
+		String m_sUpdateCostBuckets = clsManageRequestParameters.get_Request_Parameter(UPDATE_COST_BUCKETS_COMMAND, m_hsrRequest);
 
 		//Try to load the line:
 		if (CurrentSession.getAttribute("EntryLine") != null){
@@ -173,7 +158,20 @@ public class ICEditAdjustmentLine extends HttpServlet {
 			);
 		}
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		if (!createFormFromLineInput(lCostingMethod, sDBID, sUserID, sUserFullName)){
+		if (!createFormFromLineInput(
+				m_pwOut, 
+				m_sBatchNumber, 
+				m_sEntryNumber, 
+				m_sLineNumber, 
+				m_sBatchType, 
+				m_line, 
+				lCostingMethod,
+				m_sUpdateCostBuckets,
+				m_hsrRequest, 
+				sDBID, 
+				sUserID, 
+				sUserFullName)){
+			
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditAdjustmentEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -188,7 +186,19 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(long lCostingMethod, String sDBID, String sUserID, String sUserFullName){
+	private boolean createFormFromLineInput(
+			PrintWriter m_pwOut,
+			String m_sBatchNumber,
+			String m_sEntryNumber,
+			String m_sLineNumber,
+			String m_sBatchType,
+			ICEntryLine m_line,
+			long lCostingMethod,
+			String m_sUpdateCostBuckets,
+			HttpServletRequest m_hsrRequest,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName){
 
 		//Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICAdjustmentLineUpdate' METHOD='POST'>");
@@ -201,13 +211,84 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
 
-		if (!loadGLList(sDBID, sUserID, sUserFullName)){
+		//Load the gl accounts
+		ArrayList<String> m_sGLValues = new ArrayList<String>();
+		ArrayList<String> m_sGLDescriptions = new ArrayList<String>();
+		m_sGLValues.clear();
+		m_sGLDescriptions.clear();
+		try{
+			String sSQL = MySQLs.Get_GL_Account_List_SQL(false);
+
+			ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".loadGLList (1) - User: " 
+					+ sUserID
+					+ " - "
+					+ sUserFullName
+					);
+
+			//Print out directly so that we don't waste time appending to string buffers:
+			while (rsGLAccts.next()){
+				m_sGLValues.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim());
+				m_sGLDescriptions.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim() 
+						+ " - " + (String) rsGLAccts.getString(SMTableglaccounts.sDesc).trim());
+			}
+			rsGLAccts.close();
+
+		}catch (SQLException ex){
+			System.out.println("Error in " + this.toString()+ " class!!");
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		if (!loadLocationList(sDBID, sUserID, sUserFullName)){
+		
+
+		//Load the location lists
+		ArrayList<String> m_sLocationValues = new ArrayList<String>();
+		ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+		m_sLocationValues.clear();
+		m_sLocationDescriptions.clear();
+		try{
+			String sSQL = "SELECT "
+				+ SMTablelocations.sLocation
+				+ ", " + SMTablelocations.sLocationDescription
+				+ " FROM " + SMTablelocations.TableName
+				+ " ORDER BY " + SMTablelocations.sLocation;
+
+			ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".loadLocationList (1) - User: " 
+					+ sUserID
+					+ " - "
+					+ sUserFullName
+					);
+
+			//Print out directly so that we don't waste time appending to string buffers:
+			while (rsLocations.next()){
+				m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+				m_sLocationDescriptions.add(
+						(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+						+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+			}
+			rsLocations.close();
+
+		}catch (SQLException ex){
+			System.out.println("Error in " + this.toString()+ " class!!");
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
 
+
+		//Store line ID in form
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 				+ ICEntryLine.ParamLineEntryID 
 				+ "\" VALUE=\"" + m_line.sEntryId() + "\">");
@@ -218,6 +299,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		m_pwOut.println("<TABLE BORDER=1>");
 		m_pwOut.println("<TR>");
 
+		//Create HTML
 		//Item
 		String sEditCode = clsStringFunctions.filter(m_line.sItemNumber());
 		if (m_hsrRequest.getParameter(ICEntryLine.ParamLineItemNumber) != null){
@@ -483,9 +565,53 @@ public class ICEditAdjustmentLine extends HttpServlet {
 			m_pwOut.println("Create NEW offset bucket");
 			//If this class has been told to update the cost buckets, then load those
 			if (m_sUpdateCostBuckets.compareToIgnoreCase("") != 0) {
+				ArrayList<String> m_sCostBucketValues = new ArrayList<String>();
+				ArrayList<String> m_sCostBucketDescriptions = new ArrayList<String>();
+				m_sCostBucketValues.clear();
+				m_sCostBucketDescriptions.clear();
+				
 				boolean bLoadedCostBuckets = false;
 				try {
-					bLoadedCostBuckets = loadCostBuckets(sDBID, sUserID, sUserFullName);
+					String sSQL = "SELECT "
+						+ SMTableiccosts.iId
+						+ ", " + SMTableiccosts.sReceiptNumber
+						+ ", " + SMTableiccosts.bdQty
+						+ ", " + SMTableiccosts.bdCost
+						+ ", " + SMTableiccosts.datCreationDate
+						+ " FROM " + SMTableiccosts.TableName
+						+ " WHERE ("
+						+ "(" + SMTableiccosts.sItemNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_line.sItemNumber()) + "')"
+						+ " AND (" + SMTableiccosts.sLocation + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_line.sLocation()) + "')"
+						+ ")"
+						+ " ORDER BY " + SMTableiccosts.sReceiptNumber;
+
+					ResultSet rsCostBuckets = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".loadCostBuckets (1) - User: " 
+					+ sUserID
+					+" - "
+					+ sUserFullName
+					);
+
+					//Print out directly so that we don't waste time appending to string buffers:
+					while (rsCostBuckets.next()){
+						m_sCostBucketValues.add((String) Long.toString(rsCostBuckets.getLong(SMTableiccosts.iId)));
+						m_sCostBucketDescriptions.add(
+							(String) Long.toString(rsCostBuckets.getLong(SMTableiccosts.iId))
+							+ " " + rsCostBuckets.getString(SMTableiccosts.sReceiptNumber).trim() 
+							+ "- QTY: " + clsManageBigDecimals.BigDecimalToFormattedString(
+								"#########0.0000", rsCostBuckets.getBigDecimal(SMTableiccosts.bdQty))
+								+ ", COST: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+									rsCostBuckets.getBigDecimal(SMTableiccosts.bdCost))
+										+ ", CREATED: " + clsDateAndTimeConversions.utilDateToString(
+												rsCostBuckets.getDate(SMTableiccosts.datCreationDate), "MM/dd/yyyy"));	
+					}
+					rsCostBuckets.close();			
+					
+	
 				} catch (Exception e) {
 					m_pwOut.println("</SELECT><BR><B><FONT COLOR=RED>" + e.getMessage() + "</FONT></B>");
 					return false;
@@ -571,140 +697,6 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		return true;
 	}
 
-	private void get_request_parameters(){
-
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-		m_sUpdateCostBuckets = clsManageRequestParameters.get_Request_Parameter(UPDATE_COST_BUCKETS_COMMAND, m_hsrRequest);
-
-	}
-	private boolean loadGLList(String sDBID, String sUserID, String sUserFullName){
-		m_sGLValues.clear();
-		m_sGLDescriptions.clear();
-		try{
-			String sSQL = MySQLs.Get_GL_Account_List_SQL(false);
-
-			ResultSet rsGLAccts = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".loadGLList (1) - User: " 
-					+ sUserID
-					+ " - "
-					+ sUserFullName
-					);
-
-			//Print out directly so that we don't waste time appending to string buffers:
-			while (rsGLAccts.next()){
-				m_sGLValues.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim());
-				m_sGLDescriptions.add((String) rsGLAccts.getString(SMTableglaccounts.sAcctID).trim() + " - " + (String) rsGLAccts.getString(SMTableglaccounts.sDesc).trim());
-			}
-			rsGLAccts.close();
-
-		}catch (SQLException ex){
-			System.out.println("Error in " + this.toString()+ " class!!");
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-
-		return true;
-	}
-	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
-		m_sLocationValues.clear();
-		m_sLocationDescriptions.clear();
-		try{
-			String sSQL = "SELECT "
-				+ SMTablelocations.sLocation
-				+ ", " + SMTablelocations.sLocationDescription
-				+ " FROM " + SMTablelocations.TableName
-				+ " ORDER BY " + SMTablelocations.sLocation;
-
-			ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".loadLocationList (1) - User: " 
-					+ sUserID
-					+ " - "
-					+ sUserFullName
-					);
-
-			//Print out directly so that we don't waste time appending to string buffers:
-			while (rsLocations.next()){
-				m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-				m_sLocationDescriptions.add(
-						(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-						+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-			rsLocations.close();
-
-		}catch (SQLException ex){
-			System.out.println("Error in " + this.toString()+ " class!!");
-			System.out.println("SQLException: " + ex.getMessage());
-			System.out.println("SQLState: " + ex.getSQLState());
-			System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-
-		return true;
-	}
-	private boolean loadCostBuckets(String sDBID, String sUserID, String sUserFullName) throws Exception{
-		m_sCostBucketValues.clear();
-		m_sCostBucketDescriptions.clear();
-		String sSQL = "";
-		try{
-			sSQL = "SELECT "
-
-				+ SMTableiccosts.iId
-				+ ", " + SMTableiccosts.sReceiptNumber
-				+ ", " + SMTableiccosts.bdQty
-				+ ", " + SMTableiccosts.bdCost
-				+ ", " + SMTableiccosts.datCreationDate
-				+ " FROM " + SMTableiccosts.TableName
-				+ " WHERE ("
-				+ "(" + SMTableiccosts.sItemNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_line.sItemNumber()) + "')"
-				+ " AND (" + SMTableiccosts.sLocation + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_line.sLocation()) + "')"
-				+ ")"
-				+ " ORDER BY " + SMTableiccosts.sReceiptNumber;
-
-			ResultSet rsCostBuckets = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".loadCostBuckets (1) - User: " 
-					+ sUserID
-					+" - "
-					+ sUserFullName
-					);
-
-			//Print out directly so that we don't waste time appending to string buffers:
-			while (rsCostBuckets.next()){
-				m_sCostBucketValues.add((String) Long.toString(rsCostBuckets.getLong(SMTableiccosts.iId)));
-				m_sCostBucketDescriptions.add(
-						(String) Long.toString(rsCostBuckets.getLong(SMTableiccosts.iId))
-						+ " " + rsCostBuckets.getString(SMTableiccosts.sReceiptNumber).trim() 
-						+ "- QTY: " + clsManageBigDecimals.BigDecimalToFormattedString(
-								"#########0.0000", rsCostBuckets.getBigDecimal(SMTableiccosts.bdQty))
-								+ ", COST: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-										rsCostBuckets.getBigDecimal(SMTableiccosts.bdCost))
-										+ ", CREATED: " + clsDateAndTimeConversions.utilDateToString(
-												rsCostBuckets.getDate(SMTableiccosts.datCreationDate), "MM/dd/yyyy"));	
-			}
-			rsCostBuckets.close();
-
-		}catch (SQLException ex){
-			throw new Exception("Error [1451415371] in loadCostBuckets with SQL '" + sSQL + "' - " + ex.getMessage());
-		}
-		return true;
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

@@ -438,7 +438,7 @@ public class SMEditSMOptions extends HttpServlet {
 			);
 		m_pwOut.println("<TD>This key is required to use basic geocoding function for mapping addresses. Enable Maps and Places. "
 				+ ""
-				+ " <a href=\"https://developers.google.com/maps/documentation/geocoding/start\"" + 
+				+ " <a href=\"https://cloud.google.com/maps-platform/?apis=maps,places\"" + 
 				 ">Get Google API key</a></TD></TR>");
 		
 		//Use google Places API 

@@ -21,7 +21,7 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	

@@ -26,9 +26,7 @@ public class ICTransactionHistoryGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
+
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -55,6 +53,9 @@ public class ICTransactionHistoryGenerate extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
+		
+	    String sWarning = "";
+		String sCallingClass = "";
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 

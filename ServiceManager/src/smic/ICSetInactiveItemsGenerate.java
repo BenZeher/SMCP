@@ -43,11 +43,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String ITEM_CHECKBOX_NAME = "ITEMNUM";
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String m_sWarning = "";
-	private String sCallingClass = "";
-	private boolean bDebugMode = false;
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final boolean bDebugMode = false;
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -66,6 +63,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	return;
 	    }
 	    
+		String m_sWarning = "";
+		String sCallingClass = "";
+		
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    /**************Get Parameters**************/
@@ -184,23 +184,25 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		out.println("<input type=\"button\" name=\"CheckAll\" value=\"Check All Items\" onClick=\"checkAll()\">");
 		out.println("<input type=\"button\" name=\"UnCheckAll\" value=\"Uncheck All Items\" onClick=\"uncheckAll()\">");
     	
-    	if (!printList(
-    		getServletContext(),
-    		sDBID,
-    		datEndDate,
-    		sStartingItem,
-    		sEndingItem,
-    		bIncludeInactives,
-    		bIncludeStockItems,
-    		bIncludeNonStockItems,
-    		sSortBy,
-    		out,
-    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-    		sUserID
-    		)){
+    	try {
+    		printList(
+    	    		getServletContext(),
+    	    		sDBID,
+    	    		datEndDate,
+    	    		sStartingItem,
+    	    		sEndingItem,
+    	    		bIncludeInactives,
+    	    		bIncludeStockItems,
+    	    		bIncludeNonStockItems,
+    	    		sSortBy,
+    	    		out,
+    	    		(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    	    		sUserID
+    	    		);
+    	}catch (Exception e) {
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + m_sWarning
+    				+ "Warning=" + e.getMessage()
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -265,7 +267,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
    		"<TR><TD COLSPAN=6><HR></TD><TR>");
 		
 	}
-	private boolean printList(
+	private void printList(
     		ServletContext context,
     		String sDBID,
     		Date datEndDate,
@@ -278,7 +280,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		PrintWriter pwOut,
     		String sLicenseModuleLevel,
     		String sUserID
-    		){
+    		) throws Exception{
 
 		//Make sure there are no unposted batches:
 		String SQL = "SELECT"
@@ -298,15 +300,14 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				SMUtilities.getFullClassName(this.toString()) + ".printList"
 			);
 			if (rs.next()){
-				m_sWarning = "There are unposted batches - these must be posted before you can set items as inactive.";
 				rs.close();
-				return false;
+				throw new Exception("There are unposted batches - these must be posted before you can set items as inactive.");
+				
 			}else{
 				rs.close();
 			}
 		} catch (SQLException e2) {
-			m_sWarning = "Error checking for unposted batches = " + e2.getMessage();
-			return false;
+			throw new Exception("Error checking for unposted batches = " + e2.getMessage());
 		}
 		
 		//First, create a temporary table to hold all the item records:
@@ -331,10 +332,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error creating temporary item table - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080972]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080972]");
+			throw new Exception("Error creating temporary item table - " + e1.getMessage() + "."
+    			+ Remove_Temp_Table_ICITEMLIST(conn));
     	}
 		
 		//Now populate the table with active/inactive items:
@@ -378,11 +378,10 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				Statement stmt = conn.createStatement();
 				stmt.execute(SQL);
 			} catch (SQLException e1) {
-	    		m_sWarning = "Error inserting into temporary item table with SQL: " + SQL + " - " 
-	    		+ e1.getMessage() + ".";
-	    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-	    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080973]");
-	    		return false;
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080973]");
+				throw new Exception("Error inserting into temporary item table with SQL: " + SQL + " - " 
+	    		+ e1.getMessage() + "."
+	    		+ Remove_Temp_Table_ICITEMLIST(conn));
 	    	}		
 		    if (bDebugMode){
 		    	System.out.println("In " + this.toString() + " [1487711844] - inserts took " 
@@ -413,18 +412,16 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 					Statement stmt = conn.createStatement();
 					stmt.execute(SQL);
 				} catch (SQLException e1) {
-		    		m_sWarning = "Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
-		    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
 					clsDatabaseFunctions.freeConnection(context, conn, "[1547080974]");
-		    		return false;
+					throw new Exception("Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + "."
+		    		 + Remove_Temp_Table_ICITEMLIST(conn));
 					}										
 				}
 			}				
 			rs.close();		
 		}catch(SQLException e){
-			m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080975]");
-			return false;
+			throw new Exception(Remove_Temp_Table_ICITEMLIST(conn));
 		}
 		
 		
@@ -450,10 +447,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080976]");
-    		return false;
+			throw new Exception("Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		 + Remove_Temp_Table_ICITEMLIST(conn));
     	}		
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711847] - order entry filter took " 
@@ -488,10 +484,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error ignoring items on Purchase orders with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080977]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080977]");
+			throw new Exception("Error ignoring items on Purchase orders with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		 + Remove_Temp_Table_ICITEMLIST(conn));
     	}		
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711849] - purchase order filter took " 
@@ -522,10 +517,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error ignoring items on Purchase order receipts with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080978]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080978]");
+			throw new Exception("Error ignoring items on Purchase order receipts with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		 + Remove_Temp_Table_ICITEMLIST(conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711851] - PO receipt filter took " 
@@ -553,10 +547,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error ignoring items in iccosts with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080979]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080979]");
+			throw new Exception("Error ignoring items in iccosts with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		 + Remove_Temp_Table_ICITEMLIST(conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711853] - ICCOST filter took " 
@@ -584,10 +577,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error ignoring items in icitemlocations with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080980]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080980]");
+			throw new Exception("Error ignoring items in icitemlocations with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		+ Remove_Temp_Table_ICITEMLIST(conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711855] - item location filter took " 
@@ -608,10 +600,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e1) {
-    		m_sWarning = "Error updating last transaction dates with SQL: " + SQL + " - " + e1.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080981]");
-    		return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080981]");
+			throw new Exception("Error updating last transaction dates with SQL: " + SQL + " - " + e1.getMessage() + "."
+    		+ Remove_Temp_Table_ICITEMLIST(conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711857] - set datLastTransaction took " 
@@ -668,14 +659,11 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		pwOut.println("</TABLE><BR>");
     		pwOut.println(lItemsPrinted + " items printed.");
     	}catch (SQLException e){
-    		m_sWarning = "Error reading items - " + e.getMessage() + ".";
-    		m_sWarning += Remove_Temp_Table_ICITEMLIST(conn);
     		clsDatabaseFunctions.freeConnection(context, conn, "[1547080982]");
-    		return false;
-    	}
-		m_sWarning = Remove_Temp_Table_ICITEMLIST(conn);
+    		throw new Exception("Error reading items - " + e.getMessage() + "."
+    		+ Remove_Temp_Table_ICITEMLIST(conn));
+    	}	
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080983]");
-		return true;
 	}
 	
 	private String Remove_Temp_Table_ICITEMLIST(Connection conn){

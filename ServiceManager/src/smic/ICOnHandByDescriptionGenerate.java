@@ -23,14 +23,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICOnHandByDescriptionGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
 
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
-	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -52,7 +46,10 @@ public class ICOnHandByDescriptionGenerate extends HttpServlet {
 	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
-	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
+	    //local variables
+		
+		String sWarning = "";
+		String sCallingClass = "";
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
 	    String sSearchText = "";

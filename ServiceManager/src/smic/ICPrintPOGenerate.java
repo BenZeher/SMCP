@@ -19,8 +19,6 @@ public class ICPrintPOGenerate extends HttpServlet {
 
 	private static final int NUMBER_OF_LINES_ON_PO = 27;
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -47,6 +45,8 @@ public class ICPrintPOGenerate extends HttpServlet {
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
+		String sWarning = "";
+		String sCallingClass = "";
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 

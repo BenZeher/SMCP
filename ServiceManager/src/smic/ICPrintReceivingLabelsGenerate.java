@@ -42,11 +42,11 @@ import ServletUtilities.clsStringFunctions;
 public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String LABELQTY_FIELD = "LBLQTY";
-	public static String BUTTONSAVE_NAME = "SUBMITSAVE";
-	public static String BUTTONPRINT_NAME = "SUBMITPRINT";
-	public static String BUTTONSAVE_LABEL = "Save number of labels";
-	public static String BUTTONPRINT_LABEL = "Print labels";
+	public static final String LABELQTY_FIELD = "LBLQTY";
+	public static final String BUTTONSAVE_NAME = "SUBMITSAVE";
+	public static final String BUTTONPRINT_NAME = "SUBMITPRINT";
+	public static final String BUTTONSAVE_LABEL = "Save number of labels";
+	public static final String BUTTONPRINT_LABEL = "Print labels";
 	private static final int MAX_NUMBER_OF_LINES_ALLOWED = 1000;
 	private static final String TOO_MANY_ITEMS_MESSAGE = 
 		"Error [1415827798] - You cannot print labels for more than " + Integer.toString(MAX_NUMBER_OF_LINES_ALLOWED) 
@@ -54,10 +54,8 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 		+ " to bring the number of items to " + Integer.toString(MAX_NUMBER_OF_LINES_ALLOWED) + " or less."
 	;
 	//formats
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
-	private String sWarning = "";
-	private String sCallingClass = "";
 	
 	private boolean bDebugMode = false;
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
@@ -86,6 +84,9 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 		
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
+
+		String sWarning = "";
+		String sCallingClass = "";
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 		sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		if (sCallingClass.compareToIgnoreCase("") == 0){
@@ -300,9 +301,9 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				+ "\">Summary</A><BR>");
 		out.println("</TD></TR></TABLE>");
 
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		if (! sWarning.equalsIgnoreCase("")){
-			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
+		String sWarnings = ARUtilities.get_Request_Parameter("Warning", request);
+		if (! sWarnings.equalsIgnoreCase("")){
+			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarnings + "</FONT></B><BR>");
 		}
 		String sStatus = ARUtilities.get_Request_Parameter("Status", request);
 		if (! sStatus.equalsIgnoreCase("")){
@@ -322,10 +323,10 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				+ sUserLastName
 		);
 		if (conn == null){
-			sWarning = "Unable to get data connection.";
+			sWarnings = "Unable to get data connection.";
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sWarning
+					+ "?Warning=" + sWarnings
 					+ sQueryString
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID    		);			
 			return;

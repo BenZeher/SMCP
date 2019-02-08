@@ -22,8 +22,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICPrintPhysicalInventoryWorksheetGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)

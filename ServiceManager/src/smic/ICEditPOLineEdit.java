@@ -25,28 +25,22 @@ import smgl.GLAccount;
 public class ICEditPOLineEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	public static String TOGGLE_NONINVENTORY_BUTTON_NAME = "NONINVTOGGLE";
-	public static String TOGGLE_TO_NONINVENTORY_LABEL = "Change to NON-INVENTORY item";
-	public static String TOGGLE_TO_INVENTORY_LABEL = "Change to INVENTORY item";
-	public static String GET_MOST_RECENT_COST_BUTTON = "GETMOSTRECENTCOST";
-	public static String GET_MOST_RECENT_COST_BUTTON_LABEL = "Get most recent cost";
-	public static String GET_VENDOR_ITEM_NO_BUTTON = "GETVENDORITEM";
-	public static String GET_VENDOR_ITEM_NO_BUTTON_LABEL = "Get vendor item info";
-	public static String FIND_ITEM_BUTTON = "FINDITEM";
-	public static String FIND_ITEM_BUTTON_LABEL = "Find item";
-	public static String CREATE_ITEM_BUTTON = "CREATEITEMFROMPO";
-	public static String CREATE_ITEM_BUTTON_LABEL = "Create item";
-	public static String ADD_ITEM_TO_ORDER_BUTTON = "ADDITEMTOORDER";
-	public static String ADD_ITEM_TO_ORDER_BUTTON_LABEL = "Add item to order";
-	public static String UPDATEANDADD_BUTTON = "UPDATEANDADD";
-	public static String UPDATEANDADD_LABEL = "Save line and add another";
-	public static String UPDATE_LABEL = "Save line";
-	
-	//We'll use these to store the GL List, so we don't have to load it several times:
-   
-    
-	//We'll use these to store the location List, so we don't have to load it several times:
-    
+	public static final String TOGGLE_NONINVENTORY_BUTTON_NAME = "NONINVTOGGLE";
+	public static final String TOGGLE_TO_NONINVENTORY_LABEL = "Change to NON-INVENTORY item";
+	public static final String TOGGLE_TO_INVENTORY_LABEL = "Change to INVENTORY item";
+	public static final String GET_MOST_RECENT_COST_BUTTON = "GETMOSTRECENTCOST";
+	public static final String GET_MOST_RECENT_COST_BUTTON_LABEL = "Get most recent cost";
+	public static final String GET_VENDOR_ITEM_NO_BUTTON = "GETVENDORITEM";
+	public static final String GET_VENDOR_ITEM_NO_BUTTON_LABEL = "Get vendor item info";
+	public static final String FIND_ITEM_BUTTON = "FINDITEM";
+	public static final String FIND_ITEM_BUTTON_LABEL = "Find item";
+	public static final String CREATE_ITEM_BUTTON = "CREATEITEMFROMPO";
+	public static final String CREATE_ITEM_BUTTON_LABEL = "Create item";
+	public static final String ADD_ITEM_TO_ORDER_BUTTON = "ADDITEMTOORDER";
+	public static final String ADD_ITEM_TO_ORDER_BUTTON_LABEL = "Add item to order";
+	public static final String UPDATEANDADD_BUTTON = "UPDATEANDADD";
+	public static final String UPDATEANDADD_LABEL = "Save line and add another";
+	public static final String UPDATE_LABEL = "Save line";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

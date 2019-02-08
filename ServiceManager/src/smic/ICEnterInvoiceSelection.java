@@ -18,6 +18,7 @@ public class ICEnterInvoiceSelection extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClassName = "smic.ICEnterInvoiceEdit";
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

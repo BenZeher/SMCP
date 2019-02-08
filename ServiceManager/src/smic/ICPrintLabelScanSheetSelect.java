@@ -16,14 +16,13 @@ import ConnectionPool.WebContextParameters;
 import ServletUtilities.clsManageRequestParameters;
 
 public class ICPrintLabelScanSheetSelect extends HttpServlet {
-
+	
+	private static final long serialVersionUID = 1L;
 	public static final String PARAM_STARTINGITEM = "STARTINGITEM";
 	public static final String PARAM_ENDINGITEM = "ENDINGITEM";
 	public static final String PRINT_BUTTON = "PRINTBUTTON";
 	public static final String PRINT_BUTTON_LABEL = "Print scan sheet";
-	
-	private static final long serialVersionUID = 1L;
-	private static String sCalledClassName = "ICPrintLabelScanSheetAction";
+	private static final String sCalledClassName = "ICPrintLabelScanSheetAction";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

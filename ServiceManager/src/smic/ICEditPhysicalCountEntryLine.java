@@ -25,18 +25,7 @@ import smcontrolpanel.SMUtilities;
 
 public class ICEditPhysicalCountEntryLine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	private static final String sObjectName = "Line";
-	
-
-
-	//We'll use these to store the location List, so we don't have to load it several times:
-    //private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-    //private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
-    
-    //Cost bucket array lists:
-    //private ArrayList<String> m_sGLAccountValues = new ArrayList<String>();
-    //private ArrayList<String> m_sGLAccountDescriptions = new ArrayList<String>();
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

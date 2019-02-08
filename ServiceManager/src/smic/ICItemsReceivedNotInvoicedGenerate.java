@@ -30,10 +30,7 @@ public class ICItemsReceivedNotInvoicedGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	//formats
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -61,6 +58,11 @@ public class ICItemsReceivedNotInvoicedGenerate extends HttpServlet {
 	    
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
+	    //local variables
+		
+		String sWarning = "";
+		String sCallingClass = "";
+		
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 

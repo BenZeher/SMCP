@@ -20,7 +20,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICOnHandByDescriptionSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
-	public static String TEXTSNIP_PARAM = "TEXTSNIP_PARAM";
+	public static final String TEXTSNIP_PARAM = "TEXTSNIP_PARAM";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

@@ -20,7 +20,6 @@ import smcontrolpanel.SMUtilities;
 public class ICEditVendorItemsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-
 	public static final String VENDORITEMARRAY = "VENDORITEMARRAY";
 	
 	public void doPost(HttpServletRequest request,

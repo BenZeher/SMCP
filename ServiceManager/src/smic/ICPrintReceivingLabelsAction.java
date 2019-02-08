@@ -29,15 +29,11 @@ import ServletUtilities.clsStringFunctions;
 public class ICPrintReceivingLabelsAction extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-	private String sCallingClass = "";
-
-	
-	public static String PARAM_NUMBEROFDIFFERENTLABELS = "NUMBEROFDIFFERENTLABELS";
-	public static String PARAM_ITEMNUMMARKER = "ITEMNUM";
-	public static String PARAM_QTYMARKER = "QTY";
-	public static String PARAM_NUMPIECESMARKER = "NUMPIECES";
-	public static String PARAM_PONUMBER = "PONUMBER";
+	public static final String PARAM_NUMBEROFDIFFERENTLABELS = "NUMBEROFDIFFERENTLABELS";
+	public static final String PARAM_ITEMNUMMARKER = "ITEMNUM";
+	public static final String PARAM_QTYMARKER = "QTY";
+	public static final String PARAM_NUMPIECESMARKER = "NUMPIECES";
+	public static final String PARAM_PONUMBER = "PONUMBER";
 	
 	private boolean bDebugMode = false;
 
@@ -60,6 +56,7 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    
+		String sCallingClass = "";
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    
@@ -140,31 +137,37 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 	    //Special case - it's a request to 'Validate' the line:
 		//If it's an edit, process that:
 	    if(request.getParameter(ICPrintReceivingLabelsGenerate.BUTTONSAVE_NAME) != null){
-	    	if (!processUpdate(request, sDBID, sUserName, arrItemNumbers, arrNumberOfLabels)){
-        		response.sendRedirect(
+	    	try {
+	    		processUpdate(request, sDBID, sUserName, arrItemNumbers, arrNumberOfLabels);
+	    		response.sendRedirect(
+	    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+	    				+ "Status=" + "Number of labels on items successfully updated."
+	    				+ sQueryString
+	    			);
+	    			return;	
+	    	}catch(Exception e) {
+	    		response.sendRedirect(
         				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smic.ICPrintReceivingLabelsSelection" + "?"
-        				+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+        				+ "Warning=" + clsServletUtilities.URLEncode(e.getMessage())
         				+ sQueryString
         		);			
             	return;
-	    	}else{
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Status=" + "Number of labels on items successfully updated."
-    				+ sQueryString
-    			);
-    			return;
 	    	}		
 	    }
+	   
 	    if(request.getParameter(ICPrintReceivingLabelsGenerate.BUTTONPRINT_NAME) != null){
-	    	if (!printLabels(sLabelPrinterID, bPrintToPrinter, request, sDBID, sUserName, response)){
+	    	try {
+	    		printLabels(sLabelPrinterID, bPrintToPrinter, request, sDBID, sUserName, response);
+	    		
+	    	}catch(Exception e){
 	    		response.sendRedirect(
-	    			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-	    			+ "Warning=" + "Error printing labels: " + clsServletUtilities.URLEncode(sWarning)
-	    			+ sQueryString
-	    		);
-	    		return;
+		    			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+		    			+ "Warning=" + "Error printing labels: " + clsServletUtilities.URLEncode(e.getMessage())
+		    			+ sQueryString
+		    		);
+		    		return;
 	    	}
+
 	    	if (bPrintToPrinter){
         		response.sendRedirect(
         				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smic.ICPrintReceivingLabelsSelection" + "?"
@@ -177,41 +180,32 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 	    }
 	    return;
 	}
-	private boolean processUpdate(
+	private void processUpdate(
 			HttpServletRequest req, 
 			String sDBID, 
 			String sUser, 
 			ArrayList<String>arrItemNumbers,
 			ArrayList<String>arrNumberOfLabels
-			){
-		
+			) throws Exception{
 		Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", sUser);
 		if (conn == null){
-			sWarning = "Could not open data connection";
-			return false;
+			throw new Exception("Could not open data connection");
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			sWarning = "Could not open data connection";
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080952]");
-			return false;
+			throw new Exception("Could not open data connection");
 		}
 
 		//Process updates here:
 		//Verify the number of labels:
-		boolean bAllQtysAreValid = true;
 		for (int i = 0; i < arrNumberOfLabels.size(); i++){
 			try{
 				arrNumberOfLabels.set(i, arrNumberOfLabels.get(i).trim().replace(",", ""));
 			}catch(NumberFormatException e){
-				sWarning += "Qty '" + arrNumberOfLabels.get(i).trim().replace(",", "") + "' is not valid "
-					+ "for item number '" + arrItemNumbers.get(i) + "'.  <BR>";
-				bAllQtysAreValid = false;
+				throw new Exception("Qty '" + arrNumberOfLabels.get(i).trim().replace(",", "") + "' is not valid "
+					+ "for item number '" + arrItemNumbers.get(i) + "'.  <BR>");
 			}
-		}
-		
-		if (!bAllQtysAreValid){
-			return false;
 		}
 		
 		String SQL = "";
@@ -228,28 +222,26 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 				Statement stmt = conn .createStatement();
 				stmt.execute(SQL);
 			}catch (SQLException e){
-				sWarning = "Error with SQL: " + SQL + " - " + e.getMessage();
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080953]");
-				return false;
+				throw new Exception("Error with SQL: " + SQL + " - " + e.getMessage());
+				
 			}
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			sWarning = "Could not commit data transaction";
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080954]");
-			return false;
+			throw new Exception("Could not commit data transaction");
 		}
-
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080955]");
-		return true;
 	}
-	private boolean printLabels(
+	
+	private void printLabels(
 			String sLabelPrinterID,
 			boolean bPrintToPrinter,
 			HttpServletRequest req, 
 			String sDBID, 
 			String sUser, 
-			HttpServletResponse res){
+			HttpServletResponse res) throws Exception{
 	    ArrayList <String> sItemNumbers = new ArrayList<String>(0);
 	    ArrayList<Integer> iLabelQuantities = new ArrayList<Integer>(0);
 	    ArrayList<Integer> iPieceQuantities = new ArrayList<Integer>(0);
@@ -261,10 +253,9 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 			iNumberOfDifferentLabels 
 				= Integer.parseInt(clsManageRequestParameters.get_Request_Parameter(PARAM_NUMBEROFDIFFERENTLABELS, req));
 		} catch (NumberFormatException e1) {
-			sWarning = PARAM_NUMBEROFDIFFERENTLABELS + " parameter value '" 
+			throw new Exception(PARAM_NUMBEROFDIFFERENTLABELS + " parameter value '" 
 				+ clsManageRequestParameters.get_Request_Parameter(PARAM_NUMBEROFDIFFERENTLABELS, req)
-				+ "' is invalid.";
-    		return false;
+				+ "' is invalid.");
 		}
 	    //number of different labels.
 	    for (int i = 1; i < iNumberOfDifferentLabels + 1; i++){
@@ -286,12 +277,11 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 	    			try{
 	    				bdQty = new BigDecimal(sQty.replace(",", ""));
 	    			}catch (NumberFormatException e){
-	    				sWarning = "Invalid qty on item '" 
+	    				throw new Exception("Invalid qty on item '" 
 	    				+ clsManageRequestParameters.get_Request_Parameter(
 	    		    		PARAM_ITEMNUMMARKER + Integer.toString(i), req).toUpperCase()
-	    		    	+ "'."
+	    		    	+ "'.")
 	    				;
-	    				return false;
 	    			}
 	    		}
 
@@ -319,12 +309,11 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 	    			try{
 	    				bdPieceQty = new BigDecimal(sPieceQty.replace(",", ""));
 	    			}catch (NumberFormatException e){
-	    				sWarning = "Invalid label qty on item '" 
+	    				throw new Exception("Invalid label qty on item '" 
 	    				+ clsManageRequestParameters.get_Request_Parameter(
 	    		    		PARAM_ITEMNUMMARKER + Integer.toString(i), req).toUpperCase()
-	    		    	+ "'."
+	    		    	+ "'.")
 	    				;
-	    				return false;
 	    			}
 	    		}
 
@@ -340,24 +329,22 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 					iLabelQuantities.add(
 						Integer.parseInt(clsManageBigDecimals.BigDecimalToFormattedString("#########", bdRoundedQty)));
 				} catch (NumberFormatException e1) {
-    				sWarning = "Invalid rounded qty: '" +  bdRoundedQty + "' on item '" 
+					throw new Exception("Invalid rounded qty: '" +  bdRoundedQty + "' on item '" 
 	    				+ clsManageRequestParameters.get_Request_Parameter(
 	    		    		PARAM_ITEMNUMMARKER + Integer.toString(i), req).toUpperCase()
-	    		    	+ "'."
+	    		    	+ "'.")
 	    				;
-	    				return false;
 				}
 
 	    		try {
 					iPieceQuantities.add(
 						Integer.parseInt(clsManageBigDecimals.BigDecimalToFormattedString("#########", bdPieceQty)));
 				} catch (NumberFormatException e1) {
-    				sWarning = "Invalid label qty: '" +  bdPieceQty + "' on item '" 
+					throw new Exception("Invalid label qty: '" +  bdPieceQty + "' on item '" 
 	    				+ clsManageRequestParameters.get_Request_Parameter(
 	    		    		PARAM_ITEMNUMMARKER + Integer.toString(i), req).toUpperCase()
-	    		    	+ "'."
+	    		    	+ "'.")
 	    				;
-	    				return false;
 				}
 
 	    }
@@ -370,8 +357,7 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
     	Connection conn = clsDatabaseFunctions.getConnection(
         	getServletContext(), sDBID, sDatabaseType, "smic.ICPrintUPCAction");
     	if (conn == null){
-    		sWarning = "Unable to get data connection.";
-        	return false;
+    		throw new Exception("Unable to get data connection.");
     	}
     	
     	//Print the first line of the HTML:
@@ -380,8 +366,7 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
 		try {
 			out = res.getWriter();
 		} catch (IOException e) {
-    		sWarning = "Unable to initialize PrintWriter - " + e.getMessage() + ".";
-        	return false;
+			throw new Exception("Unable to initialize PrintWriter - " + e.getMessage() + ".");
         }
     	
 		//Print the beginning of the HTML:
@@ -415,16 +400,14 @@ public class ICPrintReceivingLabelsAction extends HttpServlet{
     			getServletContext())
     	){
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080950]");
-				sWarning = pupc.getErrorMessage();
 				out.println("Error printing labels - " + pupc.getErrorMessage() + ".");
-				return false;
+				throw new Exception(pupc.getErrorMessage());
 	    }else{
 	    	//out.println("NO Error printing labels.");
 	    }
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080951]");
 	    out.println("</BODY></HTML>");
 		
-		return true;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

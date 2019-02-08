@@ -15,8 +15,7 @@ import javax.servlet.http.HttpSession;
 public class ICOptionUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private ICOption m_icoption;
-	private ICOptionInput m_icoptioninput;
+
 
 	//HttpServletRequest parameters:
 	
@@ -40,8 +39,9 @@ public class ICOptionUpdate extends HttpServlet{
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
     
+		ICOption m_icoption;
+		ICOptionInput m_icoptioninput = new ICOptionInput(request);
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
 	    //Instantiate a new entry:
 	    m_icoption = new ICOption();
 	    
@@ -87,11 +87,6 @@ public class ICOptionUpdate extends HttpServlet{
 			);
 	        return;
 		}
-	}
-	private void getRequestParameters(
-    	HttpServletRequest req){
-
-		m_icoptioninput = new ICOptionInput(req);
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

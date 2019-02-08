@@ -18,8 +18,8 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICUpdateMostRecentCostEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sObjectName = "Most Recent Cost";
-	private static String sCalledClassName = "ICUpdateMostRecentCostAction";
+	private static final String sObjectName = "Most Recent Cost";
+	private static final String sCalledClassName = "ICUpdateMostRecentCostAction";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

@@ -22,16 +22,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICPrintPhysicalInventoryVarianceReport extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	//formats
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
-	private boolean bOnlyShowVariances = false;
-	private boolean bSummaryOnly = false;
-	private boolean bInactiveOnly = false;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -56,6 +47,13 @@ public class ICPrintPhysicalInventoryVarianceReport extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
+	    //local variables
+		String sWarning = "";
+		String sCallingClass = "";
+		boolean bOnlyShowVariances = false;
+		boolean bSummaryOnly = false;
+		boolean bInactiveOnly = false;
+		
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 

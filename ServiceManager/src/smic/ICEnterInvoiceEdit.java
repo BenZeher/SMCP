@@ -31,51 +31,51 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static String INPUT_RECEIPT_FIELD = "INPUTRECEIPTID";
-	public static String ADD_RECEIPT_BUTTON_NAME = "ADDRECEIPT";
-	public static String ADD_RECEIPT_BUTTON_LABEL = "Add receipt";
+	public static final String INPUT_RECEIPT_FIELD = "INPUTRECEIPTID";
+	public static final String ADD_RECEIPT_BUTTON_NAME = "ADDRECEIPT";
+	public static final String ADD_RECEIPT_BUTTON_LABEL = "Add receipt";
 	//public static String FOUND_RECEIPT_PARAMETER = "FOUNDRECEIPTID";
-	public static String FIND_RECEIPT_BUTTON_NAME = "FINDRECEIPT";
-	public static String FIND_RECEIPT_BUTTON_LABEL = "Find receipt ID for UNINVOICED receipts";
+	public static final String FIND_RECEIPT_BUTTON_NAME = "FINDRECEIPT";
+	public static final String FIND_RECEIPT_BUTTON_LABEL = "Find receipt ID for UNINVOICED receipts";
 	
-	public static String UPDATE_VENDOR_BUTTON_NAME = "UPDATEVENDOR";
-	public static String UPDATE_VENDOR_BUTTON_LABEL = "Update vendor to match invoice";
-	public static String UPDATE_VENDOR_CONFIRM_CHECKBOX = "UPDATEVENDORCONFIRM";
-	public static String UPDATE_VENDOR_CONFIRM_LABEL = "Confirm vendor update";
+	public static final String UPDATE_VENDOR_BUTTON_NAME = "UPDATEVENDOR";
+	public static final String UPDATE_VENDOR_BUTTON_LABEL = "Update vendor to match invoice";
+	public static final String UPDATE_VENDOR_CONFIRM_CHECKBOX = "UPDATEVENDORCONFIRM";
+	public static final String UPDATE_VENDOR_CONFIRM_LABEL = "Confirm vendor update";
 	
-	public static String REMOVE_RECEIPT_LINE_BUTTON_NAME = "REMOVELINE";
-	public static String REMOVE_RECEIPT_LINE_BUTTON_LABEL = "Delete";
+	public static final String REMOVE_RECEIPT_LINE_BUTTON_NAME = "REMOVELINE";
+	public static final String REMOVE_RECEIPT_LINE_BUTTON_LABEL = "Delete";
 	
-	public static String FOUND_VENDOR_PARAMETER = "FOUND" + ICPOInvoice.ParamsVendor;
-	public static String FIND_VENDOR_BUTTON_NAME = "FINDVENDOR";
-	public static String FIND_VENDOR_BUTTON_LABEL = "Find vendor";
+	public static final String FOUND_VENDOR_PARAMETER = "FOUND" + ICPOInvoice.ParamsVendor;
+	public static final String FIND_VENDOR_BUTTON_NAME = "FINDVENDOR";
+	public static final String FIND_VENDOR_BUTTON_LABEL = "Find vendor";
 	
-	public static String REFRESH_VENDOR_INFO_PARAMETER = "REFRESH" + ICPOInvoice.ParamsVendor;
-	public static String REFRESH_VENDOR_INFO_BUTTON_NAME = "REFRESHVENDORINFO";
-	public static String REFRESH_VENDOR_INFO_BUTTON_LABEL = "Update vendor info";
+	public static final String REFRESH_VENDOR_INFO_PARAMETER = "REFRESH" + ICPOInvoice.ParamsVendor;
+	public static final String REFRESH_VENDOR_INFO_BUTTON_NAME = "REFRESHVENDORINFO";
+	public static final String REFRESH_VENDOR_INFO_BUTTON_LABEL = "Update vendor info";
 	
-	public static String CALCULATE_TERMS_PARAMETER = "CALCULATETERMS";
-	public static String CALCULATE_TERMS_BUTTON_NAME = "CALCULATETERMSBUTTON";
-	public static String CALCULATE_TERMS_BUTTON_LABEL = "Re-calculate terms";
+	public static final String CALCULATE_TERMS_PARAMETER = "CALCULATETERMS";
+	public static final String CALCULATE_TERMS_BUTTON_NAME = "CALCULATETERMSBUTTON";
+	public static final String CALCULATE_TERMS_BUTTON_LABEL = "Re-calculate terms";
 	
-	public static String INVOICE_ALL_LINES_PARAMETER = "INVOICEALLLINESPARAM";
-	public static String INVOICE_ALL_LINES_BUTTON_NAME = "INVOICEALLLINESBUTTON";
-	public static String INVOICE_ALL_LINES_BUTTON_LABEL = "Invoice all receipt lines";
+	public static final String INVOICE_ALL_LINES_PARAMETER = "INVOICEALLLINESPARAM";
+	public static final String INVOICE_ALL_LINES_BUTTON_NAME = "INVOICEALLLINESBUTTON";
+	public static final String INVOICE_ALL_LINES_BUTTON_LABEL = "Invoice all receipt lines";
 	
-	public static String RECALCULATETOTALS_PARAMETER = "RECALCULATETOTALSPARAM";
-	public static String RECALCULATETOTALS_BUTTON_NAME = "RECALCULATETOTALSBUTTON";
-	public static String RECALCULATETOTALS_BUTTON_LABEL = "Recalculate line totals";
+	public static final String RECALCULATETOTALS_PARAMETER = "RECALCULATETOTALSPARAM";
+	public static final String RECALCULATETOTALS_BUTTON_NAME = "RECALCULATETOTALSBUTTON";
+	public static final String RECALCULATETOTALS_BUTTON_LABEL = "Recalculate line totals";
 
-	public static String PO_INVOICE_ENTRY_OBJECT = "POINVOICEOBJECT";
-	public static String NUMBER_OF_LINES = "NUMBEROFLINES";
+	public static final String PO_INVOICE_ENTRY_OBJECT = "POINVOICEOBJECT";
+	public static final String NUMBER_OF_LINES = "NUMBEROFLINES";
 	
-	public static String FIND_EXPENSE_ACCT_PARAMETER = "FINDGLEXPENSEACCT";
-	public static String FIND_EXPENSE_ACCT_LABEL = "Find GL Acct";
+	public static final String FIND_EXPENSE_ACCT_PARAMETER = "FINDGLEXPENSEACCT";
+	public static final String FIND_EXPENSE_ACCT_LABEL = "Find GL Acct";
 	
-	public static String ADD_NEW_LINE_PARAMETER = "ADDNEWLINE";
-	public static String ADD_NEW_LINE_LABEL = "Add New Line";
+	public static final String ADD_NEW_LINE_PARAMETER = "ADDNEWLINE";
+	public static final String ADD_NEW_LINE_LABEL = "Add New Line";
 	
-	public static String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
+	public static final String TAX_DROP_DOWN_PARAM = "TAXDROPDOWN";
 	
 	private boolean bDebugMode = false;
 	

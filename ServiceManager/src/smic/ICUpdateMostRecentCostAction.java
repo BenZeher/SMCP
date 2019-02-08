@@ -19,9 +19,8 @@ import smcontrolpanel.SMUtilities;
 public class ICUpdateMostRecentCostAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	
-	private static String m_sWarning = "";
 	private boolean bDebugMode = false;
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -46,19 +45,20 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sPhysicalInventoryID = clsManageRequestParameters.get_Request_Parameter(
 	    	ICPhysicalInventoryEntry.ParamID, request);
-	    
 		//Try to update the item:
-		if (!updateItemCost(sItemNumber, sMostRecentCost, sDBID, sUserFullName)){
+		try {
+			updateItemCost(sItemNumber, sMostRecentCost, sDBID, sUserFullName);
+		}catch(Exception e) {
 			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-				+ "?" + ICItem.ParamItemNumber + "=" + sItemNumber
-				+ "&" + ICItem.ParamMostRecentCost + "=" + sMostRecentCost
-				+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
-				+ "&Warning=" + m_sWarning
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			);
-		}else{
-			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?" + ICItem.ParamItemNumber + "=" + sItemNumber
+					+ "&" + ICItem.ParamMostRecentCost + "=" + sMostRecentCost
+					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
+					+ "&Warning=" + e.getMessage()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+		}
+		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?" + ICItem.ParamItemNumber + "=" + sItemNumber
 				+ "&" + ICItem.ParamMostRecentCost + "=" + sMostRecentCost
@@ -66,10 +66,9 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 				+ "&Status=" + "Cost updated successfully."
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
-		}
 		return;
 	}
-	private boolean updateItemCost(String sItem, String sMostRecentCost, String sDBID, String sUserFullName){
+	private void updateItemCost(String sItem, String sMostRecentCost, String sDBID, String sUserFullName) throws Exception{
 		
 		//Make sure the most recent cost is ONLY to two decimal places:
 		BigDecimal bdMRC = new BigDecimal(0);
@@ -106,16 +105,12 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".updateItemCost - user: " + sUserFullName
 			)){
-				m_sWarning = "Error updating item number '" + sItem + "' with most recent cost " + sMostRecentCost
-					+ ".";
-				return false;
-			}else{
-				return true;
+				throw new Exception("Error updating item number '" + sItem + "' with most recent cost " + sMostRecentCost
+					+ ".");
 			}
 		} catch (SQLException e) {
-			m_sWarning = "Error updating item number '" + sItem + "' with most recent cost " + sMostRecentCost
-			+ " - error = " + e.getMessage();
-			return false;		
+			throw new Exception("Error updating item number '" + sItem + "' with most recent cost " + sMostRecentCost
+			+ " - error = " + e.getMessage());
 		}
 	}
 	public void doGet(HttpServletRequest request,

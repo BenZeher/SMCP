@@ -22,10 +22,8 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
 public class ICEditPhysicalCountLine extends HttpServlet {
-
-	public static final String PARAM_INCLUDE_NEW_ITEMS = "ADDNEWITEMS";
-	
 	private static final long serialVersionUID = 1L;
+	public static final String PARAM_INCLUDE_NEW_ITEMS = "ADDNEWITEMS";
 	
 	public void doPost(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {

@@ -24,8 +24,8 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 
 	private String m_sErrorMessage;
 	private boolean bDebugMode = false;
-	private static String COMPANY_NAME_FIELD = "COMPANYNAME";
-	private static String LOCALCOMPANYMARKER = "(LOCAL)";
+	private static final String COMPANY_NAME_FIELD = "COMPANYNAME";
+	private static final String LOCALCOMPANYMARKER = "(LOCAL)";
 	public ICOnHandByDescriptionReport(
 	){
 		m_sErrorMessage = "";

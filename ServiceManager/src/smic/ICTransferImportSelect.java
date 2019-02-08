@@ -15,11 +15,8 @@ import smcontrolpanel.SMUtilities;
 public class ICTransferImportSelect extends HttpServlet {
 	public static final String PARAM_INCLUDES_HEADER_ROW = "IncludesHeaderRow";
 	private static final long serialVersionUID = 1L;
-	private static String sICTransferImportSelectCalledClassName = "ICTransferImportAction";
+	private static final String sICTransferImportSelectCalledClassName = "ICTransferImportAction";
 
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sBatchType;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -38,9 +35,14 @@ public class ICTransferImportSelect extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    get_request_parameters(request);
+		
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamBatchNumber, request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamEntryNumber, request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamBatchType, request);
+		
 	    String title = "Import inventory transfers.";
 	    String subtitle = "";
+	    
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    
 		//If there is a warning from trying to input previously, print it here:
@@ -139,11 +141,7 @@ public class ICTransferImportSelect extends HttpServlet {
 		out.println("</FORM>");
 		out.println("</BODY></HTML>");
 	}
-	private void get_request_parameters(HttpServletRequest req){
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamBatchNumber, req);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamEntryNumber, req);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter(ICEntry.ParamBatchType, req);
-	}
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

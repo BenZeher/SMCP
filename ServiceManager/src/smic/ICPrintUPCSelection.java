@@ -26,7 +26,7 @@ public class ICPrintUPCSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final int NUMBER_OF_ROWS_TO_DISPLAY = 50;
 	private static final int NUMBER_OF_COLUMNS_TO_DISPLAY = 2;
-	private static String sCalledClassName = "ICPrintUPCAction";
+	private static final String sCalledClassName = "ICPrintUPCAction";
 
 	public static final String BUTTON_PRINT_LABELS = "Printlabels";
 	public static final String BUTTON_PRINT_LABELS_LABEL = "Print labels";

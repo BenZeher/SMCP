@@ -20,12 +20,11 @@ import smcontrolpanel.SMUtilities;
 public class ICPrintUPCAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
 
-	public static String PARAM_NUMBEROFDIFFERENTLABELS = "NUMBEROFDIFFERENTLABELS";
-	public static String PARAM_ITEMNUMMARKER = "ITEMNUM";
-	public static String PARAM_QTYMARKER = "QTY";
-	public static String PARAM_NUMPIECESMARKER = "NUMPIECES";
+	public static final String PARAM_NUMBEROFDIFFERENTLABELS = "NUMBEROFDIFFERENTLABELS";
+	public static final String PARAM_ITEMNUMMARKER = "ITEMNUM";
+	public static final String PARAM_QTYMARKER = "QTY";
+	public static final String PARAM_NUMPIECESMARKER = "NUMPIECES";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -48,9 +47,7 @@ public class ICPrintUPCAction extends HttpServlet {
 
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-
-		//System.out.println("[1539289073] - Param = '" + clsManageRequestParameters.get_Request_Parameter(ICPrintUPCSelection.BUTTON_POPULATE_ITEMS, request) + "'");
-		//System.out.println("[1539289074] - Param = '" + clsManageRequestParameters.get_Request_Parameter(ICPrintUPCSelection.BUTTON_POPULATE_ITEMS_LABEL, request) + "'");
+		String sWarning = "";
 		
 		//If the user chose to POPULATE items:
 		if (clsManageRequestParameters.get_Request_Parameter(ICPrintUPCSelection.BUTTON_POPULATE_ITEMS, request).compareTo("") != 0){

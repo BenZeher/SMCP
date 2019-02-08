@@ -25,31 +25,13 @@ import smcontrolpanel.SMUtilities;
 
 public class ICEditReceiptLine extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-
 	private static final String sObjectName = "Line";
-	
-	private ICEntryLine m_line;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning;
-	private PrintWriter m_pwOut;
-	private HttpServletRequest m_hsrRequest;
-
-	//We'll use these to store the location List, so we don't have to load it several times:
-    private ArrayList<String> m_sLocationValues = new ArrayList<String>();
-    private ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
-    
-    //Cost bucket array lists:
-    private ArrayList<String> m_sCategoryValues = new ArrayList<String>();
-    private ArrayList<String> m_sCategoryDescriptions = new ArrayList<String>();
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		m_pwOut = response.getWriter();
+		PrintWriter m_pwOut = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 
@@ -67,8 +49,14 @@ public class ICEditReceiptLine extends HttpServlet {
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		
-		m_hsrRequest = request;
-	    get_request_parameters();
+	    //local variables
+	    ICEntryLine m_line;
+		HttpServletRequest m_hsrRequest = request;
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
 	    
 	    //Try to load the line:
 	    if (CurrentSession.getAttribute("EntryLine") != null){
@@ -122,8 +110,101 @@ public class ICEditReceiptLine extends HttpServlet {
 	    		+ "\">Return to Edit Entry " + m_sEntryNumber + "</A><BR><BR>");
 		
 		//Try to construct the rest of the screen form from the AREntryInput object:
-		//TODO - create the edit line form:
-		if (!createFormFromLineInput(sDBID, sUserID, sUserFullName)){
+		//load location values.
+	    ArrayList<String> m_sLocationValues = new ArrayList<String>();
+		ArrayList<String> m_sLocationDescriptions = new ArrayList<String>();
+		m_sLocationValues.clear();
+        m_sLocationDescriptions.clear();
+        try{
+	        String sSQL = "SELECT "
+	        	+ SMTablelocations.sLocation
+	        	+ ", " + SMTablelocations.sLocationDescription
+	        	+ " FROM " + SMTablelocations.TableName
+	        	+ " ORDER BY " + SMTablelocations.sLocation;
+
+	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	sDBID,
+		        	"MySQL",
+		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsLocations.next()){
+	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
+	        	m_sLocationDescriptions.add(
+	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
+	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
+			}
+	        rsLocations.close();
+
+		}catch (SQLException ex){
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEntry"
+					+ "?BatchNumber=" + m_sBatchNumber
+					+ "&BatchEntry=" + m_sEntryNumber
+					+ "&BatchType=" + m_sBatchType
+					+ "Editable=Yes"
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&Warning=" + ex.getMessage());
+			return;
+		}
+        
+        //Load categories
+      	ArrayList<String> m_sCategoryValues = new ArrayList<String>();
+      	ArrayList<String> m_sCategoryDescriptions = new ArrayList<String>();
+        m_sCategoryValues.clear();
+        m_sCategoryDescriptions.clear();
+        try{
+	        String sSQL = "SELECT "
+	        	+ SMTableiccategories.sCategoryCode
+	        	+ ", " + SMTableiccategories.sDescription
+	        	+ " FROM " + SMTableiccategories.TableName
+	        	+ " ORDER BY " + SMTableiccategories.sCategoryCode;
+
+	        ResultSet rsCategories = clsDatabaseFunctions.openResultSet(
+		        	sSQL, 
+		        	getServletContext(), 
+		        	sDBID,
+		        	"MySQL",
+		        	this.toString() + ".loadCategoryList (1) - User: " + sUserFullName);
+	        
+			//Print out directly so that we don't waste time appending to string buffers:
+	        while (rsCategories.next()){
+	        	m_sCategoryValues.add((String) rsCategories.getString(SMTableiccategories.sCategoryCode).trim());
+	        	m_sCategoryDescriptions.add(
+	        		(String) rsCategories.getString(SMTableiccategories.sCategoryCode).trim() 
+	        			+ " - " + (String) rsCategories.getString(SMTableiccategories.sDescription).trim());
+			}
+	        rsCategories.close();
+
+		}catch (SQLException ex){
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEntry"
+					+ "?BatchNumber=" + m_sBatchNumber
+					+ "&BatchEntry=" + m_sEntryNumber
+					+ "&BatchType=" + m_sBatchType
+					+ "Editable=Yes"
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&Warning=" + ex.getMessage());
+			return;
+		}
+		if (!createFormFromLineInput(
+				m_pwOut, 
+				m_line, 
+				m_sBatchNumber, 
+				m_sEntryNumber, 
+				m_sLineNumber, 
+				m_sBatchType,
+				m_sLocationValues,
+				m_sLocationDescriptions,
+				m_sCategoryValues,
+				m_sCategoryDescriptions,
+				m_hsrRequest, 
+				sDBID, 
+				sUserID, 
+				sUserFullName)
+				){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEntry"
 					+ "?BatchNumber=" + m_sBatchNumber
@@ -138,7 +219,21 @@ public class ICEditReceiptLine extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private boolean createFormFromLineInput(String sDBID, String sUserID, String sUserFullName){
+	private boolean createFormFromLineInput(
+			PrintWriter m_pwOut,
+			ICEntryLine m_line,
+			String m_sBatchNumber,
+			String m_sEntryNumber,
+			String m_sLineNumber,
+			String m_sBatchType,
+			ArrayList<String> m_sLocationValues,
+			ArrayList<String> m_sLocationDescriptions,
+			ArrayList<String> m_sCategoryValues,
+			ArrayList<String> m_sCategoryDescriptions,
+			HttpServletRequest m_hsrRequest,
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName){
 		
 	    //Start the entry edit form:
 		m_pwOut.println("<FORM NAME='ENTRYEDIT' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICReceiptLineUpdate' METHOD='POST'>");
@@ -150,12 +245,6 @@ public class ICEditReceiptLine extends HttpServlet {
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + "ICEditReceiptLine" + "'>");
 		m_pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ICEntryLine.ParamReceiptLineID 
 				+ "' VALUE='" + m_line.sReceiptLineID() + "'>");
-	    if (!loadCategoryList(sDBID, sUserID, sUserFullName)){
-	    	return false;
-	    }
-	    if (!loadLocationList(sDBID, sUserID, sUserFullName)){
-	    	return false;
-	    }
 
     	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
     			+ ICEntryLine.ParamLineEntryID 
@@ -391,88 +480,6 @@ public class ICEditReceiptLine extends HttpServlet {
 		return true;
 	}
 
-	private void get_request_parameters(){
- 
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", m_hsrRequest);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", m_hsrRequest);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
-		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-		
-	}
-
-	private boolean loadCategoryList(String sDBID, String sUserID, String sUserFulName){
-        m_sCategoryValues.clear();
-        m_sCategoryDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTableiccategories.sCategoryCode
-	        	+ ", " + SMTableiccategories.sDescription
-	        	+ " FROM " + SMTableiccategories.TableName
-	        	+ " ORDER BY " + SMTableiccategories.sCategoryCode;
-
-	        ResultSet rsCategories = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadCategoryList (1) - User: " + sUserFulName);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsCategories.next()){
-	        	m_sCategoryValues.add((String) rsCategories.getString(SMTableiccategories.sCategoryCode).trim());
-	        	m_sCategoryDescriptions.add(
-	        		(String) rsCategories.getString(SMTableiccategories.sCategoryCode).trim() 
-	        			+ " - " + (String) rsCategories.getString(SMTableiccategories.sDescription).trim());
-			}
-	        rsCategories.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
-	private boolean loadLocationList(String sDBID, String sUserID, String sUserFullName){
-        m_sLocationValues.clear();
-        m_sLocationDescriptions.clear();
-        try{
-	        String sSQL = "SELECT "
-	        	+ SMTablelocations.sLocation
-	        	+ ", " + SMTablelocations.sLocationDescription
-	        	+ " FROM " + SMTablelocations.TableName
-	        	+ " ORDER BY " + SMTablelocations.sLocation;
-
-	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
-		        	sSQL, 
-		        	getServletContext(), 
-		        	sDBID,
-		        	"MySQL",
-		        	this.toString() + ".loadLocationList (1) - User: " + sUserFullName);
-	        
-			//Print out directly so that we don't waste time appending to string buffers:
-	        while (rsLocations.next()){
-	        	m_sLocationValues.add((String) rsLocations.getString(SMTablelocations.sLocation).trim());
-	        	m_sLocationDescriptions.add(
-	        		(String) rsLocations.getString(SMTablelocations.sLocation).trim() 
-	        			+ " - " + (String) rsLocations.getString(SMTablelocations.sLocationDescription).trim());
-			}
-	        rsLocations.close();
-
-		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
-	        System.out.println("SQLException: " + ex.getMessage());
-	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
-			return false;
-		}
-		
-		return true;
-	}
 		public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

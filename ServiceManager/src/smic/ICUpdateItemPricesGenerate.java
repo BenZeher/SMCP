@@ -29,9 +29,6 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -59,6 +56,8 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 	   
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
+		String sWarning = "";
+		String sCallingClass = "";
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 
@@ -373,56 +372,58 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 			    	);
     				return;
 				}else{
-					if (!updatePrices(
-							conn,
-							sStartingItem,
-							sEndingItem,
-							sStartingPriceList,
-							sEndingPriceList,
-							sStartingRptGrp1,
-							sEndingRptGrp1,
-							sStartingRptGrp2,
-							sEndingRptGrp2,
-							sStartingRptGrp3,
-							sEndingRptGrp3,
-							sStartingRptGrp4,
-							sEndingRptGrp4,
-							sStartingRptGrp5,
-							sEndingRptGrp5,
-							bPriceLevel0,
-							bPriceLevel1,
-							bPriceLevel2,
-							bPriceLevel3,
-							bPriceLevel4,
-							bPriceLevel5,
-							bUpdateByPercent,
-							sUpdateAmount,
-							sUserFullName,
-							sUserID
-					)){
+					try {
+						updatePrices(
+								conn,
+								sStartingItem,
+								sEndingItem,
+								sStartingPriceList,
+								sEndingPriceList,
+								sStartingRptGrp1,
+								sEndingRptGrp1,
+								sStartingRptGrp2,
+								sEndingRptGrp2,
+								sStartingRptGrp3,
+								sEndingRptGrp3,
+								sStartingRptGrp4,
+								sEndingRptGrp4,
+								sStartingRptGrp5,
+								sEndingRptGrp5,
+								bPriceLevel0,
+								bPriceLevel1,
+								bPriceLevel2,
+								bPriceLevel3,
+								bPriceLevel4,
+								bPriceLevel5,
+								bUpdateByPercent,
+								sUpdateAmount,
+								sUserFullName,
+								sUserID
+						);
+					}catch(Exception e) {
 						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081009]");
 						response.sendRedirect(
 			    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-			    				+ "Warning=" + sWarning
+			    				+ "Warning=" + e.getMessage()
 			    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			    				+ sRedirectParams	
 			    		);			
 			        	return;	
-					}else{
-						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081010]");
-						response.sendRedirect(
-			    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-			    				+ "Status=Prices were successfully updated."
-			    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    				+ sRedirectParams	
-			    		);
-						return;
 					}
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547081010]");
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+			    		+ "Status=Prices were successfully updated."
+			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			    		+ sRedirectParams	
+			    		);
+				return;
+					
 				}
 			}
 		}
 	}
-	private boolean updatePrices(
+	private void updatePrices(
 			Connection conn,
 			String sStartingItem,
 			String sEndingItem,
@@ -448,7 +449,7 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 			String sUpdateAmount,
 			String sUserFullName,
 			String sUserID
-			){
+			) throws Exception{
 		
 		String SQL = "UPDATE "
 			+ SMTableicitemprices.TableName + " LEFT JOIN " 
@@ -569,10 +570,8 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 		try {
 			clsDatabaseFunctions.executeSQL(SQL, conn);
 		} catch (SQLException e) {
-			sWarning = "Error updating prices - " + e.getMessage();
-			return false;
+			throw new Exception("Error updating prices - " + e.getMessage());
 		}
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICUPDATEPRICE, "Successfully updated IC prices", SQL, "[1376509415]");
-		return true;
 	}
 }

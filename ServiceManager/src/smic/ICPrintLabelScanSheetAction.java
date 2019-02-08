@@ -22,8 +22,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICPrintLabelScanSheetAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private String sWarning = "";
-
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -46,6 +44,7 @@ public class ICPrintLabelScanSheetAction extends HttpServlet {
 		
 		//sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sWarning = "";
 		String sStartingItemNumber = clsManageRequestParameters.get_Request_Parameter(
 			ICPrintLabelScanSheetSelect.PARAM_STARTINGITEM, request);
 		String sEndingItemNumber = clsManageRequestParameters.get_Request_Parameter(

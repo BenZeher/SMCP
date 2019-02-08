@@ -26,13 +26,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICItemPriceEdit extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	
-	private String sBasePrice = "";
-	private String sPriceLevel1 = "";
-	private String sPriceLevel2 = "";
-	private String sPriceLevel3 = "";
-	private String sPriceLevel4 = "";
-	private String sPriceLevel5 = "";
 		
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -47,6 +40,13 @@ public class ICItemPriceEdit extends HttpServlet {
 		{
 			return;
 		}
+		
+		String sBasePrice = "";
+		String sPriceLevel1 = "";
+		String sPriceLevel2 = "";
+		String sPriceLevel3 = "";
+		String sPriceLevel4 = "";
+		String sPriceLevel5 = "";
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
@@ -136,8 +136,37 @@ public class ICItemPriceEdit extends HttpServlet {
 		    }
 		}else{
 			//Try to get an existing record, if there is one, display it
+			String SQL = "SELECT"
+					+ " * FROM " + SMTableicitemprices.TableName
+					+ " WHERE ("
+						+ "(" + SMTableicitemprices.sItemNumber + " = '" + sItemNumber + "')"
+						+ " AND (" + SMTableicitemprices.sPriceListCode + " = '" + sPriceListCode + "')"
+					+ ")"
+					;
 			try {
-				if (!readItemPriceRecord(sItemNumber, sPriceListCode, sDBID, sUserName)){
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+						SQL, 
+						getServletContext(), 
+						sDBID, 
+						"MySQL", 
+						SMUtilities.getFullClassName(this.toString()) + ".validateItem - user: " + sUserName
+						);
+				if (rs.next()){
+					sBasePrice = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdBasePrice));
+					sPriceLevel1 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel1Price));
+					sPriceLevel2 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel2Price));
+					sPriceLevel3 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel3Price));
+					sPriceLevel4 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel4Price));
+					sPriceLevel5 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel5Price));
+					rs.close();
+				}else{
+					sBasePrice = "0.00";
+					sPriceLevel1 = "0.00";
+					sPriceLevel2 = "0.00";
+					sPriceLevel3 = "0.00";
+					sPriceLevel4 = "0.00";
+					sPriceLevel5 = "0.00";
+					rs.close();
 				}
 			} catch (SQLException e) {
 				out.println("<B><FONT COLOR=\"RED\">WARNING: " + "Error reading item price record for item: '" 
@@ -147,7 +176,14 @@ public class ICItemPriceEdit extends HttpServlet {
 			    return;
 			}
 		}
-		buildEditFields(out);
+		buildEditFields(
+				out,
+				sBasePrice,
+				sPriceLevel1,
+				sPriceLevel2,
+				sPriceLevel3,
+				sPriceLevel4,
+				sPriceLevel5);
 		
 		out.println("</TABLE>");
 		out.println("<BR>");
@@ -156,52 +192,15 @@ public class ICItemPriceEdit extends HttpServlet {
 	    	
 		out.println("</BODY></HTML>");
 	}
-	private boolean readItemPriceRecord(
-			String sItem, 
-			String sPriceCode, 
-			String sDBID, 
-			String sUser) throws SQLException{
-		
-		String SQL = "SELECT"
-			+ " * FROM " + SMTableicitemprices.TableName
-			+ " WHERE ("
-				+ "(" + SMTableicitemprices.sItemNumber + " = '" + sItem + "')"
-				+ " AND (" + SMTableicitemprices.sPriceListCode + " = '" + sPriceCode + "')"
-			+ ")"
-			;
-		//System.out.println(SQL);
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(
-					SQL, 
-					getServletContext(), 
-					sDBID, 
-					"MySQL", 
-					SMUtilities.getFullClassName(this.toString()) + ".validateItem - user: " + sUser
-					);
-			if (rs.next()){
-				sBasePrice = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdBasePrice));
-				sPriceLevel1 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel1Price));
-				sPriceLevel2 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel2Price));
-				sPriceLevel3 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel3Price));
-				sPriceLevel4 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel4Price));
-				sPriceLevel5 = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableicitemprices.bdLevel5Price));
-				rs.close();
-				return true;
-			}else{
-				sBasePrice = "0.00";
-				sPriceLevel1 = "0.00";
-				sPriceLevel2 = "0.00";
-				sPriceLevel3 = "0.00";
-				sPriceLevel4 = "0.00";
-				sPriceLevel5 = "0.00";
-				rs.close();
-				return false;
-			}
-		} catch (SQLException e) {
-			throw e;
-		}
-	}
-	private void buildEditFields(PrintWriter pwOut){
+	
+	private void buildEditFields(
+			PrintWriter pwOut,
+			String sBasePrice,
+			String sPriceLevel1,
+			String sPriceLevel2,
+			String sPriceLevel3,
+			String sPriceLevel4,
+			String sPriceLevel5){
 		
 		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 			"BasePrice", 

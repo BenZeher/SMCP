@@ -22,9 +22,6 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-	
-	private String sWarning = "";
-	private String sCallingClass = "";
 
 	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
@@ -41,6 +38,9 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 		){
 			return;
 		}
+		String sWarning = "";
+		String sCallingClass = "";
+		
 	    response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
 		

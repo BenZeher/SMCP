@@ -24,14 +24,7 @@ import smcontrolpanel.SMUtilities;
 public class ICItemPriceEditAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
-	private static String sBasePrice = "";
-	private static String sPriceLevel1 = "";
-	private static String sPriceLevel2 = "";
-	private static String sPriceLevel3 = "";
-	private static String sPriceLevel4 = "";
-	private static String sPriceLevel5 = "";
 	
-	private static String sErrorMessage = "";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -55,27 +48,44 @@ public class ICItemPriceEditAction extends HttpServlet{
 	    		      + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    
+		String sErrorMessage = "";
+		
 	    //First get the input fields:
 	    String sItemNumber = clsManageRequestParameters.get_Request_Parameter("ItemNumber", request).trim();
 	    String sPriceListCode = clsManageRequestParameters.get_Request_Parameter("PriceListCode", request).trim();
 	    String sPriceListCodeDesc = clsManageRequestParameters.get_Request_Parameter("PriceListCodeDesc", request).trim();
-	    sBasePrice = clsManageRequestParameters.get_Request_Parameter("BasePrice", request).trim().replace(",", "");
-	    sPriceLevel1 = clsManageRequestParameters.get_Request_Parameter("PriceLevel1", request).trim().replace(",", "");
-	    sPriceLevel2 = clsManageRequestParameters.get_Request_Parameter("PriceLevel2", request).trim().replace(",", "");
-	    sPriceLevel3 = clsManageRequestParameters.get_Request_Parameter("PriceLevel3", request).trim().replace(",", "");
-	    sPriceLevel4 = clsManageRequestParameters.get_Request_Parameter("PriceLevel4", request).trim().replace(",", "");
-	    sPriceLevel5 = clsManageRequestParameters.get_Request_Parameter("PriceLevel5", request).trim().replace(",", "");
+	    String sBasePrice = clsManageRequestParameters.get_Request_Parameter("BasePrice", request).trim().replace(",", "");
+	    String sPriceLevel1 = clsManageRequestParameters.get_Request_Parameter("PriceLevel1", request).trim().replace(",", "");
+	    String sPriceLevel2 = clsManageRequestParameters.get_Request_Parameter("PriceLevel2", request).trim().replace(",", "");
+	    String sPriceLevel3 = clsManageRequestParameters.get_Request_Parameter("PriceLevel3", request).trim().replace(",", "");
+	    String sPriceLevel4 = clsManageRequestParameters.get_Request_Parameter("PriceLevel4", request).trim().replace(",", "");
+	    String sPriceLevel5 = clsManageRequestParameters.get_Request_Parameter("PriceLevel5", request).trim().replace(",", "");
 
-	    if (!saveItemPrice(
-	    		sItemNumber,
-	    		sPriceListCode,
-	    		sUserFullName,
-	    		sUserID,
-	    		sDBID
-	    	)
-	    ){
-			response.sendRedirect(
+	    
+	    try{
+	    	saveItemPrice(
+		    		sItemNumber,
+		    		sPriceListCode,
+		    		sUserFullName,
+		    		sUserID,
+		    		sDBID,
+		    		sBasePrice,
+		    		sPriceLevel1,
+		    		sPriceLevel2,
+		    		sPriceLevel3,
+		    		sPriceLevel4,
+		    		sPriceLevel5)
+	    		;
+	    	response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?ItemNumber=" + sItemNumber
+					+ "&PriceListCode=" + sPriceListCode
+					+ "&Status=Item price saved successfully"
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);
+	    	
+	    }catch(Exception e) {
+	    	response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?ItemNumber=" + sItemNumber
 					+ "&PriceListCode=" + sPriceListCode
@@ -90,24 +100,39 @@ public class ICItemPriceEditAction extends HttpServlet{
 					+ "&Warning=Could not save: " + sErrorMessage
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
-			return;
-	    }else{
-			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?ItemNumber=" + sItemNumber
-					+ "&PriceListCode=" + sPriceListCode
-					+ "&Status=Item price saved successfully"
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			);
 	    }
-	    
 		return;
 	}
-	private boolean saveItemPrice(String sItemNumber, String sPriceListCode, String sUserFullName, String sUserID, String sDBID){
+	private void saveItemPrice(
+			String sItemNumber, 
+			String sPriceListCode, 
+			String sUserFullName, 
+			String sUserID, 
+			String sDBID,
+			String sBasePrice,
+			String sPriceLevel1,
+			String sPriceLevel2,
+			String sPriceLevel3,
+			String sPriceLevel4,
+			String sPriceLevel5) throws Exception{
 		
-		if (!validateFields(sItemNumber, sPriceListCode, sDBID, sUserFullName)){
-			return false;
+		try {
+			validateFields(
+					sItemNumber, 
+					sPriceListCode, 
+					sDBID, 
+					sUserFullName,
+					sBasePrice,
+					sPriceLevel1,
+					sPriceLevel2,
+					sPriceLevel3,
+					sPriceLevel4,
+					sPriceLevel5
+					);
+		}catch (Exception e) {
+			throw new Exception("Error in validation - " + e.getMessage());
 		}
+
 		
 		String SQL = "INSERT INTO " + SMTableicitemprices.TableName
 			+ " ("
@@ -155,24 +180,27 @@ public class ICItemPriceEditAction extends HttpServlet{
 					sDBID, 
 					"MySQL", 
 					SMUtilities.getFullClassName(this.toString()) + ".saveItemPrice - user: " + sUserFullName)){
-				sErrorMessage = "Could not update/insert item price record.";
-				return false;
+				throw new Exception("Could not update/insert item price record.");
 			}
 		} catch (SQLException e) {
-			sErrorMessage = "Could not update/insert item price record - " + e.getMessage();
-			return false;
+			throw new Exception("Could not update/insert item price record - " + e.getMessage());
 		}
-		
-		return true;
 	}
-	private boolean validateFields(
+	private void validateFields(
     		String sItemNumber,
     		String sPriceListCode,
     		String sDBID,
-    		String sUserFullName
-    	){
+    		String sUserFullName,
+    		String sBasePrice,
+			String sPriceLevel1,
+			String sPriceLevel2,
+			String sPriceLevel3,
+			String sPriceLevel4,
+			String sPriceLevel5
+    	)throws Exception{
 		
 		boolean bResult = true;
+		String sErrorMessage = "";
 		
 		//Validate the item number
 		if (!validateItem(sItemNumber, sDBID, sUserFullName)){
@@ -239,8 +267,9 @@ public class ICItemPriceEditAction extends HttpServlet{
 				bResult = false;
 			}
 		}
-
-		return bResult;
+		if(!bResult) {
+			throw new Exception(sErrorMessage);
+		}
 	}
 	private boolean isValidAmount(String sAmt, int iScale){
 		

@@ -30,13 +30,12 @@ import ServletUtilities.clsManageRequestParameters;
 public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
-
-	private static Connection conn;
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private boolean bDebugMode = false;
 	private long lStartingTime = 0;
 	private long lTestTime = 0;
-	private boolean bDebugMode = false;
+
+	
 	private String sTempTableName = "";
 
 	public void doGet(HttpServletRequest request,
@@ -54,7 +53,8 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sUserFirstName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
 		String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-
+		
+		
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
 		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
@@ -209,12 +209,34 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		}
 		//End special cases:
 		/*******************************************************/
+		Connection conn = clsDatabaseFunctions.getConnection(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() 
+				+ ".doGet - User: " 
+				+ sUserID
+				+ " - "
+				+ sUserFirstName
+				+ " "
+				+ sUserLastName
+		);
+		if (conn == null){
+			sWarning = "Could not open connection";
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+					+ "Warning=" + sWarning
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);			
+			return;
+		}
 		
 		lStartingTime = System.currentTimeMillis();
 
 		java.sql.Date datAgeAsOf;
 		java.sql.Date datCutOffDate;
 		String SQL = "";
+		
 		
 		try {
 			datAgeAsOf = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyyy", sAgeAsOf);
@@ -239,6 +261,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			return;
 		}
 		
+
 		try {
 			//0 for non-retainage, 1 for retainage type
 			//Customized title
@@ -332,27 +355,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 				+ "\">Return to Accounts Receivable Main Menu</A></TD></TR></TABLE>");
 
 			//Retrieve information
-			conn = clsDatabaseFunctions.getConnection(
-					getServletContext(), 
-					sDBID, 
-					"MySQL", 
-					this.toString() 
-					+ ".doGet - User: " 
-					+ sUserID
-					+ " - "
-					+ sUserFirstName
-					+ " "
-					+ sUserLastName
-			);
-			if (conn == null){
-				sWarning = "Could not open connection";
-				response.sendRedirect(
-						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);			
-				return;
-			}
+			
 
 			long lTempTableTime = System.currentTimeMillis();
 

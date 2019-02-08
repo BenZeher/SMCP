@@ -25,7 +25,7 @@ public class FAAssetListGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private boolean bSelectAssetListByCategory = false;
+	private static final boolean bSelectAssetListByCategory = false;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

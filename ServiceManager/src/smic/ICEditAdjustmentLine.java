@@ -611,7 +611,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 					}
 					rsCostBuckets.close();			
 					
-	
+					bLoadedCostBuckets =true;
 				} catch (Exception e) {
 					m_pwOut.println("</SELECT><BR><B><FONT COLOR=RED>" + e.getMessage() + "</FONT></B>");
 					return false;

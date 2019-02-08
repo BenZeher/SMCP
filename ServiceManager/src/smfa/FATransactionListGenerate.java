@@ -25,8 +25,7 @@ import smcontrolpanel.SMUtilities;
 public class FATransactionListGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-
-	private SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

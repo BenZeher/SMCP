@@ -23,8 +23,8 @@ import smcontrolpanel.SMUtilities;
 public class FAEditLocationEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static String sLocationObjectName = "Location";
-	private static String sFAEditLocationEditCalledClassName = "FAEditLocationAction";
+	private static final String sLocationObjectName = "Location";
+	private static final String sFAEditLocationEditCalledClassName = "FAEditLocationAction";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

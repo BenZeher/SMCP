@@ -26,11 +26,11 @@ import ServletUtilities.clsManageRequestParameters;
 public class ARAgedTrialBalanceReport  extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	public static String FIND_STARTING_CUSTOMER_BUTTON_NAME = "FINDSTARTINGCUSTOMERBUTTON";
-	public static String FIND_STARTING_CUSTOMER_BUTTON_LABEL = "Find";
-	public static String FIND_ENDING_CUSTOMER_BUTTON_NAME = "FINDENDINGCUSTOMERBUTTON";
-	public static String FIND_ENDING_CUSTOMER_BUTTON_LABEL = "Find";
-	public static String DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
+	public static final String FIND_STARTING_CUSTOMER_BUTTON_NAME = "FINDSTARTINGCUSTOMERBUTTON";
+	public static final String FIND_STARTING_CUSTOMER_BUTTON_LABEL = "Find";
+	public static final String FIND_ENDING_CUSTOMER_BUTTON_NAME = "FINDENDINGCUSTOMERBUTTON";
+	public static final String FIND_ENDING_CUSTOMER_BUTTON_LABEL = "Find";
+	public static final String DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

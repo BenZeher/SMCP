@@ -28,21 +28,21 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class ARAutoCreateCallSheetsSelection extends HttpServlet {
 
-	public static String FIND_STARTING_CUSTOMER_BUTTON_NAME = "FINDSTARTINGCUSTOMERBUTTON";
-	public static String FIND_STARTING_CUSTOMER_BUTTON_LABEL = "Find";
-	public static String FIND_ENDING_CUSTOMER_BUTTON_NAME = "FINDENDINGCUSTOMERBUTTON";
-	public static String FIND_ENDING_CUSTOMER_BUTTON_LABEL = "Find";
-	public static String STARTING_CUSTOMER_FIELD = "StartingCustomer";
-	public static String ENDING_CUSTOMER_FIELD = "EndingCustomer";
-	public static String STARTING_DATE_FIELD = "StartingDate";
-	public static String ENDING_DATE_FIELD = "EndingDate";
-	public static String REFRESHLIST_BUTTON_NAME = "REFRESHLIST";
-	public static String REFRESHLIST_BUTTON_LABEL = "Refresh invoice list";
-	public static String CREATECALLSHEETS_BUTTON_NAME = "CREATECALLSHEETS";
-	public static String CREATECALLSHEETS_BUTTON_LABEL = "Create call sheets";
-	public static String PARAM_RUNREFRESH = "RUNREFRESH";
-	public static String PARAM_SERVICETYPE = "SERVICETYPE";
-	public static String PARAM_INVNUMBER = "INVNUMBER";
+	public static final String FIND_STARTING_CUSTOMER_BUTTON_NAME = "FINDSTARTINGCUSTOMERBUTTON";
+	public static final String FIND_STARTING_CUSTOMER_BUTTON_LABEL = "Find";
+	public static final String FIND_ENDING_CUSTOMER_BUTTON_NAME = "FINDENDINGCUSTOMERBUTTON";
+	public static final String FIND_ENDING_CUSTOMER_BUTTON_LABEL = "Find";
+	public static final String STARTING_CUSTOMER_FIELD = "StartingCustomer";
+	public static final String ENDING_CUSTOMER_FIELD = "EndingCustomer";
+	public static final String STARTING_DATE_FIELD = "StartingDate";
+	public static final String ENDING_DATE_FIELD = "EndingDate";
+	public static final String REFRESHLIST_BUTTON_NAME = "REFRESHLIST";
+	public static final String REFRESHLIST_BUTTON_LABEL = "Refresh invoice list";
+	public static final String CREATECALLSHEETS_BUTTON_NAME = "CREATECALLSHEETS";
+	public static final String CREATECALLSHEETS_BUTTON_LABEL = "Create call sheets";
+	public static final String PARAM_RUNREFRESH = "RUNREFRESH";
+	public static final String PARAM_SERVICETYPE = "SERVICETYPE";
+	public static final String PARAM_INVNUMBER = "INVNUMBER";
 
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,

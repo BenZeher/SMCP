@@ -31,7 +31,6 @@ public class FAEditAssetsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sAssetObjectName = "Asset";
 	private static final String sFAEditAssetsEditCalledClassName = "FAEditAssetsAction";
-	private boolean bisNew;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -50,6 +49,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAManageAssets)){
 	    	return;
 	    }
+	    boolean bisNew = false;
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the item number

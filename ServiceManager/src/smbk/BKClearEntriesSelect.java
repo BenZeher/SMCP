@@ -19,10 +19,10 @@ public class BKClearEntriesSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	
-	public static String CLEAR_BK_BUTTON_NAME = "GENERATE_REPORT";
-	public static String CLEAR_BKSTATEMENT_BUTTON_LABEL = "----Clear Statements----";
-	public static String CLEARING_BKENTRY_DATE_FIELD = "Clearing Date";
-	public static String CONFIRM_CLEAR_BKENTRY_CHECKBOX_NAME = "CONFIRMCLEARING";
+	public static final String CLEAR_BK_BUTTON_NAME = "GENERATE_REPORT";
+	public static final String CLEAR_BKSTATEMENT_BUTTON_LABEL = "----Clear Statements----";
+	public static final String CLEARING_BKENTRY_DATE_FIELD = "Clearing Date";
+	public static final String CONFIRM_CLEAR_BKENTRY_CHECKBOX_NAME = "CONFIRMCLEARING";
 
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)

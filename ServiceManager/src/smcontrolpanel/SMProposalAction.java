@@ -37,7 +37,7 @@ public class SMProposalAction extends HttpServlet{
     		//int iNOofCopies = Integer.parseInt(SMUtilities.get_Request_Parameter(SMProposalEdit.NOOFCOPIES_NAME, request));
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 			+ "smcontrolpanel.SMProposalPrintSelection"
-			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&" + SMProposal.Paramstrimmedordernumber + "=" + proposal.getstrimmedordernumber()
 			//+ "&" + SMProposalEdit.NOOFCOPIES_NAME + "=" + iNOofCopies 
 			+ "&CallingClass=" + smaction.getCallingClass()

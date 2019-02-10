@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -63,6 +64,14 @@ public class SMAuthenticate{
         boolean bComingFromLoginScreen = clsManageRequestParameters.get_Request_Parameter("CallingClass", req).compareToIgnoreCase("smcontrolpanel.SMLogin") == 0;
        
         if((!bAllQuickLinkParametersExist && sDatabaseID.compareToIgnoreCase("") == 0) ) {
+        	
+        	String sParameters = "";
+    		Enumeration<?> paramNames = req.getParameterNames();
+    		while(paramNames.hasMoreElements()) {
+    			String sParamName = (String)paramNames.nextElement();
+    			sParameters += "\n" + "'" + sParamName + "' = '" + req.getParameter(sParamName) + "'.";
+    		}
+        	
         	SMUtilities.sysprint(
         		"[1541794978]", 
         		sUserFullName, 
@@ -71,6 +80,10 @@ public class SMAuthenticate{
                 	+ " req.getQueryString()  = '" + req.getQueryString() + "', " 
                 	+ " sSessiondatabase = '" + sSessionDatabase + "', "
                 	+ " lFunctionID = '" + Long.toString(lFunctionID) + "'"
+                	+ ", sOpts = '" + sOpts + "'"
+                	+ ", SessionUserName = '" + sSessionUsername + "'"
+                	+ ", req.parameters = "
+                	+ sParameters
                 	+ "."
         	);
         	

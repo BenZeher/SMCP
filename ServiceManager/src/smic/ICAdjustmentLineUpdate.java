@@ -22,7 +22,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 
-	
+	private ICEntryLine m_Line;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -57,7 +57,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
 		String m_sWarning = "";
 	    
 		//Instantiate a new line:
-		ICEntryLine m_Line = new ICEntryLine(request);
+		m_Line = new ICEntryLine(request);
 	    m_Line.sBatchNumber(m_sBatchNumber);
 	    m_Line.sEntryNumber(m_sEntryNumber);
 	    m_Line.sLineNumber(m_sLineNumber);

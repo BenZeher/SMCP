@@ -175,6 +175,11 @@ public class SMProposalEdit  extends HttpServlet {
 		s += sCommandScripts(entry, sm);
 		s += sStyleScripts();
 
+		//Record the database name:
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + sm.getsDBID() + "\""
+				+ " id=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\""
+				+ ">";
+		
 		//Store whether or not the record has been changed this includes ANY change, including approval:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + RECORDWASCHANGED_FLAG + "\""

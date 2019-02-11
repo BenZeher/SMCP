@@ -3475,6 +3475,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
                 + "	   }\n" 
                 +"};\n\n"
                 //Send the request
+                // MISSING DB?
                 + "xhr.open(\"POST\", \"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWorkOrderAction" + "\");\n" 
                 + "xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n"
                 //+ "alert(\"Sending request.. Updating \" + sParamName + \"=\" +getCurrentTimeValue(sParamName));\n"

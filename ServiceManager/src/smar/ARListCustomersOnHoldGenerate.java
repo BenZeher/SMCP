@@ -83,8 +83,8 @@ public class ARListCustomersOnHoldGenerate extends HttpServlet {
     		sWarning = "Unable to get data connection.";
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + sWarning
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    					+ "Warning=" + sWarning
     		);			
         	return;
     	}

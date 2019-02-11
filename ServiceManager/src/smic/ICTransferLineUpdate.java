@@ -12,24 +12,14 @@ import javax.servlet.http.HttpSession;
 
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMUtilities;
 
 public class ICTransferLineUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private ICEntryLine m_Line;
-	//HttpServletRequest parameters:
-	private String m_sSave;
-	private String m_sSaveAndAddAnother;
-	private String m_sDelete;
-	private String m_sConfirmDelete;
-	private String m_sDisplayQtys;
-	private String m_sCallingClass;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
+	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -50,11 +40,21 @@ public class ICTransferLineUpdate extends HttpServlet{
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
+		//HttpServletRequest parameters:
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
+		String m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", request);
+		String m_sSaveAndAddAnother = clsManageRequestParameters.get_Request_Parameter("SaveAndAddAnother", request);
+		String m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", request);
+		String m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", request);
+		String m_sDisplayQtys = clsManageRequestParameters.get_Request_Parameter(ICEditTransferLine.DISPLAY_QTYS_PARAM, request);
+		String m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
 	    
 	    //Instantiate a new line:
-	    m_Line = new ICEntryLine(request);
+		ICEntryLine m_Line = new ICEntryLine(request);
 	    m_Line.sBatchNumber(m_sBatchNumber);
 	    m_Line.sEntryNumber(m_sEntryNumber);
 	    m_Line.sLineNumber(m_sLineNumber);
@@ -91,7 +91,18 @@ public class ICTransferLineUpdate extends HttpServlet{
 	    	return;
 		}
     	try {
-			processTransferLine(CurrentSession,response, sDBID, sUserID, sUserFullName);
+			processTransferLine(
+					CurrentSession,
+					response, 
+					sDBID, 
+					sUserID, 
+					sUserFullName, 
+					m_sDisplayQtys, 
+					m_sDelete, 
+					m_sConfirmDelete, 
+					m_sSave, 
+					m_sSaveAndAddAnother, 
+					m_Line);
 		} catch (Exception e1) {
 	    	try {
 				options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
@@ -133,11 +144,24 @@ public class ICTransferLineUpdate extends HttpServlet{
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			;
     	}
-    	response.sendRedirect(sRedirectString + "&Status=" + "Line updated successfully");
+    	response.sendRedirect(sRedirectString + "&Status=" + clsServletUtilities.URLEncode("Line updated successfully"));
     	return;
 	
 	}
-	private void processTransferLine(HttpSession CurrentSession, HttpServletResponse response, String sDBID, String sUserID, String sUserFullName) throws Exception{
+	private void processTransferLine(
+			HttpSession CurrentSession, 
+			HttpServletResponse response, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String m_sDisplayQtys,
+			String m_sDelete,
+			String m_sConfirmDelete,
+			String m_sSave,
+			String m_sSaveAndAddAnother,
+			ICEntryLine m_Line	
+			) throws Exception{
+		
 	    //If it's a request to display the qtys:
 	    if (m_sDisplayQtys.compareToIgnoreCase("") != 0){
 	    	if (m_Line.sItemNumber().compareToIgnoreCase("") == 0){
@@ -153,7 +177,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 	    	}else{
 	    		//Delete the line:
 	    		try {
-					deleteLine(sDBID, sUserID, sUserFullName);
+					deleteLine(sDBID, sUserID, sUserFullName, m_Line);
 				} catch (Exception e) {
 					throw new Exception("Error [1531849292] - " + e.getMessage());
 				}
@@ -168,7 +192,8 @@ public class ICTransferLineUpdate extends HttpServlet{
 					getServletContext(), 
 					sDBID, 
 					sUserID,
-					sUserFullName
+					sUserFullName, 
+					m_Line
 				);
 			} catch (Exception e) {
 				throw new Exception("Error [1531849212] - " + e.getMessage());
@@ -184,7 +209,8 @@ public class ICTransferLineUpdate extends HttpServlet{
 					getServletContext(), 
 					sDBID, 
 					sUserID,
-					sUserFullName
+					sUserFullName,
+					m_Line
 				);
 			} catch (Exception e) {
 				throw new Exception("Error [1531849213] - " + e.getMessage());
@@ -198,7 +224,8 @@ public class ICTransferLineUpdate extends HttpServlet{
 			ServletContext context, 
 			String sDBID, 
 			String sUserID,
-			String sUserFullName
+			String sUserFullName,
+			ICEntryLine m_Line
 		) throws Exception{
 		
 		String sWarning = "";
@@ -336,7 +363,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		
 		return;
 	}
-	private void deleteLine(String sDBID, String sUserID, String sUserFullName) throws Exception{
+	private void deleteLine(String sDBID, String sUserID, String sUserFullName, ICEntryLine m_Line) throws Exception{
 		
 		String sWarning = "";
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
@@ -375,20 +402,7 @@ public class ICTransferLineUpdate extends HttpServlet{
 		
 		return;
 	}
- 	private void getRequestParameters(
-    	HttpServletRequest req){
 
-		m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", req);
-		m_sSaveAndAddAnother = clsManageRequestParameters.get_Request_Parameter("SaveAndAddAnother", req);
-		m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", req);
-		m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", req);
-		m_sDisplayQtys = clsManageRequestParameters.get_Request_Parameter(ICEditTransferLine.DISPLAY_QTYS_PARAM, req);
-		m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", req);
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", req);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", req);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", req);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", req);
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

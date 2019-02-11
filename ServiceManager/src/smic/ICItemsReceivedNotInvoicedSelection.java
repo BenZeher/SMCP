@@ -21,6 +21,8 @@ import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
+import smap.APVendor;
 
 public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 	
@@ -141,9 +143,20 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 					sVendor, 
 					20, 
 					SMTableicpoheaders.svendorLength, 
-					"&nbsp;(Leave this blank to include ALL vendors.)"
+					"&nbsp;"
+					+ "<A HREF=\""
+					+ APVendor.getFindVendorLink(
+						clsServletUtilities.getFullClassName(this.toString()), 
+						PARAM_VENDOR, 
+						SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID,
+						getServletContext(),
+						sDBID
+					)
+					+ "\"> Find vendor</A>"
+					+ "&nbsp;(Leave this blank to include ALL vendors.)"
 					) 
 		);
+		
 		out.println("</TD></TR>");
 		
 		//Inventory/NON-inventory items:

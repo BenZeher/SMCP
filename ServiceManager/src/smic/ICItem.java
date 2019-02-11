@@ -1340,7 +1340,7 @@ public class ICItem extends Object{
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
-				m_sErrorMessageArray.add("Item " + sItemNumber + " is on invoices that have not been exported.");
+				m_sErrorMessageArray.add("Item " + sItemNumber + " is on invoices that have not yet been exported to AR or IC batches.");
 				rs.close();
 				return false;
 			}else{

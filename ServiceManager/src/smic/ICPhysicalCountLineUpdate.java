@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import SMDataDefinition.SMTablelocations;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -23,19 +24,6 @@ import smcontrolpanel.SMUtilities;
 public class ICPhysicalCountLineUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private ICEntryLine m_Line;
-	//HttpServletRequest parameters:
-	private String m_sSave;
-	private String m_sDelete;
-	private String m_sConfirmDelete;
-	private String m_sUpdateDefaultWriteOffAccount;
-	private String m_sCallingClass;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning = ""; //$NON-NLS-1$
-	private String m_sSendRedirect;
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -56,14 +44,22 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    
-	    m_sWarning = ""; //$NON-NLS-1$
-	    
+	   
+	    String m_sSendRedirect = "";
+	    String m_sStatus = ""; 
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
+	    String m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", request); //$NON-NLS-1$
+	    String m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", request); //$NON-NLS-1$
+	    String m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", request); //$NON-NLS-1$
+	    String m_sUpdateDefaultWriteOffAccount = clsManageRequestParameters.get_Request_Parameter("SubmitDefaultWriteOffAccount", request); //$NON-NLS-1$
+	    String m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request); //$NON-NLS-1$
+	    String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request); //$NON-NLS-1$
+	    String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request); //$NON-NLS-1$
+	    String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", request); //$NON-NLS-1$
+	    String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request); //$NON-NLS-1$
 	    
 	    //Instantiate a new line:
-	    m_Line = new ICEntryLine(request);
+	    ICEntryLine m_Line = new ICEntryLine(request);
 	    m_Line.sBatchNumber(m_sBatchNumber);
 	    m_Line.sEntryNumber(m_sEntryNumber);
 	    m_Line.sLineNumber(m_sLineNumber);
@@ -96,11 +92,55 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 			);
 	    	return;
 		}
-	    //Branch here, depending on the request:
-	    //If it's a request to update the write off account, update that account:
-	    //System.out.println("In " + this.toString() + " 01");
+
+    	//Process the request
+    	try {
+    		process(CurrentSession,
+    				response, 
+    				sDBID, 
+    				sUserID, 
+    				sUserFullName, 
+    				m_sUpdateDefaultWriteOffAccount, 
+    				m_sDelete, 
+    				m_sConfirmDelete, 
+    				m_sSave, 
+    				m_Line
+    				);
+    		if(m_sDelete.compareToIgnoreCase("") != 0) {
+    			m_sStatus = "Successfully deleted line " + m_Line.sLineNumber();
+    		}
+    		if(m_sSave.compareToIgnoreCase("") != 0) {
+    			m_sStatus = "Successfully added line " + m_Line.sLineNumber();
+    		}
+    		//If updating the write off account or any error redirect to same screen. Otherwise go back to entry screen. 
+    		if(m_sUpdateDefaultWriteOffAccount.compareToIgnoreCase("") != 0) {
+    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" 
+    					+ "BatchNumber=" + m_Line.sBatchNumber() 
+    					+ "&EntryNumber=" + m_Line.sEntryNumber() 
+    					+ "&LineNumber=" + m_Line.sLineNumber() 
+    					+ "&BatchType=" + m_sBatchType 
+    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID ;
+    		}else {
+    		
+    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountEntry" + "?" 
+    				+ "BatchNumber=" + m_Line.sBatchNumber()
+    				+ "&EntryNumber=" + m_Line.sEntryNumber() 
+    				+ "&BatchType=" + m_sBatchType 
+    				+ "&Editable=Yes"
+    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    				+ "&Status=" + clsServletUtilities.URLEncode(m_sStatus);
+    		}
+   
+    	}catch (Exception e) {
+    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" 
+					+ "BatchNumber=" + m_Line.sBatchNumber() 
+					+ "&EntryNumber=" + m_Line.sEntryNumber() 
+					+ "&LineNumber=" + m_Line.sLineNumber() 
+					+ "&BatchType=" + m_sBatchType 
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+					+ "&Warning=" + clsServletUtilities.URLEncode(e.getMessage()); 
+    	}
     	
-    	process(CurrentSession,response, sDBID, sUserID, sUserFullName);
     	try{
         	options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
     	}catch(Exception e){
@@ -111,98 +151,79 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 	}
 	
 	
-	private void process( HttpSession CurrentSession, HttpServletResponse response, String sDBID, String sUserID, String sUserFullName) throws ServletException, IOException{
-		
-	if (m_sUpdateDefaultWriteOffAccount.compareToIgnoreCase("") != 0){ //$NON-NLS-1$
-    	if (!setDefaultWriteOffAccount(
-    			getServletContext(), 
-    			sDBID, 
-    			sUserFullName,
-    			m_Line.sLocation()
-    		)){
-    		//System.out.println("In " + this.toString() + " 02");
-    	}
-    	m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" //$NON-NLS-1$ //$NON-NLS-2$
-				+ "BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
-				+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
-				+ "&LineNumber=" + m_Line.sLineNumber() //$NON-NLS-1$
-				+ "&BatchType=" + m_sBatchType //$NON-NLS-1$
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID //$NON-NLS-1$
-				+ "&Warning=" + m_sWarning; //$NON-NLS-1$
+	private void process( 
+			HttpSession CurrentSession, 
+			HttpServletResponse response, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String m_sUpdateDefaultWriteOffAccount,
+			String m_sDelete,
+			String m_sConfirmDelete,
+			String m_sSave,
+			ICEntryLine m_Line) throws Exception{
 
+	//If it's a request to update the write off account, update that account:
+	if (m_sUpdateDefaultWriteOffAccount.compareToIgnoreCase("") != 0){ 
+    	try {
+    		setDefaultWriteOffAccount(
+        			getServletContext(), 
+        			sDBID, 
+        			sUserFullName,
+        			m_Line.sLocation(),
+        			m_Line);
+    	}catch (Exception e){
+    		throw new Exception(e.getMessage());
+    	}
     	return;
     }
-    
-    if (m_sDelete.compareToIgnoreCase("") != 0){ //$NON-NLS-1$
-    	if (m_sConfirmDelete.compareToIgnoreCase("") == 0){ //$NON-NLS-1$
-    		m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.23"); //$NON-NLS-1$
-    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" //$NON-NLS-1$ //$NON-NLS-2$
-					+ "BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
-					+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
-					+ "&LineNumber=" + m_Line.sLineNumber() //$NON-NLS-1$
-					+ "&BatchType=" + m_sBatchType //$NON-NLS-1$
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID //$NON-NLS-1$
-					+ "&Warning=" + m_sWarning; //$NON-NLS-1$
-	    	
-	    	return;
+	//If it's a request to delete.
+    if (m_sDelete.compareToIgnoreCase("") != 0){ 
+    	if (m_sConfirmDelete.compareToIgnoreCase("") == 0){ 
+    		throw new Exception("Confirm delete checkbox is not selected."); 
+
     	}else{
-    		//Delete the line:
-    		if (!deleteLine(sDBID, sUserID, sUserFullName)){
-    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" //$NON-NLS-1$ //$NON-NLS-2$
-						+ "BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
-						+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
-						+ "&LineNumber=" + m_Line.sLineNumber() //$NON-NLS-1$
-						+ "&BatchType=" + m_sBatchType //$NON-NLS-1$
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID //$NON-NLS-1$
-						+ "&Warning=" + Messages.getString("ICPhysicalCountLineUpdate.40") + m_sWarning; //$NON-NLS-1$ //$NON-NLS-2$
-		    	return;	    			
+    		try {
+    			deleteLine(sDBID, sUserID, sUserFullName, m_Line);
+    		}catch(Exception e) {
+    			throw new Exception("Error deleting. ");
     		}
-    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditShipmentEntry" //$NON-NLS-1$
-					+ "?BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
-					+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
-					+ "&BatchType=" + m_sBatchType //$NON-NLS-1$
-					+ "&Editable=Yes" //$NON-NLS-1$
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID //$NON-NLS-1$
-					+ "&Warning="; //$NON-NLS-1$
-	    	return;
     	}
     }
-
-	    if (m_sSave.compareToIgnoreCase("") != 0){ //$NON-NLS-1$
-	    	if (!saveLine(
-	    			getServletContext(), 
-	    			sDBID, 
-	    			sUserID,
-	    			sUserFullName
-	    		)){
-	    		//System.out.println("In " + this.toString() + " 02");
-	    	}
-	    	//Store the saved line in the session
+    //If its a request to save.
+    if (m_sSave.compareToIgnoreCase("") != 0){ //$NON-NLS-1$
+	    	
+    	try {
+    		saveLine(
+    			getServletContext(), 
+		    	sDBID, 
+		    	sUserID,
+		    	sUserFullName,
+		    	m_Line
+		    	);
 	    	CurrentSession.setAttribute("EntryLine", m_Line); //$NON-NLS-1$
-	    	m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?" //$NON-NLS-1$ //$NON-NLS-2$
-					+ "BatchNumber=" + m_Line.sBatchNumber() //$NON-NLS-1$
-					+ "&EntryNumber=" + m_Line.sEntryNumber() //$NON-NLS-1$
-					+ "&LineNumber=" + m_Line.sLineNumber() //$NON-NLS-1$
-					+ "&BatchType=" + m_sBatchType //$NON-NLS-1$
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID //$NON-NLS-1$
-					+ "&Warning=" + m_sWarning; //$NON-NLS-1$ 
-	    	return;
+		    return;
+	    }catch (Exception e){
+	    	throw new Exception(e.getMessage());
 	    }
+	    	
+	   }
 	}
 	
-	private boolean saveLine(
+	private void saveLine(
 			ServletContext context, 
 			String sDBID, 
 			String sUserID,
-			String sUserFullName
-		){
-		
+			String sUserFullName,
+			ICEntryLine m_Line
+		) throws Exception{
+		String sWarning = "";
 		ICEntry entry = new ICEntry();
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
-			return false;
+			throw new Exception(sWarning);
 		}
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
@@ -217,17 +238,17 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 				);
 		
 		if (conn == null){
-			m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.61"); //$NON-NLS-1$
-			return false;
+			sWarning = Messages.getString("ICPhysicalCountLineUpdate.61"); //$NON-NLS-1$
+			throw new Exception(sWarning);
 		}
 		
 		//Validate the line first in case we can't save it at all:
 		if (!entry.validateSingleLine(m_Line, conn)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080886]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		
 		//If it's a new line, just add it to the entry:
@@ -238,10 +259,10 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 
 			if (!entry.add_line(m_Line)){
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
-					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+					sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 				}
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080887]");
-				return false;
+				throw new Exception(sWarning);
 			}
 			//If the line was successfully added, update the line number:
 			m_Line.sLineNumber(entry.sLastLine());
@@ -290,22 +311,22 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 			//	bErrorUpdatingEntry = true;
 			//}
 			if (bErrorUpdatingEntry){
-				m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.65") + this.toString() + ".saveLine - "; //$NON-NLS-1$ //$NON-NLS-2$
+				sWarning = Messages.getString("ICPhysicalCountLineUpdate.65") + this.toString() + ".saveLine - "; //$NON-NLS-1$ //$NON-NLS-2$
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
-					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+					sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 				}
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080888]");
-				return false;
+				throw new Exception(sWarning);
 			}
 		}
 
 		//System.out.println("In " + this.toString() + ".saveLine: price = " + m_Line.sPriceSTDFormat());
 		if (!entry.save_without_data_transaction(conn, sUserID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080889]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080890]");
 		
@@ -323,20 +344,22 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 		//Finally, load the line again into the class:
 		m_Line = new ICEntryLine();
 		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sDBID)){
-			m_sWarning = m_sWarning + "\n" + m_Line.getErrorMessage(); //$NON-NLS-1$
-			return false;
+			sWarning = sWarning + "\n" + m_Line.getErrorMessage(); //$NON-NLS-1$
+			throw new Exception(sWarning);
 		}
-		
-		return true;
 	}
-	private boolean deleteLine(String sDBID, String sUserID, String sUserFullName){
-		
+	private void deleteLine(
+			String sDBID,
+			String sUserID, 
+			String sUserFullName,
+			ICEntryLine m_Line) throws Exception{
+		String sWarning = "";
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), getServletContext(), sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
 			}
-			return false;
+			throw new Exception(sWarning);
 		}
 		
 		//Setting these to zero will cause the entry to drop this line:
@@ -352,27 +375,35 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
 				); //$NON-NLS-1$ //$NON-NLS-2$
 		
 		if (conn == null){
-			m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.75"); //$NON-NLS-1$
-			return false;
+			sWarning = Messages.getString("ICPhysicalCountLineUpdate.75"); 
+			throw new Exception(sWarning);
 		}
 		
 		if (!entry.save_without_data_transaction(conn, sUserID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i); //$NON-NLS-1$
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i); 
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080884]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080885]");
-		return true;
+	
 	}
-    private boolean setDefaultWriteOffAccount(
+    private void setDefaultWriteOffAccount(
     		ServletContext context, 
     		String sDBID, 
     		String sUserFullName,
-    		String sLocation
-    		){
+    		String sLocation,
+    		ICEntryLine m_Line
+    		) throws Exception{
     	
+    	String sWarning = "";
+    	if (sLocation.compareToIgnoreCase("") == 0){
+    		sWarning = "You chose to set the default write off account, but you have not selected "
+    			+ "a location.";
+    		throw new Exception(sWarning);
+    	}
+    	//String sWarning = "";
     	String SQL = "SELECT " //$NON-NLS-1$
     		+ SMTablelocations.sGLWriteOffAcct
     		+ " FROM "  //$NON-NLS-1$
@@ -392,32 +423,17 @@ public class ICPhysicalCountLineUpdate extends HttpServlet{
     		if (rs.next()){
     			m_Line.sDistributionAcct(rs.getString(SMTablelocations.sGLWriteOffAcct));
     		}else{
-    			m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.86"); //$NON-NLS-1$
+    			//sWarning = Messages.getString("ICPhysicalCountLineUpdate.86"); //$NON-NLS-1$
     			m_Line.sCategoryCode(""); //$NON-NLS-1$
+    			throw new Exception("Default write off account is empty. ");
     		}
     		rs.close();
     	}catch (SQLException e){
     		m_Line.sCategoryCode(""); //$NON-NLS-1$
-    		m_sWarning = Messages.getString("ICPhysicalCountLineUpdate.89") + e.getMessage(); //$NON-NLS-1$
+    		throw new Exception("Default write off account is empty - " + e.getMessage());
     	}
-    	
-    	return true;
     }
 
-	private void getRequestParameters(
-    	HttpServletRequest req){
-
-		m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", req); //$NON-NLS-1$
-		m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", req); //$NON-NLS-1$
-		m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", req); //$NON-NLS-1$
-		m_sUpdateDefaultWriteOffAccount = clsManageRequestParameters.get_Request_Parameter("SubmitDefaultWriteOffAccount", req); //$NON-NLS-1$
-		m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", req); //$NON-NLS-1$
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", req); //$NON-NLS-1$
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", req); //$NON-NLS-1$
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", req); //$NON-NLS-1$
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", req); //$NON-NLS-1$
-		
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

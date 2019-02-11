@@ -20,19 +20,7 @@ import smcontrolpanel.SMUtilities;
 public class ICShipmentLineUpdate extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
-	private ICEntryLine m_Line;
-	//HttpServletRequest parameters:
-	private String m_sSave;
-	private String m_sDelete;
-	private String m_sConfirmDelete;
-	private String m_sUpdateDefaultCategory;
-	private String m_sCallingClass;
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sLineNumber;
-	private String m_sBatchType;
-	private String m_sWarning = "";
-	private String m_sSendRedirect;
+	
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -53,13 +41,23 @@ public class ICShipmentLineUpdate extends HttpServlet{
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-	    m_sWarning = "";
-	    
+	    String m_sStatus = "";
+		//HttpServletRequest parameters:
+		String m_sSendRedirect = "";
+		
 	    //Collect all the request parameters:
-	    getRequestParameters(request);
+		String m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", request);
+		String m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", request);
+		String m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", request);
+		String m_sUpdateDefaultCategory = clsManageRequestParameters.get_Request_Parameter("SubmitDefaultCategory", request);
+		String m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
 	    
 	    //Instantiate a new line:
-	    m_Line = new ICEntryLine(request);
+		ICEntryLine m_Line = new ICEntryLine(request);
 	    m_Line.sBatchNumber(m_sBatchNumber);
 	    m_Line.sEntryNumber(m_sEntryNumber);
 	    m_Line.sLineNumber(m_sLineNumber);
@@ -85,7 +83,56 @@ public class ICShipmentLineUpdate extends HttpServlet{
 					+ "&Warning=" + e1.getMessage()
 			);
 		}
-    	process(CurrentSession, sDBID, sUserID, sUserFullName);
+    	try {
+    		process(CurrentSession, 
+    				sDBID, 
+    				sUserID, 
+    				sUserFullName, 
+    				m_sUpdateDefaultCategory, 
+    				m_sDelete, 
+    				m_sBatchType, 
+    				m_sConfirmDelete, 
+    				m_sSave, 
+    				m_Line);
+    		
+    		if(m_sDelete.compareToIgnoreCase("") != 0) {
+    			m_sStatus = "Successfully deleted line " + m_Line.sLineNumber();
+    		}
+    		if(m_sSave.compareToIgnoreCase("") != 0) {
+    			m_sStatus = "Successfully saved line " + m_Line.sLineNumber();
+    		}
+    		
+    		if(m_sUpdateDefaultCategory.compareToIgnoreCase("") != 0) {
+    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
+    					+ "BatchNumber=" + m_Line.sBatchNumber()
+    					+ "&EntryNumber=" + m_Line.sEntryNumber()
+    					+ "&LineNumber=" + m_Line.sLineNumber()
+    					+ "&BatchType=" + m_sBatchType
+    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    					;
+    		}else {
+    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditShipmentEntry"
+    					+ "?BatchNumber=" + m_Line.sBatchNumber()
+    					+ "&EntryNumber=" + m_Line.sEntryNumber()
+    					+ "&BatchType=" + m_sBatchType
+    					+ "&Editable=Yes"
+    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    					+ "&Status=" + m_sStatus;
+    		}
+    		
+    	}catch(Exception e) {
+    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
+					+ "BatchNumber=" + m_Line.sBatchNumber()
+					+ "&EntryNumber=" + m_Line.sEntryNumber()
+					+ "&LineNumber=" + m_Line.sLineNumber()
+					+ "&BatchType=" + m_sBatchType
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&Warning=" + e.getMessage();
+    	}
+    	
+    	
+    	
+    	
     	try {
 			options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
 		} catch (Exception e) {
@@ -93,98 +140,80 @@ public class ICShipmentLineUpdate extends HttpServlet{
     	response.sendRedirect(m_sSendRedirect);
 	    
 	}
-	private void process(HttpSession CurrentSession, String sDBID, String sUserID, String sUserFullName){
+	private void process(
+			HttpSession CurrentSession, 
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			String m_sUpdateDefaultCategory,
+			String m_sDelete,
+			String m_sBatchType,
+			String m_sConfirmDelete,
+			String m_sSave,
+			ICEntryLine m_Line
+			) throws Exception {
 	    //Branch here, depending on the request:
 	    //If it's a request to update the write off account, update that account:
-	    //System.out.println("In " + this.toString() + " 01");
 	    if (m_sUpdateDefaultCategory.compareToIgnoreCase("") != 0){
-	    	if (!setDefaultCategory(
-	    			getServletContext(), 
-	    			sDBID, 
-	    			sUserFullName,
-	    			m_Line.sItemNumber()
-	    		)){
-	    		//System.out.println("In " + this.toString() + " 02");
+	    	
+	    	try {
+	    		setDefaultCategory(
+		    			getServletContext(), 
+		    			sDBID, 
+		    			sUserFullName,
+		    			m_Line.sItemNumber(), 
+		    			m_Line
+		    		);
+	    	}catch(Exception e) {
+	    		throw new Exception(e.getMessage());
 	    	}
-	    	m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
-					+ "BatchNumber=" + m_Line.sBatchNumber()
-					+ "&EntryNumber=" + m_Line.sEntryNumber()
-					+ "&LineNumber=" + m_Line.sLineNumber()
-					+ "&BatchType=" + m_sBatchType
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning;
-	    	return;
 	    }
 	    
+	    //If it's a request to delete
 	    if (m_sDelete.compareToIgnoreCase("") != 0){
 	    	if (m_sConfirmDelete.compareToIgnoreCase("") == 0){
-	    		m_sWarning = "You chose to delete, but did not check the 'confirming' check box.";
-	    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
-						+ "BatchNumber=" + m_Line.sBatchNumber()
-						+ "&EntryNumber=" + m_Line.sEntryNumber()
-						+ "&LineNumber=" + m_Line.sLineNumber()
-						+ "&BatchType=" + m_sBatchType
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-						+ "&Warning=" + m_sWarning;
-		    	return;
+	    		throw new Exception("You chose to delete, but did not check the 'confirming' check box.");
 	    	}else{
-	    		//Delete the line:
-	    		if (!deleteLine(sDBID, sUserID, sUserFullName)){
-	    			m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
-							+ "BatchNumber=" + m_Line.sBatchNumber()
-							+ "&EntryNumber=" + m_Line.sEntryNumber()
-							+ "&LineNumber=" + m_Line.sLineNumber()
-							+ "&BatchType=" + m_sBatchType
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-							+ "&Warning=" + "Could not delete line: " + m_sWarning;
-			    	return;	    			
+	    		try {
+	    			deleteLine(sDBID, sUserID, sUserFullName, m_Line);
+	    		}catch (Exception e) {
+	    			throw new Exception("Could not delete line:" + e.getMessage());
 	    		}
-	    		m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditShipmentEntry"
-						+ "?BatchNumber=" + m_Line.sBatchNumber()
-						+ "&EntryNumber=" + m_Line.sEntryNumber()
-						+ "&BatchType=" + m_sBatchType
-						+ "&Editable=Yes"
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-						+ "&Warning=";
-		    	return;
 	    	}
 	    }
+	    
+	    //if it's a request to save
 	    if (m_sSave.compareToIgnoreCase("") != 0){
-	    	if (!saveLine(
+	    	try {
+	    		saveLine(
 	    			getServletContext(), 
 	    			sDBID, 
 	    			sUserID,
-	    			sUserFullName
-
-	    		)){
-	    		//System.out.println("In " + this.toString() + " 02");
+	    			sUserFullName,
+	    			m_Line
+	    			);
+	    	}catch(Exception e) {
+	    		throw new Exception(e.getMessage());
 	    	}
-
-	    	//Store the saved line in the session
 	    	CurrentSession.setAttribute("EntryLine", m_Line);
-	    	m_sSendRedirect = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + m_sCallingClass + "?"
-					+ "BatchNumber=" + m_Line.sBatchNumber()
-					+ "&EntryNumber=" + m_Line.sEntryNumber()
-					+ "&LineNumber=" + m_Line.sLineNumber()
-					+ "&BatchType=" + m_sBatchType
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + m_sWarning;
-	    	return;
 	    }
 	}
-	private boolean saveLine(
+	
+	private void saveLine(
 			ServletContext context, 
 			String sDBID, 
 			String sUserID,
-			String sUserFullName
-		){
+			String sUserFullName,
+			ICEntryLine m_Line
+		) throws Exception{
 		
+		String sWarning = "";
 		ICEntry entry = new ICEntry();
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), context, sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			return false;
+			throw new Exception(sWarning);
 		}
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, 
@@ -197,8 +226,8 @@ public class ICShipmentLineUpdate extends HttpServlet{
 				);
 		
 		if (conn == null){
-			m_sWarning = "Could not open data connection to save line.";
-			return false;
+			sWarning = "Could not open data connection to save line.";
+			throw new Exception(sWarning);
 		}
 		
 		//Validate the line first in case we can't save it at all:
@@ -214,10 +243,10 @@ public class ICShipmentLineUpdate extends HttpServlet{
 
 		if (!entry.validateSingleLine(m_Line, conn)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080986]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		
 		//If it's a new line, just add it to the entry:
@@ -228,10 +257,10 @@ public class ICShipmentLineUpdate extends HttpServlet{
 
 			if (!entry.add_line(m_Line)){
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
-					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+					sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080987]");
-				return false;
+				throw new Exception(sWarning);
 			}
 			//If the line was successfully added, update the line number:
 			m_Line.sLineNumber(entry.sLastLine());
@@ -284,22 +313,22 @@ public class ICShipmentLineUpdate extends HttpServlet{
 			//	bErrorUpdatingEntry = true;
 			//}
 			if (bErrorUpdatingEntry){
-				m_sWarning = "Could not save in " + this.toString() + ".saveLine - ";
+				sWarning = "Could not save in " + this.toString() + ".saveLine - ";
 				for (int i = 0; i < entry.getErrorMessage().size(); i++){
-					m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+					sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 				}
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080988]");
-				return false;
+				throw new Exception(sWarning);
 			}
 		}
 	    //TODO - here the cost reverts back:
 		//System.out.println("In " + this.toString() + ".saveLine: price = " + m_Line.sPriceSTDFormat());
 		if (!entry.save_without_data_transaction(conn, sUserID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080989]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080990]");
 		
@@ -317,20 +346,25 @@ public class ICShipmentLineUpdate extends HttpServlet{
 		//Finally, load the line again into the class:
 		m_Line = new ICEntryLine();
 		if (!m_Line.load(sBatchNumber, sEntryNumber, sLineNumber, context, sDBID)){
-			m_sWarning = m_sWarning + "\n" + m_Line.getErrorMessage();
-			return false;
+			sWarning = sWarning + "\n" + m_Line.getErrorMessage();
+			throw new Exception(sWarning);
 		}
-		
-		return true;
 	}
-	private boolean deleteLine(String sDBID, String sUserID, String sUserFullName){
+	
+	private void deleteLine(
+			String sDBID, 
+			String sUserID, 
+			String sUserFullName,
+			ICEntryLine m_Line
+			) throws Exception{
 		
+		String sWarning = "";
 		ICEntry entry = new ICEntry(m_Line.sBatchNumber(), m_Line.sEntryNumber());
 		if (!entry.load(m_Line.sBatchNumber(), m_Line.sEntryNumber(), getServletContext(), sDBID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
-			return false;
+			throw new Exception(sWarning);
 		}
 		
 		//Setting these to zero will cause the entry to drop this line:
@@ -345,27 +379,29 @@ public class ICShipmentLineUpdate extends HttpServlet{
 				);
 		
 		if (conn == null){
-			m_sWarning = "Could not get data connection to delete line.";
-			return false;
+			sWarning = "Could not get data connection to delete line.";
+			throw new Exception(sWarning);
 		}
 		
 		if (!entry.save_without_data_transaction(conn, sUserID)){
 			for (int i = 0; i < entry.getErrorMessage().size(); i++){
-				m_sWarning = m_sWarning + "\n" + entry.getErrorMessage().get(i);
+				sWarning = sWarning + "\n" + entry.getErrorMessage().get(i);
 			}
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080984]");
-			return false;
+			throw new Exception(sWarning);
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080985]");
-		return true;
 	}
-    private boolean setDefaultCategory(
+	
+    private void setDefaultCategory(
     		ServletContext context, 
     		String sDBID, 
     		String sUserFullName,
-    		String sItemNumber
-    		){
+    		String sItemNumber,
+    		ICEntryLine m_Line
+    		) throws Exception{
     	
+    	String sWarning = "";
     	String SQL = "SELECT "
     		+ SMTableicitems.sCategoryCode
     		+ " FROM " 
@@ -386,31 +422,18 @@ public class ICShipmentLineUpdate extends HttpServlet{
     			m_Line.sCategoryCode(rs.getString(SMTableicitems.sCategoryCode));
     			//System.out.println("In " + this.toString() + ".setDefaultCategory - m_Line.sCategoryCode = " + m_Line.sCategoryCode());
     		}else{
-    			m_sWarning = "No matching item record.";
+    			sWarning = "No matching item record.";
     			m_Line.sCategoryCode("");
+    			throw new Exception(sWarning);
     		}
     		rs.close();
     	}catch (SQLException e){
     		m_Line.sCategoryCode("");
-    		m_sWarning = "SQL Error setting default category: " + e.getMessage();
+    		sWarning = "SQL Error setting default category: " + e.getMessage();
+    		throw new Exception(sWarning);
     	}
-    	
-    	return true;
     }
-	private void getRequestParameters(
-    	HttpServletRequest req){
 
-		m_sSave = clsManageRequestParameters.get_Request_Parameter("Save", req);
-		m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", req);
-		m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", req);
-		m_sUpdateDefaultCategory = clsManageRequestParameters.get_Request_Parameter("SubmitDefaultCategory", req);
-		m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", req);
-		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", req);
-		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", req);
-		m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", req);
-		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", req);
-		
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

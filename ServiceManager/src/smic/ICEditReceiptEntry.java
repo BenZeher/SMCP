@@ -54,6 +54,7 @@ public class ICEditReceiptEntry extends HttpServlet {
 		String m_sEditable;
 		String m_sBatchType;
 		String m_sWarning;
+		String m_sStatus;
 		ICEntry m_Entry;
 		
 	    //If there is no EntryInput in the session, we'll get a null in m_EntryInput:
@@ -93,10 +94,39 @@ public class ICEditReceiptEntry extends HttpServlet {
 		}
 		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
 		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-	    	
+		m_sStatus = 	clsManageRequestParameters.get_Request_Parameter("Status", m_hsrRequest);
 		//Try to load an ICEntryInput object from which to build the form:
 		try {
-			loadICEntryInput(m_Entry, m_sBatchNumber, m_sBatchType, m_sEntryNumber, m_bIsNewEntry, sDBID);
+			if (m_Entry == null){
+
+				//Have to construct the AREntryInput object here:
+				m_Entry = new ICEntry();
+				if (m_bIsNewEntry){
+					//If it's a new entry:
+					m_Entry.sBatchNumber(m_sBatchNumber);
+					m_Entry.sBatchType(m_sBatchType);
+					m_Entry.sEntryDescription("Receipt");
+					m_Entry.sEntryType(Integer.toString(ICEntryTypes.RECEIPT_ENTRY));
+					m_Entry.sEntryNumber("-1");
+					m_Entry.slid("-1");
+					
+					//System.out.println("In " + this.toString() + ".loadICEntryInput - 01");
+					//Get the batch date as the default entry date:
+					ICEntryBatch batch = new ICEntryBatch(m_Entry.sBatchNumber());
+					if(!batch.load(getServletContext(), sDBID)){
+						//System.out.println("In " + this.toString() + ".loadICEntryInput - 02");
+						m_Entry.sEntryDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
+					}else{
+						//System.out.println("In " + this.toString() + ".loadICEntryInput - 03");
+						m_Entry.sEntryDate(batch.getBatchDateInStdFormat());
+					}
+				}else{
+					if (!m_Entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
+				    	throw new Exception("Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber
+				    	 + "\n" + m_Entry.getErrorMessage());
+					}
+				}
+			}
 		}catch (Exception e){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit"
@@ -124,6 +154,9 @@ public class ICEditReceiptEntry extends HttpServlet {
 		if (! m_sWarning.equalsIgnoreCase("")){
 			m_pwOut.println("<B><FONT COLOR=\"RED\">WARNING: " + m_sWarning + "</FONT></B><BR>");
 		}
+		if (!m_sStatus.equalsIgnoreCase("")){
+			m_pwOut.println("<B>STATUS: " + m_sStatus + "</B><BR>");
+		}
 		
 	    //Print a link to main menu:
 		m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICMainMenu?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Return to Inventory Main Menu</A><BR>");
@@ -150,46 +183,7 @@ public class ICEditReceiptEntry extends HttpServlet {
 		//End the page:
 		m_pwOut.println("</BODY></HTML>");
 	}
-	private void loadICEntryInput(
-			ICEntry m_Entry, 
-			String m_sBatchNumber, 
-			String m_sBatchType, 
-			String m_sEntryNumber,
-			boolean m_bIsNewEntry,
-			String sDBID) throws Exception {
-		
-		//If the class has NOT been passed an AREntryInput query string, we'll have to build it:
-		if (m_Entry == null){
 
-			//Have to construct the AREntryInput object here:
-			m_Entry = new ICEntry();
-			if (m_bIsNewEntry){
-				//If it's a new entry:
-				m_Entry.sBatchNumber(m_sBatchNumber);
-				m_Entry.sBatchType(m_sBatchType);
-				m_Entry.sEntryDescription("Receipt");
-				m_Entry.sEntryType(Integer.toString(ICEntryTypes.RECEIPT_ENTRY));
-				m_Entry.sEntryNumber("-1");
-				m_Entry.slid("-1");
-				
-				//System.out.println("In " + this.toString() + ".loadICEntryInput - 01");
-				//Get the batch date as the default entry date:
-				ICEntryBatch batch = new ICEntryBatch(m_Entry.sBatchNumber());
-				if(!batch.load(getServletContext(), sDBID)){
-					//System.out.println("In " + this.toString() + ".loadICEntryInput - 02");
-					m_Entry.sEntryDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
-				}else{
-					//System.out.println("In " + this.toString() + ".loadICEntryInput - 03");
-					m_Entry.sEntryDate(batch.getBatchDateInStdFormat());
-				}
-			}else{
-				if (!m_Entry.load(m_sBatchNumber, m_sEntryNumber, getServletContext(), sDBID)){
-			    	throw new Exception("Could not load entry with batch number " + m_sBatchNumber + ", entry number " + m_sEntryNumber
-			    	 + "\n" + m_Entry.getErrorMessage());
-				}
-			}
-		}
-	}
 	private boolean createFormFromEntryInput(
 			ICEntry m_Entry,
 			boolean m_bEditable,

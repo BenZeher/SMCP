@@ -91,7 +91,7 @@ public class SMProposalPrintSelection extends HttpServlet {
 				+ sCalledClass + "\" METHOD='POST'>");
 		String sTrimmedOrderNumber = clsManageRequestParameters.get_Request_Parameter(SMTableproposals.strimmedordernumber, request);
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
-		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
+		out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMTableproposals.strimmedordernumber + "' VALUE='" + sTrimmedOrderNumber + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + NUMBER_OF_PROPOSAL_COPIES + "' VALUE='" + "1" + "'>");
 		out.println("<script type='text/javascript' src='scripts/gen_validatorv31.js'></script>\n");

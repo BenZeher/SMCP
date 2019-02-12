@@ -1325,7 +1325,7 @@ public class ICItem extends Object{
 		//No unexported invoices in SM
 		SQL = "SELECT " 
 			+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
-			+ " FROM " + SMTableinvoiceheaders.TableName + " LEFT JOIN " + SMTableinvoicedetails.TableName
+			+ " FROM " + SMTableinvoicedetails.TableName + " LEFT JOIN " + SMTableinvoiceheaders.TableName
 			+ " ON " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " = "
 			+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
 			+ " WHERE ("

@@ -5,14 +5,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.servlet.http.HttpServlet;
 
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableinvoicedetails;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsEmailInlineHTML;
+import ServletUtilities.clsPDFFileCreator;
+import smcontrolpanel.SMUtilities;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -22,11 +27,11 @@ public class TESTBatchExport extends HttpServlet{
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
-		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.211.251
-		String sDBID = "servmgr1"; //servmgr1 - default
+		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
+		String sDBID = "sm1"; //servmgr1 - default
 		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
-		String sUser = "root";//"smuser7sT559";
-		String sPassword = "x14r7uidfDgvC4th";//"kJ26D3G9bvK8";
+		String sUser = "smuser";//"smuser7sT559";
+		String sPassword = "smuser";//"kJ26D3G9bvK8";
 		
 		//OHD Tampa settings:
 		/*
@@ -67,8 +72,36 @@ public class TESTBatchExport extends HttpServlet{
 			}
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
+		//TEST EMAILER
 		
+		//Get the temporary file path for saving files:
+
+		//Email one copy to each person in the email address list:;
+		String sSMTPServer = "smtp.gmail.com";
+		String sSMTPUserName = "ohd-washington-noreply@odcdc.com";
+		String sSMTPPassword = "SMTPPassword";
+		String sEmailTo = "benzeher@odcdc.com";
+		String sSMTPReplyToAddress = "ohd-washington-noreply@overheaddoors.com";
+		String sEmailBody = "This is a test email message";
+		String sEmailSubject = "Testing emailer";
+		try {
+			clsEmailInlineHTML.sendEmailWithEmbeddedHTML(
+				sSMTPServer, //System option
+				sSMTPUserName, //System option
+				sSMTPPassword, //System option
+				sEmailTo,
+				sSMTPReplyToAddress,//System option
+				sEmailSubject, 
+				sEmailBody, 
+				null,
+				null
+				);
+		} catch (Exception e2) {
+			System.out.println("Error sending email  - " + e2.getMessage());
+		}
+		System.out.println("Done email function.");
 		
+		/* IMPORT EXPENSED COST
 		String SMTabletempExpensedCost = "tempExpensedCost";
 
 		String sSQLtemp = "SELECT * FROM " + SMTabletempExpensedCost;
@@ -147,6 +180,7 @@ public class TESTBatchExport extends HttpServlet{
 	}
 		
 		System.out.println("All Done!");
+		*/
 		/*
 		String sNote = "123*SESSIONTAG*456";
 		

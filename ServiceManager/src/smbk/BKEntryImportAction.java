@@ -11,6 +11,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -38,18 +39,18 @@ import ServletUtilities.clsStringFunctions;
 public class BKEntryImportAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static int NUMBER_OF_FIELDS_PER_LINE = 3;
-	private static int FIELD_CHECK_NUMBER = 0;
-	private static int FIELD_ISSUE_DATE = 1;
-	private static int FIELD_AMOUNT = 2;
+	private static final int NUMBER_OF_FIELDS_PER_LINE = 3;
+	private static final int FIELD_CHECK_NUMBER = 0;
+	private static final int FIELD_ISSUE_DATE = 1;
+	private static final int FIELD_AMOUNT = 2;
 	
-	private static String sBKEntryImportActionCallingClass = "";
-	private static String sBKEntryImportActionError = "";
 	
-	//Member variables for the count:
-	private static String m_sBankID = "";
-	private static String m_sEntryDescription = "";
-	private static String m_sGLAccount = "";
+	//Member variables for local hash map key:
+	private static final String sBKEntryImportActionCallingClass = "sBKEntryImportActionCallingClass";
+	private static final String sBKEntryImportActionError = "sBKEntryImportActionError";
+	private static final String m_sBankID = "m_sBankID";
+	private static final String m_sEntryDescription = "m_sEntryDescription";
+	private static final String m_sGLAccount = "m_sGLAccount";
 
 	private static boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
@@ -69,7 +70,7 @@ public class BKEntryImportAction extends HttpServlet{
 			{
 				return;
 			}
-
+		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
@@ -79,6 +80,15 @@ public class BKEntryImportAction extends HttpServlet{
 	    
 	    String sStatus = "";
 	    String sError = "";
+	    
+		//Create hash map object of member variables. 
+		//A hash map must be past to functions of this class instead of updating global variables for thread safety. 
+		HashMap<String,String> mv = new HashMap<String,String>();
+		mv.put(sBKEntryImportActionCallingClass, "");
+		mv.put(sBKEntryImportActionError, "");
+		mv.put(m_sBankID, "");
+		mv.put(m_sEntryDescription, "");
+		mv.put(m_sGLAccount, "");
 	    
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
@@ -97,10 +107,10 @@ public class BKEntryImportAction extends HttpServlet{
 	    	}
 	    }
 	    
-	    if (!processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName)){
+	    if (!processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName, mv)){
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Warning=" + sError
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -108,7 +118,7 @@ public class BKEntryImportAction extends HttpServlet{
 				);
 			}		
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Warning=" + sError
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -118,7 +128,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    	sStatus = "Import completed without errors.";
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Status=" + sStatus
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -126,7 +136,7 @@ public class BKEntryImportAction extends HttpServlet{
 				);
 			}
 	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sBKEntryImportActionCallingClass
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Status=" + sStatus
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
 					+ "&" + SMTablebkaccountentries.sdescription + "=" + clsManageRequestParameters.get_Request_Parameter(SMTablebkaccountentries.sdescription, request)
@@ -136,7 +146,7 @@ public class BKEntryImportAction extends HttpServlet{
 		
 		return;
 	}
-	private boolean createTempImportFileFolder(String sTempFileFolder){
+	private boolean createTempImportFileFolder(String sTempFileFolder, HashMap<String,String> mv){
 	    File dir = new File(sTempFileFolder);
 	    if (dir.exists()) {
 	      return true;
@@ -146,11 +156,11 @@ public class BKEntryImportAction extends HttpServlet{
 	    try{
 	        // Create one directory
 	        if (!new File(sTempFileFolder).mkdir()) {
-	        	this.addToErrorMessage("<BR>Error creating temp upload folder.");
+	        	this.addToErrorMessage("<BR>Error creating temp upload folder.", mv);
 	        	return false;
 	        }    
         }catch (Exception e){//Catch exception if any
-        	this.addToErrorMessage("<BR>Error creating temp upload folder: " + e.getMessage() + ".");
+        	this.addToErrorMessage("<BR>Error creating temp upload folder: " + e.getMessage() + ".", mv);
 	    }
 	    return true;
 	}
@@ -160,7 +170,8 @@ public class BKEntryImportAction extends HttpServlet{
 			PrintWriter pwOut,
 			String sDBID, 
 			String sUserID, 
-			String sUserFullName
+			String sUserFullName,
+			HashMap<String,String> mv
 			){
 
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
@@ -169,12 +180,12 @@ public class BKEntryImportAction extends HttpServlet{
 		;
 
     	//If the folder has not been created, create it now:
-		if (!createTempImportFileFolder(sTempFilePath)){
+		if (!createTempImportFileFolder(sTempFilePath, mv)){
 			return false;
 		}
     	
 		//First, remove any temporary files:
-		if (!deleteCurrentTempImportFiles(sTempFilePath)){
+		if (!deleteCurrentTempImportFiles(sTempFilePath, mv)){
 			return false;
 		}
 
@@ -189,9 +200,9 @@ public class BKEntryImportAction extends HttpServlet{
 				pwOut,
 				sDBID, 
 				sUserID, 
-				sUserFullName
+				sUserFullName, mv
 				);
-		deleteCurrentTempImportFiles(sTempFilePath);
+		deleteCurrentTempImportFiles(sTempFilePath, mv);
 		return bResult;
 		
 	}
@@ -203,7 +214,8 @@ public class BKEntryImportAction extends HttpServlet{
 			PrintWriter pwOut,
 			String sDBID, 
 			String sUserID, 
-			String sUserFullName
+			String sUserFullName,
+			HashMap<String,String> mv
 	){
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
@@ -226,7 +238,7 @@ public class BKEntryImportAction extends HttpServlet{
 			fileEntries = upload.parseRequest(req);
 		} catch (FileUploadException e1) {
 			this.addToErrorMessage("<BR>"
-				+ "Error on upload.parseRequest: " + e1.getMessage());
+				+ "Error on upload.parseRequest: " + e1.getMessage(), mv);
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
@@ -240,29 +252,29 @@ public class BKEntryImportAction extends HttpServlet{
 		    FileItem fileitem = (FileItem) iter.next();
 		    if (fileitem.isFormField()) {
 		    	if (fileitem.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sBKEntryImportActionCallingClass = fileitem.getString();
+		    		mv.put(sBKEntryImportActionCallingClass, fileitem.getString());
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sBKEntryImportActionCallingClass + "."); 
+							+ ".writeFileAndProcess, parameter CallingClass = " + mv.get(sBKEntryImportActionCallingClass) + "."); 
 					}		
 		    	}
 		    	if (fileitem.getFieldName().compareToIgnoreCase(SMTablebkaccountentries.sdescription) == 0){
-		    		m_sEntryDescription = fileitem.getString();		    		
+		    		mv.put(m_sEntryDescription, fileitem.getString());		    		
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
-							+ SMTablebkaccountentries.sdescription + " = " + m_sEntryDescription + "."); 
+							+ SMTablebkaccountentries.sdescription + " = " + mv.get(m_sEntryDescription) + "."); 
 					}
 		    	}
 		    	if (fileitem.getFieldName().compareToIgnoreCase(BKBankStatement.Paramlbankid) == 0){
-		    		m_sBankID = fileitem.getString();
+		    		mv.put(m_sBankID, fileitem.getString());
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
-							+ BKBankStatement.Paramlbankid + " = " + m_sBankID + "."); 
+							+ BKBankStatement.Paramlbankid + " = " + mv.get(m_sBankID) + "."); 
 					}
 		    	}
 
@@ -287,7 +299,7 @@ public class BKEntryImportAction extends HttpServlet{
 					fi.write(new File(sTempImportFilePath, fileName));
 				} catch (Exception e) {
 					this.addToErrorMessage("<BR>"
-						+ "Error writing temporary file: " + e.getMessage());
+						+ "Error writing temporary file: " + e.getMessage(), mv);
 					System.out.println("In " + this.toString() + " error on fi.write: " + e.getMessage());
 					return false;
 				}
@@ -305,7 +317,7 @@ public class BKEntryImportAction extends HttpServlet{
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
-		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow)){
+		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, mv)){
 			return false;
 		}
 		
@@ -328,14 +340,14 @@ public class BKEntryImportAction extends HttpServlet{
 		boolean bResult = true;		
 		//Get the GLAccount for this bank:
 		try {
-			m_sGLAccount = getBankGL(m_sBankID, conn);
+			mv.put(m_sGLAccount, getBankGL(mv.get(m_sBankID), conn));
 		} catch (Exception e) {
-			this.addToErrorMessage(e.getMessage());
+			this.addToErrorMessage(e.getMessage(), mv);
 			bResult =  false;
 		}
 
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			this.addToErrorMessage("Could not start data transaction.");
+			this.addToErrorMessage("Could not start data transaction.", mv);
 			bResult =  false;
 		}
 		
@@ -343,12 +355,12 @@ public class BKEntryImportAction extends HttpServlet{
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
 		
-		if (!insertEntries(sTempImportFilePath, fileName, conn, bIncludesHeaderRow)){
+		if (!insertEntries(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, mv)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			bResult = false;
 		}else{
 			if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-				this.addToErrorMessage("Could not commit data transaction.");
+				this.addToErrorMessage("Could not commit data transaction.", mv);
 				bResult = false;
 			}
 		}
@@ -372,7 +384,8 @@ public class BKEntryImportAction extends HttpServlet{
 			String sFilePath,
 			String sFileName,
 			Connection conn,
-			boolean bFileIncludesHeaderRow
+			boolean bFileIncludesHeaderRow,
+			HashMap<String,String> mv
 	) {
 		
 		BufferedReader br = null;
@@ -420,7 +433,7 @@ public class BKEntryImportAction extends HttpServlet{
 					try {
 						bEntryAlreadyExists = (entryAlreadyExists(sDocNumber, conn));
 					} catch (Exception e1) {
-						this.addToErrorMessage("<BR>" + e1.getMessage());
+						this.addToErrorMessage("<BR>" + e1.getMessage(), mv);
 						return false;
 					}
 					if (!bEntryAlreadyExists){
@@ -450,9 +463,9 @@ public class BKEntryImportAction extends HttpServlet{
 							+ ", 0"
 							+ ", " + sEntryType
 							+ ", " + SMTablebkaccountentries.INITIAL_STATEMENT_ID_VALUE
-							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sEntryDescription) + "'"
+							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(mv.get(m_sEntryDescription)) + "'"
 							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDocNumber) + "'"
-							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sGLAccount) + "'"
+							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(mv.get(m_sGLAccount)) + "'"
 							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(SMTablebkaccountentries.SOURCE_MODULE_IMPORTED_ENTRY) + "'"
 							+ ")"
 						;
@@ -460,24 +473,24 @@ public class BKEntryImportAction extends HttpServlet{
 							Statement stmt = conn.createStatement();
 							stmt.execute(SQL);
 						} catch (Exception e) {
-							this.addToErrorMessage("<BR>" + "Error inserting entry with SQL: " + SQL + " - " + e.getMessage());
+							this.addToErrorMessage("<BR>" + "Error inserting entry with SQL: " + SQL + " - " + e.getMessage(), mv);
 							return false;
 						}
 					}
 				}
 			}
 		} catch (FileNotFoundException ex) {
-			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".");
+			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".", mv);
 			return false;
 		} catch (IOException ex) {
-			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
+			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".", mv);
 			return false;
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
+				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".", mv);
 				return false;
 			}
 		}
@@ -504,13 +517,13 @@ public class BKEntryImportAction extends HttpServlet{
 		
 		return bAlreadyExists;
 	}
-	private boolean deleteCurrentTempImportFiles(String sTempImportFilePath){
+	private boolean deleteCurrentTempImportFiles(String sTempImportFilePath, HashMap<String,String> mv){
 		
 		boolean bDeletionSuccessful = true;
 		
 	    File dir = new File(sTempImportFilePath);
 	    if (!dir.exists()) {
-	    	this.addToErrorMessage("<BR>Temp import file directory does not exist: " + sTempImportFilePath);
+	    	this.addToErrorMessage("<BR>Temp import file directory does not exist: " + sTempImportFilePath, mv);
 	      return false;
 	    }
 	    String[] info = dir.list();
@@ -520,14 +533,15 @@ public class BKEntryImportAction extends HttpServlet{
 	        continue;
 	      }
 	      if (!n.delete()){
-	    	  this.addToErrorMessage("Unable to delete " + sTempImportFilePath + info[i]);
+	    	  this.addToErrorMessage("Unable to delete " + sTempImportFilePath + info[i], mv);
 	    	  bDeletionSuccessful = false;
 	      } 
 	    }
 	    return bDeletionSuccessful;
 
 	}
-	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow) {
+
+	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, HashMap<String,String> mv) {
 
 		BufferedReader br = null;
 		boolean bResult = true;
@@ -563,7 +577,7 @@ public class BKEntryImportAction extends HttpServlet{
 							//bResult = false;
 						}else{
 							if (!validateImportField(
-									iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""))){
+									iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""), mv)){
 								bResult = false;
 							}
 						}
@@ -571,27 +585,27 @@ public class BKEntryImportAction extends HttpServlet{
 					}
 					if (iFieldCounter < NUMBER_OF_FIELDS_PER_LINE){
 						this.addToErrorMessage("<BR>Line number " + iLineCounter + " has less than " 
-							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it.");
+							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it.", mv);
 						bResult = false;
 					}
 				}
 			}
 			if (iLineCounter == 0){
-				this.addToErrorMessage("<BR>The file has no lines in it.");
+				this.addToErrorMessage("<BR>The file has no lines in it.", mv);
 				bResult = false;
 			}
 		} catch (FileNotFoundException ex) {
-			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".");
+			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".", mv);
 			bResult = false;
 		} catch (IOException ex) {
-			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
+			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".", mv);
 			bResult = false;
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
+				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".", mv);
 				bResult = false;
 			}
 		}
@@ -617,7 +631,7 @@ public class BKEntryImportAction extends HttpServlet{
 		}
 		return s;
 	}
-	private boolean validateImportField (int iLineNumber, int iFieldIndex, String sField){
+	private boolean validateImportField (int iLineNumber, int iFieldIndex, String sField, HashMap<String,String> mv){
 		
 		boolean bResult = true;
 		
@@ -630,18 +644,18 @@ public class BKEntryImportAction extends HttpServlet{
 		}
 		if (iFieldIndex == FIELD_ISSUE_DATE){
 			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", sField)){
-				this.addToErrorMessage("Invalid issue date on line " + iLineNumber + ": '" + sField + "'.  ");
+				this.addToErrorMessage("Invalid issue date on line " + iLineNumber + ": '" + sField + "'.  ", mv);
 				return false;
 			}
 		}
 		if (iFieldIndex == FIELD_CHECK_NUMBER){
 			if (sField.compareToIgnoreCase("") == 0){
-				this.addToErrorMessage("Check number on line " + iLineNumber + " is blank.");
+				this.addToErrorMessage("Check number on line " + iLineNumber + " is blank.", mv);
 				return false;
 			}
 			if (sField.length() > SMTablebkaccountentries.sdocnumberlength){
 				this.addToErrorMessage("Check number on line " + iLineNumber + " is too long - it can only be " 
-					+ SMTablebkaccountentries.sdocnumberlength + " characters long.");
+					+ SMTablebkaccountentries.sdocnumberlength + " characters long.", mv);
 				return false;
 			}
 		}
@@ -650,19 +664,19 @@ public class BKEntryImportAction extends HttpServlet{
 				@SuppressWarnings("unused")
 				BigDecimal bdAmount = new BigDecimal(sField.replace(",", ""));
 			} catch (Exception e) {
-				this.addToErrorMessage("Amount '" + sField + "' on line " + iLineNumber + " is invalid.");
+				this.addToErrorMessage("Amount '" + sField + "' on line " + iLineNumber + " is invalid.", mv);
 				return false;
 			}
 		}
 		return bResult;
 	}
 
-	private void addToErrorMessage(String sMsg){
+	private void addToErrorMessage(String sMsg, HashMap<String,String> mv){
 		
-		if (sBKEntryImportActionError.length() > 900){
-			sBKEntryImportActionError = sBKEntryImportActionError.substring(0, 900) + " . . . (remaining errors truncated).";
+		if (mv.get(sBKEntryImportActionError).length() > 900){
+			mv.put(sBKEntryImportActionError, mv.get(sBKEntryImportActionError).substring(0, 900) + " . . . (remaining errors truncated).");
 		}else{
-			sBKEntryImportActionError += sMsg;
+			mv.put(sBKEntryImportActionError, mv.get(sBKEntryImportActionError) + sMsg);
 		}
 		if (bDebugMode){
 			clsServletUtilities.sysprint(this.toString(), "ICCOUNTIMPORT", sMsg);

@@ -38,6 +38,7 @@ public class ICTransferImportAction extends HttpServlet{
 	private static final int FIELD_TO_LOCATION = 3;
 	
 
+	//Keys used for local hash mapped member variables.
 	private static final String sCallingClass = "sCallingClass";
 	private static final String m_sBatchNumber = "m_sBatchNumber";
 	private static final String m_sEntryNumber = "m_sEntryNumber";
@@ -48,7 +49,8 @@ public class ICTransferImportAction extends HttpServlet{
 			HttpServletResponse response)
 			throws ServletException, IOException {
 
-		//Create  hash map object of member variables so that the values will be updated when passing to other functions in this class
+		//Create hash map object of member variables. 
+		//A hash map must be past to functions of this class instead of updating global variables for thread safety. 
 		HashMap<String,String> mv = new HashMap<String,String>();
 		mv.put(m_sBatchNumber, "");
 		mv.put(m_sEntryNumber, "");

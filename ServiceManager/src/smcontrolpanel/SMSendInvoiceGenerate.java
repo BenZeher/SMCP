@@ -923,9 +923,9 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 	private String createEmailBody() throws Exception{
 		String s = "";
 		s += "Please process the attached invoice for payment."
-			+ "  \n\nNOTE: This is an automatically generated email, please do not respond to this email address."
-			+ "  Please use the contact information on the attached invoice to respond."
-			+ "  \n\nThank you"
+			+ "  <BR /><BR /><font color=\"red\"><b>NOTE: This is an automatically generated email, please do not respond to this email address.</b></font>"
+			+ "  <BR />Please use the contact information on the attached invoice to respond."
+			+ "  <BR /><BR />Thank you"
 		;
 		return s;
 	}

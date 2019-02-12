@@ -434,7 +434,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
         out.println ("</TR></TABLE><BR><BR>");
        	out.println ("</FORM>");
        	
-       	out.println ("<script LANGUAGE=\"JavaScript\">");
+       	out.println ("<script type=\"text/javascript\">");
        	
        	out.println(javaScript());
        	
@@ -457,15 +457,11 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 	
 	public String javaScript(){
 		String s = "";
-		  s +=  "   window.addEventListener(\"beforeunload\",function(){\n" 
-		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; color: black; cursor: not-allowed; display: inline-block; text-decoration: none;\");\n"
+		  s +=  "   window.addEventListener(\"beforeunload\",function(){\n"
+		  +  "      document.documentElement.style.cursor = \"not-allowed\";\n "
 		  +  "     document.documentElement.style.cursor = \"wait\";\n"
 		  +"      });\n";
-//		  +  "   function Import(){\n"
-//		  + "        alert(\"Hello\");\n"
-////		  +  "     document.getElementById(id).setAttribute(\"style\",\"pointer-events: none; color: black; cursor: not-allowed; opacity: 0.5; display: inline-block; text-decoration: none; \");\n"
-////		  +  "     window.location.href = link;\n"
-//		  +  "      }\n"
+
 		return s;
 	}
 	

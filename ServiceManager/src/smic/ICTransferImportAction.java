@@ -9,6 +9,7 @@ import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletException;
@@ -38,17 +39,22 @@ public class ICTransferImportAction extends HttpServlet{
 	
 
 	private static String sCallingClass = "";
+	private static String m_sBatchNumber = "m_sBatchNumber";
+	private static String m_sEntryNumber = "m_sEntryNumber";
+	private static String m_sBatchType = "m_sBatchType";
 	
-	//Member variables for the entry:
-	private String m_sBatchNumber;
-	private String m_sEntryNumber;
-	private String m_sBatchType;
-
-	private static boolean bDebugMode = false;
+	private static boolean bDebugMode = true;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
-	
+
+		//Create  hash map object of member variables so that the values will be updated when passing to other functions in this class
+		HashMap<String,String> mv = new HashMap<String,String>();
+		mv.put(m_sBatchNumber, "");
+		mv.put(m_sEntryNumber, "");
+		mv.put(m_sBatchType, "");
+		
+		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " 01");
 		}
@@ -90,24 +96,24 @@ public class ICTransferImportAction extends HttpServlet{
 	    }
 	    
 	    try {
-			processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName);
+			processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName, mv);
 		} catch (Exception e) {
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
-	  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + m_sBatchNumber
-	   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + m_sEntryNumber
-	   	    		+ "&" + ICEntry.ParamBatchType + "=" + m_sBatchType
+	  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
+	   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
+	   	    		+ "&" + ICEntry.ParamBatchType + "=" + mv.get(m_sBatchType)
 	   	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
 			}		
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
-  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + m_sBatchNumber
-   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + m_sEntryNumber
-   	    		+ "&" + ICEntry.ParamBatchType + "=" + m_sBatchType
+  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
+   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
+   	    		+ "&" + ICEntry.ParamBatchType + "=" + mv.get(m_sBatchType)
    	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
@@ -118,18 +124,18 @@ public class ICTransferImportAction extends HttpServlet{
 			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
 				+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 				+ "?Status=" + sStatus
-  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + m_sBatchNumber
-   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + m_sEntryNumber
-   	    		+ "&" + ICEntry.ParamBatchType + "=" + m_sBatchType
+  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
+   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
+   	    		+ "&" + ICEntry.ParamBatchType + "=" + mv.get(m_sBatchType)
    	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID				
 			);
 		}
     	response.sendRedirect(
 			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 			+ "?Status=" + sStatus
-    		+ "&" + ICEntry.ParamBatchNumber + "=" + m_sBatchNumber
-    		+ "&" + ICEntry.ParamEntryNumber + "=" + m_sEntryNumber
-    		+ "&" + ICEntry.ParamBatchType + "=" + m_sBatchType
+    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
+    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
+    		+ "&" + ICEntry.ParamBatchType + "=" + mv.get(m_sBatchType)
     		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID	
 		);
 		
@@ -157,8 +163,8 @@ public class ICTransferImportAction extends HttpServlet{
 			PrintWriter pwOut,
 			String sDBID,
 			String sUserID,
-			String sUserFullName
-			) throws Exception{
+			String sUserFullName,
+			HashMap<String, String> mv) throws Exception{
 
     	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
 			+ System.getProperty("file.separator")
@@ -183,7 +189,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		try {
-			writeFileAndProcess(sTempFilePath, ses, req, pwOut, sDBID, sUserID, sUserFullName);
+			writeFileAndProcess(sTempFilePath, ses, req, pwOut, sDBID, sUserID, sUserFullName, mv);
 		} catch (Exception e2) {
 			throw new Exception (e2.getMessage());
 		}
@@ -202,7 +208,8 @@ public class ICTransferImportAction extends HttpServlet{
 			PrintWriter pwOut,
 			String sDBID,
 			String sUserID, 
-			String sUserFullName
+			String sUserFullName,
+			HashMap<String, String> mv
 	) throws Exception{
 		//Check to see if the file has a header row:
 		boolean bIncludesHeaderRow = false;
@@ -245,31 +252,31 @@ public class ICTransferImportAction extends HttpServlet{
 					}		
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(ICEntry.ParamBatchNumber) == 0){
-		    		m_sBatchNumber = item.getString();		    		
+		    		mv.put(m_sBatchNumber, item.getString());		    		
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
-							+ ICEntry.ParamBatchNumber + " = " + m_sBatchNumber + "."); 
+							+ ICEntry.ParamBatchNumber + " = " + mv.get(m_sBatchNumber) + "."); 
 					}
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(ICEntry.ParamBatchType) == 0){
-		    		m_sBatchType = item.getString();
+		    		mv.put(m_sBatchType,item.getString());
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
-							+ ICEntry.ParamBatchType + " = " + m_sBatchType + "."); 
+							+ ICEntry.ParamBatchType + " = " + mv.get(m_sBatchType) + "."); 
 					}
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(
 		    			ICEntry.ParamEntryNumber) == 0){
-		    			m_sEntryNumber = item.getString();
+		    		mv.put(m_sEntryNumber,item.getString());
 						if (bDebugMode){
 							System.out.println(
 								"In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
-								+ ICEntry.ParamEntryNumber + " = " + m_sEntryNumber + "."); 
+								+ ICEntry.ParamEntryNumber + " = " + mv.get(m_sEntryNumber) + "."); 
 						}
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase("INCLUDESHEADERROW") == 0){
@@ -332,7 +339,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		try {
-			insertTransferLines(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, options, sDBID, sUserID, sUserFullName);
+			insertTransferLines(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, options, sDBID, sUserID, sUserFullName, mv);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080995]");
@@ -359,7 +366,8 @@ public class ICTransferImportAction extends HttpServlet{
 			ICOption options,
 			String sDBID,
 			String sUserID,
-			String sUserFullName
+			String sUserFullName,
+			HashMap<String, String> mv
 	) throws Exception{
 		
 		BufferedReader br = null;
@@ -400,12 +408,12 @@ public class ICTransferImportAction extends HttpServlet{
 					}
 					
 					ICEntryLine entryline = new ICEntryLine();
-					entryline.sBatchNumber(m_sBatchNumber);
+					entryline.sBatchNumber(mv.get(m_sBatchNumber));
 					entryline.setQtyString(sQty);
 					entryline.sItemNumber(sItem);
 					entryline.sLocation(sFromLocation);
 					entryline.sTargetLocation(sToLocation);
-					entryline.sEntryNumber(m_sEntryNumber);
+					entryline.sEntryNumber(mv.get(m_sEntryNumber));
 					entryline.sComment("Imported transfer");
 					ICItem item = new ICItem(sItem);
 					if(!item.load(conn)){

@@ -94,13 +94,16 @@ public class SMBackgroundJobManager implements ServletContextListener {
 						sc
 						);
 			} catch (Exception e) {
-				System.out.println("[1483715802] Error in runEveryMinute - " + e.getMessage() + ", "
-					+ "sControlDatabaseURL = '" + sControlDatabaseURL + "', "
-					+ "sControlDatabaseName = '" + sControlDatabaseName + "', "
-					+ "sControlDatabasePort = '" + sControlDatabasePort + "', "
-					+ "sControlDatabaseUser = '" + sControlDatabaseUser + "'."
+				SMUtilities.sysprint(
+					this.toString(), 
+					"SYSTEM", 
+					"[1483715802] Error in runEveryMinute - " + e.getMessage() + ", "
+						+ "sControlDatabaseURL = '" + sControlDatabaseURL + "', "
+						+ "sControlDatabaseName = '" + sControlDatabaseName + "', "
+						+ "sControlDatabasePort = '" + sControlDatabasePort + "', "
+						+ "sControlDatabasePw length = '" + sControlDatabasePw.length() + "', "
+						+ "sControlDatabaseUser = '" + sControlDatabaseUser + "'."
 				);
-				
 			}
 			proc = null;
 		}

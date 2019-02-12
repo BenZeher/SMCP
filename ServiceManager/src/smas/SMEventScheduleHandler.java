@@ -416,7 +416,6 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 		
 		//Now we have to update the schedule details 'activated' flag so that the system knows which details have been activated and which have been 
 		//'de-activated':
-		// TOREVIEW - Review this line to see if it can't be optimized:
 		SQL = "UPDATE " + SMTablesseventscheduledetails.TableName
 			+ " SET " + SMTablesseventscheduledetails.iactivated + " = "
 			+ " IF(" + SMTablesseventscheduledetails.lid + " = " + Long.toString(lSSEventScheduleDetailID) + ", 1, 0)"

@@ -31,17 +31,17 @@ import smcontrolpanel.SMUtilities;
 public class ICTransferImportAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
-	private static int NUMBER_OF_FIELDS_PER_LINE = 4;
-	private static int FIELD_QTY = 0;
-	private static int FIELD_ITEM = 1;
-	private static int FIELD_FROM_LOCATION = 2;
-	private static int FIELD_TO_LOCATION = 3;
+	private static final int NUMBER_OF_FIELDS_PER_LINE = 4;
+	private static final int FIELD_QTY = 0;
+	private static final int FIELD_ITEM = 1;
+	private static final int FIELD_FROM_LOCATION = 2;
+	private static final int FIELD_TO_LOCATION = 3;
 	
 
-	private static String sCallingClass = "";
-	private static String m_sBatchNumber = "m_sBatchNumber";
-	private static String m_sEntryNumber = "m_sEntryNumber";
-	private static String m_sBatchType = "m_sBatchType";
+	private static final String sCallingClass = "sCallingClass";
+	private static final String m_sBatchNumber = "m_sBatchNumber";
+	private static final String m_sEntryNumber = "m_sEntryNumber";
+	private static final String m_sBatchType = "m_sBatchType";
 	
 	private static boolean bDebugMode = true;
 	public void doPost(HttpServletRequest request,
@@ -53,6 +53,7 @@ public class ICTransferImportAction extends HttpServlet{
 		mv.put(m_sBatchNumber, "");
 		mv.put(m_sEntryNumber, "");
 		mv.put(m_sBatchType, "");
+		mv.put(sCallingClass, "");
 		
 		
 		if (bDebugMode){
@@ -100,7 +101,7 @@ public class ICTransferImportAction extends HttpServlet{
 		} catch (Exception e) {
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 					+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 	  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
 	   	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
@@ -109,7 +110,7 @@ public class ICTransferImportAction extends HttpServlet{
 				);
 			}		
 			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 				+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
   	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
    	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
@@ -122,7 +123,7 @@ public class ICTransferImportAction extends HttpServlet{
     	sStatus = "Import completed without errors.";
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
-				+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+				+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 				+ "?Status=" + sStatus
   	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
    	    		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
@@ -131,7 +132,7 @@ public class ICTransferImportAction extends HttpServlet{
 			);
 		}
     	response.sendRedirect(
-			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+			"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 			+ "?Status=" + sStatus
     		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
     		+ "&" + ICEntry.ParamEntryNumber + "=" + mv.get(m_sEntryNumber)
@@ -244,11 +245,11 @@ public class ICTransferImportAction extends HttpServlet{
 		    FileItem item = (FileItem) iter.next();
 		    if (item.isFormField()) {
 		    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-		    		sCallingClass = item.getString();
+		    		mv.put(sCallingClass,item.getString());
 					if (bDebugMode){
 						System.out.println(
 							"In " + this.toString() 
-							+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+							+ ".writeFileAndProcess, parameter CallingClass = " + mv.get(sCallingClass) + "."); 
 					}		
 		    	}
 		    	if (item.getFieldName().compareToIgnoreCase(ICEntry.ParamBatchNumber) == 0){
@@ -423,7 +424,7 @@ public class ICTransferImportAction extends HttpServlet{
 					
 				    //First, make sure there is no posting going on:
 			    	try {
-			    		options.checkAndUpdatePostingFlagWithoutConnection(getServletContext(), sDBID, sCallingClass, sUserFullName, "TRANSFER IMPORT ACTION");
+			    		options.checkAndUpdatePostingFlagWithoutConnection(getServletContext(), sDBID, mv.get(sCallingClass), sUserFullName, "TRANSFER IMPORT ACTION");
 					} catch (Exception e1) {
 						throw new Exception("Error [1396371621] - " + e1.getMessage());
 					}

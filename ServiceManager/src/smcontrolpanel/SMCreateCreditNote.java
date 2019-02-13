@@ -123,6 +123,7 @@ public class SMCreateCreditNote extends java.lang.Object{
             cDetail.setM_dExtendedCost(cDetail.getM_dExtendedCost().negate());
             cDetail.setM_dExtendedPrice(cDetail.getM_dExtendedPrice().negate());
             cDetail.setbdLineSalesTaxAmount(cDetail.getbdLineSalesTaxAmount().negate());
+            cDetail.setM_dExpensedCost(cDetail.getM_dExpensedCost().negate());
             //right now this is set to 1, means always return
             //cDetail.setM_iReturnToInventory(1);
             //set Current LineNumber as MatchingInvoiceLineNumber

@@ -209,7 +209,9 @@ public class SMAuthenticate{
 					sUserID, 
 					SMLogEntry.LOG_OPERATION_USERLOGIN, 
 					"Logging in", 
-					sSessionTagAttribute + " OPTS='" + sOpts + "'", 
+					sSessionTagAttribute + " OPTS='" + sOpts + "', "
+						+ " req.getQueryString() = '" + req.getQueryString() + "'"
+					, 
 					"[1376509305]");
 				if (bDebugMode){
 					System.out.println("In SMAuthenticate.authenticateCredentials - going into processLogin - 04");
@@ -509,7 +511,9 @@ public class SMAuthenticate{
 			    			sUserID, 
 			    			SMLogEntry.LOG_OPERATION_USERLOGIN, 
 			    			"Invalid password for user '" + sUserName + "'", 
-			    			"OPTS='" + sOpts + "'",
+			    			"OPTS='" + sOpts + "', "
+			    				+ " req.getQueryString() = '" + req.getQueryString() + "'"
+			    			,
 			    			"[1376509306]"
 			    			);
 			    	bResult = false;

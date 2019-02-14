@@ -300,6 +300,11 @@ public class PoolUtilities {
 			  String SQLStatement, 
 			  ServletContext context,
 			  String sDBID) throws SQLException{
+		
+		  
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151131] - sDBID = '" + sDBID + "', SQLStatement = '" + SQLStatement + "'.");
+			}
 		  
 		Connection conn;
 		try {
@@ -351,6 +356,11 @@ public class PoolUtilities {
 			  String CallingClass) throws SQLException{
 		  
 			Connection conn;
+			
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151130] - sDBID = '" + sDBID + "', CallingClass = '" + CallingClass + "', SQLStatement = '" + SQLStatement + "'.");
+			}
+			
 			try {
 				//TJR - changed 3/19/2012:
 				//conn = getConnection(context, sDBID, DBType, CallingClass);
@@ -401,7 +411,13 @@ public class PoolUtilities {
 			  String CallingClass,
 			  ServletContext context) throws Exception{
 
+		  
 		  Connection conn;
+		  
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151133] - sDBID = '" + sDBID + "', CallingClass = '" + CallingClass + "', SQL = '" + SQL + "'.");
+			}
+		  
 		  try {
 			  //TJR - changed 3/19/2012:
 			  //conn = getConnection(context, sDBID, DBType, CallingClass);
@@ -461,6 +477,10 @@ public class PoolUtilities {
 	    String sAllSQLs = "";
 	    for(int i = 0; i < SQLStatements.size(); i++){
 	    	sAllSQLs += SQLStatements.get(i) + "\n";
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151136] - sDBID = '" + sDBID + "', SQLStatement = '" + SQLStatements.get(i) + "'.");
+			}
+
 	    }
 		  try{
 			  conn = getConnection(context, sDBID, "MySQL", "SQL: (Multiple SQLs in transaction.)");
@@ -525,6 +545,9 @@ public class PoolUtilities {
 	    String sAllSQLs = "";
 	    for(int i = 0; i < SQLStatements.size(); i++){
 	    	sAllSQLs += SQLStatements.get(i) + "\n";
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151135] - sDBID = '" + sDBID + "', SQLStatement = '" + SQLStatements.get(i) + "'.");
+			}
 	    }
 		  
 		  try{
@@ -578,6 +601,11 @@ public class PoolUtilities {
 	  public static ResultSet openResultSet(String SQLStatement, ServletContext context, String sDBID) throws SQLException{
 		  
 		  Connection conn;
+		  
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151140] - sDBID = '" + sDBID + "', SQLStatement = '" + SQLStatement + "'.");
+			}
+
 		try {
 			//TJR - changed 3/19/2012:
 			//conn = getConnection(context, sDBID, "MySQL", "N/A");
@@ -630,6 +658,11 @@ public class PoolUtilities {
 			  String DBType) throws SQLException{
 		  
 		  Connection conn;
+		  
+			if (sDBID.contains("SMCP16")){
+				System.out.println("[1550151139] - sDBID = '" + sDBID + "', SQLStatement = '" + SQLStatement + "'.");
+			}
+
 		try {
 			//TJR - changed 3/19/2012:
 			//conn = getConnection(context, sDBID, DBType, "N/A");
@@ -683,6 +716,11 @@ public class PoolUtilities {
 			  String CallingClass) throws SQLException{
 		  
 		  Connection conn;
+		  
+			if (DBID.contains("SMCP16")){
+				System.out.println("[1550151138] - sDBID = '" + DBID + "', CallingClass = '" + CallingClass + "', SQLStatement = '" + SQLStatement + "'.");
+			}
+
 		try {
 			//TJR - changed 3/19/2012:
 			//conn = getConnection(context, sDBID, DBType, CallingClass);

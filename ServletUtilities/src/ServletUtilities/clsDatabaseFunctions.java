@@ -49,6 +49,11 @@ public class clsDatabaseFunctions {
 	}
 
 	public static Connection getConnection(ServletContext context, String sDBID, String sDBType, String sCallingClass){
+		
+		if (sDBID.contains("SMCP16")){
+			System.out.println("[1550151142] - sDBID = '" + sDBID + "', CallingClass = '" + sCallingClass + "'.");
+		}
+
 		try {
 			return PoolUtilities.getConnection(context, sDBID, sDBType, sCallingClass);
 		}catch (Exception e){
@@ -58,6 +63,11 @@ public class clsDatabaseFunctions {
 	}
 
 	public static Connection getConnectionWithException(ServletContext context, String sDBID, String sDBType, String sCallingClass) throws Exception{
+		
+		if (sDBID.contains("SMCP16")){
+			System.out.println("[1550151143] - sDBID = '" + sDBID + "', sCallingClass = '" + sCallingClass + "'.");
+		}
+
 		try {
 			return PoolUtilities.getConnection(context, sDBID, sDBType, sCallingClass);
 		}catch (SQLException e){

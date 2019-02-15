@@ -56,28 +56,12 @@ public class SMLogin extends HttpServlet {
 		
 		String sDBID = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
 		if (sDBID.contains("SMCP16")){
-			
-			String sContextParameters = "Context parameters: ";
-			Enumeration<String> enumContextParameters = getServletContext().getInitParameterNames();
-			while(enumContextParameters.hasMoreElements()) {
-				String sParamName = (String)enumContextParameters.nextElement();
-				sContextParameters += ", " + sParamName + " = " + getServletContext().getInitParameter(sParamName);
-			}
-			
-			HttpSession CurrentSession = request.getSession(true);
-			String sSessionParameters = "Session Parameters: ";
-			Enumeration<String> enumSessionParameters = CurrentSession.getAttributeNames();
-			while(enumSessionParameters.hasMoreElements()) {
-				String sAttributeName = (String)enumSessionParameters.nextElement();
-				sSessionParameters += ", " + sAttributeName + " = " + CurrentSession.getAttribute(sAttributeName);
-			}
-
 			clsServletUtilities.sysprint(this.toString(),
 				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_USER, request),
 				"[1550240637] - "
-				+ " request.getQueryString() = '" + request.getQueryString() + "',"
-				+ sContextParameters
-				+ " - " + sSessionParameters
+               	+ " req parameters  = '" + clsManageRequestParameters.getAllRequestParameters(request) + "', " 
+               	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(request.getSession(true)) + "', "
+               	+ " context parameters = '" + clsServletUtilities.getContextParameters(getServletContext()) + "'"
 			);
 		}
 		

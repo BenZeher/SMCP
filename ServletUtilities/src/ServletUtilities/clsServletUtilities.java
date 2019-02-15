@@ -24,6 +24,7 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Enumeration;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
@@ -47,6 +48,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablesmoptions;
+import smcontrolpanel.x;
 
 public class clsServletUtilities {
 
@@ -1466,5 +1468,33 @@ public class clsServletUtilities {
 			return "1";
 		}
 	
+	}
+	
+	public static String getContextParameters(ServletContext context){
+		String sContextParameters = "";
+		Enumeration<String> enumContextParameters = context.getInitParameterNames();
+		while(enumContextParameters.hasMoreElements()) {
+			String sParamName = (String)enumContextParameters.nextElement();
+			if (sContextParameters.compareToIgnoreCase("") == 0){
+				sContextParameters += sParamName + " = " + context.getInitParameter(sParamName);
+			}else{
+				sContextParameters += ", " + sParamName + " = " + context.getInitParameter(sParamName);
+			}
+		}
+		return sContextParameters;
+	}
+	public static String getSessionAttributes(HttpSession session){
+		
+		String sSessionParameters = "";
+		Enumeration<String> enumSessionParameters = session.getAttributeNames();
+		while(enumSessionParameters.hasMoreElements()) {
+			String sAttributeName = (String)enumSessionParameters.nextElement();
+			if (sSessionParameters.compareTo("") == 0){
+				sSessionParameters += sAttributeName + " = " + session.getAttribute(sAttributeName);
+			}else{
+				sSessionParameters += ", " + sAttributeName + " = " + session.getAttribute(sAttributeName);
+			}
+		}
+		return sSessionParameters;
 	}
 }

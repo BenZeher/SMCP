@@ -99,7 +99,7 @@ public class ICEditBatches extends HttpServlet {
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 	    out.println("<TR>");
 	    out.println("<TD>");
-	    out.println("<A HREF \""+ SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit?BatchNumber=-1&BatchType=" 
+	    out.println("<A HREF=\""+ SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit?BatchNumber=-1&BatchType=" 
 	    		+ Integer.toString(ICBatchTypes.IC_SHIPMENT) 
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+"\">New shipment batch</A>");

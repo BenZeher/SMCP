@@ -864,7 +864,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 			SQL += ", " + SMTablessalarmsequences.datlastarmed + " = NOW()"
 				+ ", " + SMTablessalarmsequences.datlastdisarmed + " = '0000-00-00 00:00:00'"
 				+ ", " + SMTablessalarmsequences.llastarmedbyid + " = " + sUserID + ""
-				+ ", " + SMTablessalarmsequences.slastarmedbyfullname + " = '" + sUserFullName + "'"
+				+ ", " + SMTablessalarmsequences.slastarmedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				+ ", " + SMTablessalarmsequences.llastdisarmedbyid + " = 0"
 				+ ", " + SMTablessalarmsequences.slastdisarmedbyfullname + " = ''"
 				
@@ -875,7 +875,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 				+ ", " + SMTablessalarmsequences.llastarmedbyid + " = 0"
 				+ ", " + SMTablessalarmsequences.slastarmedbyfullname + " = ''"
 				+ ", " + SMTablessalarmsequences.llastdisarmedbyid + " = " + sUserID + ""
-				+ ", " + SMTablessalarmsequences.slastdisarmedbyfullname + " = '" + sUserFullName + "'"
+				+ ", " + SMTablessalarmsequences.slastdisarmedbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 				
 			;
 		}else if (iArmingState == SMTablessalarmsequences.ALARM_STATE_TRIGGERED){

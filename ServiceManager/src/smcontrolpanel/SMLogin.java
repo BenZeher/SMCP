@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import ConnectionPool.CompanyDataCredentials;
 import ConnectionPool.PoolUtilities;
@@ -53,9 +54,36 @@ public class SMLogin extends HttpServlet {
 			return;
 		}
 		
+		String sDBID = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
+		if (sDBID.contains("SMCP16")){
+			
+			String sContextParameters = "Context parameters: ";
+			Enumeration<String> enumContextParameters = getServletContext().getInitParameterNames();
+			while(enumContextParameters.hasMoreElements()) {
+				String sParamName = (String)enumContextParameters.nextElement();
+				sContextParameters += ", " + sParamName + " = " + getServletContext().getInitParameter(sParamName);
+			}
+			
+			HttpSession CurrentSession = request.getSession(true);
+			String sSessionParameters = "Session Parameters: ";
+			Enumeration<String> enumSessionParameters = CurrentSession.getAttributeNames();
+			while(enumSessionParameters.hasMoreElements()) {
+				String sAttributeName = (String)enumSessionParameters.nextElement();
+				sSessionParameters += ", " + sAttributeName + " = " + CurrentSession.getAttribute(sAttributeName);
+			}
+
+			clsServletUtilities.sysprint(this.toString(),
+				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_USER, request),
+				"[1550240637] - "
+				+ " request.getQueryString() = '" + request.getQueryString() + "',"
+				+ sContextParameters
+				+ " - " + sSessionParameters
+			);
+		}
+		
 		try {
 			readInitialCompanyData(
-					clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request),
+					sDBID,
 					getServletContext(),
 					out)
 			;
@@ -69,7 +97,7 @@ public class SMLogin extends HttpServlet {
 		String sBackgroundcolor = "#" + SMUtilities.DEFAULT_BK_COLOR;;
 		try {
 			sBackgroundcolor = getBackgroundColor(
-				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request),
+				sDBID,
 				getServletContext());
 		} catch (Exception e1) {
 			out.println(SMUtilities.DOCTYPE
@@ -135,7 +163,7 @@ public class SMLogin extends HttpServlet {
 
 		//Main database ID information:
 		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID 
-			+ "\" VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request) + "\">");
+			+ "\" VALUE=\"" + sDBID + "\">");
 		//Store the options string:
 		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "\" VALUE=\"" 
 			+ clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_OPTS, request) + "\">");

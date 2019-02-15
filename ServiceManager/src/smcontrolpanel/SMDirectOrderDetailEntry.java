@@ -715,7 +715,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
 					}
 					//Now build the order detail:
 			    	SMOrderDetail detail = new SMOrderDetail();
-			    	detail.setM_bdEstimatedUnitCost(clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableicitems.bdmostrecentcostScale, bdUnitCost).replace(",", ""));
+			    	detail.setM_bdEstimatedUnitCost(clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.bdEstimatedUnitCostScale, bdUnitCost).replace(",", ""));
 			    	detail.setM_datDetailExpectedShipDate("00/00/0000");
 			    	detail.setM_datLineBookedDate(clsDateAndTimeConversions.now("MM/dd/yyyy"));
 			    	detail.setM_dExtendedOrderCost("0.00");

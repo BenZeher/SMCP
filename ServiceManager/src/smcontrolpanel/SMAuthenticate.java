@@ -6,7 +6,6 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +70,7 @@ public class SMAuthenticate{
         		"Missing db parameter in request class: req.getRequestURI = '" 
         			+ req.getRequestURI() + "',"
                 	+ " req parameters  = '" + clsManageRequestParameters.getAllRequestParameters(req) + "', " 
-                	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(req.getSession(true)) + "', "
+                	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(req.getSession()) + "', "
                 	+ " context parameters = '" + clsServletUtilities.getContextParameters(context) + "'"
                 	+ "."
         	);

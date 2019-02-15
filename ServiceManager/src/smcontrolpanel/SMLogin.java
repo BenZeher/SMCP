@@ -13,7 +13,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import ConnectionPool.CompanyDataCredentials;
 import ConnectionPool.PoolUtilities;
@@ -60,7 +59,7 @@ public class SMLogin extends HttpServlet {
 				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_USER, request),
 				"[1550240637] - "
                	+ " req parameters  = '" + clsManageRequestParameters.getAllRequestParameters(request) + "', " 
-               	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(request.getSession(true)) + "', "
+               	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(request.getSession()) + "', "
                	+ " context parameters = '" + clsServletUtilities.getContextParameters(getServletContext()) + "'"
 			);
 		}

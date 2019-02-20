@@ -137,7 +137,7 @@ public class ICEditBatchesEdit extends HttpServlet {
 				+ " <BR></B></FONT>");
 		}
 		
-    	//If it's a posted batch, we need to add a button for creating a bank rec:
+    	//If it's a posted batch, we need to add a button for re-creating a GL export file:
         if (batch.iBatchStatus() == SMBatchStatuses.POSTED){
         	out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMRecreateExportAction"
         		+ "?" + SMRecreateExportAction.BATCHNUMBER_PARAM + "=" + batch.sBatchNumber()

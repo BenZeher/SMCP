@@ -911,15 +911,6 @@ public class ICEntryBatch {
     	m_iFlagInvoices = false;
     	clearErrorMessages();
     	
-    	Connection conn = clsDatabaseFunctions.getConnection(
-    		context, 
-    		sDBID, 
-    		"MySQL",
-    		this.toString() + ".post_with_data_transaction - User: " 
-    		+ sUserID
-    		+ " - "
-    		+ sUserFullName
-    	);
     	//First check to make sure no one else is posting:
     	ICOption option = new ICOption();
     	try{
@@ -933,9 +924,30 @@ public class ICEntryBatch {
     		
     	}catch (Exception e){
 			addErrorMessage("Error [1529956984] checking for previous posting - " + e.getMessage());
-    		clsDatabaseFunctions.freeConnection(context, conn, "[1547080854]");
     		return false;
     	}
+    	
+    	Connection conn;
+		try {
+			conn = clsDatabaseFunctions.getConnectionWithException(
+					context, 
+					sDBID, 
+					"MySQL",
+					this.toString() + ".post_with_data_transaction - User: " 
+					+ sUserID
+					+ " - "
+					+ sUserFullName
+				);
+		} catch (Exception e2) {
+			addErrorMessage("Error [1550676771] getting connection to post batch - " + e2.getMessage());
+    		//Clear the posting flag:
+    		try {
+				option.resetPostingFlagWithoutConnection(context, sDBID);
+			} catch (Exception e) {
+				//We won't stop for this, but the next user will have to clear the IC posting flag
+			}
+			return false;
+		}    	
     	
     	if(!clsDatabaseFunctions.start_data_transaction(conn)){
     		//Clear the posting flag:
@@ -964,13 +976,16 @@ public class ICEntryBatch {
 		}
 
 		clsDatabaseFunctions.commit_data_transaction(conn);
-    		try {
-    			option.resetPostingFlagWithoutConnection(context, sDBID);
-			} catch (Exception e1) {
-				addErrorMessage("Error [1529952579] - " + e1.getMessage());
-				return false;
-			}
+		try {
+			option.resetPostingFlagWithoutConnection(context, sDBID);
+		} catch (Exception e1) {
+			addErrorMessage("Error [1529952579] - " + e1.getMessage());
+			return false;
+		}
     	
+		
+		//These functions can proceed OUTSIDE the transaction, since they are 'clean up' functions, and can run anytime:
+		
     	//Remove any empty cost buckets here:
     	String SQL = "DELETE FROM " + SMTableiccosts.TableName
     	 	+ " WHERE ("
@@ -1587,6 +1602,8 @@ public class ICEntryBatch {
     			}
     		}
     		if(Integer.parseInt(entry.sEntryType()) == ICEntryTypes.SHIPMENT_ENTRY){
+    			//On SHIPMENTS (and SM Invoices), the 'qty shipped' is negative.
+    			// On RETURNS (and SM Credit Notes), the 'qty shipped' is positive
     			BigDecimal bdQtyShipped = new BigDecimal(line.sQtySTDFormat());
     			if (bdQtyShipped.compareTo(BigDecimal.ZERO) < 0){
         	    	if(bLogDebug){
@@ -2364,8 +2381,8 @@ public class ICEntryBatch {
     	try{
     		clsDatabaseFunctions.executeSQL(SQL, conn);
     	}catch (SQLException e){
-    		addErrorMessage("<BR>Error updating statistics for item " + ln.sItemNumber() + ", location"
-    				+ ln.sLocation() + " - " + e.getMessage() + "."
+    		addErrorMessage("<BR>Error [1550674322] updating statistics for item " + ln.sItemNumber() + ", location"
+    				+ ln.sLocation() + " - entry number: " +  ln.sEntryNumber() + ", line number " + ln.sLineNumber() + " - " +  e.getMessage() + "."
     		);
     	}
     	if(bLogDebug){
@@ -2529,8 +2546,8 @@ public class ICEntryBatch {
     	try{
     		clsDatabaseFunctions.executeSQL(SQL, conn);
     	}catch (SQLException e){
-    		addErrorMessage("<BR>Error updating statistics for item " + ln.sItemNumber() + ", location"
-    				+ ln.sLocation() + " - " + e.getMessage() + "."
+    		addErrorMessage("<BR>Error [1550674323] updating statistics for item " + ln.sItemNumber() + ", location"
+    				+ ln.sLocation() + " - entry number: " +  ln.sEntryNumber() + ", line number " + ln.sLineNumber() + " - " +  e.getMessage() + "."
     		);
     	}
     	
@@ -4056,7 +4073,7 @@ public class ICEntryBatch {
 		// iLineNumber or the iDetailNumber fields on a credit note point back to the corresponding 
 		//line on the invoice which was credited, so we'll use one of those to read the costs from
 		//the invoice:
-		SQL = "SELECT " + SMTableinvoicedetails.dExtendedCost 
+		SQL = "SELECT " + SMTableinvoicedetails.dExtendedCost
 			+ " FROM " + SMTableinvoicedetails.TableName
 			+ " WHERE ("
 				+ "(TRIM(" + SMTableinvoicedetails.sInvoiceNumber + ") = '" + sOriginalInvoice + "')"

@@ -559,14 +559,9 @@ public class ICEditBatches extends HttpServlet {
 		String s = "";
 		s += " <script>\n"
 		  +  "   window.addEventListener(\"beforeunload\",function(){\n" 
-		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; color: black; cursor: not-allowed; display: inline-block; text-decoration: none;\");\n"
+		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed; \");\n"
 		  +  "     document.documentElement.style.cursor = \"wait\";\n"
 		  +"      });\n"
-//		  +  "   function Import(){\n"
-//		  + "        alert(\"Hello\");\n"
-////		  +  "     document.getElementById(id).setAttribute(\"style\",\"pointer-events: none; color: black; cursor: not-allowed; opacity: 0.5; display: inline-block; text-decoration: none; \");\n"
-////		  +  "     window.location.href = link;\n"
-//		  +  "      }\n"
 		  +  " </script>\n";
 		return s;
 	}

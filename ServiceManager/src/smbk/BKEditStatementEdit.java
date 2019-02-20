@@ -876,7 +876,7 @@ public class BKEditStatementEdit  extends HttpServlet {
 		
 		
 		s += "   window.addEventListener(\"beforeunload\",function(){\n" 
-		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; color: black; cursor: not-allowed;\");\n"
+		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed;\");\n"
 		  +  "     document.documentElement.style.cursor = \"wait\";\n"
 		  +"      });\n";
 

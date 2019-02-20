@@ -3,6 +3,7 @@ package SMClasses;
 import java.sql.Connection;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.servlet.ServletContext;
 
@@ -18,7 +19,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_FIXEDASSETS = "FIXEDASSETS";
 	public final static String LOG_OPERATION_FIXEDASSETSTRANSACTIONCLEARING = "FATRANSACTIONCLEARING";
 	public final static String LOG_OPERATION_CANCELORDER = "CANCELEDORDER";
-	public final static String LOG_OPERATION_UNCANCELORDER = "UNCANCELEDORDER";
+	public final static String LOG_OPERATION_SMUNCANCELORDER = "SMUNCANCELEDORDER";
 	public final static String LOG_OPERATION_ARACTIVITYREPORT = "ARACTIVITYREPORT";
 	public final static String LOG_OPERATION_ARAGING = "ARAGING";
 	public final static String LOG_OPERATION_ARCLEARMONTHLYSTATISTICS= "ARCLEARMONTHLYSTATISTICS";
@@ -277,9 +278,8 @@ public class SMLogEntry {
 		}
     	return true;
     }
-    public static String getOperationDescriptions(){
+    public static ArrayList<String> getOperationDescriptions(){
 
-    	String s = "";
     	ArrayList<String> m_arrOperationLabelValues = new ArrayList<String>(0);
     	ArrayList<String> m_arrOperationLabelDescriptions = new ArrayList<String>(0);
 
@@ -295,7 +295,7 @@ public class SMLogEntry {
     	m_arrOperationLabelValues.add(LOG_OPERATION_CANCELORDER);
     	m_arrOperationLabelDescriptions.add("CANCELEDORDER");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_UNCANCELORDER);
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMUNCANCELORDER);
     	m_arrOperationLabelDescriptions.add("UNCANCELEDORDER");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARACTIVITYREPORT);
@@ -721,10 +721,13 @@ public class SMLogEntry {
     	m_arrOperationLabelValues.add(LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS);
     	m_arrOperationLabelDescriptions.add("BKCLEARPOSTEDBANKSTATEMENTS");
 
-    	for (int i = 0; i <= m_arrOperationLabelValues.size(); i++){
-    		s += "<BR>Label: " + m_arrOperationLabelValues.get(i) + " - " + m_arrOperationLabelDescriptions.get(i);
+    	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
+    	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){
+    		arrCompleteListings.add("<BR>Label: " + m_arrOperationLabelValues.get(i) + " - " + m_arrOperationLabelDescriptions.get(i));
     	}
-    	return s;
+    	Collections.sort(arrCompleteListings);
+    	
+    	return arrCompleteListings;
     }
 
 }

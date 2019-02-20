@@ -285,6 +285,8 @@ public class SMUserLogin extends HttpServlet {
 		
 		arMenu.add(SMSystemFunctions.SMExecuteSQL);
 		
+		arMenu.add(SMSystemFunctions.SMDisplayLoggingOperations);
+		
 		// TJR - 1/29/2019 - removed this until we can clean it up:
 		//arMenu.add(SMSystemFunctions.SMImportData);
 		

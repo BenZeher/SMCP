@@ -1272,6 +1272,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMDisplayLoggingOperations</servlet-name>
+        <servlet-class>smcontrolpanel.SMDisplayLoggingOperations</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMDisplayOrderInformation</servlet-name>
         <servlet-class>smcontrolpanel.SMDisplayOrderInformation</servlet-class>
     </servlet>
@@ -5102,6 +5107,11 @@
     <servlet-mapping>
         <servlet-name>SMDisplayJobCostSelect</servlet-name>
         <url-pattern>/smcontrolpanel.SMDisplayJobCostSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMDisplayLoggingOperations</servlet-name>
+        <url-pattern>/smcontrolpanel.SMDisplayLoggingOperations</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

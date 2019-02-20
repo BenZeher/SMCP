@@ -322,6 +322,8 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLEditFinancialStatements = 1230L;
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
+	public static long SMDisplayLoggingOperations = 1233L;
+	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
 	private static ArrayList <String>arrFunctionLinks;
@@ -2568,6 +2570,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(SMEditServerSettingsFile);
 			arrFunctionLinks.add("smcontrolpanel.SMServerSettingsEdit"); 
 			arrFunctionDescriptions.add("Allows user to edit the server settings file on the server. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
+			arrFunctions.add("SM List Logging Operations");
+			arrFunctionIDs.add(SMDisplayLoggingOperations);
+			arrFunctionLinks.add("smcontrolpanel.SMDisplayLoggingOperations"); 
+			arrFunctionDescriptions.add("Liast all the logging operations; useful for building queries to track who used which function, when, and how. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			
 	}

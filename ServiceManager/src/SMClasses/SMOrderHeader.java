@@ -1104,7 +1104,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			}
 		}
 		SMLogEntry log = new SMLogEntry(sDBIB, context);
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_UNCANCELORDER, "Order was UNcanceled", SQL, "[1376509291]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMUNCANCELORDER, "Order was UNcanceled", SQL, "[1376509291]");
 		if (bResult){
 			try {
 				mailCancellationNotification(

@@ -253,7 +253,7 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 			SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_MOVEDSCHEDULEENTRYFROMSCHEDULESCREEN
+				SMLogEntry.LOG_OPERATION_SMMOVEDSCHEDULEENTRYFROMSCHEDULESCREEN
 				, sResultString, 
 				"Work order #" + entry.getlid(), 
 				"[1428498914]");

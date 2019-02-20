@@ -543,7 +543,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 	    log.writeEntry(
 	    	sUserID, 
-	    	SMLogEntry.LOG_OPERATION_VIEWTRUCKSCHEDULE, 
+	    	SMLogEntry.LOG_OPERATION_SMVIEWTRUCKSCHEDULE, 
 	    	"REPORT", 
 	    	"SMViewTruckSchedule - marker = " + sMSMarker 
 	    		+ ", current time: " + System.currentTimeMillis()

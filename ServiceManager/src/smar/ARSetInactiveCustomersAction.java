@@ -95,7 +95,7 @@ public class ARSetInactiveCustomersAction extends HttpServlet {
 			}
 	    }
 	    SMLogEntry SMLog = new SMLogEntry(sDBID, getServletContext());
-	    SMLog.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SETINACTIVECUSTOMER, "Customer " + sCustomerNumber, SQL, "[1376509288]");
+	    SMLog.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARSETINACTIVECUSTOMER, "Customer " + sCustomerNumber, SQL, "[1376509288]");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smar.ARSetInactiveCustomersSelection" + "?"
 				+ "Warning=" + "Selected customers successfully set to inactive."

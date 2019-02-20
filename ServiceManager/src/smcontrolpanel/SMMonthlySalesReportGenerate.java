@@ -247,7 +247,7 @@ public class SMMonthlySalesReportGenerate extends HttpServlet {
 	   
 	    //log usage of this this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PRINTMONTHLYSALESREPORT, "REPORT", "SMMonthlySalesReport", "[1376509330]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPRINTMONTHLYSALESREPORT, "REPORT", "SMMonthlySalesReport", "[1376509330]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

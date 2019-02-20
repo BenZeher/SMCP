@@ -354,7 +354,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 	    //log usage of this report
 	   if (!bReprocessing){
 		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PRINTINVOICEAUDIT, "REPORT", "SMPrintInvoiceAuditReport", "[1376509336]");
+		   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPRINTINVOICEAUDIT, "REPORT", "SMPrintInvoiceAuditReport", "[1376509336]");
 	   }
 
 	   boolean bAllowItemViewing = 

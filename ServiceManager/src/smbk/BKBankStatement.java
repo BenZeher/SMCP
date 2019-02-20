@@ -654,7 +654,7 @@ public class BKBankStatement extends clsMasterEntry{//java.lang.Object{
     	SMLogEntry log = new SMLogEntry(conn);
     	log.writeEntry(
     		sUserID, 
-    		SMLogEntry.LOG_OPERATION_DELETEBKSTMT, 
+    		SMLogEntry.LOG_OPERATION_BKDELETEBKSTMT, 
     		"Deleted STMT " + get_lid(), 
     		"Statement date: " + get_datstatementdate()
     		+ ", bank ID: " + get_lbankid()

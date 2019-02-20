@@ -67,7 +67,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    
 	    
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	 	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CRITICALDATEREPORT, "REPORT", "sUserFirstName sUserLastName ran Critical Date report for"+sStartingDate+" - "+sEndingDate, "[1535653241]");
+	 	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCRITICALDATEREPORT, "REPORT", "sUserFirstName sUserLastName ran Critical Date report for"+sStartingDate+" - "+sEndingDate, "[1535653241]");
 
 		try {
 			sStartingDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartingDate),"yyyy-MM-dd");

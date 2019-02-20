@@ -71,7 +71,7 @@ public class SMUpdateData extends java.lang.Object{
 		//Log the entry:
 		log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_UPDATEDATA, 
+				SMLogEntry.LOG_OPERATION_SMUPDATEDATA, 
 				"Security Functions Successfully Updated", "",
 				"[1376509362]"
 		);
@@ -98,7 +98,7 @@ public class SMUpdateData extends java.lang.Object{
 			//Log the entry:
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_UPDATEDATA, 
+					SMLogEntry.LOG_OPERATION_SMUPDATEDATA, 
 					"Preparing to update database version from "
 					+ iReadDatabaseVersion, "",
 					"[1376509363]"
@@ -130,7 +130,7 @@ public class SMUpdateData extends java.lang.Object{
 		//Log the entry:
 		log.writeEntry(			
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_UPDATEDATA, 
+				SMLogEntry.LOG_OPERATION_SMUPDATEDATA, 
 				"SQL ATTEMPTED update statement from version "
 				+ m_iReadDatabaseVersion + " to "
 				+ Integer.toString(m_CurrentDatabaseVersion), sSQL,
@@ -146,7 +146,7 @@ public class SMUpdateData extends java.lang.Object{
 				+ " - SQL: " + sSQL;
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_UPDATEDATA, 
+					SMLogEntry.LOG_OPERATION_SMUPDATEDATA, 
 					"SQL FAILED update statement from version "
 					+ m_iReadDatabaseVersion + " to "
 					+ Integer.toString(m_CurrentDatabaseVersion)

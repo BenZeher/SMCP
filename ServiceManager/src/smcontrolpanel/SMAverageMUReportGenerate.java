@@ -176,7 +176,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
 				   
  	   //log usage of this this report
  	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
- 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_AVERAGEMUREPORT, "REPORT", "SMAverageMUReport", "[1376509307]");
+ 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMAVERAGEMUREPORT, "REPORT", "SMAverageMUReport", "[1376509307]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

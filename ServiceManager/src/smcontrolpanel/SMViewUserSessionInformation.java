@@ -66,7 +66,7 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 			sUserID, 
-			SMLogEntry.LOG_OPERATION_VIEWUSERSESSIONINFO, 
+			SMLogEntry.LOG_OPERATION_SMVIEWUSERSESSIONINFO, 
 			"Viewing user info", 
 			sCompanyName, 
 			"[1435785109]"

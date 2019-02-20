@@ -120,7 +120,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		}else{
 			//log usage of this this report
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_DISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
+			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
 	
 			out.println(sStyleScripts());
 			

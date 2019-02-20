@@ -341,7 +341,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 			
 			log.writeEntry(
 				smaction.getUserID(), 
-				SMLogEntry.LOG_OPERATION_PRINTINTERACTIVEDELIVERYTICKET, 
+				SMLogEntry.LOG_OPERATION_SMPRINTINTERACTIVEDELIVERYTICKET, 
 				"SUCCESSFULLY Printed delivery ticket number: '" + sDeliveryTicketNumber + "'", 
 				"Email mode = '" + bEmailMode + "', emailed to '" + sEmailTo + "'", 
 				"[1536256700]"
@@ -350,7 +350,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 		} catch (Exception e) {
 			log.writeEntry(
 				smaction.getUserID(), 
-				SMLogEntry.LOG_OPERATION_PRINTINTERACTIVEDELIVERYTICKET, 
+				SMLogEntry.LOG_OPERATION_SMPRINTINTERACTIVEDELIVERYTICKET, 
 				"UNSUCCESSFULLY Printed delivery ticket number: '" + sDeliveryTicketNumber + "', Email mode = '" + bEmailMode + "', emailed to '" + sEmailTo + "'",
 				"Error: " + e.getMessage(), 
 				"[1536256701]"

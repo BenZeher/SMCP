@@ -57,7 +57,7 @@ public class ICListUnusedPOsGenerate extends HttpServlet {
 
 	    //Log the report usage:
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_LISTUNUSEDPOS, "REPORT", "IC List Unused POs", "[1376509404]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICLISTUNUSEDPOS, "REPORT", "IC List Unused POs", "[1376509404]");
 	    	    
     	String sReportTitle = "IC List Unused Purchase Orders";    	
     	String sCriteria = "Listing any purchase orders that have been assigned, but do no yet have any lines"

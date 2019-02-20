@@ -591,7 +591,7 @@ public class SMAppointment extends clsMasterEntry{
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_GEOCODEREQUEST, 
+				SMLogEntry.LOG_OPERATION_SMGEOCODEREQUEST, 
 					"Appointment ID: " + getslid() +  "\n"
 					+ "Requested Address: " + sMapAddressToUpdate + ""
 					+ "Returned Lat/Lng: " + sLatLng + "\n"

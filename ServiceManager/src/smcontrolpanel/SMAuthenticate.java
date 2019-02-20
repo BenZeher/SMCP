@@ -195,7 +195,7 @@ public class SMAuthenticate{
 				*/
 				log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_USERLOGIN, 
+					SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 					"Logging in", 
 					sSessionTagAttribute + " OPTS='" + sOpts + "', "
 						+ " req.getQueryString() = '" + req.getQueryString() + "'"
@@ -497,7 +497,7 @@ public class SMAuthenticate{
 		    		SMLogEntry log = new SMLogEntry(sDatabaseID, context);
 			    	log.writeEntry(
 			    			sUserID, 
-			    			SMLogEntry.LOG_OPERATION_USERLOGIN, 
+			    			SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 			    			"Invalid password for user '" + sUserName + "'", 
 			    			"OPTS='" + sOpts + "', "
 			    				+ " req.getQueryString() = '" + req.getQueryString() + "'"
@@ -543,7 +543,7 @@ public class SMAuthenticate{
 		    	SMLogEntry log = new SMLogEntry(sDatabaseID, context);
 		    	log.writeEntry(
 		    			sUserID, 
-		    			SMLogEntry.LOG_OPERATION_USERLOGIN, 
+		    			SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 		    			"Invalid username (" + sUserName + "')", 
 		    			"OPTS='" + sOpts + "'",
 		    			"[1376509516]"

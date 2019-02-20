@@ -91,7 +91,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 				sLicenseModuleLevel);
 		
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PRINTUNBILLEDCONTRACTREPORT, "REPORT", "SMUnbilledContractReport", "[1429043469]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPRINTUNBILLEDCONTRACTREPORT, "REPORT", "SMUnbilledContractReport", "[1429043469]");
 
 
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080674]");

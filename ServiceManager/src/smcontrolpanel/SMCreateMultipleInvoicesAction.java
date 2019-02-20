@@ -150,7 +150,7 @@ public class SMCreateMultipleInvoicesAction extends HttpServlet {
 				   
  	   //log usage of this this report
  	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
- 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CREATEMULTIPLEINVOICES, "ACTION", "SMCreateMultipleInvoices", "[1376509315]");
+ 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCREATEMULTIPLEINVOICES, "ACTION", "SMCreateMultipleInvoices", "[1376509315]");
  	   
  	   //reset warning message;
 	   sWarning = "";

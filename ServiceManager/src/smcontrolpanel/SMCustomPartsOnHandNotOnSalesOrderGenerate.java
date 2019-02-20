@@ -53,7 +53,7 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 
 		//log usage of this this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CUSTOMITEMSONHANDNOTONSALESORDER, "REPORT", "SMCustomPartsOnHandNotOnSalesOrder", "[1376509317]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCUSTOMITEMSONHANDNOTONSALESORDER, "REPORT", "SMCustomPartsOnHandNotOnSalesOrder", "[1376509317]");
 
 		try{
 

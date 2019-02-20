@@ -882,7 +882,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		} catch (Exception e2) {
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_INVOICENOTMAILED, 
+				SMLogEntry.LOG_OPERATION_SMINVOICENOTMAILED, 
 				"Inv# " + sInvoiceNumber.trim() + " to: " + sEmailAddressee.replace(";", ","), 
 				"Error: " + e2.getMessage(), 
 				"[1487781876]"
@@ -892,7 +892,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		
 		log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_INVOICEEMAILED, 
+				SMLogEntry.LOG_OPERATION_SMINVOICEEMAILED, 
 				"Inv# " + sInvoiceNumber.trim() + " to: " + sEmailAddressee.replace(";", ","), 
 				"", 
 				"[1487781877]"

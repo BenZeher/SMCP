@@ -90,7 +90,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				+ sDBID + "\">Return to...</A><BR>");
  	    //log usage of this this report
  	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
- 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_DISPLAYCUSTOMERINFO, "REPORT", "SMDisplayCustomerInformation", "[1376509275]");
+ 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARDISPLAYCUSTOMERINFO, "REPORT", "SMDisplayCustomerInformation", "[1376509275]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMDisplayOrderInformation");

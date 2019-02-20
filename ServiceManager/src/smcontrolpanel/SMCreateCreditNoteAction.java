@@ -89,7 +89,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 				   
  	   //log usage of this this report
  	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
- 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CREATECREDITNOTE, "ACTION", "SMCreateCreditNote", "[1376509312]");
+ 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCREATECREDITNOTE, "ACTION", "SMCreateCreditNote", "[1376509312]");
  	   
  	   //reset warning message;
 	   sWarning = "";

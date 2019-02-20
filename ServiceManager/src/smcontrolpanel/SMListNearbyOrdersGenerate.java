@@ -50,7 +50,7 @@ public class SMListNearbyOrdersGenerate extends HttpServlet {
 		
 	    //log usage of this this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_LISTNEARBYORDERREPORT, "REPORT", "SMListNearbyOrderReport", "[1376509326]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMLISTNEARBYORDERREPORT, "REPORT", "SMListNearbyOrderReport", "[1376509326]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

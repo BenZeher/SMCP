@@ -902,7 +902,7 @@ public class SMOption {
 			SMLogEntry log = new SMLogEntry(conn);
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_POSTINGPERIODVIOLATION, 
+				SMLogEntry.LOG_OPERATION_SMPOSTINGPERIODVIOLATION, 
 				sDateName, 
 				"Tried to post to date " + smmddyyyy + ", but posting starting date is " + getscurrentperiodstartdate() 
 					+ ", ending date is " + getscurrentperiodenddate() + ".",

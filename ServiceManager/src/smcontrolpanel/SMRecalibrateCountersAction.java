@@ -129,7 +129,7 @@ public class SMRecalibrateCountersAction extends HttpServlet {
     		sWarning = "Error retrieving Invoice Number [1531242877] "+e.getMessage();
     	}
     	SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
-    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_RECALIBRATECOUNTERS, "Recalibration attempted", "", "[1389802121]");
+    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMRECALIBRATECOUNTERS, "Recalibration attempted", "", "[1389802121]");
     	//Reset flag:
     	boolean bResetSuccessful = true;
     	try{
@@ -170,10 +170,10 @@ public class SMRecalibrateCountersAction extends HttpServlet {
     	//If there was no error message, simply advise that the delete process was successful:
     	if (bResetSuccessful){
     		sWarning = "Recalibration was successful.";
-    		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_RECALIBRATECOUNTERS, "Recalibration was successful", SQL, "[1389802122]");
+    		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMRECALIBRATECOUNTERS, "Recalibration was successful", SQL, "[1389802122]");
     	}else{
     		sWarning = sWarning + "<BR>recalibration failed.";
-    		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_RECALIBRATECOUNTERS, "Recalibration failed", SQL + " - " + sWarning, "[1389802123]");
+    		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMRECALIBRATECOUNTERS, "Recalibration failed", SQL + " - " + sWarning, "[1389802123]");
     	}
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

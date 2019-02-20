@@ -70,7 +70,7 @@ public class SMImportDataAction extends HttpServlet {
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_IMPORTDATA, 
+					SMLogEntry.LOG_OPERATION_SMIMPORTDATA, 
 					"Import with SQL SUCCEEDED",
 					"Command: " + sLoadCommand + "\n" + m_sExecuteString,
 					"[1376509322]");
@@ -79,7 +79,7 @@ public class SMImportDataAction extends HttpServlet {
 	    	SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_IMPORTDATA, 
+					SMLogEntry.LOG_OPERATION_SMIMPORTDATA, 
 					"Import with SQL FAILED",
 					"Command: " + sLoadCommand + "\n" + m_sExecuteString,
 					"[1376509323]");

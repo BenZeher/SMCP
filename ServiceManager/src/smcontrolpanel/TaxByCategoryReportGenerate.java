@@ -79,7 +79,7 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 	   
 	   //log usage of this this report
 	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_TAXBYCATEGORYREPORT, "REPORT", "TaxByCategoryReport", "[1376509369]");
+	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMTAXBYCATEGORYREPORT, "REPORT", "TaxByCategoryReport", "[1376509369]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "smcontrolpanel.TaxByCategoryReportGenerate");

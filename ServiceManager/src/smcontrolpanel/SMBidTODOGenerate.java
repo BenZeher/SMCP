@@ -144,7 +144,7 @@ public class SMBidTODOGenerate extends HttpServlet {
     	
 	    //log usage of this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PENDINGBIDSREPORT, "REPORT", "SMPendingBidsReport", "[1376509310]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPENDINGBIDSREPORT, "REPORT", "SMPendingBidsReport", "[1376509310]");
 
     	out.println(SMUtilities.Build_HTML_Table(4, alCriteria, 100, 0, false, false));
 	    sSQL = SMMySQLs.Get_Bid_TO_DO_List_SQL(sSalespersonCode,

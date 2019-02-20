@@ -396,7 +396,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 	    //log usage of this report
 	   if (!bReprocessing){
 		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PRINTPREINVOICE, "REPORT", "SMPrintPreInvoiceList", "[1376509338]");
+		   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPRINTPREINVOICE, "REPORT", "SMPrintPreInvoiceList", "[1376509338]");
 	   }
 
 	   if (bDebugMode){

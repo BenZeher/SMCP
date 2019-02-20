@@ -98,7 +98,7 @@ public class SMPrintInvoice extends HttpServlet {
 
 		//log usage of this this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_PRINTINVOICE, "REPORT", "SMPrintInvoice", "[1376509335]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPRINTINVOICE, "REPORT", "SMPrintInvoice", "[1376509335]");
 
 		//get request parameters
 		int iNoofInvoiceCopies = 1;

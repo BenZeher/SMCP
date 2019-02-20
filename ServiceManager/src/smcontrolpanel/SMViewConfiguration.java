@@ -76,7 +76,7 @@ public class SMViewConfiguration  extends HttpServlet {
 		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 			sUserID,
-			SMLogEntry.LOG_OPERATION_VIEWSYSTEMCONFIGURATION, 
+			SMLogEntry.LOG_OPERATION_SMVIEWSYSTEMCONFIGURATION, 
 			"Viewing system configuration", 
 			sCompanyName, 
 			"[1435785110]"

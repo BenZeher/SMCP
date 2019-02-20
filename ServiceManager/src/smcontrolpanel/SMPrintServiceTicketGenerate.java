@@ -124,7 +124,7 @@ public class SMPrintServiceTicketGenerate extends HttpServlet {
     		SMLogEntry log = new SMLogEntry(conn); 
 			log.writeEntry(
 					sUserID,
-					SMLogEntry.LOG_OPERATION_PRINTSERVICETICKET,
+					SMLogEntry.LOG_OPERATION_SMPRINTSERVICETICKET,
 					"",
 					"Order numbers from " + sStartingOrderNumber + " to " + sEndingOrderNumber,
 					"[1405006253]"

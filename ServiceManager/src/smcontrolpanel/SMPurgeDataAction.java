@@ -70,7 +70,7 @@ public class SMPurgeDataAction extends HttpServlet{
 		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 			sUserID, 
-			SMLogEntry.LOG_OPERATION_PURGEDATA, 
+			SMLogEntry.LOG_OPERATION_SMPURGEDATA, 
 			"Attempting to purge data using purge deadline date " + clsDateAndTimeConversions.utilDateToString(datPurgeDeadline, "MM/dd/yyyy") + ".",
 			"Purge orders: " + (request.getParameter(SMPurgeDataSelection.PURGE_ORDERS) != null)
 			+ ", Purge customer call logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_CUSTOMERCALLLOGS) != null)
@@ -131,7 +131,7 @@ public class SMPurgeDataAction extends HttpServlet{
 		
 		log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_PURGEDATA, 
+				SMLogEntry.LOG_OPERATION_SMPURGEDATA, 
 				"Successfully purged data using purge deadline date " + clsDateAndTimeConversions.utilDateToString(datPurgeDeadline, "MM/dd/yyyy") + ".",
 				"Purge orders: " + (request.getParameter(SMPurgeDataSelection.PURGE_ORDERS) != null)
 				+ ", Purge customer call logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_CUSTOMERCALLLOGS) != null)

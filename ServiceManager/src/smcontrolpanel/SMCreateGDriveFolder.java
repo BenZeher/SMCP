@@ -249,7 +249,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		SMLogEntry log = new SMLogEntry(conn);
 		log.writeEntry(
 			sUserID, 
-			SMLogEntry.LOG_OPERATION_CREATENEWDOCUMENTFOLDER, 
+			SMLogEntry.LOG_OPERATION_SMCREATENEWDOCUMENTFOLDER, 
 			"Added folder for " + sRecordType + ", key: " + sKeyValue, 
 			"Folder URL: '" + sFolderURL + "'", 
 			"[1440028151]"

@@ -77,7 +77,7 @@ public class ARClearMonthlyStatisticsAction extends HttpServlet {
     	}
     	
     	SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
-    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CLEARMONTHLYSTATISTICS, "AR Monthly statistics successfully cleared", SQL, "[1376509268]");
+    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARCLEARMONTHLYSTATISTICS, "AR Monthly statistics successfully cleared", SQL, "[1376509268]");
 		return;
 	}
 }

@@ -54,7 +54,7 @@ public class ICEditReceiptAction extends HttpServlet{
     		if (sParam.contains(ICEditReceiptEdit.SUBMIT_BUTTON_RECEIVE_OUTSTANDING)){
     	    	log.writeEntry(
     	        		sUserID, 
-    	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+    	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
     	        		"Receiving remaining qty on PO line, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
     	        		"", 
     	        		"[1531259736]"
@@ -69,7 +69,7 @@ public class ICEditReceiptAction extends HttpServlet{
 				} catch (Exception e4) {
 	    	    	log.writeEntry(
 	    	        		sUserID, 
-	    	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	    	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	    	        		"Receiving remaining qty on PO line, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	    	        		"Error checking posting flag - " + e4.getMessage(), 
 	    	        		"[1531259737]"
@@ -105,7 +105,7 @@ public class ICEditReceiptAction extends HttpServlet{
 				} catch (Exception e3) {
 	    	    	log.writeEntry(
 	    	        		sUserID, 
-	    	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	    	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	    	        		"Receiving remaining qty on PO line, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	    	        		"Error receiving: " + e3.getMessage(), 
 	    	        		"[1531259738]"
@@ -119,7 +119,7 @@ public class ICEditReceiptAction extends HttpServlet{
     			//Now send a response back to the browser:
     	    	log.writeEntry(
     	        		sUserID, 
-    	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+    	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
     	        		"Receiving remaining qty on PO line, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp,
     	        		"Function returned successfully", 
     	        		"[1531259739]"
@@ -140,7 +140,7 @@ public class ICEditReceiptAction extends HttpServlet{
 	    if(request.getParameter(ICEditReceiptEdit.SUBMIT_BUTTON_RECEIVE_ALL) != null){
 	    	log.writeEntry(
 	        		sUserID, 
-	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	        		"Receiving all lines on PO, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	        		"", 
 	        		"[1531259836]"
@@ -155,7 +155,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			} catch (Exception e4) {
 		    	log.writeEntry(
 		        		sUserID, 
-		        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+		        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 		        		"Receiving all lines on PO, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 		        		"Error checking posting flag: " + e4.getMessage(), 
 		        		"[1531259837]"
@@ -177,7 +177,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			} catch (Exception e2) {
     	    	log.writeEntry(
     	        		sUserID, 
-    	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+    	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
     	        		"Receiving all lines on PO, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp,
     	        		"Error receiving: " + e2.getMessage(), 
     	        		"[1531259838]"
@@ -199,7 +199,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			}
 	    	log.writeEntry(
 	        		sUserID, 
-	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	        		"Receiving all lines on PO, rcpt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	        		"Function returned successfully", 
 	        		"[1531259839]"
@@ -219,7 +219,7 @@ public class ICEditReceiptAction extends HttpServlet{
 	    if(smaction.isDeleteRequested()){
 	    	log.writeEntry(
 	        		sUserID, 
-	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	        		"Deleting receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	        		"", 
 	        		"[1531259930]"
@@ -235,7 +235,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			} catch (Exception e2) {
 		    	log.writeEntry(
 		        		sUserID, 
-		        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+		        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 		        		"Deleting receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 		        		"Error checking posting flag: " + e2.getMessage(), 
 		        		"[1531259931]"
@@ -255,7 +255,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			} catch (Exception e3) {
 		    	log.writeEntry(
 		        		sUserID, 
-		        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+		        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 		        		"Deleting receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 		        		"Error deleting receipt: " + e3.getMessage(), 
 		        		"[1531259932]"
@@ -281,7 +281,7 @@ public class ICEditReceiptAction extends HttpServlet{
 		    //Delete was successful:
 	    	log.writeEntry(
 	        		sUserID, 
-	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	        		"Deleting receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	        		"Receipt deleted successfully", 
 	        		"[1531259933]"
@@ -299,7 +299,7 @@ public class ICEditReceiptAction extends HttpServlet{
 	    //If it's just an update:
     	log.writeEntry(
         		sUserID, 
-        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
         		"Updating receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
         		"", 
         		"[1531259130]"
@@ -318,7 +318,7 @@ public class ICEditReceiptAction extends HttpServlet{
 		 		}catch (Exception e2) {
 		 	    	log.writeEntry(
 		 	        		sUserID, 
-		 	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+		 	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 		 	        		"Updating receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 		 	        		"Error checking posting flag: " + e2.getMessage(), 
 		 	        		"[1531259131]"
@@ -339,7 +339,7 @@ public class ICEditReceiptAction extends HttpServlet{
 			} catch (Exception e2) {
 	 	    	log.writeEntry(
 	 	        		sUserID, 
-	 	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+	 	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
 	 	        		"Updating receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
 	 	        		"Error updating receipt: " + e2.getMessage(), 
 	 	        		"[1531259132]"
@@ -356,7 +356,7 @@ public class ICEditReceiptAction extends HttpServlet{
 		    }
  	    	log.writeEntry(
  	        		sUserID, 
- 	        		SMLogEntry.LOG_OPERATION_RECEIVINGPO, 
+ 	        		SMLogEntry.LOG_OPERATION_ICRECEIVINGPO, 
  	        		"Updating receipt #" + entry.getsID() + ", TimeStamp: " + sTimeStamp, 
  	        		"Returning to calling class ", 
  	        		"[1531259133]"

@@ -65,7 +65,7 @@ public class SMCreateInvoice extends java.lang.Object{
 			System.out.println("[1540839462] - Starting creatInvoice function for invoice number " +cInvoice+ " from user " + sUserFullName + " at " + System.currentTimeMillis());
 			log.writeEntry(
 					sUserID,
-					SMLogEntry.LOG_OPERATION_CREATEINVOICE,
+					SMLogEntry.LOG_OPERATION_SMCREATEINVOICE,
 					"Order number " + cOrder.getM_strimmedordernumber(),
 					"Last edited by " + cOrder.getM_LASTEDITUSERFULLNAME()
 					+ ", Disc Percent: " + cOrder.getM_dPrePostingInvoiceDiscountPercentage()

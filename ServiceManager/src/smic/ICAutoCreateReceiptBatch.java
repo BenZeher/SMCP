@@ -346,16 +346,16 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 			+ ")"
 		;
 		SMLogEntry log = new SMLogEntry(sDBID, context);
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_UPDATERECEIPTSTATUS, "Batch " + m_sBatchNumber, SQL, "[1379014554]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICUPDATERECEIPTSTATUS, "Batch " + m_sBatchNumber, SQL, "[1379014554]");
 
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (SQLException e) {
-			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_UPDATERECEIPTSTATUS, "FAIL", "Error: " + e.getMessage(), "[1379014554]");
+			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICUPDATERECEIPTSTATUS, "FAIL", "Error: " + e.getMessage(), "[1379014554]");
 			throw new Exception("Error [1529955491] updating posted flag on receipts - " + e.getMessage());
 		}
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_UPDATERECEIPTSTATUS, "SUCCESSFUL", SQL, "[1379014554]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICUPDATERECEIPTSTATUS, "SUCCESSFUL", SQL, "[1379014554]");
 		
 	}
 

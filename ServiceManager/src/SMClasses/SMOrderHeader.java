@@ -1723,7 +1723,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_GEOCODEREQUEST, 
+				SMLogEntry.LOG_OPERATION_SMGEOCODEREQUEST, 
 				"Order Number: " + getM_strimmedordernumber() +  "\n"
 				+ "Requested Address: " + sMapAddress +  "\n"
 				+ "Returned Lat/Lng: " + sLatLng +  "\n"
@@ -3345,7 +3345,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_DELETEORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMDELETEORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to delete detail lines: " 
 						+ sDeletedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -3356,7 +3356,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_DELETEORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMDELETEORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully deleted detail lines: " 
 					+ sDeletedDetailLines + ".",
 				"SUCCESSFUL ORDER LINE DELETIONS",
@@ -3532,7 +3532,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_UNSHIPORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMUNSHIPORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to unship detail lines: " 
 						+ sUnshippedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -3543,7 +3543,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_UNSHIPORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMUNSHIPORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully unshipped detail lines: " 
 					+ sUnshippedDetailLines + ".",
 				"SUCCESSFUL ORDER LINE UNSHIPS",
@@ -3665,7 +3665,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_SHIPORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMSHIPORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to ship detail lines: " 
 						+ sShippedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -3676,7 +3676,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_SHIPORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMSHIPORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully shipped detail lines: " 
 					+ sShippedDetailLines + ".",
 				"SUCCESSFUL ORDER LINE SHIPS",
@@ -3932,7 +3932,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_CREATEITEMORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMCREATEITEMORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to create items for detail lines: " 
 						+ sItemCreatedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -3943,7 +3943,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_CREATEITEMORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMCREATEITEMORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully created items for detail lines: " 
 					+ sItemCreatedDetailLines + ".",
 				"SUCCESSFUL ORDER LINE SHIPS",
@@ -4117,7 +4117,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_MOVEORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMMOVEORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to move detail lines: " 
 						+ sMovedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -4128,7 +4128,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_MOVEORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMMOVEORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully moved detail lines: " 
 					+ sMovedDetailLines + " above line number: " + sLineNumberToMoveAbove + ".",
 				"SUCCESSFUL ORDER LINE DELETIONS",
@@ -4295,7 +4295,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_COPYORDERLINESFAIL,
+					SMLogEntry.LOG_OPERATION_SMCOPYORDERLINESFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to move detail lines: " 
 						+ sCopiedDetailLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -4306,7 +4306,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_MOVEORDERLINESSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMMOVEORDERLINESSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully moved detail lines: " 
 					+ sCopiedDetailLines + " above line number: " + sLineNumberToCopyAbove + ".",
 				"SUCCESSFUL ORDER LINE DELETIONS",
@@ -4513,7 +4513,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_SETDETAILMECHANICSFAIL,
+					SMLogEntry.LOG_OPERATION_SMSETDETAILMECHANICSFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to set mechanics for detail lines: " 
 						+ sSelectedLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -4524,7 +4524,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_SETDETAILMECHANICSSSUCCEED,
+				SMLogEntry.LOG_OPERATION_SMSETDETAILMECHANICSSSUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully set mechanics for  detail lines: " 
 					+ sSelectedLines + " above line number: " + sSelectedLines + ".",
 				"SUCCESSFUL SETTING ORDER LINE MECHANICS",
@@ -4652,7 +4652,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		} catch (Exception e) {
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_REPRICEQUOTEFAIL,
+					SMLogEntry.LOG_OPERATION_SMREPRICEQUOTEFAIL,
 					"On order number '" + sTrimmedOrderNumber + "', failed to reprice lines: " 
 						+ sSelectedLines + ".",
 					"ERROR: " + e.getMessage(),
@@ -4663,7 +4663,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		if (bDebugMode){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_REPRICEQUOTESUCCEED,
+				SMLogEntry.LOG_OPERATION_SMREPRICEQUOTESUCCEED,
 				"On order number '" + sTrimmedOrderNumber + "', successfully repriced detail lines: " 
 					+ sSelectedLines + " above line number: " + sSelectedLines + ".",
 				"SUCCESSFUL ORDER LINE REPRICING",

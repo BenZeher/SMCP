@@ -193,7 +193,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
     	
 	    //log usage of this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_BIDFOLLOWUPREPORT, "REPORT", "SMBidFollowUp", "[1376509308]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMBIDFOLLOWUPREPORT, "REPORT", "SMBidFollowUp", "[1376509308]");
 
     	out.println(SMUtilities.Build_HTML_Table(3, 
 			    								 alCriteria,

@@ -73,7 +73,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 				+ "\">Return to user login</A></FONT><BR><BR>");
     	//log usage of this this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_DISPLAYJOBCOSTINFO, "REPORT", "SMDisplayJobCostInformation", "[1376509319]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYJOBCOSTINFO, "REPORT", "SMDisplayJobCostInformation", "[1376509319]");
 	    
 		//If there is a warning from trying to input previously, print it here:
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);

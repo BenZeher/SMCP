@@ -165,7 +165,7 @@ public class SMGeocoder {
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(Connection);
 		log.writeEntry(
    				"-1", 
-   				SMLogEntry.LOG_OPERATION_GEOCODEREQUEST, 
+   				SMLogEntry.LOG_OPERATION_SMGEOCODEREQUEST, 
    				"Requested Address: " + address + "\n"
    				+ "Returned GeoCode Request Status: " + sXMLStatus + "\n"
    				+ "Returned Lat: " + Float.toString(lat)+ "\n"

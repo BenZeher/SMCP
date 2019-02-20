@@ -798,7 +798,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"Before validate_configure_screen_fields",
 				"[1429125172]")
@@ -813,7 +813,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"After validate_configure_screen_fields",
 					"[1429125173]")
@@ -1001,7 +1001,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						"ADD DETAIL SHEET WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In save_detail_sheet_without_data_transaction EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1430407563]")
@@ -1012,7 +1012,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					"ADD DETAIL SHEET WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In save_detail_sheet_without_data_transaction - SQL: " + SQL,
 					"[1430410298]")
@@ -1030,7 +1030,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				"EDIT SCREEN WOID :" + getlid() 
 				+ ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"Before validate_edit_screen_fields",
@@ -1045,7 +1045,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				"EDIT SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"After validate_edit_screen_fields",
 				"[1430407562]")
@@ -1098,7 +1098,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 							sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						"EDIT SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In save_edit_screen_without_data_transaction EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1430407563]")
@@ -1117,7 +1117,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					"EDIT SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In save_edit_screen_without_data_transaction - SQL: " + SQL,
 					"[1430407564]")
@@ -1146,7 +1146,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						"IMPORT WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In save_import_without_data_transaction EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1430406364]")
@@ -1157,7 +1157,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					"IMPORT WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In save_import_without_data_transaction - SQL: " + SQL,
 					"[1430406366]")
@@ -1175,7 +1175,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				"ACCEPTANCE SCREEN WOID :" + getlid() 
 				+ ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"Before validate_acceptance_screen_fields",
@@ -1190,7 +1190,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				"ACCEPTANCE SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"After validate_acceptance_screen_fields",
 				"[1430332142]")
@@ -1216,7 +1216,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 							sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						"ACCEPTANCE SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In save_acceptance_screen_without_data_transaction EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1430332131]")
@@ -1227,7 +1227,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					"ACCEPTANCE SCREEN WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In save_acceptance_screen_without_data_transaction - SQL: " + SQL,
 					"[1430332133]")
@@ -1299,7 +1299,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 							sUserID, 
-							SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+							SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 							Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() 
 							+ ", isWorkOrderPosted() = " + isWorkOrderPosted()
 							+ " in updateJobSequencesByDayAndMechanic",
@@ -1312,7 +1312,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() 
 						+ ", isWorkOrderPosted() = " + isWorkOrderPosted()
 						+ " in updateJobSequencesByDayAndMechanic",
@@ -1440,7 +1440,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In updateFromConfigureWorkOrderWithNoScheduleChange - EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1429125175]")
@@ -1451,7 +1451,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In updateFromConfigureWorkOrderWithNoScheduleChange - SQL: " + SQL,
 					"[1429125175]")
@@ -1512,7 +1512,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In updateFromConfigureWithScheduleChange - EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 						"[1429283040]")
@@ -1523,7 +1523,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In updateFromConfigureWithScheduleChange - SQL: " + SQL,
 					"[1429125176]")
@@ -1669,7 +1669,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In updateOtherAffectedWorkOrder EXCEPTION CAUGHT SQL: " + SQL + e.getMessage(),
 						"[1429283160]")
@@ -1680,7 +1680,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In updateOtherAffectedWorkOrder SQL: " + SQL,
 					"[1429283161]")
@@ -1883,7 +1883,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 		    	log.writeEntry(
 		    			sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						" WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In post_without_data_transaction EXCEPTION CAUGHT - SQL: " + sSQL
 						+ " - error: " + e.getMessage(),
@@ -1895,7 +1895,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					" WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In post_without_data_transaction - SQL: " + sSQL,
 					"[1429282128]")
@@ -2125,7 +2125,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 		log.writeEntry(
 				sUserID, 
-			SMLogEntry.LOG_OPERATION_EMAILEDWOPOSTNOTIFICATION,
+			SMLogEntry.LOG_OPERATION_SMEMAILEDWOPOSTNOTIFICATION,
 			"WO#" + getlid() + "' Post Notification sent to '" + sEmailAddresses, 
 			sBody, 
 			"[1441740428]");
@@ -2470,7 +2470,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 					SMLogEntry log = new SMLogEntry(sDBID, context);
 					log.writeEntry(
 							sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERCONCURRENCYERROR, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERCONCURRENCYERROR, 
 						"Occurred when user '" + sUserID + " - " + sUserFullName + "' tried to update work order # " + getlid(), 
 						sResult, 
 						"[1519696952]"
@@ -2850,7 +2850,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		initWorkOrderVariables();
     	log.writeEntry(
     			sUserID, 
-    		SMLogEntry.LOG_OPERATION_DELETEWO, 
+    		SMLogEntry.LOG_OPERATION_SMDELETEWO, 
     		"Deleted WO " + getlid(), 
     		"Order #: " + getstrimmedordernumber()
     		+ ", mechanic: " + getmechanicsname()
@@ -2859,7 +2859,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 	    	log.writeEntry(
 	    			sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In delete_without_transaction - SQL: " + SQL,
 					"[1429297152]")
@@ -2898,7 +2898,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 	    	   	log.writeEntry(
 	    	   			sUserID, 
-	    				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+	    				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 	    				Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 	    				"In delete_current_lines EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 	    				"[1429297234]")
@@ -2909,7 +2909,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 		   	log.writeEntry(
 		   			sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In delete_current_lines - SQL: " + SQL,
 					"[1429297235]")
@@ -3003,7 +3003,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 		    	log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						" WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 						"In unpostWorkOrder_without_data_transaction EXCEPTION CAUGHT - SQL: " + SQL
 						+ " - error: " + e.getMessage(),
@@ -3014,7 +3014,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
 		log.writeEntry(
 			sUserID, 
-			SMLogEntry.LOG_OPERATION_UNPOSTINGWORKORDER, 
+			SMLogEntry.LOG_OPERATION_SMUNPOSTINGWORKORDER, 
 			"WO #" + getlid() + ", Work order #" + getlid(), 
 			read_out_debug_data(), 
 			"[1398096098]"
@@ -3537,7 +3537,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " ADD CUSTOM DETAIL SHEET WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 					"In addCustomDetailSheetText EXCEPTION CAUGHT - SQL: " + SQL + " - " + e.getMessage(),
 					"[1437062545]")
@@ -3549,7 +3549,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 				sUserID, 
-				SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+				SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 				Integer.toString(iSavingFromWhichScreen) + " ADD CUSTOM DETAIL SHEET WOID :" + getlid() + ", isWorkOrderPosted() = " + isWorkOrderPosted(),
 				"In addCustomDetailSheetText - SQL: " + SQL,
 				"[1437062546]")

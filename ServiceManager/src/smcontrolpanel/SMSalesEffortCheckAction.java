@@ -221,7 +221,7 @@ public class SMSalesEffortCheckAction extends HttpServlet {
 	   
 	    //log usage of this this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SALESEFFORTCHECK, "REPORT", "SMSalesEffortCheck", "[1376509355]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMSALESEFFORTCHECK, "REPORT", "SMSalesEffortCheck", "[1376509355]");
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

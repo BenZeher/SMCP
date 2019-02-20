@@ -62,7 +62,7 @@ public class SMViewAppointmentCalendarGenerate extends HttpServlet {
 		}
 		  //log usage of this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_VIEWAPPOINTMENTCALENDAR, "REPORT", "SMViewAppointmentCalendar", "[1528217212]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMVIEWAPPOINTMENTCALENDAR, "REPORT", "SMViewAppointmentCalendar", "[1528217212]");
 
 		boolean bAllowedToViewCalendar = SMSystemFunctions.isFunctionPermitted(
 			SMSystemFunctions.SMViewAppointmentCalendar,

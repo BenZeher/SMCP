@@ -1086,7 +1086,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 				SMLogEntry log = new SMLogEntry(conn);
 				log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_ASEMAILSENDERROR, 
+					SMLogEntry.LOG_OPERATION_SSEMAILSENDERROR, 
 					"Alarm " + this.getsname() + " was triggered; error sending email", 
 					"Error: " + e.getMessage(), 
 					"[1473957806]"

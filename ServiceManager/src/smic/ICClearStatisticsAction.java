@@ -80,7 +80,7 @@ public class ICClearStatisticsAction extends HttpServlet {
     	}
     	
     	SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
-    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CLEARITEMSTATISTICS, "Item statistics successfully cleared", SQL, "[1376509374]");
+    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICCLEARITEMSTATISTICS, "Item statistics successfully cleared", SQL, "[1376509374]");
     	
 		m_sWarning = "Item statistics BEFORE year " + sYear + ", month " + sMonth
 			+ " were successfully cleared.";

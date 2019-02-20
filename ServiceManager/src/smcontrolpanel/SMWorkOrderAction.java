@@ -90,7 +90,7 @@ public class SMWorkOrderAction extends HttpServlet{
 	    	SMLogEntry log = new SMLogEntry(smaction.getsDBID(), getServletContext());
 	    	log.writeEntry(
 	    		smaction.getUserID(), 
-	    		SMLogEntry.LOG_OPERATION_WORKORDERCOMMANDWOFULLDISPLAY, 
+	    		SMLogEntry.LOG_OPERATION_SMWORKORDERCOMMANDWOFULLDISPLAY, 
 	    		"WOID:" + workorder.getlid() + " - command: " + sCommandValue, 
 	    		"Fully Displayed Warning Was Triggered Previously", 
 	    		"[1431635498]");
@@ -293,7 +293,7 @@ public class SMWorkOrderAction extends HttpServlet{
 			} catch (Exception e) {
 				log.writeEntry(
 					smaction.getUserID(),
-					SMLogEntry.LOG_OPERATION_WORKORDEREMAIL, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDEREMAIL, 
 					"Work order #: " + workorder.getlid(), 
 					"Attempted to send to: '" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.EMAIL_TO_FIELD, request) + "'"
 						+ " - Error message: " + e.getMessage(), 
@@ -311,7 +311,7 @@ public class SMWorkOrderAction extends HttpServlet{
 			}
 			log.writeEntry(
 					smaction.getUserID(),
-					SMLogEntry.LOG_OPERATION_WORKORDEREMAIL, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDEREMAIL, 
 					"Work order #: " + workorder.getlid(), 
 					 "Sent to: '" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.EMAIL_TO_FIELD, request) + "'", 
 					"[1417634374]");

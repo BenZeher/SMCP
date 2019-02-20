@@ -287,7 +287,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
     		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getsworkorderid() 
 						+ " in DETAIL save - ",
 						"EXCEPTION CAUGHT - SQL = " + SQL + " - " + ex.getMessage(),
@@ -299,7 +299,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 		if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+					SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 					Integer.toString(iSavingFromWhichScreen) + " WOID :" + getsworkorderid() 
 					+ " in DETAIL save",
 					" - SQL = " + SQL,
@@ -323,7 +323,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 				if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 					log.writeEntry(
 							sUserID, 
-							SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+							SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 							Integer.toString(iSavingFromWhichScreen) + " WOID :" + getsworkorderid() 
 							+ " in DETAIL save getting line ID - ID NOT FOUND",
 							" - SQL = " + SQL,
@@ -337,7 +337,7 @@ public class SMWorkOrderDetail extends clsMasterEntry{
 			if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
 				log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_WORKORDERSAVEDEBUGGING, 
+						SMLogEntry.LOG_OPERATION_SMWORKORDERSAVEDEBUGGING, 
 						Integer.toString(iSavingFromWhichScreen) + " WOID :" + getsworkorderid() 
 						+ " in DETAIL save getting line ID - EXCEPTION CAUGHT",
 						" - SQL = " + SQL + " - " + e.getMessage(),

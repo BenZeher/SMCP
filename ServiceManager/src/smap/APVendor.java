@@ -533,14 +533,14 @@ public class APVendor extends clsMasterEntry{
     		if (bEmailSucceeded){
     			log.writeEntry(
     					sUserID, 
-    					SMLogEntry.LOG_OPERATION_SENDNEWVENDOREMAIL, 
+    					SMLogEntry.LOG_OPERATION_APSENDNEWVENDOREMAIL, 
     					"EMAIL SENT", 
     					"Successfully added vendor '" + m_svendoracct.trim() + "'",
     					"[1385580402]");
     		}else{
     			log.writeEntry(
     					sUserID, 
-    					SMLogEntry.LOG_OPERATION_SENDNEWVENDOREMAIL, 
+    					SMLogEntry.LOG_OPERATION_APSENDNEWVENDOREMAIL, 
     					"EMAIL NOT SENT", 
     					"Vendor '" + m_svendoracct.trim() + "' - email error: " + sErrorMessage,
     					"[1385580403]");

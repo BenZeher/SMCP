@@ -108,7 +108,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 			   
 	 	    //log usage of this this report
 	 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-	 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CREATECREDITNOTEPREVIEW, "REPORT", "SMCreateCreditNotePreview", "[1376509313]");
+	 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCREATECREDITNOTEPREVIEW, "REPORT", "SMCreateCreditNotePreview", "[1376509313]");
 	    	out.println ("<FORM NAME=\"MAINFORM\" ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCreateCreditNoteAction\">");
 	    	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='smcontrolpanel.SMCreateCreditNotePreview'>");

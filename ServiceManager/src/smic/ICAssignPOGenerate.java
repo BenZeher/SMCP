@@ -119,7 +119,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		}
     	
 	    //Log the usage:
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_POASSIGNMENT, "POASSIGNMENT", "PO Number " + sICAssignPOGenerateAssignedNumber 
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICPOASSIGNMENT, "POASSIGNMENT", "PO Number " + sICAssignPOGenerateAssignedNumber 
 				+ " was assigned to " + sUserFullName + " on " + sAssignedDate,
 				"[1376509373]"
 		);

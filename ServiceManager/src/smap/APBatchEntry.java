@@ -2804,7 +2804,7 @@ public class APBatchEntry {
 				//If it's a PAYMENT, We apply only the DISCOUNTED amt against the CURRENT amt, we don't apply the whole CURRENT amt against it:
 				if((getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_PAYMENT)){
 					line.setsbdamount(clsManageBigDecimals.BigDecimalToScaledFormattedString(
-						SMTableapbatchentrylines.bdamountScale, (rs.getBigDecimal(SMTableaptransactions.bdcurrentamt).subtract(rs.getBigDecimal(SMTableaptransactions.bdcurrentdiscountavailable))).negate()));
+						SMTableapbatchentrylines.bdamountScale, (rs.getBigDecimal(SMTableaptransactions.bdcurrentamt).subtract(bdEligibleDiscountAmt)).negate()));
 				}else{
 					line.setsbdamount(clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						SMTableapbatchentrylines.bdamountScale, (rs.getBigDecimal(SMTableaptransactions.bdcurrentamt).negate())));

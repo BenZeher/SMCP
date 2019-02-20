@@ -71,7 +71,7 @@ public class SMAuthenticate{
         			+ req.getRequestURI() + "',"
                 	+ " req parameters  = '" + clsManageRequestParameters.getAllRequestParameters(req) + "', " 
                 	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(req.getSession()) + "', "
-                	+ " context parameters = '" + clsServletUtilities.getContextParameters(context) + "'"
+                	//+ " context parameters = '" + clsServletUtilities.getContextParameters(context) + "'"
                 	+ "."
         	);
         	

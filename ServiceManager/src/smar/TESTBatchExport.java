@@ -1,23 +1,7 @@
 package smar;
-import java.math.BigDecimal;
 import java.sql.DriverManager;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 
 import javax.servlet.http.HttpServlet;
-
-import SMClasses.SMLogEntry;
-import SMDataDefinition.SMTableaptransactionlines;
-import SMDataDefinition.SMTableaptransactions;
-import SMDataDefinition.SMTableinvoicedetails;
-import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsEmailInlineHTML;
-import ServletUtilities.clsPDFFileCreator;
-import smcontrolpanel.SMUtilities;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -76,6 +60,7 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//Get the temporary file path for saving files:
 
+/*
 		//Email one copy to each person in the email address list:;
 		String sSMTPServer = "smtp.gmail.com";
 		String sSMTPUserName = "ohd-washington-noreply@odcdc.com";
@@ -100,7 +85,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Error sending email  - " + e2.getMessage());
 		}
 		System.out.println("Done email function.");
-		
+*/		
 		/* IMPORT EXPENSED COST
 		String SMTabletempExpensedCost = "tempExpensedCost";
 

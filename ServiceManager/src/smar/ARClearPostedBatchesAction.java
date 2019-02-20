@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
+import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableentries;
 import SMDataDefinition.SMTableentrylines;
@@ -24,6 +22,9 @@ import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableglexportheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ARClearPostedBatchesAction extends HttpServlet{
 
@@ -91,9 +92,18 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 			return;
 	    }
 
+	    SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
+	    
 	    try{
 	    	if(!clsDatabaseFunctions.start_data_transaction(conn)){
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067514]");
+	    		log.writeEntry(
+	    			sUserID, 
+	    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+	    			"Failed to clear batches", 
+	    			"Could not start data transaction", 
+	    			"[1550678994]"
+	    		);
 	    		m_sWarning = "Could not start data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -131,6 +141,13 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067515]");
+	    		log.writeEntry(
+		    			sUserID, 
+		    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+		    			"Failed to clear batches", 
+		    			"Could not delete batches, entries, and lines", 
+		    			"[1550678995]"
+		    		);
 	    		m_sWarning = "Could not execute delete statement.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -158,6 +175,14 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067516]");
+	    		log.writeEntry(
+		    			sUserID, 
+		    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+		    			"Failed to clear batches", 
+		    			"Could not delete batches with no entries", 
+		    			"[1550678996]"
+		    		);
+
 	    		m_sWarning = "Could not delete empty batches in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -181,6 +206,14 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067517]");
+	    		log.writeEntry(
+		    			sUserID, 
+		    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+		    			"Failed to clear batches", 
+		    			"Could not delete GL export header records", 
+		    			"[1550678997]"
+		    		);
+
 	    		m_sWarning = "Could not delete GL Export Header records in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -203,6 +236,14 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		clsDatabaseFunctions.rollback_data_transaction(conn);
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067518]");
+	    		log.writeEntry(
+		    			sUserID, 
+		    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+		    			"Failed to clear batches", 
+		    			"Could not delete GL export detail records", 
+		    			"[1550678998]"
+		    		);
+
 	    		m_sWarning = "Could not delete GL Export Detail records in the range.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -214,6 +255,14 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    	
 	    	if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067519]");
+	    		log.writeEntry(
+		    			sUserID, 
+		    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+		    			"Failed to clear batches", 
+		    			"Could not commit data transaction", 
+		    			"[1550678999]"
+		    		);
+
 	    		m_sWarning = "Could not commit data transaction.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -226,7 +275,15 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 	    }catch(SQLException e){
 	    	m_sWarning = "Error deleting batches - " + e.getMessage();
 	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067520]");
-			response.sendRedirect(
+    		log.writeEntry(
+	    			sUserID, 
+	    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+	    			"Failed to clear batches", 
+	    			e.getMessage(), 
+	    			"[1550679000]"
+	    		);
+
+	    	response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + m_sWarning
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -234,7 +291,15 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 			return;
 	    }
 	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067521]");
-		m_sWarning = "Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.";
+		log.writeEntry(
+    			sUserID, 
+    			SMLogEntry.LOG_OPERATION_ARCLEARPOSTEDBATCHES, 
+    			"Successfully deleted posted AR batches", 
+    			"Clearing date: '" + sClearingDate + "'", 
+    			"[1550679001]"
+    		);
+
+	    m_sWarning = "Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.";
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + m_sWarning

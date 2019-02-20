@@ -2,20 +2,22 @@ package smbk;
 
 import java.io.IOException;
 import java.sql.Connection;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smcontrolpanel.SMMasterEditAction;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTablebkaccountentries;
 import SMDataDefinition.SMTablebkpostedentries;
 import SMDataDefinition.SMTablebkstatements;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import smcontrolpanel.SMMasterEditAction;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class BKClearEntriesAction extends HttpServlet{
 	
@@ -51,6 +53,15 @@ public class BKClearEntriesAction extends HttpServlet{
 			return;
 		}
 
+		SMLogEntry log = new SMLogEntry(smaction.getsDBID(), getServletContext());
+		log.writeEntry(
+			smaction.getUserID(), 
+			SMLogEntry.LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS, 
+			"Successfully cleared bank statements", 
+			"Clearing date: '" + sClearingDate + "'", 
+			"[1550680125]"
+		);
+		
 		smaction.redirectAction("", "Posted statements up to " + sClearingDate + " were successfully cleared.", "");
 		return;
 	}

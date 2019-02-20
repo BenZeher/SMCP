@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatchentrylines;
@@ -258,6 +259,13 @@ public class APClearPostedBatchesAction extends HttpServlet{
 			return;
 	    }
 	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998973]");
+	    SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
+	    log.writeEntry(
+	    	sUserID, 
+	    	SMLogEntry.LOG_OPERATION_APCLEARPOSTEDBATCHES,
+	    	"Successfully cleared posted and deleted AP batches",
+	    	"Clearing date: '" + datClearingDate + "'",
+	    	"[1550679877]");
 		m_sWarning = "Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.";
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

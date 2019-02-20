@@ -11,10 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableglexportheaders;
@@ -24,6 +22,9 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICClearPostedBatchesAction extends HttpServlet{
 
@@ -242,6 +243,13 @@ public class ICClearPostedBatchesAction extends HttpServlet{
 			return;
 	    }
 	    clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080795]");
+	    SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
+	    log.writeEntry(
+	    	sUserID, 
+	    	SMLogEntry.LOG_OPERATION_ICCLEARPOSTEDBATCHES, 
+	    	"Successfully cleared posted and deleted IC batches", 
+	    	"Clearing date: '" + datClearingDate + "'", 
+	    	"[1550679670]");
 		m_sWarning = clsServletUtilities.URLEncode("Posted and deleted batches with posting dates up to and including " + sClearingDate + " were cleared.");
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

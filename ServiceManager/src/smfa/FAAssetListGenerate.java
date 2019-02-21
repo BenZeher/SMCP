@@ -186,7 +186,7 @@ public class FAAssetListGenerate extends HttpServlet {
 				+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FIXEDASSETS, "REPORT", "FAAssetList","[1376509370]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "REPORT", "FAAssetList","[1376509370]");
 
 		//Retrieve information
 		Connection conn = clsDatabaseFunctions.getConnection(

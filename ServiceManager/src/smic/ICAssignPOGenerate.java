@@ -196,7 +196,7 @@ public class ICAssignPOGenerate extends HttpServlet {
 		if (diffMinutes < 5){
 			log.writeEntry(
 					sUserID, 
-					SMLogEntry.LOG_OPERATION_ICASSIGNPO, 
+					SMLogEntry.LOG_OPERATION_ICDUPLICATEDPOASSIGNMENT, 
 					"PO requested twice within " + diffMinutes + " minutes", 
 					"Comment was: '" + sPOComment + "'",
 					"[1376509372]")

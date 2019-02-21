@@ -12,11 +12,16 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTablesystemlog;
 import ServletUtilities.clsManageRequestParameters;
 
 public class SMDisplayLoggingOperations  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	private static final String FIELD_DELIMITER = " - ";
+	private static final String ODD_ROW_BACKGROUND_COLOR = "#C2E0FF";
+	private static final String EVEN_ROW_BACKGROUND_COLOR = "#C2E0FF";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -39,8 +44,11 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String title = "SM List Logging Operations";
 		String subtitle = "";
+		
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
+		out.println(SMUtilities.getMasterStyleSheetLink());
+		
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
@@ -52,11 +60,62 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMDisplayLoggingOperations) 
 				+ "\">Summary</A><BR><BR>");
 		
-		out.println("LIST OF LOGGING OPERATIONS - the 'marker' is on the left, description on the right.");
-		ArrayList<String>arrOperationsList = SMLogEntry.getOperationDescriptions();
+		out.println("<I><B>LIST OF LOGGING OPERATIONS:</B></I>");
+		out.println("<BR>    The 'marker', which appears in the '" + SMTablesystemlog.soperation + "' field of the '" + SMTablesystemlog.TableName
+			+ "' table is on the left, description of the event being recorded is on the right.");
+		
+		String s = "";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+				//+ " style = \" width:100%; \" "
+				+ " ID = \"" + "LOGGINGOPERATIONS" + "\""
+				+ ">\n";
+		
+		//Headings:
+		s += "  <TR>\n";
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+				+ " style = \" font-weight:bold; color: white; background-color: black; \" >"
+				+ "LABEL"
+				+ "</TD>\n"
+			;
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
+				+ " style = \" font-weight: bold; color: white; background-color: black; \" >"
+				+ "DESCRIPTION"
+				+ "</TD>\n"
+			;
+	
+		s += "  </TR>";
+		
+		ArrayList<String>arrOperationsList = SMLogEntry.getOperationDescriptions(FIELD_DELIMITER);
+		boolean bOddRow = true;
 		for (int i = 0; i < arrOperationsList.size(); i++){
-			out.println(arrOperationsList.get(i));
+			
+			String[] sLine  = arrOperationsList.get(i).split(FIELD_DELIMITER);
+			
+			String sBackgroundColor = ODD_ROW_BACKGROUND_COLOR;
+			if (bOddRow){
+				sBackgroundColor = EVEN_ROW_BACKGROUND_COLOR;
+			}
+			s += "  <TR style = \" background-color: " + sBackgroundColor + "; \" >\n";
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED_WITH_BORDER + "\""
+					+ " style = \" font-weight:bold; color: black; \" >"
+		    		+ sLine[0]
+					+ "</TD>\n"
+				;
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED_WITH_BORDER + "\""
+					+ " style = \" font-style: italic; color: black; \" >"
+		    		+ sLine[1]
+					+ "</TD>\n"
+				;
+			s += "  </TR>";
+			
+			bOddRow = !bOddRow;
 		}
+		
+		s += "</TABLE>" + "\n";
+		
+		out.println(s);
 		
 		out.println("</BODY></HTML>");
 		return;

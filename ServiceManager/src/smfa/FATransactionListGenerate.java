@@ -122,7 +122,7 @@ public class FATransactionListGenerate extends HttpServlet {
 				+ "\">Return to Fixed Assets Main Menu</A><BR>");
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
-		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FIXEDASSETS, "REPORT", "FATransactionList", "[1376509371]");
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "REPORT", "FATransactionList", "[1376509371]");
 
 		//Retrieve information
 		Connection conn = clsDatabaseFunctions.getConnection(

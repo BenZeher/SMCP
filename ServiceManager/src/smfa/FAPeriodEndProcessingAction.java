@@ -100,7 +100,7 @@ public class FAPeriodEndProcessingAction extends HttpServlet{
 			
 			//Add an entry to the system log to let us know what happened:
 			SMLogEntry log = new SMLogEntry(conn);
-			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FIXEDASSETS, "FA Period Process Failed", e.getMessage(), "[1435346362]");
+			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "FA Period Process Failed", e.getMessage(), "[1435346362]");
 			
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067476]");
 			response.sendRedirect(

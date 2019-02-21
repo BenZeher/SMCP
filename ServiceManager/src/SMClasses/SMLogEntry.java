@@ -15,10 +15,10 @@ import smcontrolpanel.SMUtilities;
 
 public class SMLogEntry {
 
-	public final static String LOG_OPERATION_RECEIPTFLAGGEDASNONINVENTORY = "NONINVRCPTFLAGGED";
-	public final static String LOG_OPERATION_FIXEDASSETS = "FIXEDASSETS";
+	public final static String LOG_OPERATION_ICRECEIPTFLAGGEDASNONINVENTORY = "ICNONINVRCPTFLAGGED";
+	public final static String LOG_OPERATION_FAFIXEDASSETS = "FAFIXEDASSETS";
 	public final static String LOG_OPERATION_FIXEDASSETSTRANSACTIONCLEARING = "FATRANSACTIONCLEARING";
-	public final static String LOG_OPERATION_CANCELORDER = "CANCELEDORDER";
+	public final static String LOG_OPERATION_SMCANCELORDER = "SMCANCELEDORDER";
 	public final static String LOG_OPERATION_SMUNCANCELORDER = "SMUNCANCELEDORDER";
 	public final static String LOG_OPERATION_ARACTIVITYREPORT = "ARACTIVITYREPORT";
 	public final static String LOG_OPERATION_ARAGING = "ARAGING";
@@ -78,7 +78,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_ICLISTUNUSEDPOS = "ICLISTUNUSEDPOS";
 	public final static String LOG_OPERATION_ICONHANDBYDESCRIPTION = "ICONHANDBYDESCRIPTION";
 	public final static String LOG_OPERATION_ICPHYSICALINVENTORYVARIANCEREPORT = "ICPHYSICALINVENTORYVARIANCEREPORT";
-	public final static String LOG_OPERATION_ICUPDATEINVNUMONRECEIPT = "ICUPDATEINVNUMONRECEIPT";
+	//public final static String LOG_OPERATION_ICUPDATEINVNUMONRECEIPT = "ICUPDATEINVNUMONRECEIPT";
 	public final static String LOG_OPERATION_ICPHYSICALINVENTORYWORKSHEET= "ICPHYSICALINVENTORYWORKSHEET";
 	public final static String LOG_OPERATION_ICPORECEIVINGREPORT = "ICPORECEIVINGREPORT";
 	public final static String LOG_OPERATION_ICPRINTRECEIVINGLABELS = "ICPRINTRECEIVINGLABELS";
@@ -117,7 +117,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_SMQUERYSAVE = "SMQUERYSAVE";
 	public final static String LOG_OPERATION_SMUPDATEDATA = "SMUPDATEDATA";
 	public final static String LOG_OPERATION_SMWORKORDEREMAIL = "SMWORKORDEREMAIL";
-	public final static String LOG_OPERATION_ICASSIGNPO = "ICASSIGNPO";
+	public final static String LOG_OPERATION_ICDUPLICATEDPOASSIGNMENT = "ICASSIGNPO";
 	public final static String LOG_OPERATION_ICCLEARTRANS = "ICCLEARTRANS";
 	public final static String LOG_OPERATION_ICBATCHPOST = "ICBATCHPOST";
 	public final static String LOG_OPERATION_ICBATCHPOSTINVOICEUPDATE = "ICBATCHPOSTINVOICEUPDATE";
@@ -278,452 +278,452 @@ public class SMLogEntry {
 		}
     	return true;
     }
-    public static ArrayList<String> getOperationDescriptions(){
+    public static ArrayList<String> getOperationDescriptions(String sDelimiter){
 
     	ArrayList<String> m_arrOperationLabelValues = new ArrayList<String>(0);
     	ArrayList<String> m_arrOperationLabelDescriptions = new ArrayList<String>(0);
 
-       	m_arrOperationLabelValues.add(LOG_OPERATION_RECEIPTFLAGGEDASNONINVENTORY);
-    	m_arrOperationLabelDescriptions.add("NONINVRCPTFLAGGED");
+       	m_arrOperationLabelValues.add(LOG_OPERATION_ICRECEIPTFLAGGEDASNONINVENTORY);
+    	m_arrOperationLabelDescriptions.add("Records when a non-inventory item is flagged during IC receipt processing");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_FIXEDASSETS);
-    	m_arrOperationLabelDescriptions.add("FIXEDASSETS");
+    	m_arrOperationLabelValues.add(LOG_OPERATION_FAFIXEDASSETS);
+    	m_arrOperationLabelDescriptions.add("Records one of several Fixed Assets events");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_FIXEDASSETSTRANSACTIONCLEARING);
-    	m_arrOperationLabelDescriptions.add("FATRANSACTIONCLEARING");
+    	m_arrOperationLabelDescriptions.add("Records clearing of Fixed Assets transactions");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_CANCELORDER);
-    	m_arrOperationLabelDescriptions.add("CANCELEDORDER");
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMCANCELORDER);
+    	m_arrOperationLabelDescriptions.add("Records cancellation of an SM sales order");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUNCANCELORDER);
-    	m_arrOperationLabelDescriptions.add("UNCANCELEDORDER");
+    	m_arrOperationLabelDescriptions.add("Records the UN-cancellation of an SM sales order");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARACTIVITYREPORT);
-    	m_arrOperationLabelDescriptions.add("ARACTIVITYREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Activity report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARAGING);
-    	m_arrOperationLabelDescriptions.add("ARAGING");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Aging report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARCLEARMONTHLYSTATISTICS);
-    	m_arrOperationLabelDescriptions.add("CLEAR MONTHLY STATISTICS");
+    	m_arrOperationLabelDescriptions.add("Records AR monthly statistics CLEARING");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARINVOICEIMPORT);
-    	m_arrOperationLabelDescriptions.add("ARINVOICEIMPORT");
+    	m_arrOperationLabelDescriptions.add("Records AR invoice import from SM");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARRENUMBER);
-    	m_arrOperationLabelDescriptions.add("ARRENUMBER");
+    	m_arrOperationLabelDescriptions.add("Records a customer number change/merge in AR");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARDISPLAYCUSTOMERINFO);
-    	m_arrOperationLabelDescriptions.add("DISPLAYCUSTOMERINFO");
+    	m_arrOperationLabelDescriptions.add("Records display of customer information in AR");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARLISTCUSTOMERSONHOLD);
-    	m_arrOperationLabelDescriptions.add("ARLISTCUSTOMERSONHOLD");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Customers On Hold report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARLISTINACTIVECUST);
-    	m_arrOperationLabelDescriptions.add("AR LIST INACTIVE CUST");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR List Inactive Customers report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARMISCCASHREPORT);
-    	m_arrOperationLabelDescriptions.add("ARMISCCASHREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Miscellaneous Cash report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARPOSTINGJOURNAL);
-    	m_arrOperationLabelDescriptions.add("ARPOSTINGJOURNAL");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Posting Journal");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARPRINTSTATEMENT);
-    	m_arrOperationLabelDescriptions.add("ARPRINTSTATEMENT");
+    	m_arrOperationLabelDescriptions.add("Records printing of an AR customer statement");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARPRINTCALLSHEETS);
-    	m_arrOperationLabelDescriptions.add("ARPRINTCALLSHEETS");
+    	m_arrOperationLabelDescriptions.add("Records running of AR Call Sheets");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARSETINACTIVECUSTOMER);
-    	m_arrOperationLabelDescriptions.add("SETINACTIVECUSTOMER");
+    	m_arrOperationLabelDescriptions.add("Records setting a customer to INACTIVE");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARVIEWCHRONLOG);
-    	m_arrOperationLabelDescriptions.add("ARVIEWCHRONLOG");
+    	m_arrOperationLabelDescriptions.add("Records running of the AR Chronological Log");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMAVERAGEMUREPORT);
-    	m_arrOperationLabelDescriptions.add("AVERAGEMUREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Average Mark Up report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMBIDFOLLOWUPREPORT);
-    	m_arrOperationLabelDescriptions.add("BIDFOLLOWUPREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Sales Lead Follow Up report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMBIDREPORT);
-    	m_arrOperationLabelDescriptions.add("SMBIDREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Sales Lead report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPENDINGBIDSREPORT);
-    	m_arrOperationLabelDescriptions.add("PENDINGBIDSREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Pending Sales Lead report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCANCELEDJOBSREPORT);
-    	m_arrOperationLabelDescriptions.add("SMCANCELEDJOBSREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Canceled Jobs report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATECREDITNOTE);
-    	m_arrOperationLabelDescriptions.add("CREATECREDITNOTE");
+    	m_arrOperationLabelDescriptions.add("Records credit note creation ");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATECREDITNOTEPREVIEW);
-    	m_arrOperationLabelDescriptions.add("CREATECREDITNOTEPREVIEW");
+    	m_arrOperationLabelDescriptions.add("Records credit note preview");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATEMULTIPLEINVOICES);
-    	m_arrOperationLabelDescriptions.add("CREATEMULTIPLEINVOICES");
+    	m_arrOperationLabelDescriptions.add("Records running of the Create Multiple Invoices function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCRITICALDATEREPORT);
-    	m_arrOperationLabelDescriptions.add("CRITICALDATEREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Critical Dates report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCUSTOMITEMSONHANDNOTONSALESORDER);
-    	m_arrOperationLabelDescriptions.add("CUSTOMITEMSONHANDNOTONSALESORDER");
+    	m_arrOperationLabelDescriptions.add("Records running of the Custom Items On Hand Not On Sales Orders report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMQUERY);
-    	m_arrOperationLabelDescriptions.add("SMQUERY");
+    	m_arrOperationLabelDescriptions.add("Records when queries are run");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMDISPLAYJOBCOSTINFO);
-    	m_arrOperationLabelDescriptions.add("DISPLAYJOBCOSTINFO");
+    	m_arrOperationLabelDescriptions.add("Records when Job Cost Summary is viewed");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMDISPLAYORDERINFORMATION);
-    	m_arrOperationLabelDescriptions.add("DISPLAYORDERINFORMATION");
+    	m_arrOperationLabelDescriptions.add("Records when View Order Information screen is viewed");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMJOBCOSTDAILYREPORT);
-    	m_arrOperationLabelDescriptions.add("SMJOBCOSTDAILYREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Job Cost Daily report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_OTHER);
-    	m_arrOperationLabelDescriptions.add("OTHER");
+    	m_arrOperationLabelDescriptions.add("Records miscellaneous events");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMLISTNEARBYORDERREPORT);
-    	m_arrOperationLabelDescriptions.add("LISTNEARBYORDERREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the List Nearby Orders report");
     	
     	//m_arrOperationLabelValues.add(LOG_OPERATION_SMLISTORDERSFORSCHEDULING);
     	//m_arrOperationLabelDescriptions.add("SMLISTORDERSFORSCHEDULING");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMMONTHLYBILLINGREPORT);
-    	m_arrOperationLabelDescriptions.add("MONTHLYBILLINGREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Monthly Billing report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTMONTHLYSALESREPORT);
-    	m_arrOperationLabelDescriptions.add("PRINTMONTHLYSALESREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Monthly Sales report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMOPENORDERSREPORT);
-    	m_arrOperationLabelDescriptions.add("SMOPENORDERSREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Open Orders report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCHANGEUSERPASSWORD);
-    	m_arrOperationLabelDescriptions.add("SMCHANGEUSERPASSWORD");
+    	m_arrOperationLabelDescriptions.add("Records when a user's password is changed ");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMORDERSOURCELISTING);
-    	m_arrOperationLabelDescriptions.add("SMORDERSOURCELISTING");
+    	m_arrOperationLabelDescriptions.add("Records running of the Order Source listing");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTDELIVERYTICKET);
-    	m_arrOperationLabelDescriptions.add("PRINTDELIVERYTICKET");
+    	m_arrOperationLabelDescriptions.add("Records when a delivery ticket is printed");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTINVOICE);
-    	m_arrOperationLabelDescriptions.add("PRINTINVOICE");
+    	m_arrOperationLabelDescriptions.add("Records when an invoice is printed");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTINVOICEAUDIT);
-    	m_arrOperationLabelDescriptions.add("PRINTINVOICEAUDIT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Invoice Audit List");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTPREINVOICE);
-    	m_arrOperationLabelDescriptions.add("PRINTPREINVOICE");
+    	m_arrOperationLabelDescriptions.add("Records running of the Pre-Invoice Audit List");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRODUCTIVITYREPORT);
-    	m_arrOperationLabelDescriptions.add("SMPRODUCTIVITYREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Productivity report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMRECALIBRATECOUNTERS);
-    	m_arrOperationLabelDescriptions.add("RECALIBRATECOUNTERS");
+    	m_arrOperationLabelDescriptions.add("Records invoice/order number recalibration");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSALESCONTACTREPORT);
-    	m_arrOperationLabelDescriptions.add("SMSALESCONTACTREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Sales Contact report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTUNBILLEDCONTRACTREPORT);
-    	m_arrOperationLabelDescriptions.add("PRINTUNBILLEDCONTRACTREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Unbilled Contract report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMEMAILUNBILLEDCONTRACTREPORT);
-    	m_arrOperationLabelDescriptions.add("EMAILUNBILLEDCONTRACTREPORT");
+    	m_arrOperationLabelDescriptions.add("Records emailing of the Unbilled Contract report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMVIEWTRUCKSCHEDULE);
-    	m_arrOperationLabelDescriptions.add("VIEWTRUCKSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records viewing of the Truck Schedule");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMWAGESCALEREPORT);
-    	m_arrOperationLabelDescriptions.add("SMWAGESCALEREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Wage Scale report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMWARRANTYSTATUSREPORT);
-    	m_arrOperationLabelDescriptions.add("SMWARRANTYSTATUSREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Warranty Status report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMTAXBYCATEGORYREPORT);
-    	m_arrOperationLabelDescriptions.add("TAXBYCATEGORYREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the SM Tax By Category report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICPOASSIGNMENT);
-    	m_arrOperationLabelDescriptions.add("POASSIGNMENT");
+    	m_arrOperationLabelDescriptions.add("Records when a PO number is assigned");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICUPDATERECEIPTSTATUS);
-    	m_arrOperationLabelDescriptions.add("UPDATERECEIPTSTATUS");
+    	m_arrOperationLabelDescriptions.add("Records updating the status of receipt entries during posting");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICCLEARITEMSTATISTICS);
-    	m_arrOperationLabelDescriptions.add("CLEARITEMSTATISTICS");
+    	m_arrOperationLabelDescriptions.add("Records clearing of IC Item Statistics");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICCONVERSION);
-    	m_arrOperationLabelDescriptions.add("ICCONVERSION");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC data conversion (from ACCPAC)");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICITEMSRECEIVEDNOTINVOICED);
-    	m_arrOperationLabelDescriptions.add("ICITEMSRECEIVEDNOTINVOICED");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC Items Received Not Invoiced report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICITEMVALUATIONREPORT);
-    	m_arrOperationLabelDescriptions.add("ICITEMVALUATIONREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC Item Valuation report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICLISTUNUSEDPOS);
-    	m_arrOperationLabelDescriptions.add("LISTUNUSEDPOS");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC List Unused POs report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICONHANDBYDESCRIPTION);
-    	m_arrOperationLabelDescriptions.add("ICONHANDBYDESCRIPTION");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC Items On Hand Searched By Description report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICPHYSICALINVENTORYVARIANCEREPORT);
-    	m_arrOperationLabelDescriptions.add("ICPHYSICALINVENTORYVARIANCEREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC Physical Variance report");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_ICUPDATEINVNUMONRECEIPT);
-    	m_arrOperationLabelDescriptions.add("UPDATEINVNUMONRECEIPT");
+    	//m_arrOperationLabelValues.add(LOG_OPERATION_ICUPDATEINVNUMONRECEIPT);
+    	//m_arrOperationLabelDescriptions.add("UPDATEINVNUMONRECEIPT");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICPHYSICALINVENTORYWORKSHEET);
-    	m_arrOperationLabelDescriptions.add("ICPHYSICALINVENTORYWORKSHEET");
+    	m_arrOperationLabelDescriptions.add("Records printing of the IC Physical Inventory Worksheet");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICPORECEIVINGREPORT);
-    	m_arrOperationLabelDescriptions.add("ICPORECEIVINGREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Ic PO Receiving report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICPRINTRECEIVINGLABELS);
-    	m_arrOperationLabelDescriptions.add("ICPRINTRECEIVINGLABELS");
+    	m_arrOperationLabelDescriptions.add("Records printing Ic Receiving Labels");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICTRANSACTIONHISTORYREPORT);
-    	m_arrOperationLabelDescriptions.add("ICTRANSACTIONHISTORYREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Ic Transaction History report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICUNDERSTOCKEDITEMREPORT);
-    	m_arrOperationLabelDescriptions.add("ICUNDERSTOCKEDITEMREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC Understocked Item report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICUPDATEPRICE);
-    	m_arrOperationLabelDescriptions.add("ICUPDATEPRICE");
+    	m_arrOperationLabelDescriptions.add("Records updating of IC item prices");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICVIEWITEMPRICINGREPORT);
-    	m_arrOperationLabelDescriptions.add("ICVIEWITEMPRICINGREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the IC View Item Pricing report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARBATCHPOST);
-    	m_arrOperationLabelDescriptions.add("ARBATCHPOST");
+    	m_arrOperationLabelDescriptions.add("Records psting of AR batches ");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMDELETEWO);
-    	m_arrOperationLabelDescriptions.add("DELETE WO");
+    	m_arrOperationLabelDescriptions.add("Records work order deletions ");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARCLEARPAIDTRANS);
-    	m_arrOperationLabelDescriptions.add("ARCLEARPAIDTRANS");
+    	m_arrOperationLabelDescriptions.add("Records clearing of the AR paid transactions");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APCLEARPAIDTRANS);
-    	m_arrOperationLabelDescriptions.add("APCLEARPAIDTRANS");
+    	m_arrOperationLabelDescriptions.add("Records clearing of the AP paid transactions");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARSMINVOICEIMPORT);
-    	m_arrOperationLabelDescriptions.add("ARSMINVOICEIMPORT");
+    	m_arrOperationLabelDescriptions.add("Records import of SM invoices into AR");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_BKDELETEBKSTMT);
-    	m_arrOperationLabelDescriptions.add("DELETEBKSTMT");
+    	m_arrOperationLabelDescriptions.add("Records deletion of BK bank statements");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMDELETEORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("DELETEORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to delete SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMDELETEORDERLINESSUCCEED);
-    	m_arrOperationLabelDescriptions.add("DELETEORDERLINESSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to delete SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUNSHIPORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("UNSHIPORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to UNship SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUNSHIPORDERLINESSUCCEED);
-    	m_arrOperationLabelDescriptions.add("UNSHIPORDERLINESSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to UNship SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSHIPORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("SHIPORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to ship SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSHIPORDERLINESSUCCEED);
-    	m_arrOperationLabelDescriptions.add("SHIPORDERLINESSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to ship SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATEITEMORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("CREATEITEMORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to create items for SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATEITEMORDERLINESSUCCEED);
-    	m_arrOperationLabelDescriptions.add("CREATEITEMORDERLINESSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to create items for SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMMOVEORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("MOVEORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to move SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMMOVEORDERLINESSUCCEED);
-    	m_arrOperationLabelDescriptions.add("MOVEORDERLINESSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to ship SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCOPYORDERLINESFAIL);
-    	m_arrOperationLabelDescriptions.add("COPYORDERLINESFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to copy SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSETDETAILMECHANICSFAIL);
-    	m_arrOperationLabelDescriptions.add("SETDETAILMECHANICSFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to set mechanics on SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSETDETAILMECHANICSSSUCCEED);
-    	m_arrOperationLabelDescriptions.add("SETDETAILMECHANICSSSUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to set mechanics on SM order lines");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMREPRICEQUOTEFAIL);
-    	m_arrOperationLabelDescriptions.add("REPRICEQUOTEFAIL");
+    	m_arrOperationLabelDescriptions.add("Records failed attempts to reprice an SM quote");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMREPRICEQUOTESUCCEED);
-    	m_arrOperationLabelDescriptions.add("REPRICEQUOTESUCCEED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempts to reprice an SM quote");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUNPOSTINGWORKORDER);
-    	m_arrOperationLabelDescriptions.add("UNPOSTINGWORKORDER");
+    	m_arrOperationLabelDescriptions.add("Records UNPOSTING a work order");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUSERLOGIN);
-    	m_arrOperationLabelDescriptions.add("USERLOGIN");
+    	m_arrOperationLabelDescriptions.add("Records user logins");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATEINVOICE);
-    	m_arrOperationLabelDescriptions.add("CREATEINVOICE");
+    	m_arrOperationLabelDescriptions.add("Records invoice creation");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMEXECUTESQL);
-    	m_arrOperationLabelDescriptions.add("SMEXECUTESQL");
+    	m_arrOperationLabelDescriptions.add("Records running the SM Execute SQL function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTSERVICETICKET);
-    	m_arrOperationLabelDescriptions.add("PRINTSERVICETICKET");
+    	m_arrOperationLabelDescriptions.add("Records printing service ticket");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPURGEDATA);
-    	m_arrOperationLabelDescriptions.add("PURGEDATA");
+    	m_arrOperationLabelDescriptions.add("Records data purges");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMQUERYDELETE);
-    	m_arrOperationLabelDescriptions.add("SMQUERYDELETE");
+    	m_arrOperationLabelDescriptions.add("Records deletion of SM queries");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMQUERYSAVE);
-    	m_arrOperationLabelDescriptions.add("SMQUERYSAVE");
+    	m_arrOperationLabelDescriptions.add("Records SM query saves");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMUPDATEDATA);
-    	m_arrOperationLabelDescriptions.add("UPDATEDATA");
+    	m_arrOperationLabelDescriptions.add("Records updates of SM data structures (during first login after program update");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMWORKORDEREMAIL);
-    	m_arrOperationLabelDescriptions.add("WORKORDEREMAIL");
+    	m_arrOperationLabelDescriptions.add("Records emailing of work orders");
     	
-    	m_arrOperationLabelValues.add(LOG_OPERATION_ICASSIGNPO);
-    	m_arrOperationLabelDescriptions.add("ICASSIGNPO");
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICDUPLICATEDPOASSIGNMENT);
+    	m_arrOperationLabelDescriptions.add("Records a duplicated PO number assignment");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICCLEARTRANS);
-    	m_arrOperationLabelDescriptions.add("ICCLEARTRANS");
+    	m_arrOperationLabelDescriptions.add("Records IC transaction clearing");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICBATCHPOST);
-    	m_arrOperationLabelDescriptions.add("ICBATCHPOST");
+    	m_arrOperationLabelDescriptions.add("Records IC batch posting");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICBATCHPOSTINVOICEUPDATE);
-    	m_arrOperationLabelDescriptions.add("ICBATCHPOSTINVOICEUPDATE");
+    	m_arrOperationLabelDescriptions.add("Records IC batch line costing update events during posting");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICSMINVOICEIMPORT);
-    	m_arrOperationLabelDescriptions.add("ICSMINVOICEIMPORT");
+    	m_arrOperationLabelDescriptions.add("Records import of SM invoices into IC batches");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APSENDNEWVENDOREMAIL);
-    	m_arrOperationLabelDescriptions.add("SENDNEWVENDOREMAIL");
+    	m_arrOperationLabelDescriptions.add("Records emailing of new vendor notifications");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMMOVEDSCHEDULEENTRYFROMSCHEDULESCREEN);
-    	m_arrOperationLabelDescriptions.add("MOVEDSCHEDULEENTRYFROMSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records when an entry is moved on the Truck Schedule");
     	
     	//m_arrOperationLabelValues.add(LOG_OPERATION_SMWORKORDERSAVEDEBUGGING);
     	//m_arrOperationLabelDescriptions.add("WOSAVEDEBUG");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMWORKORDERCOMMANDWOFULLDISPLAY);
-    	m_arrOperationLabelDescriptions.add("WOCOMMANDWOFULLDISPLAY");
+    	m_arrOperationLabelDescriptions.add("Records when a user is warned for about clicking before the work order screen was fully displayed");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMVIEWUSERSESSIONINFO);
-    	m_arrOperationLabelDescriptions.add("VIEWUSERSESSIONINFO");
+    	m_arrOperationLabelDescriptions.add("Records use of View Session Information function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMVIEWSYSTEMCONFIGURATION);
-    	m_arrOperationLabelDescriptions.add("VIEWSYSTEMCONFIGURATION");
+    	m_arrOperationLabelDescriptions.add("Records use of View System Configuration function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMCREATENEWDOCUMENTFOLDER);
-    	m_arrOperationLabelDescriptions.add("CREATENEWDOCUMENTFOLDER");
+    	m_arrOperationLabelDescriptions.add("Records new document folder creation (Google Drive integration)");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMEMAILEDWOPOSTNOTIFICATION);
-    	m_arrOperationLabelDescriptions.add("EMAILEDWOPOSTNOTIFICATION");
+    	m_arrOperationLabelDescriptions.add("Records emailing of work order posting notification");
     	
     	//m_arrOperationLabelValues.add(LOG_OPERATION_SMWORKORDERRECENTITEMSDISPLAY);
     	//m_arrOperationLabelDescriptions.add("RECENTITEMSDISPLAY");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPOSTINGPERIODVIOLATION);
-    	m_arrOperationLabelDescriptions.add("POSTINGPERIODVIOLATION");
+    	m_arrOperationLabelDescriptions.add("Records posting period violation");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSSYSTEMREQUEST);
-    	m_arrOperationLabelDescriptions.add("SSSYSTEMREQUEST");
+    	m_arrOperationLabelDescriptions.add("Records Security System request by the program");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSSYSTEMERROR);
-    	m_arrOperationLabelDescriptions.add("SSSYSTEMERROR");
+    	m_arrOperationLabelDescriptions.add("Records Security System error");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSEMAILSENDERROR);
-    	m_arrOperationLabelDescriptions.add("ASEMAILSENDERROR");
+    	m_arrOperationLabelDescriptions.add("Records error sending emails from the Security System");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMSALESEFFORTCHECK);
-    	m_arrOperationLabelDescriptions.add("SALESEFFORTCHECK");
+    	m_arrOperationLabelDescriptions.add("Records running of the Check Sales Effort report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPURGEORDERSREPORT);
-    	m_arrOperationLabelDescriptions.add("SMPURGEORDERSREPORT");
+    	m_arrOperationLabelDescriptions.add("Records running of the Order History report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSDEVICESETBYSCHEDULE);
-    	m_arrOperationLabelDescriptions.add("SSDEVICESETBYSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records setting of a Security System device by schedule");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSDEVICEUNSETBYSCHEDULE);
-    	m_arrOperationLabelDescriptions.add("SSDEVICEUNSETBYSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records UNsetting of a Security System device by schedule");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSSEQUENCESETBYSCHEDULE);
-    	m_arrOperationLabelDescriptions.add("SSSEQUENCESETBYSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records setting of a Security System sequence by schedule");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSSEQUENCEUNSETBYSCHEDULE);
-    	m_arrOperationLabelDescriptions.add("SSSEQUENCEUNSETBYSCHEDULE");
+    	m_arrOperationLabelDescriptions.add("Records UNsetting of a Security System sequence by schedule");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMINVOICEEMAILED);
-    	m_arrOperationLabelDescriptions.add("INVOICEMAILED");
+    	m_arrOperationLabelDescriptions.add("Records successful attempt to email an invoice");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMINVOICENOTMAILED);
-    	m_arrOperationLabelDescriptions.add("INVOICENOTMAILED");
+    	m_arrOperationLabelDescriptions.add("Records failed attempt to email an invoice");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APBATCHPOST);
-    	m_arrOperationLabelDescriptions.add("APBATCHPOST");
+    	m_arrOperationLabelDescriptions.add("Records AP batch posting");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APAGING);
-    	m_arrOperationLabelDescriptions.add("APAGING");
+    	m_arrOperationLabelDescriptions.add("Records running of AP Aging report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APPRECHECK);
-    	m_arrOperationLabelDescriptions.add("APPRECHECK");
+    	m_arrOperationLabelDescriptions.add("Records an AP check run");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APVENDORTRANSACTIONS);
-    	m_arrOperationLabelDescriptions.add("APVENDORTRANSACTIONS");
+    	m_arrOperationLabelDescriptions.add("Records running of the AP Vendor Transactions report");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APCHECKREGISTER);
-    	m_arrOperationLabelDescriptions.add("APCHECKREGISTER");
+    	m_arrOperationLabelDescriptions.add("Records running of the AP check register");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APCHECKRUNPRINTED);
-    	m_arrOperationLabelDescriptions.add("APCHECKRUNPRINTED");
+    	m_arrOperationLabelDescriptions.add("Records printing checks from an AP check run");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APRENUMBER);
-    	m_arrOperationLabelDescriptions.add("APRENUMBER");
+    	m_arrOperationLabelDescriptions.add("Records AP vendor number change/merge");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APGENERATECHECKBATCH);
-    	m_arrOperationLabelDescriptions.add("APGENERATECHECKBATCH");
+    	m_arrOperationLabelDescriptions.add("Records creation of an AP check batch");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMGEOCODEREQUEST);
-    	m_arrOperationLabelDescriptions.add("GEOCODEREQUEST");
+    	m_arrOperationLabelDescriptions.add("Records an SM Geocode request");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMWORKORDERCONCURRENCYERROR);
-    	m_arrOperationLabelDescriptions.add("WORKORDERCONCURRENCYERROR");
+    	m_arrOperationLabelDescriptions.add("Records an SM Work Order 'concurrency' error (two users trying to save the same work order simultaneously)");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMVIEWAPPOINTMENTCALENDAR);
-    	m_arrOperationLabelDescriptions.add("APPOINTMENTCALENDAR");
+    	m_arrOperationLabelDescriptions.add("Records viewing of the SM Appointment Calendar");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICRECEIVINGPO);
-    	m_arrOperationLabelDescriptions.add("RECEIVINGPO");
+    	m_arrOperationLabelDescriptions.add("Records IC PO receipt");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMIMPORTDATA);
-    	m_arrOperationLabelDescriptions.add("IMPORTDATA");
+    	m_arrOperationLabelDescriptions.add("Records use of the SM Import Data function");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SMPRINTINTERACTIVEDELIVERYTICKET);
-    	m_arrOperationLabelDescriptions.add("PRINTINTERACTIVEDELIVERYTICKET");
+    	m_arrOperationLabelDescriptions.add("Records printing of the 'interactive' Delivery Ticket");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ARCLEARPOSTEDBATCHES);
-    	m_arrOperationLabelDescriptions.add("ARCLEARPOSTEDBATCHES");
+    	m_arrOperationLabelDescriptions.add("Records clearing of AR Posted Batches");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICCLEARPOSTEDBATCHES);
-    	m_arrOperationLabelDescriptions.add("ICCLEARPOSTEDBATCHES");
+    	m_arrOperationLabelDescriptions.add("Records clearing of IC Posted Batches");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_APCLEARPOSTEDBATCHES);
-    	m_arrOperationLabelDescriptions.add("APCLEARPOSTEDBATCHES");
+    	m_arrOperationLabelDescriptions.add("Records clearing of AP Posted Batches");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS);
-    	m_arrOperationLabelDescriptions.add("BKCLEARPOSTEDBANKSTATEMENTS");
+    	m_arrOperationLabelDescriptions.add("Records clearing of BK Bank Statements");
 
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){
-    		arrCompleteListings.add("<BR>Label: " + m_arrOperationLabelValues.get(i) + " - " + m_arrOperationLabelDescriptions.get(i));
+    		arrCompleteListings.add(m_arrOperationLabelValues.get(i) + sDelimiter + m_arrOperationLabelDescriptions.get(i));
     	}
     	Collections.sort(arrCompleteListings);
     	

@@ -1024,7 +1024,7 @@ public class SMOrderHeader extends clsMasterEntry{
 				bResult = false;
 			}
 			SMLogEntry log = new SMLogEntry(sDBIB, context);
-			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_CANCELORDER, "Order was canceled", SQL, "[1376509290]");
+			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCANCELORDER, "Order was canceled", SQL, "[1376509290]");
 		}
 		
 		if (bResult){

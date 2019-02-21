@@ -235,7 +235,7 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 					SMLogEntry log = new SMLogEntry(conn);
 					log.writeEntry(
 						sUserID, 
-						SMLogEntry.LOG_OPERATION_RECEIPTFLAGGEDASNONINVENTORY, 
+						SMLogEntry.LOG_OPERATION_ICRECEIPTFLAGGEDASNONINVENTORY, 
 						"Receipt #" + Long.toString(rs.getLong(SMTableicporeceiptheaders.lid)) + " flagged as Non-Inventory", 
 						SQL, 
 						"[1424972111]"

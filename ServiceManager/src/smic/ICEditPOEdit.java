@@ -481,31 +481,6 @@ public class ICEditPOEdit  extends HttpServlet {
 		//New Row 
 		s += "<TR>";
 	
-		//Status LTO 20140212
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Phase:</TD>"
-			+ "<TD style=\" text-align:left; \">";
-		if ((entry.getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_ENTERED)) == 0)
-				|| (entry.getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_PARTIALLY_RECEIVED)) == 0)){
-			//use dropdown box
-			s += "<SELECT ID=\"" + ICPOHeader.Paramlphase + "\""
-					+ " onchange=\"phaseChange(this); flagDirty();\""
-					+ " NAME=\"" + ICPOHeader.Paramlphase + "\"" + ">";
-			for (int i = 0; i < 3; i++){
-				s += "<OPTION";
-				if (Integer.parseInt(entry.getlphase()) == i){
-					s += " selected=YES ";
-				}
-				s += " VALUE=\"" + i + "\">" + SMTableicpoheaders.getPhaseDescription(i);
-				s += "</OPTION>";
-			}
-			s += "</SELECT></TD>";
-		}else{
-			//use text, no editing
-			s+= SMTableicpoheaders.getPhaseDescription(Integer.parseInt(entry.getlphase()));
-			s += "<INPUT TYPE=HIDDEN ID=\"" + ICPOHeader.Paramlphase + "\" NAME=\"" + ICPOHeader.Paramlphase + "\" VALUE=\"" + entry.getlphase() + "\">";
-		}
-		s += "</TD>";
-		
 		//Created by:
 		s += "<TD  style=\" text-align:right; font-weight:bold; \">Created by:</TD>"
 			+ "<TD>" 
@@ -1223,23 +1198,16 @@ public class ICEditPOEdit  extends HttpServlet {
 				(entry.getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_ENTERED)) == 0)
 				|| 	(entry.getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_PARTIALLY_RECEIVED)) == 0)
 		){
-			//IF the PO is NOT on hold:
-			if (entry.getlphase().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.PHASE_ON_HOLD)) != 0){
-				out.println(
-					"<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEdit"
-					+ "?" + ICPOReceiptHeader.Paramlpoheaderid + "=" + entry.getsID()
-					+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=TRUE" //Set this to indicate it's an 'add'
-					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-					+ "\">" + "Add new receipt" + "</A></FONT>"		
-				);
-			}
+			out.println(
+				"<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditReceiptEdit"
+				+ "?" + ICPOReceiptHeader.Paramlpoheaderid + "=" + entry.getsID()
+				+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=TRUE" //Set this to indicate it's an 'add'
+				+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+				+ "\">" + "Add new receipt" + "</A></FONT>"		
+			);
 		}
-		
-		
 	}
-	
-
 	
 	private boolean loadLocations(
 			ArrayList<String> arrLocs,

@@ -51,7 +51,6 @@ public class ICPOReceivingReport extends java.lang.Object{
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.scomment
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sponumber
@@ -112,18 +111,14 @@ public class ICPOReceivingReport extends java.lang.Object{
 							+ " )";
 				}
 	 
-    					//Is NOT complete:
-    					SQL += " AND (" 
-    							+ "(" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-    							+ " = " + SMTableicpoheaders.STATUS_ENTERED + ")"
-    							+ " OR (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-    							+ " = " + SMTableicpoheaders.STATUS_PARTIALLY_RECEIVED + ")"
-    						+ ")";
-				//Is NOT on hold:
+				//Is NOT complete:
 				SQL += " AND (" 
-					+ "(" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
-					+ " != " + SMTableicpoheaders.PHASE_ON_HOLD + ")"
+					+ "(" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
+					+ " = " + SMTableicpoheaders.STATUS_ENTERED + ")"
+					+ " OR (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
+					+ " = " + SMTableicpoheaders.STATUS_PARTIALLY_RECEIVED + ")"
 				+ ")"
+
 			+ ")"	//Complete the 'where' clause
 			+ " ORDER BY "
 				+ SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor

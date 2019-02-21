@@ -87,6 +87,7 @@ public class SMAuthenticate{
 	 	    	//If the session is not valid and there is a DB parameter redirect to that login page
 	 	    	if(sDatabaseID.compareToIgnoreCase("") != 0){
 	 				if(sDatabaseID.compareToIgnoreCase(sSessionDatabase) != 0){
+	 					//CONNECTION ERROR?
 	 					String sRedirectstring = SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMLogin" 
 	 		 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDatabaseID 
 	 		 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS + "=" + req.getServletPath().replace("/","");

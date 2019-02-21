@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1353;
+	private static final int m_CurrentDatabaseVersion = 1354;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "2/20/2019";
+	private static final String m_sLastRevisionDate = "2/21/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -13849,6 +13849,15 @@ public class SMUpdateData extends java.lang.Object{
 			case 1352:
 				//Added by TJR 2/4/2019
 				SQL = "ALTER TABLE icitems  ADD icannotbesold int(11) NOT NULL DEFAULT '0'; ";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1353:
+				//Added by TJR 2/21/2019
+				SQL = "ALTER TABLE icpoheaders DROP COLUMN lphase";
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;

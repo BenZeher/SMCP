@@ -549,7 +549,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 			+ " " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sponumber
@@ -754,9 +753,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				}
 				out.println("<TD VALIGN=TOP><FONT SIZE=2>" + sPOViewLink + "</FONT></TD>");
 
-				//Phase:
-				out.println("<TD VALIGN=TOP><FONT SIZE=2>" + SMTableicpoheaders.getPhaseDescription(rs.getInt(SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase)) + "</FONT></TD>");
-				
 				//Location:
 				out.println("<TD VALIGN=TOP><FONT SIZE=2>" 
 						+ rs.getString(SMTableicpolines.TableName + "." 
@@ -816,7 +812,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Description</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>PO&nbsp;#</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>View&nbsp;?</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Confirmed&nbsp;?</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Loc.</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Expected<BR>rcpt&nbsp;Date</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Reference</FONT></B></TD>");
@@ -856,7 +851,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 			+ ", " + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname
-			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
 			+ ", " + SMTableicitems.TableName + "." + SMTableicitems.sComment1
 			+ ", " + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber
 			+ " FROM (" + SMTableicporeceiptheaders.TableName + " INNER JOIN " + SMTableicporeceiptlines.TableName
@@ -1043,9 +1037,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				}
 				out.println("<TD VALIGN=TOP><FONT SIZE=2>" + sReceiptViewLink + "</FONT></TD>");
 
-				//Confirmed:
-				out.println("<TD VALIGN=TOP><FONT SIZE=2>" + SMTableicpoheaders.getPhaseDescription(rs.getInt(SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase)) + "</FONT></TD>");
-			    
 				//Location:
 				out.println("<TD VALIGN=TOP><FONT SIZE=2>" 
 						+ rs.getString(SMTableicporeceiptlines.TableName + "." 
@@ -1112,7 +1103,6 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Description</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>PO&nbsp;#</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Rcpt&nbsp;#</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Phase</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Loc.</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Actual<BR>Rcpt&nbsp;Date</FONT></B></TD>");
 		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Received&nbsp;By</FONT></B></TD>");

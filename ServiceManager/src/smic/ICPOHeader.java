@@ -36,7 +36,6 @@ public class ICPOHeader extends clsMasterEntry{
 	public static final String Paramsreference = "sreference";
 	public static final String Paramsvendorname = "svendorname";
 	public static final String Paramllstatus = "lstatus";
-	public static final String Paramlphase = "lphase";
 	public static final String Paramdatpodate = "datpodate";
 	public static final String Paramsshipcode = "sshipcode";
 	public static final String Paramsshipname = "sshipname";
@@ -82,7 +81,6 @@ public class ICPOHeader extends clsMasterEntry{
 	private String m_sreference;
 	private String m_svendorname;
 	private String m_sstatus;
-	private String m_sphase;
 	private String m_sdatpodate;
 	private String m_sshipcode;
 	private String m_sshipname;
@@ -150,10 +148,7 @@ public class ICPOHeader extends clsMasterEntry{
 		if (m_sstatus.compareToIgnoreCase("") == 0){
 			m_sstatus = Integer.toString(SMTableicpoheaders.STATUS_ENTERED);
 		}
-		m_sphase = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramlphase, req).trim();
-		if (m_sphase.compareToIgnoreCase("") == 0){
-			m_sphase = Integer.toString(SMTableicpoheaders.PHASE_RELEASED_FOR_FABRICATION);
-		}
+
 		m_sshipcode = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsshipcode, req).trim();
 		m_sshipname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsshipname, req).trim();
 		m_sshipaddress1 = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsshipaddress1, req).trim();
@@ -265,7 +260,6 @@ public class ICPOHeader extends clsMasterEntry{
 				m_sreference = rs.getString(SMTableicpoheaders.sreference).trim();
 				m_svendorname = rs.getString(SMTableicpoheaders.svendorname).trim();
 				m_sstatus = Long.toString(rs.getLong(SMTableicpoheaders.lstatus));
-				m_sphase = Long.toString(rs.getLong(SMTableicpoheaders.lphase));
 				m_sdatpodate = clsDateAndTimeConversions.resultsetDateStringToString(
 						rs.getString(SMTableicpoheaders.datpodate));
 				m_sshipcode = rs.getString(SMTableicpoheaders.sshipcode).trim();
@@ -454,7 +448,6 @@ public class ICPOHeader extends clsMasterEntry{
 		if (m_slid.compareToIgnoreCase("-1") == 0){
 			SQL = "INSERT INTO " + SMTableicpoheaders.TableName + " ("
 			+ SMTableicpoheaders.lstatus
-			+ ", " + SMTableicpoheaders.lphase
 			+ ", " + SMTableicpoheaders.sponumber
 			+ ", " + SMTableicpoheaders.sreference
 			+ ", " + SMTableicpoheaders.svendor
@@ -498,8 +491,7 @@ public class ICPOHeader extends clsMasterEntry{
 			+ ", " + SMTableicpoheaders.screatedbyfullname
 			+ ", " + SMTableicpoheaders.lcreatedbyuserid
 			+ ") VALUES ("
-			+ m_sstatus
-			+ ", 1" //POs start with "released for fabrication"
+			+ " 1" //POs start with "released for fabrication"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sponumber.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sreference.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendor.trim()) + "'"
@@ -547,8 +539,6 @@ public class ICPOHeader extends clsMasterEntry{
 		}else{
 			SQL = "UPDATE " + SMTableicpoheaders.TableName + " SET "
 			+ SMTableicpoheaders.lstatus + " = " + m_sstatus
-			+ ", " + SMTableicpoheaders.lphase
-			+ " = " + m_sphase
 			+ ", " + SMTableicpoheaders.sreference
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sreference.trim()) + "'"
 			+ ", " + SMTableicpoheaders.svendor
@@ -1113,7 +1103,6 @@ public class ICPOHeader extends clsMasterEntry{
 		sQueryString += ParamObjectName + "=" + clsServletUtilities.URLEncode(this.getObjectName());
 		sQueryString += "&" + Paramlid + "=" + clsServletUtilities.URLEncode(this.getsID());
 		sQueryString += "&" + Paramllstatus + "=" + clsServletUtilities.URLEncode(getsstatus());
-		sQueryString += "&" + Paramlphase + "=" + clsServletUtilities.URLEncode(getlphase());
 		sQueryString += "&" + Paramsponumber + "=" + clsServletUtilities.URLEncode(getsponumber());
 		sQueryString += "&" + Paramsreference + "=" + clsServletUtilities.URLEncode(getsreference());
 		sQueryString += "&" + Paramsvendor + "=" + clsServletUtilities.URLEncode(getsvendor());
@@ -1193,12 +1182,6 @@ public class ICPOHeader extends clsMasterEntry{
 	}
 	public void setsstatus(String siscomplete) {
 		this.m_sstatus = siscomplete;
-	}
-	public String getlphase() {
-		return m_sphase;
-	}
-	public void setlphase(String lphase) {
-		this.m_sphase = lphase;
 	}
 	public String getspodate() {
 		return m_sdatpodate;
@@ -1723,7 +1706,6 @@ public class ICPOHeader extends clsMasterEntry{
     	m_svendorname = "";
     	m_sreference = "";
     	m_sstatus = "0";
-    	m_sphase = "1";
     	m_sdatpodate = clsDateAndTimeConversions.now("MM/dd/yyyy");
     	m_sbillcode = "";
     	m_sbillname = "";

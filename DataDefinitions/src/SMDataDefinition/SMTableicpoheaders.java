@@ -50,7 +50,7 @@ public class SMTableicpoheaders {
 	public static final String sgdoclink = "sgdoclink";
 	public static final String screatedbyfullname = "screatedbyfullname";
 	public static final String lcreatedbyuserid = "lcreatedbyuserid";
-	public static final String lphase = "lphase";
+	//public static final String lphase = "lphase"; - removed 2/21/2019 - TJR
 	
 	//Field lengths:
 	public static final int svendorLength = 24;

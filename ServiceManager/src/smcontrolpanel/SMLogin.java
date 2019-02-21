@@ -125,36 +125,80 @@ public class SMLogin extends HttpServlet {
 		}
 
 		//If this is a redirect from internal link with an invalid session, then store all the parameters passed in
+		 //We'll want to add hidden fields here, but keep track, so we don't add them AGAIN in the code below:
+		 boolean bAlreadyUsedDBID = false;
+		 boolean bAlreadyUsedOPTS = false;
+		 boolean bAlreadyUsedCallingClass = false;
+		 boolean bAlreadyUsedMobileView = false;
 		if(clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS, request).compareToIgnoreCase("") != 0) {
 			out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS, request) + "\">");
 			 Enumeration<String> parameterNames = request.getParameterNames();
+			 
 			 while (parameterNames.hasMoreElements()) {
 					String paramName = parameterNames.nextElement();
-					String[] paramValues = request.getParameterValues(paramName);				
-					for (int i = 0; i < paramValues.length; i++) {
-						String paramValue = paramValues[i];
-						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + paramValue + "\">");
+					
+					//Add needed hidden fields here, but DON'T duplicate ones we already have:
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID) ==0){
+						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
+						bAlreadyUsedDBID = true;
+						continue;
 					}
+					if (paramName.compareToIgnoreCase("CallingClass") ==0){
+						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
+						bAlreadyUsedCallingClass = true;
+						continue;
+					}
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_OPTS) ==0){
+						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
+						bAlreadyUsedOPTS = true;
+						continue;
+					}
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_MOBILE) ==0){
+						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
+						bAlreadyUsedMobileView = true;
+						continue;
+					}
+					
+					//We can print any other hidden value without keeping track:
+					out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
+					
+					// TJR - 2/21/2019 - replaced this with the code above to try to eliminate log in errors found in the catalina log
+					//CONNECTION ERROR?
+					//String[] paramValues = request.getParameterValues(paramName);
+					//
+					//for (int i = 0; i < paramValues.length; i++) {
+					//	String paramValue = paramValues[i];
+					//	out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + paramValue + "\">");
+					//}
 				}
 
 		}else {
 			out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin" + "\" method=\"post\">");
 		}
-		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
-		//out.println("<TABLE WIDTH=100% CELLPADDING=10 BORDER=4>");
-		out.println("<TR>");
-
-		//Main database ID information:
-		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID 
-			+ "\" VALUE=\"" + sDBID + "\">");
-		//Store the options string:
-		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "\" VALUE=\"" 
-			+ clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_OPTS, request) + "\">");
 		
-
+		//Now add our own hidden fields, if they're not already taken from the request string:
+		if (!bAlreadyUsedDBID){
+			//Main database ID information:
+			out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID 
+				+ "\" VALUE=\"" + sDBID + "\">");
+		}
+		
+		if (!bAlreadyUsedCallingClass){
+			//Calling Class:
+			out.println("<INPUT TYPE=HIDDEN NAME = \"CallingClass\" VALUE=\"" + this.getClass().getName() + "\">");
+		}
+		
+		if (!bAlreadyUsedOPTS){
+			//Store the options string:
+			out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "\" VALUE=\"" 
+				+ clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_OPTS, request) + "\">");
+		}
+		
 		//Mobile or not:
 		if(bMobileView){
-			out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_MOBILE + "\" VALUE=\"" + "Y" + "\">");
+			if (!bAlreadyUsedMobileView){
+				out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_MOBILE + "\" VALUE=\"" + "Y" + "\">");
+			}
 			//User name:
 			out.println(
 					"<P>User name:<BR><INPUT TYPE=TEXT NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_USER + "\" " // SIZE=28 "

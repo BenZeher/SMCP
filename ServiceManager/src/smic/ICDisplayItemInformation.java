@@ -1438,7 +1438,6 @@ public class ICDisplayItemInformation extends HttpServlet {
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datpodate
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sgdoclink
 					+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered
 					+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyreceived
@@ -1492,7 +1491,6 @@ public class ICDisplayItemInformation extends HttpServlet {
 					+ "<TD><FONT SIZE=2><B><U>View ?</B></U></FONT></TD>"
 					+ "<TD><FONT SIZE=2><B><U>Doc folder</B></U></FONT></TD>"
 					+ "<TD><FONT SIZE=2><B><U>PO Status</B></U></FONT></TD>"
-					+ "<TD><FONT SIZE=2><B><U>PO Phase</B></U></FONT></TD>"
 					+ "<TD><FONT SIZE=2><B><U>Expected date</B></U></FONT></TD>"
 					+ "<TD><FONT SIZE=2><B><U>Location</B></U></FONT></TD>"
 					+ "<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Qty ordered</B></U></FONT></TD>"
@@ -1578,12 +1576,6 @@ public class ICDisplayItemInformation extends HttpServlet {
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus))
 							+ "</FONT></TD>");
 
-					//PO Phase
-					pwOut.println("<TD><FONT SIZE=2>"
-							+ SMTableicpoheaders.getPhaseDescription(rsPurchaseOrderLines.getInt(
-								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase))
-							+ "</FONT></TD>");
-					
 					pwOut.println(
 							"<TD><FONT SIZE=2>" 
 							+ clsDateAndTimeConversions.resultsetDateStringToString(

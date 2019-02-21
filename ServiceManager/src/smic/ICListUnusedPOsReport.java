@@ -39,7 +39,6 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sassignedtofullname
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
-			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.scomment
 			//+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datdeleted
 			//+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sdeletedby
@@ -112,12 +111,6 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus)) 
 								+ "</FONT></TD>");
 				
-				//Phase:
-				out.println("<TD><FONT SIZE=2>" 
-						+ SMTableicpoheaders.getPhaseDescription(rs.getInt(
-								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lphase)) 
-								+ "</FONT></TD>");
-			    
 				//Assigned date:
 				out.println("<TD><FONT SIZE=2>" 
 						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(
@@ -180,8 +173,6 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 				+ "<B><FONT SIZE=2>View&nbsp;?</FONT></B></TD>");
 		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
 				+ "<B><FONT SIZE=2>Status</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Phase</FONT></B></TD>");
 		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
 				+ "<B><FONT SIZE=2>Date&nbsp;assigned</FONT></B></TD>");
 		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"

@@ -114,17 +114,4 @@ public class SMTableicpoheaders {
 				return "N/A";
 		}
 	}
-	
-	public static String getPhaseDescription(int iPhase){
-		switch (iPhase){
-			case PHASE_ON_HOLD:
-				return "On hold";
-			case PHASE_RELEASED_FOR_FABRICATION:
-				return "Released for fabrication";
-			case PHASE_CONFIRMED:
-				return "Confirmed";
-			default:
-				return "N/A";
-		}
-	}
 }

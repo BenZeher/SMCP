@@ -491,7 +491,7 @@ public class ICPOHeader extends clsMasterEntry{
 			+ ", " + SMTableicpoheaders.screatedbyfullname
 			+ ", " + SMTableicpoheaders.lcreatedbyuserid
 			+ ") VALUES ("
-			+ " 1" //POs start with "released for fabrication"
+			+ " 0" //POs start as 'ENTERED'
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sponumber.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sreference.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendor.trim()) + "'"

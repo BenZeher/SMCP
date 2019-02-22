@@ -171,7 +171,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		;
 
 		//Comments:
-		s += "<TR><TD ALIGN=RIGHT><B>Comments</B>:</TD>";
+		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Comments</B>:</TD>";
 		s += "<TD>"
 			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammcomments + "\""
 			+ " rows=\"" + "3" + "\""
@@ -204,7 +204,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TR>";
 		
 		//Resolution Comments:
-		s += "<TR><TD ALIGN=RIGHT><B>Resolution Comments</B>:</TD>";
+		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Resolution Comments</B>:</TD>";
 		s += "<TD>"
 			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammresolutioncomments + "\""
 			+ " rows=\"" + "3" + "\""
@@ -216,7 +216,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		//Status Options
-		s += "<TR><TD ALIGN=RIGHT><B>Credit Status:</B>:</TD>";
+		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>";
 		s += "<TD>";
 		String sChecked = "";
 		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITNOTEXPECTED)) == 0){
@@ -238,7 +238,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
 		
-		
 		    s+= "</TD>"
 		    	+ "</TR>"
 		    ;
@@ -248,6 +247,8 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sCheckBoxChecked = "";
 		}
 		s += "<TR><TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>";
 		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked

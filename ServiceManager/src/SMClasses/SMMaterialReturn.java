@@ -115,7 +115,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramicreditstatus, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 			SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
-		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
+		
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramitobereturned, req).compareToIgnoreCase("") == 0){
 			m_itobereturned = "0";
 		}else{
 			m_itobereturned = "1";

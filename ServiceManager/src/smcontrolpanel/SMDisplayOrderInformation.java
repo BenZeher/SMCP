@@ -1820,6 +1820,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += "<TD class = \" leftjustifiedheading \" >Initiated</TD>";
 			s += "<TD class = \" leftjustifiedheading \" >By</TD>";
 			s += "<TD class = \" leftjustifiedheading \" >W.O. #</TD>";
+			s += "<TD class = \" leftjustifiedheading \" >To be returned?</TD>";
+			s += "<TD class = \" leftjustifiedheading \" >Vendor #</TD>";
 			s += "<TD class = \" leftjustifiedheading \" >Resolved?</TD>";
 			s += "<TD class = \" leftjustifiedheading \" >Description</TD>";
 			s += "</TR>";
@@ -1879,6 +1881,17 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}else{
 					s += "<TD class = \" leftjustifiedcell \" >" + "N/A" + "</TD>";
 				}
+				
+				//To Be Returned?
+				String sToBeReturned = "N";
+				if (rsMaterialReturns.getInt(SMTablematerialreturns.itobereturned)==1){
+					sToBeReturned = "Y";
+				}
+				s += "<TD class = \" leftjustifiedcell \" >" + sToBeReturned + "</TD>";
+				
+				//Vendor acct:
+				s += "<TD class = \" leftjustifiedcell \" >" + rsMaterialReturns.getString(SMTablematerialreturns.svendoracct) + "</TD>";
+				
 				//Resolved:
 				String sResolved = "N";
 				if (rsMaterialReturns.getInt(SMTablematerialreturns.iresolved)==1){

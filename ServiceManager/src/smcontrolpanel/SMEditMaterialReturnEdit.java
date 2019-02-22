@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMMaterialReturn;
 import SMDataDefinition.SMTablematerialreturns;
 import ServletUtilities.clsServletUtilities;
+import smap.APVendor;
 
 public class SMEditMaterialReturnEdit  extends HttpServlet {
 
@@ -62,7 +63,15 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				}
 	    	}
 	    }
+	    
+	    //If there is a vendor in the request, then that might mean we are coming back from a vendor 'find', and we'll put that in the entry:
+	    if (ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0){
+	    	entry.setsvendoracct(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request));
+	    }
+	    
 	    smedit.printHeaderTable();
+	    
+	    //smedit.getPWOut().println(getJavascript());
 	    
 	    //Add a link to return to the original URL:
 	    if (smedit.getOriginalURL().trim().compareToIgnoreCase("") !=0 ){
@@ -149,15 +158,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "></TD>"
 			+ "</TR>"
 		;
-		//Purchase order number:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
-			+ " VALUE=\"" + entry.getsponumber().replace("\"", "&quot;") + "\""
-			+ "SIZE=" + "13"
-			+ "MAXLENGTH= 10"
-			+ "></TD>"
-			+ "</TR>"
-		;
+
 		//Description:
 		s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Description: <FONT COLOR=RED>*Required*</FONT></B>"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><TEXTAREA NAME=\"" + SMMaterialReturn.Paramsdescription + "\""
@@ -239,12 +240,79 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 		
 		    s+= "</TD>"
+		    	+ "</TR>"
+		    ;
+		    		
+		//'Returned' section:
+		s += "<TR style = \" background-color: lightblue; \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD></TR>";
+		
+		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
+			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}
+		s += "<TR><TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>";
+		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
+			+ " NAME=\"" + SMMaterialReturn.Paramitobereturned + "\" width=0.25></TD>"
 			+ "</TR>"
 		;
+		
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramsvendoracct + "\""
+			+ " VALUE=\"" + entry.getsvendoracct().replace("\"", "&quot;") + "\""
+			+ "SIZE=" + "13"
+			+ "MAXLENGTH= " + Integer.toString(SMTablematerialreturns.svendoracctlength)
+			+ ">"
+			
+			//Vendor finder:
+			+ "&nbsp;<A HREF=\""
+			+ APVendor.getFindVendorLink(
+				clsServletUtilities.getFullClassName(this.toString()), 
+				SMMaterialReturn.Paramsvendoracct, 
+				SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+					+ "*" + SMMaterialReturn.Paramlid + "=" + entry.getslid(),
+				getServletContext(),
+				sm.getsDBID()
+			)
+			+ "\"> Find vendor</A>"
+			
+			+ "</TD>"
+			+ "</TR>"
+		;
+		
+		//Purchase order number:
+		s += "<TR><TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
+			+ " VALUE=\"" + entry.getsponumber().replace("\"", "&quot;") + "\""
+			+ "SIZE=" + "13"
+			+ "MAXLENGTH= 10"
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
 		s += "</TABLE>";
 		return s;
 	}
-
+	/*
+	String getJavascript(){
+		String s = "";
+		s = "<script type= 'text/JavaScript'>\n"
+				+" function invisible(){\n"
+	    		+ "       document.getElementById(\"itemId\").style.display = \"none\";\n"
+	    		+ "       document.getElementById(\"textBoxId\").value = \"\";\n"
+	    		//+ "       document.getElementById(\"itemId\").children.value = \"\"\n;"
+	    		+ " }\n"
+	    		+"  $(document).ready(function(){\n"
+	    		+"        if(document.getElementById(\"invoicechecked\").checked == false){\n"
+	    		+ "       document.getElementById(\"itemId\").style.display = \"none\";\n"
+	    		+ "       document.getElementById(\"textBoxId\").value = \"\";\n"
+	    		+"         }\n   "
+	    		+"       });\n"
+	    		+ " function visible () {\n"
+	    		+ "       document.getElementById(\"itemId\").style.display = \"block\";\n  "
+	    		+ " }\n"
+	    		+ " </script>\n";
+		return s;
+	}
+	*/
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

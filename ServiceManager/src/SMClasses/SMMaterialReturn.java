@@ -7,13 +7,14 @@ import java.sql.Statement;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import smic.ICPOHeader;
 import SMDataDefinition.SMTablematerialreturns;
-import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsMasterEntry;
+import smap.APVendor;
 import smcontrolpanel.SMMasterEditSelect;
+import smic.ICPOHeader;
 
 public class SMMaterialReturn extends clsMasterEntry{
 	
@@ -34,6 +35,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramstrimmedordernumber = "strimmedordernumber";
 	public static final String Paramicreditstatus = "icreditstatus";
 	public static final String Paramiponumber = "iponumber";
+	public static final String Paramitobereturned = "itobereturned";
+	public static final String Paramsvendoracct = "svendoracct";
 	
 	
 	private String m_slid;
@@ -52,6 +55,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_sNewRecord;
 	private String m_screditstatus;
 	private String m_sponumber;
+	private String m_itobereturned;
+	private String m_svendoracct;
 	
 	private boolean bDebugMode = false;
 	
@@ -110,6 +115,14 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramicreditstatus, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 			SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
+		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
+			m_itobereturned = "0";
+		}else{
+			m_itobereturned = "1";
+		}
+		m_svendoracct = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramsvendoracct, req).trim().replace("&quot;", "\"");
+		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
     public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
@@ -176,6 +189,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 					m_sponumber = "";
 				}
 				m_strimmedordernumber = rs.getString(SMTablematerialreturns.strimmedordernumber).trim();
+				m_itobereturned = Long.toString(rs.getLong(SMTablematerialreturns.itobereturned));
+				m_svendoracct = rs.getString(SMTablematerialreturns.svendoracct).trim();
 				rs.close();
 			} else {
 				rs.close();
@@ -287,6 +302,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.sinitiatedbyfullname
 				+ ", " + SMTablematerialreturns.datresolved
 				+ ", " + SMTablematerialreturns.iresolved
+				+ ", " + SMTablematerialreturns.itobereturned
 				+ ", " + SMTablematerialreturns.lresolvedbyid
 				+ ", " + SMTablematerialreturns.sresolvedbyfullname
 				+ ", " + SMTablematerialreturns.mresolutioncomments
@@ -296,6 +312,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.strimmedordernumber
 				+ ", " + SMTablematerialreturns.icreditstatus
 				+ ", " + SMTablematerialreturns.iponumber
+				+ ", " + SMTablematerialreturns.svendoracct
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -307,6 +324,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SQL += ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getsdatresolved()) + "'";
 			}
 			SQL += ", " + getsresolved()
+				+ ", " + getstobereturned()
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid()) + ""
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
@@ -316,6 +334,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
 				+ ", " + sCreditStatus
 				+ ", " + sPONumber
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 				+ ")"
 			;
     	}else{
@@ -327,6 +346,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SQL += " " + SMTablematerialreturns.datresolved + " = '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getsdatresolved()) + "'";
 			}
 			SQL += ", " + SMTablematerialreturns.iresolved + " = " + getsresolved()
+				+ ", " + SMTablematerialreturns.itobereturned + " = " + getstobereturned()
 				+ ", " + SMTablematerialreturns.mcomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
 				+ ", " + SMTablematerialreturns.sdescription  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
 				+ ", " + SMTablematerialreturns.mresolutioncomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
@@ -336,6 +356,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.strimmedordernumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
 				+ ", " + SMTablematerialreturns.icreditstatus + " = " + sCreditStatus
 				+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
+				+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
@@ -531,7 +552,25 @@ public class SMMaterialReturn extends clsMasterEntry{
         		}
         	}
         }
+        
+        //Validate the vendor:
+        if (m_svendoracct.compareToIgnoreCase("") != 0){
+        	if (m_svendoracct.compareToIgnoreCase("0") != 0){
+        		APVendor vendor = new APVendor();
+        		vendor.setsvendoracct(m_svendoracct);;
+        		if (!vendor.load(conn)){
+        			sErrors += "Could not load vendor '" + m_svendoracct + "' - " + vendor.getErrorMessages() + ".  ";
+        		}
+        	}
+        }
  
+        if (
+        		(m_itobereturned.compareToIgnoreCase("0") != 0)
+        		&& (m_itobereturned.compareToIgnoreCase("1") != 0)
+        ){
+        	sErrors += "'To Be Returned' status (" + m_itobereturned + ") is invalid.";
+        }
+        
     	if (sErrors.compareToIgnoreCase("") != 0){
     		throw new Exception(sErrors);
     	}
@@ -633,6 +672,19 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setsponumber(String sponumber) {
 		m_sponumber = sponumber;
 	}
+	public String getstobereturned() {
+		return m_itobereturned;
+	}
+	public void setstobereturned(String sToBeReturned) {
+		m_itobereturned = sToBeReturned;
+	}
+	public String getsvendoracct() {
+		return m_svendoracct;
+	}
+	public void setsvendoracct(String sVendorAcct) {
+		m_svendoracct = sVendorAcct;
+	}
+	
 	public String getObjectName(){
 		return ParamObjectName;
 	}
@@ -670,6 +722,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_sNewRecord = "1";
     	m_screditstatus = "0";
     	m_sponumber = "0";
-    	
+    	m_itobereturned = "0";
+    	m_svendoracct = "";
 	}
 }

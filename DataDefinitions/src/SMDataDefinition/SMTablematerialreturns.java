@@ -17,7 +17,11 @@ public class SMTablematerialreturns {
 	public static final String iworkorderid = "iworkorderid";
 	public static final String strimmedordernumber = "strimmedordernumber";
 	public static final String icreditstatus = "icreditstatus";
-	public static final String iponumber = "iponumber";		
+	public static final String iponumber = "iponumber";
+	// TJR - Added these two fields 2/22/2019:
+	public static final String itobereturned = "itobereturned";
+	public static final String svendoracct = "svendoracct";
+	
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
 	public static final int sinitiatedbyfullnamelength = 128;
@@ -25,6 +29,7 @@ public class SMTablematerialreturns {
 	public static final int sresolvedbyfullnamelength = 128;
 	public static final int sdescriptionlength = 254;
 	public static final int strimmedordernumberlength = 22;
+	public static final int svendoracctlength = 12;  //Same as icvendors.svendoracctLength
 	
 	public static int STATUS_CREDITNOTEXPECTED = 1;
 	public static int STATUS_CREDITANTICIPATED = 2;

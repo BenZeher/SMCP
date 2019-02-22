@@ -162,7 +162,7 @@ public class SMLogin extends HttpServlet {
 					//We can print any other hidden value without keeping track:
 					out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
 					
-					// TJR - 2/21/2019 - replaced this with the code above to try to eliminate log in errors found in the catalina log
+					// TJR - 2/21/2019 - replaced this with the code above to try to eliminate errors found in the catalina log
 					//CONNECTION ERROR?
 					//String[] paramValues = request.getParameterValues(paramName);
 					//

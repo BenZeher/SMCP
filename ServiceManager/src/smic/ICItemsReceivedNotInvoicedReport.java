@@ -240,6 +240,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 			if (bDebugMode){
 				System.out.println("[1520280197] In " + this.toString() + " SQL: " + SQL);
 			}
+			//System.out.println("[1551108887] - SQL = '" + SQL + "'.");
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
 				

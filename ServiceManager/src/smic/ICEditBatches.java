@@ -559,9 +559,9 @@ public class ICEditBatches extends HttpServlet {
 		String s = "";
 		s += " <script>\n"
 		  +  "   window.addEventListener(\"beforeunload\",function(){\n" 
-		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed; \");\n"
-		  +  "     document.documentElement.style.cursor = \"wait\";\n"
-		  +"      });\n"
+		  +  "   document.documentElement.style.cursor = \"not-allowed\";\n "
+		  +  "   document.documentElement.style.cursor = \"wait\";\n"
+		  +"     });\n"
 		  +  " </script>\n";
 		return s;
 	}

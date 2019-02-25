@@ -500,9 +500,9 @@ public class AREditBatchesEdit extends HttpServlet {
 	public String getJavaScript() {
 		String s = "<script>";
 		 s +=  "   window.addEventListener(\"beforeunload\",function(){\n" 
-				  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed;\");\n"
-				  +  "     document.documentElement.style.cursor = \"wait\";\n"
-				  +"      });\n";
+		   +  "      document.documentElement.style.cursor = \"not-allowed\";\n "
+		   +  "     document.documentElement.style.cursor = \"wait\";\n"
+		   +  "      });\n";
 		 s += "</script>";
 		return s;
 	}

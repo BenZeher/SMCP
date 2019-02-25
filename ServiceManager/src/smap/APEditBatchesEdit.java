@@ -663,7 +663,7 @@ public class APEditBatchesEdit extends HttpServlet {
 		;
 		
 		 s +=  "   window.addEventListener(\"beforeunload\",function(){\n" 
-				  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed; \");\n"
+				 +  "      document.documentElement.style.cursor = \"not-allowed\";\n "
 				  +  "     document.documentElement.style.cursor = \"wait\";\n"
 				  +"      });\n";
 		 

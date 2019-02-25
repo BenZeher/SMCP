@@ -62,7 +62,7 @@ public class BKEditBanksSelect extends HttpServlet {
 		s += " <script>\n"
 		  +  "   window.addEventListener(\"beforeunload\",function(){\n"
 		  +  "     doucment.getElementsByName(\""+SMMasterEditSelect.SUBMIT_EDIT_BUTTON_NAME+"\")[0].disabled = true;\n"
-		  +  "     document.body.setAttribute(\"style\",\"pointer-events: none; cursor: not-allowed; \");\n"
+		  +  "      document.documentElement.style.cursor = \"not-allowed\";\n "
 		  +  "     document.documentElement.style.cursor = \"wait\";\n"
 		  +"      });\n"
 

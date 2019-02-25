@@ -97,14 +97,11 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		if (request.getParameter("ConfirmPost") != null){
 			if (!batch.load(getServletContext(), sDBID)){
 				m_EditBatchesUpdateWarning = "WARNING: could not load batch " + sBatchNumber + ": \n" + batch.getErrorMessages();
-				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
-			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
+				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + m_EditBatchesUpdateWarning
-			    		+ "'>");
-				out.println("</BODY></HTML>");
+			    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
 				return;				
 			}
 			if (batch.post_with_data_transaction(
@@ -113,40 +110,31 @@ public class ICEditBatchesUpdate extends HttpServlet{
 					sUserID,
 					sUserFullName,
 					out)){
-				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
-			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
+				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Posting complete."
-			    		+ "'>");
-				out.println("</BODY></HTML>");
+			    		+ "&Warning=" + "Posting%20complete.");
 			    return;
 			}
 			else{
 				m_EditBatchesUpdateWarning = "WARNING: Error posting batch " + sBatchNumber + ": \n" 
-					+ clsServletUtilities.URLEncode(batch.getErrorMessages());
-				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
-			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
+					+ batch.getErrorMessages();
+				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + m_EditBatchesUpdateWarning
-			    		+ "'>");
-				out.println("</BODY></HTML>");
+			    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
 				return;
 			}
 		}
 		else{
 			m_EditBatchesUpdateWarning = "WARNING: You clicked the Post button, but did not confirm by checking the checkbox.";
-			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
-		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
+			response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + m_EditBatchesUpdateWarning
-		    		+ "'>");
-			out.println("</BODY></HTML>");
+		    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
 		    return;
 		}
 	}

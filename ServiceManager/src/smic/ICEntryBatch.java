@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 
 import smar.SMGLExport;
 import smar.SMOption;
+import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
@@ -898,6 +899,11 @@ public class ICEntryBatch {
     		PrintWriter out
     		){
 		
+    	SMUtilities.sysprint(
+    		this.toString(), 
+    		sUserID, 
+    		"[1551131086] entering post_with_data_transaction for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
     	if (this.iBatchStatus() == SMBatchStatuses.POSTED){
     		addErrorMessage("This batch is already posted");
     		return false;
@@ -912,6 +918,10 @@ public class ICEntryBatch {
     	clearErrorMessages();
     	
     	//First check to make sure no one else is posting:
+    	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131087] entering checkAndUpdatePostingFlagWithoutConnection for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	ICOption option = new ICOption();
     	try{
     		String sPostingProcess = "POSTING IC BATCH";
@@ -926,6 +936,11 @@ public class ICEntryBatch {
 			addErrorMessage("Error [1529956984] checking for previous posting - " + e.getMessage());
     		return false;
     	}
+    	
+    	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131088] exiting checkAndUpdatePostingFlagWithoutConnection for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	
     	Connection conn;
 		try {
@@ -975,14 +990,24 @@ public class ICEntryBatch {
     		return false;
 		}
 
+    	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131089] after post_without_data_transaction for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
 		clsDatabaseFunctions.commit_data_transaction(conn);
 		try {
 			option.resetPostingFlagWithoutConnection(context, sDBID);
 		} catch (Exception e1) {
 			addErrorMessage("Error [1529952579] - " + e1.getMessage());
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080956]");
 			return false;
 		}
-    	
+		
+    	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131090] after resetting posting flag for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
 		
 		//These functions can proceed OUTSIDE the transaction, since they are 'clean up' functions, and can run anytime:
 		
@@ -1001,6 +1026,12 @@ public class ICEntryBatch {
 			System.out.println("Error [1435002732] removing empty buckets with SQL: '" + SQL + "' - " + e.getMessage());
 		}
     	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131091] after deleting empty cost buckets for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
+		
+    	
     	//Remove any 'canceling' cost buckets here:
     	try {
 			removeCancelingCosts(conn);
@@ -1008,6 +1039,11 @@ public class ICEntryBatch {
 			//We don't need to react to this, just trap it and go on - presumably it will run next time:
 			System.out.println(e.getMessage());
 		} 
+    	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131092] after removing canceling costs for company '" + sDBID + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080857]");
 		return true;
@@ -1189,6 +1225,11 @@ public class ICEntryBatch {
     }
     public void post_without_data_transaction(Connection conn, String sUserFullName, String sUserID) throws Exception{
 	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131093] entering post_without_data_transaction for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
     	if (!getICOptions(conn)){
     		throw new Exception("Error reading IC Options - " + getErrorMessages());
     	}
@@ -1299,6 +1340,12 @@ public class ICEntryBatch {
 	        		"[1376509545]"
 	        );
     	}
+    	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131094] going to flag invoices for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
     	if (m_iFlagInvoices){
 	    	if (this.iBatchType() == ICBatchTypes.IC_SHIPMENT){
 	    		/* Here's the update statement without variables:
@@ -1441,6 +1488,11 @@ public class ICEntryBatch {
 	        );
     	}
     	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131095] going to create the GL batch for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
     	if (!createGLBatch(conn, sUserFullName)){
     		throw new Exception(getErrorMessages());
     	}
@@ -1458,6 +1510,11 @@ public class ICEntryBatch {
         		"[1376509571]"
     		);
     	}
+    	
+      	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131096] going to save the IC batch for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	if (!save_without_data_transaction(conn, sUserFullName, sUserID)){
     		throw new Exception("Error updating batch - " + getErrorMessages());
     	}
@@ -1470,6 +1527,11 @@ public class ICEntryBatch {
         		"[1376509555]"
     		);
     	}
+    	
+      	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131097] leaving post_without_data_transaction for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	return;
     }
 

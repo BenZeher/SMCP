@@ -1386,7 +1386,7 @@ public class SMProposalEdit  extends HttpServlet {
 			;
 		
 			s += "function insertProposalPhrase(sPhraseID, label) {\n" 
-				+ "    var phrasestring = document.getElementById(sPhraseID).value;\n"
+				+ "    var phrasestring = document.getElementById(sPhraseID).value + '<div><br/></div>';\n"
 				+ "    var iFramedoc = window.frames['" + SMProposal.Paramsbodydescription + "iFrame'].document;\n"
 				+ "    iFramedoc.execCommand('insertHTML',false,phrasestring);\n"
 				+ "	   iFramedoc.body.focus();"

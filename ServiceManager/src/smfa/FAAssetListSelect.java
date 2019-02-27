@@ -75,7 +75,7 @@ public class FAAssetListSelect extends HttpServlet {
 	    String sOutPut = "<P><B>This function will print a list of all assets.</B></P>";
 		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDEDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDEDISPOSED'> Include disposed assets on the list.</LABEL><BR>";
 		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDENONDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDENONDISPOSED'> Include non-disposed assets on the list.</LABEL><BR>";
-		sOutPut = sOutPut + "<LABEL NAME = 'LABELINCLUDENONDISPOSED'><INPUT TYPE=CHECKBOX NAME='INCLUDENONDISPOSED'> Show details.</LABEL><BR>";
+		sOutPut = sOutPut + "<LABEL NAME = 'LABELSHOWDETAILS'><INPUT TYPE=CHECKBOX NAME='SHOWDETAILS'> Show details.</LABEL><BR>";
 		
 		sOutPut += "<BR>Show year-to-date values for fiscal year:&nbsp;"
 			+ "<SELECT NAME = \"" + ASSET_LIST_SELECT_FISCALYEARSELECTION + "\">";

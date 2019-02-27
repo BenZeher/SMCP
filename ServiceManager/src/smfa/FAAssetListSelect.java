@@ -17,6 +17,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablefaclasses;
+import SMDataDefinition.SMTablefalocations;
 import SMDataDefinition.SMTablefatransactions;
 import SMDataDefinition.SMTablelocations;
 import ServletUtilities.clsDatabaseFunctions;
@@ -135,10 +136,10 @@ public class FAAssetListSelect extends HttpServlet {
 		try{
 			//select location
 			sLocationSQL = "SELECT"
-				+ " " + SMTablelocations.sLocation
-				+ ", " + SMTablelocations.sLocationDescription
-				+ " FROM " + SMTablelocations.TableName
-				+ " ORDER BY "  + SMTablelocations.sLocation
+				+ " " + SMTablefalocations.sLocLocation
+				+ ", " + SMTablefalocations.sLocDescription
+				+ " FROM " + SMTablefalocations.TableName
+				+ " ORDER BY "  + SMTablefalocations.sLocLocation
 			;
 			ResultSet rsLocations = clsDatabaseFunctions.openResultSet(
 					sLocationSQL, 
@@ -148,11 +149,11 @@ public class FAAssetListSelect extends HttpServlet {
 					"smfa.FAAssetListSelect");
 			//String sChecked = "";
 			while(rsLocations.next()){
-				sLocationTable.add("<LABEL NAME = 'LABEL" + rsLocations.getString(SMTablelocations.sLocation) + "'><INPUT TYPE=CHECKBOX " 
+				sLocationTable.add("<LABEL NAME = 'LABEL" + rsLocations.getString(SMTablefalocations.sLocLocation) + "'><INPUT TYPE=CHECKBOX " 
 				+ clsServletUtilities.CHECKBOX_CHECKED_STRING
-				+ " NAME=\"" + ASSET_LIST_SELECT_LOCATION_CHECKBOX_PARAM + rsLocations.getString(SMTablelocations.sLocation) + "\">" 
-				+ rsLocations.getString(SMTablelocations.sLocation) 
-				+ " - " + rsLocations.getString(SMTablelocations.sLocationDescription)
+				+ " NAME=\"" + ASSET_LIST_SELECT_LOCATION_CHECKBOX_PARAM + rsLocations.getString(SMTablefalocations.sLocLocation) + "\">" 
+				+ rsLocations.getString(SMTablefalocations.sLocLocation) 
+				+ " - " + rsLocations.getString(SMTablefalocations.sLocDescription)
 				+ "</LABEL>"
 				);
 			}

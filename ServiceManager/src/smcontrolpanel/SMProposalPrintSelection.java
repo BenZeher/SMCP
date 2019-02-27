@@ -63,7 +63,21 @@ public class SMProposalPrintSelection extends HttpServlet {
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
+		SMUtilities.sysprint(
+			this.toString(), 
+			sUserName, 
+			"[1551280487] - sDBID = '" 
+				+ sDBID 
+				+ "', sCompanyName = '" 
+				+ sCompanyName 
+				+ "', req.parameters = " 
+				+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
+				+ " - SESSION ATTRIBUTES: "
+				+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
+		);
+		
 		String title = "Print Proposals";
 		String subtitle = "";
 
@@ -91,6 +105,7 @@ public class SMProposalPrintSelection extends HttpServlet {
 				+ sCalledClass + "\" METHOD='POST'>");
 		String sTrimmedOrderNumber = clsManageRequestParameters.get_Request_Parameter(SMTableproposals.strimmedordernumber, request);
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_USER + "' VALUE='" + sUserID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMTableproposals.strimmedordernumber + "' VALUE='" + sTrimmedOrderNumber + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + NUMBER_OF_PROPOSAL_COPIES + "' VALUE='" + "1" + "'>");

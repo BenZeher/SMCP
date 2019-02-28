@@ -106,10 +106,12 @@ public class FAAssetList extends java.lang.Object{
     		" " + SMTablefaclasses.TableName + "." + SMTablefaclasses.sClass + ")";
 
 		if (!bIncludeDisposed){
+			//If we DON'T WANT disposed assets, then ONLY get assets with no real 'date sold'
 			SQL += " AND (" + SMTablefamaster.TableName + "." + SMTablefamaster.datDateSold + " < '1900-01-01 00:00:00')";
 		}
 
 		if (!bIncludeNonDisposed){
+			//If we DON'T want 'non-disposed' items, then ONLY get assets with a 'date sold':
 			SQL += " AND (" + SMTablefamaster.TableName + "." + SMTablefamaster.datDateSold + " > '1900-01-01 00:00:00')";
 		}	
 		//Include only the classes selected:
@@ -142,6 +144,8 @@ public class FAAssetList extends java.lang.Object{
 				SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + ", " +
 				SMTablefamaster.TableName + "." + SMTablefamaster.datAcquisitionDate +
 				", " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber;
+		
+		System.out.println("[1551287752] - SQL = '" + SQL + "'");
 		
 		BigDecimal bdYTDPurch = BigDecimal.ZERO;
 		BigDecimal bdYTDDisp = BigDecimal.ZERO;
@@ -295,6 +299,10 @@ public class FAAssetList extends java.lang.Object{
 			bdGrandAccumulatedDepreciationOfNonDisposedAssets,
 			bdGrandBookValueOfNonDisposedAssets,
 			out);
+		
+		//Print the SQL statement itself at the bottom:
+		//out.println("<BR> - SQL Statement:<BR><B>" + SQL + "</B>");
+		
 		return true;
 	}
 

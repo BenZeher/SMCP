@@ -51,9 +51,21 @@ public class SMProposalPrintAction extends HttpServlet {
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+	    
+		SMUtilities.sysprint(
+				this.toString(), 
+				sUserName, 
+				"[1551280488] - sDBID = '" 
+					+ sDBID 
+					+ "', req.parameters = " 
+					+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
+					+ " - SESSION ATTRIBUTES: "
+					+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
+			);
 
 	    String  sRedirect = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ SMProposal.Paramstrimmedordernumber + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposal.Paramstrimmedordernumber, request)
+			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&" + SMProposalPrintSelection.EMAIL_BUTTON_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.EMAIL_BUTTON_NAME, request)
 			+ "&" + SMProposalPrintSelection.EMAIL_ADDRESSES_PARAM + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.EMAIL_ADDRESSES_PARAM, request)
 			+ "&" + SMProposalPrintSelection.EMAIL_MESSAGE_PARAM + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.EMAIL_MESSAGE_PARAM, request)
@@ -62,7 +74,6 @@ public class SMProposalPrintAction extends HttpServlet {
 			+ "&" + SMProposalPrintSelection.NUMBER_OF_PROPOSAL_COPIES + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.NUMBER_OF_PROPOSAL_COPIES, request)
 			+ "&" + SMProposalPrintSelection.PRINT_BUTTON_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_BUTTON_NAME, request)
 			+ "&" + SMProposalPrintSelection.PRINT_LOGO_PARAM + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.PRINT_LOGO_PARAM, request)
-			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		;
 	    
 	    //First get the command value that was passed in:
@@ -118,7 +129,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		String sSendingEmail = "";
 		//boolean bUsesSMTPAuthentication = false;
 		String sEmailAddresses = clsManageRequestParameters.get_Request_Parameter(SMProposalPrintSelection.EMAIL_ADDRESSES_PARAM, req).replace(";", ",");
-		System.out.println("sEmailAddresses = " + sEmailAddresses);
+		System.out.println("[1551280950] sEmailAddresses = " + sEmailAddresses);
 		if (sEmailAddresses.trim().length() == 0){
 			throw new Exception("You must enter at least one email address.");
 		}

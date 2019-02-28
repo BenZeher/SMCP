@@ -1251,6 +1251,12 @@ public class ICEntryBatch {
     			"Entering post_without_data_transaction", "Batch #:" + sBatchNumber(), "[1376509385]");
     	}
     	long lEntryCount = 0;
+    	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131100] going to check entries for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+    	
     	try {
     		ResultSet rsAscendingEntryList = clsDatabaseFunctions.openResultSet(SQL, conn);
     		
@@ -1270,6 +1276,11 @@ public class ICEntryBatch {
     	}catch (SQLException e){
     		throw new Exception("Error opening entry list result set - " + e.getMessage());
     	}
+
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131101] going to check for non-stock items for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
     	
     	//[1519070245]
     	if (!checkForNonStockItems(conn)){
@@ -1308,7 +1319,13 @@ public class ICEntryBatch {
 			+ SMTableicbatchentries.lbatchnumber + " = " + sBatchNumber()
 			+ ")"
 			+ " ORDER BY " + SMTableicbatchentries.lentrynumber + " ASC";
-    	
+
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131102] going into create transactions for non-stock items for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+
+		
     	try {
     		ResultSet rsCreateTransactions = clsDatabaseFunctions.openResultSet(SQL, conn);
 
@@ -1624,6 +1641,12 @@ public class ICEntryBatch {
     		return false;
     	}    	
     	
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131103] ENTRY '" + entry.lEntryNumber() + "' going into create individual line processing for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+
+    	
     	//Create a flag to indicate whether the entry was created by an invoice:
     	//String sCreatedFromInvoiceNumber = "";
     	for (int i = 0; i < entry.getLineCount(); i++){
@@ -1680,6 +1703,11 @@ public class ICEntryBatch {
         	        	);
         	    	}
 
+        	       	SMUtilities.sysprint(
+        	        		this.toString(), 
+        	        		sUserID, 
+        	        		"[1551131104] going into processshipmentline for item '" + line.sItemNumber() + "' for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+
     				if (!processShipmentLine(line, datEntryDate, sUserFullName, sUserID, conn)){
         				return false;
         			}
@@ -1698,6 +1726,11 @@ public class ICEntryBatch {
     	    	        			"[1376509551]"
     	    	        	);
     	    	    	}
+
+            	       	SMUtilities.sysprint(
+            	        		this.toString(), 
+            	        		sUserID, 
+            	        		"[1551131105] going into updateCreditLineCost for item '" + line.sItemNumber() + "' for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
 
     					if (!updateCreditLineCost(
     						line, 
@@ -1724,6 +1757,11 @@ public class ICEntryBatch {
         	        			+ ", Line #:" + line.sLineNumber(),
         	        			"[1376509528]");
         	    	}
+
+        	       	SMUtilities.sysprint(
+        	        		this.toString(), 
+        	        		sUserID, 
+        	        		"[1551131106] going into processShipmentReturnLine for item '" + line.sItemNumber() + "' for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
 
     	   			if (!processShipmentReturnLine(line, datEntryDate, sUserFullName, sUserID, conn)){
         				return false;
@@ -2120,6 +2158,11 @@ public class ICEntryBatch {
     	}
     	
     	//Now that costs have been updated, save the entry:
+       	SMUtilities.sysprint(
+        		this.toString(), 
+        		sUserID, 
+        		"[1551131107] going into save_without_data_transaction for entry '" + entry.lEntryNumber() + "' for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
+
     	if (!entry.save_without_data_transaction(conn, sUserID)){
     		String sErr = "";
     		for (int i = 0; i < entry.getErrorMessage().size(); i++){

@@ -130,12 +130,11 @@ public class clsTextEditorFunctions {
 			+ "doc" + sFieldName + ".close();\n"
 			+ sAutoWrapText		
 			+ "doc" + sFieldName + ".body.innerHTML = document.getElementById(\"" + sFieldName + "\").value;\n"
-			+ "var sOrginalText = document.getElementById(\"" + sFieldName + "\").value;\n"
 			+ "doc" + sFieldName + ".body.addEventListener('blur',function(e) {\n"			
-			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\").replace(\"\\n\",\"\").replace(\"\\r\",\"\");\n"
-			+ "		if(sOrginalText !== document.getElementById(\""+ sFieldName + "\").value){\n"
-			+			onChange + "\n"					
-			+ "		}\n"				
+			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\").replace(\"\\n\",\"\").replace(\"\\r\",\"\");\n"			
+			+ "});\n"
+			+ "doc" + sFieldName + ".body.addEventListener('input',function() {\n"			
+			+  	onChange + "\n"		
 			+ "});\n"
 			+ "</script>\n";
 		return s;

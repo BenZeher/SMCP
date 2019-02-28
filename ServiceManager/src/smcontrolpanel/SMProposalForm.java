@@ -450,9 +450,9 @@ public class SMProposalForm extends java.lang.Object{
 		s += "<p style = \" font-family: Arial; font-weight: bold; font-style: italic; text-decoration:underline; \" >" + "DESCRIPTION:" + "</p>";
 		
 		try {
-			s += "<p style = \" font-family: Arial; \" >" 
-					+ rsOrderAndProposal.getString(SMTableproposals.TableName + "." + SMTableproposals.sbodydescription).replace("\n", "<BR>")
-					+ "</p>";
+			s += "<font style = \" font-family: Arial; \" >" 
+					+ rsOrderAndProposal.getString(SMTableproposals.TableName + "." + SMTableproposals.sbodydescription).replace("\n", "<br/>")
+					+ "</font>";
 		} catch (Exception e) {
 			throw new Exception("Error printing description body - " + e.getMessage() + ".");
 		}

@@ -329,7 +329,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<b>Name: </b>" + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Number: </b>" + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Status: </b>" + SMTableicpoheaders.getStatusDescription(rs.getInt((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus))) + ""); 
-							out.println("<br><b>Expected: </b>" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datexpecteddate)), "M/d/yyyy") + ""); 
+							out.println("<br><b>Expected: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTableicpoheaders.datexpecteddate)) + ""); 
 							out.println("<br><b>PO Number: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smic.ICEditPOEdit?lid=" 

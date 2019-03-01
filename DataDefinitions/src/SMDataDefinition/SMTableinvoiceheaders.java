@@ -137,6 +137,10 @@ public class SMTableinvoiceheaders {
 	public static final int bdtaxratescale = 2;
 	public static final int bdtaxbasescale = 2;
 	
+	//When automatically creating invoice numbers, we only use the first 8 characters of the field.
+	// So if the invoice number is '123456', it will be stored in the sInvoiceNumber field to 8 characters: '  123456'
+	public static final int NUMBER_OF_CHARACTERS_USED_IN_INVOICE_NUMBER = 8;
+	
 	public static final int TYPE_INVOICE = 0;
 	public static final int TYPE_CREDIT = 1;
 	

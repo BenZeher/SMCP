@@ -1646,9 +1646,51 @@ public class ICEntryBatch {
         		sUserID, 
         		"[1551131103] ENTRY '" + entry.lEntryNumber() + "' going into create individual line processing for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
 
-    	
-    	//Create a flag to indicate whether the entry was created by an invoice:
-    	//String sCreatedFromInvoiceNumber = "";
+       	//If this is a credit note, we want to know that before we go into the loop, so we can get the matching invoice number before
+       	// we start iterating through the loop:
+       	//If it's a SHIPMENT entry, AND the lines have a POSITIVE qty shipped, it's a RETURNED SHIPMENT or a CREDIT NOTE.
+       	//If it then also has an invoice number, then it's a credit note:
+       	boolean bEntryIsCreditNote = false;
+       	
+       	//This will carry the invoice number from which this credit note is created - IF this is a credit note (if not it will just be blank)
+       	String sMatchingInvoiceNumber = "";
+       	if(Integer.parseInt(entry.sEntryType()) == ICEntryTypes.SHIPMENT_ENTRY){
+       		if (entry.getLineByIndex(0).sInvoiceNumber().compareToIgnoreCase("") !=0){
+    			BigDecimal bdQtyShipped = new BigDecimal(entry.getLineByIndex(0).sQtySTDFormat());
+    			if (bdQtyShipped.compareTo(BigDecimal.ZERO) > 0){
+    				bEntryIsCreditNote = true;
+    				
+       				//The invoicedetails.sInvoiceNumber is 9 characters long, so if the invoice number is 123456, the actual value in the field would
+    				// be: '   123456'.  So we'll pad it out to 9 places, and use that to link to the invoice details:
+    				String sInvoiceNumber = clsStringFunctions.PadLeft(entry.getLineByIndex(0).sInvoiceNumber().trim(), " ", SMTableinvoiceheaders.NUMBER_OF_CHARACTERS_USED_IN_INVOICE_NUMBER);
+    				
+    		       	//If the entry corresponds to an SM invoice or credit, then ALL of the entrylines will carry that invoice number in the
+    		       	// 'sinvoicenumber' field.  We'll use that invoice number now to get the 'Matching Invoice Number':
+    				String SQL = "SELECT " + SMTableinvoiceheaders.sMatchingInvoiceNumber
+    					+ " FROM " + SMTableinvoiceheaders.TableName
+    					+ " WHERE ("
+    						+ "(" + SMTableinvoiceheaders.sInvoiceNumber + " = '" + entry.getLineByIndex(0).sInvoiceNumber() +"')"
+    					+ ")"
+    				;
+    				try {
+						ResultSet rsGetMatchingInvoice = clsDatabaseFunctions.openResultSet(SQL, conn);
+						if (rsGetMatchingInvoice.next()){
+							sMatchingInvoiceNumber = clsStringFunctions.PadLeft(
+								rsGetMatchingInvoice.getString(SMTableinvoiceheaders.sMatchingInvoiceNumber).trim(),
+								" ",
+								SMTableinvoiceheaders.NUMBER_OF_CHARACTERS_USED_IN_INVOICE_NUMBER);
+							//Now we've got the matching invoice number for our credit note, padded as it should be in the invoice details table.
+						}else{
+							
+						}
+					} catch (SQLException e) {
+			   			addErrorMessage("Error [1551413442] - could not reading matching invoice number for credit note with SQL: '" + SQL + "' - " + e.getMessage());
+		    			return false;
+					}
+       			}
+       		}
+       	}
+       	
     	for (int i = 0; i < entry.getLineCount(); i++){
     	
     		ICEntryLine line = entry.getLineByIndex(i);
@@ -1733,6 +1775,7 @@ public class ICEntryBatch {
             	        		"[1551131105] going into updateCreditLineCost for item '" + line.sItemNumber() + "' for company '" + "(unknown)" + "' IC batch number '" + this.m_lbatchnumber + "'.");
 
     					if (!updateCreditLineCost(
+    						sMatchingInvoiceNumber,
     						line, 
     						conn)){
     		    	    	if(bLogDebug){
@@ -4139,36 +4182,13 @@ public class ICEntryBatch {
     	return true;
     }
 	private boolean updateCreditLineCost(
+			String sMatchingInvoiceNumber,
 			ICEntryLine line, 
 			Connection con
 	){
-		
-		//First get the original invoice number from which the credit was created:
-		String SQL = "SELECT " 
-			+ SMTableinvoiceheaders.sMatchingInvoiceNumber
-			+ " FROM " + SMTableinvoiceheaders.TableName
-			+ " WHERE ("
-				+ "TRIM(" + SMTableinvoiceheaders.sInvoiceNumber + ") = '" + line.sInvoiceNumber().trim() + "'"
-			+ ")"
-			;
-		
-		String sOriginalInvoice = "";
-		
-		ResultSet rs;
-		try {
-			rs = clsDatabaseFunctions.openResultSet(SQL, con);
-			if (rs.next()){
-				sOriginalInvoice = rs.getString(SMTableinvoiceheaders.sMatchingInvoiceNumber).trim();
-			}
-			rs.close();
-		} catch (SQLException e1) {
-			addErrorMessage("Could not get original invoice number to cost credit note on entry "
-					+ line.sEntryNumber() + " - " + e1.getMessage());
-				return false;
-		}
-		
+
 		//If the original invoice number is blank, get out:
-		if (sOriginalInvoice.trim().compareToIgnoreCase("") == 0){
+		if (sMatchingInvoiceNumber.trim().compareToIgnoreCase("") == 0){
 			addErrorMessage("Could not get original invoice number to cost credit note on entry "
 				+ line.sEntryNumber() + ".");
 			return false;
@@ -4178,29 +4198,28 @@ public class ICEntryBatch {
 		// iLineNumber or the iDetailNumber fields on a credit note point back to the corresponding 
 		//line on the invoice which was credited, so we'll use one of those to read the costs from
 		//the invoice:
-		SQL = "SELECT " + SMTableinvoicedetails.dExtendedCost
+		String SQL = "SELECT " + SMTableinvoicedetails.dExtendedCost
 			+ " FROM " + SMTableinvoicedetails.TableName
 			+ " WHERE ("
-				+ "(TRIM(" + SMTableinvoicedetails.sInvoiceNumber + ") = '" + sOriginalInvoice + "')"
-				+ " AND (" + SMTableinvoicedetails.iLineNumber + " = " 
-					+ line.sInvoiceLineNumber() + ")"
+				+ "(" + SMTableinvoicedetails.sInvoiceNumber + " = '" + sMatchingInvoiceNumber + "')"
+				+ " AND (" + SMTableinvoicedetails.iLineNumber + " = " + line.sInvoiceLineNumber() + ")"
 			+ ")"
 			;
 		
 		try {
-			rs = clsDatabaseFunctions.openResultSet(SQL, con);
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
 			if (rs.next()){
 				line.setCostString(
 					clsManageBigDecimals.doubleTo2DecimalSTDFormat(
 						rs.getDouble(SMTableinvoicedetails.dExtendedCost)).replace(",", ""));
 			}else{
-				addErrorMessage("Could not update credit line cost from invoice '" + sOriginalInvoice 
+				addErrorMessage("Could not update credit line cost from invoice '" + sMatchingInvoiceNumber 
 						+ "' for invoice line number " + line.sInvoiceLineNumber() + "."); 
 				return false;
 			}
 			rs.close();
 		} catch (SQLException e) {
-			addErrorMessage("Could not update credit line cost from invoice '" + sOriginalInvoice 
+			addErrorMessage("Could not update credit line cost from invoice '" + sMatchingInvoiceNumber 
 			+ "' - " + e.getMessage());
 			return false;
 		}

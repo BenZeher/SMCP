@@ -355,6 +355,17 @@ public class APBatch {
 			sResult += "  " + e.getMessage() + ".";
 		}
 
+		//Insure that the batch date is within the posting period:
+        SMOption opt = new SMOption();
+        if (!opt.load(conn)){
+        	sResult += "  " + "Error [1551456648] loading SM Options to check batch date range - " + opt.getErrorMessage() + ".";
+        }else{
+            try {
+    			opt.checkDateForPosting(m_sbatchdate, "Batch Date", conn, sUserID);
+    		} catch (Exception e) {
+    			sResult += "  " + "Error [1551456649]  - " + e.getMessage() + ".";
+    		}
+        }
 		
 		//Validate the entries:
 		//System.out.println("[1490382128] m_arrBatchEntries.size() = " + m_arrBatchEntries.size());

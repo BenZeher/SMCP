@@ -99,6 +99,13 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		if (sDBID.compareToIgnoreCase("") == 0){
+			SMUtilities.sysprint(this.toString(), 
+			sUserID, 
+			"[1551711576] request params = '" + ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
+				+ "', session attributes = '" + SMUtilities.getSessionAttributes(CurrentSession)
+			);
+		}
 
 		String sOrderNumber = clsManageRequestParameters.get_Request_Parameter("OrderNumber", request).replace(" ", "");
 

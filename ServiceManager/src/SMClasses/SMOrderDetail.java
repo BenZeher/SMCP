@@ -214,7 +214,7 @@ public class SMOrderDetail extends clsMasterEntry{
 	        
 	        //Make sure that it is a 'sellable' item:
 	        if (item.getCannotBeSoldFlag().compareToIgnoreCase("1") == 0){
-	        	super.addErrorMessage("Item number: '" + m_sItemNumber + "  is not configured as a sellable item.");
+	        	super.addErrorMessage("Item number: '" + m_sItemNumber + "' is not configured as a sellable item.");
 	        	return false;
 	        }
      	}
@@ -702,7 +702,7 @@ public class SMOrderDetail extends clsMasterEntry{
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067716]");
-			super.addErrorMessage(e1.getMessage());
+			//super.addErrorMessage(e1.getMessage());
     		return false;
 		}
 		//Now load and save the entire order to update all the calculations:

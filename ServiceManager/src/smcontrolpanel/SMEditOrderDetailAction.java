@@ -229,6 +229,8 @@ public class SMEditOrderDetailAction extends HttpServlet{
 				(String) clsManageRequestParameters.get_Request_Parameter(SMEditOrderDetailEdit.INSERTNEWLINEABOVEDETAILNUMBER, request))
 				){
 
+    			System.out.println("[1551731866] - failed to save line");
+    			
 				try {
 					smaction.getCurrentSession().setAttribute(SMOrderDetail.ParamObjectName, detail);
 				} catch (Exception e) {

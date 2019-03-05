@@ -159,6 +159,18 @@ public class SMViewConfiguration  extends HttpServlet {
 		out.println(createRow("Licensed modules:", SMModuleListing.getModuleList(lLicenseModuleLevel), "Modules configured for this company.", bOddRow));
 		bOddRow = !bOddRow;
 		
+		String sExpirationDate = SMUtilities.getSMCPLicenseExpirationDate(getServletContext(), sDBID);
+		ServletUtilities.clsDBServerTime objServerTime = null;
+		try {
+			objServerTime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, getServletContext());
+			if (sExpirationDate.compareToIgnoreCase(objServerTime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATE_FORMAT_FOR_SQL)) < 0){
+				sExpirationDate = "<B><FONT COLOR=RED>" + sExpirationDate + " - YOUR CURRENT SMCP LICENSE HAS EXPIRED</FONT></B>";
+			}
+		} catch (Exception e1) {
+			//Don't choke on this.
+		}
+		out.println(createRow("License expires on:", sExpirationDate, "Your current SMCP license expires on this date.", bOddRow));
+		bOddRow = !bOddRow;
 		
 		out.println(createRow("Path to images:", WebContextParameters.getInitImagePath(getServletContext()), "The path on the web server to the folder that holds all the image files for the program.", bOddRow)); //?
 		bOddRow = !bOddRow;

@@ -16,6 +16,7 @@ public class BuildLicense {
 
 		ArrayList<String>arrCompanyIDs = new ArrayList<String>(0);
 		ArrayList<String>arrModuleLevels = new ArrayList<String>(0);
+		ArrayList<String>arrExpirationDates = new ArrayList<String>(0);
 
 		//TEST:
 		//String s = "";
@@ -70,6 +71,22 @@ public class BuildLicense {
 			}
 			arrModuleLevels.add(sResponse);
 			
+			
+			sResponse = "";
+			while (sResponse.compareToIgnoreCase("") == 0){
+				System.out.println("Enter the expiration date in YYYY-MM-DD format:");
+				sResponse = reader.nextLine().trim();
+				if (!ServletUtilities.clsDateAndTimeConversions.IsValidDateString(SMUtilities.DATE_FORMAT_FOR_SQL, sResponse)){
+					System.out.println("Invalid expiration date: '" + sResponse + "'.");
+					sResponse = "";
+					continue;
+				}
+				if (sResponse.compareTo("") == 0){
+					System.out.println("Expiration date cannot be blank");
+				}
+			}
+			arrExpirationDates.add(sResponse);
+			
 			System.out.println("Add another company? (Y/N)");
 			sResponse = reader.nextLine().trim();
 			if (sResponse.compareToIgnoreCase("Y") != 0){
@@ -77,9 +94,9 @@ public class BuildLicense {
 			}
 		}
 
-		System.out.println("Company IDs and modules:");
+		System.out.println("Company IDs, modules and expiration dates:");
 		for (int i = 0; i < arrCompanyIDs.size(); i++){
-			System.out.println(arrCompanyIDs.get(i) + "," + arrModuleLevels.get(i));
+			System.out.println(arrCompanyIDs.get(i) + "," + arrModuleLevels.get(i) + "," + arrExpirationDates.get(i));
 		}
 		
 		//If all goes well, then we 'encrypt' by converting each character to ascii values and add a constant:
@@ -92,7 +109,7 @@ public class BuildLicense {
 			+ SMUtilities.SMCP_LICENSE_FILE
 			;
 		try {
-			writeLicenseFile (sFullLicenseFileName, arrCompanyIDs,arrModuleLevels);
+			writeLicenseFile (sFullLicenseFileName, arrCompanyIDs, arrModuleLevels, arrExpirationDates);
 		} catch (Exception e) {
 			System.out.println("Error writing license file - " + e.getMessage());
 			reader.close();
@@ -154,14 +171,16 @@ public class BuildLicense {
 	private static void writeLicenseFile (
 			String sLicenseFileName, 
 			ArrayList<String>arrCompanyIDS, 
-			ArrayList<String>arrModuleLevels) throws Exception{
+			ArrayList<String>arrModuleLevels,
+			ArrayList<String>arrExpirationDates
+			) throws Exception{
 		
 		BufferedWriter bw = null;
 		try {
 			// OVERWRITE MODE SET HERE
 			bw = new BufferedWriter(new FileWriter(sLicenseFileName, false));
 			for (int i = 0; i < arrCompanyIDS.size(); i++){
-				String sEncryptedLine = SMUtilities.encryptLicenseLine(arrCompanyIDS.get(i), arrModuleLevels.get(i));
+				String sEncryptedLine = SMUtilities.encryptLicenseLine(arrCompanyIDS.get(i), arrModuleLevels.get(i), arrExpirationDates.get(i));
 				bw.write(sEncryptedLine);
 				bw.newLine();
 				bw.flush();

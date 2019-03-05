@@ -89,9 +89,15 @@ public class SMAuthenticate{
 	 	    	if(sDatabaseID.compareToIgnoreCase("") != 0){
 	 				if(sDatabaseID.compareToIgnoreCase(sSessionDatabase) != 0){
 	 					//CONNECTION ERROR?
+	 					String sOptsParamValue = sOpts;
+	 					if (sOptsParamValue.compareToIgnoreCase("") == 0){
+	 						sOptsParamValue = (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_OPTS);
+	 					}
 	 					String sRedirectstring = SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMLogin" 
-	 		 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDatabaseID 
-	 		 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS + "=" + req.getServletPath().replace("/","");
+ 		 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDatabaseID 
+ 		 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_REDIRECT_CLASS + "=" + req.getServletPath().replace("/","")
+ 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "=" + sOptsParamValue
+	 					;
 	 					if (req.getQueryString() != null) {
 	 						sRedirectstring += "&" + req.getQueryString();
 	 					} 						
@@ -200,7 +206,7 @@ public class SMAuthenticate{
 					SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 					"Logging in", 
 					sSessionTagAttribute + " OPTS='" + sOpts + "', "
-						+ " req.getQueryString() = '" + req.getQueryString() + "'"
+						+ " query string = '" + clsManageRequestParameters.getAllRequestParametersMaskingPassword(req) + "'"
 					, 
 					"[1376509305]");
 				if (bDebugMode){
@@ -502,7 +508,7 @@ public class SMAuthenticate{
 			    			SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 			    			"Invalid password for user '" + sUserName + "'", 
 			    			"OPTS='" + sOpts + "', "
-			    				+ " req.getQueryString() = '" + req.getQueryString() + "'"
+			    					+ " query string = '" + clsManageRequestParameters.getAllRequestParametersMaskingPassword(req) + "'"
 			    			,
 			    			"[1376509306]"
 			    			);
@@ -547,7 +553,8 @@ public class SMAuthenticate{
 		    			sUserID, 
 		    			SMLogEntry.LOG_OPERATION_SMUSERLOGIN, 
 		    			"Invalid username (" + sUserName + "')", 
-		    			"OPTS='" + sOpts + "'",
+		    			"OPTS='" + sOpts + "',"
+		    			+ " query string = '" + clsManageRequestParameters.getAllRequestParametersMaskingPassword(req) + "'",
 		    			"[1376509516]"
 		    			);
 		    	bResult = false;

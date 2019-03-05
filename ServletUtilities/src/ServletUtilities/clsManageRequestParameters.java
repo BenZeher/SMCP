@@ -38,6 +38,23 @@ public class clsManageRequestParameters {
 		} 
 		return s;
 	}
+	public static String getAllRequestParametersMaskingPassword(HttpServletRequest req){
+		
+		Enumeration <String> e = req.getParameterNames();
+		String sParam = "";
+		String s = "";
+		while (e.hasMoreElements()){
+			sParam = (String) e.nextElement();
+			if (sParam.compareToIgnoreCase("pw") == 0){
+				s += (sParam + "='" + "******" + "'") + ", ";
+			}else{
+				s += (sParam + "='" + get_Request_Parameter(sParam, req) + "'") + ", ";
+			}
+		}
+		//Pull off the first comma:
+		
+		return s.substring(0, s.length() - 1);
+	}
 
 	public static void printRequestParametersString(HttpServletRequest req){
 	

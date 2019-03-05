@@ -27,7 +27,9 @@ import ServletUtilities.clsServletUtilities;
 public class SMLogin extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private boolean bDebugMode = false;
+	private static final String DEFAULT_OPTS_VALUE = "smlogin";
 	public static final String INPUT_DB_PARAMS_CLASS = "smcontrolpanel.SMInputDBParams";
+	
 	/*
 	 * Gets passed in the request:
 	 * 'db' - the database name
@@ -138,22 +140,22 @@ public class SMLogin extends HttpServlet {
 					String paramName = parameterNames.nextElement();
 					
 					//Add needed hidden fields here, but DON'T duplicate ones we already have:
-					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID) ==0){
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID) == 0){
 						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
 						bAlreadyUsedDBID = true;
 						continue;
 					}
-					if (paramName.compareToIgnoreCase("CallingClass") ==0){
+					if (paramName.compareToIgnoreCase("CallingClass") == 0){
 						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
 						bAlreadyUsedCallingClass = true;
 						continue;
 					}
-					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_OPTS) ==0){
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_OPTS) == 0){
 						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
 						bAlreadyUsedOPTS = true;
 						continue;
 					}
-					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_MOBILE) ==0){
+					if (paramName.compareToIgnoreCase(SMUtilities.SMCP_REQUEST_PARAM_MOBILE) == 0){
 						out.println("<INPUT TYPE=HIDDEN NAME=\"" + paramName + "\" VALUE=\"" + request.getParameter(paramName) + "\">");
 						bAlreadyUsedMobileView = true;
 						continue;
@@ -190,8 +192,12 @@ public class SMLogin extends HttpServlet {
 		
 		if (!bAlreadyUsedOPTS){
 			//Store the options string:
-			out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "\" VALUE=\"" 
-				+ clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_OPTS, request) + "\">");
+			//If there's an 'OPTS' in the request, use it:
+			String sOpts = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_OPTS, request);
+			if (sOpts.compareToIgnoreCase("") == 0){
+				sOpts = DEFAULT_OPTS_VALUE;
+			}
+			out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_OPTS + "\" VALUE=\"" + sOpts + "\">");
 		}
 		
 		//Mobile or not:

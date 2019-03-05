@@ -65,18 +65,18 @@ public class SMProposalPrintSelection extends HttpServlet {
 		String sUserName =  (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
-		SMUtilities.sysprint(
-			this.toString(), 
-			sUserName, 
-			"[1551280487] - sDBID = '" 
-				+ sDBID 
-				+ "', sCompanyName = '" 
-				+ sCompanyName 
-				+ "', req.parameters = " 
-				+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
-				+ " - SESSION ATTRIBUTES: "
-				+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
-		);
+		//SMUtilities.sysprint(
+		//	this.toString(), 
+		//	sUserName, 
+		//	"[1551280487] - sDBID = '" 
+		//		+ sDBID 
+		//		+ "', sCompanyName = '" 
+		//		+ sCompanyName 
+		//		+ "', req.parameters = " 
+		//		+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
+		//		+ " - SESSION ATTRIBUTES: "
+		//		+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
+		//);
 		
 		String title = "Print Proposals";
 		String subtitle = "";

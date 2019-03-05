@@ -52,16 +52,16 @@ public class SMProposalPrintAction extends HttpServlet {
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    
-		SMUtilities.sysprint(
-				this.toString(), 
-				sUserName, 
-				"[1551280488] - sDBID = '" 
-					+ sDBID 
-					+ "', req.parameters = " 
-					+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
-					+ " - SESSION ATTRIBUTES: "
-					+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
-			);
+		//SMUtilities.sysprint(
+		//		this.toString(), 
+		//		sUserName, 
+		//		"[1551280488] - sDBID = '" 
+		//			+ sDBID 
+		//			+ "', req.parameters = " 
+		//			+ ServletUtilities.clsManageRequestParameters.getAllRequestParameters(request)
+		//			+ " - SESSION ATTRIBUTES: "
+		//			+ ServletUtilities.clsServletUtilities.getSessionAttributes(CurrentSession)
+		//	);
 
 	    String  sRedirect = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 			+ SMProposal.Paramstrimmedordernumber + "=" + clsManageRequestParameters.get_Request_Parameter(SMProposal.Paramstrimmedordernumber, request)

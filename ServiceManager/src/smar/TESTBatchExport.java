@@ -3,6 +3,10 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
+import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsServletUtilities;
+import smcontrolpanel.SMUtilities;
+
 public class TESTBatchExport extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -56,6 +60,21 @@ public class TESTBatchExport extends HttpServlet{
 			}
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
+		
+		String DateTimeString = null;
+		
+		try {
+			System.out.println(clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+				DateTimeString, 
+				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+				clsServletUtilities.EMPTY_DATETIME_VALUE
+			)
+			);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println("DONE");
+		
 		//TEST EMAILER
 		
 		//Get the temporary file path for saving files:

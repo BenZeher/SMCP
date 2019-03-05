@@ -339,7 +339,7 @@ public class clsDateAndTimeConversions {
 	
 		//If it's a null string, return the 'zero date':
 		if (rsString == null){
-			return clsServletUtilities.EMPTY_DATE_VALUE;
+			rsString = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		}
 	
 		//Convert the string to the format requested:
@@ -361,7 +361,7 @@ public class clsDateAndTimeConversions {
 	
 		//If it's a null string, return the 'zero date':
 		if (rsString == null){
-			return clsServletUtilities.EMPTY_DATETIME_VALUE;
+			rsString = clsServletUtilities.EMPTY_SQL_DATETIME_VALUE;
 		}
 	
 		//Convert the string to the format requested:

@@ -609,7 +609,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 				+ "		(" + SMTablecriticaldates.itype + " = " + Integer.toString(iType) + ")"
 				+ " AND (" + SMTablecriticaldates.sdocnumber + " = '" + sDocNumber + "')"
 				+ " )"
-				+ " ORDER BY " + SMTablecriticaldates.sCriticalDate
+				+ " ORDER BY " + SMTablecriticaldates.sCriticalDate + " , " + SMTablecriticaldates.sId
 				;
 
 			boolean bCriticalDates  = true; 

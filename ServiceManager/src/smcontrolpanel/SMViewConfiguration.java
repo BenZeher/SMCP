@@ -164,7 +164,9 @@ public class SMViewConfiguration  extends HttpServlet {
 		try {
 			objServerTime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, getServletContext());
 			if (sExpirationDate.compareToIgnoreCase(objServerTime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATE_FORMAT_FOR_SQL)) < 0){
-				sExpirationDate = "<B><FONT COLOR=RED>" + sExpirationDate + " - YOUR CURRENT SMCP LICENSE HAS EXPIRED</FONT></B>";
+				if (sExpirationDate.compareToIgnoreCase(SMUtilities.EMPTY_SQL_DATE_VALUE) != 0){
+					sExpirationDate = "<B><FONT COLOR=RED>" + sExpirationDate + " - YOUR CURRENT SMCP LICENSE HAS EXPIRED</FONT></B>";
+				}
 			}
 		} catch (Exception e1) {
 			//Don't choke on this.

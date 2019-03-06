@@ -19,7 +19,6 @@ import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablefaclasses;
 import SMDataDefinition.SMTablefalocations;
 import SMDataDefinition.SMTablefatransactions;
-import SMDataDefinition.SMTablelocations;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;

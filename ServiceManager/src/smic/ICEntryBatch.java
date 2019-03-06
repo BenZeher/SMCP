@@ -15,7 +15,6 @@ import javax.servlet.ServletContext;
 
 import smar.SMGLExport;
 import smar.SMOption;
-import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
@@ -1571,7 +1570,6 @@ public class ICEntryBatch {
        	// we start iterating through the loop:
        	//If it's a SHIPMENT entry, AND the lines have a POSITIVE qty shipped, it's a RETURNED SHIPMENT or a CREDIT NOTE.
        	//If it then also has an invoice number, then it's a credit note:
-       	boolean bEntryIsCreditNote = false;
        	
        	//This will carry the invoice number from which this credit note is created - IF this is a credit note (if not it will just be blank)
        	String sMatchingInvoiceNumber = "";
@@ -1579,13 +1577,8 @@ public class ICEntryBatch {
        		if (entry.getLineByIndex(0).sInvoiceNumber().compareToIgnoreCase("") !=0){
     			BigDecimal bdQtyShipped = new BigDecimal(entry.getLineByIndex(0).sQtySTDFormat());
     			if (bdQtyShipped.compareTo(BigDecimal.ZERO) > 0){
-    				bEntryIsCreditNote = true;
     				
-       				//The invoicedetails.sInvoiceNumber is 9 characters long, so if the invoice number is 123456, the actual value in the field would
-    				// be: '   123456'.  So we'll pad it out to 9 places, and use that to link to the invoice details:
-    				String sInvoiceNumber = clsStringFunctions.PadLeft(entry.getLineByIndex(0).sInvoiceNumber().trim(), " ", SMTableinvoiceheaders.NUMBER_OF_CHARACTERS_USED_IN_INVOICE_NUMBER);
-    				
-    		       	//If the entry corresponds to an SM invoice or credit, then ALL of the entrylines will carry that invoice number in the
+    				//If the entry corresponds to an SM invoice or credit, then ALL of the entrylines will carry that invoice number in the
     		       	// 'sinvoicenumber' field.  We'll use that invoice number now to get the 'Matching Invoice Number':
     				String SQL = "SELECT " + SMTableinvoiceheaders.sMatchingInvoiceNumber
     					+ " FROM " + SMTableinvoiceheaders.TableName

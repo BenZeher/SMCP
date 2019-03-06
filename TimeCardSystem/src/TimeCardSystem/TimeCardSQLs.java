@@ -1779,20 +1779,6 @@ public class TimeCardSQLs {
 		return SQL;
 	}
 
-	public static String Get_Leave_Adjustment_Types_SQL(String sAwardType){
-		
-		String SQL = "SELECT * FROM " + LeaveAdjustmentTypes.TableName + " WHERE " + LeaveAdjustmentTypes.dAwardType;
-		if (sAwardType.compareTo("lumpsum") == 0){
-			SQL = SQL + " < ";
-		}else{
-			SQL = SQL + " >= ";
-		}
-		SQL = SQL + "0";
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
 	public static String Get_Leave_Adjustment_Types_SQL(ArrayList<String> sTIDs){
 		
 		String SQL = "SELECT * FROM " + LeaveAdjustmentTypes.TableName;
@@ -1836,74 +1822,33 @@ public class TimeCardSQLs {
 	}
 
 	public static String Get_Insert_Leave_Adjustment_Type_SQL(int iSessionTID, 
-													  		  String sTypeTitle, 
-															  String sTypeDesc,
-	    												      String sEffectiveDate,
-	    												      int iEEPType,
-	    												      int iEEStatus,
-	    												      double dMinHour,
-	    												      String sAwardPeriod,
-	    												      double dAwardType,
-	    												      int iCarriedOver,
-	    												      double dMaxHour,
-	    												      int iPaidLeave){
+  		  String sTypeTitle, 
+		  String sTypeDesc
+	      ){
 		String SQL = "INSERT INTO " + LeaveAdjustmentTypes.TableName + " (" + 
 				 " " + LeaveAdjustmentTypes.iTypeID + "," +  
 				 " " + LeaveAdjustmentTypes.sTypeTitle + "," +
-				 " " + LeaveAdjustmentTypes.sTypeDesc + "," +
-				 " " + LeaveAdjustmentTypes.dtEffectiveDate + "," +
-				 " " + LeaveAdjustmentTypes.iEligibleEmployeePayType + "," +
-				 " " + LeaveAdjustmentTypes.iEligibleEmployeeStatus + "," +
-				 " " + LeaveAdjustmentTypes.dMinimumHourWorked + "," +
-				 " " + LeaveAdjustmentTypes.sAwardPeriod + "," +
-				 " " + LeaveAdjustmentTypes.dAwardType + "," +
-				 " " + LeaveAdjustmentTypes.iCarriedOver + "," +
-				 " " + LeaveAdjustmentTypes.dMaximumHourAvailable + "," +
-				 " " + LeaveAdjustmentTypes.iPaidLeave +
+				 " " + LeaveAdjustmentTypes.sTypeDesc +
 				 " )" + 
 			  "VALUES(" +
 			  	 " " + iSessionTID + "," +
 			  	 " '" + clsDatabaseFunctions.FormatSQLStatement(sTypeTitle) + "'," +
-			  	 " '" + clsDatabaseFunctions.FormatSQLStatement(sTypeDesc) + "'," + 
-			  	 " '" + sEffectiveDate + "'," + 
-			  	 " " + iEEPType + "," + 
-			  	 " " + iEEStatus + "," + 
-			  	 " " + dMinHour + "," + 
-			  	 " '" + sAwardPeriod + "'," + 
-			  	 " " + dAwardType + "," + 
-			  	 " " + iCarriedOver + "," + 
-			  	 " " + dMaxHour + "," + 
-			  	 " " + iPaidLeave + ")";
+			  	 " '" + clsDatabaseFunctions.FormatSQLStatement(sTypeDesc) + "'" + 
+			  	 ")";
 		
 		//System.out.println ("SQL = " + SQL);
 		return SQL;
 	}
 
-	public static String Get_Update_Leave_Adjustment_Type_SQL(int iSessionTID, 
-													  		  String sTypeTitle, 
-															  String sTypeDesc,
-														      String sEffectiveDate,
-														      int iEEPType,
-														      int iEEStatus,
-														      double dMinHour,
-														      String sAwardPeriod,
-														      double dAwardType,
-														      int iCarriedOver,
-														      double dMaxHour,
-	    												      int iPaidLeave){
+	public static String Get_Update_Leave_Adjustment_Type_SQL(
+		int iSessionTID, 
+  		String sTypeTitle, 
+		String sTypeDesc
+	    ){
 	
 		String SQL = "UPDATE " + LeaveAdjustmentTypes.TableName + " SET" +
 		 		 " " + LeaveAdjustmentTypes.sTypeTitle + " = '" + clsDatabaseFunctions.FormatSQLStatement(sTypeTitle) + "'," +
-				 " " + LeaveAdjustmentTypes.sTypeDesc + " = '" + clsDatabaseFunctions.FormatSQLStatement(sTypeDesc) + "'," +
-		 		 " " + LeaveAdjustmentTypes.dtEffectiveDate + " = '" + sEffectiveDate + "'," +
-		 		 " " + LeaveAdjustmentTypes.iEligibleEmployeePayType + " = " + iEEPType + "," +
-		 		 " " + LeaveAdjustmentTypes.iEligibleEmployeeStatus + " = " + iEEStatus + "," +
-		 		 " " + LeaveAdjustmentTypes.dMinimumHourWorked + " = " + dMinHour + "," +
-		 		 " " + LeaveAdjustmentTypes.sAwardPeriod + " = '" + sAwardPeriod + "'," +
-		 		 " " + LeaveAdjustmentTypes.dAwardType + " = " + dAwardType + "," +
-		 		 " " + LeaveAdjustmentTypes.iCarriedOver + " = " + iCarriedOver + "," +
-		 		 " " + LeaveAdjustmentTypes.dMaximumHourAvailable + " = " + dMaxHour + "," +
-		 		 " " + LeaveAdjustmentTypes.iPaidLeave + " = " + iPaidLeave +
+				 " " + LeaveAdjustmentTypes.sTypeDesc + " = '" + clsDatabaseFunctions.FormatSQLStatement(sTypeDesc) + "'" +
 			  " WHERE" +
 			 	 " " + LeaveAdjustmentTypes.iTypeID + " = " + iSessionTID;
 		

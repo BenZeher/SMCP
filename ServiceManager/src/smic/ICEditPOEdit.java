@@ -791,17 +791,18 @@ public class ICEditPOEdit  extends HttpServlet {
 		out.println("<br><br><b><u><FONT SIZE=2>PO Detail Lines</FONT></u></b><br>");
 
 		out.println("<TABLE STYLE=\"max-width:"+INFO_TABLES_MAX_WIDTH+"; table-layout: fixed; background-color: " + DETAILS_TABLE_BG_COLOR + ";\" BORDER=0 cellspacing=0 cellpadding=1><TR>");
-		out.println("<TD class = \"leftjustifiedheading\" width=10px><FONT SIZE=2><B>&nbsp;&nbsp;</B></FONT></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=40px><FONT SIZE=2><B>Line&nbsp;#</B></FONT></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=85px><FONT SIZE=2><B>Qty&nbsp;ordered</B></FONT></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=85px><FONT SIZE=2><B>Qty&nbsp;received</B></FONT></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=100px><FONT SIZE=2><B>Item&nbsp;#</FONT></B></TD>");
-		out.println("<TD class = \"leftjustifiedheading\"><FONT SIZE=2><B>Ven.&nbsp;Item&nbsp;#</FONT></B></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=60px><FONT SIZE=2><B>NonInv?</FONT></B></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=100% ><FONT SIZE=2><B>Item&nbsp;description</B></FONT></TD>");
-		out.println("<TD class = \"leftjustifiedheading\" width=35px><FONT SIZE=2><B>UOM</B></FONT></TD>");
-		out.println("<TD class = \"rightjustifiedheading\" width=120px align=right><FONT SIZE=2><B>Total&nbsp;order&nbsp;cost</B></FONT></TD>");
-		out.println("<TD class = \"rightjustifiedheading\" width=120px align=right><FONT SIZE=2><B>Total&nbsp;received&nbsp;cost</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>&nbsp;&nbsp;</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Line&nbsp;#</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Location</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Qty&nbsp;ordered</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Qty&nbsp;received</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Item&nbsp;#</FONT></B></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Ven.&nbsp;Item&nbsp;#</FONT></B></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Non-Inventory?</FONT></B></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>Item&nbsp;description</B></FONT></TD>");
+		out.println("<TD class = \"leftjustifiedheading\" ><FONT SIZE=2><B>UOM</B></FONT></TD>");
+		out.println("<TD class = \"rightjustifiedheading\" ><FONT SIZE=2><B>Total&nbsp;order&nbsp;cost</B></FONT></TD>");
+		out.println("<TD class = \"rightjustifiedheading\" ><FONT SIZE=2><B>Total&nbsp;received&nbsp;cost</B></FONT></TD>");
 		
 
 		boolean bViewItemAllowed = SMSystemFunctions.isFunctionPermitted(
@@ -832,6 +833,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.lnoninventoryitem
 				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.sitemdescription
 				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.sitemnumber
+				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.slocation
 				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.lid
 				+ ", " + SMTableicpolines.TableName + "." + SMTableicpolines.sunitofmeasure
 				//TJR - changed this on 10/25/16 to read the actual PO line instead
@@ -876,7 +878,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					
 					out.println("<TR bgcolor=" + sBackgroundColor + ">");
 					//Space for drag sort handle
-					out.println("<TD width=10px><span class=\"handle\">"
+					out.println("<TD ><span class=\"handle\">"
 							+ "<span class=\"ui-icon ui-icon-arrowthick-2-n-s\">" 
 							+ "</span>"
 							+ "</span></TD>");
@@ -891,20 +893,24 @@ public class ICEditPOEdit  extends HttpServlet {
 					//+ "&" + ICPOHeader.Paramsponumber + "=" + entry.getsponumber()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 					+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sLineNumber) + "</A>";
-					out.println("<TD width=40px ALIGN=RIGHT><FONT SIZE=2>" + sLineNumberLink + "</FONT>");
+					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + sLineNumberLink + "&nbsp;</FONT>");
 					out.println("</TD>");
 					//Add hidden parameter to store change in line numbers when sorting
 					out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"POLINEID" + sLineID + "\" VALUE=\"" + sLineNumber + "\" >");
 					
-
+					//Location:
+					out.println("<TD><FONT SIZE=2>&nbsp;" 
+							+ rs.getString(SMTableicpolines.TableName + "." + SMTableicpolines.slocation) + "</FONT></TD>"
+					);
+					
 					//Qty ordered
-					out.println("<TD width=85px ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
 							+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 									SMTableicpolines.bdqtyorderedScale, rs.getBigDecimal(
 											SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered)) + "</FONT></TD>"
 					);					
 					//Qty received
-					out.println("<TD width=85px ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
 							+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 									SMTableicpolines.bdqtyreceivedScale, rs.getBigDecimal(
 											SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyreceived)) + "</FONT></TD>"
@@ -918,9 +924,9 @@ public class ICEditPOEdit  extends HttpServlet {
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 					+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
 					if (bViewItemAllowed){
-						out.println("<TD width=100px ><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
+						out.println("<TD><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
 					}else {
-						out.println("<TD width=100 px ><FONT SIZE=2>" + sItemNumber + "</FONT></TD>");
+						out.println("<TD><FONT SIZE=2>" + sItemNumber + "</FONT></TD>");
 					}
 
 					//Vendor's item number:
@@ -953,27 +959,27 @@ public class ICEditPOEdit  extends HttpServlet {
 							+ SMTableicpolines.lnoninventoryitem) == 1){
 						sNonInventoryItem = "Y";
 					}
-					out.println("<TD width=60px ALIGN=CENTER><FONT SIZE=2><B>" + sNonInventoryItem + "</B></FONT></TD>");
+					out.println("<TD ALIGN=CENTER><FONT SIZE=2><B>" + sNonInventoryItem + "</B></FONT></TD>");
 					
 					//Desc
-					out.println("<TD width=100%><FONT SIZE=2>" 
+					out.println("<TD><FONT SIZE=2>" 
 							+ rs.getString(SMTableicpolines.TableName + "." + SMTableicpolines.sitemdescription) + "</FONT></TD>"
 					);
 
 					//UOM
-					out.println("<TD width=35px><FONT SIZE=2>" 
+					out.println("<TD><FONT SIZE=2>" 
 							+ rs.getString(SMTableicpolines.TableName + "." + SMTableicpolines.sunitofmeasure) + "</FONT></TD>"
 					);
 
 					//total order cost
-					out.println("<TD width=120px ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
 							+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 									SMTableicpolines.bdextendedordercostScale, rs.getBigDecimal(
 											SMTableicpolines.TableName + "." + SMTableicpolines.bdextendedordercost)) + "</FONT></TD>"
 					);
 
 					//total received cost
-					out.println("<TD width=120px ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
 							+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 									SMTableicpolines.bdextendedreceivedcostScale, rs.getBigDecimal(
 											SMTableicpolines.TableName + "." + SMTableicpolines.bdextendedreceivedcost)) + "</FONT></TD>"
@@ -1003,7 +1009,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		//Print the grand total:
 		out.println("<TR bgcolor= " + sBackgroundColor + ">");
 		out.println("<TD></TD>");
-		out.println("<TD COLSPAN=8 ALIGN=RIGHT><B><FONT SIZE=2>TOTALS:</FONT></TD>"
+		out.println("<TD COLSPAN=9 ALIGN=RIGHT><B><FONT SIZE=2>TOTALS:</FONT></TD>"
 				+ "<TD ALIGN=RIGHT><B><FONT SIZE = 2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						SMTableicpolines.bdextendedordercostScale, bdTotalOrderedCost) + "</FONT></B></TD>");
 		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>" 

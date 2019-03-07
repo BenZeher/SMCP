@@ -75,7 +75,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
             + ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " AS SALESGROUP"
             
             + " FROM"
-            + " " + SMTableinvoiceheaders.TableName + " LEFT JOIN " + SMTableinvoicedetails.TableName + " ON "
+            + " " + SMTableinvoicedetails.TableName + " LEFT JOIN " + SMTableinvoiceheaders.TableName + " ON "
             + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " = "
             + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
             

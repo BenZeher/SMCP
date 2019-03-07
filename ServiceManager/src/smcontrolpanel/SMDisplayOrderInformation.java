@@ -847,7 +847,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Directions: </B>" + rsOrder.getString(SMTableorderheaders.mDirections) + "</FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
-					pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Work order notes: </B>" + rsOrder.getString(SMTableorderheaders.mTicketComments) + "</FONT></TD>");
+					pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Work order notes: </B>" + rsOrder.getString(SMTableorderheaders.mTicketComments).replace("\n",  "<BR>") + "</FONT></TD>");
 					pwOut.println("</TR>");
 					
 					// TJR - Removed 10/2/2014:

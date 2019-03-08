@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMTablecriticaldates;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -88,10 +89,14 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    ArrayList<String> alTypes = new ArrayList<String>(0);
 	    ArrayList<String> alStatus = new ArrayList<String>(0);
     	ArrayList<String> alSelectedUsers = new ArrayList<String>(0);
+    	ArrayList<String> arrSalesGroupCodes = new ArrayList<String>(0);
 	    Enumeration<String> paramNames = request.getParameterNames();
 	    String sUsersMarker = SMCriticalDateReportCriteriaSelection.UserMarker;
 	    String sTypesMarker = SMCriticalDateReportCriteriaSelection.TypeMarker;
 	    String sStatusMarker = SMCriticalDateReportCriteriaSelection.StatusMarker;
+	    String sSalesGroupMarker = SMCriticalDateReportCriteriaSelection.SALESGROUP_PARAM;
+	    
+	    boolean bUserChoseToPrintOrderTypes = false;
 	    while(paramNames.hasMoreElements()) {
 	      String sParamName = paramNames.nextElement();
 		  if (sParamName.contains(sUsersMarker)){
@@ -99,9 +104,16 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 		  }
 		  if (sParamName.contains(sTypesMarker)){
 			  alTypes.add(sParamName.substring(sParamName.indexOf(sTypesMarker) + sTypesMarker.length()));
+			  //If the user chose to print ORDER critical dates, note that:
+			  if (Integer.parseInt(alTypes.get(alTypes.size() - 1)) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE){
+				  bUserChoseToPrintOrderTypes = true;
+			  }
 		  }
 		  if (sParamName.contains(sStatusMarker)){
 			  alStatus.add(sParamName.substring(sParamName.indexOf(sStatusMarker) + sStatusMarker.length()));
+		  }
+		  if (sParamName.contains(sSalesGroupMarker)){
+			  arrSalesGroupCodes.add(sParamName.substring(sParamName.indexOf(sSalesGroupMarker) + sSalesGroupMarker.length()));
 		  }
 	    }
 	    if (alSelectedUsers.size() == 0 || alTypes.size() == 0 || alStatus.size() == 0 ){
@@ -114,10 +126,16 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    	if(alStatus.size() == 0) {
 	    		sWarning += "You must select at least one status. ";	
 	    	}
-    		redirectAfterError(response, sCallingClass, sDBID, sWarning);
-    		return;
+	    	
+	    	//If the user chose to list critical dates for ORDERS, then they must pick at least one Sales Group:
+	    	if (bUserChoseToPrintOrderTypes){
+		    	if (arrSalesGroupCodes.size() == 0){
+		    		sWarning += "You must select at least one sales group. ";
+		    	}
+	    	}
     	}
 	    Collections.sort(alSelectedUsers);
+	    Collections.sort(arrSalesGroupCodes);
 	    
     	//save URL History
 		String sURLTitle = "Critical Date Report (from " + sStartingDate + " to " + sEndingDate + ", users: ";
@@ -148,7 +166,6 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    //Get 'Assigned By':
 	    String sAssignedBy = clsManageRequestParameters.get_Request_Parameter(SMCriticalDateEntry.ParamAssignedbyUserID, request);
 
-	    
     	//Customized title
     	String sReportTitle = "Critical Date Report";
 
@@ -163,8 +180,22 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     			sCriteria += ", <B>" + alSelectedUsers.get(i) + "</B>";
     		}
     	}
-   		sCriteria += "," +
-   		" sorted by ";
+   		sCriteria += ","
+    	;
+   				
+   		//Show the sales groups, if any:
+   		if (bUserChoseToPrintOrderTypes){
+   			sCriteria += " for sales groups: ";
+   			for (int i = 0; i < arrSalesGroupCodes.size(); i++){
+   				if (i == 0){
+   					sCriteria += "<B>" + arrSalesGroupCodes.get(i) + "</B>";
+   				}else{
+   					sCriteria += ", <B>" + arrSalesGroupCodes.get(i) + "</B>";
+   				}
+   			}
+   		}
+   				
+   		sCriteria += " sorted by ";
    		
    		if (sSelectedSortOrder.compareToIgnoreCase(SMCriticalDateReportCriteriaSelection.ParamSortByDate) == 0){
    			sCriteria += "<B>Critical date </B>";
@@ -225,6 +256,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     			alSelectedUsers,
     			alTypes,
     			alStatus,		
+    			arrSalesGroupCodes,
     			sSelectedSortOrder,
     			sAssignedBy,
     			sCurrentURL,

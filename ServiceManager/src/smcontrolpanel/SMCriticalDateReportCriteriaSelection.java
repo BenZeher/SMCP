@@ -4,6 +4,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 import SMDataDefinition.SMTablecriticaldates;
+import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesalesgroups;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -22,10 +24,14 @@ import java.util.ArrayList;
 		public static final String ParamSelectedSortOrder = "SelectedSortOrder";
 		public static final String ParamSortByDate = "SortByDate";
 		public static final String ParamSortByType = "SortByType";
+		public static final String ParamOrders = "Orders";
 		
 		public static final String TypeMarker = "TYPES";
 		public static final String UserMarker = "USERS";
 		public static final String StatusMarker = "STATUS";
+		
+		public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
+		public static final String SALESGROUP_PARAM_SEPARATOR = ",";
 		
 		public void doGet(HttpServletRequest request,
 					HttpServletResponse response)
@@ -77,7 +83,7 @@ import java.util.ArrayList;
 	        	out.println("<TABLE BORDER=10 CELLPADDING=10 WIDTH=80%>");
 	        	
 	        	//Resolved/Unresolved
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Status </H3></TD><TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Status </TD><TD>");
 	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
 	        				+ "ID=\"" + ParamIncludeUnresolved + "\" "
 	        				+ "NAME=\"" + StatusMarker + "0" + "\" "
@@ -90,10 +96,11 @@ import java.util.ArrayList;
 	        	out.println("</TD></TR>");
 	        	
 	        	//Type
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Type </H3></TD><TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Type </TD><TD>");
 	        	
 	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
 	        				+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) + "\" "
+	        				+ "ID=\"" + ParamOrders + "\" "
 	        				+ "CHECKED/> Orders ");
 	        	
 	        	//out.println("<INPUT TYPE=\"CHECKBOX\" "
@@ -105,10 +112,62 @@ import java.util.ArrayList;
     					+ "CHECKED /> Purchase Order ");
 	        	
 
-	        	out.println("</TD></TR>");
+	    		//Sales Groups
+	    		//We only show these when 'Orders' is selected as one of the Critical Date types.
+	    		out.println("<div style= \"display: none;\" class=\"SALESGROUPOPTIONS\">");
+	    		//out.println("<BR>TEST<BR>");
+	    		//out.println("</div>");
+	    		
+	    		out.println("<BR>");
+	    		out.println("<span style = \" font-size:normal; font-weight:bold; \" >Sales Groups&nbsp;</span>"
+	    			+ "<span style = \" font-size:normal; font-style:italic; \" >(Applies to ORDER Critical Dates only)</span>"
+	    			+ "<BR>"
+	    		);
+	    		ArrayList<String>arrSalesGroupControls = new ArrayList<String>(0);
+	    		String SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup 
+	    			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode
+	    			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc
+	    				+ " FROM " + SMTableorderheaders.TableName
+	    			+ " LEFT JOIN " + SMTablesalesgroups.TableName + " ON "
+	    			+ SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + " = "
+	    			+ SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId
+	    			+ " ORDER BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup ;
+	    		try{
+	    			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+	    			while(rs.next()){
+	    				String sSalesGroupCode = rs.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode);
+	    				String sSalesGroupDesc = rs.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc);
+	    				if (sSalesGroupCode == null){
+	    					sSalesGroupCode = "(BLANK)";
+	    				}
+	    				if (sSalesGroupDesc == null){
+	    					sSalesGroupDesc = "(BLANK)";
+	    				}
+
+	    				arrSalesGroupControls.add(
+    						"<LABEL NAME = \"" + "SALESGROUPLABELSALES" + sSalesGroupCode + " \" >"
+	    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
+	    						+ sSalesGroupCode
+	    						//+ SALESGROUP_PARAM_SEPARATOR
+	    						//+ Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup))						   
+	    						+ "\" CHECKED width=0.25>" 
+	    						+ sSalesGroupCode + " - " + sSalesGroupDesc
+	    						+ "</LABEL>"		
+	    				);
+	    			}
+	    			rs.close();
+	    		}catch (SQLException e){
+	    			out.println("Could not read sales group table - " + e.getMessage());
+	    		}
+	    		
+	    		out.println(SMUtilities.Build_HTML_Table(5, arrSalesGroupControls, 100, 0, true ,true));
+	    		out.println("</div>");
+	    		
+	    		out.println("</TD>");
+	    		out.println("</TR>");
 	        	
 	        	//Select responsible users
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Responsible Person </H3></TD><TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Responsible Person </TD><TD>");
 	        	
 				out.println("<input type=\"button\" name=\"select-all\" id=\"select-all\" value=\"CHECK All users\" onclick=\"checkall()\">"); 
 				out.println("&nbsp;<input type=\"button\" name=\"unselect-all\" id=\"unselect-all\" value=\"UNCHECK All users\" onclick=\"uncheckall()\"><BR><BR>"); 
@@ -193,7 +252,6 @@ import java.util.ArrayList;
 	    		out.println("<BR>");
 	    		out.println("</TD></TR>");
 	        	
-	    		
 	    		//Select 'Assigned By':
 				sSQL = "SELECT DISTINCT " + SMTablecriticaldates.lassignedbyuserid	
 						+ " FROM " + SMTablecriticaldates.TableName
@@ -231,7 +289,7 @@ import java.util.ArrayList;
 		    	}
 				rsAssignedUsers.close();
 		        
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Assigned by</H3></TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Assigned by</TD>");
 	    		out.println("<TD>");
 		        out.println(clsCreateHTMLFormFields.TDDropDownBox(
 		        		SMCriticalDateEntry.ParamAssignedbyUserID, 
@@ -243,7 +301,7 @@ import java.util.ArrayList;
 		        
 	        	//Select date range
 	    		
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Date Range</H3></TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Date Range</TD>");
 	    		out.println("<TD>");
 	    		out.println(clsCreateHTMLFormFields.TDTextBox(
         				"StartingDate", 
@@ -267,7 +325,7 @@ import java.util.ArrayList;
 	    		out.println("</TD></TR>");
 	    		
 	    		//Select sorting method
-	        	out.println("<TR><TD ALIGN=CENTER><H3>Sort By </H3></TD>");
+	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Sort By</TD>");
 	        		out.println("<TD><SELECT NAME=\"" + ParamSelectedSortOrder + "\">");
         				out.println("<OPTION VALUE=\"" + ParamSortByDate + "\">Date ");
 	        			out.println("<OPTION VALUE=\"" +ParamSortByType + "\">Record Type");
@@ -286,34 +344,49 @@ import java.util.ArrayList;
 		        // handle any errors
 		    	System.out.println("Error in SMCriticalDateReportCriteriaSelection class!!");
 		        System.out.println("SQLException: " + ex.getMessage());
-		        out.println("<BR>Error - in SQL: " + sSQL + " - " + ex.getMessage());
+		        out.println("<BR>Error [] selecting critical dates - with SQL: '" + sSQL + "' - " + ex.getMessage());
 		    }
 	 
 		    out.println("</BODY></HTML>");
 		}
 		private String getScript() {
 			String s = "<script>"
-					+ "$( document ).ready(function() {\n" 
-					+ "  		if ($(" + ParamIncludeResolved + ").is(':checked')){\n" 
+					+ "$( document ).ready(function() {\n"
+					+ "\n"
+					+ "     // If the 'include resolved' checkbox is set, then show the 'Resolved Users' list:\n"
+					+ "  	if ($(" + ParamIncludeResolved + ").is(':checked')){\n" 
 					+ "    		$('.RESOLVEDUSERS').show();\n" 
 					+ "		}\n"
-					+ "		$('#" + ParamIncludeResolved + "').click(function(event) {   \n" 
-					+ "  			$('.RESOLVEDUSERS').slideToggle('fast');                     \n" 
+					+ "\n"
+					+ "     // Now set the function that happens when the 'Resolved' checkbox is clicked:\n"
+					+ "		$('#" + ParamIncludeResolved + "').click(function(event) {\n" 
+					+ "  			$('.RESOLVEDUSERS').slideToggle('fast');\n" 
 					+ "		});\n"
+					+ "\n"
+					+ "     // If the 'ORDERS' checkbox is set, then show the 'Sales Groups' list:\n"
+					+ "  	if ($(" + ParamOrders + ").is(':checked')){\n" 
+					+ "    		$('.SALESGROUPOPTIONS').show();\n" 
+					+ "		}\n"
+					+ "\n"
+					+ "     // Now set the function that happens when the 'ORDERS' checkbox is clicked:\n"
+					+ "		$('#" + ParamOrders + "').click(function(event) {\n" 
+					+ "  			$('.SALESGROUPOPTIONS').slideToggle('fast');\n" 
+					+ "		});\n"
+					+ "\n"
 					+ "});\n"
 					+ "\n"
 					
 					+ "function checkall() {   \n"  
-					+ "        $('#RESOLVEDUSER, #UNRESOLVEDUSER').each(function() {\n" 
-					+ "            this.checked = true;                        \n" 
-					+ "        });\n" 
+					+ "       $('#RESOLVEDUSER, #UNRESOLVEDUSER').each(function() {\n" 
+					+ "           this.checked = true;                        \n" 
+					+ "       });\n" 
 					+ "};\n"	
 					
 					+ "function uncheckall() {   \n"  
-					+ "        $('#RESOLVEDUSER, #UNRESOLVEDUSER').each(function() {\n" 
-					+ "            this.checked = false;                       \n" 
-					+ "        });\n" 
-					+ "    }\n" 
+					+ "     $('#RESOLVEDUSER, #UNRESOLVEDUSER').each(function() {\n" 
+					+ "         this.checked = false;                       \n" 
+					+ "     });\n" 
+					+ "}\n" 
 					
 					+ "</script>";
 		

@@ -90,6 +90,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    ArrayList<String> alStatus = new ArrayList<String>(0);
     	ArrayList<String> alSelectedUsers = new ArrayList<String>(0);
     	ArrayList<String> arrSalesGroupCodes = new ArrayList<String>(0);
+    	ArrayList<String> arrFullUserNames = new ArrayList<String>(0);
 	    Enumeration<String> paramNames = request.getParameterNames();
 	    String sUsersMarker = SMCriticalDateReportCriteriaSelection.UserMarker;
 	    String sTypesMarker = SMCriticalDateReportCriteriaSelection.TypeMarker;
@@ -100,7 +101,11 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    while(paramNames.hasMoreElements()) {
 	      String sParamName = paramNames.nextElement();
 		  if (sParamName.contains(sUsersMarker)){
-			  alSelectedUsers.add(sParamName.substring(sParamName.indexOf(sUsersMarker) + sUsersMarker.length()));
+			  String sSelectedUserID = sParamName.substring(sParamName.indexOf(sUsersMarker) + sUsersMarker.length());
+			  alSelectedUsers.add(sSelectedUserID);
+			  arrFullUserNames.add(
+				  clsManageRequestParameters.get_Request_Parameter(SMCriticalDateReportCriteriaSelection.FULL_NAME_PARAMETER_BASE + sSelectedUserID , request)
+			);
 		  }
 		  if (sParamName.contains(sTypesMarker)){
 			  alTypes.add(sParamName.substring(sParamName.indexOf(sTypesMarker) + sTypesMarker.length()));
@@ -136,6 +141,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	}
 	    Collections.sort(alSelectedUsers);
 	    Collections.sort(arrSalesGroupCodes);
+	    Collections.sort(arrFullUserNames);
 	    
     	//save URL History
 		String sURLTitle = "Critical Date Report (from " + sStartingDate + " to " + sEndingDate + ", users: ";
@@ -169,23 +175,22 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	//Customized title
     	String sReportTitle = "Critical Date Report";
 
-    	String sCriteria = "Starting with date <B>" + sStartingDate + " </B>" +
+    	String sCriteria = "Starting with date <B>" + sStartingDate + "</B>" +
     					   ", ending with date <B>" + sEndingDate + "</B>" +
-    					   ", including user ids: ";
+    					   "<BR>Including user ids: ";
     	
-    	for (int i = 0; i < alSelectedUsers.size(); i++){
+    	for (int i = 0; i < arrFullUserNames.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + alSelectedUsers.get(i) + "</B>";
+    			sCriteria += "<B>" + arrFullUserNames.get(i) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + alSelectedUsers.get(i) + "</B>";
+    			sCriteria += ", <B>" + arrFullUserNames.get(i) + "</B>";
     		}
     	}
-   		sCriteria += ","
     	;
    				
    		//Show the sales groups, if any:
    		if (bUserChoseToPrintOrderTypes){
-   			sCriteria += " for sales groups: ";
+   			sCriteria += "<BR>For sales groups: ";
    			for (int i = 0; i < arrSalesGroupCodes.size(); i++){
    				if (i == 0){
    					sCriteria += "<B>" + arrSalesGroupCodes.get(i) + "</B>";
@@ -195,7 +200,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
    			}
    		}
    				
-   		sCriteria += " sorted by ";
+   		sCriteria += "<BR>Sorted by ";
    		
    		if (sSelectedSortOrder.compareToIgnoreCase(SMCriticalDateReportCriteriaSelection.ParamSortByDate) == 0){
    			sCriteria += "<B>Critical date </B>";

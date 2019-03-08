@@ -29,6 +29,7 @@ import java.util.ArrayList;
 		public static final String TypeMarker = "TYPES";
 		public static final String UserMarker = "USERS";
 		public static final String StatusMarker = "STATUS";
+		public static final String FULL_NAME_PARAMETER_BASE = "FULLUSERNAME";
 		
 		public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
 		public static final String SALESGROUP_PARAM_SEPARATOR = ",";
@@ -84,32 +85,36 @@ import java.util.ArrayList;
 	        	
 	        	//Resolved/Unresolved
 	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Status </TD><TD>");
-	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
+	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "ID=\"" + ParamIncludeUnresolved + "\" "
 	        				+ "NAME=\"" + StatusMarker + "0" + "\" "
-	        				+ "CHECKED/> Unresolved ");      
+	        				+ "CHECKED/> Unresolved "
+	        				+ "</LABEL>");      
 	        	
-	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
+	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "ID=\"" + ParamIncludeResolved + "\" "
 	        				+ "NAME=\"" + StatusMarker + "1" + "\" "
-	        				+ "/> Resolved ");	        	
+	        				+ "/> Resolved "
+	        				+ "</LABEL>");	        	
 	        	out.println("</TD></TR>");
 	        	
 	        	//Type
 	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Type </TD><TD>");
 	        	
-	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
+	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) + "\" "
 	        				+ "ID=\"" + ParamOrders + "\" "
-	        				+ "CHECKED/> Orders ");
+	        				+ "CHECKED/> Orders "
+	        				+ "</LABEL>");
 	        	
 	        	//out.println("<INPUT TYPE=\"CHECKBOX\" "
         		//			+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) + "\" "
         		//			+ "/> Sales Lead ");
 	        	
-	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
+	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
     					+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) + "\" "
-    					+ "CHECKED /> Purchase Order ");
+    					+ "CHECKED /> Purchase Order "
+    					+ "</LABEL>");
 	        	
 
 	    		//Sales Groups
@@ -145,7 +150,7 @@ import java.util.ArrayList;
 	    				}
 
 	    				arrSalesGroupControls.add(
-    						"<LABEL NAME = \"" + "SALESGROUPLABELSALES" + sSalesGroupCode + " \" >"
+    						"<LABEL>"
 	    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
 	    						+ sSalesGroupCode
 	    						//+ SALESGROUP_PARAM_SEPARATOR
@@ -220,18 +225,30 @@ import java.util.ArrayList;
 							 + " - "
 							 + sUserFullName);
 					if(bAllResolved && sResponsibleUserID.compareToIgnoreCase("0") != 0) {
-						sResponsibleAllResolvedUsersList.add((String) "<INPUT TYPE=CHECKBOX" + (bCheckAllUsers?" checked":"")  
+						sResponsibleAllResolvedUsersList.add((String) "<LABEL><INPUT TYPE=CHECKBOX" + (bCheckAllUsers?" checked":"")  
 			        			+ " ID=\"RESOLVEDUSER\" NAME=\"" + UserMarker 
 			        			+ sResponsibleUserID 
 			        			+ "\">&nbsp;" 
 			        			+ sResponsibleUserFullName.trim().replace(" ", "&nbsp;")
+			        			+ "</LABEL>"
+			        			//Include a hidden field for the user's full name:
+			        			+ "<INPUT TYPE=HIDDEN"
+			        				+ " NAME = '" + FULL_NAME_PARAMETER_BASE + sResponsibleUserID + "'"
+			        				+ " VALUE = '" + sResponsibleUserFullName.trim() + "'"
+			        				+ ">"
 			        			);					
 					}else {
-						sResponsibleUsersList.add((String) "<INPUT TYPE=CHECKBOX" + (bCheckAllUsers?" checked":"")  
+						sResponsibleUsersList.add((String) "<LABEL><INPUT TYPE=CHECKBOX" + (bCheckAllUsers?" checked":"")  
 			        			+ " ID=\"UNRESOLVEDUSER\" NAME=\"" + UserMarker 
 			        			+ sResponsibleUserID 
 			        			+ "\">&nbsp;" 
 			        			+ sResponsibleUserFullName.trim().replace(" ", "&nbsp;")
+			        			+ "</LABEL>"
+			        			//Include a hidden field for the user's full name:
+			        			+ "<INPUT TYPE=HIDDEN"
+			        				+ " NAME = '" + FULL_NAME_PARAMETER_BASE + sResponsibleUserID + "'"
+			        				+ " VALUE = '" + sResponsibleUserFullName.trim() + "'"
+			        				+ ">"
 			        			);
 					}					
 		    	}
@@ -341,10 +358,7 @@ import java.util.ArrayList;
 	        	out.println(getScript());
 			    
 		    } catch (Exception ex) {
-		        // handle any errors
-		    	System.out.println("Error in SMCriticalDateReportCriteriaSelection class!!");
-		        System.out.println("SQLException: " + ex.getMessage());
-		        out.println("<BR>Error [] selecting critical dates - with SQL: '" + sSQL + "' - " + ex.getMessage());
+		        out.println("<BR>Error [1552087707] selecting critical dates - with SQL: '" + sSQL + "' - " + ex.getMessage());
 		    }
 	 
 		    out.println("</BODY></HTML>");

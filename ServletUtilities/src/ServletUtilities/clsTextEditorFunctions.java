@@ -136,6 +136,11 @@ public class clsTextEditorFunctions {
 			+ "doc" + sFieldName + ".body.addEventListener('input',function() {\n"			
 			+  	onChange + "\n"		
 			+ "});\n"
+			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"			
+			+  	"e.preventDefault();" + "\n"
+			+ "  var text = (e.originalEvent || e).clipboardData.getData('text/plain');" + "\n"		
+			+ "  doc" + sFieldName + ".execCommand(\"insertHTML\", false, text);" + "\n"		
+			+ "});\n"
 			+ "</script>\n";
 		return s;
 	

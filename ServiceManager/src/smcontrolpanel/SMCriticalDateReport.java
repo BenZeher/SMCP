@@ -12,6 +12,7 @@ import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesalesgroups;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 
@@ -31,6 +32,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 			ArrayList <String> alSelectedUsers,
 			ArrayList <String> alTypes,
 			ArrayList <String> alStatus,
+			ArrayList <String>arrSalesGroupCodes,
 			String sOrderBy,
 			String sAssignedBy,
 			String sCurrentURL,
@@ -46,6 +48,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 				alSelectedUsers,
 				alTypes,
 				alStatus,
+				arrSalesGroupCodes,
 				sAssignedBy,
 				sOrderBy);
 		//end SQL statement
@@ -363,6 +366,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 			ArrayList<String> alSelectedUsers,
 			ArrayList <String> alTypes,
 			ArrayList <String> alStatus,
+			ArrayList <String> arrSalesGroupCodes,
 			String sAssignedBy,
 			String sOrderBy){
 
@@ -417,7 +421,11 @@ public class SMCriticalDateReport extends java.lang.Object{
 			if (Integer.parseInt(alTypes.get(i)) ==  SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTableorderheaders.TableName 
 					+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
-					+ SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber;
+					+ SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber
+					+ " LEFT JOIN " + SMTablesalesgroups.TableName
+					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup
+					+ " = " + SMTablesalesgroups.iSalesGroupId
+					;
 			}	
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTablebids.TableName
@@ -474,6 +482,19 @@ public class SMCriticalDateReport extends java.lang.Object{
 			+ sAssignedBy + ")";
 		}
 		
+		//If the user chose to list critical dates for ORDERS, then qualify the SQL statement using the selected sales groups:
+		for (int i = 0; i < alTypes.size(); i++){
+			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) {
+				SQL += " AND ("
+					//We have to add this because if the user selects orders AND purchase orders, for example, then any purchase order records won't have a sales group code - it will be null instead:
+					+ " (" +  SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " IS NULL)";
+				for (int j = 0; j < arrSalesGroupCodes.size(); j++){
+					SQL += " OR (" + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " = '" + arrSalesGroupCodes.get(j) + "')";
+				}
+				SQL += ")";  //End the 'AND' clause
+				break;
+			}
+		}
 		
 		SQL += ")"; //End the 'WHERE' clause
 		
@@ -488,6 +509,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 					SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate ;
 					
 		}
+		
+		//System.out.println("[1552014955] - SQL = '" + SQL + "'");
 		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " SQL: " + SQL);

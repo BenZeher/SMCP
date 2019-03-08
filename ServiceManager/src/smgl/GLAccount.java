@@ -8,15 +8,37 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMBatchStatuses;
+import SMDataDefinition.SMTableapaccountsets;
+import SMDataDefinition.SMTableapbatches;
+import SMDataDefinition.SMTableapdistributioncodes;
+import SMDataDefinition.SMTableaptransactionlines;
+import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableapvendorgroups;
+import SMDataDefinition.SMTablebkaccountentries;
+import SMDataDefinition.SMTablebkbanks;
+import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
 import SMDataDefinition.SMTableglacctsegmentvalues;
+import SMDataDefinition.SMTablegloptions;
+import SMDataDefinition.SMTableicaccountsets;
+import SMDataDefinition.SMTableiccategories;
+import SMDataDefinition.SMTableicpoheaders;
+import SMDataDefinition.SMTableicpoinvoiceheaders;
+import SMDataDefinition.SMTableicpoinvoicelines;
+import SMDataDefinition.SMTableicpolines;
+import SMDataDefinition.SMTableicporeceiptheaders;
+import SMDataDefinition.SMTableicporeceiptlines;
+import SMDataDefinition.SMTableicvendors;
+import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsServletUtilities;
 import smar.ARSQLs;
 import smar.ARUtilities;
+import smic.ICEntryBatch;
 
 public class GLAccount extends java.lang.Object{
 	
@@ -668,7 +690,7 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//transactionentries - scontrolacct
-		SQL = ARSQLs.Get_Unposted_Entries_For_GLAcct(sGLAcct);
+		SQL = ARSQLs.Get_Unposted_AR_Entries_For_GLAcct(sGLAcct);
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -688,7 +710,7 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//transactionlines - sglacct
-		SQL = ARSQLs.Get_Unposted_TransactionLines_For_GLAcct(sGLAcct);
+		SQL = ARSQLs.Get_Unposted_AR_Entry_Lines_For_GLAcct(sGLAcct);
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -706,6 +728,457 @@ public class GLAccount extends java.lang.Object{
 			m_sErrorMessageArray.add("Error [1518554376] - checking transaction lines to delete GL - " + e.getMessage());
 			return false;
 		}
+		
+		//Make sure all AP batches are posted:
+		SQL = "SELECT " + SMTableapbatches.lbatchnumber + " FROM " + SMTableapbatches.TableName
+			+ " WHERE ("
+				+ "(" + SMTableapbatches.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+				+ " AND (" + SMTableapbatches.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (8)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074477] - there are AP batches that must be posted OR deleted before deleting a GL account.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074478] - checking AP batch statuses to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//Make sure all IC batches are posted:
+		SQL = "SELECT " + ICEntryBatch.lbatchnumber + " FROM " + ICEntryBatch.TableName
+			+ " WHERE ("
+				+ "(" + ICEntryBatch.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+				+ " AND (" + ICEntryBatch.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (9)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074479] - there are IC batches that must be posted OR deleted before deleting a GL account.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074480] - checking IC batch statuses to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//Make sure this isn't the current GL 'closing' account:
+		SQL = "SELECT " + SMTablegloptions.sclosingaccount + " FROM " + SMTablegloptions.TableName
+			+ " WHERE ("
+				+ "(" + SMTablegloptions.sclosingaccount + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (10)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074481] - you are trying to delete the GL closing account.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074482] - checking the GL closing account to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//AP Account sets:
+		SQL = "SELECT " + SMTableapaccountsets.lid + " FROM " + SMTableapaccountsets.TableName
+			+ " WHERE ("
+				+ "(" + SMTableapaccountsets.spayablescontrolacct + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableapaccountsets.sprepaymentacct + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableapaccountsets.spurchasediscountacct + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (11)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074483] - this account is included in at least one AP account set.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074484] - checking the AP account sets to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//AP transaction lines:
+		SQL = "SELECT " + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.lid + " FROM " + SMTableaptransactionlines.TableName
+			+ " LEFT JOIN " + SMTableaptransactions.TableName + " ON "
+			+ SMTableaptransactions.TableName + "." + SMTableaptransactions.lid + "=" 
+			+ SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.ltransactionheaderid
+			+ " WHERE ("
+				+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.bdcurrentamt + " != 0.00)"
+				+ " AND ("
+				+ " (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.scontrolacct + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.sdistributionacct + " = '" + sGLAcct + "')"
+				+ ")"
+			+ ")"
+			;
+			try{
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					context,
+					sDBIB,
+					"MySQL",
+					this.toString() + ".delete (12)");
+				if(rs.next()){
+					m_sErrorMessageArray.add("Error [1552074485] - this account is included on some open AP transactions.");
+					rs.close();
+					return false;
+				}
+				rs.close();
+			}catch(SQLException e){
+				m_sErrorMessageArray.add("Error [1552074486] - checking the AP transactions to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+				return false;
+			}
+		
+		//AP vendor groups:
+		SQL = "SELECT " + SMTableapvendorgroups.lid + " FROM " + SMTableapvendorgroups.TableName
+			+ " WHERE ("
+				+ "(" + SMTableapvendorgroups.sglacctusedfordistribution + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (13)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074487] - this account is used as the distribtuion account in an AP Vendor Group.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074488] - checking the AP vendor groups to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//AP Distribution codes:
+		SQL = "SELECT " + SMTableapdistributioncodes.lid + " FROM " + SMTableapdistributioncodes.TableName
+			+ " WHERE ("
+				+ "(" + SMTableapdistributioncodes.sglacct + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (14)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074489] - this account is used as the distribtuion account in an AP Vendor Group.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074490] - checking the AP distribution codes to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//Fixed assets
+		SQL = "SELECT " + SMTablefamaster.sAssetNumber + " FROM " + SMTablefamaster.TableName
+			+ " WHERE ("
+				//If the current value is <= salvage value, there's no depreciation happening anymore.
+				+ "(" + SMTablefamaster.bdCurrentValue + " > " + SMTablefamaster.bdSalvageValue + ")" 
+				+ " AND (" 
+					+ "(" + SMTablefamaster.sDepreciationGLAcct + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablefamaster.sLossOrGainGL + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablefamaster.sNotePayableGLAcct + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablefamaster.sAccumulatedDepreciationGLAcct + " = '" + sGLAcct + "')"
+				+ ")"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (15)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074491] - this account is included on at least one Asset in Fixed Assets.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074492] - checking Fixed Assets to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+			
+		//IC Categories:
+		SQL = "SELECT " + SMTableiccategories.sCategoryCode + " FROM " + SMTableiccategories.TableName
+			+ " WHERE ("
+				+ "(" + SMTableiccategories.sCostofGoodsSoldAccount + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTableiccategories.sSalesAccount + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (16)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074493] - this account is included on at least one IC Category.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074494] - checking IC Categories to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}	
+		
+		//IC PO Lines
+		SQL = "SELECT " + SMTableicpolines.TableName + "." + SMTableicpolines.lid + " FROM " + SMTableicpolines.TableName
+			+ " LEFT JOIN " + SMTableicpoheaders.TableName + " ON "
+			+ SMTableicpolines.TableName + "." + SMTableicpolines.lpoheaderid + " = "
+			+ SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
+			+ " WHERE ("
+				+ "(" + SMTableicpolines.TableName + "." + SMTableicpolines.sglexpenseacct + " = '" + sGLAcct + "')"
+				+ " AND (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus + " != " + Integer.toString(SMTableicpoheaders.STATUS_COMPLETE) + ")"
+				+ " AND (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus + " != " + Integer.toString(SMTableicpoheaders.STATUS_DELETED) + ")"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (17)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074495] - this account is included on at least open PO.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074496] - checking open PO's to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//IC PO Receipt Lines
+		SQL = "SELECT " + SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.lid + " FROM " + SMTableicporeceiptlines.TableName
+			+ " LEFT JOIN " + SMTableicporeceiptheaders.TableName + " ON "
+			+ SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.lreceiptheaderid + " = "
+			+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid
+			+ " WHERE ("
+				+ "(" + SMTableicporeceiptlines.TableName + "." +SMTableicporeceiptlines.sglexpenseacct + " = '" + sGLAcct + "')"
+				+ " AND (" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lstatus + " != " + Integer.toString(SMTableicporeceiptheaders.STATUS_DELETED) + ")"
+				+ " AND (" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpostedtoic + " = 0)"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (18)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074497] - this account is included on at least open unposted IC receipts.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074498] - checking IC unposted receipts to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//IC Vendors
+		SQL = "SELECT " + SMTableicvendors.svendoracct + " FROM " + SMTableicvendors.TableName
+			+ " WHERE ("
+				+ "(" + SMTableicvendors.sdefaultexpenseacct + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (19)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074499] - this account is used as the default expense account on at least one AP Vendor.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074500] - checking the AP vendors to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//Locations:
+		SQL = "SELECT " + SMTablelocations.sLocation + " FROM " + SMTablelocations.TableName
+			+ " WHERE ("
+				+ "(" + SMTablelocations.sGLInventoryAcct + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablelocations.sGLPayableClearingAcct + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablelocations.sGLTransferClearingAcct + " = '" + sGLAcct + "')"
+					+ " OR (" + SMTablelocations.sGLWriteOffAcct + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (20)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074501] - this account is included on at least one IC Location.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074502] - checking IC Locations to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}	
+
+		//Bank account entries
+		SQL = "SELECT " + SMTablebkaccountentries.lid + " FROM " + SMTablebkaccountentries.TableName
+			+ " WHERE ("
+				+ "(" + SMTablebkaccountentries.icleared + " = 0)"
+				+ " AND (" + SMTablebkaccountentries.sglaccount + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (21)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074503] - this account is used on at least one uncleared bank account entry.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074504] - checking the uncleared bank account entries to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//Banks
+		SQL = "SELECT " + SMTablebkbanks.lid + " FROM " + SMTablebkbanks.TableName
+			+ " WHERE ("
+				+ "(" + SMTablebkbanks.sglaccount + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (22)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074505] - this account is used on at least one bank account.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074506] - checking the bank accounts to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//IC Account Sets
+		SQL = "SELECT " + SMTableicaccountsets.sAccountSetCode + " FROM " + SMTableicaccountsets.TableName
+			+ " WHERE ("
+				+ "(" + SMTableicaccountsets.sAdjustmentWriteOffAccount + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableicaccountsets.sInventoryAccount + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableicaccountsets.sNonStockClearingAccount + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableicaccountsets.sPayablesClearingAccount + " = '" + sGLAcct + "')"
+				+ " OR (" + SMTableicaccountsets.sTransferClearingAccount + " = '" + sGLAcct + "')"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (23)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074507] - this account is included in at least one IC account set.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074508] - checking the IC account sets to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//IC PO Invoice Lines:
+		SQL = "SELECT " + SMTableicpoinvoicelines.TableName + "." + SMTableicpoinvoicelines.lid + " FROM " + SMTableicpoinvoicelines.TableName
+			+ " LEFT JOIN " + SMTableicpoinvoiceheaders.TableName + " ON "
+			+ SMTableicpoinvoicelines.TableName + "." + SMTableicpoinvoicelines.lpoinvoiceheaderid + " = "
+			+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid
+			+ " WHERE ("
+				+ "(" + SMTableicpoinvoicelines.TableName + "." + SMTableicpoinvoicelines.sexpenseaccount + " = '" + sGLAcct + "')"
+				+ " AND (" + SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lexportsequencenumber + " = 0)"
+			+ ")"
+		;
+		try{
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context,
+				sDBIB,
+				"MySQL",
+				this.toString() + ".delete (24)");
+			if(rs.next()){
+				m_sErrorMessageArray.add("Error [1552074509] - this account is included on at least open unexported IC Invoices.");
+				rs.close();
+				return false;
+			}
+			rs.close();
+		}catch(SQLException e){
+			m_sErrorMessageArray.add("Error [1552074510] - checking unexported IC Invoices to delete GL with SQL '" + SQL + "' - "+ e.getMessage());
+			return false;
+		}
+		
+		//finally, delete the GL:
 		try{
 			SQL = ARSQLs.Delete_GL_Account_SQL(sGLAcct);
 			if(!clsDatabaseFunctions.executeSQL(
@@ -721,7 +1194,6 @@ public class GLAccount extends java.lang.Object{
 			m_sErrorMessageArray.add("Error [1518554377] - deleting GL Account - " + e.getMessage());
 			return false;
 		}
-		
 		return true;
 	}
 	public String getM_sacctid() {

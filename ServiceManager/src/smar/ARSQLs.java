@@ -1250,7 +1250,11 @@ public class ARSQLs extends SMClasses.MySQLs {
 				+ " OR (" + SMTableinvoicedetails.sRevenueGLAcct + " = '" + sGLAcct + "')"
 			+ ")"
 			
-			+ " AND (" + SMTableinvoiceheaders.iExportedToAR + " != 1)"
+			+ " AND ("
+			
+			+ " (" + SMTableinvoiceheaders.iExportedToAR + " != 1) OR (" + SMTableinvoiceheaders.iExportedToIC + " != 1)"
+			
+			+ ")"
 			
 			+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
 				+ " = " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
@@ -1453,7 +1457,7 @@ public class ARSQLs extends SMClasses.MySQLs {
 		return SQL;
 	}
 	//Get_Unposted_Entries_For_GLAcct
-	public static String Get_Unposted_Entries_For_GLAcct(String sGLAcct){
+	public static String Get_Unposted_AR_Entries_For_GLAcct(String sGLAcct){
 		SQL = "SELECT " + SMTableentries.lid 
 		+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
 		+ " WHERE ("
@@ -1469,7 +1473,7 @@ public class ARSQLs extends SMClasses.MySQLs {
 		return SQL;
 	}
 	//Get_Unposted_TransactionLines_For_GLAcct
-	public static String Get_Unposted_TransactionLines_For_GLAcct(String sGLAcct){
+	public static String Get_Unposted_AR_Entry_Lines_For_GLAcct(String sGLAcct){
 		SQL = "SELECT " + SMTableentries.TableName + "." + SMTableentries.lid 
 		+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
 		 + ", " + SMTableentrylines.TableName

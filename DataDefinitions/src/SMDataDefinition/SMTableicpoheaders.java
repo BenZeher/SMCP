@@ -96,10 +96,6 @@ public class SMTableicpoheaders {
 	public static final int STATUS_COMPLETE = 2;
 	public static final int STATUS_DELETED = 3;
 	
-	public static final int PHASE_ON_HOLD = 0;
-	public static final int PHASE_RELEASED_FOR_FABRICATION = 1;
-	public static final int PHASE_CONFIRMED = 2;
-	
 	public static String getStatusDescription(int iStatus){
 		switch (iStatus){
 			case STATUS_ENTERED:

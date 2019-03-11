@@ -14,6 +14,7 @@ public class SMTableglaccounts {
 	public static String iaddedbyACCPACconversion = "iaddedbyACCPACconversion";
 	public static String lstructureid = "lstructureid";
 	public static String laccountgroupid = "laccountgroupid";
+	public static String bdannualbudget = "bdannualbudget";
 	//public static String inormalbalancetype = "inormalbalancetype";  //ACCTBAL in ACCPAC
 	//public static String iconsolidated = "iconsolidated";  //CONSLDSW in ACCPAC
 	
@@ -23,6 +24,8 @@ public class SMTableglaccounts {
 	public static int sFormattedAcctLength = 60;
 	public static int sDescLength = 60;
 	public static int sAcctTypeLength = 1;
+	
+	public static int bdannualbudgetScale = 2;
 	
 	/*
 	public static final int NORMAL_BALANCE_TYPE_DEBIT = 1;

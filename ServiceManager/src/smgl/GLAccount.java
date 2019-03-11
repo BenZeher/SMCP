@@ -1,5 +1,6 @@
 package smgl;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
 import SMDataDefinition.SMTableapaccountsets;
+import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapdistributioncodes;
 import SMDataDefinition.SMTableaptransactionlines;
@@ -35,7 +37,9 @@ import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsValidateFormFields;
 import smar.ARSQLs;
 import smar.ARUtilities;
 import smic.ICEntryBatch;
@@ -52,6 +56,7 @@ public class GLAccount extends java.lang.Object{
 	public static final String Paramiallowaspoexpense = "iallowaspoexpense";
 	public static final String Paramlaccountstructureid = "laccountstructureid";
 	public static final String Paramlaccountgroupid = "laccountgroupid";
+	public static final String Parambdannualbudget = "bdannualbudget";
 	public static final String Paramobjectname = "GL Account";
 	
 	public static final String ACCOUNT_SEGMENT_DELIMITER = "-";
@@ -65,6 +70,7 @@ public class GLAccount extends java.lang.Object{
 	private String m_iallowaspoexpense;
 	private String m_laccountstructureid;
 	private String m_laccountgroupid;
+	private String m_sbdannualbudget;
 	private String m_iNewRecord;
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
 
@@ -80,6 +86,7 @@ public class GLAccount extends java.lang.Object{
 		m_iallowaspoexpense = "1";
 		m_laccountstructureid = "0";
 		m_laccountgroupid = "0";
+		m_sbdannualbudget = "0.00";
 	}
     public void loadFromHTTPRequest(HttpServletRequest req){
     	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
@@ -102,6 +109,10 @@ public class GLAccount extends java.lang.Object{
 		if (m_laccountstructureid.compareToIgnoreCase("") == 0){ m_laccountstructureid = "0"; }
 		m_laccountgroupid = ARUtilities.get_Request_Parameter(Paramlaccountgroupid, req).trim().replace("&quot;", "\"");
 		if (m_laccountgroupid.compareToIgnoreCase("") == 0){ m_laccountgroupid = "0"; }
+		m_sbdannualbudget = ARUtilities.get_Request_Parameter(Parambdannualbudget, req).trim().replace("&quot;", "\"");
+		if (getsbdannualbudget().compareToIgnoreCase("") == 0){
+			setsbdannualbudget("0.00");
+		}
     }
     public boolean load (
     		Connection conn
@@ -129,6 +140,7 @@ public class GLAccount extends java.lang.Object{
 			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));
 			m_laccountstructureid = Long.toString(rs.getLong(SMTableglaccounts.lstructureid));
 			m_laccountgroupid = Long.toString(rs.getLong(SMTableglaccounts.laccountgroupid));
+			m_sbdannualbudget = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableglaccounts.bdannualbudget));
 			m_iNewRecord = "0";
 			rs.close();
 		}catch (SQLException ex){
@@ -170,6 +182,7 @@ public class GLAccount extends java.lang.Object{
     			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));
     			m_laccountstructureid =  Long.toString(rs.getLong(SMTableglaccounts.lstructureid));
     			m_laccountgroupid =  Long.toString(rs.getLong(SMTableglaccounts.laccountgroupid));
+    			m_sbdannualbudget = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableglaccounts.bdannualbudget));
     			m_iNewRecord = "0";
     			rs.close();
     		}catch (SQLException ex){
@@ -212,7 +225,8 @@ public class GLAccount extends java.lang.Object{
 						m_icostcenterid,
 						m_iallowaspoexpense,
 						m_laccountstructureid,
-						m_laccountgroupid
+						m_laccountgroupid,
+						m_sbdannualbudget
 						);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE SQL: '" + SQL + "'.");
@@ -240,7 +254,8 @@ public class GLAccount extends java.lang.Object{
 						m_icostcenterid,
 						m_iallowaspoexpense,
 						m_laccountstructureid,
-						m_laccountgroupid
+						m_laccountgroupid,
+						m_sbdannualbudget
 						);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute INSERT SQL '" + SQL + "'.");
@@ -320,6 +335,22 @@ public class GLAccount extends java.lang.Object{
 			rsCount.close();
 		} catch (SQLException e1) {
 			m_sErrorMessageArray.add("Error [1528313033] - could not get count of GL Account Groups - " + e1.getMessage());
+			bEntriesAreValid = false;
+		}
+		
+		//Annual budget:
+		setsbdannualbudget(getsbdannualbudget().replaceAll(",", "").trim());
+		try {
+			setsbdannualbudget(clsValidateFormFields.validateBigdecimalField(
+				getsbdannualbudget(), 
+				"Annual Budget", 
+				SMTableglaccounts.bdannualbudgetScale,
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
+				).replaceAll(",", "")
+			);
+		} catch (Exception e) {
+			m_sErrorMessageArray.add("Error [1552315800] - error reading annual budget '" + getsbdannualbudget() + "' - " + e.getMessage());
 			bEntriesAreValid = false;
 		}
     	
@@ -567,6 +598,7 @@ public class GLAccount extends java.lang.Object{
 		sQueryString += "&" + Paramicostcenterid + "=" + ARUtilities.URLEncode(m_icostcenterid);
 		sQueryString += "&" + Paramlaccountstructureid + "=" + ARUtilities.URLEncode(m_laccountstructureid);
 		sQueryString += "&" + Paramlaccountgroupid + "=" + ARUtilities.URLEncode(m_laccountgroupid);
+		sQueryString += "&" + Parambdannualbudget + "=" + ARUtilities.URLEncode(getsbdannualbudget());
 		
 		if (m_iallowaspoexpense.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramiallowaspoexpense + "=" + m_iallowaspoexpense;
@@ -1249,6 +1281,12 @@ public class GLAccount extends java.lang.Object{
 	}
 	public String getM_laccountgroupid() {
 		return m_laccountgroupid;
+	}
+	public void setsbdannualbudget(String sbdannualbudget) {
+		m_sbdannualbudget = sbdannualbudget.trim();
+	}
+	public String getsbdannualbudget() {
+		return m_sbdannualbudget;
 	}
 	public String getM_iNewRecord() {
 		return m_iNewRecord;

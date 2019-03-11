@@ -12,12 +12,14 @@ import ConnectionPool.PoolUtilities;
 
 public class clsDatabaseFunctions {
 
-	public static String FormatSQLStatement(String s) {
+	public static String FormatSQLStatement(String s){
 		
 		if (s != null){
 			s = s.replace("'", "''");
 			s = s.replace("\\", "\\\\");
 			s = s.replace("“", "\"");
+			
+			//Filter Microsoft Quotes
 			//ASCII Values
 			int iAsciiLeftSingleQuotationMark = 145;
 			int iAsciiRightSingleQuotationMark = 146;
@@ -41,8 +43,16 @@ public class clsDatabaseFunctions {
 					newString.append(s.charAt(i));
 				}
 			}
-			if(newString.length() != 0)
-     			s = newString.toString();
+			
+			//Remove all script tags if they exist
+		    String startTag = "<script";
+		    String endTag = "</script>";
+		    if(newString.toString().contains(startTag)) {
+		    	 //removing script tags
+			    newString.replace(newString.toString().indexOf(startTag), newString.toString().indexOf(endTag) + endTag.length(), "");
+		    }	   
+		    
+     		s = newString.toString();
 		}
 	
 		return s;

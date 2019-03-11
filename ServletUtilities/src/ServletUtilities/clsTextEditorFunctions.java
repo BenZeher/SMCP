@@ -130,17 +130,24 @@ public class clsTextEditorFunctions {
 			+ "doc" + sFieldName + ".close();\n"
 			+ sAutoWrapText		
 			+ "doc" + sFieldName + ".body.innerHTML = document.getElementById(\"" + sFieldName + "\").value;\n"
+			
+			//Update the text area any time focus comes off the frame.
 			+ "doc" + sFieldName + ".body.addEventListener('blur',function(e) {\n"			
 			+ "		document.getElementById(\""+ sFieldName + "\").value = doc" + sFieldName + ".body.innerHTML.replace(\"<br>\",\"<br/>\").replace(\"\\n\",\"\").replace(\"\\r\",\"\");\n"			
 			+ "});\n"
+			
+			//Execute onChange when anything is entered into the frame
 			+ "doc" + sFieldName + ".body.addEventListener('input',function() {\n"			
 			+  	onChange + "\n"		
 			+ "});\n"
+			
+			//Only paste into the frame as plain text.
 			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"			
 			+  	"e.preventDefault();" + "\n"
 			+ "  var text = (e.originalEvent || e).clipboardData.getData('text/plain');" + "\n"		
 			+ "  doc" + sFieldName + ".execCommand(\"insertHTML\", false, text);" + "\n"		
 			+ "});\n"
+			
 			+ "</script>\n";
 		return s;
 	

@@ -1111,7 +1111,8 @@ public class MySQLs {
 			String sCostCenter,
 			String sAllowAsAPOExpense,
 			String sStructureID,
-			String sAccountGroupID
+			String sAccountGroupID,
+			String sAnnualBudget
 			){
 		
 		String sSQL = "UPDATE " + SMTableglaccounts.TableName 
@@ -1124,6 +1125,7 @@ public class MySQLs {
 			+ ", " + SMTableglaccounts.iallowaspoexpense + " = " + sAllowAsAPOExpense
 			+ ", " + SMTableglaccounts.lstructureid + " = " + sStructureID
 			+ ", " + SMTableglaccounts.laccountgroupid + " = " + sAccountGroupID
+			+ ", " + SMTableglaccounts.bdannualbudget + " = " + sAnnualBudget
 			+ " WHERE ("
 				+ SMTableglaccounts.sAcctID + " = '" + sGLAccountID + "'"
 			+ ")";
@@ -1141,7 +1143,8 @@ public class MySQLs {
 			String sCostCenter,
 			String sAllowAsAPOExpense,
 			String sStructureID,
-			String sAccountGroupID
+			String sAccountGroupID,
+			String sAnnualBudget
 			){
 		
 		String sSQL = "INSERT INTO " 
@@ -1156,6 +1159,7 @@ public class MySQLs {
 				+ ", " + SMTableglaccounts.iallowaspoexpense
 				+ ", " + SMTableglaccounts.lstructureid
 				+ ", " + SMTableglaccounts.laccountgroupid
+				+ ", " + SMTableglaccounts.bdannualbudget
 			+ ") VALUES ("
 				+ "'" + sGLAccountID + "'"
 				+ ", '" + sFormattedID + "'"
@@ -1166,6 +1170,7 @@ public class MySQLs {
 				+ ", " + sAllowAsAPOExpense
 				+ ", " + sStructureID
 				+ ", " + sAccountGroupID
+				+ ", " + sAnnualBudget
 			+ ")";
 		
 		//System.out.println("Insert_GL_Account_SQL = " + sSQL);

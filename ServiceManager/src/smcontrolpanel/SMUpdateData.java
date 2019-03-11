@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1356;
+	private static final int m_CurrentDatabaseVersion = 1357;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "3/8/2019";
+	private static final String m_sLastRevisionDate = "3/11/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -13881,6 +13881,17 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE smoptions"
 					+ " DROP COLUMN sbankname"
 					+ ", DROP COLUMN sbankrecglacct"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1356:
+				//Added by TJR 3/11/2019
+				SQL = "ALTER TABLE glaccounts"
+					+ " ADD COLUMN bdannualbudget DECIMAL(17,2) NOT NULL DEFAULT '0.00' COMMENT 'The annual budget for the GL account.'";
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

@@ -345,6 +345,17 @@ public class GLEditAccountsEdit extends HttpServlet {
 				)
 		);
 		
+		//Annual budget:
+		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        		GLAccount.Parambdannualbudget, 
+        		glacct.getsbdannualbudget().replace("\"", "&quot;"), 
+        		13, 
+        		"Annual budget:", 
+        		"",
+        		"7"
+        	)
+        );
+		
         pwOut.println("</TABLE>");
         pwOut.println("<BR>");
         pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");

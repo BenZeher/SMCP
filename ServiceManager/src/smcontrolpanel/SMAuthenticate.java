@@ -31,6 +31,7 @@ public class SMAuthenticate{
 			ServletContext context,
 			Long lFunctionID
 	){
+		
 		res.setContentType("text/html");
 		PrintWriter out;
 		try {
@@ -431,7 +432,6 @@ public class SMAuthenticate{
 			PrintWriter pwOut, 
 			ServletContext context
 	){
-
 		boolean bResult = true;
 		//Read the company name from the company profile:
 		String SQL = "SELECT"

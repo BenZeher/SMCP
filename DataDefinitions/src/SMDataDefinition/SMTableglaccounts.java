@@ -15,7 +15,7 @@ public class SMTableglaccounts {
 	public static String lstructureid = "lstructureid";
 	public static String laccountgroupid = "laccountgroupid";
 	public static String bdannualbudget = "bdannualbudget";
-	//public static String inormalbalancetype = "inormalbalancetype";  //ACCTBAL in ACCPAC
+	public static String inormalbalancetype = "inormalbalancetype";  //ACCTBAL in ACCPAC
 	//public static String iconsolidated = "iconsolidated";  //CONSLDSW in ACCPAC
 	
 	
@@ -27,13 +27,13 @@ public class SMTableglaccounts {
 	
 	public static int bdannualbudgetScale = 2;
 	
-	/*
 	public static final int NORMAL_BALANCE_TYPE_DEBIT = 1;
 	public static final int NORMAL_BALANCE_TYPE_CREDIT = 2;
-	
+
+	/*
 	public static final int CONSOLIDATED_SWITCH_FALSE = 0;
 	public static final int CONSOLIDATED_SWITCH_TRUE = 1;
-	
+	*/
 	public String getNormalBalanceDescription(int iNormalBalanceType){
 		
 		switch (iNormalBalanceType){
@@ -45,7 +45,7 @@ public class SMTableglaccounts {
 			return "Debit";
 		}
 	}
-	
+	/*
 	public String getConsolidationTypeDescription(int iConsolidationType){
 		
 		switch (iConsolidationType){

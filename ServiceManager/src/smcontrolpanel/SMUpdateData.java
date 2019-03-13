@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1357;
+	private static final int m_CurrentDatabaseVersion = 1358;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "3/11/2019";
+	private static final String m_sLastRevisionDate = "3/13/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -84,7 +84,6 @@ public class SMUpdateData extends java.lang.Object{
 	private void updateData (Connection conn, String sUserID, String sDBID) throws Exception{
 
 		//First, update the data
-
 		//Store the version we started with so we can show it later :
 		try {
 			m_iReadDatabaseVersion = getReadDatabaseVersion(conn);
@@ -94,6 +93,7 @@ public class SMUpdateData extends java.lang.Object{
 
 		//Update a local variable we can use in the loop :
 		int iReadDatabaseVersion = m_iReadDatabaseVersion;
+		
 		while (iReadDatabaseVersion < m_CurrentDatabaseVersion){
 			//Log the entry:
 			log.writeEntry(
@@ -13897,7 +13897,18 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;
 			//END CASE
-
+				
+			//BEGIN CASE
+			case 1357:
+				//Added by TJR 3/13/2019
+				SQL = "ALTER TABLE glaccounts"
+					+ " ADD COLUMN inormalbalancetype INT(11) NOT NULL DEFAULT '0' COMMENT 'Indicates account type (credit or debit balance).'";
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
 		//End switch:
 		}
 		

@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1358;
+	private static final int m_CurrentDatabaseVersion = 1359;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "3/13/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -13903,6 +13903,29 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 3/13/2019
 				SQL = "ALTER TABLE glaccounts"
 					+ " ADD COLUMN inormalbalancetype INT(11) NOT NULL DEFAULT '0' COMMENT 'Indicates account type (credit or debit balance).'";
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1358:
+				//Added by TJR 3/13/2019
+				SQL = "CREATE TABLE `glfinancialstatementdata` ("
+					+ "`sacctid` varchar(45) NOT NULL DEFAULT '' COMMENT '[090101]',"
+					+ "`ifiscalyear` int(11) NOT NULL DEFAULT '0',"
+					+ "`ifiscalperiod` int(11) NOT NULL DEFAULT '0',"
+					+ "`bdnetchangeforperiod` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdnetchangeforperiodpreviousyear` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdtotalyeartodate` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdtotalpreviousyeartodate` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdopeningbalancepreviousyear` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdopeningbalance` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdnetchangeforpreviousperiod` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "`bdnetchangeforpreviousperiodpreviousyear` decimal(17,2) NOT NULL DEFAULT '0.00',"
+					+ "PRIMARY KEY (`sacctid`,`ifiscalyear`,`ifiscalperiod`)"
+					+ ") ENGINE=InnoDB"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

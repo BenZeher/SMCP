@@ -417,6 +417,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			String SQLInsert = "INSERT INTO " + sTablename + "("
 				+ SMTableglaccounts.lActive
 				+ ", " + SMTableglaccounts.iaddedbyACCPACconversion
+				+ ", " + SMTableglaccounts.inormalbalancetype
 				+ ", " + SMTableglaccounts.laccountgroupid
 				+ ", " + SMTableglaccounts.lstructureid
 				+ ", " + SMTableglaccounts.sAcctID
@@ -428,6 +429,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ " SELECT"
 				+ " " + Integer.toString(rsGLAccts.getInt("ACTIVESW"))
 				+ ", 1"
+				+ ", " + Integer.toString(rsGLAccts.getInt("ACCTBAL"))
 				+ ", " + "ACCOUNTGROUPSTABLE." + SMTableglaccountgroups.lid
 				+ ", " + "STRUCTURESTABLE." + SMTableglaccountstructures.lid
 				+ ", '" + FormatSQLStatement(rsGLAccts.getString("ACCTID").trim()) + "'"
@@ -443,6 +445,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				
 				+ " ON DUPLICATE KEY UPDATE "
 				+ SMTableglaccounts.lActive + " = " + Integer.toString(rsGLAccts.getInt("ACTIVESW"))
+				+ ", " + SMTableglaccounts.inormalbalancetype + " = " + Integer.toString(rsGLAccts.getInt("ACCTBAL"))
 				+ ", " + SMTableglaccounts.laccountgroupid + " = " + "ACCOUNTGROUPSTABLE." + SMTableglaccountgroups.lid
 				+ ", " + SMTableglaccounts.lstructureid + " = " + "STRUCTURESTABLE." + SMTableglaccountstructures.lid
 				+ ", " + SMTableglaccounts.sAcctType + " = '" + FormatSQLStatement(rsGLAccts.getString("ACCTTYPE").trim()) + "'"

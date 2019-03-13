@@ -26,6 +26,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String s = "Rolling back critical changes to SMCP data...<BR>";
 		//We only remove CRITICAL data changes, i.e., those that might affect processing:
 
+		System.out.println("[1552318880] - starting reverseDataChanges.");
+		
 		//Remove any segments that we added from ACCPAC:
 		String SQL = "TRUNCATE " + SMTableglaccountsegments.TableName
 		;
@@ -36,6 +38,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1523028659] - could not remove GL account segments - " + e.getMessage());
 		}
 		s+= "GL Account Segments that were added from ACCPAC have been removed.<BR>";
+		
+		System.out.println("[1552318881] - removed segments.");
 		
 		//Remove any segment values that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglacctsegmentvalues.TableName
@@ -48,6 +52,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Segment Values that were added from ACCPAC have been removed.<BR>";
 		
+		System.out.println("[1552318882] - removed segment values.");
+		
 		//Remove any account structures that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountstructures.TableName
 		;
@@ -58,6 +64,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1523305753] - could not remove GL account structures - " + e.getMessage());
 		}
 		s+= "GL Account Structures that were added from ACCPAC have been removed.<BR>";
+		
+		System.out.println("[1552318883] - removed account structures.");
 		
 		//Remove any GL accounts that were added in a previous conversion:
 		SQL = "DELETE FROM " + SMTableglaccounts.TableName
@@ -73,6 +81,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Accounts that were added from ACCPAC have been removed.<BR>";
 		
+		System.out.println("[1552318884] - removed accounts created from ACCPAC.");
+		
 		//Remove any GL financial statement data that was added in a previous conversion:
 		SQL = "TRUNCATE " + SMTableglfiscalsets.TableName
 		;
@@ -83,6 +93,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1528222445] - could not remove GL financial statement data added by the conversion with SQL '" + SQL + "' - " + e.getMessage());
 		}
 		s+= "GL financial statement data that was added from ACCPAC have been removed.<BR>";
+		
+		System.out.println("[1552318885] - removed fiscal sets.");
 		
 		//Remove any segment values that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountgroups.TableName
@@ -95,7 +107,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Groups that were added from ACCPAC have been removed.<BR>";
 		
-		//Remove and fiscal calendars that we added from ACCPAC:
+		System.out.println("[1552318886] - removed account groups.");
+		
+		//Remove any fiscal calendars that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglfiscalperiods.TableName
 		;
 		try {
@@ -105,6 +119,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1530809060] - could not remove GL fiscal periods - " + e.getMessage());
 		}
 		s+= "GL Fiscal Periods that were added from ACCPAC have been removed.<BR>";
+		
+		System.out.println("[1552318887] - removed fiscal periods.");
 		
 		return s;
 	}

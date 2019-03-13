@@ -118,21 +118,21 @@ public class ServerSettingsFileParameters {
     
 	public static String getFullPathToResourceFolder(ServletContext context) throws Exception{
 		
-		String sFullFilePath = context.getRealPath(System.getProperty("file.separator"));
-		//Strip out the web app path from the absolute path:
-		sFullFilePath = sFullFilePath.replace(WebContextParameters.getInitWebAppName(context), "");
-		while (sFullFilePath.endsWith(System.getProperty("file.separator"))){
-			sFullFilePath = sFullFilePath.substring(0, sFullFilePath.length() - 1);
-		}
+		//Get catalina base
+		String sFullFilePath = System.getProperty( "catalina.base" );
 		
+		//Add webapps folder to the path
+		sFullFilePath += System.getProperty("file.separator") + "webapps";
+		
+		//Add local resources folder to the path
 		sFullFilePath = sFullFilePath + System.getProperty("file.separator");
-		
+		System.out.println("[1552416111] sFullFilePath = " + sFullFilePath);
 		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
 			sFullFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
 		}else{
 			sFullFilePath += WebContextParameters.getLocalResourcesPath(context);
 		}
-
+		//End with file separator
 		while (sFullFilePath.endsWith(System.getProperty("file.separator"))){
 			sFullFilePath = sFullFilePath.substring(0, sFullFilePath.length() - 1);
 		}

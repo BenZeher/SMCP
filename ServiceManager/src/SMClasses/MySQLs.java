@@ -1112,7 +1112,8 @@ public class MySQLs {
 			String sAllowAsAPOExpense,
 			String sStructureID,
 			String sAccountGroupID,
-			String sAnnualBudget
+			String sAnnualBudget,
+			String siNormalBalanceType
 			){
 		
 		String sSQL = "UPDATE " + SMTableglaccounts.TableName 
@@ -1123,6 +1124,7 @@ public class MySQLs {
 			+ ", " + SMTableglaccounts.lActive + " = " + sActive
 			+ ", " + SMTableglaccounts.iCostCenterID + " = " + sCostCenter
 			+ ", " + SMTableglaccounts.iallowaspoexpense + " = " + sAllowAsAPOExpense
+			+ ", " + SMTableglaccounts.inormalbalancetype + " = " + siNormalBalanceType
 			+ ", " + SMTableglaccounts.lstructureid + " = " + sStructureID
 			+ ", " + SMTableglaccounts.laccountgroupid + " = " + sAccountGroupID
 			+ ", " + SMTableglaccounts.bdannualbudget + " = " + sAnnualBudget
@@ -1130,7 +1132,7 @@ public class MySQLs {
 				+ SMTableglaccounts.sAcctID + " = '" + sGLAccountID + "'"
 			+ ")";
 		
-		//System.out.println("Update_GL_Account_SQL = " + sSQL);
+		//System.out.println("[1552508183] Update_GL_Account_SQL = " + sSQL);
 		return sSQL;
 	}
 	
@@ -1144,7 +1146,8 @@ public class MySQLs {
 			String sAllowAsAPOExpense,
 			String sStructureID,
 			String sAccountGroupID,
-			String sAnnualBudget
+			String sAnnualBudget,
+			String siNormalBalanceType
 			){
 		
 		String sSQL = "INSERT INTO " 
@@ -1157,6 +1160,7 @@ public class MySQLs {
 				+ ", " + SMTableglaccounts.lActive
 				+ ", " + SMTableglaccounts.iCostCenterID
 				+ ", " + SMTableglaccounts.iallowaspoexpense
+				+ ", " + SMTableglaccounts.inormalbalancetype
 				+ ", " + SMTableglaccounts.lstructureid
 				+ ", " + SMTableglaccounts.laccountgroupid
 				+ ", " + SMTableglaccounts.bdannualbudget
@@ -1168,6 +1172,7 @@ public class MySQLs {
 				+ ", " + sActive
 				+ ", " + sCostCenter 
 				+ ", " + sAllowAsAPOExpense
+				+ ", " + siNormalBalanceType
 				+ ", " + sStructureID
 				+ ", " + sAccountGroupID
 				+ ", " + sAnnualBudget

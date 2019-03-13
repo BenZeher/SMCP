@@ -278,6 +278,27 @@ public class GLEditAccountsEdit extends HttpServlet {
         	)
         );
         
+        
+        //Type:
+        ArrayList<String>sBalanceTypeValues = new ArrayList<String>(0);
+        ArrayList<String>sBalanceTypeDescriptions = new ArrayList<String>(0);
+        sBalanceTypeValues.clear();
+        sBalanceTypeDescriptions.clear();
+        sBalanceTypeValues.add(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT));
+        sBalanceTypeValues.add(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_CREDIT));
+        sBalanceTypeDescriptions.add("Normally a DEBIT balance");
+        sBalanceTypeDescriptions.add("Normally a CREDIT balance");
+		
+        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        	GLAccount.Paraminormalbalancetype, 
+        	sBalanceTypeValues, 
+        	glacct.getsbinormalbalancetype(),
+        	sBalanceTypeDescriptions, 
+        	"Normal balance type:", 
+        	"Accounts normally carry a DEBIT or CREDIT balance"
+        	)
+        );
+        
         //Cost Center
         sValues.clear();
         sDescriptions.clear();

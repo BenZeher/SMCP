@@ -57,6 +57,7 @@ public class GLAccount extends java.lang.Object{
 	public static final String Paramlaccountstructureid = "laccountstructureid";
 	public static final String Paramlaccountgroupid = "laccountgroupid";
 	public static final String Parambdannualbudget = "bdannualbudget";
+	public static final String Paraminormalbalancetype = "inormalbalancetype";
 	public static final String Paramobjectname = "GL Account";
 	
 	public static final String ACCOUNT_SEGMENT_DELIMITER = "-";
@@ -71,6 +72,7 @@ public class GLAccount extends java.lang.Object{
 	private String m_laccountstructureid;
 	private String m_laccountgroupid;
 	private String m_sbdannualbudget;
+	private String m_inormalbalancetype;
 	private String m_iNewRecord;
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
 
@@ -87,6 +89,7 @@ public class GLAccount extends java.lang.Object{
 		m_laccountstructureid = "0";
 		m_laccountgroupid = "0";
 		m_sbdannualbudget = "0.00";
+		m_inormalbalancetype = "0";
 	}
     public void loadFromHTTPRequest(HttpServletRequest req){
     	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
@@ -113,6 +116,7 @@ public class GLAccount extends java.lang.Object{
 		if (getsbdannualbudget().compareToIgnoreCase("") == 0){
 			setsbdannualbudget("0.00");
 		}
+		m_inormalbalancetype = ARUtilities.get_Request_Parameter(Paraminormalbalancetype, req).trim().replace("&quot;", "\"");
     }
     public boolean load (
     		Connection conn
@@ -141,6 +145,7 @@ public class GLAccount extends java.lang.Object{
 			m_laccountstructureid = Long.toString(rs.getLong(SMTableglaccounts.lstructureid));
 			m_laccountgroupid = Long.toString(rs.getLong(SMTableglaccounts.laccountgroupid));
 			m_sbdannualbudget = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableglaccounts.bdannualbudget));
+			m_inormalbalancetype = Long.toString(rs.getLong(SMTableglaccounts.inormalbalancetype));
 			m_iNewRecord = "0";
 			rs.close();
 		}catch (SQLException ex){
@@ -183,6 +188,7 @@ public class GLAccount extends java.lang.Object{
     			m_laccountstructureid =  Long.toString(rs.getLong(SMTableglaccounts.lstructureid));
     			m_laccountgroupid =  Long.toString(rs.getLong(SMTableglaccounts.laccountgroupid));
     			m_sbdannualbudget = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableglaccounts.bdannualbudget));
+    			m_inormalbalancetype = Long.toString(rs.getLong(SMTableglaccounts.inormalbalancetype));
     			m_iNewRecord = "0";
     			rs.close();
     		}catch (SQLException ex){
@@ -226,7 +232,8 @@ public class GLAccount extends java.lang.Object{
 						m_iallowaspoexpense,
 						m_laccountstructureid,
 						m_laccountgroupid,
-						m_sbdannualbudget
+						m_sbdannualbudget,
+						m_inormalbalancetype
 						);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE SQL: '" + SQL + "'.");
@@ -255,7 +262,8 @@ public class GLAccount extends java.lang.Object{
 						m_iallowaspoexpense,
 						m_laccountstructureid,
 						m_laccountgroupid,
-						m_sbdannualbudget
+						m_sbdannualbudget,
+						m_inormalbalancetype
 						);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBIB)){
 					m_sErrorMessageArray.add("Cannot execute INSERT SQL '" + SQL + "'.");
@@ -354,6 +362,15 @@ public class GLAccount extends java.lang.Object{
 			bEntriesAreValid = false;
 		}
     	
+		//Normal balance type:
+		if (
+			(getsbinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) != 0)
+			&& (getsbinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_CREDIT)) != 0)
+		){
+			m_sErrorMessageArray.add("Error [1552316800] - normal balance type '" + getsbinormalbalancetype() + "' is invalid.");
+			bEntriesAreValid = false;
+		}
+		
     	if (bAccountGroupRecordsExist){
 	    	SQL = " SELECT * FROM " + SMTableglaccountgroups.TableName
 	    		+ " WHERE ("
@@ -599,6 +616,7 @@ public class GLAccount extends java.lang.Object{
 		sQueryString += "&" + Paramlaccountstructureid + "=" + ARUtilities.URLEncode(m_laccountstructureid);
 		sQueryString += "&" + Paramlaccountgroupid + "=" + ARUtilities.URLEncode(m_laccountgroupid);
 		sQueryString += "&" + Parambdannualbudget + "=" + ARUtilities.URLEncode(getsbdannualbudget());
+		sQueryString += "&" + Paraminormalbalancetype + "=" + ARUtilities.URLEncode(getsbinormalbalancetype());
 		
 		if (m_iallowaspoexpense.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramiallowaspoexpense + "=" + m_iallowaspoexpense;
@@ -1287,6 +1305,12 @@ public class GLAccount extends java.lang.Object{
 	}
 	public String getsbdannualbudget() {
 		return m_sbdannualbudget;
+	}
+	public void setsinormalbalancetype(String sinormalbalancetype) {
+		m_inormalbalancetype = sinormalbalancetype.trim();
+	}
+	public String getsbinormalbalancetype() {
+		return m_inormalbalancetype;
 	}
 	public String getM_iNewRecord() {
 		return m_iNewRecord;

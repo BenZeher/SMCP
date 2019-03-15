@@ -260,10 +260,10 @@ public class GLConvertACCPACAction extends HttpServlet {
     		return conv.processGLAccountGroups(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
     	case GLConvertACCPAC.PROCESS_GL_ACCOUNT_MASTER_VALUE:
     		return conv.processGLAccounts(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
-    	case GLConvertACCPAC.PROCESS_GL_FISCAL_SETS_VALUE:
-    		return conv.processGLFiscalSets(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
     	case GLConvertACCPAC.PROCESS_GL_FISCAL_CALENDAR_VALUE:
     		return conv.processGLFiscalCalendar(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser, sUserID, sUserFullName);
+    	case GLConvertACCPAC.PROCESS_GL_FISCAL_SETS_VALUE:
+    		return conv.processGLFiscalSets(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
 		
     	default:
     		throw new Exception("Function value " + iSelectedFunction + " is not valid");

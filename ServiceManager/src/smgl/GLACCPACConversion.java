@@ -568,24 +568,34 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String SQLInsert = "";
 		String sPreviousYearSQL = "";
 		long lLastFiscalYear = 0L;
+		//String sLastFiscalPeriodDateOfPreviousYear = "0000-00-00";
+		//String sLastFiscalPeriodDateOfTwoYearsPrevious = "0000-00-00";
+		int iLastPeriodOfPreviousYear = 0;
+		int iLastPeriodOfTwoYearsPrevious = 0;
 		while(rsFiscalSets.next()){
 			
-			
+			//IF we've moved to a new fiscal year, then we have to determine the LAST period of the two previous fiscal years:
 			if (rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) != lLastFiscalYear){
 				//We need to determine the LAST PERIOD of the two previous years:
 				String SQLFiscalPeriods = "SELECT * FROM " + SMTableglfiscalperiods.TableName
 					+ " WHERE ("
-						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear)) + ")"
-						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1L) + ")"
+						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1L) + ")"
 						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2L) + ")"
 					+ ")"
+					+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC"
 				;
+				ResultSet rsRecentFiscalPeriods = clsDatabaseFunctions.openResultSet(SQLFiscalPeriods, cnSMCP);
+
+				if (rsRecentFiscalPeriods.next()){
+					//This is the PREVIOUS fiscal year:
+					iLastPeriodOfPreviousYear = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+				}
 				
+				if (rsRecentFiscalPeriods.next()){
+					//This is the fiscal year TWO YEARS PREVIOUS:
+					iLastPeriodOfTwoYearsPrevious = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+				}
 			}
-			
-			//Get the last period of the previous year:
-			
-			
 			
 			//Get the previous year's fiscal set, if there is one:
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
@@ -598,6 +608,18 @@ public class GLACCPACConversion  extends java.lang.Object{
 			if(rsPreviousYearFiscalSet.next()){
 				bPreviousYearWasFound = true;
 			}
+			
+			//Get the fiscal set from TWO YEARS PREVIOUS, if there is one:
+			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2) + ")"
+				+ ")"
+			;
+			ResultSet rsTwoYearsPreviousFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, cnSMCP);
+			boolean bTwoYearsPreviousWasFound = false;
+			if(rsTwoYearsPreviousFiscalSet.next()){
+				bTwoYearsPreviousWasFound = true;
+			}
 
 			//PERIOD 1:
 			String sPeriod = "1";
@@ -606,25 +628,29 @@ public class GLACCPACConversion  extends java.lang.Object{
 			if (bPreviousYearWasFound){
 				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
 			}
-			
-			
-			//Have to acccount for these in period 1:
-			//public static String bdnetchangeforpreviousperiod = "bdnetchangeforpreviousperiod";
-			//public static String bdnetchangeforpreviousperiodpreviousyear = "bdnetchangeforpreviousperiodpreviousyear";
-			
-			
-			
-			
+					
 			BigDecimal bdNetChangeForPreviousPeriod = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				// How do we know what was the last period of the previous year?
-				bdNetChangeForPreviousPeriod = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+				// Here we use the value we found above for the last period of the previous year:
+				if (iLastPeriodOfPreviousYear == 13){
+					bdNetChangeForPreviousPeriod = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);
+				}
+				if (iLastPeriodOfPreviousYear == 12){
+					bdNetChangeForPreviousPeriod = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);
+				}
 			}
 			
 			BigDecimal bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
-			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bTwoYearsPreviousWasFound){
+				// Here we use the value we found above for the last period of the year two years previous:
+				if (iLastPeriodOfTwoYearsPrevious == 13){
+					bdNetChangeForPreviousPeriodPreviousYear = rsTwoYearsPreviousFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);
+				}
+				if (iLastPeriodOfTwoYearsPrevious == 12){
+					bdNetChangeForPreviousPeriodPreviousYear = rsTwoYearsPreviousFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);
+				}
 			}
+				
 			BigDecimal bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			BigDecimal bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){

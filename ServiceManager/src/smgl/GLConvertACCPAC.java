@@ -42,12 +42,13 @@ public class GLConvertACCPAC extends HttpServlet {
 	public static final String PROCESS_GL_ACCOUNT_GROUPS_BUTTON_LABEL = Integer.toString(PROCESS_GL_ACCOUNT_GROUPS_VALUE) + ") Convert GL Account Groups";
 	public static final int PROCESS_GL_ACCOUNT_MASTER_VALUE = 6;
 	public static final String PROCESS_GL_ACCOUNT_MASTER_BUTTON_LABEL = Integer.toString(PROCESS_GL_ACCOUNT_MASTER_VALUE) + ") Convert GL Accounts";
-	public static final int PROCESS_GL_FISCAL_SETS_VALUE = 7;
-	public static final String PROCESS_GL_FISCAL_SETS_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Fiscal Sets";
-	public static final int PROCESS_GL_FISCAL_CALENDAR_VALUE = 8;
+	public static final int PROCESS_GL_FISCAL_CALENDAR_VALUE = 7;
 	public static final String PROCESS_GL_FISCAL_CALENDAR_LABEL = Integer.toString(PROCESS_GL_FISCAL_CALENDAR_VALUE) + ") Convert GL Fiscal Calendar";
+	public static final int PROCESS_GL_FISCAL_SETS_VALUE = 8;
+	public static final String PROCESS_GL_FISCAL_SETS_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Fiscal Sets";
+
 	
-	public static final int LAST_FUNCTION_IN_SEQUENCE = PROCESS_GL_FISCAL_CALENDAR_VALUE;
+	public static final int LAST_FUNCTION_IN_SEQUENCE = PROCESS_GL_FISCAL_SETS_VALUE;
 	
 	private static final String HIGHLIGHT_ROW_BACKGROUND_COLOR = "YELLOW";
 	private static final String DEFAULT_ROW_BACKGROUND_COLOR = "WHITE";
@@ -137,14 +138,13 @@ public class GLConvertACCPAC extends HttpServlet {
     	arrConversionPhaseNames.add(PROCESS_GL_ACCOUNT_MASTER_BUTTON_LABEL);
     	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
     	
-    	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE));
-    	arrConversionPhaseNames.add(PROCESS_GL_FISCAL_SETS_LABEL);
-    	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
-
     	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FISCAL_CALENDAR_VALUE));
     	arrConversionPhaseNames.add(PROCESS_GL_FISCAL_CALENDAR_LABEL);
     	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
     	
+    	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE));
+    	arrConversionPhaseNames.add(PROCESS_GL_FISCAL_SETS_LABEL);
+    	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
     	
     	String sDefaultPhaseValue = Integer.toString(ROLLBACK_OPTION_VALUE);
     	if (clsManageRequestParameters.get_Request_Parameter(RADIO_FIELD_NAME, request).compareToIgnoreCase("") != 0){

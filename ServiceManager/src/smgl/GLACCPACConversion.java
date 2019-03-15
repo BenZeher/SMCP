@@ -601,6 +601,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
 					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;
 			ResultSet rsPreviousYearFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, cnSMCP);
@@ -613,6 +614,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
 					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;
 			ResultSet rsTwoYearsPreviousFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, cnSMCP);

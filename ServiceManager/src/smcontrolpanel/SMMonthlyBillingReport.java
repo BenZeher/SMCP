@@ -7,6 +7,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.servlet.ServletContext;
 import SMClasses.SMOrderHeader;
@@ -15,6 +19,7 @@ import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
+import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -33,9 +38,8 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			Connection conn,
 			String sStartingDate,
 			String sEndingDate,
-			ArrayList<String> sSalesGroupList,
-			boolean bIncludeSales,
-			boolean bIncludeService,
+			ArrayList<String> arrSalesGroupList,
+			ArrayList<String> arrServiceTypesList,
 			boolean bShowDetail,
 			String sDBID,
 			String sUserID,
@@ -64,13 +68,9 @@ public class SMMonthlyBillingReport extends java.lang.Object{
     		+ ", CONCAT(" + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName + ",' '," 
 			+ SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName + ") AS SALESPERSONNAME"
     		
-            + ", " + "IF((" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
-            + " = 'SH0001') OR (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
-            + " = 'SH0003'), 'Service', 'Sales') as SaleType"
-            
-            + ", " + "IF((" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
-            + " = 'SH0001') OR (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
-            + " = 'SH0002'), 'Residential', 'Commercial') as SiteType"
+            + ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " AS SERVICETYPE"
+             + ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " AS SERVICETYPEDESC"
+
             
             + ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " AS SALESGROUP"
             
@@ -79,44 +79,46 @@ public class SMMonthlyBillingReport extends java.lang.Object{
             + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " = "
             + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
             
+            //Link sales groups table:
     	    + " LEFT JOIN " + SMTablesalesgroups.TableName + " ON " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId
     	    + " = " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iSalesGroup
     	    
     	    //Link salesperson table:
     	    + " LEFT JOIN " + SMTablesalesperson.TableName + " ON " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sSalesperson
     	    	+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+    	    
+    	    //Link service types table:
+    	    + " LEFT JOIN " + SMTableservicetypes.TableName + " ON " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode
+    	    + " = " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
             
             + " WHERE ("
             
             + "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" + sStartingDate + " 00:00:00')"
             + " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" + sEndingDate + " 23:59:59')";
             
-        	//SH0002 and SH0004 are sales
-            if(!bIncludeSales){
-                SQL = SQL + " AND (" + SMTableinvoiceheaders.TableName + "." 
-                	+ SMTableinvoiceheaders.sServiceTypeCode + " != 'SH0002')"
-                	+ " AND (" + SMTableinvoiceheaders.TableName + "." 
-                	+ SMTableinvoiceheaders.sServiceTypeCode + " != 'SH0004')";
-            }
-            
-            //SH0001 and SH0003 are service
-            if(!bIncludeService){
-                SQL = SQL + " AND (" + SMTableinvoiceheaders.TableName + "." 
-                	+ SMTableinvoiceheaders.sServiceTypeCode + " != 'SH0001')"
-                	+ " AND (" + SMTableinvoiceheaders.TableName + "." 
-                	+ SMTableinvoiceheaders.sServiceTypeCode + " != 'SH0003')";
-            }
-
-    		//Get the sales groups:
-		    if (sSalesGroupList.size() > 0){
+    		//Get the service types:
+		    if (arrServiceTypesList.size() > 0){
 		    	SQL += " AND (";
-	    		for (int i = 0; i < sSalesGroupList.size(); i++){
+	    		for (int i = 0; i < arrServiceTypesList.size(); i++){
+	    			if (i == 0){
+	    				SQL += "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = '" + arrServiceTypesList.get(i) + "')";
+	    			}else{
+	    				SQL += " OR (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = '" + arrServiceTypesList.get(i) + "')";
+	    			}
+	    		}
+	    		SQL = SQL + ")";
+		    }
+		    
+    		//Get the sales groups:
+		    if (arrSalesGroupList.size() > 0){
+		    	SQL += " AND (";
+	    		for (int i = 0; i < arrSalesGroupList.size(); i++){
 	    			if (i == 0){
 	    				SQL += "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlyBillingReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlyBillingReportSelection.PARAM_SEPARATOR) + 1) + ")";
 	    			}else{
 	    				SQL += " OR (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlyBillingReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlyBillingReportSelection.PARAM_SEPARATOR) + 1) + ")";
 	    			}
 	    		}
 	    		SQL = SQL + ")";
@@ -126,8 +128,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
             
             + " ORDER BY"
             + " SALESGROUP"
-            + ", SiteType"
-            + ", SaleType"
+            + ", SERVICETYPE"
             + ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation
             + ", " + SMTableinvoiceheaders.sSalesperson
             + ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
@@ -139,8 +140,8 @@ public class SMMonthlyBillingReport extends java.lang.Object{
         }
             
         //System.out.println("In " + this.toString() + ".processReport - main SQL = " + SQL);
-		String sCurrentSalesServiceType = "";
-    	String sCurrentCommericalResidentialType = "";
+		String sCurrentServiceType = "";
+		String sCurrentServiceTypeDescription = "";
     	String sCurrentLocation = "";
     	String sCurrentSalesperson = "";
     	String sCurrentSalespersonName = "";
@@ -168,19 +169,12 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 		BigDecimal bdCreditNoteAmountForLocation = BigDecimal.ZERO;
 		BigDecimal bdTotalAmountForLocation = BigDecimal.ZERO;
 
-		//Variables for Commercial/Residential type:
-		long lNumberOfInvoicesForCommOrResiType = 0L;
-		BigDecimal bdInvoiceAmountForCommOrResiType = BigDecimal.ZERO;
-		long lNumberOfCreditNotesForCommOrResiType = 0l;
-		BigDecimal bdCreditNoteAmountForCommOrResiType = BigDecimal.ZERO;
-		BigDecimal bdTotalAmountForCommOrResiType = BigDecimal.ZERO;
-		
-		//Variables for Sale/Service type:
-		long lNumberOfInvoicesForSaleOrServiceType = 0L; 
-		BigDecimal bdInvoiceAmountForSaleOrServiceType = BigDecimal.ZERO;
-		long lNumberOfCreditNotesForSaleOrServiceType = 0L;
-		BigDecimal bdCreditNoteAmountForSaleOrServiceType = BigDecimal.ZERO;
-		BigDecimal bdTotalAmountForSaleOrServiceType = BigDecimal.ZERO;
+		//Variables for Service types:
+		long lNumberOfInvoicesForServiceType = 0L;
+		BigDecimal bdInvoiceAmountForServiceType = BigDecimal.ZERO;
+		long lNumberOfCreditNotesForServiceType = 0l;
+		BigDecimal bdCreditNoteAmountForServiceType = BigDecimal.ZERO;
+		BigDecimal bdTotalAmountForServiceType = BigDecimal.ZERO;
 		
 		//Variables for sales group:
 		long lNumberOfInvoicesForSalesGroup = 0L; 
@@ -197,8 +191,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 		BigDecimal bdTotalAmount = BigDecimal.ZERO;
 		BigDecimal bdTotalInvoiceAmount = BigDecimal.ZERO;
 		BigDecimal bdTotalCreditNoteAmount = BigDecimal.ZERO;
-		BigDecimal bdTotalServiceAmount = BigDecimal.ZERO;
-		BigDecimal bdTotalSalesAmount = BigDecimal.ZERO;
+		Map< String,BigDecimal> hmServiceTypeTotalAmmounts =  new HashMap< String,BigDecimal>();
     	
 		//Check permissions for viewing invoices and orders:
 		boolean bViewInvoicePermitted = SMSystemFunctions.isFunctionPermitted(
@@ -225,8 +218,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 					if (bShowDetail){
 						printInvoiceFooter(
 							sCurrentSalesGroup,
-							sCurrentCommericalResidentialType,
-							sCurrentSalesServiceType,
+							sCurrentServiceTypeDescription,
 							sCurrentLocation,
 							sCurrentSalesperson,
 							sCurrentInvoiceNumber.trim(),
@@ -248,25 +240,22 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 						lTotalNumberOfInvoices++;
 						lNumberOfInvoicesForSalesperson++;
 						lNumberOfInvoicesForLocation++;
-						lNumberOfInvoicesForCommOrResiType++;
-						lNumberOfInvoicesForSaleOrServiceType++;
+						lNumberOfInvoicesForServiceType++;
 						lNumberOfInvoicesForSalesGroup++;
 					}
 					if (sCurrentTransactionType.compareToIgnoreCase("CR") == 0){
 						lTotalNumberOfCreditNotes++;
 						lNumberOfCreditNotesForSalesperson++;
 						lNumberOfCreditNotesForLocation++;
-						lNumberOfCreditNotesForCommOrResiType++;
-						lNumberOfCreditNotesForSaleOrServiceType++;
+						lNumberOfCreditNotesForServiceType++;
 						lNumberOfCreditNotesForSalesGroup++;
 					}
 				}
 				
-	    		//Print the salesperson header for any new sales type OR site type OR location
+	    		//Print the salesperson header for any new service type OR location
 				// OR salesperson:
 				if (
-					((rs.getString("SaleType").compareToIgnoreCase(sCurrentSalesServiceType) != 0)
-					|| ((rs.getString("SiteType")).compareToIgnoreCase(sCurrentCommericalResidentialType) != 0)
+					((rs.getString("ServiceType").compareToIgnoreCase(sCurrentServiceType) != 0)
 					|| ((rs.getString(SMTableinvoiceheaders.sLocation)).compareToIgnoreCase(sCurrentLocation) != 0)
 					|| ((rs.getString(SMTableinvoiceheaders.sSalesperson)).compareToIgnoreCase(sCurrentSalesperson) != 0))
 					&& (sCurrentSalesperson.compareToIgnoreCase("") != 0)
@@ -292,8 +281,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 						sCurrentSalesperson,
 						sCurrentSalespersonName,
 						sCurrentLocation,
-						sCurrentCommericalResidentialType,
-						sCurrentSalesServiceType,
+						sCurrentServiceTypeDescription,
 						sCurrentSalesGroup,
 						bdTotalAmountForSalesperson,
 						bShowDetail,
@@ -310,10 +298,9 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				}
 
 				//Process the location footer:
-	    		//Print the location footer for any new sales type OR site type OR location
+	    		//Print the location footer for any new service type OR location
 				if (
-					((rs.getString("SaleType").compareToIgnoreCase(sCurrentSalesServiceType) != 0)
-					|| ((rs.getString("SiteType")).compareToIgnoreCase(sCurrentCommericalResidentialType) != 0)
+					((rs.getString("ServiceType").compareToIgnoreCase(sCurrentServiceType) != 0)
 					|| ((rs.getString(SMTableinvoiceheaders.sLocation)).compareToIgnoreCase(sCurrentLocation) != 0))
 					&& (sCurrentLocation.compareToIgnoreCase("") != 0)
 				){
@@ -336,8 +323,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 							lNumberOfCreditNotesForLocation, 
 							bdAverageCreditNoteAmountForLocation,
 							sCurrentLocation,
-							sCurrentCommericalResidentialType,
-							sCurrentSalesServiceType,
+							sCurrentServiceTypeDescription,
 							sCurrentSalesGroup,
 							bdTotalAmountForLocation,
 							out
@@ -350,80 +336,39 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 					bdTotalAmountForLocation = BigDecimal.ZERO;
 				}
 
-				//Sale Type footer
-	    		//Print the sale type footer for any new sales OR site type
-				if (
-						((rs.getString("SaleType").compareToIgnoreCase(sCurrentSalesServiceType) != 0)
-						|| ((rs.getString("SiteType")).compareToIgnoreCase(sCurrentCommericalResidentialType) != 0))
-					&& (sCurrentSalesServiceType.compareToIgnoreCase("") != 0)
+				//Service Type footer
+	    		//Print the sale type footer for any new service type
+				if (((rs.getString("ServiceType").compareToIgnoreCase(sCurrentServiceType) != 0))
+					&& (sCurrentServiceType.compareToIgnoreCase("") != 0)
 				){
-					BigDecimal bdAverageInvoiceAmountForSaleType = BigDecimal.ZERO;
-					BigDecimal bdAverageCreditNoteAmountForSaleType = BigDecimal.ZERO;
-					
-					if (lNumberOfInvoicesForSaleOrServiceType > 0){
-						bdAverageInvoiceAmountForSaleType = bdInvoiceAmountForSaleOrServiceType.divide(BigDecimal.valueOf(lNumberOfInvoicesForSaleOrServiceType), 2, RoundingMode.HALF_UP);
+					BigDecimal bdAverageInvoiceAmountForServiceType = BigDecimal.ZERO;
+					BigDecimal bdAverageCreditNoteAmountForServiceType = BigDecimal.ZERO;
+					if (lNumberOfInvoicesForServiceType > 0){
+						bdAverageInvoiceAmountForServiceType = bdInvoiceAmountForServiceType.divide(BigDecimal.valueOf(lNumberOfInvoicesForServiceType), 2, RoundingMode.HALF_UP);
 					}else{
-						bdAverageInvoiceAmountForSaleType = BigDecimal.ZERO;
+						bdAverageInvoiceAmountForServiceType = BigDecimal.ZERO;
 					}
-					if (lNumberOfCreditNotesForSaleOrServiceType > 0){
-						bdAverageCreditNoteAmountForSaleType = bdCreditNoteAmountForSaleOrServiceType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForSaleOrServiceType), 2, RoundingMode.HALF_UP);
+					if (lNumberOfCreditNotesForServiceType > 0){
+						bdAverageCreditNoteAmountForServiceType = bdCreditNoteAmountForServiceType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForServiceType), 2, RoundingMode.HALF_UP);
 					}else{
-						bdAverageCreditNoteAmountForSaleType = BigDecimal.ZERO;
+						bdAverageCreditNoteAmountForServiceType = BigDecimal.ZERO;
 					}
-					printSaleTypeFooter(
-							lNumberOfInvoicesForSaleOrServiceType, 
-							bdAverageInvoiceAmountForSaleType,
-							lNumberOfCreditNotesForSaleOrServiceType, 
-							bdAverageCreditNoteAmountForSaleType,
-							sCurrentSalesServiceType,
-							sCurrentCommericalResidentialType,
+					printServiceTypeFooter(
+							lNumberOfInvoicesForServiceType, 
+							bdAverageInvoiceAmountForServiceType,
+							lNumberOfCreditNotesForServiceType, 
+							bdAverageCreditNoteAmountForServiceType,
+							sCurrentServiceTypeDescription,
 							sCurrentSalesGroup,
-							bdTotalAmountForSaleOrServiceType,
+							bdTotalAmountForServiceType,
 							out
 							);
-					//Initialize the sale type variables:
-					lNumberOfInvoicesForSaleOrServiceType = 0L; 
-					lNumberOfCreditNotesForSaleOrServiceType = 0L; 
-					bdInvoiceAmountForSaleOrServiceType = BigDecimal.ZERO;
-					bdCreditNoteAmountForSaleOrServiceType = BigDecimal.ZERO;
-					bdTotalAmountForSaleOrServiceType = BigDecimal.ZERO;
-				}
-				
-				//Site type footer
-	    		//Print the site type footer for any new site type
-				if (
-					(rs.getString("SiteType").compareToIgnoreCase(sCurrentCommericalResidentialType) != 0)
-					&& (sCurrentCommericalResidentialType.compareToIgnoreCase("") != 0)
-				){
-					BigDecimal bdAverageInvoiceAmountForSiteType = BigDecimal.ZERO;
-					BigDecimal bdAverageCreditNoteAmountForSiteType = BigDecimal.ZERO;
-					
-					if (lNumberOfInvoicesForCommOrResiType > 0){
-						bdAverageInvoiceAmountForSiteType = bdInvoiceAmountForCommOrResiType.divide(BigDecimal.valueOf(lNumberOfInvoicesForCommOrResiType), 2, RoundingMode.HALF_UP);
-					}else{
-						bdAverageInvoiceAmountForSiteType = BigDecimal.ZERO;
-					}
-					if (lNumberOfCreditNotesForCommOrResiType > 0){
-						bdAverageCreditNoteAmountForSiteType = bdCreditNoteAmountForCommOrResiType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForCommOrResiType), 2, RoundingMode.HALF_UP);
-					}else{
-						bdAverageCreditNoteAmountForSiteType = BigDecimal.ZERO;
-					}
-					printSiteTypeFooter(
-							lNumberOfInvoicesForCommOrResiType, 
-							bdAverageInvoiceAmountForSiteType,
-							lNumberOfCreditNotesForCommOrResiType, 
-							bdAverageCreditNoteAmountForSiteType,
-							sCurrentCommericalResidentialType,
-							sCurrentSalesGroup,
-							bdTotalAmountForCommOrResiType,
-							out
-							);
-					//Initialize the site type variables:
-					lNumberOfInvoicesForCommOrResiType = 0L; 
-					lNumberOfCreditNotesForCommOrResiType = 0L; 
-					bdInvoiceAmountForCommOrResiType = BigDecimal.ZERO;
-					bdCreditNoteAmountForCommOrResiType = BigDecimal.ZERO;
-					bdTotalAmountForCommOrResiType = BigDecimal.ZERO;
+					//Initialize the service type variables:
+					lNumberOfInvoicesForServiceType = 0L; 
+					lNumberOfCreditNotesForServiceType = 0L; 
+					bdInvoiceAmountForServiceType = BigDecimal.ZERO;
+					bdCreditNoteAmountForServiceType = BigDecimal.ZERO;
+					bdTotalAmountForServiceType = BigDecimal.ZERO;
 				}
 				
 				//Sales Group footer
@@ -472,8 +417,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 					bdTotalInvoiceAmount = bdTotalInvoiceAmount.add(bdLinePrice);
 					bdInvoiceAmountForSalesperson = bdInvoiceAmountForSalesperson.add(bdLinePrice);
 					bdInvoiceAmountForLocation = bdInvoiceAmountForLocation.add(bdLinePrice);
-					bdInvoiceAmountForCommOrResiType = bdInvoiceAmountForCommOrResiType.add(bdLinePrice);
-					bdInvoiceAmountForSaleOrServiceType = bdInvoiceAmountForSaleOrServiceType.add(bdLinePrice);
+					bdInvoiceAmountForServiceType = bdInvoiceAmountForServiceType.add(bdLinePrice);
 					bdInvoiceAmountForSalesGroup = bdInvoiceAmountForSalesGroup.add(bdLinePrice);
 					sCurrentTransactionType = "IN";
 				}
@@ -481,8 +425,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 					bdTotalCreditNoteAmount = bdTotalCreditNoteAmount.add(bdLinePrice);
 					bdCreditNoteAmountForSalesperson = bdCreditNoteAmountForSalesperson.add(bdLinePrice);
 					bdCreditNoteAmountForLocation = bdCreditNoteAmountForLocation.add(bdLinePrice);
-					bdCreditNoteAmountForCommOrResiType = bdCreditNoteAmountForCommOrResiType.add(bdLinePrice);
-					bdCreditNoteAmountForSaleOrServiceType = bdCreditNoteAmountForSaleOrServiceType.add(bdLinePrice);
+					bdCreditNoteAmountForServiceType = bdCreditNoteAmountForServiceType.add(bdLinePrice);
 					bdCreditNoteAmountForSalesGroup = bdCreditNoteAmountForSalesGroup.add(bdLinePrice);
 					sCurrentTransactionType = "CR";
 				}
@@ -490,23 +433,25 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				bdTotalAmount = bdTotalAmount.add(bdLinePrice);
 				bdTotalAmountForSalesperson = bdTotalAmountForSalesperson.add(bdLinePrice);
 				bdTotalAmountForLocation = bdTotalAmountForLocation.add(bdLinePrice);
-				bdTotalAmountForCommOrResiType = bdTotalAmountForCommOrResiType.add(bdLinePrice);
-				bdTotalAmountForSaleOrServiceType = bdTotalAmountForSaleOrServiceType.add(bdLinePrice);
+				bdTotalAmountForServiceType = bdTotalAmountForServiceType.add(bdLinePrice);
 				bdTotalAmountForSalesGroup = bdTotalAmountForSalesGroup.add(bdLinePrice);
-				
-				if (rs.getString("SaleType").compareToIgnoreCase("Service") == 0){
-					bdTotalServiceAmount = bdTotalServiceAmount.add(bdLinePrice);
-				}else{
-					bdTotalSalesAmount = bdTotalSalesAmount.add(bdLinePrice);
+				//Add the service type totals to hash map.
+				try {
+					if(sCurrentServiceType.compareToIgnoreCase("") != 0) {
+						hmServiceTypeTotalAmmounts.put(sCurrentServiceTypeDescription , hmServiceTypeTotalAmmounts.get(sCurrentServiceTypeDescription).add(bdLinePrice));
+					}	
+				}catch (Exception e) {
+					hmServiceTypeTotalAmmounts.put(sCurrentServiceTypeDescription, bdLinePrice);
 				}
+				
 			
-				//If either the group, sale type or the site type or the location or the salesperson changes,
+			
+				//If service type or the location or the salesperson changes,
 				//print a salesperson header:
 				//If the current salesperson is blank, print it
 				if (
 						(sSalesGroupFromData.compareToIgnoreCase(sCurrentSalesGroup) != 0)
-						|| (rs.getString("SaleType").compareToIgnoreCase(sCurrentSalesServiceType) != 0)
-						|| ((rs.getString("SiteType")).compareToIgnoreCase(sCurrentCommericalResidentialType) != 0)
+						|| (rs.getString("ServiceType").compareToIgnoreCase(sCurrentServiceType) != 0)
 						|| ((rs.getString(SMTableinvoiceheaders.sLocation)).compareToIgnoreCase(sCurrentLocation) != 0)
 						|| ((rs.getString(SMTableinvoiceheaders.sSalesperson)).compareToIgnoreCase(sCurrentSalesperson) != 0)
 					){
@@ -517,8 +462,8 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				}
 				
 				//Update the variables:
-				sCurrentSalesServiceType = rs.getString("SaleType");
-		    	sCurrentCommericalResidentialType = rs.getString("SiteType");
+				sCurrentServiceType = rs.getString("SERVICETYPE");
+				sCurrentServiceTypeDescription = rs.getString("SERVICETYPEDESC");
 		    	sCurrentSalesGroup = sSalesGroupFromData;
 		    	sCurrentLocation = rs.getString(SMTableinvoiceheaders.sLocation);
 		    	sCurrentSalesperson = rs.getString(SMTableinvoiceheaders.sSalesperson);
@@ -546,8 +491,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			if (bShowDetail){
 				printInvoiceFooter(
 					sCurrentSalesGroup,
-					sCurrentCommericalResidentialType,
-					sCurrentSalesServiceType,
+					sCurrentServiceTypeDescription,
 					sCurrentLocation,
 					sCurrentSalesperson,
 					sCurrentInvoiceNumber.trim(),
@@ -569,16 +513,14 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				lTotalNumberOfInvoices++;
 				lNumberOfInvoicesForSalesperson++;
 				lNumberOfInvoicesForLocation++;
-				lNumberOfInvoicesForCommOrResiType++;
-				lNumberOfInvoicesForSaleOrServiceType++;
+				lNumberOfInvoicesForServiceType++;
 				lNumberOfInvoicesForSalesGroup++;
 			}
 			if (sCurrentTransactionType.compareToIgnoreCase("CR") == 0){
 				lTotalNumberOfCreditNotes++;
 				lNumberOfCreditNotesForSalesperson++;
 				lNumberOfCreditNotesForLocation++;
-				lNumberOfCreditNotesForCommOrResiType++;
-				lNumberOfCreditNotesForSaleOrServiceType++;
+				lNumberOfCreditNotesForServiceType++;
 				lNumberOfCreditNotesForSalesGroup++;
 			}
 		}
@@ -606,8 +548,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				sCurrentSalesperson,
 				sCurrentSalespersonName,
 				sCurrentLocation,
-				sCurrentCommericalResidentialType,
-				sCurrentSalesServiceType,
+				sCurrentServiceTypeDescription,
 				sCurrentSalesGroup,
 				bdTotalAmountForSalesperson,
 				bShowDetail,
@@ -637,65 +578,36 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 					lNumberOfCreditNotesForLocation, 
 					bdAverageCreditNoteAmountForLocation,
 					sCurrentLocation,
-					sCurrentCommericalResidentialType,
-					sCurrentSalesServiceType,
+					sCurrentServiceTypeDescription,
 					sCurrentSalesGroup,
 					bdTotalAmountForLocation,
 					out
 					);
 		}
 
-		//Print the sale type footer for any new sales type
-		if (sCurrentSalesServiceType.compareToIgnoreCase("") != 0){
-			BigDecimal bdAverageInvoiceAmountForSaleType = BigDecimal.ZERO;
-			BigDecimal bdAverageCreditNoteAmountForSaleType = BigDecimal.ZERO;
-			
-			if (lNumberOfInvoicesForSaleOrServiceType > 0){
-				bdAverageInvoiceAmountForSaleType = bdInvoiceAmountForSaleOrServiceType.divide(BigDecimal.valueOf(lNumberOfInvoicesForSaleOrServiceType), 2, RoundingMode.HALF_UP);
+		//Print the service type footer for any new service type
+		if (sCurrentServiceType.compareToIgnoreCase("") != 0){
+			BigDecimal bdAverageInvoiceAmountForServiceType = BigDecimal.ZERO;
+			BigDecimal bdAverageCreditNoteAmountForServiceType = BigDecimal.ZERO;
+			if (lNumberOfInvoicesForServiceType > 0){
+				bdAverageInvoiceAmountForServiceType = bdInvoiceAmountForServiceType.divide(BigDecimal.valueOf(lNumberOfInvoicesForServiceType), 2, RoundingMode.HALF_UP);
 			}else{
-				bdAverageInvoiceAmountForSaleType = BigDecimal.ZERO;
+				bdAverageInvoiceAmountForServiceType = BigDecimal.ZERO;
 			}
-			if (lNumberOfCreditNotesForSaleOrServiceType > 0){
-				bdAverageCreditNoteAmountForSaleType = bdCreditNoteAmountForSaleOrServiceType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForSaleOrServiceType), 2, RoundingMode.HALF_UP);
+			if (lNumberOfCreditNotesForServiceType > 0){
+				bdAverageCreditNoteAmountForServiceType = bdCreditNoteAmountForServiceType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForServiceType), 2, RoundingMode.HALF_UP);
 			}else{
-				bdAverageCreditNoteAmountForSaleType = BigDecimal.ZERO;
+				bdAverageCreditNoteAmountForServiceType = BigDecimal.ZERO;
 			}
-			printSaleTypeFooter(
-					lNumberOfInvoicesForSaleOrServiceType, 
-					bdAverageInvoiceAmountForSaleType,
-					lNumberOfCreditNotesForSaleOrServiceType, 
-					bdAverageCreditNoteAmountForSaleType,
-					sCurrentSalesServiceType,
-					sCurrentCommericalResidentialType,
+
+			printServiceTypeFooter(
+					lNumberOfInvoicesForServiceType, 
+					bdAverageInvoiceAmountForServiceType,
+					lNumberOfCreditNotesForServiceType, 
+					bdAverageCreditNoteAmountForServiceType,
+					sCurrentServiceTypeDescription,
 					sCurrentSalesGroup,
-					bdTotalAmountForSaleOrServiceType,
-					out
-					);
-		}
-		
-		//Print the site type footer if there was at least one site type:
-		if (sCurrentCommericalResidentialType.compareToIgnoreCase("") != 0){
-			BigDecimal bdAverageInvoiceAmountForSiteType = BigDecimal.ZERO;
-			BigDecimal bdAverageCreditNoteAmountForSiteType = BigDecimal.ZERO;
-			
-			if (lNumberOfInvoicesForCommOrResiType > 0){
-				bdAverageInvoiceAmountForSiteType = bdInvoiceAmountForCommOrResiType.divide(BigDecimal.valueOf(lNumberOfInvoicesForCommOrResiType), 2, RoundingMode.HALF_UP);
-			}else{
-				bdAverageInvoiceAmountForSiteType = BigDecimal.ZERO;
-			}
-			if (lNumberOfCreditNotesForCommOrResiType > 0){
-				bdAverageCreditNoteAmountForSiteType = bdCreditNoteAmountForCommOrResiType.divide(BigDecimal.valueOf(lNumberOfCreditNotesForCommOrResiType), 2, RoundingMode.HALF_UP);
-			}else{
-				bdAverageCreditNoteAmountForSiteType = BigDecimal.ZERO;
-			}
-			printSiteTypeFooter(
-					lNumberOfInvoicesForCommOrResiType, 
-					bdAverageInvoiceAmountForSiteType,
-					lNumberOfCreditNotesForCommOrResiType, 
-					bdAverageCreditNoteAmountForSiteType,
-					sCurrentCommericalResidentialType,
-					sCurrentSalesGroup,
-					bdTotalAmountForCommOrResiType,
+					bdTotalAmountForServiceType,
 					out
 					);
 		}
@@ -744,16 +656,14 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				lTotalNumberOfCreditNotes, 
 				bdTotalAverageCreditNoteAmount,
 				bdTotalAmount,
-				bdTotalServiceAmount,
-				bdTotalSalesAmount,
+				hmServiceTypeTotalAmmounts,
 				out
 				);
 		return true;
 	}
 	private void printInvoiceFooter(
 		String sSalesGroup,
-		String sCommOrResi,
-		String sSalesOrService,
+		String sServiceType,
 		String sLocation,
 		String sSalesperson,
 		String sInvoiceNumber,
@@ -786,8 +696,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 		out.println(
 				  "<TR>\n"
             	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sSalesGroup + "</FONT></TD>\n"
-            	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sCommOrResi + "</FONT></TD>\n"
-            	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sSalesOrService + "</FONT></TD>\n"
+            	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sServiceType + "</FONT></TD>\n"
             	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sLocation + "</FONT></TD>\n"
             	+     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sSalesperson + "</FONT></TD>\n"
 			    +     "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sInvoiceNumberLink + "</FONT></TD>\n"
@@ -810,8 +719,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				+   "<TR>\n"
 						
 				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><U><FONT SIZE=2>Sales&nbsp;Grp</FONT></U></B></TD>\n"
-				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><U><FONT SIZE=2>Comm/Resi</FONT></U></B></TD>\n"
-				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8%><B><U><FONT SIZE=2>Sales/Service</FONT></U></B></TD>\n"
+				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><U><FONT SIZE=2>Service Type</FONT></U></B></TD>\n"
 				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=3%><B><U><FONT SIZE=2>Loc</FONT></U></B></TD>\n"
 				+     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><U><FONT SIZE=2>Sales</FONT></U></B></TD>\n"
 			    +     "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=5%><B><U><FONT SIZE=2>Doc&nbsp;#</FONT></U></B></TD>\n"
@@ -832,8 +740,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			String sSalesperson,
 			String sSalespersonName,
 			String sLocation,
-			String sSiteType,
-			String sSaleType,
+			String sServiceType,
 			String sSalesGroup,
 			BigDecimal bdTotalAmountForSalesperson,
 			boolean bShowDetail,
@@ -848,7 +755,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 		
 		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" WIDTH = 100%>\n"
 			+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_GREY + " \" >\n"
-			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Invoices for sales group '" + sSalesGroup + "', " + sSiteType + " " + sSaleType 
+			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Invoices for sales group '" + sSalesGroup + "', " + sServiceType 
 			+       ", location " + sLocation + ", salesperson " + sSalesperson + "&nbsp;" 
 		    +       sSalespersonName + ":</B></FONT></TD>\n"
 			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfInvoicesForSalesperson) + "</B></FONT></TD>\n"
@@ -856,7 +763,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageInvoiceAmountForSalesperson) + "</B></FONT></TD>\n"
 			+   "</TR>\n"
 			+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_GREY + " \" >\n"
-			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sSiteType + " " + sSaleType
+			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sServiceType
 			+       ", location " + sLocation + ", salesperson " + sSalesperson + "&nbsp;"
 			+       sSalespersonName + ":</B></FONT></TD>\n"
 			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfCreditNotesForSalesperson) + "</B></FONT></TD>\n"
@@ -864,7 +771,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageCreditNoteAmountForSalesperson) + "</B></FONT></TD>\n"
 			+   "</TR>\n"
 			+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_GREY + " \" >\n"
-			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sSiteType + " " + sSaleType
+			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sServiceType
 			+       ", location " + sLocation + ", salesperson " + sSalesperson + "&nbsp;"
 			+       sSalespersonName + ":</B></FONT></TD>\n"
 			+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSalesperson) + "</B></FONT></TD>\n"
@@ -878,93 +785,62 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			long lNumberOfCreditNotesForLocation, 
 			BigDecimal bdAverageCreditNoteAmountForLocation,
 			String sLocation,
-			String sSiteType,
-			String sSaleType,
+			String sServiceType,
 			String sSalesGroup,
 			BigDecimal bdTotalAmountForLocation,
 			PrintWriter out
 			){
 		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" WIDTH = 100%>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_ORANGE + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Invoices for sales group '" + sSalesGroup + "', " + sSiteType + " " + sSaleType + ", location " + sLocation + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Invoices for sales group '" + sSalesGroup + "', " + sServiceType + ", location " + sLocation + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfInvoicesForLocation) + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2><B>Avg. invoice amount</B>:</FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageInvoiceAmountForLocation) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_ORANGE + " \">\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\"ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sSiteType +" "+ sSaleType + ", location " + sLocation + "</B>:</FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\"ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sServiceType + ", location " + sLocation + "</B>:</FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfCreditNotesForLocation) + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2 ><B>Avg. credit note amount</B>:</FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageCreditNoteAmountForLocation) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_ORANGE + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sSiteType + "   "+sSaleType + ", location " + sLocation + "</B>:</FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sServiceType + ", location " + sLocation + "</B>:</FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForLocation) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+ "</TABLE>\n"//Deleted <TR>
 				);
 	}
-	private void printSaleTypeFooter(
-			long lNumberOfInvoicesForSaleType, 
-			BigDecimal bdAverageInvoiceAmountForSaleType,
-			long lNumberOfCreditNotesForSaleType, 
-			BigDecimal bdAverageCreditNoteAmountForSaleType,
-			String sSaleType,
-			String sSiteType,
+	private void printServiceTypeFooter(
+			long lNumberOfInvoicesForSeviceType, 
+			BigDecimal bdAverageInvoiceAmountForServiceType,
+			long lNumberOfCreditNotesForServiceType, 
+			BigDecimal bdAverageCreditNoteAmountForServiceType,
+			String sServiceType,
 			String sSalesGroup,
-			BigDecimal bdTotalAmountForSaleType,
+			BigDecimal bdTotalAmountForServiceType,
 			PrintWriter out
 			){
 		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" WIDTH = 100%>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2 ><B>Invoices for sales group '" + sSalesGroup + "', " + sSiteType + " " + sSaleType + "</B>: </FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfInvoicesForSaleType) + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2 ><B>Invoices for sales group '" + sSalesGroup + "', " + sServiceType + "</B>: </FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfInvoicesForSeviceType) + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=4%><FONT SIZE=2><B>Avg. invoice amount</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageInvoiceAmountForSaleType) + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageInvoiceAmountForServiceType) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sSiteType + " " + sSaleType + "</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfCreditNotesForSaleType) + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sServiceType + "</B>:</FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfCreditNotesForServiceType) + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2><B>Avg. credit note amount</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageCreditNoteAmountForSaleType) + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageCreditNoteAmountForServiceType) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sSiteType + " " + sSaleType + "</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSaleType) + "</B></FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sServiceType + "</B>:</FONT></TD>\n"
+				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForServiceType) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+ "</TABLE>\n" //Deleted <TR>
 				);
 	}
-	private void printSiteTypeFooter(
-			long lNumberOfInvoicesForSiteType, 
-			BigDecimal bdAverageInvoiceAmountForSiteType,
-			long lNumberOfCreditNotesForSiteType, 
-			BigDecimal bdAverageCreditNoteAmountForSiteType,
-			String sSiteType,
-			String sSalesGroup,
-			BigDecimal bdTotalAmountForSiteType,
-			PrintWriter out
-			){
-		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" WIDTH = 100%>\n"
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Invoices for sales group '" + sSalesGroup + "', " + sSiteType + "</B>: </FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfInvoicesForSiteType) + "</B></FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2><B>Avg. invoice amount</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageInvoiceAmountForSiteType) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Credit notes for sales group '" + sSalesGroup + "', " + sSiteType + "</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lNumberOfCreditNotesForSiteType) + "</B></FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2><B>Avg. credit note amount</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageCreditNoteAmountForSiteType) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Total for " + sSiteType + "</B>:</FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSiteType) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
-				+ "</TABLE>\n" //Deleted <TR>
-				);
-	}
+
 	private void printSalesGroupFooter(
 			long lNumberOfInvoicesForSalesGroup, 
 			BigDecimal bdAverageInvoiceAmountForSalesGroup,
@@ -1000,8 +876,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			long lTotalNumberOfCreditNotes, 
 			BigDecimal bdTotalAverageCreditNoteAmount,
 			BigDecimal bdTotalAmount,
-			BigDecimal bdServiceTotalAmount,
-			BigDecimal bdSalesTotalAmount,
+			 Map< String,BigDecimal > hmTotalServiceTypeTotals,
 			PrintWriter out
 			){
 		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" BORDER=0 WIDTH = 100%>\n"
@@ -1016,25 +891,29 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=5%><FONT SIZE=2><B>" + Long.toString(lTotalNumberOfCreditNotes) + "</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=40%><FONT SIZE=2><B>Avg. credit note amount:</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAverageCreditNoteAmount) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
+				+   "</TR>\n");
 				
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Service Total:</B></FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdServiceTotalAmount) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
+				for(String sServiceTypeDescription : hmTotalServiceTypeTotals.keySet()) {
+					out.println("<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
+						+   "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>" + sServiceTypeDescription + " Total:</B></FONT></TD>\n"
+						+   "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(hmTotalServiceTypeTotals.get(sServiceTypeDescription)) + "</B></FONT></TD>\n"
+						+   "</TR>\n");
+				}
 				
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Sales Total:</B></FONT></TD>\n"
-				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdSalesTotalAmount) + "</B></FONT></TD>\n"
-				+   "</TR>\n"
+				
+			//	out.println( "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
+			//	+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Service Type Total:</B></FONT></TD>\n"
+			//	+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalServiceTypeTotals) + "</B></FONT></TD>\n"
+			//	+   "</TR>\n"
 								
-				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
+				out.println( "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Company Total:</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmount) + "</B></FONT></TD>\n"
 				+   "</TR>\n"
 				+ "</TABLE>\n"
 				);
 	}
+	
 	public String getErrorMessage (){
 		return m_sErrorMessage;
 	}

@@ -11,8 +11,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
+import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -21,7 +23,9 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMMonthlyBillingReportSelection  extends HttpServlet {
 	
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
-	public static final String SALESGROUP_PARAM_SEPARATOR = ",";
+	public static final String SERVICETYPE_PARAM = "SERVICETYPECODE";
+	public static final String PARAM_SEPARATOR = ",";
+
 	
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
@@ -93,11 +97,40 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 		out.println("</TR>");
 		
 		out.println("<TR>");
-		out.println("<TD><B>Billing type:</B></TD>");
+		out.println("<TD><B>Service types:</B></TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"BillingType\" value=\"Sales\"> Sales<BR>");
-		out.println("<input type=\"radio\" name=\"BillingType\" value=\"Service\"> Service<BR>");
-		out.println("<input type=\"radio\" name=\"BillingType\" value=\"SalesAndService\" checked> Sales AND Service<BR>");
+		
+		String SQL = "SELECT DISTINCT " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode 
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+				+ " FROM " + SMTableinvoiceheaders.TableName
+				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+				+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName ;
+			try{
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+				while(rs.next()){
+					String sServiceTypeCode = rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode);
+					String sServiceTypeName = rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName);
+
+					if (sServiceTypeName == null || sServiceTypeName.compareToIgnoreCase("") == 0){
+						sServiceTypeName = "(BLANK)";
+					}
+					
+					if (sServiceTypeCode != null && sServiceTypeCode.compareToIgnoreCase("") != 0){
+					out.println(
+							  "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
+							  + sServiceTypeCode					
+							  + "\" CHECKED width=0.25>" 
+							  + sServiceTypeCode + " - " + sServiceTypeName
+							  + "<BR>");
+					}
+				}
+				rs.close();
+			}catch (SQLException e){
+				out.println("Could not read service types table - " + e.getMessage());
+			}
 		out.println("</TD>");
 		out.println("</TR>");
 		
@@ -106,7 +139,7 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 		out.println("<TD><B>Include sales groups:<B></TD>");
 		out.println("<TD>");
 		
-		String SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup 
+		SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup 
 			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode
 			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc
 				+ " FROM " + SMTableorderheaders.TableName
@@ -119,21 +152,20 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 			while(rs.next()){
 				String sSalesGroupCode = rs.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode);
 				String sSalesGroupDesc = rs.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc);
-				if (sSalesGroupCode == null){
-					sSalesGroupCode = "(BLANK)";
-				}
-				if (sSalesGroupDesc == null){
+				
+				if (sSalesGroupDesc == null || sSalesGroupDesc.compareToIgnoreCase("") == 0){
 					sSalesGroupDesc = "(BLANK)";
 				}
-
+				if (sSalesGroupCode != null && sSalesGroupCode.compareToIgnoreCase("") != 0){
 				out.println(
 						  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
 						  + sSalesGroupCode
-						  + SALESGROUP_PARAM_SEPARATOR
+						  + PARAM_SEPARATOR
 						  + Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup))						   
 						  + "\" CHECKED width=0.25>" 
 						  + sSalesGroupCode + " - " + sSalesGroupDesc
 						  + "<BR>");
+				}
 			}
 			rs.close();
 		}catch (SQLException e){

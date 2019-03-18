@@ -109,20 +109,23 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
 				}
     		}
     	}
-
-    	//Get the list of selected sales groups:
-    	ArrayList<String> sSalesGroups = new ArrayList<String>(0);
     	Enumeration<String> paramNames = request.getParameterNames();
 	    String sParamName = "";
-	    String sMarker = SMMonthlyBillingReportSelection.SALESGROUP_PARAM;
+	    String sSaleGroupMarker = SMMonthlyBillingReportSelection.SALESGROUP_PARAM;
+	    String sServiceTypeMarker = SMMonthlyBillingReportSelection.SERVICETYPE_PARAM;;
+    	ArrayList<String> arrSalesGroups = new ArrayList<String>(0);
+    	ArrayList<String> arrServiceTypes = new ArrayList<String>(0);
 	    while(paramNames.hasMoreElements()) {
 	      sParamName = paramNames.nextElement();
-		  if (sParamName.contains(sMarker)){
-			  sSalesGroups.add(sParamName.substring(sParamName.indexOf(sMarker) + sMarker.length()));
+		  if (sParamName.contains(sSaleGroupMarker)){
+			  arrSalesGroups.add(sParamName.substring(sParamName.indexOf(sSaleGroupMarker) + sSaleGroupMarker.length()));
+		  }
+		  if (sParamName.contains(sServiceTypeMarker)){
+			  arrServiceTypes.add(sParamName.substring(sParamName.indexOf(sServiceTypeMarker) + sServiceTypeMarker.length()));
 		  }
 	    }
-	    Collections.sort(sSalesGroups);
-    	if (sSalesGroups.size() == 0){
+	    Collections.sort(arrSalesGroups);
+    	if (arrSalesGroups.size() == 0){
     		sWarning = "You must select at least one sales group.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -131,24 +134,18 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
     		);			
         	return;
     	}
-	    //Billing types:
-    	boolean bIncludeSales = false;
-    	boolean bIncludeService = false;
-    	String sServiceTypes = "";
-		if(request.getParameter("BillingType").compareToIgnoreCase("Sales") == 0){
-			sServiceTypes = "Sales";
-			bIncludeSales = true;
-		}
-		if(request.getParameter("BillingType").compareToIgnoreCase("Service") == 0){
-			bIncludeService = true;
-			sServiceTypes = "Service";
-		}
-		if(request.getParameter("BillingType").compareToIgnoreCase("SalesAndService") == 0){
-			bIncludeSales = true;
-			bIncludeService = true;
-			sServiceTypes = "Sales AND Service";
-		}
+	    Collections.sort(arrServiceTypes);
+    	if (arrServiceTypes.size() == 0){
+    		sWarning = "You must select at least one service type.";
+    		response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+				+ "Warning=" + sWarning
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    		);			
+        	return;
+    	}
 		
+    	//Show detail?
     	boolean bShowInvoiceDetail = false;
     	if (request.getParameter("Detailed") != null){
     		bShowInvoiceDetail = true;
@@ -158,17 +155,27 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
     	String sReportTitle = "Monthly Billing Report";
 
     	String sCriteria = "Starting with date <B>" + sStartingDate + "</B>"
-    		+ ", ending with date <B>" + sEndingDate + "</B>"
-    		+ ", including order types <B>" + sServiceTypes + "</B>";
+    		+ ", ending with date <B>" + sEndingDate + "</B>";
     	
-   		sCriteria = sCriteria + ", including sales groups: ";
-    	for (int i = 0; i < sSalesGroups.size(); i++){
+    	//List service types
+    	sCriteria	+= ", including service types: ";
+    	for (int i = 0; i < arrServiceTypes.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + sSalesGroups.get(i).substring(
-   					0, sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
+    			sCriteria += "<B>" + arrServiceTypes.get(i) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + sSalesGroups.get(i).substring(
-       					0, sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
+    			sCriteria += ", <B>" + arrServiceTypes.get(i) + "</B>";
+    		}
+    	}
+    	
+    	//List sales groups
+   		sCriteria += ", including sales groups: ";
+    	for (int i = 0; i < arrSalesGroups.size(); i++){
+    		if (i == 0){
+    			sCriteria += "<B>" + arrSalesGroups.get(i).substring(
+   					0, arrSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
+    		}else{
+    			sCriteria += ", <B>" + arrSalesGroups.get(i).substring(
+       					0, arrSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
     		}
     	}
     	
@@ -236,9 +243,8 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
     			conn, 
     			sStartingDate, 
     			sEndingDate, 
-    			sSalesGroups,
-    			bIncludeSales, 
-    			bIncludeService, 
+    			arrSalesGroups,
+    			arrServiceTypes,
     			bShowInvoiceDetail, 
     			sDBID,
     			sUserID,

@@ -8,9 +8,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Map.Entry;
+
 
 import javax.servlet.ServletContext;
 import SMClasses.SMOrderHeader;
@@ -899,13 +898,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 						+   "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(hmTotalServiceTypeTotals.get(sServiceTypeDescription)) + "</B></FONT></TD>\n"
 						+   "</TR>\n");
 				}
-				
-				
-			//	out.println( "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
-			//	+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Service Type Total:</B></FONT></TD>\n"
-			//	+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalServiceTypeTotals) + "</B></FONT></TD>\n"
-			//	+   "</TR>\n"
-								
+		
 				out.println( "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" colspan=\"3\" ALIGN=RIGHT><FONT SIZE=2><B>Company Total:</B></FONT></TD>\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmount) + "</B></FONT></TD>\n"

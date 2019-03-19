@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
 import SMDataDefinition.SMTableapaccountsets;
-import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapdistributioncodes;
 import SMDataDefinition.SMTableaptransactionlines;

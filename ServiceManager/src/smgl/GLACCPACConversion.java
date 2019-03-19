@@ -660,7 +660,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			}
 			BigDecimal bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = new BigDecimal("0.00");
+				bdTotalPreviousYearToDate = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
 			}
 			BigDecimal bdTotalYearToDate = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
 
@@ -718,7 +718,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
+			
 			if (bPreviousYearWasFound){
 				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2));
 			}
@@ -779,7 +779,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3));
 			}
@@ -821,30 +820,29 @@ public class GLACCPACConversion  extends java.lang.Object{
 				throw new Exception("Error [1552579532] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 4:	// !CHANGE!
-			sPeriod = "4"; // !CHANGE!
+			//PERIOD 4:	
+			sPeriod = "4"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -879,34 +877,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579533] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 5:	// !CHANGE!
-			sPeriod = "5"; // !CHANGE!
+			//PERIOD 5:	
+			sPeriod = "5"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -941,34 +937,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579534] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 6:	// !CHANGE!
-			sPeriod = "6"; // !CHANGE!
+			//PERIOD 6:	
+			sPeriod = "6"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1003,34 +997,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579536] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 7:	// !CHANGE!
-			sPeriod = "7"; // !CHANGE!
+			//PERIOD 7:	
+			sPeriod = "7"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1065,34 +1057,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579537] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 8:	// !CHANGE!
-			sPeriod = "8"; // !CHANGE!
+			//PERIOD 8:	
+			sPeriod = "8"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1127,34 +1117,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579538] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 9:	// !CHANGE!
-			sPeriod = "9"; // !CHANGE!
+			//PERIOD 9:	
+			sPeriod = "9"; 
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1189,34 +1177,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579539] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}	
 			
-			//PERIOD 10:	// !CHANGE!
-			sPeriod = "10"; // !CHANGE!
+			//PERIOD 10:
+			sPeriod = "10";
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1251,34 +1237,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579540] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 11:	// !CHANGE!
-			sPeriod = "11"; // !CHANGE!
+			//PERIOD 11:
+			sPeriod = "11";
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1313,34 +1297,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579541] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 12:	// !CHANGE!
-			sPeriod = "12"; // !CHANGE!
+			//PERIOD 12:
+			sPeriod = "12";
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  
 
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1375,34 +1357,32 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579542] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			
-			//PERIOD 13:	// !CHANGE!
-			sPeriod = "13"; // !CHANGE!
+			//PERIOD 13:
+			sPeriod = "13";
 			
-			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  // !CHANGE!
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  
 			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
 			if (bPreviousYearWasFound){
-				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  // !CHANGE!
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  
 			}
-			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  // !CHANGE!
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
 			
 			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  // !CHANGE!
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
 			}
 			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
 				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
 			}
-			bdTotalPreviousYearToDate = new BigDecimal("0.00");
 			if (bPreviousYearWasFound){
-				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  // !CHANGE!
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  
 			}
-			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  // !CHANGE!
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  
 			
 			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 				+ "("
@@ -1437,7 +1417,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 				iCounter++;
 			} catch (Exception e) {
 				rsGLFiscalSets.close();
-				 // !CHANGE! below
 				throw new Exception("Error [1552579543] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
 			

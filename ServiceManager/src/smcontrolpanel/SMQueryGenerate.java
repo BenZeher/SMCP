@@ -234,17 +234,18 @@ public class SMQueryGenerate extends HttpServlet {
 	    }
 	    
 	    //Print the selection criteria and the title here:
-	    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
-		   + "  <TR>\n"
-	       + "    <TD><FONT SIZE=2>" + sCriteria + "</FONT></TD>\n"
-	       + "  </TR>\n"
-		   + "  <TR>\n"
-	       + "    <TD style = \" text-align:center; font-size: x-large; font-weight:bold;  \">" + sQueryTitle + "</TD>\n"
-	       + "  </TR>\n"
-		   + "</TABLE>\n"
-	       + "<BR>"
-	    );
-
+	    if(!bHideHeaderFooter){
+		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
+			   + "  <TR>\n"
+		       + "    <TD><FONT SIZE=2>" + sCriteria + "</FONT></TD>\n"
+		       + "  </TR>\n"
+			   + "  <TR>\n"
+		       + "    <TD style = \" text-align:center; font-size: x-large; font-weight:bold;  \">" + sQueryTitle + "</TD>\n"
+		       + "  </TR>\n"
+			   + "</TABLE>\n"
+		       + "<BR>"
+		    );
+	    }
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(
     			getServletContext(), 

@@ -643,18 +643,13 @@ public class clsServletUtilities {
 	public static String getAbsoluteRootPath(HttpServletRequest req, ServletContext context){
 
 		String sPath = "";
-
-		//If the program is using the correct tomcat configuration, then this path is returned with this call:
-		// String sPath = context.getRealPath("/");
+		
 		if (context.getInitParameter(WebContextParameters.webappname) != null){
-			if(System.getProperty("os.name").equals("Linux"))
-				sPath = context.getRealPath("/");
-			else
-				sPath = context.getRealPath("\\");
+			sPath = System.getProperty( "catalina.base" ) 
+					+ System.getProperty("file.separator")  + "webapps" 
+					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.webappname);
 		}else{
-			//This returns the absolute path to the 'ROOT' folder, with a file separator
-			//at the end:
-			sPath = context.getRealPath(req.getContextPath());
+			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
 		}
 
 		//Strip off any file separators we don't need:
@@ -1185,16 +1180,14 @@ public class clsServletUtilities {
 	public static String getRootPath(ServletContext context){
 		String sPath = "";
 	
-		//If the program is using the correct tomcat configuration, then this path is returned with this call:
-		// String sPath = context.getRealPath("/");
-		//if (context.getInitParameter(WebContextParameters.webappname) != null){
-			sPath = context.getRealPath("/");
-		//}else{
-			//This returns the absolute path to the 'ROOT' folder, with a file separator
-			//at the end:
-			//sPath = context.getRealPath(req.getContextPath());
-		//}
-	
+		if (context.getInitParameter(WebContextParameters.webappname) != null){
+			sPath = System.getProperty( "catalina.base" ) 
+					+ System.getProperty("file.separator")  + "webapps" 
+					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.webappname);
+		}else{
+			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
+		}
+
 		//Strip off any file separators we don't need:
 		while (
 				sPath.endsWith(System.getProperty("file.separator"))

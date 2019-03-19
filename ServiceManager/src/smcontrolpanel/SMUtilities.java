@@ -1321,29 +1321,29 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getFullPathToResourceFolder(ServletContext context) throws Exception{
 		
-			String sFullFilePath = context.getRealPath(System.getProperty("file.separator"));
-			//Strip out the web app path from the absolute path:
-			sFullFilePath = sFullFilePath.replace(WebContextParameters.getInitWebAppName(context), "");
-			while (sFullFilePath.endsWith(System.getProperty("file.separator"))){
-				sFullFilePath = sFullFilePath.substring(0, sFullFilePath.length() - 1);
-			}
-			
+			//Get catalina base
+			String sFullFilePath = System.getProperty( "catalina.base" );
+				
+			//Add webapps folder to the path
+			sFullFilePath += System.getProperty("file.separator") + "webapps";
+				
+			//Add local resources folder to the path
 			sFullFilePath = sFullFilePath + System.getProperty("file.separator");
-			
+
 			if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
 				sFullFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
 			}else{
 				sFullFilePath += WebContextParameters.getLocalResourcesPath(context);
 			}
-
+			//End with file separator
 			while (sFullFilePath.endsWith(System.getProperty("file.separator"))){
 				sFullFilePath = sFullFilePath.substring(0, sFullFilePath.length() - 1);
 			}
 			sFullFilePath += System.getProperty("file.separator");
-			
+				
 			//return full path to resource folder (e.g. '/var/lib/tomcat7/webapps/smlocalresources/')
 			return sFullFilePath;
-		}
+	}
 	public static String getTempFileDirectory(
 			ServletContext context, 
 			HttpServletRequest request){

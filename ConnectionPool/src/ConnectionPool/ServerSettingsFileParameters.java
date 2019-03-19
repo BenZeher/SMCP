@@ -126,7 +126,7 @@ public class ServerSettingsFileParameters {
 		
 		//Add local resources folder to the path
 		sFullFilePath = sFullFilePath + System.getProperty("file.separator");
-		//System.out.println("[1552416111] sFullFilePath = " + sFullFilePath);
+
 		if (WebContextParameters.getLocalResourcesPath(context).startsWith(System.getProperty("file.separator"))){
 			sFullFilePath += WebContextParameters.getLocalResourcesPath(context).substring(1);
 		}else{

@@ -131,40 +131,36 @@ public class SMMonthlySalesReportGenerate extends HttpServlet {
     	}
 
 	    //Sales types:
-    	boolean bIncludeSales = false;
-    	boolean bIncludeService = false;
+
     	boolean bShowIndividualOrders = false;
-    	String sServiceTypes = "";
-		if(request.getParameter("SalesType").compareToIgnoreCase("Sales") == 0){
-			sServiceTypes = "Sales";
-			bIncludeSales = true;
-		}
-		if(request.getParameter("SalesType").compareToIgnoreCase("Service") == 0){
-			bIncludeService = true;
-			sServiceTypes = "Service";
-		}
-		if(request.getParameter("SalesType").compareToIgnoreCase("SalesAndService") == 0){
-			bIncludeSales = true;
-			bIncludeService = true;
-			sServiceTypes = "Sales AND Service";
-		}
 		if(request.getParameter("ShowIndividualOrders") != null){
 			bShowIndividualOrders = true;
 		}
 		
-    	//Get the list of selected sales groups:
-    	ArrayList<String> sSalesGroups = new ArrayList<String>(0);
+    	//Get the list of selected sales groups, service types, and salesperson
+    	ArrayList<String> arrSalesGroups = new ArrayList<String>(0);
+    	ArrayList<String> arrServiceTypes = new ArrayList<String>(0);
+    	ArrayList<String> arrSalespersons = new ArrayList<String>(0);
     	Enumeration<String> paramNames = request.getParameterNames();
 	    String sParamName = "";
-	    String sMarker = SMMonthlySalesReportSelection.SALESGROUP_PARAM;
+	    String sSalesGroupMarker = SMMonthlySalesReportSelection.SALESGROUP_PARAM;
+	    String sServiceTypeMarker = SMMonthlySalesReportSelection.SERVICETYPE_PARAM;
+	    String sSalespersonMarker = "SALESPERSON";
 	    while(paramNames.hasMoreElements()) {
 	      sParamName = paramNames.nextElement();
-		  if (sParamName.contains(sMarker)){
-			  sSalesGroups.add(sParamName.substring(sParamName.indexOf(sMarker) + sMarker.length()));
+	      
+		  if (sParamName.contains(sSalesGroupMarker)){
+			  arrSalesGroups.add(sParamName.substring(sParamName.indexOf(sSalesGroupMarker) + sSalesGroupMarker.length()));
+		  }
+		  if (sParamName.contains(sServiceTypeMarker)){
+			  arrServiceTypes.add(sParamName.substring(sParamName.indexOf(sServiceTypeMarker) + sServiceTypeMarker.length()));
+		  }
+		  if (sParamName.contains(sSalespersonMarker)){
+			  arrSalespersons.add(sParamName.substring(sParamName.indexOf(sSalespersonMarker) + sSalespersonMarker.length()));
 		  }
 	    }
-	    Collections.sort(sSalesGroups);
-    	if (sSalesGroups.size() == 0){
+	    Collections.sort(arrSalesGroups);
+    	if (arrSalesGroups.size() == 0){
     		sWarning = "You must select at least one sales group.";
     		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
@@ -173,43 +169,49 @@ public class SMMonthlySalesReportGenerate extends HttpServlet {
     		);			
         	return;
     	}
-	    
-    	//Get the list of selected salespersons:
-    	ArrayList<String> sSalespersons = new ArrayList<String>(0);
-	    paramNames = request.getParameterNames();
-	    sMarker = "SALESPERSON";
-	    while(paramNames.hasMoreElements()) {
-	      sParamName = paramNames.nextElement();
-	      //System.out.println("sParamname = " + sParamName);
-		  if (sParamName.contains(sMarker)){
-			  //System.out.println("sSalespersons.add: " + sParamName.substring(sParamName.indexOf(sMarker) + sMarker.length()));
-			  sSalespersons.add(sParamName.substring(sParamName.indexOf(sMarker) + sMarker.length()));
-		  }
-	    }
-	    Collections.sort(sSalespersons);
+    	 Collections.sort(arrServiceTypes);
+     	if (arrServiceTypes.size() == 0){
+     		sWarning = "You must select at least one service type.";
+     		response.sendRedirect(
+ 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+ 				+ "Warning=" + sWarning
+ 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+     		);			
+         	return;
+     	}    
+     	 Collections.sort(arrSalespersons);
+	   
 	    
     	//Customized title
 
     	String sReportTitle = "Monthly Sales Report";
 
     	String sCriteria = "Starting with date <B>" + sStartingDate + "</B>"
-    		+ ", ending with date <B>" + sEndingDate + "</B>"
-    		+ ", including order types <B>" + sServiceTypes + "</B>";
+    		+ ", ending with date <B>" + sEndingDate + "</B>";
+    		
+    	sCriteria	+= ", including service types: ";
+    	for (int i = 0; i < arrServiceTypes.size(); i++){
+    		if (i == 0){
+    			sCriteria += "<B>" + arrServiceTypes.get(i) + "</B>";
+    		}else{
+    			sCriteria += ", <B>" + arrServiceTypes.get(i) + "</B>";
+    		}
+    	}
 
    		sCriteria = sCriteria + ", including sales groups: ";
-    	for (int i = 0; i < sSalesGroups.size(); i++){
+    	for (int i = 0; i < arrSalesGroups.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + sSalesGroups.get(i).substring(
-   					0, sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
+    			sCriteria += "<B>" + arrSalesGroups.get(i).substring(
+   					0, arrSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + sSalesGroups.get(i).substring(
-       					0, sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
+    			sCriteria += ", <B>" + arrSalesGroups.get(i).substring(
+       					0, arrSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
     		}
     	}
 
     	sCriteria = sCriteria + " for salespersons: ";
-    	for (int i = 0; i < sSalespersons.size(); i++){
-    		String sSalespersonCode = sSalespersons.get(i);
+    	for (int i = 0; i < arrSalespersons.size(); i++){
+    		String sSalespersonCode = arrSalespersons.get(i);
     		if (sSalespersonCode.compareToIgnoreCase("") == 0){
     			sSalespersonCode = SMOrderHeader.UNLISTEDSALESPERSON_MARKER;
     		}
@@ -277,13 +279,12 @@ public class SMMonthlySalesReportGenerate extends HttpServlet {
     			conn, 
     			sStartingDate, 
     			sEndingDate, 
-    			bIncludeSales, 
-    			bIncludeService,
+    			arrServiceTypes,
     			bShowIndividualOrders,
     			sDBID,
     			sUserID,
-    			sSalespersons,
-    			sSalesGroups,
+    			arrSalespersons,
+    			arrSalesGroups,
     			out,
     			getServletContext(),
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){

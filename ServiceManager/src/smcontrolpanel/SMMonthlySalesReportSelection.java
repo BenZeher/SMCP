@@ -16,6 +16,7 @@ import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
+import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -24,6 +25,7 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMMonthlySalesReportSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
+	public static final String SERVICETYPE_PARAM = "SERVICETYPE";
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
 	public static final String SALESGROUP_PARAM_SEPARATOR = ",";
 	public static final String PRINTINDIVIDUAL_PARAMETER = "INDIVIDUAL";
@@ -130,21 +132,52 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		out.println("</TD>");
 		out.println("</TR>");
 		
+		//check boxes for service type
 		out.println("<TR>");
-		out.println("<TD><B>Billing type:</B></TD>");
+		out.println("<TD><B>Service type:</B></TD>");
 		out.println("<TD>");
-		out.println("<LABEL NAME = \"" + "BILLINGTYPELABELSALES \" ><input type=\"radio\" name=\"SalesType\" value=\"Sales\" checked> Sales</LABEL>&nbsp;");
-		out.println("<LABEL NAME = \"" + "BILLINGTYPELABELSERVICE \" ><input type=\"radio\" name=\"SalesType\" value=\"Service\"> Service</LABEL>&nbsp;");
-		out.println("<LABEL NAME = \"" + "BILLINGTYPELABELSALESANDSERVICE \" ><input type=\"radio\" name=\"SalesType\" value=\"SalesAndService\"> Sales AND Service</LABEL>");
+		
+		String SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+				+ " FROM " + SMTableorderheaders.TableName
+				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName ;
+			try{
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+				while(rs.next()){
+					String sServiceTypeCode = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode);
+					String sServiceTypeName = rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName);
+
+					if (sServiceTypeName == null || sServiceTypeName.compareToIgnoreCase("") == 0){
+						sServiceTypeName = "(BLANK)";
+					}
+					
+					if (sServiceTypeCode != null && sServiceTypeCode.compareToIgnoreCase("") != 0){
+					out.println(
+							  "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
+							  + sServiceTypeCode					
+							  + "\" CHECKED width=0.25>" 
+							  + sServiceTypeCode + " - " + sServiceTypeName
+							  + "<BR>");
+					}
+				}
+				rs.close();
+			}catch (SQLException e){
+				out.println("Could not read service types table - " + e.getMessage());
+			}
+			
 		out.println("</TD>");
 		out.println("</TR>");
 		
-		//checkboxes for sales groups:
+		//check boxes for sales groups:
 		out.println("<TR>");
 		out.println("<TD><B>Include sales groups:<B></TD>");
 		out.println("<TD>");
 		
-		String SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup 
+		SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup 
 			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode
 			+ ", " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc
 				+ " FROM " + SMTableorderheaders.TableName

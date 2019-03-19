@@ -1213,12 +1213,13 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionDescriptions.add("Required to edit orders - gives access to the order header, order details, order totals, and order detail list screens for editing.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
+/*		3/19/2019 Currently not being used. 
 		arrFunctions.add("SM Sales Effort Check"); 
 		arrFunctionIDs.add(SMSalesEffortCheck); 
 		arrFunctionLinks.add("smcontrolpanel.SMSalesEffortCheckSelection"); 
 		arrFunctionDescriptions.add("Required to run the Sales Effort Check report.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
-
+*/
 		arrFunctions.add("SM View Order Detail Information"); 
 		arrFunctionIDs.add(SMViewOrderDetailInformation); 
 		arrFunctionLinks.add(""); 

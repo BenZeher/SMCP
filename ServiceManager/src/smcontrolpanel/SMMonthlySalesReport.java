@@ -31,21 +31,16 @@ public class SMMonthlySalesReport extends java.lang.Object{
 			Connection conn,
 			String sStartingDate,
 			String sEndingDate,
-			boolean bIncludeSales,
-			boolean bIncludeService,
+			ArrayList<String> arrServiceTypes,
 			boolean bShowIndividualOrders,
 			String sDBID,
 			String sUserID,
-			ArrayList<String> sSalespersonList,
-			ArrayList<String> sSalesGroupList,
+			ArrayList<String> arrSalespersonList,
+			ArrayList<String> arrSalesGroupList,
 			PrintWriter out,
 			ServletContext context,
 			String sLicenseModuleLevel
 			){
-	
-	for (int i = 0; i < sSalespersonList.size(); i++){
-		//System.out.println("[1518791294] sSalespersonList.get(" + i + ") = '" + sSalespersonList.get(i) + "'.");
-	}
 		
     //The first half of the statement doesn't care if the orders have been canceled, and the values are added as if it was not canceled:
     String SQL = "SELECT" + "\n"
@@ -105,43 +100,40 @@ public class SMMonthlySalesReport extends java.lang.Object{
 			+ SMTableorderheaders.ORDERTYPE_QUOTE + ")" + "\n"
 			;
     
-		   	//SH0002 and SH0004 are sales
-		    if(!bIncludeSales){
-		        SQL = SQL + " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0002')" + "\n"
-		        	+ " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0004')" + "\n";
-		    }
-		    
-		    //SH0001 and SH0003 are service
-		    if(!bIncludeService){
-		        SQL = SQL + " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0001')" + "\n"
-		        	+ " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0003')" + "\n";
-		    }
-		    
-		    if (sSalespersonList.size() > 0){
+    		//Get service types
+    		if (arrServiceTypes.size() > 0){
+    			SQL = SQL + " AND (" + "\n";
+    			for (int i = 0; i < arrServiceTypes.size(); i++){
+    				if (i > 0){
+    					SQL = SQL + " OR ";
+    				}
+    				SQL = SQL + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+    						+ " = '" + arrServiceTypes.get(i) + "')" + "\n";
+    			}
+    		}
+    		SQL += ")" + "\n";
+		    //Get salesperson's
+		    if (arrSalespersonList.size() > 0){
 		    	SQL = SQL + " AND (" + "\n";
-			    for (int i = 0; i < sSalespersonList.size(); i++){
+			    for (int i = 0; i < arrSalespersonList.size(); i++){
 			    	if (i > 0){
 			    		SQL = SQL + " OR ";
 			    	}
 			    	SQL = SQL + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-			    		+ " = '" + sSalespersonList.get(i) + "')" + "\n";
+			    		+ " = '" + arrSalespersonList.get(i) + "')" + "\n";
 			    }
 		    }
 		    SQL += ")" + "\n";
     		//Get the sales groups:
-		    if (sSalesGroupList.size() > 0){
+		    if (arrSalesGroupList.size() > 0){
 		    	SQL += " AND (" + "\n";
-	    		for (int i = 0; i < sSalesGroupList.size(); i++){
+	    		for (int i = 0; i < arrSalesGroupList.size(); i++){
 	    			if (i == 0){
 	    				SQL += "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
 	    			}else{
 	    				SQL += " OR (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
 	    			}
 	    		}
 	    		SQL = SQL + ")" + "\n";
@@ -207,44 +199,42 @@ public class SMMonthlySalesReport extends java.lang.Object{
 			+ SMTableorderheaders.ORDERTYPE_QUOTE + ")" + "\n"
 			;
 		
-		   	//SH0002 and SH0004 are sales
-		    if(!bIncludeSales){
-		        SQL = SQL + " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0002')" + "\n"
-		        	+ " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0004')" + "\n";
-		    }
-		    
-		    //SH0001 and SH0003 are service
-		    if(!bIncludeService){
-		        SQL = SQL + " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0001')" + "\n"
-		        	+ " AND (" + SMTableorderheaders.TableName + "." 
-		        	+ SMTableorderheaders.sServiceTypeCode + " != 'SH0003')" + "\n";
-		    }
-	    
-		    if (sSalespersonList.size() > 0){
+		
+		//Get service types
+		if (arrServiceTypes.size() > 0){
+			SQL = SQL + " AND (" + "\n";
+			for (int i = 0; i < arrServiceTypes.size(); i++){
+				if (i > 0){
+					SQL = SQL + " OR ";
+				}
+				SQL = SQL + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+						+ " = '" + arrServiceTypes.get(i) + "')" + "\n";
+			}
+			SQL = SQL + ")" + "\n";
+		}
+		
+		    if (arrSalespersonList.size() > 0){
 		    	SQL = SQL + " AND (" + "\n";
-			    for (int i = 0; i < sSalespersonList.size(); i++){
+			    for (int i = 0; i < arrSalespersonList.size(); i++){
 			    	if (i > 0){
 			    		SQL = SQL + " OR ";
 			    	}
 			    	SQL = SQL + "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson 
-			    		+ " = '" + sSalespersonList.get(i) + "')" + "\n";
+			    		+ " = '" + arrSalespersonList.get(i) + "')" + "\n";
 			    }
 		    	SQL = SQL + ")" + "\n";
 		    }
 		    
     		//Get the sales groups:
-		    if (sSalesGroupList.size() > 0){
+		    if (arrSalesGroupList.size() > 0){
 		    	SQL += " AND (" + "\n";
-	    		for (int i = 0; i < sSalesGroupList.size(); i++){
+	    		for (int i = 0; i < arrSalesGroupList.size(); i++){
 	    			if (i == 0){
 	    				SQL += "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
 	    			}else{
 	    				SQL += " OR (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup + " = " 
-	    					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
+	    					+ arrSalesGroupList.get(i).substring(arrSalesGroupList.get(i).indexOf(SMMonthlySalesReportSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")" + "\n";
 	    			}
 	    		}
 	    		SQL = SQL + ")" + "\n";
@@ -252,7 +242,7 @@ public class SMMonthlySalesReport extends java.lang.Object{
 		SQL += ")";
 	    SQL += " ORDER BY " + "SALESGROUP, SALETYPE, SALESPERSON, ORDERNUMBER" + "\n"
 	    ;
-	    //System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
+	   // System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		
 	    String sCurrentSalesGroup = "";
 		String sCurrentSalesType = "";

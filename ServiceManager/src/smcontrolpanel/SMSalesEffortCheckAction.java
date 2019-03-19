@@ -2,23 +2,13 @@ package smcontrolpanel;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Timestamp;
-import java.sql.Connection;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collections;
-import java.util.Enumeration;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import SMClasses.SMLogEntry;
-import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -26,7 +16,7 @@ public class SMSalesEffortCheckAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 
-	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	//private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -46,11 +36,11 @@ public class SMSalesEffortCheckAction extends HttpServlet {
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
-	    String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	   // String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	   // String sUserFirstName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME);
+	   // String sUserLastName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
-	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	   // String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
@@ -129,6 +119,7 @@ public class SMSalesEffortCheckAction extends HttpServlet {
     	}
 
 	    //Sales types:
+    	/*
     	boolean bIncludeSales = false;
     	boolean bIncludeService = false;
     	boolean bShowIndividualOrders = false;
@@ -149,7 +140,7 @@ public class SMSalesEffortCheckAction extends HttpServlet {
 		if(request.getParameter("ShowIndividualOrders") != null){
 			bShowIndividualOrders = true;
 		}
-		
+	/*	
     	//Get the list of selected sales groups:
     	ArrayList<String> sSalesGroups = new ArrayList<String>(0);
     	Enumeration<String> paramNames = request.getParameterNames();
@@ -245,14 +236,14 @@ public class SMSalesEffortCheckAction extends HttpServlet {
     		);			
         	return;
     	}
-    	
+    	/*
     	SMMonthlySalesReport amr = new SMMonthlySalesReport();
+    	
     	if (!amr.processReport(
     			conn, 
     			sStartingDate, 
     			sEndingDate, 
-    			bIncludeSales, 
-    			bIncludeService,
+    			arrServiceTypes,
     			bShowIndividualOrders,
     			sDBID,
     			sUserID,
@@ -263,7 +254,8 @@ public class SMSalesEffortCheckAction extends HttpServlet {
     			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
     		out.println("Could not print report - " + amr.getErrorMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080659]");
+    	*/
+    	//clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080659]");
 	    out.println("</BODY></HTML>");
 	}
 }

@@ -8,8 +8,6 @@ import javax.servlet.http.*;
 import ServletUtilities.clsDatabaseFunctions;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 /* Servlet that insert In-Time records into the the time entry table.*/
 

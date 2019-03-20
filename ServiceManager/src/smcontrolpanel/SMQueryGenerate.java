@@ -76,7 +76,7 @@ public class SMQueryGenerate extends HttpServlet {
 		String sComment = clsManageRequestParameters.get_Request_Parameter(SMTablesavedqueries.scomment, request);
 		boolean bIncludeBorder = (request.getParameter(SMQuerySelect.PARAM_INCLUDEBORDER) != null);
     	String sReportTitle = "Service Manager Query: " + sQueryTitle;  
-    	String sCriteria = "";
+    	String sCriteria = getParameterPromptsAndValues(request);
 
 		boolean bExportAsCommaDelimited = clsManageRequestParameters.get_Request_Parameter(
 				SMQuerySelect.PARAM_EXPORTOPTIONS, 
@@ -115,12 +115,12 @@ public class SMQueryGenerate extends HttpServlet {
 			   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, sCallingClass) 
 			   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
 			   + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
-			   + "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>");
+			  );
 					   
 	    	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
-		    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICPOReceivingReport) 
+		    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMQuerySelector) 
 		    		+ "\">Summary</A><BR><BR>");
 			out.println("</TD></TR></TABLE>");
 			   }
@@ -232,7 +232,20 @@ public class SMQueryGenerate extends HttpServlet {
 			}
 			out.println("</FORM>");
 	    }
-
+	    
+	    //Print the selection criteria and the title here:
+	    if(!bHideHeaderFooter){
+		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
+			   + "  <TR>\n"
+		       + "    <TD><FONT SIZE=2>" + sCriteria + "</FONT></TD>\n"
+		       + "  </TR>\n"
+			   + "  <TR>\n"
+		       + "    <TD style = \" text-align:center; font-size: x-large; font-weight:bold;  \">" + sQueryTitle + "</TD>\n"
+		       + "  </TR>\n"
+			   + "</TABLE>\n"
+		       + "<BR>"
+		    );
+	    }
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(
     			getServletContext(), 
@@ -451,6 +464,60 @@ public class SMQueryGenerate extends HttpServlet {
 			throw e;
 		}
 		return;
+	}
+	private String getParameterPromptsAndValues(HttpServletRequest req){
+		
+		String sCriteria = "";
+		ArrayList<String>arrQueryParameterNames = new ArrayList<String>(0);
+		Enumeration <String> e = req.getParameterNames();
+		String sParam = "";
+		while (e.hasMoreElements()){
+			sParam = e.nextElement();
+			//If the parameter contains EITHER the 'query parameter base' OR the query DATE PICKER parameter base, add
+			//it to the list of parameter names:
+			if (sParam.contains(SMQueryParameters.QUERYPARAMBASE)){
+				//But we don't want to include the 'QUERYDROPDOWNCHOICEBASE' parameters:
+				if (!sParam.contains(SMQueryParameters.QUERYDROPDOWNCHOICEBASE)){
+					arrQueryParameterNames.add(sParam);
+				}
+			}
+			if (sParam.contains(SMQueryParameters.QUERYDATEPICKERPARAMBASE)){
+				if (!sParam.contains(SMQueryParameters.QUERYDROPDOWNCHOICEBASE)){
+					arrQueryParameterNames.add(sParam);
+				}
+			}
+		}
+		Collections.sort(arrQueryParameterNames);
+		
+		//Now build the list of criteria:
+		for (int i = 0; i < arrQueryParameterNames.size(); i++){
+			System.out.println("[1553031177] - arrQueryParameterNames.get(i) = '" + arrQueryParameterNames.get(i) + "'");
+			//If the control on the form was NOT a drop down list, then the user's choice was simply whatever was placed in the text field:
+			String sUserChoice = clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req);
+			//But if the control was a DROP DOWN LIST, then we have to go get the actual user's choice, because it may be different than the 'value' of the control:
+			
+			//See if we have a parameter whose name includes the control's name AND the select value:
+			String sDropDownChoiceParam = SMQueryParameters.QUERYDROPDOWNCHOICEBASE + arrQueryParameterNames.get(i) + clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req).trim();
+			System.out.println("[1553031178] - sDropDownChoiceParam = '" + sDropDownChoiceParam + "'");
+			if (req.getParameter(sDropDownChoiceParam) != null){
+				sUserChoice = clsManageRequestParameters.get_Request_Parameter(sDropDownChoiceParam, req);
+				System.out.println("[1553031179] - sUserChoice = '" + sUserChoice + "'");
+			}
+			
+			sCriteria += clsManageRequestParameters.get_Request_Parameter(
+					arrQueryParameterNames.get(i).replaceAll(
+						SMQueryParameters.QUERYPARAMBASE, SMQueryParameters.QUERYPARAMPROMPTBASE).replaceAll(
+							SMQueryParameters.QUERYDATEPICKERPARAMBASE, SMQueryParameters.QUERYPARAMPROMPTBASE), req)
+				+ " <B>"
+				+ sUserChoice
+				+ "</B>"
+				+ "<BR>"
+			;
+		}
+		if (sCriteria.compareToIgnoreCase("") != 0){
+			sCriteria = "<BR><I><U><B>Selection Criteria:</B></U></I><BR>" + sCriteria;
+		}
+		return sCriteria;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

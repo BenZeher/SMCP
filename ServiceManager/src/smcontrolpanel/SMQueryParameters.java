@@ -24,6 +24,8 @@ public class SMQueryParameters  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String QUERYPARAMBASE = "QPBASE";
 	public static final String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
+	public static final String QUERYPARAMPROMPTBASE = "QPPARAMPROMPTBASE";
+	public static final String QUERYDROPDOWNCHOICEBASE = "QPDROPDOWNCHOICEBASE";
 	private static final String CALLED_CLASS_NAME = "smcontrolpanel.SMQueryGenerate";
 
 	public void doPost(HttpServletRequest request,
@@ -217,18 +219,18 @@ public class SMQueryParameters  extends HttpServlet {
 	private String createParameterEntryFields(String sQuery, String sDatabaseID, String sUserID, String sUserFullName) throws Exception{
 		String s = "";
 	    //Pattern p = Pattern.compile("\\[\\[");
-		Pattern p = null;
-		String[] x = null;
+		Pattern pStartingParameterDelimiterPattern = null;
+		String[] sParameterList = null;
 		try {
-			p = Pattern.compile(clsStringFunctions.convertStringToRegex(SMCustomQuery.STARTINGPARAMDELIMITER));
-			x = p.split(sQuery);
+			pStartingParameterDelimiterPattern = Pattern.compile(clsStringFunctions.convertStringToRegex(SMCustomQuery.STARTINGPARAMDELIMITER));
+			sParameterList = pStartingParameterDelimiterPattern.split(sQuery);
 		}catch(Exception e){
 			throw new Exception("Error [1416325304] splitting query '" + sQuery + "' into parameters - " + e.getMessage());
 		}
-		for (int i=0; i<x.length; i++) {
-			int iEnd = x[i].indexOf(SMCustomQuery.ENDINGPARAMDELIMITER);
+		for (int i=0; i<sParameterList.length; i++) {
+			int iEnd = sParameterList[i].indexOf(SMCustomQuery.ENDINGPARAMDELIMITER);
 			if (iEnd > -1){
-				String sParam = x[i].substring(0, iEnd);
+				String sParam = sParameterList[i].substring(0, iEnd);
 				//First test for a date picker:
 				//If it's a DATEPICKER parameter, then don't pick it up:
 				if (isDatePickerParameter(sParam)){
@@ -258,6 +260,16 @@ public class SMQueryParameters  extends HttpServlet {
 						//Test here to see if the default date is one of the pre-established dates (TODAY, FIRST DAY OF THE YEAR, etc.)
 						sParamDefault = getDefaultDatePickerDate(sParamDefault, sDatabaseID, sUserID, sUserFullName);
 						String sDatePickerField = "<BR>" + sParamPrompt;
+						
+						//Store the prompt in a hidden field:
+						s += "\n"
+							+ "<INPUT"
+							+ " TYPE=HIDDEN NAME = \"" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMPROMPTBASE + "\""
+							+ " VALUE = \"" + sParamPrompt + "\""
+							+ ">"
+							+ "\n"
+						;
+						
 						sDatePickerField += "<BR>" 
 							+ clsCreateHTMLFormFields.Create_Edit_Form_Date_Input_Field(
 								clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYDATEPICKERPARAMBASE, 
@@ -307,9 +319,21 @@ public class SMQueryParameters  extends HttpServlet {
 						}
 						String[] sDescriptions = y[3].substring(0, iParamDataEnd).split(",");
 						ArrayList<String> alDescriptions = new ArrayList<String>(0);
+						
 						for (int m = 0; m < sDescriptions.length; m++){
-							alDescriptions.add(sDescriptions[m].replace("\"", ""));
+
+							String sDescription = sDescriptions[m].replace("\"", "");
+							alDescriptions.add(sDescription);
 						}
+						
+						//Store the prompt in a hidden field:
+						s += "\n"
+							+ "<INPUT"
+							+ " TYPE=HIDDEN NAME = \"" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMPROMPTBASE + "\""
+							+ " VALUE = \"" + sParamPrompt + "\""
+							+ ">"
+							+ "\n"
+						;
 						String sDropDownListField = "<BR>" + sParamPrompt;
 						sDropDownListField += "<BR>"
 							+ clsCreateHTMLFormFields.Create_Edit_Form_List_Field(
@@ -319,7 +343,22 @@ public class SMQueryParameters  extends HttpServlet {
 								alDescriptions
 							)
 						;
-						s += sDropDownListField;
+						s += "\n" + sDropDownListField;
+						
+						//We'll have a list of hidden fields added to it to store the visible listed value, so we can
+						// display it in the 'Criteria' list on the results page:
+						String sVisibleSelectionValuesList = "";
+						for (int iValueCounter = 0; iValueCounter < alValues.size(); iValueCounter++){
+							sVisibleSelectionValuesList += 
+									"<INPUT TYPE=HIDDEN"
+									+ " NAME=\"" + QUERYDROPDOWNCHOICEBASE + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMBASE + alValues.get(iValueCounter).trim() + "\""
+									+ " VALUE=\"" + alDescriptions.get(iValueCounter).trim() + "\""
+									+ ">"
+									+ "\n"
+								;
+						}
+						
+						s += "\n" + sVisibleSelectionValuesList;
 					} catch (Exception e) {
 						throw new Exception("Error [1416325830] in drop down prompt '" + sParam + "' - " + e.getMessage());
 					}
@@ -327,6 +366,14 @@ public class SMQueryParameters  extends HttpServlet {
 					//Ignore it, and pick it up later
 				}else{
 					//It's a regular string parameter:
+					//Store the prompt in a hidden field:
+					s += "\n"
+						+ "<INPUT"
+						+ " TYPE=HIDDEN NAME = \"" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMPROMPTBASE + "\""
+						+ " VALUE = \"" + sParam + "\""
+						+ ">"
+						+ "\n"
+					;
 					s += "<BR>" + sParam;
 					s += "<BR>" + clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 						clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMBASE, 

@@ -75,9 +75,9 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 		out.println("<TD><B>Date range (choose 'Previous Month', 'Current Month',<BR>or enter a date range"
 				+ " in mm/dd/yyyy format):</B></TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
+		out.println("<LABEL NAME = \"" + "DATERANGELABELPREVIOUSMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month</LABEL><BR>");
+		out.println("<LABEL NAME = \"" + "DATERANGELABELCURRENTMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month</LABEL><BR>");
+		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
 		
 		out.println(
 			"Starting:&nbsp;" 
@@ -90,7 +90,7 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 				+ SMUtilities.getDatePickerString("StartingDate", getServletContext())
 				+ "&nbsp;&nbsp;Ending:&nbsp;" + clsCreateHTMLFormFields.TDTextBox(
 						"EndingDate", sDefaultEndDate, 10, 10, "")
-				+ SMUtilities.getDatePickerString("EndingDate", getServletContext())
+				+ SMUtilities.getDatePickerString("EndingDate", getServletContext()) + "</LABEL>"
 			
 		);
 		out.println("</TD>");
@@ -120,10 +120,12 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 					
 					if (sServiceTypeCode != null && sServiceTypeCode.compareToIgnoreCase("") != 0){
 					out.println(
-							  "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
+							  "<LABEL NAME = \"" + "SERVICETYPELABEL" + sServiceTypeCode + " \" >"
+							  + "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
 							  + sServiceTypeCode					
 							  + "\" CHECKED width=0.25>" 
 							  + sServiceTypeCode + " - " + sServiceTypeName
+							  + "</LABEL>"
 							  + "<BR>");
 					}
 				}
@@ -158,12 +160,14 @@ public class SMMonthlyBillingReportSelection  extends HttpServlet {
 				}
 				if (sSalesGroupCode != null && sSalesGroupCode.compareToIgnoreCase("") != 0){
 				out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
+						 "<LABEL NAME = \"" + "SALESGROUPLABEL" + sSalesGroupCode + " \" >"
+						  + "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
 						  + sSalesGroupCode
 						  + PARAM_SEPARATOR
 						  + Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup))						   
 						  + "\" CHECKED width=0.25>" 
 						  + sSalesGroupCode + " - " + sSalesGroupDesc
+						  + "</LABEL>"
 						  + "<BR>");
 				}
 			}

@@ -123,11 +123,11 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		out.println("<TD>");
 		out.println("<LABEL NAME = \"" + "DATERANGELABELPREVIOUSMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month</LABEL><BR>");
 		out.println("<LABEL NAME = \"" + "DATERANGELABELCURRENTMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month</LABEL><BR>");
-		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\"></LABEL>&nbsp;"
+		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;"
 			+ "Starting:&nbsp;" + clsCreateHTMLFormFields.TDTextBox("StartingDate", sDefaultStartDate, 10, 10, "")
 			+ SMUtilities.getDatePickerString("StartingDate", getServletContext())
 			+ "&nbsp;&nbsp;Ending:&nbsp;" + clsCreateHTMLFormFields.TDTextBox("EndingDate", sDefaultEndDate, 10, 10, "")
-			+ SMUtilities.getDatePickerString("EndingDate", getServletContext())
+			+ SMUtilities.getDatePickerString("EndingDate", getServletContext()) + "</LABEL>"
 		);
 		out.println("</TD>");
 		out.println("</TR>");
@@ -157,10 +157,12 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 					
 					if (sServiceTypeCode != null && sServiceTypeCode.compareToIgnoreCase("") != 0){
 					out.println(
-							  "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
+							"<LABEL NAME = \"" + "SERVICETYPELABEL" + sServiceTypeCode + " \" >"  
+							+ "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
 							  + sServiceTypeCode					
 							  + "\" CHECKED width=0.25>" 
 							  + sServiceTypeCode + " - " + sServiceTypeName
+							  + "</LABEL>"
 							  + "<BR>");
 					}
 				}

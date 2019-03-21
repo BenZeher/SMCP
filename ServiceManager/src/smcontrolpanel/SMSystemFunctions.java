@@ -303,7 +303,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long APEditCheckForms = 1211L;
 	public static long APPrintChecks = 1212L;
 	public static long BKUpdateNextCheckNumber = 1213L;
-	//public static long APYearEndProcessing = 1214L;
+	public static long GLQueryFinancialInformation = 1214L;
 	public static long APClearFullyPaidTransactions = 1215L;
 	public static long APDeleteInactiveVendorsQuery = 1216L;
 	public static long APQueryCheckRunLog = 1217L;
@@ -323,6 +323,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
+	
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2576,8 +2577,14 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("SM List Logging Operations");
 			arrFunctionIDs.add(SMDisplayLoggingOperations);
 			arrFunctionLinks.add("smcontrolpanel.SMDisplayLoggingOperations"); 
-			arrFunctionDescriptions.add("Liast all the logging operations; useful for building queries to track who used which function, when, and how. ");
+			arrFunctionDescriptions.add("List all the logging operations; useful for building queries to track who used which function, when, and how. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
+			arrFunctions.add("GL Query GL Financial Information");
+			arrFunctionIDs.add(GLQueryFinancialInformation);
+			arrFunctionLinks.add(""); 
+			arrFunctionDescriptions.add("Allows or denies a user the ability to run queries on GL financial data - this permission is required to run financial statements. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}
 

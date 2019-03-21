@@ -11,10 +11,14 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMLogEntry;
-import ServletUtilities.clsServletUtilities;
+import SMDataDefinition.SMTableglbatches;
+import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class SMCustomQuery extends java.lang.Object{
@@ -65,7 +69,8 @@ public class SMCustomQuery extends java.lang.Object{
 			boolean bShowSQLCommand,
 			boolean bHideHeaderFooter,
 			boolean bHideColumnLabels,
-			ServletContext context
+			ServletContext context,
+			String sLicenseModuleLevel
 	){
 
 		if (bDebugMode){
@@ -73,8 +78,15 @@ public class SMCustomQuery extends java.lang.Object{
 		}
 		long lStartingTime = System.currentTimeMillis();
 		
-		//Log the report usage:
+		//Check permissions on tables included in the query:
+		try {
+			checkTablePermissions(sUserID, context, sDBID, sLicenseModuleLevel, sQueryString);
+		} catch (Exception e2) {
+			m_sErrorMessage = "Error [1553194860] attempting to run query - " + e2.getMessage();
+			return false;
+		}
 		
+		//Log the report usage:
 		if(sQueryID.compareToIgnoreCase("") != 0){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMQUERY, "SMQUERY" + " Saved Query: " + sQueryID, sQueryTitle + " - SQL: '" + sQueryString + "'", "[1376509318]");
@@ -663,5 +675,30 @@ public class SMCustomQuery extends java.lang.Object{
 	}
 	public String getErrorMessage (){
 		return m_sErrorMessage;
+	}
+	private void checkTablePermissions(
+		String sUserID, 
+		ServletContext context, 
+		String sDBID, 
+		String sLicenseModuleLevel,
+		String sQueryString) throws Exception{
+		
+		//Check for GL financial information:
+		if (
+			(sQueryString.contains(SMTableglfinancialstatementdata.TableName))
+			|| (sQueryString.contains(SMTableglfiscalsets.TableName))
+			|| (sQueryString.contains(SMTableglbatches.TableName))
+			|| (sQueryString.contains(SMTablegltransactionlines.TableName))
+		){
+			if (!SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.GLQueryFinancialInformation, 
+				sUserID, 
+				context, 
+				sDBID,
+				sLicenseModuleLevel)
+			){
+				throw new Exception("Error [1553194938] - you do not have permission to query GL financial data.");
+			}
+		}
 	}
 }

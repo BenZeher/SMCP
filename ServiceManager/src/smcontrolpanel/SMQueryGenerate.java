@@ -374,7 +374,10 @@ public class SMQueryGenerate extends HttpServlet {
     			bShowSQLCommand,
     			bHideHeaderFooter,
     			bHideColumnLabels,
-    			getServletContext())){
+    			getServletContext(),
+    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+    		)
+    	){
     		
     		out.println("Could not print query '" + sQueryString + "' - " + qry.getErrorMessage());
     	}

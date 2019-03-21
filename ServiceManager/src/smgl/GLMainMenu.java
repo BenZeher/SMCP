@@ -177,7 +177,6 @@ public class GLMainMenu extends HttpServlet {
 		arMenu.add(SMSystemFunctions.GLEditAccountStructures);
 		arMenu.add(SMSystemFunctions.GLEditAccountGroups);
 		arMenu.add(SMSystemFunctions.GLEditFiscalPeriods);
-		arMenu.add(SMSystemFunctions.GLEditFinancialStatements);
 		
 		//Make this one last:
 		arMenu.add(SMSystemFunctions.GLConvertACCPACData);

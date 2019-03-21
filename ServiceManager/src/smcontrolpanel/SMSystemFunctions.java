@@ -319,7 +319,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLEditAccountStructures = 1227L;
 	public static long GLEditAccountGroups = 1228L;
 	public static long GLEditFiscalPeriods = 1229L;
-	public static long GLEditFinancialStatements = 1230L;
+	//public static long GLEditFinancialStatements = 1230L;
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
@@ -2555,13 +2555,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smgl.GLEditFiscalPeriodsSelect"); 
 			arrFunctionDescriptions.add("Used to add new fiscal years and periods befoe beginning a new year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
-			
-			arrFunctions.add("GL Edit Financial Statements");
-			arrFunctionIDs.add(GLEditFinancialStatements);
-			arrFunctionLinks.add("smgl.GLEditFinancialStatementsSelect"); 
-			arrFunctionDescriptions.add("Design, modify, and save financial statements (balance sheet or income statement) with this function.");
-			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
-			
+						
 			arrFunctions.add("SM Import Data");
 			arrFunctionIDs.add(SMImportData);
 			arrFunctionLinks.add("smcontrolpanel.SMImportDataSelect"); 

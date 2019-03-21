@@ -15,6 +15,7 @@ import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 
@@ -134,6 +135,19 @@ public class GLACCPACConversion  extends java.lang.Object{
 		s+= "GL Fiscal Periods that were added from ACCPAC have been removed.<BR>";
 		
 		System.out.println("[1552318887] - removed fiscal periods.");
+		
+		//Remove any GL transactions that we added from ACCPAC:
+		SQL = "TRUNCATE " + SMTablegltransactionlines.TableName
+		;
+		try {
+			Statement stmt = cnSMCP.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1553200508] - could not remove GL transactions - " + e.getMessage());
+		}
+		s+= "GL transactions that were added from ACCPAC have been removed.<BR>";
+		
+		System.out.println("[1553200509] - removed GL transactions.");
 		
 		return s;
 	}
@@ -1432,7 +1446,123 @@ public class GLACCPACConversion  extends java.lang.Object{
 		return sStatus;
 		
 	}
-	
+	public String processGLTransactions(
+		Connection cnSMCP, 
+		Connection cnACCPAC, 
+		int iAPDatabaseType, 
+		String sUser,
+		String sUserID,
+		String sUserFullName) throws Exception{
+		
+		String sStatus = "";
+		
+		//First delete any GL transactionlines that may have been added by a previous conversion:
+		String sTablename = SMTablegltransactionlines.TableName;
+		String SQL = "TRUNCATE " + sTablename;
+		try {
+			Statement stmtDelete = cnSMCP.createStatement();
+			stmtDelete.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1553200423] - could not delete GL transactions using SQL '" + SQL + "' - " + e.getMessage());
+		}
+		
+		/* GLPOST field names:
+		[ACCTID]
+      ,[FISCALYR]
+      ,[FISCALPERD]
+      ,[SRCECURN]
+      ,[SRCELEDGER]
+      ,[SRCETYPE]
+      ,[POSTINGSEQ]
+      ,[CNTDETAIL]
+      ,[AUDTDATE]
+      ,[AUDTTIME]
+      ,[AUDTUSER]
+      ,[AUDTORG]
+      ,[JRNLDATE]
+      ,[BATCHNBR]
+      ,[ENTRYNBR]
+      ,[TRANSNBR]
+      ,[EDITALLOWD]
+      ,[CONSOLIDAT]
+      ,[COMPANYID]
+      ,[JNLDTLDESC]
+      ,[JNLDTLREF]
+      ,[TRANSAMT]
+      ,[TRANSQTY]
+      ,[SCURNDEC]
+      ,[SCURNAMT]
+      ,[HCURNCODE]
+      ,[RATETYPE]
+      ,[SCURNCODE]
+      ,[RATEDATE]
+      ,[CONVRATE]
+      ,[RATESPREAD]
+      ,[DATEMTCHCD]
+      ,[RATEOPER]
+      ,[DRILSRCTY]
+      ,[DRILLDWNLK]
+      ,[DRILAPP]
+      ,[RPTAMT]
+      ,[VALUES]
+      ,[DOCDATE]
+		 */
+		
+		SQL = "SELECT * FROM GLPOST";
+		Statement stmtACCPAC = cnACCPAC.createStatement();
+		ResultSet rsPostedTransactions = stmtACCPAC.executeQuery(SQL);
+		int iCounter = 0;
+		while (rsPostedTransactions.next()){
+			String SQLInsert = "INSERT INTO " + sTablename + "("
+				+ SMTablegltransactionlines.bdamount
+				+ ", " + SMTablegltransactionlines.datpostingdate
+				+ ", " + SMTablegltransactionlines.dattransactiondate
+				+ ", " + SMTablegltransactionlines.iconsolidatedposting
+				+ ", " + SMTablegltransactionlines.ifiscalperiod
+				+ ", " + SMTablegltransactionlines.ifiscalyear
+				+ ", " + SMTablegltransactionlines.loriginalbatchnumber
+				+ ", " + SMTablegltransactionlines.loriginalentrynumber
+				+ ", " + SMTablegltransactionlines.loriginallinenumber
+				+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+				+ ", " + SMTablegltransactionlines.sacctid
+				+ ", " + SMTablegltransactionlines.sdescription
+				+ ", " + SMTablegltransactionlines.sreference
+				+ ", " + SMTablegltransactionlines.ssourceledger
+				+ ", " + SMTablegltransactionlines.ssourcetype
+				+ ", " + SMTablegltransactionlines.stransactiontype
+				+ ") VALUES ("
+				+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablegltransactionlines.bdamountScale, rsPostedTransactions.getBigDecimal("TRANSAMT")).replace(",", "") //bdamount
+				+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("JRNLDATE"), false) + "'" //datpostingdate
+				+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("DOCDATE"), false) + "'" //dattransactiondate
+				+ ", " + Integer.toString(rsPostedTransactions.getInt("CONSOLIDAT")) //consolidated posting
+				+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALPERD")) //fiscal period
+				+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALYR")) //fiscal year
+				+ ", 0" //original batch number
+				+ ", 0" //original entry number
+				+ ", 0" //original line number
+				+ ", 0" //source transaction line ID
+				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
+				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription
+				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLREF").trim()) + "'" //reference
+				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCELEDGER").trim()) + "'" //source ledger
+				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCETYPE").trim()) + "'" //source type
+				+ ", 0" //stransactiontype
+			;
+			try {
+				Statement stmtInsert = cnSMCP.createStatement();
+				stmtInsert.execute(SQLInsert);
+				iCounter++;
+			} catch (Exception e) {
+				rsPostedTransactions.close();
+				throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+		}
+		rsPostedTransactions.close();
+
+		sStatus +=  "<BR>Added " + Integer.toString(iCounter) + " GL account segments to " + sTablename + "<BR>";
+		
+		return sStatus;
+	}
 	public String processGLFiscalCalendar(
 			Connection cnSMCP, 
 			Connection cnACCPAC, 

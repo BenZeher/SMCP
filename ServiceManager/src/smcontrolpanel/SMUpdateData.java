@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1359;
+	private static final int m_CurrentDatabaseVersion = 1362;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "3/21/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -13931,6 +13931,36 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;
 			//END CASE
+				
+			//BEGIN CASE
+			case 1359:
+				//Added by TJR 3/21/2019
+				SQL = "DROP TABLE `glstatementforms`";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1360:
+				//Added by TJR 3/21/2019
+				SQL = "ALTER TABLE `gltransactionlines` ADD COLUMN datpostingdate date NOT NULL default '0000-00-00'";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1361:
+				//Added by TJR 3/21/2019
+				SQL = "ALTER TABLE `gltransactionlines`"
+					+ " ADD COLUMN iconsolidatedposting INT(11) NOT NULL default '0'"
+					+ ", ADD COLUMN ssourcetype VARCHAR(2) NOT NULL default ''";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
 				
 		//End switch:
 		}

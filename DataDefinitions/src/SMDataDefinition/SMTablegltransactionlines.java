@@ -33,4 +33,27 @@ public class SMTablegltransactionlines {
 	
 	public static final int bdamountScale = 2;
 	
+	/* UNIQUE SOURCE LEDGERS AND TYPES CURRENTLY IN SMCP - 3/21/2019:
+	mysql> select distinct CONCAT(sdetailsourceledger, '-', sdetailsourcetype) from glexportdetails;
+	+-----------------------------------------------------+
+	| CONCAT(sdetailsourceledger, '-', sdetailsourcetype) |
+	+-----------------------------------------------------+
+	| IC-SH                                               |
+	| IC-AD                                               |
+	| IC-RC                                               |
+	| IC-TF                                               |
+	| FA-SS                                               |
+	| AP-IN                                               |
+	| AP-PY                                               |
+	| AP-RC                                               |
+	| AR-PY                                               |
+	| AR-PI                                               |
+	| AR-RT                                               |
+	| AR-AD                                               |
+	| AR-UC                                               |
+	| AR-CN                                               |
+	| AR-IN                                               |
+	+-----------------------------------------------------+
+    */
+	
 }

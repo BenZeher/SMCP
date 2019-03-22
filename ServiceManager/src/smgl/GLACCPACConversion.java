@@ -1547,6 +1547,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCELEDGER").trim()) + "'" //source ledger
 				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCETYPE").trim()) + "'" //source type
 				+ ", 0" //stransactiontype
+				+ ")"
 			;
 			try {
 				Statement stmtInsert = cnSMCP.createStatement();
@@ -1556,10 +1557,11 @@ public class GLACCPACConversion  extends java.lang.Object{
 				rsPostedTransactions.close();
 				throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
+			iCounter++;
 		}
 		rsPostedTransactions.close();
 
-		sStatus +=  "<BR>Added " + Integer.toString(iCounter) + " GL account segments to " + sTablename + "<BR>";
+		sStatus +=  "<BR>Added " + Integer.toString(iCounter) + " GL posted transactions to " + sTablename + "<BR>";
 		
 		return sStatus;
 	}

@@ -80,12 +80,12 @@ public class SMEditServiceTypeSelect extends HttpServlet {
 			out.println("Error getting list of service types - " + ex.getMessage());
 		}
 		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "'" 
-			+ "></P>";
+			+ ">&nbsp;&nbsp;";
 		//sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " 
 		//	+ sObjectName + "'>";
 		//sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		//sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " 
-		//	+ sObjectName + "'></P>";
+		sOutPut = sOutPut + "<INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " 
+			+ sObjectName + "'></P>";
 		//sOutPut = sOutPut + 
 		//	" New Proposal Phrase To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
 		//	Integer.toString(SMTableproposalphrases.sproposalphrasenameLength) + 

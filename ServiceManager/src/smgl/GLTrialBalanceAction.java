@@ -4,8 +4,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.Timestamp;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Enumeration;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -16,9 +17,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -55,65 +54,109 @@ public class GLTrialBalanceAction extends HttpServlet {
 		String sEndingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP);
 		String sStartingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT_GROUP);
 		String sFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_FISCAL_PERIOD_SELECTION);
-		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 		String sReportType = request.getParameter(GLTrialBalanceSelect.PARAM_REPORT_TYPE);
+		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 		boolean bDownloadAsHTML = (request.getParameter(GLTrialBalanceSelect.PARAM_DOWNLOAD_TO_HTML) != null);
 
 		//Get the starting and ending segment values:
-		String sStartingSegmentBase = request.getParameter(GLTrialBalanceSelect.PARAM_ENDING_SEGMENT_BASE);
-		String sEndingSegmentBase = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE);
-
+		ArrayList<String>alStartingSegmentNames = new ArrayList<String>(0);
+		ArrayList<String>alEndingSegmentNames = new ArrayList<String>(0);
+		ArrayList<String>alStartingSegmentIDs = new ArrayList<String>(0);
+		ArrayList<String>alEndingSegmentIDs = new ArrayList<String>(0);
+		ArrayList<String>alStartingSegmentValueIDs = new ArrayList<String>(0);
+		ArrayList<String>alEndingSegmentValueIDs = new ArrayList<String>(0);
+		ArrayList<String>alStartingSegmentValueDescriptions = new ArrayList<String>(0);
+		ArrayList<String>alEndingSegmentValueDescriptions = new ArrayList<String>(0);
 		
+    	Enumeration <String> eParams = request.getParameterNames();
+    	String sParameter = "";
+    	while (eParams.hasMoreElements()){
+    		sParameter = eParams.nextElement();
+    		if (sParameter.startsWith(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE)){
+    			String sParamWithoutBase = sParameter.replace(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE, "");
+    			//System.out.println("[1553288613] - sParamWithoutBase = '" + sParamWithoutBase + "'.");
+    			String sStartingSegmentID = sParamWithoutBase.substring(0, sParamWithoutBase.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			//System.out.println("[1553288614] - sStartingSegmentID = '" + sStartingSegmentID + "'.");
+    			String sStartingSegmentName = sParamWithoutBase.substring((sStartingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			//System.out.println("[1553288615] - sStartingSegmentName = '" + sStartingSegmentName + "'.");
+    			String sStartingSegmentValueForSegment = request.getParameter(sParameter);
+    			//System.out.println("[1553288616] - sStartingSegmentValueForSegment = '" + sStartingSegmentValueForSegment + "'.");
+    			String sStartingSegmentValueIDAndDescription = sStartingSegmentValueForSegment.substring((sStartingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			//System.out.println("[1553288617] - sStartingSegmentValueIDAndDescription = '" + sStartingSegmentValueIDAndDescription + "'.");
+    			String sStartingSegmentValueID = sStartingSegmentValueIDAndDescription.substring(0, sStartingSegmentValueIDAndDescription.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			//System.out.println("[1553288618] - sStartingSegmentValueID = '" + sStartingSegmentValueID + "'.");
+    			String sStartingSegmentValueDescription = sStartingSegmentValueIDAndDescription.substring((sStartingSegmentValueID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			//System.out.println("[1553288619] - sStartingSegmentValueDescription = '" + sStartingSegmentValueDescription + "'.");
+    			String sEndingSegmentName = sStartingSegmentName;
+    			//System.out.println("[1553288620] - sEndingSegmentName = '" + sEndingSegmentName + "'.");
+    			String sEndingSegmentID = sStartingSegmentID;
+    			//System.out.println("[1553288621] - sEndingSegmentID = '" + sEndingSegmentID + "'.");
+    			String sEndingSegmentValueForSegment = request.getParameter(sParameter.replaceAll(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE, GLTrialBalanceSelect.PARAM_ENDING_SEGMENT_BASE));
+    			//System.out.println("[1553288622] - sEndingSegmentValueForSegment = '" + sEndingSegmentValueForSegment + "'.");
+    			String sEndingSegmentValueIDAndDescription = sEndingSegmentValueForSegment.substring((sEndingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			//System.out.println("[1553288623] - sEndingSegmentValueIDAndDescription = '" + sEndingSegmentValueIDAndDescription + "'.");
+    			String sEndingSegmentValueID = sEndingSegmentValueIDAndDescription.substring(0, sEndingSegmentValueIDAndDescription.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			//System.out.println("[1553288624] - sEndingSegmentValueID = '" + sEndingSegmentValueID + "'.");
+    			String sEndingSegmentValueDescription = sEndingSegmentValueIDAndDescription.substring((sEndingSegmentValueID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			//System.out.println("[1553288625] - sEndingSegmentValueDescription = '" + sEndingSegmentValueDescription + "'.");
+    			
+    			//Load up the arrays:
+    			alStartingSegmentNames.add(sStartingSegmentName);
+    			alEndingSegmentNames.add(sEndingSegmentName);
+    			alStartingSegmentIDs.add(sStartingSegmentID);
+    			alEndingSegmentIDs.add(sEndingSegmentID);
+    			alStartingSegmentValueIDs.add(sStartingSegmentValueID);
+    			alEndingSegmentValueIDs.add(sEndingSegmentValueID);
+    			alStartingSegmentValueDescriptions.add(sStartingSegmentValueDescription);
+    			alEndingSegmentValueDescriptions.add(sEndingSegmentValueDescription);
+    		}
+    	}
 		
 		/*******************************************************/
 		
 		String sParamString = "";
-		sParamString += "*CallingClass=" + sCallingClass;
-/*
-		
-		sParamString += "*" + APAgedPayablesSelect.PARAM_AS_OF_DATE + "=" + sAgeAsOf;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_CUT_OFF_BY + "=" + sCutoffBy;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_CUT_OFF_DATE + "=" + sCutOffDate;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_STARTING_VENDOR + "=" + sStartingVendor;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_ENDING_VENDOR + "=" + sEndingVendor;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_ACCOUNT_SET + "=" + sAccountSet;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_SORT_BY + "=" + sSortBy;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_PRINT_TRANSACTION_IN_DETAIL_OR_SUMMARY + "=" + sPrintTransactionsInDetailOrSummary;
+		sParamString += "&CallingClass=" + sCallingClass;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT + "=" + sEndingAccount;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT + "=" + sStartingAccount;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP + "=" + sEndingAccountGroup;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT_GROUP + "=" + sStartingAccountGroup;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_FISCAL_PERIOD_SELECTION + "=" + sFiscalPeriod;
+		sParamString += "&" + GLTrialBalanceSelect.PARAM_REPORT_TYPE + "=" + sReportType;
 		if (bDownloadAsHTML){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_DOWNLOAD_TO_HTML + "=" + "Y";
+			sParamString += "&" + GLTrialBalanceSelect.PARAM_DOWNLOAD_TO_HTML + "=" + "Y";
 		}
 		
-		sParamString += "*" + APAgedPayablesSelect.PARAM_AGING_CATEGORY_FIRST + "=" + s1stAgingCategory;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_AGING_CATEGORY_SECOND + "=" + s2ndAgingCategory;
-		sParamString += "*" + APAgedPayablesSelect.PARAM_AGING_CATEGORY_THIRD + "=" + s3rdAgingCategory;
-		
-		if (bPrintVendorswithaZeroBalance){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE + "=" + "Y";
-		}
-		if (bIncludeAppliedDetails){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_INCLUDE_APPLIED_DETAILS + "=" + "Y";
-		}
-		if (bIncludeFullyPaidTransactions){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS + "=" + "Y";
-		}
-		if (bSortByTransactionType){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_SORT_DETAIL_BY_TRANSACTION_TYPE + "=" + "Y";
-		}
-		if (bIncludeInactiveVendors){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_INCLUDE_INACTIVE_VENDORS + "=" + "Y";
-		}
-		if (bIncludeTransactionsOnHold){
-			sParamString += "*" + APAgedPayablesSelect.PARAM_INCLUDE_TRANSACTIONS_ON_HOLD + "=" + "Y";
+		if (bIncludeAccountsWithNoActivity){
+			sParamString += "&" + GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY + "=" + "Y";
 		}
 		
-		sParamString += "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		for (int i = 0; i < alStartingSegmentNames.size(); i++){
+			sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE + alStartingSegmentIDs.get(i) + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER +  "=" 
+				+ alStartingSegmentNames.get(i)
+				+ "=" + alStartingSegmentIDs.get(i) 
+				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
+				+ alStartingSegmentValueIDs.get(i) 
+				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
+				+ alStartingSegmentValueDescriptions.get(i)
+			;
+			sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_SEGMENT_BASE + alEndingSegmentIDs.get(i) + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER +  "=" 
+				+ alEndingSegmentNames.get(i)
+				+ "=" + alEndingSegmentIDs.get(i) 
+				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
+				+ alEndingSegmentValueIDs.get(i) 
+				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
+				+ alEndingSegmentValueDescriptions.get(i)
+			;
+		}
+		
+		sParamString += "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		
 		//Customized title
 		String sReportTitle = "GL Trial Balance";
 		
 		//If the user chose to download it:
 		if (bDownloadAsHTML){
-			String disposition = "attachment; fileName= " + " AP AGED PAYABLES " + clsDateAndTimeConversions.now("MM-dd-yyyy hh:mm") + ".html";
+			String disposition = "attachment; fileName= " + " GL TRIAL BALANCE " + ServletUtilities.clsDateAndTimeConversions.now("MM-dd-yyyy hh:mm") + ".html";
 			response.setHeader("Content-Disposition", disposition);
 		}
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
@@ -151,181 +194,102 @@ public class GLTrialBalanceAction extends HttpServlet {
 		
 		String s = "";
 		
+		String sTypeOfReport = GLTrialBalanceSelect.REPORT_TYPE_BALANCES_LABEL;
+		if (sReportType.compareToIgnoreCase(GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES) == 0){
+			sTypeOfReport = GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES_LABEL;
+		}
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Age as of:&nbsp;"
+			+ "Type of report:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sAgeAsOf + "</B>"
+			+ "<B>" + sTypeOfReport + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 			
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Cut off by:&nbsp;"
+			+ "Fiscal year - period:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sCutoffBy + "</B>"
+			+ "<B>" + sFiscalPeriod + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 		
+		String sNoActivity = "N";
+		if (bIncludeAccountsWithNoActivity){
+			sNoActivity = "Y";
+		}
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Cut off date:&nbsp;"
+			+ "Include accounts with no activity?:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sCutOffDate + "</B>"
+			+ "<B>" + sNoActivity + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Starting with vendor:&nbsp;"
+			+ "Starting with account:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sStartingVendor + "</B>"
+			+ "<B>" + sStartingAccount + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Ending with vendor:&nbsp;"
+			+ "Ending with account:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sEndingVendor + "</B>"
+			+ "<B>" + sEndingAccount + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 		
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "For AP Account set:&nbsp;"
+			+ "Starting with account group:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sAccountSet + "</B>"
+			+ "<B>" + sStartingAccountGroup + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
 		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Sort by:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sSortBy + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "1st aging category:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + s1stAgingCategory + " days</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "2nd aging category:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + s2ndAgingCategory + " days</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "3rd aging category:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + s3rdAgingCategory + " days</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;	
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Print transactions in detail or summary:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sPrintTransactionsInDetailOrSummary + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-			
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Include vendors with a zero balance:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + (bPrintVendorswithaZeroBalance ? "Y" : "N") + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Include applied details:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + (bIncludeAppliedDetails ? "Y" : "N") + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Include fully paid transactions:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + (bIncludeFullyPaidTransactions ? "Y" : "N") + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Include inactive vendors:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + (bIncludeInactiveVendors ? "Y" : "N") + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-
 		s += "  <TR>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Include transactions on hold:&nbsp;"
+				+ "Ending with account group:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + (bIncludeTransactionsOnHold ? "Y" : "N") + "</B>"
+				+ "<B>" + sEndingAccountGroup + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
 		
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Sort transactions by type:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + (bSortByTransactionType ? "Y" : "N") + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		
-		
+		for (int i = 0; i < alStartingSegmentNames.size(); i++){
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ alStartingSegmentNames.get(i) + ":&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "FROM:&nbsp;"
+				+ "<B>" + alStartingSegmentValueDescriptions.get(i) + "</B>"
+				+ "&nbsp;TO:&nbsp;"
+				+ "<B>" + alEndingSegmentValueDescriptions.get(i) + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+			;
+		}
+
 		out.println(s);
 		out.println("</TABLE>\n");
 		out.println("<BR>\n");
-		*/
 		
 		//Retrieve information
 		Connection conn = null;

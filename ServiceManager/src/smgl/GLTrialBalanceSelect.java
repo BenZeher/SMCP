@@ -31,7 +31,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 	public static String REPORT_TYPE_BALANCES_LABEL = "Account balances as of the year/period";
 	public static String REPORT_TYPE_NET_CHANGES_LABEL = "Net changes for the period";
 	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
-	public static String FISCAL_PERIOD_SELECTION_DELIMITER = " - ";
+	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	public static String PARAM_STARTING_ACCOUNT = "StartingAccount";
 	public static String PARAM_ENDING_ACCOUNT = "EndingVendor";
@@ -114,7 +114,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		alOptions.clear();
 		String sSQL = "SELECT DISTINCT"
 			+ " CONCAT(CAST(" + SMTablegltransactionlines.ifiscalyear + " AS CHAR), '" 
-				+ FISCAL_PERIOD_SELECTION_DELIMITER 
+				+ PARAM_VALUE_DELIMITER 
 				+ "', CAST(" + SMTablegltransactionlines.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
 			+ " FROM " + SMTablegltransactionlines.TableName
 			+ " ORDER BY " + SMTablegltransactionlines.ifiscalyear + " DESC, " + SMTablegltransactionlines.ifiscalperiod + " DESC"
@@ -186,7 +186,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			);
 			while(rsGLAccounts.next()){
 				alValues.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID));
-				alOptions.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID) + FISCAL_PERIOD_SELECTION_DELIMITER + rsGLAccounts.getString(SMTableglaccounts.sDesc));
+				alOptions.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID) + PARAM_VALUE_DELIMITER + rsGLAccounts.getString(SMTableglaccounts.sDesc));
 			}
 			rsGLAccounts.close();
 		} catch (Exception e1) {
@@ -244,7 +244,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			);
 			while(rsAccountGroups.next()){
 				alValues.add(Long.toString(rsAccountGroups.getLong(SMTableglaccountgroups.lid)));
-				alOptions.add(rsAccountGroups.getString(SMTableglaccountgroups.sgroupcode) + FISCAL_PERIOD_SELECTION_DELIMITER + rsAccountGroups.getString(SMTableglaccountgroups.sdescription));
+				alOptions.add(rsAccountGroups.getString(SMTableglaccountgroups.sgroupcode) + PARAM_VALUE_DELIMITER + rsAccountGroups.getString(SMTableglaccountgroups.sdescription));
 			}
 			rsAccountGroups.close();
 		} catch (Exception e1) {
@@ -298,7 +298,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			);
 			while(rsAccountSegments.next()){
 				alAccountSegments.add(Long.toString(rsAccountSegments.getLong(SMTableglaccountsegments.lid)));
-				alAccountSegmentDescriptions.add(rsAccountSegments.getString(SMTableglaccountsegments.sdescription));
+				alAccountSegmentDescriptions.add(rsAccountSegments.getString(SMTableglaccountsegments.sdescription).toUpperCase());
 			}
 			rsAccountSegments.close();
 		} catch (Exception e1) {
@@ -323,8 +323,10 @@ public class GLTrialBalanceSelect extends HttpServlet {
 				);
 				while(rsSegmentValues.next()){
 					alValues.add(Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lsegmentid))
-						+ FISCAL_PERIOD_SELECTION_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid)));
-					alOptions.add(rsSegmentValues.getString(SMTableglaccountsegments.sdescription) + FISCAL_PERIOD_SELECTION_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid)));
+						+ PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid))
+						+ PARAM_VALUE_DELIMITER + rsSegmentValues.getString(SMTableglacctsegmentvalues.sdescription)
+					);
+					alOptions.add(rsSegmentValues.getString(SMTableglaccountsegments.sdescription) + PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid)));
 				}
 				rsSegmentValues.close();
 			} catch (Exception e1) {
@@ -345,9 +347,10 @@ public class GLTrialBalanceSelect extends HttpServlet {
 				+ "FROM:&nbsp;"
 			);
 			//Add START drop down here
-			out.println("&nbsp;<SELECT NAME=\"" + PARAM_STARTING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex) + "\">");
+			out.println("&nbsp;<SELECT NAME=\"" + PARAM_STARTING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex) 
+				+ PARAM_VALUE_DELIMITER + alAccountSegmentDescriptions.get(iAccountSegmentIndex) + "\">");
 			for (int iSegmentValueIndex=0;iSegmentValueIndex<alValues.size();iSegmentValueIndex++){
-				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(FISCAL_PERIOD_SELECTION_DELIMITER));
+				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(PARAM_VALUE_DELIMITER));
 				if(sSegmentID.compareToIgnoreCase(alAccountSegments.get(iAccountSegmentIndex)) == 0){
 					out.println("<OPTION VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
 				}
@@ -357,16 +360,17 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			out.println("<TD>TO:&nbsp;"
 				);
 			//Add END drop down here
-			out.println("&nbsp;<SELECT NAME=\"" + PARAM_ENDING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex) + "\">");
+			out.println("&nbsp;<SELECT NAME=\"" + PARAM_ENDING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex)
+				+ PARAM_VALUE_DELIMITER + alAccountSegmentDescriptions.get(iAccountSegmentIndex)+ "\">");
 			for (int iSegmentValueIndex=0;iSegmentValueIndex<alValues.size();iSegmentValueIndex++){
-				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(FISCAL_PERIOD_SELECTION_DELIMITER));
+				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(PARAM_VALUE_DELIMITER));
 
 				if(sSegmentID.compareToIgnoreCase(alAccountSegments.get(iAccountSegmentIndex)) == 0){
 					//We want to know if this is the last value for this segment, so we can 'select' it.
 					//If the NEXT value coming up is for a different segment, then we know we're on the last value for this segment:
 					String sNextSegmentID = "";
 					if (iSegmentValueIndex < alValues.size() - 1){
-						sNextSegmentID = alValues.get(iSegmentValueIndex + 1).substring(0, alValues.get(iSegmentValueIndex + 1).indexOf(FISCAL_PERIOD_SELECTION_DELIMITER));
+						sNextSegmentID = alValues.get(iSegmentValueIndex + 1).substring(0, alValues.get(iSegmentValueIndex + 1).indexOf(PARAM_VALUE_DELIMITER));
 					}
 					//If the next segment ID is different (or if it's blank), then we know we're at the lest segment value for this segment:
 					if(sNextSegmentID.compareToIgnoreCase(sSegmentID) != 0){

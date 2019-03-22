@@ -3926,6 +3926,15 @@
         <servlet-class>smgl.GLEditGLOptions</servlet-class>
     </servlet>
     
+    <servlet>
+        <servlet-name>GLTrialBalanceAction</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLTrialBalanceSelect</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
+    </servlet>
 
     <!-- SERVLET MAPPINGS START HERE: -->
     
@@ -7739,6 +7748,16 @@
     <servlet-mapping>
         <servlet-name>GLEditGLOptions</servlet-name>
         <url-pattern>/smgl.GLEditGLOptions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLTrialBalanceAction</servlet-name>
+        <url-pattern>/smgl.GLTrialBalanceAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLTrialBalanceSelect</servlet-name>
+        <url-pattern>/smgl.GLTrialBalanceSelect</url-pattern>
     </servlet-mapping>
     
     <!-- Define the default session timeout for your application,

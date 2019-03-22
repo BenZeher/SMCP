@@ -319,7 +319,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLEditAccountStructures = 1227L;
 	public static long GLEditAccountGroups = 1228L;
 	public static long GLEditFiscalPeriods = 1229L;
-	//public static long GLEditFinancialStatements = 1230L;
+	public static long GLTrialBalance = 1230L;
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
@@ -2578,6 +2578,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLQueryFinancialInformation);
 			arrFunctionLinks.add(""); 
 			arrFunctionDescriptions.add("Allows or denies a user the ability to run queries on GL financial data - this permission is required to run financial statements. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Trial Balance");
+			arrFunctionIDs.add(GLTrialBalance);
+			arrFunctionLinks.add("smgl.GLTrialBalanceSelect"); 
+			arrFunctionDescriptions.add("Print the General Ledger Trial Balance. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

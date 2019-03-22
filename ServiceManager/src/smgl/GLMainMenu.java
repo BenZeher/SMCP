@@ -264,6 +264,7 @@ public class GLMainMenu extends HttpServlet {
 
 		//Reports
 		arMenu.clear();
+		arMenu.add(SMSystemFunctions.GLTrialBalance);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

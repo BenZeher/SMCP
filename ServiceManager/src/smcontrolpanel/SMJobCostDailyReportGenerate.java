@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTablemechanics;
-import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -227,10 +226,10 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     			//System.out.println("Service type: " + sServiceTypes.get(i));
     			if (i == 0){
     				sCriteria += "<B>" 
-    					+ SMTableservicetypes.getServiceTypeLabelFromTypeID(sServiceTypes.get(i)) + "</B>";
+    					+ sServiceTypes.get(i) + "</B>";
     			}else{
     				sCriteria += ", <B>" 
-    					+ SMTableservicetypes.getServiceTypeLabelFromTypeID(sServiceTypes.get(i)) + "</B>";
+    					+ sServiceTypes.get(i) + "</B>";
     			}
     		}
     	}

@@ -24,7 +24,6 @@ import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -254,7 +253,7 @@ public class SMMapDisplay extends HttpServlet {
 			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToCountry
 			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToZip
 			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription
 			+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sgeocode
 			+ ", " + SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName
 			+ ", " + SMTablemechanics.TableName + "." + SMTablemechanics.sMechColorCodeRow
@@ -462,12 +461,10 @@ public class SMMapDisplay extends HttpServlet {
 				}
 				
 				String sServiceType = rs.getString(SMTableorderheaders.TableName + "." 
-						+ SMTableorderheaders.sServiceTypeCode);
+						+ SMTableorderheaders.sServiceTypeCodeDescription);
 				if (sServiceType == null){
 					sServiceType = "";
-				} else{
-					sServiceType = SMTableservicetypes.getServiceTypeInitials(sServiceType);
-				}
+				} 
 				
 				String sInfoWindow = ""
 					+ sEditJobCostLink

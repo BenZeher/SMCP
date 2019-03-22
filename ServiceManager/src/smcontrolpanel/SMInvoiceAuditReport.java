@@ -20,7 +20,6 @@ import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTabletax;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -1615,7 +1614,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 	private void printServiceTypeHeader(String sServiceType, PrintWriter pwOut){
 		
 		pwOut.println("<BR><B><I><U>Service Type: " 
-			+ SMTableservicetypes.getServiceTypeLabel(sServiceType) + "</U></I></B><BR>");
+			+ sServiceType + "</U></I></B><BR>");
 	}
 	private void printServiceTypeFooter(
 			String sServiceType,
@@ -1639,7 +1638,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		*/
 		
 		pwOut.println("<TD ALIGN=RIGHT>Number of invoices in " 
-			+ SMTableservicetypes.getServiceTypeLabel(sServiceType) + ":</TD>");
+			+ sServiceType + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfInvoicesForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfInvoices = BigDecimal.valueOf(lNumberOfInvoicesForServiceType);
@@ -1656,7 +1655,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		//Credits
 		pwOut.println("<TR>");
 		pwOut.println("<TD ALIGN=RIGHT>Number of credits in " 
-			+ SMTableservicetypes.getServiceTypeLabel(sServiceType) + ":</TD>");
+			+ sServiceType + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfCreditsForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfCredits = BigDecimal.valueOf(lNumberOfCreditsForServiceType);

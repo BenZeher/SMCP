@@ -24,7 +24,6 @@ import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableordermgrcomments;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTabletax;
 import SMDataDefinition.SMTableusers;
 import SMDataDefinition.SMTableworkorders;
@@ -1779,7 +1778,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 	private void printServiceTypeHeader(String sServiceType, PrintWriter pwOut){
 		
 		pwOut.println("<BR><B><I><U>Service Type: " 
-			+ SMTableservicetypes.getServiceTypeLabel(sServiceType) + "</U></I></B><BR>");
+			+ sServiceType + "</U></I></B><BR>");
 	}
 	private void printServiceTypeFooter(
 			String sServiceType,
@@ -1793,7 +1792,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 		//Orders
 		pwOut.println("<TR>");
 		pwOut.println("<TD ALIGN=RIGHT>Number of orders in " 
-			+ SMTableservicetypes.getServiceTypeLabel(sServiceType) + ":</TD>");
+			+ sServiceType + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfOrdersForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfOrders = BigDecimal.valueOf(lNumberOfOrdersForServiceType);

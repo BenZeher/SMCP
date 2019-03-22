@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
-import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -199,9 +198,9 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
     	sCriteria += ", and including ONLY orders for these service types: ";
     	for (int i = 0; i < sServiceTypes.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + SMTableservicetypes.getServiceTypeLabel(sServiceTypes.get(i)) + "</B>";
+    			sCriteria += "<B>" + sServiceTypes.get(i) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + SMTableservicetypes.getServiceTypeLabel(sServiceTypes.get(i)) + "</B>";
+    			sCriteria += ", <B>" + sServiceTypes.get(i) + "</B>";
     		}
     	}
     	

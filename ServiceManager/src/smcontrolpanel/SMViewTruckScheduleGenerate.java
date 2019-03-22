@@ -394,6 +394,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
     	if (bShowAllServiceTypes){
     		String SQL = "SELECT"
     			+ " " + SMTableservicetypes.sCode
+    			+ " " + SMTableservicetypes.sName
     			+ " FROM " + SMTableservicetypes.TableName
     			+ " ORDER BY " + SMTableservicetypes.sCode
     		;
@@ -464,9 +465,9 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 	    	sCriteria += ", including mechanics AND orders associated with these service types: ";
 	    	for (int i = 0; i < sServiceTypes.size(); i++){
 	    		if (i == 0){
-	    			sCriteria += "<B>" + SMTableservicetypes.getServiceTypeLabel(sServiceTypes.get(i)) + "</B>";
+	    			sCriteria += "<B>" + sServiceTypes.get(i) + "</B>";
 	    		}else{
-	    			sCriteria += ", <B>" + SMTableservicetypes.getServiceTypeLabel(sServiceTypes.get(i)) + "</B>";
+	    			sCriteria += ", <B>" + sServiceTypes.get(i) + "</B>";
 	    		}
 	    	}
     	}

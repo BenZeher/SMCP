@@ -24,7 +24,6 @@ import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
-import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsEmailInlineHTML;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -287,9 +286,9 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 
 		for (int i = 0; i < sOrderTypes.size(); i++){
 			if (i == 0){
-				sCriteria += "<B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+				sCriteria += "<B>" + sOrderTypes.get(i) + "</B>";
 			}else{
-				sCriteria += ", <B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+				sCriteria += ", <B>" + sOrderTypes.get(i) + "</B>";
 			}
 		}
 		sCriteria = sCriteria + ", including sales groups: ";

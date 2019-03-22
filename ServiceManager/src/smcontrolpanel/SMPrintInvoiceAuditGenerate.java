@@ -20,7 +20,6 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableinvoicemgrcomments;
-import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -311,9 +310,9 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
     	
     	for (int i = 0; i < sOrderTypes.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+    			sCriteria += "<B>" + sOrderTypes.get(i) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+    			sCriteria += ", <B>" +sOrderTypes.get(i) + "</B>";
     		}
     	}
    		sCriteria = sCriteria + ", including sales groups: ";

@@ -13,7 +13,6 @@ import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -88,7 +87,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 //        	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datCompletedDate
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dEstimatedHour
-        	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+        	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription
         	+ " FROM " + SMTableworkorders.TableName
         	+ ", " + SMTableorderheaders.TableName
         	+ " WHERE ("
@@ -263,9 +262,8 @@ public class SMJobCostDailyReport extends java.lang.Object{
 				pwSuppressed.println("<TD><FONT SIZE=2>" + sOrderNumberLink + "</FONT></TD>");
 
 				pwSuppressed.println("<TD><FONT SIZE=2>" 
-						+ SMTableservicetypes.getServiceTypeInitials(
-								rs.getString(SMTableorderheaders.TableName + "." 
-								+ SMTableorderheaders.sServiceTypeCode).trim()) + "</FONT></TD>");
+						+ rs.getString(SMTableorderheaders.TableName + "." 
+								+ SMTableorderheaders.sServiceTypeCodeDescription).trim() + "</FONT></TD>");
 				
 				pwSuppressed.println("<TD><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." 
 						+ SMTableorderheaders.sShipToName).trim() + "</FONT></TD>");

@@ -2635,10 +2635,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		// m_sTicketComments
 		// m_sFieldNotes
 		// m_sServiceTypeCode
-		if (SMTableservicetypes.getServiceTypeInitials(m_sServiceTypeCode).compareToIgnoreCase("N/A") == 0){
-			super.addErrorMessage("Service type code '" + m_sServiceTypeCode + "' is invalid.");
-			bEntriesAreValid = false;
-		}else{
+		
 			//If it's a valid service type code, read the service type description:
 			SQL = "SELECT"
 				+ " " + SMTableservicetypes.sName + " FROM " + SMTableservicetypes.TableName
@@ -2666,7 +2663,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			// m_sServiceTypeCodeDescription
 			if (!isStringValid("Service code description", m_sServiceTypeCodeDescription,
 				SMTableorderheaders.sServiceTypeCodeDescriptionLength,false)){bEntriesAreValid = false; }
-		}
+			
 		// m_strimmedordernumber
 		if (m_siID.compareToIgnoreCase("-1") != 0){
 			if (!isLongValid("Trimmed order number", m_strimmedordernumber, true)){bEntriesAreValid = false; }

@@ -16,7 +16,6 @@ import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -422,8 +421,6 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 						+ SMTableorderheaders.sServiceTypeCode);
 				if (sServiceType == null){
 					sServiceType = "";
-				} else{
-					sServiceType = SMTableservicetypes.getServiceTypeInitials(sServiceType);
 				}
 				//Print the actual entry:
 				if (

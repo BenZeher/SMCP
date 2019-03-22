@@ -21,7 +21,6 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableordermgrcomments;
-import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
@@ -355,9 +354,9 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
     	
     	for (int i = 0; i < sOrderTypes.size(); i++){
     		if (i == 0){
-    			sCriteria += "<B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+    			sCriteria += "<B>" + sOrderTypes.get(i) + "</B>";
     		}else{
-    			sCriteria += ", <B>" + SMTableservicetypes.getServiceTypeLabel(sOrderTypes.get(i)) + "</B>";
+    			sCriteria += ", <B>" + sOrderTypes.get(i) + "</B>";
     		}
     	}
    		sCriteria = sCriteria + ", for locations: ";

@@ -149,14 +149,14 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 							sUserID, 
 							conn,
 							sLicenseModuleLevel
-					);
+					   );
 				boolean bAllowCustomerActivityView = 
 					SMSystemFunctions.isFunctionPermitted(
 							SMSystemFunctions.ARCustomerActivity, 
 							sUserID, 
 							conn,
 							sLicenseModuleLevel
-					);
+					   );
 				boolean bAllowCreateGDriveARFolders = 
 						SMSystemFunctions.isFunctionPermitted(
 								SMSystemFunctions.SMCreateGDriveARFolders, 
@@ -164,6 +164,14 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 								conn,
 								sLicenseModuleLevel
 						);
+				boolean bAllowCallSheetViewing = 
+						SMSystemFunctions.isFunctionPermitted(
+								SMSystemFunctions.ARPrintCallSheets, 
+								sUserID, 
+								conn, 
+								sLicenseModuleLevel
+						); 
+				
 				String sLinks = "";
 				if (bAllowCustomerActivityView){
 					sLinks = 
@@ -205,6 +213,26 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 						pwOut.println("<FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT>");
 					}
 					sLinks += sUploadLink;
+				}
+				
+				if (bAllowCallSheetViewing){
+					sLinks = sLinks
+							+ "&nbsp;&nbsp;<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+							+ "smar.ARPrintCallSheetsGenerate?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+							+ "&CallingClass=smcontrolpanel.SMDisplayOrderInformation"
+							+ "&" + ARPrintCallSheetsSelection.ORDERNUMBER_FIELD + "=" 
+							+ "&" + ARPrintCallSheetsSelection.ENDING_CUSTOMER_FIELD + "=" + sCustomerNum
+							+ "&" + ARPrintCallSheetsSelection.ENDING_LAST_CONTACT_DATE_FIELD + "=12/31/2100"
+							+ "&" + ARPrintCallSheetsSelection.ENDING_NEXT_CONTACT_DATE_FIELD + "=12/31/2100"
+							+ "&" + ARPrintCallSheetsSelection.PRINTWITHNOTES_FIELD + "=Y"
+							+ "&" + ARPrintCallSheetsSelection.PRINTZEROBALANCECUSTOMERS_FIELD + "=Y"
+							+ "&" + ARPrintCallSheetsSelection.COLLECTOR_FIELD + "="
+							+ "&" + ARPrintCallSheetsSelection.RESPONSIBILITY_FIELD + "="
+							+ "&" + ARPrintCallSheetsSelection.STARTING_CUSTOMER_FIELD + "=" + sCustomerNum
+							+ "&" + ARPrintCallSheetsSelection.STARTING_LAST_CONTACT_DATE_FIELD + "=1/1/1990"
+							+ "&" + ARPrintCallSheetsSelection.STARTING_NEXT_CONTACT_DATE_FIELD + "=1/1/1990"
+							+ "&" + ARPrintCallSheetsSelection.PRINT_BUTTON_NAME + "Y"
+							+ "\">List&nbsp;call&nbsp;sheets</A>&nbsp;&nbsp;</FONT>";
 				}
 	
 				pwOut.println("<BR>" + sLinks + "<BR>"); 

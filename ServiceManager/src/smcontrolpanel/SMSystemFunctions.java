@@ -303,7 +303,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long APEditCheckForms = 1211L;
 	public static long APPrintChecks = 1212L;
 	public static long BKUpdateNextCheckNumber = 1213L;
-	//public static long APYearEndProcessing = 1214L;
+	public static long GLQueryFinancialInformation = 1214L;
 	public static long APClearFullyPaidTransactions = 1215L;
 	public static long APDeleteInactiveVendorsQuery = 1216L;
 	public static long APQueryCheckRunLog = 1217L;
@@ -319,10 +319,11 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLEditAccountStructures = 1227L;
 	public static long GLEditAccountGroups = 1228L;
 	public static long GLEditFiscalPeriods = 1229L;
-	public static long GLEditFinancialStatements = 1230L;
+	public static long GLTrialBalance = 1230L;
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
+	
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2554,13 +2555,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smgl.GLEditFiscalPeriodsSelect"); 
 			arrFunctionDescriptions.add("Used to add new fiscal years and periods befoe beginning a new year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
-			
-			arrFunctions.add("GL Edit Financial Statements");
-			arrFunctionIDs.add(GLEditFinancialStatements);
-			arrFunctionLinks.add("smgl.GLEditFinancialStatementsSelect"); 
-			arrFunctionDescriptions.add("Design, modify, and save financial statements (balance sheet or income statement) with this function.");
-			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
-			
+						
 			arrFunctions.add("SM Import Data");
 			arrFunctionIDs.add(SMImportData);
 			arrFunctionLinks.add("smcontrolpanel.SMImportDataSelect"); 
@@ -2576,8 +2571,20 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("SM List Logging Operations");
 			arrFunctionIDs.add(SMDisplayLoggingOperations);
 			arrFunctionLinks.add("smcontrolpanel.SMDisplayLoggingOperations"); 
-			arrFunctionDescriptions.add("Liast all the logging operations; useful for building queries to track who used which function, when, and how. ");
+			arrFunctionDescriptions.add("List all the logging operations; useful for building queries to track who used which function, when, and how. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
+			arrFunctions.add("GL Query GL Financial Information");
+			arrFunctionIDs.add(GLQueryFinancialInformation);
+			arrFunctionLinks.add(""); 
+			arrFunctionDescriptions.add("Allows or denies a user the ability to run queries on GL financial data - this permission is required to run financial statements. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Trial Balance");
+			arrFunctionIDs.add(GLTrialBalance);
+			arrFunctionLinks.add("smgl.GLTrialBalanceSelect"); 
+			arrFunctionDescriptions.add("Print the General Ledger Trial Balance. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}
 

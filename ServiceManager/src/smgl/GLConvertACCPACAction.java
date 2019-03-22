@@ -264,7 +264,8 @@ public class GLConvertACCPACAction extends HttpServlet {
     		return conv.processGLFiscalCalendar(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser, sUserID, sUserFullName);
     	case GLConvertACCPAC.PROCESS_GL_FISCAL_SETS_VALUE:
     		return conv.processGLFiscalSets(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
-		
+    	case GLConvertACCPAC.PROCESS_GL_POSTEDTRANSACTIONS_VALUE:
+    		return conv.processGLTransactions(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser, sUserID, sUserFullName);
     	default:
     		throw new Exception("Function value " + iSelectedFunction + " is not valid");
     	}

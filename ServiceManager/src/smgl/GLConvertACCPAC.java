@@ -46,9 +46,11 @@ public class GLConvertACCPAC extends HttpServlet {
 	public static final String PROCESS_GL_FISCAL_CALENDAR_LABEL = Integer.toString(PROCESS_GL_FISCAL_CALENDAR_VALUE) + ") Convert GL Fiscal Calendar";
 	public static final int PROCESS_GL_FISCAL_SETS_VALUE = 8;
 	public static final String PROCESS_GL_FISCAL_SETS_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Fiscal Sets";
+	public static final int PROCESS_GL_POSTEDTRANSACTIONS_VALUE = 9;
+	public static final String PROCESS_GL_POSTEDTRANSACTIONS_LABEL = Integer.toString(PROCESS_GL_POSTEDTRANSACTIONS_VALUE) + ") Convert GL Posted Transactions";
 
 	
-	public static final int LAST_FUNCTION_IN_SEQUENCE = PROCESS_GL_FISCAL_SETS_VALUE;
+	public static final int LAST_FUNCTION_IN_SEQUENCE = PROCESS_GL_POSTEDTRANSACTIONS_VALUE;
 	
 	private static final String HIGHLIGHT_ROW_BACKGROUND_COLOR = "YELLOW";
 	private static final String DEFAULT_ROW_BACKGROUND_COLOR = "WHITE";
@@ -144,6 +146,10 @@ public class GLConvertACCPAC extends HttpServlet {
     	
     	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE));
     	arrConversionPhaseNames.add(PROCESS_GL_FISCAL_SETS_LABEL);
+    	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
+    	
+    	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_POSTEDTRANSACTIONS_VALUE));
+    	arrConversionPhaseNames.add(PROCESS_GL_POSTEDTRANSACTIONS_LABEL);
     	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
     	
     	String sDefaultPhaseValue = Integer.toString(ROLLBACK_OPTION_VALUE);

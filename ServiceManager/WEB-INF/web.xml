@@ -3907,21 +3907,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>GLEditFinancialStatementsAction</servlet-name>
-        <servlet-class>smgl.GLEditFinancialStatementsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditFinancialStatementsEdit</servlet-name>
-        <servlet-class>smgl.GLEditFinancialStatementsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditFinancialStatementsSelect</servlet-name>
-        <servlet-class>smgl.GLEditFinancialStatementsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
         <servlet-class>smgl.GLEditFiscalPeriodsAction</servlet-class>
     </servlet>
@@ -3942,11 +3927,14 @@
     </servlet>
     
     <servlet>
-        <servlet-name>GLViewStatementForm</servlet-name>
-        <servlet-class>smgl.GLViewStatementForm</servlet-class>
+        <servlet-name>GLTrialBalanceAction</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceAction</servlet-class>
     </servlet>
-    
-   
+
+    <servlet>
+        <servlet-name>GLTrialBalanceSelect</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
+    </servlet>
 
     <!-- SERVLET MAPPINGS START HERE: -->
     
@@ -7743,21 +7731,6 @@
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>GLEditFinancialStatementsAction</servlet-name>
-        <url-pattern>/smgl.GLEditFinancialStatementsAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>GLEditFinancialStatementsEdit</servlet-name>
-        <url-pattern>/smgl.GLEditFinancialStatementsEdit</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>GLEditFinancialStatementsSelect</servlet-name>
-        <url-pattern>/smgl.GLEditFinancialStatementsSelect</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
         <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
         <url-pattern>/smgl.GLEditFiscalPeriodsAction</url-pattern>
     </servlet-mapping>
@@ -7778,8 +7751,13 @@
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>GLViewStatementForm</servlet-name>
-        <url-pattern>/smgl.GLViewStatementForm</url-pattern>
+        <servlet-name>GLTrialBalanceAction</servlet-name>
+        <url-pattern>/smgl.GLTrialBalanceAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLTrialBalanceSelect</servlet-name>
+        <url-pattern>/smgl.GLTrialBalanceSelect</url-pattern>
     </servlet-mapping>
     
     <!-- Define the default session timeout for your application,

@@ -3,21 +3,20 @@ package smgl;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.ArrayList;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import ConnectionPool.WebContextParameters;
-import SMDataDefinition.SMTableapaccountsets;
-import SMDataDefinition.SMTableicvendors;
+import SMDataDefinition.SMTableglaccountgroups;
+import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglaccountsegments;
+import SMDataDefinition.SMTableglacctsegmentvalues;
+import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -26,46 +25,21 @@ import smcontrolpanel.SMUtilities;
 public class GLTrialBalanceSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	/*
-	Selections for Trial Balance:
-
-	0) Balance or net changes
-	1) Year/period
-	2) Starting/Ending account number
-	3) Checkbox to include accounts with no activity
-	4) From account group TO account group
-	5) From segment TO segment
-
-	 */
-	
-	//public static String FIND_STARTING_VENDOR_BUTTON_NAME = "FINDSTARTINGVENDORBUTTON";
-	//public static String FIND_STARTING_VENDOR_BUTTON_LABEL = "Find";
-	//public static String FIND_ENDING_VENDOR_BUTTON_NAME = "FINDENDINGVENDORBUTTON";
-	//public static String FIND_ENDING_VENDOR_BUTTON_LABEL = "Find";
+	public static String PARAM_REPORT_TYPE = "PARAMREPORTTYPE";
+	public static String REPORT_TYPE_BALANCES = "REPORTTYPEBALANCES";
+	public static String REPORT_TYPE_NET_CHANGES = "REPORTTYPENETCHANGES";
+	public static String REPORT_TYPE_BALANCES_LABEL = "Account balances as of the year/period";
+	public static String REPORT_TYPE_NET_CHANGES_LABEL = "Net changes for the period";
+	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
+	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	public static String PARAM_STARTING_ACCOUNT = "StartingAccount";
-	public static String PARAM_ENDING_ACCouNT = "EndingVendor";
-	public static String PARAM_AS_OF_DATE = "AsOfDate";
-	public static String PARAM_CUT_OFF_BY = "CutOffBy";
-	public static String PARAM_CUT_OFF_BY_DOCUMENT_DATE = "Document Date";
-	public static String PARAM_CUT_OFF_DATE = "CutOffDate";
-	public static String PARAM_PRINT_TRANSACTION_IN_DETAIL_OR_SUMMARY = "PrintTransactionIn";
-	public static String PARAM_PRINT_TRANSACTION_IN_DETAIL_LABEL = "Detail";
-	public static String PARAM_PRINT_TRANSACTION_IN_SUMMARY_LABEL = "Summary";
-	public static String PARAM_ACCOUNT_SET = "AccountSet";
-	public static String PARAM_ACCOOUNT_SET_ALL_ACCOUNT_SETS = "ALL Account Sets";
-	public static String PARAM_AGING_CATEGORY_FIRST = "1st";
-	public static String PARAM_AGING_CATEGORY_SECOND = "2nd";
-	public static String PARAM_AGING_CATEGORY_THIRD = "3rd";
-	public static String PARAM_SORT_BY = "SortBy";
-	public static String PARAM_SORT_BY_ACCOUNT = "Vendor Account";
-	public static String PARAM_SORT_BY_NAME = "Vendor Name";
-	public static String PARAM_SORT_DETAIL_BY_TRANSACTION_TYPE = "SortByTransactionType";
-	public static String PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE = "PrintVendorsWithAZeroBalance";
-	public static String PARAM_INCLUDE_APPLIED_DETAILS = "IncludeAppliedDetails";
-	public static String PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS = "IncludeFullyPaidTransactions";
-	public static String PARAM_INCLUDE_INACTIVE_VENDORS = "IncludeInactiveVendors";
-	public static String PARAM_INCLUDE_TRANSACTIONS_ON_HOLD = "IncludeTransactionsOnHold";
+	public static String PARAM_ENDING_ACCOUNT = "EndingVendor";
+	public static String PARAM_PROCESS_FOR_NO_ACTIVITY = "PROCESSFORNOACTIVITY";
+	public static String PARAM_STARTING_ACCOUNT_GROUP = "STARTINGACCOUNTGROUP";
+	public static String PARAM_ENDING_ACCOUNT_GROUP = "ENDINGACCOUNTGROUP";
+	public static String PARAM_STARTING_SEGMENT_BASE = "STARTINGSEGMENTBASE";
+	public static String PARAM_ENDING_SEGMENT_BASE = "ENDINGSEGMENTBASE";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -101,305 +75,323 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to General Ledger Main Menu</A><BR>");
-		out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.APAgedPayables)
+		out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.GLTrialBalance)
 				+ "\">Summary</A><BR>");
 
+		ArrayList<String> alValues = new ArrayList<String>(0);
+		ArrayList<String> alOptions = new ArrayList<String>(0);
+		out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLTrialBalanceAction\">");
+		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
+		out.println("<TABLE border=4>\n");
+
+		//Selection criteria:
+		//Balance or net changes
+		alValues.add(REPORT_TYPE_BALANCES);
+		alValues.add(REPORT_TYPE_NET_CHANGES);
+		alOptions.add(REPORT_TYPE_BALANCES_LABEL);
+		alOptions.add(REPORT_TYPE_NET_CHANGES_LABEL);
+		out.println("  <TR>\n");
+		out.println("    <TD ALIGN=RIGHT >"
+			+  "<B>Type of report:&nbsp;</B>"
+			+ "</TD>\n"
+		);
+		out.println("    <TD COLSPAN=2>"
+			+ ServletUtilities.clsCreateHTMLTableFormFields.Create_Edit_Form_RadioButton_Input_Field(
+				PARAM_REPORT_TYPE, 
+				alOptions, 
+				alValues, 
+				REPORT_TYPE_BALANCES
+			)
+			+ "</TD>\n"
+		);
+		out.println("    <TD>&nbsp;</TD\n");
+		out.println("  </TR>\n");
+		
+		// Year/period
+		//Get a drop down of the available periods:
+		alValues.clear();
+		alOptions.clear();
+		String sSQL = "SELECT DISTINCT"
+			+ " CONCAT(CAST(" + SMTablegltransactionlines.ifiscalyear + " AS CHAR), '" 
+				+ PARAM_VALUE_DELIMITER 
+				+ "', CAST(" + SMTablegltransactionlines.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
+			+ " FROM " + SMTablegltransactionlines.TableName
+			+ " ORDER BY " + SMTablegltransactionlines.ifiscalyear + " DESC, " + SMTablegltransactionlines.ifiscalperiod + " DESC"
+		;
 		try {
-			ArrayList<String> alValues = new ArrayList<String>(0);
-			ArrayList<String> alOptions = new ArrayList<String>(0);
-			out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APAgedPayablesGenerate\">");
-			out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
-			out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
-			out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>\n");
-			//Starting date will be 1990-01-01
-			out.println("<INPUT TYPE=HIDDEN NAME=SelectedStartYear VALUE=1990>");
-			out.println("<INPUT TYPE=HIDDEN NAME=SelectedStartMonth VALUE=1>");
-			out.println("<INPUT TYPE=HIDDEN NAME=SelectedStartDay VALUE=1>");
-
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=CENTER WIDTH=100%>\n"
-				+ "<TABLE BORDER=0 WIDTH=100%>\n");
-
-			//As of date:
-			String sAsOfDate = clsManageRequestParameters.get_Request_Parameter(PARAM_AS_OF_DATE, request);
-			if (sAsOfDate.compareToIgnoreCase("") == 0){
-				sAsOfDate = clsDateAndTimeConversions.now("MM/dd/yyyy");
-			}
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=LEFT WIDTH=30%><B>Age As Of:&nbsp;</B>"
-				+ "<INPUT TYPE=TEXT NAME=\"" + PARAM_AS_OF_DATE + "\""
-				+ " VALUE=\"" + sAsOfDate + "\""
-				+ " SIZE=12"
-				+ " MAXLENGTH=10"
-				+ ">"
-				+ SMUtilities.getDatePickerString(PARAM_AS_OF_DATE, getServletContext())
-				+ "</TD>\n"
+			ResultSet rsFiscalSelections = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting period selections - User: " + sUserID
+				+ " - "
+				+ sUserFullName
 			);
+			while(rsFiscalSelections.next()){
+				alValues.add(rsFiscalSelections.getString("FISCALSELECTION"));
+				alOptions.add(rsFiscalSelections.getString("FISCALSELECTION"));
+			}
+			rsFiscalSelections.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266235] getting fiscal period selections - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=RIGHT >"
+			+  "<B>Fiscal Period:&nbsp;</B>"
+			+ "</TD>"
+		);
+		out.println("    <TD COLSPAN=2>");
+		out.println("&nbsp;<SELECT NAME=\"" + PARAM_FISCAL_PERIOD_SELECTION + "\">");
+		for (int i=0;i<alValues.size();i++){
+			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+		}
+		out.println("</SELECT>");
+		out.println("</TD>");
+		out.println("    <TD>&nbsp;</TD");
+		out.println("  </TR>");
+		
+		// Checkbox to include accounts with no activity
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=RIGHT >"
+			+  "<B>Filter by activity:&nbsp;</B>"
+			+ "</TD>"
+		);
+		out.println("    <TD COLSPAN=2>"
+			+ clsCreateHTMLFormFields.TDCheckBox(PARAM_PROCESS_FOR_NO_ACTIVITY, false, "Include accounts with no activity")
+			+ "</TD>"
+		);
+		out.println("    <TD>&nbsp;</TD>");
+		out.println("  </TR>");
+					
+		//Account number range:
+		alValues.clear();
+		alOptions.clear();
+		sSQL = "SELECT "
+			+ SMTableglaccounts.sAcctID
+			+ ", " + SMTableglaccounts.sDesc
+			+ " FROM " + SMTableglaccounts.TableName
+			+ " ORDER BY " + SMTableglaccounts.sAcctID
+		;
+		try {
+			ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting account groups - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+			);
+			while(rsGLAccounts.next()){
+				alValues.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID));
+				alOptions.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID) + PARAM_VALUE_DELIMITER + rsGLAccounts.getString(SMTableglaccounts.sDesc));
+			}
+			rsGLAccounts.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266336] getting GL accounts - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=RIGHT >"
+			+  "<B>Accounts:&nbsp;</B>"
+			+ "</TD>"
+		);
+		// Starting account number
+		out.println("    <TD>");
+		out.println("Starting with:&nbsp;<SELECT NAME=\"" + PARAM_STARTING_ACCOUNT + "\">");
+		for (int i=0;i<alValues.size();i++){
+			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+		}
+		out.println("</SELECT>");
+		out.println("</TD>");
+		
+		//Ending with account
+		out.println("    <TD>"
+			+  "&nbsp;Ending with:&nbsp;"
+			+ "<SELECT NAME=\"" + PARAM_ENDING_ACCOUNT + "\">");
+		for (int i=0;i<alValues.size();i++){
+			if(i == (alValues.size() - 1)){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
+		}
+		out.println("</SELECT>");
+		out.println("</TD>");
+		out.println("    <TD>&nbsp;</TD");
+		out.println("  </TR>");
+		
+		// Starting with account group
+		alValues.clear();
+		alOptions.clear();
+		sSQL = "SELECT "
+			+ SMTableglaccountgroups.lid
+			+ ", " + SMTableglaccountgroups.sgroupcode
+			+ ", " + SMTableglaccountgroups.sdescription
+			+ " FROM " + SMTableglaccountgroups.TableName
+			+ " ORDER BY " + SMTableglaccountgroups.sgroupcode
+		;
+		try {
+			ResultSet rsAccountGroups = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting account groups - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+			);
+			while(rsAccountGroups.next()){
+				alValues.add(Long.toString(rsAccountGroups.getLong(SMTableglaccountgroups.lid)));
+				alOptions.add(rsAccountGroups.getString(SMTableglaccountgroups.sgroupcode) + PARAM_VALUE_DELIMITER + rsAccountGroups.getString(SMTableglaccountgroups.sdescription));
+			}
+			rsAccountGroups.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266236] getting GL account groups - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=RIGHT >"
+			+  "<B>Account Groups:&nbsp;</B>"
+			+ "</TD>"
+		);
+		out.println("    <TD>");
+		out.println("Starting with:&nbsp;<SELECT NAME=\"" + PARAM_STARTING_ACCOUNT_GROUP + "\">");
+		for (int i=0;i<alValues.size();i++){
+			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+		}
+		out.println("</SELECT>");
+		out.println("</TD>");
+		
+		//Ending with account group
+		out.println("    <TD>"
+			+  "&nbsp;Ending with:&nbsp;"
+			+ "<SELECT NAME=\"" + PARAM_ENDING_ACCOUNT_GROUP + "\">");
+		for (int i=0;i<alValues.size();i++){
+			if(i == (alValues.size() - 1)){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
+		}
+		out.println("</SELECT>");
+		out.println("</TD>");
+		out.println("    <TD>&nbsp;</TD");
+		out.println("  </TR>");
+		
+		//Build a range of segment values for each of the possibly segments:
+		ArrayList<String> alAccountSegments = new ArrayList<String>(0);
+		ArrayList<String> alAccountSegmentDescriptions = new ArrayList<String>(0);
+		//First get the segment names:
+		sSQL = "SELECT * FROM " + SMTableglaccountsegments.TableName
+			+ " ORDER BY " + SMTableglaccountsegments.sdescription
+		;
+		try {
+			ResultSet rsAccountSegments = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting account segments - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+			);
+			while(rsAccountSegments.next()){
+				alAccountSegments.add(Long.toString(rsAccountSegments.getLong(SMTableglaccountsegments.lid)));
+				alAccountSegmentDescriptions.add(rsAccountSegments.getString(SMTableglaccountsegments.sdescription).toUpperCase());
+			}
+			rsAccountSegments.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266237] getting GL account segments - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		
+		//Now Get all the segment values:
+		alValues.clear();
+		alOptions.clear();
+		sSQL = "SELECT * FROM " + SMTableglacctsegmentvalues.TableName
+				+ " ORDER BY " + SMTableglacctsegmentvalues.sdescription
+			;
+			try {
+				ResultSet rsSegmentValues = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".getting account segment values - User: " + sUserID
+					+ " - "
+					+ sUserFullName
+				);
+				while(rsSegmentValues.next()){
+					alValues.add(Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lsegmentid))
+						+ PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid))
+						+ PARAM_VALUE_DELIMITER + rsSegmentValues.getString(SMTableglacctsegmentvalues.sdescription)
+					);
+					alOptions.add(rsSegmentValues.getString(SMTableglaccountsegments.sdescription) + PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid)));
+				}
+				rsSegmentValues.close();
+			} catch (Exception e1) {
+				out.println("<BR><FONT COLOR=RED><B>Error [1553266238] getting GL account segment values - " + e1.getMessage() + "</B></FONT><BR>");
+			}
+		
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=LEFT COLSPAN=4>"
+			+  "<B><I><U>Segments&nbsp;</U></I></B>"
+			+ "</TD>"
+		);
+		out.println("  </TR>");
+		
+		for(int iAccountSegmentIndex = 0; iAccountSegmentIndex < alAccountSegments.size(); iAccountSegmentIndex++){
+			out.println("  <TR>");
+			out.println("    <TD ALIGN=RIGHT><B>" + alAccountSegmentDescriptions.get(iAccountSegmentIndex).toUpperCase() + ":&nbsp;</B></TD>");
+			out.println("    <TD>"
+				+ "FROM:&nbsp;"
+			);
+			//Add START drop down here
+			out.println("&nbsp;<SELECT NAME=\"" + PARAM_STARTING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex) 
+				+ PARAM_VALUE_DELIMITER + alAccountSegmentDescriptions.get(iAccountSegmentIndex) + "\">");
+			for (int iSegmentValueIndex=0;iSegmentValueIndex<alValues.size();iSegmentValueIndex++){
+				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(PARAM_VALUE_DELIMITER));
+				if(sSegmentID.compareToIgnoreCase(alAccountSegments.get(iAccountSegmentIndex)) == 0){
+					out.println("<OPTION VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
+				}
+			}
+			out.println("</SELECT></TD>");
 			
-			//Cut off by TYPE of date (no needed?)
-			alValues.clear(); alOptions.clear();
-			alValues.add(PARAM_CUT_OFF_BY_DOCUMENT_DATE); alOptions.add(PARAM_CUT_OFF_BY_DOCUMENT_DATE);
-			String sDefaultCutoffBy = clsManageRequestParameters.get_Request_Parameter(PARAM_CUT_OFF_BY, request);
-			out.println("    <TD ALIGN=LEFT><B>Cut off by:&nbsp;</B>" + "<SELECT NAME=\"" + PARAM_CUT_OFF_BY + "\">");
-			for (int i=0;i<alValues.size();i++){
-				if (alValues.get(i).compareToIgnoreCase(sDefaultCutoffBy) == 0){
-					out.println("<OPTION VALUE=\"" + alValues.get(i) + "\" CHECKED > " + alOptions.get(i));
-				}else{
-					out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			out.println("<TD>TO:&nbsp;"
+				);
+			//Add END drop down here
+			out.println("&nbsp;<SELECT NAME=\"" + PARAM_ENDING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex)
+				+ PARAM_VALUE_DELIMITER + alAccountSegmentDescriptions.get(iAccountSegmentIndex)+ "\">");
+			for (int iSegmentValueIndex=0;iSegmentValueIndex<alValues.size();iSegmentValueIndex++){
+				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(PARAM_VALUE_DELIMITER));
+
+				if(sSegmentID.compareToIgnoreCase(alAccountSegments.get(iAccountSegmentIndex)) == 0){
+					//We want to know if this is the last value for this segment, so we can 'select' it.
+					//If the NEXT value coming up is for a different segment, then we know we're on the last value for this segment:
+					String sNextSegmentID = "";
+					if (iSegmentValueIndex < alValues.size() - 1){
+						sNextSegmentID = alValues.get(iSegmentValueIndex + 1).substring(0, alValues.get(iSegmentValueIndex + 1).indexOf(PARAM_VALUE_DELIMITER));
+					}
+					//If the next segment ID is different (or if it's blank), then we know we're at the lest segment value for this segment:
+					if(sNextSegmentID.compareToIgnoreCase(sSegmentID) != 0){
+						out.println("<OPTION selected=yes VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
+					}else{
+						out.println("<OPTION VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
+					}
 				}
 			}
 			out.println("</SELECT>");
-			out.println("</TD>\n");
 			
-			//Cut off date:
-			String sCutOffDate = clsManageRequestParameters.get_Request_Parameter(PARAM_CUT_OFF_DATE, request);
-			if (sCutOffDate.compareToIgnoreCase("") == 0){
-				sCutOffDate = clsDateAndTimeConversions.now("MM/dd/yyyy");
-			}
-			out.println("    <TD ALIGN=LEFT WIDTH=35%><B>Cut off date:&nbsp;</B>"
-				+ "<INPUT TYPE=TEXT NAME=\"" + PARAM_CUT_OFF_DATE + "\""
-				+ " VALUE=\"" + sCutOffDate + "\""
-				+ " SIZE=12"
-				+ " MAXLENGTH=10"
-				+ ">"
-				+ SMUtilities.getDatePickerString(PARAM_CUT_OFF_DATE, getServletContext())
-				+ "</TD>\n"
-			);
-			
-			out.println("  </TR>\n");
-
-			//Print transactions in
-			String sPrintTransactionsIn = clsManageRequestParameters.get_Request_Parameter(PARAM_PRINT_TRANSACTION_IN_DETAIL_OR_SUMMARY, request);
-			alValues.clear(); alOptions.clear();
-			alValues.add(PARAM_PRINT_TRANSACTION_IN_DETAIL_LABEL); alOptions.add(PARAM_PRINT_TRANSACTION_IN_DETAIL_LABEL);
-			alValues.add(PARAM_PRINT_TRANSACTION_IN_SUMMARY_LABEL); alOptions.add(PARAM_PRINT_TRANSACTION_IN_SUMMARY_LABEL);
-
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=LEFT WIDTH=20%><B>Print Transactions In&nbsp;</B>"
-				+ clsCreateHTMLFormFields.Create_Edit_Form_List_Field(
-					PARAM_PRINT_TRANSACTION_IN_DETAIL_OR_SUMMARY, 
-					alValues, 
-					sPrintTransactionsIn, 
-					alOptions)
-				+ "</TD>\n");
-			
-			String sSQL = "";
-			String sStartingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_ACCOUNT, request);
-			String sEndingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_ENDING_ACCouNT, request);
-			ResultSet rsVendors = null;
-			//get customer list from database if it's not passed in:
-			if (sStartingVendorNumber.compareToIgnoreCase("") == 0){
-				sSQL = "SELECT " 
-					+ SMTableicvendors.svendoracct 
-					+ ", " + SMTableicvendors.sname
-					+ " FROM " + SMTableicvendors.TableName
-					+ " ORDER BY " + SMTableicvendors.svendoracct + " ASC LIMIT 1";
-				rsVendors = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".doPost (1) - User: " + sUserID
-					+ " - "
-					+ sUserFullName
-						);
-
-				if (rsVendors.next()){
-					sStartingVendorNumber = rsVendors.getString(SMTableicvendors.svendoracct);
-				}
-				rsVendors.close();
-			}
-			if (sEndingVendorNumber.compareToIgnoreCase("") == 0){
-				sSQL = "SELECT " 
-					+ SMTableicvendors.svendoracct 
-					+ ", " + SMTableicvendors.sname
-					+ " FROM " + SMTableicvendors.TableName
-					+ " ORDER BY " + SMTableicvendors.svendoracct + " DESC LIMIT 1";
-				rsVendors = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".doPost (2) - User: " + sUserID
-					+ " - "
-					+ sUserFullName
-						);
-				if (rsVendors.next()){
-					sEndingVendorNumber = rsVendors.getString(SMTableicvendors.svendoracct);
-				}
-				rsVendors.close();
-			}
-	
-			out.println("</TABLE>\n"
-				+ "</TD>\n"
-				+ "  </TR>\n");
-
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=CENTER WIDTH=100%>\n");
-			out.println("<TABLE BORDER=0 WIDTH=100%>\n");
-			out.println("  <TR>\n");
-			
-
-			//Aging categories:
-			out.println("  <TR>\n");
-			out.println("    <TD ALIGN=LEFT><B>Aging categories:</B></TD>\n");
-			
-			//deadline for 1st
-			String s1st = clsManageRequestParameters.get_Request_Parameter(PARAM_AGING_CATEGORY_FIRST, request);
-			if (s1st.compareToIgnoreCase("") == 0){
-				s1st = "30";
-			}
-			out.println("    <TD ALIGN=LEFT WIDTH=20%><B>1st column:&nbsp;</B>Up to&nbsp;</B>"
-				+ clsCreateHTMLFormFields.TDTextBox(PARAM_AGING_CATEGORY_FIRST, s1st, 6, 10, "") + "&nbsp;days</TD>\n");
-			
-			//deadline for 2nd
-			String s2nd = clsManageRequestParameters.get_Request_Parameter(PARAM_AGING_CATEGORY_SECOND, request);
-			if (s2nd.compareToIgnoreCase("") == 0){
-				s2nd = "60";
-			}
-			out.println("    <TD ALIGN=LEFT WIDTH=20%><B>2nd column:&nbsp;</B>Up to&nbsp;</B>"
-				+ clsCreateHTMLFormFields.TDTextBox(PARAM_AGING_CATEGORY_SECOND, s2nd, 6, 10, "") + "&nbsp;days</TD>\n");
-			
-			//deadline for 3rd
-			String s3rd = clsManageRequestParameters.get_Request_Parameter(PARAM_AGING_CATEGORY_THIRD, request);
-			if (s3rd.compareToIgnoreCase("") == 0){
-				s3rd = "90";
-			}
-			out.println("    <TD ALIGN=LEFT WIDTH=20%><B>3rd column:&nbsp;</B>Up to&nbsp;</B>"
-				+ clsCreateHTMLFormFields.TDTextBox(PARAM_AGING_CATEGORY_THIRD, s3rd, 6, 10, "") + "&nbsp;days</TD>\n");
-			
-			out.println("  </TR>\n");
-			out.println("</TABLE>\n");
-			out.println("    </TD>\n"
-				+ "  </TR>\n");
-
-			//Get the account sets:
-			//Account sets:
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=CENTER WIDTH=100%>\n");
-			out.println("<TABLE BORDER=0 WIDTH=100%>\n");
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=LEFT WIDTH=100%>" 
-					+ "<B>For Control Account Set:&nbsp;");
-
-			String sAccountSet = clsManageRequestParameters.get_Request_Parameter(PARAM_ACCOUNT_SET, request);
-			try{
-				String SQL = "SELECT * FROM " + SMTableapaccountsets.TableName;
-				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID, "MySQL", this.toString() + " - User: " + sUserID
-				+ " - " + sUserFullName		
-						);
-
-				out.println ("<SELECT NAME=\"" + PARAM_ACCOUNT_SET + "\">" );
-				out.println ("<OPTION VALUE=\"" + PARAM_ACCOOUNT_SET_ALL_ACCOUNT_SETS + "\">");
-				out.println (PARAM_ACCOOUNT_SET_ALL_ACCOUNT_SETS);
-				while (rs.next()){
-					if (rs.getString(SMTableapaccountsets.sacctsetname).compareToIgnoreCase(sAccountSet) == 0){
-						out.println ("<OPTION SELECTED=yes VALUE=\"" + rs.getString(SMTableapaccountsets.sacctsetname) + "\">");
-					}else{
-						out.println ("<OPTION VALUE=\"" + rs.getString(SMTableapaccountsets.sacctsetname) + "\">");
-					}
-					out.println (rs.getString(SMTableapaccountsets.sacctsetname) + " - " + rs.getString(SMTableapaccountsets.sdescription));
-				}
-				rs.close();
-				//End the drop down list:
-				out.println ("</SELECT>");
-
-			}catch (SQLException e){
-				out.println("Error loading account sets - " + e.getMessage());
-			}
-			out.println ("&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;");
-
-			String sSortBy = clsManageRequestParameters.get_Request_Parameter(PARAM_SORT_BY, request);
-			out.println("<B>Sort by:</B>&nbsp;");
-			out.println ("<SELECT NAME=\"" + PARAM_SORT_BY + "\">" );
-			if (sSortBy.compareToIgnoreCase(PARAM_SORT_BY_NAME) == 0){
-				out.println ("<OPTION VALUE=\"" + PARAM_SORT_BY_NAME + "\">" + PARAM_SORT_BY_NAME);
-				out.println ("<OPTION SELECTED=yes VALUE=\"" + PARAM_SORT_BY_NAME + "\">" + PARAM_SORT_BY_NAME);
-			}else{
-				out.println ("<OPTION SELECTED=yes VALUE=\"" + PARAM_SORT_BY_ACCOUNT + "\">" + PARAM_SORT_BY_ACCOUNT);
-				out.println ("<OPTION VALUE=\"" + PARAM_SORT_BY_ACCOUNT + "\">" + PARAM_SORT_BY_ACCOUNT);
-			}
-			out.println ("</SELECT>");
-			out.println("</TD>\n");
-			out.println("  </TR>\n");
-			out.println("</TABLE>\n"
-				+ "</TD>\n"
-				+ "  </TR>");
-
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=CENTER WIDTH=100%>\n");
-			out.println("<TABLE BORDER=0 WIDTH=100%>\n");
-			
-			boolean bPrintVendorsWithAZeroBalance = false;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE,request).compareToIgnoreCase("Y") == 0){
-				bPrintVendorsWithAZeroBalance = true;
-			}
-
-			boolean bIncludeAppliedDetails = true;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_INCLUDE_APPLIED_DETAILS,request).compareToIgnoreCase("N") == 0){
-				bIncludeAppliedDetails = false;
-			}
-			boolean bIncludePullyPaidTransactions = false;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS,request).compareToIgnoreCase("Y") == 0){
-				bIncludePullyPaidTransactions = true;
-			}
-			
-			//on hold vendors
-			boolean bIncludeInactiveVendors = false;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_INCLUDE_INACTIVE_VENDORS,request).compareToIgnoreCase("Y") == 0){
-				bIncludeInactiveVendors = true;
-			}
-			
-			//on hold transactions
-			boolean bIncludeTransactionsOnHold = false;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_INCLUDE_TRANSACTIONS_ON_HOLD,request).compareToIgnoreCase("Y") == 0){
-				bIncludeTransactionsOnHold = true;
-			}
-
-			//sort by transaction type
-			boolean bSortDetailByTransactionType = false;
-			if (clsManageRequestParameters.get_Request_Parameter(PARAM_SORT_DETAIL_BY_TRANSACTION_TYPE,request).compareToIgnoreCase("Y") == 0){
-				bSortDetailByTransactionType = true;
-			}
-
-			//select transaction types
-			
-			out.println("  <TR>\n" 
-				+ "    <TD ALIGN=LEFT WIDTH=55%>" 
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE, bPrintVendorsWithAZeroBalance, "Print vendors with a zero balance") 
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_INCLUDE_APPLIED_DETAILS, bIncludeAppliedDetails, "Include applied details") //default to true
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS, bIncludePullyPaidTransactions, "Include fully paid transactions")
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_INCLUDE_INACTIVE_VENDORS, bIncludeInactiveVendors, "Include inactive vendors")
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_INCLUDE_TRANSACTIONS_ON_HOLD, bIncludeTransactionsOnHold, "Include transactions on hold")
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_SORT_DETAIL_BY_TRANSACTION_TYPE, bSortDetailByTransactionType, "Sort detail by transaction type")
-				+ "</TD>\n" 
-				+ "  </TR>\n"
-			);
-			out.println("</TABLE>\n"
-				+ "    </TD>\n"
-				+ "  </TR>\n");
-
-			out.println("  <TR>\n"
-				+ "    <TD ALIGN=CENTER WIDTH=100%>\n");
-			out.println("<TABLE BORDER=0 WIDTH=100%>\n");
-			boolean bDownLoadToHTML = (request.getParameter(PARAM_DOWNLOAD_TO_HTML) != null);
-			out.println("  <TR>" 
-				+ "    <TD ALIGN=LEFT WIDTH=55%>" 
-				+ clsCreateHTMLFormFields.TDCheckBox(PARAM_DOWNLOAD_TO_HTML, bDownLoadToHTML, "Download to HTML file") 
-				+ "</TD>\n" 
-				+ "  </TR>\n"
-			);
-			out.println("</TABLE>\n");
-			
-			out.println("</TABLE>\n");
-			out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----View----\">");
-			out.println("</FORM>");
-
-		} catch (SQLException ex) {
-			// handle any errors
-			out.println("<B>Error: " + ex.getMessage() + "</B>");
+			out.println("    <TD>"
+					+ "&nbsp;"
+				);
+			out.println("  </TR>");
 		}
 
+		//End the table:
+		out.println("</TABLE>\n");
+		out.println("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Print----\">");
+		out.println("</FORM>");
 		out.println("</BODY></HTML>");
 	}
 

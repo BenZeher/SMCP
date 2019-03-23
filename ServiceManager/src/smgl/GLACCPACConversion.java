@@ -1508,10 +1508,33 @@ public class GLACCPACConversion  extends java.lang.Object{
       ,[DOCDATE]
 		 */
 		
-		SQL = "SELECT * FROM GLPOST";
-		Statement stmtACCPAC = cnACCPAC.createStatement();
-		ResultSet rsPostedTransactions = stmtACCPAC.executeQuery(SQL);
-		int iCounter = 0;
+		//Get the count of GL transactions from ACCPAC:
+		long lNumberOfACCPACGLTransactions = 0L;
+		
+		SQL = "SELECT COUNT(*) AS TRANSACTIONCOUNT FROM GLPOST";
+		try {
+			Statement stmtACCPAC = cnACCPAC.createStatement();
+			ResultSet rsTransactionsCount = stmtACCPAC.executeQuery(SQL);
+			if (rsTransactionsCount.next()){
+				lNumberOfACCPACGLTransactions = rsTransactionsCount.getLong("TRANSACTIONCOUNT");
+			}else{
+				rsTransactionsCount.close();
+				throw new Exception("Error [1553377271] - no record returned when counting ACCPAC GL transactions.");
+			}
+			rsTransactionsCount.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [1553377272] - counting ACCPAC GL transactions - " + e1.getMessage());
+		}
+		
+		ResultSet rsPostedTransactions;
+		try {
+			SQL = "SELECT * FROM GLPOST";
+			Statement stmtACCPAC = cnACCPAC.createStatement();
+			rsPostedTransactions = stmtACCPAC.executeQuery(SQL);
+		} catch (Exception e1) {
+			throw new Exception("Error [1523042093] - reading ACCPAC posted GL transactions - " + e1.getMessage());
+		}
+		long lCounter = 0L;
 		while (rsPostedTransactions.next()){
 			String SQLInsert = "INSERT INTO " + sTablename + "("
 				+ SMTablegltransactionlines.bdamount
@@ -1552,16 +1575,17 @@ public class GLACCPACConversion  extends java.lang.Object{
 			try {
 				Statement stmtInsert = cnSMCP.createStatement();
 				stmtInsert.execute(SQLInsert);
-				iCounter++;
+				lCounter++;
 			} catch (Exception e) {
 				rsPostedTransactions.close();
 				throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 			}
-			iCounter++;
+			lCounter++;
 		}
 		rsPostedTransactions.close();
 
-		sStatus +=  "<BR>Added " + Integer.toString(iCounter) + " GL posted transactions to " + sTablename + "<BR>";
+		sStatus +=  "<BR>ACCPAC has " + Long.toString(lNumberOfACCPACGLTransactions) 
+			+ " posted GL transactions, added " + Long.toString(lCounter) + " GL posted transactions to " + sTablename + "<BR>";
 		
 		return sStatus;
 	}
@@ -1587,7 +1611,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1530809394] - could not delete GL fiscal periods using SQL '" + SQL + "' - " + e.getMessage());
 		}
 		
-		//Now read the ACCPAC fisal periods into SMCP:
+		//Now read the ACCPAC fiscal periods into SMCP:
 		SQL = "SELECT * FROM CSFSC"
 		;
 		Statement stmtACCPAC = cnACCPAC.createStatement();

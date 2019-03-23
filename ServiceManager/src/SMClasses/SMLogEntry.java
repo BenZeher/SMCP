@@ -161,6 +161,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_ICCLEARPOSTEDBATCHES = "ICCLEARPOSTEDBATCHES";
 	public final static String LOG_OPERATION_APCLEARPOSTEDBATCHES = "APCLEARPOSTEDBATCHES";
 	public final static String LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS = "BKCLEARPOSTEDBANKSTATEMENTS";
+	public final static String LOG_OPERATION_GLTRIALBALANCE = "GLTRIALBALANCE";
 	
 	private Connection conn;
 	private ServletContext context;
@@ -720,7 +721,10 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS);
     	m_arrOperationLabelDescriptions.add("Records clearing of BK Bank Statements");
-
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_GLTRIALBALANCE);
+    	m_arrOperationLabelDescriptions.add("Records running of GL Trial Balance");
+    	
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){
     		arrCompleteListings.add(m_arrOperationLabelValues.get(i) + sDelimiter + m_arrOperationLabelDescriptions.get(i));

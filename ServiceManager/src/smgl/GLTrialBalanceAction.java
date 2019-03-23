@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -311,56 +312,41 @@ public class GLTrialBalanceAction extends HttpServlet {
 		}
 		
 		lStartingTime = System.currentTimeMillis();
-		/*
-		APAgedPayablesReport rpt = new APAgedPayablesReport(s1stAgingCategory, s2ndAgingCategory, s3rdAgingCategory);
+		GLTrialBalanceReport rpt = new GLTrialBalanceReport();
 		try {
 			out.println(
 				rpt.processReport(
 					conn,
-					sAgeAsOf, 
-					sCutoffBy, 
-					sCutOffDate, 
-					sStartingVendor, 
-					sEndingVendor, 
-					sAccountSet, 
-					sSortBy, 
-					sPrintTransactionsInDetailOrSummary, 
-					bPrintVendorswithaZeroBalance, 
-					bIncludeAppliedDetails, 
-					bIncludeFullyPaidTransactions, 
-					bSortByTransactionType, 
-					bIncludeInactiveVendors,
-					bIncludeTransactionsOnHold,
-					bDownloadAsHTML,
-					SMSystemFunctions.isFunctionPermitted(
-						SMSystemFunctions.APViewTransactionInformation, 
-						sUserID, 
-						conn, 
-						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)),
-					SMSystemFunctions.isFunctionPermitted(
-						SMSystemFunctions.APDisplayVendorInformation,
-						sUserID, 
-						conn, 
-						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)),
 					sDBID,
-					getServletContext()
+					getServletContext(),
+					bDownloadAsHTML,
+					sStartingAccount,
+					sEndingAccount,
+					sStartingAccountGroup,
+					sEndingAccountGroup,
+					sFiscalPeriod,
+					sReportType,
+					bIncludeAccountsWithNoActivity,
+					alStartingSegmentIDs,
+					alStartingSegmentValueIDs,
+					alEndingSegmentIDs,
+					alEndingSegmentValueIDs
 				)
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1546998936]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1553378988]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + e.getMessage()
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ sParamString.replace("*", "&")
+				+ sParamString
 			);			
 			return;
 		}
-		*/
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998937]");
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1553378989]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
-		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "AP Aged Payables", "[1495576478]");
+		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "GL Trial Balance", "[1553378990]");
 		
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");

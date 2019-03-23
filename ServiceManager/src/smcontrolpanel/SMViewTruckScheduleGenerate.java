@@ -394,7 +394,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
     	if (bShowAllServiceTypes){
     		String SQL = "SELECT"
     			+ " " + SMTableservicetypes.sCode
-    			+ " " + SMTableservicetypes.sName
+    			+ ", " + SMTableservicetypes.sName
     			+ " FROM " + SMTableservicetypes.TableName
     			+ " ORDER BY " + SMTableservicetypes.sCode
     		;

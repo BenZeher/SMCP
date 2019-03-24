@@ -1526,6 +1526,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1553377272] - counting ACCPAC GL transactions - " + e1.getMessage());
 		}
 		
+		//System.out.println("[1553458951] - ACCPAC GL Transaction count = " + Long.toString(lNumberOfACCPACGLTransactions) + ".");
+		
 		ResultSet rsPostedTransactions;
 		try {
 			SQL = "SELECT * FROM GLPOST";
@@ -1535,51 +1537,76 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1523042093] - reading ACCPAC posted GL transactions - " + e1.getMessage());
 		}
 		long lCounter = 0L;
+		long lInsertCounter = 0;
+		long lStartingTime = System.currentTimeMillis();
+		int iNumberOfQueriesPerInsert = 100;
+		String SQLInsert = "";
+		//System.out.println("[1553458952] - going into while loop.");
+		
 		while (rsPostedTransactions.next()){
-			String SQLInsert = "INSERT INTO " + sTablename + "("
-				+ SMTablegltransactionlines.bdamount
-				+ ", " + SMTablegltransactionlines.datpostingdate
-				+ ", " + SMTablegltransactionlines.dattransactiondate
-				+ ", " + SMTablegltransactionlines.iconsolidatedposting
-				+ ", " + SMTablegltransactionlines.ifiscalperiod
-				+ ", " + SMTablegltransactionlines.ifiscalyear
-				+ ", " + SMTablegltransactionlines.loriginalbatchnumber
-				+ ", " + SMTablegltransactionlines.loriginalentrynumber
-				+ ", " + SMTablegltransactionlines.loriginallinenumber
-				+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
-				+ ", " + SMTablegltransactionlines.sacctid
-				+ ", " + SMTablegltransactionlines.sdescription
-				+ ", " + SMTablegltransactionlines.sreference
-				+ ", " + SMTablegltransactionlines.ssourceledger
-				+ ", " + SMTablegltransactionlines.ssourcetype
-				+ ", " + SMTablegltransactionlines.stransactiontype
-				+ ") VALUES ("
-				+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablegltransactionlines.bdamountScale, rsPostedTransactions.getBigDecimal("TRANSAMT")).replace(",", "") //bdamount
-				+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("JRNLDATE"), false) + "'" //datpostingdate
-				+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("DOCDATE"), false) + "'" //dattransactiondate
-				+ ", " + Integer.toString(rsPostedTransactions.getInt("CONSOLIDAT")) //consolidated posting
-				+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALPERD")) //fiscal period
-				+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALYR")) //fiscal year
-				+ ", 0" //original batch number
-				+ ", 0" //original entry number
-				+ ", 0" //original line number
-				+ ", 0" //source transaction line ID
-				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
-				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription
-				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLREF").trim()) + "'" //reference
-				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCELEDGER").trim()) + "'" //source ledger
-				+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCETYPE").trim()) + "'" //source type
-				+ ", 0" //stransactiontype
-				+ ")"
-			;
-			try {
-				Statement stmtInsert = cnSMCP.createStatement();
-				stmtInsert.execute(SQLInsert);
-				lCounter++;
-			} catch (Exception e) {
-				rsPostedTransactions.close();
-				throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			if (lInsertCounter == 0){
+				SQLInsert = "INSERT INTO " + sTablename + "("
+					+ SMTablegltransactionlines.bdamount
+					+ ", " + SMTablegltransactionlines.datpostingdate
+					+ ", " + SMTablegltransactionlines.dattransactiondate
+					+ ", " + SMTablegltransactionlines.iconsolidatedposting
+					+ ", " + SMTablegltransactionlines.ifiscalperiod
+					+ ", " + SMTablegltransactionlines.ifiscalyear
+					+ ", " + SMTablegltransactionlines.loriginalbatchnumber
+					+ ", " + SMTablegltransactionlines.loriginalentrynumber
+					+ ", " + SMTablegltransactionlines.loriginallinenumber
+					+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+					+ ", " + SMTablegltransactionlines.sacctid
+					+ ", " + SMTablegltransactionlines.sdescription
+					+ ", " + SMTablegltransactionlines.sreference
+					+ ", " + SMTablegltransactionlines.ssourceledger
+					+ ", " + SMTablegltransactionlines.ssourcetype
+					+ ", " + SMTablegltransactionlines.stransactiontype
+					+ ") VALUES ";
 			}
+			if (lInsertCounter > 0){
+				SQLInsert += ", ";
+			}
+		
+			SQLInsert += "("
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablegltransactionlines.bdamountScale, rsPostedTransactions.getBigDecimal("TRANSAMT")).replace(",", "") //bdamount
+			+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("JRNLDATE"), false) + "'" //datpostingdate
+			+ ", '" + convertACCPACLongDateToString(rsPostedTransactions.getLong("DOCDATE"), false) + "'" //dattransactiondate
+			+ ", " + Integer.toString(rsPostedTransactions.getInt("CONSOLIDAT")) //consolidated posting
+			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALPERD")) //fiscal period
+			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALYR")) //fiscal year
+			+ ", 0" //original batch number
+			+ ", 0" //original entry number
+			+ ", 0" //original line number
+			+ ", 0" //source transaction line ID
+			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
+			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription
+			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLREF").trim()) + "'" //reference
+			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCELEDGER").trim()) + "'" //source ledger
+			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("SRCETYPE").trim()) + "'" //source type
+			+ ", 0" //stransactiontype
+			+ ")"
+			;
+			lInsertCounter++;
+
+			if (lInsertCounter >= iNumberOfQueriesPerInsert){
+				try {
+					Statement stmtInsert = cnSMCP.createStatement();
+					stmtInsert.execute(SQLInsert);
+					lCounter++;
+				} catch (Exception e) {
+					rsPostedTransactions.close();
+					throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+				}
+				lInsertCounter = 0;
+			}
+			
+			//if ((lCounter % 1000L) == 0){
+			//	System.out.println("[1553459657] - at " + lCounter + " inserts, at " + iNumberOfQueriesPerInsert 
+			//		+ " queries per insert, inserts are taking " + (System.currentTimeMillis() - lStartingTime) + "ms per 1000.");
+			//	lStartingTime = System.currentTimeMillis();
+			//}
+			
 			lCounter++;
 		}
 		rsPostedTransactions.close();

@@ -128,16 +128,11 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 					+ ")  != 0.00)";
 			}
 				
-			//Limit by the segments:
-			for (int i = 0; i < alStartingSegmentIDs.size(); i++){
-				//Get the position and length of each segment:
-			}
-				
 			sSQL += ")"
 			+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
 		;
 		
-		System.out.println("[1553548501] - SQL = '" + sSQL + "'");
+		//System.out.println("[1553548501] - SQL = '" + sSQL + "'");
 			
 		boolean bOddRow = false;
 		BigDecimal bdDebitTotal = new BigDecimal("0.00");
@@ -146,49 +141,52 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(rs.next()){
-				
-				BigDecimal bdDebit = new BigDecimal("0.00");
-				BigDecimal bdCredit = new BigDecimal("0.00");
-				BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
-				//If the account is normally a debit balance:
-				if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
-					if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
-						bdDebit = bdAmount;
-						bdCredit = BigDecimal.ZERO;
+				//Now do all of the segment filtering:
+				boolean bPassesSegmentFilter = true;
+				if (bPassesSegmentFilter){
+					BigDecimal bdDebit = new BigDecimal("0.00");
+					BigDecimal bdCredit = new BigDecimal("0.00");
+					BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
+					//If the account is normally a debit balance:
+					if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+						if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
+							bdDebit = bdAmount;
+							bdCredit = BigDecimal.ZERO;
+						}else{
+							bdDebit = BigDecimal.ZERO;
+							bdCredit = bdAmount.negate();
+						}
+					// But if the account is normally a credit balance:
 					}else{
-						bdDebit = BigDecimal.ZERO;
-						bdCredit = bdAmount.negate();
+						if (bdAmount.compareTo(BigDecimal.ZERO) < 0){
+							bdDebit = BigDecimal.ZERO;
+							bdCredit = bdAmount.negate();
+						}else{
+							bdDebit = bdAmount;
+							bdCredit = BigDecimal.ZERO;
+						}
 					}
-				// But if the account is normally a credit balance:
-				}else{
-					if (bdAmount.compareTo(BigDecimal.ZERO) < 0){
-						bdDebit = BigDecimal.ZERO;
-						bdCredit = bdAmount.negate();
-					}else{
-						bdDebit = bdAmount;
-						bdCredit = BigDecimal.ZERO;
+					
+					bdDebitTotal = bdDebitTotal.add(bdDebit);
+					bdCreditTotal = bdCreditTotal.add(bdCredit);
+					
+					//If it's an income statement account, add it to the earnings total:
+					if (rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType).compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
+						//For each record, one of these will be zero, but it's simpler to just add and subtract both each time,
+						// than to worry about which case it is for each record:
+						bdEarningsTotal = bdEarningsTotal.subtract(bdDebit);
+						bdEarningsTotal = bdEarningsTotal.add(bdCredit);
 					}
+					
+					s += printBalanceSheetLine(
+							rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
+							rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
+							bdDebit,
+							bdCredit,
+							bOddRow);
+					
+					bOddRow = !bOddRow;
 				}
-				
-				bdDebitTotal = bdDebitTotal.add(bdDebit);
-				bdCreditTotal = bdCreditTotal.add(bdCredit);
-				
-				//If it's an income statement account, add it to the earnings total:
-				if (rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType).compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
-					//For each record, one of these will be zero, but it's simpler to just add and subtract both each time,
-					// than to worry about which case it is for each record:
-					bdEarningsTotal = bdEarningsTotal.subtract(bdDebit);
-					bdEarningsTotal = bdEarningsTotal.add(bdCredit);
-				}
-				
-				s += printBalanceSheetLine(
-						rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
-						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
-						bdDebit,
-						bdCredit,
-						bOddRow);
-				
-				bOddRow = !bOddRow;
 			}
 			rs.close();
 		} catch (Exception e1) {

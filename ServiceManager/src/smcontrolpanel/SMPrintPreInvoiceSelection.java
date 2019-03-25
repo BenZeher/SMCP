@@ -108,7 +108,7 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 		
 		//checkboxes for Order types:
 		out.println("<TR>");
-		out.println("<TD><B>Include order types:<B></TD>");
+		out.println("<TD><B>Include service types:<B></TD>");
 		out.println("<TD>");
 		
 		SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;

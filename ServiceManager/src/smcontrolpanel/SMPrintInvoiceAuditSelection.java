@@ -102,7 +102,7 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 
 		//checkboxes for Order types:
 		out.println("<TR>");
-		out.println("<TD><B>Include order types:<B></TD>");
+		out.println("<TD><B>Include service types:<B></TD>");
 		out.println("<TD>");
 		
 		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;

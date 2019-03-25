@@ -134,7 +134,7 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		
 		//checkboxes for Order types:
 		out.println("<TR>");
-		out.println("<TD>Include order types:</TD>");
+		out.println("<TD>Include service types:</TD>");
 		out.println("<TD>");
 		
 		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
@@ -156,8 +156,8 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD>Group by:</TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"OrderType\" checked> Order type, then salesperson<BR>");
-		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"Salesperson\"> Salesperson, then order type<BR>");
+		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"OrderType\" checked> Service type, then salesperson<BR>");
+		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"Salesperson\"> Salesperson, then service type<BR>");
 		out.println("</TD>");
 		out.println("</TR>");
 		

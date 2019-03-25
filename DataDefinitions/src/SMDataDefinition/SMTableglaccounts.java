@@ -27,6 +27,9 @@ public class SMTableglaccounts {
 	
 	public static int bdannualbudgetScale = 2;
 	
+	public static final String ACCOUNT_TYPE_INCOME_STATEMENT = "I";
+	public static final String ACCOUNT_TYPE_BALANCE_SHEET = "B";
+	
 	public static final int NORMAL_BALANCE_TYPE_DEBIT = 1;
 	public static final int NORMAL_BALANCE_TYPE_CREDIT = 2;
 

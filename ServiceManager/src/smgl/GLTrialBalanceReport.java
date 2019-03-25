@@ -40,21 +40,24 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 
 		
 		s += printTableHeading();
-		s += buildReport(
-			sReportType, 
-			sFiscalYearAndPeriod,
-			conn,
-			sDBID, 
-			context
-		);
-		//s += printReportTotals(sPrintTransactionsInDetailOrSummary.compareToIgnoreCase(APAgedPayablesSelect.PARAM_PRINT_TRANSACTION_IN_SUMMARY_LABEL) == 0);
-		
+		if(sReportType.compareToIgnoreCase(GLTrialBalanceSelect.REPORT_TYPE_BALANCES) == 0){
+			s += buildBalanceSheetReport(
+				sReportType, 
+				sFiscalYearAndPeriod,
+				conn,
+				sDBID, 
+				context
+			);			
+		}else{
+			
+		}
+
 		s += printTableFooting();
 		
 		return s;
 	}
 	
-	private String buildReport(
+	private String buildBalanceSheetReport(
 		String sReportType,
 		String sFiscalYearAndPeriod,
 		Connection conn,
@@ -70,9 +73,12 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 		
 		String sSQL = "SELECT"
 			+ " " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
-			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+			+ ", (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ") AS CURRENTBALANCE"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype
+			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType
 			+ " FROM " + SMTableglfinancialstatementdata.TableName
 			+ " LEFT JOIN " + SMTableglaccounts.TableName 
 			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID 
@@ -96,7 +102,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				
 				BigDecimal bdDebit = new BigDecimal("0.00");
 				BigDecimal bdCredit = new BigDecimal("0.00");
-				BigDecimal bdAmount = rs.getBigDecimal(SMTableglfinancialstatementdata.bdtotalyeartodate);
+				BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
 				//If the account is normally a debit balance:
 				if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
 					if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
@@ -119,6 +125,15 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				
 				bdDebitTotal = bdDebitTotal.add(bdDebit);
 				bdCreditTotal = bdCreditTotal.add(bdCredit);
+				
+				//If it's an income statement account, add it to the earnings total:
+				if (rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType).compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
+					//For each record, one of these will be zero, but it's simpler to just add and subtract both each time,
+					// than to worry about which case it is for each record:
+					bdEarningsTotal = bdEarningsTotal.subtract(bdDebit);
+					bdEarningsTotal = bdEarningsTotal.add(bdCredit);
+				}
+				
 				s += printBalanceSheetLine(
 						rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
 						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),

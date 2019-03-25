@@ -40,6 +40,9 @@ public class GLTrialBalanceSelect extends HttpServlet {
 	public static String PARAM_ENDING_ACCOUNT_GROUP = "ENDINGACCOUNTGROUP";
 	public static String PARAM_STARTING_SEGMENT_BASE = "STARTINGSEGMENTBASE";
 	public static String PARAM_ENDING_SEGMENT_BASE = "ENDINGSEGMENTBASE";
+	public static String DEFAULT_FIRST_STARTING_VALUE = "";
+	public static String DEFAULT_LAST_ENDING_VALUE = "ZZZZZZ";
+	
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -243,7 +246,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 				+ sUserFullName
 			);
 			while(rsAccountGroups.next()){
-				alValues.add(Long.toString(rsAccountGroups.getLong(SMTableglaccountgroups.lid)));
+				alValues.add(rsAccountGroups.getString(SMTableglaccountgroups.sgroupcode));
 				alOptions.add(rsAccountGroups.getString(SMTableglaccountgroups.sgroupcode) + PARAM_VALUE_DELIMITER + rsAccountGroups.getString(SMTableglaccountgroups.sdescription));
 			}
 			rsAccountGroups.close();
@@ -309,7 +312,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		alValues.clear();
 		alOptions.clear();
 		sSQL = "SELECT * FROM " + SMTableglacctsegmentvalues.TableName
-				+ " ORDER BY " + SMTableglacctsegmentvalues.sdescription
+				+ " ORDER BY " + SMTableglacctsegmentvalues.svalue
 			;
 			try {
 				ResultSet rsSegmentValues = clsDatabaseFunctions.openResultSet(
@@ -324,9 +327,9 @@ public class GLTrialBalanceSelect extends HttpServlet {
 				while(rsSegmentValues.next()){
 					alValues.add(Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lsegmentid))
 						+ PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid))
-						+ PARAM_VALUE_DELIMITER + rsSegmentValues.getString(SMTableglacctsegmentvalues.sdescription)
+						+ PARAM_VALUE_DELIMITER + rsSegmentValues.getString(SMTableglacctsegmentvalues.svalue)
 					);
-					alOptions.add(rsSegmentValues.getString(SMTableglaccountsegments.sdescription) + PARAM_VALUE_DELIMITER + Long.toString(rsSegmentValues.getLong(SMTableglacctsegmentvalues.lid)));
+					alOptions.add(rsSegmentValues.getString(SMTableglacctsegmentvalues.svalue) + PARAM_VALUE_DELIMITER + rsSegmentValues.getString(SMTableglaccountsegments.sdescription));
 				}
 				rsSegmentValues.close();
 			} catch (Exception e1) {
@@ -349,6 +352,14 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			//Add START drop down here
 			out.println("&nbsp;<SELECT NAME=\"" + PARAM_STARTING_SEGMENT_BASE + alAccountSegments.get(iAccountSegmentIndex) 
 				+ PARAM_VALUE_DELIMITER + alAccountSegmentDescriptions.get(iAccountSegmentIndex) + "\">");
+			
+			//Add the first default value:
+			out.println("<OPTION selected=yes VALUE=\"" 
+				+ alAccountSegments.get(iAccountSegmentIndex)
+				+ PARAM_VALUE_DELIMITER + "0"
+				+ PARAM_VALUE_DELIMITER + DEFAULT_FIRST_STARTING_VALUE
+				+ "\" >" + DEFAULT_FIRST_STARTING_VALUE
+			);
 			for (int iSegmentValueIndex=0;iSegmentValueIndex<alValues.size();iSegmentValueIndex++){
 				String sSegmentID = alValues.get(iSegmentValueIndex).substring(0, alValues.get(iSegmentValueIndex).indexOf(PARAM_VALUE_DELIMITER));
 				if(sSegmentID.compareToIgnoreCase(alAccountSegments.get(iAccountSegmentIndex)) == 0){
@@ -372,14 +383,16 @@ public class GLTrialBalanceSelect extends HttpServlet {
 					if (iSegmentValueIndex < alValues.size() - 1){
 						sNextSegmentID = alValues.get(iSegmentValueIndex + 1).substring(0, alValues.get(iSegmentValueIndex + 1).indexOf(PARAM_VALUE_DELIMITER));
 					}
-					//If the next segment ID is different (or if it's blank), then we know we're at the lest segment value for this segment:
-					if(sNextSegmentID.compareToIgnoreCase(sSegmentID) != 0){
-						out.println("<OPTION selected=yes VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
-					}else{
-						out.println("<OPTION VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
-					}
+					out.println("<OPTION VALUE=\"" + alValues.get(iSegmentValueIndex) + "\"> " + alOptions.get(iSegmentValueIndex));
 				}
 			}
+			//Add the last ending default value:
+			out.println("<OPTION selected=yes  VALUE=\""
+				+ alAccountSegments.get(iAccountSegmentIndex)
+				+ PARAM_VALUE_DELIMITER + "0"
+				+ PARAM_VALUE_DELIMITER + DEFAULT_LAST_ENDING_VALUE
+				+ "\" >" + DEFAULT_LAST_ENDING_VALUE	
+			);
 			out.println("</SELECT>");
 			
 			out.println("    <TD>"

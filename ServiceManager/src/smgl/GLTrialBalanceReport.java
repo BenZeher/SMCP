@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsDatabaseFunctions;
@@ -44,6 +45,15 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			s += buildBalanceSheetReport(
 				sReportType, 
 				sFiscalYearAndPeriod,
+				sStartingAccount,
+				sEndingAccount,
+				sStartingAccountGroup,
+				sEndingAccountGroup,
+				bIncludeAccountsWithNoActivity,
+				alStartingSegmentIDs,
+				alStartingSegmentValueIDs,
+				alEndingSegmentIDs,
+				alEndingSegmentValueIDs,
 				conn,
 				sDBID, 
 				context
@@ -60,6 +70,15 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 	private String buildBalanceSheetReport(
 		String sReportType,
 		String sFiscalYearAndPeriod,
+		String sStartingAccount,
+		String sEndingAccount,
+		String sStartingAccountGroupCode,
+		String sEndingAccountGroupCode,
+		boolean bIncludeAccountsWithNoActivity,
+		ArrayList<String>alStartingSegmentIDs,
+		ArrayList<String>alStartingSegmentValueIDs,
+		ArrayList<String>alEndingSegmentIDs,
+		ArrayList<String>alEndingSegmentValueIDs,
 		Connection conn,
 		String sDBID, 
 		ServletContext context) throws Exception{
@@ -81,17 +100,45 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType
 			+ " FROM " + SMTableglfinancialstatementdata.TableName
 			+ " LEFT JOIN " + SMTableglaccounts.TableName 
-			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID 
+			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 			+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+			+ " LEFT JOIN " + SMTableglaccountgroups.TableName
+			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
+				+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid
+			
 
 			//WHERE CLAUSE:
 			+ " WHERE ("
 				+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sFiscalYear + ")"
 				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = " + sFiscalPeriod + ")"
-			+ ")"
+				
+				//Account range:
+				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')"
+				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " <= '" + sEndingAccount + "')"
+				
+				//Account group range:
+				+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')"
+				+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " <= '" + sEndingAccountGroupCode + "')"
+			;
+		
+			//Include accounts with no activity?
+			if(!bIncludeAccountsWithNoActivity){
+				sSQL += " AND ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+					+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
+					+ ")  != 0.00)";
+			}
+				
+			//Limit by the segments:
+			for (int i = 0; i < alStartingSegmentIDs.size(); i++){
+				//Get the position and length of each segment:
+			}
+				
+			sSQL += ")"
 			+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
 		;
 		
+		System.out.println("[1553548501] - SQL = '" + sSQL + "'");
+			
 		boolean bOddRow = false;
 		BigDecimal bdDebitTotal = new BigDecimal("0.00");
 		BigDecimal bdCreditTotal = new BigDecimal("0.00");
@@ -145,7 +192,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			}
 			rs.close();
 		} catch (Exception e1) {
-			throw new Exception("<BR><FONT COLOR=RED><B>Error [1553381089] reading GL transactions with SQL: '" + sSQL + " - " + e1.getMessage() + "</B></FONT><BR>");
+			throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
 		}
 		
 		s += printBalanceReportTotals(bdDebitTotal, bdCreditTotal, bdEarningsTotal);

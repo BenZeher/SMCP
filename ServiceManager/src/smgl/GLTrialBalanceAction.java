@@ -117,6 +117,8 @@ public class GLTrialBalanceAction extends HttpServlet {
 		
 		String sParamString = "";
 		sParamString += "&CallingClass=" + sCallingClass;
+		
+		/* May not use all thesejust for the occasional redirect on this screen:
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT + "=" + sEndingAccount;
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT + "=" + sStartingAccount;
 		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP + "=" + sEndingAccountGroup;
@@ -149,6 +151,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 				+ alEndingSegmentValueDescriptions.get(i)
 			;
 		}
+		*/
 		
 		sParamString += "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		

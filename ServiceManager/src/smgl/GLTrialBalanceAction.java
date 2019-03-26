@@ -331,9 +331,9 @@ public class GLTrialBalanceAction extends HttpServlet {
 					sReportType,
 					bIncludeAccountsWithNoActivity,
 					alStartingSegmentIDs,
-					alStartingSegmentValueIDs,
+					alStartingSegmentValueDescriptions,
 					alEndingSegmentIDs,
-					alEndingSegmentValueIDs
+					alEndingSegmentValueDescriptions
 				)
 			);
 		} catch (Exception e) {

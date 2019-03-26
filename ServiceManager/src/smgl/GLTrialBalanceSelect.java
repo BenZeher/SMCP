@@ -4,16 +4,21 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglacctsegmentvalues;
+import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -30,7 +35,12 @@ public class GLTrialBalanceSelect extends HttpServlet {
 	public static String REPORT_TYPE_NET_CHANGES = "REPORTTYPENETCHANGES";
 	public static String REPORT_TYPE_BALANCES_LABEL = "Account balances as of the year/period";
 	public static String REPORT_TYPE_NET_CHANGES_LABEL = "Net changes for the period";
-	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
+	public static String PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION = "BALANCESHEETFISCALPERIODSELECTION";
+	public static String SPAN_BALANCE_SHEET_FISCAL_PERIOD = "SPANBALANCESHEETFISCALPERIOD";
+	public static String PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION = "NETEARNINGSFISCALYEARSELECTION";
+	public static String PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION = "NETEARNINGSFISCALPERIODSTARTINGSELECTION";
+	public static String PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION = "NETEARNINGSFISCALPERIODENDINGSELECTION";
+	public static String SPAN_NET_EARNINGS_FIELDS = "SPANNETEARNINGS";
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	public static String PARAM_STARTING_ACCOUNT = "StartingAccount";
@@ -63,6 +73,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
+		out.println(sCommandScript());
 
 		if (clsManageRequestParameters.get_Request_Parameter("Warning", request).compareToIgnoreCase("") != 0){
 			out.println("<BR><FONT COLOR=RED><B>WARNING: " + clsManageRequestParameters.get_Request_Parameter("Warning", request) + "</B></FONT><BR>");
@@ -100,27 +111,26 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			+ "</TD>\n"
 		);
 		out.println("    <TD COLSPAN=2>"
-			+ ServletUtilities.clsCreateHTMLTableFormFields.Create_Edit_Form_RadioButton_Input_Field(
-				PARAM_REPORT_TYPE, 
-				alOptions, 
-				alValues, 
-				REPORT_TYPE_BALANCES
-			)
+			+ "<SELECT  onchange=\"toggleFiscalPeriod(this.value);\"" + "\n"
+			+ " NAME = \"" + PARAM_REPORT_TYPE + "\" ID = \"" + PARAM_REPORT_TYPE + "\">" + "\n"
+			+ "<OPTION VALUE = \"" + REPORT_TYPE_BALANCES + "\">" + REPORT_TYPE_BALANCES_LABEL + "\n"
+			+ "<OPTION VALUE = \"" + REPORT_TYPE_NET_CHANGES + "\">" + REPORT_TYPE_NET_CHANGES_LABEL + "\n"
+			+ "</SELECT>" + "\n"
 			+ "</TD>\n"
 		);
 		out.println("    <TD>&nbsp;</TD\n");
 		out.println("  </TR>\n");
 		
-		// Year/period
+		// Balance sheet Year/period
 		//Get a drop down of the available periods:
 		alValues.clear();
 		alOptions.clear();
 		String sSQL = "SELECT DISTINCT"
-			+ " CONCAT(CAST(" + SMTablegltransactionlines.ifiscalyear + " AS CHAR), '" 
+			+ " CONCAT(CAST(" + SMTableglfinancialstatementdata.ifiscalyear + " AS CHAR), '" 
 				+ PARAM_VALUE_DELIMITER 
-				+ "', CAST(" + SMTablegltransactionlines.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
-			+ " FROM " + SMTablegltransactionlines.TableName
-			+ " ORDER BY " + SMTablegltransactionlines.ifiscalyear + " DESC, " + SMTablegltransactionlines.ifiscalperiod + " DESC"
+				+ "', CAST(" + SMTableglfinancialstatementdata.ifiscalperiod + " AS CHAR)) AS FISCALSELECTION"
+			+ " FROM " + SMTableglfinancialstatementdata.TableName
+			+ " ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + " DESC, " + SMTableglfinancialstatementdata.ifiscalperiod + " DESC"
 		;
 		try {
 			ResultSet rsFiscalSelections = clsDatabaseFunctions.openResultSet(
@@ -145,12 +155,77 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			+  "<B>Fiscal Period:&nbsp;</B>"
 			+ "</TD>"
 		);
+		
+		
+		//Balance sheet selection:
 		out.println("    <TD COLSPAN=2>");
-		out.println("&nbsp;<SELECT NAME=\"" + PARAM_FISCAL_PERIOD_SELECTION + "\">");
+		out.println("<SPAN NAME = \"" + SPAN_BALANCE_SHEET_FISCAL_PERIOD + "\" ID = \"" + SPAN_BALANCE_SHEET_FISCAL_PERIOD + "\" >" + "\n");
+		out.println("&nbsp;<SELECT NAME=\"" + PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION + "\"" 
+			+ " ID = \"" + 	PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION + "\""
+			+ "\">");
 		for (int i=0;i<alValues.size();i++){
 			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
 		}
 		out.println("</SELECT>");
+		out.println("</SPAN>\n");
+		
+		//Net earnings selection:
+		alValues.clear();
+		alOptions.clear();
+		sSQL = "SELECT DISTINCT"
+			+ " " + SMTableglfinancialstatementdata.ifiscalyear 
+			+ " FROM " + SMTableglfinancialstatementdata.TableName
+			+ " ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + " DESC, " + SMTableglfinancialstatementdata.ifiscalperiod + " DESC"
+		;
+		try {
+			ResultSet rsFiscalSelections = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting fiscal years - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+			);
+			while(rsFiscalSelections.next()){
+				alValues.add(Long.toString(rsFiscalSelections.getLong(SMTableglfinancialstatementdata.ifiscalyear)));
+				alOptions.add(Long.toString(rsFiscalSelections.getLong(SMTableglfinancialstatementdata.ifiscalyear)));
+			}
+			rsFiscalSelections.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266335] getting fiscal year selections - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		
+		out.println("<SPAN NAME = \"" + SPAN_NET_EARNINGS_FIELDS + "\" ID = \"" + SPAN_NET_EARNINGS_FIELDS + "\""
+			+ " style = \" display:none; \" "
+			+ " >\n");
+		out.println("&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION + "\""
+			+ " ID = \"" + PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION + "\""
+			+ ">");
+		for (int i=0;i<alValues.size();i++){
+			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+		}
+		out.println("</SELECT>");
+		
+		//Net Earnings STARTING fiscal periods:
+		out.println("&nbsp;FROM:&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
+			+ " ID = \"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
+			+ "\">");
+		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
+			out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+		}
+		out.println("</SELECT>");
+		
+		//Net Earnings ENDING fiscal periods:
+		out.println("&nbsp;TO:&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION + "\"" 
+			+ " ID = \"" + PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION + "\""
+			+ "\">");
+		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
+			out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+		}
+		out.println("</SELECT>");
+		out.println("</SPAN>\n");
+		
 		out.println("</TD>");
 		out.println("    <TD>&nbsp;</TD");
 		out.println("  </TR>");
@@ -407,7 +482,34 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		out.println("</FORM>");
 		out.println("</BODY></HTML>");
 	}
+	private String sCommandScript(){
+		String s = "";
+		
+		s += "<NOSCRIPT>\n"
+				+ "    <font color=red>\n"
+				+ "    <H3>This page requires that JavaScript be enabled to function properly</H3>\n"
+				+ "    </font>\n"
+				+ "</NOSCRIPT>\n"
+			;
+		s += "<script type='text/javascript'>\n";
+		
+   		s += "function toggleFiscalPeriod(reporttypevalue){\n"
+   			//+ "    alert('toggled');\n"
+   			+ "    if (reporttypevalue == '" + REPORT_TYPE_NET_CHANGES + "'){\n"
+   			+ "        document.getElementById(\"" + SPAN_BALANCE_SHEET_FISCAL_PERIOD + "\").style.display='none';\n"
+   			+ "        document.getElementById(\"" + SPAN_NET_EARNINGS_FIELDS + "\").style.display='inline';\n"
+   			+ "    }else{\n"
+   			+ "        document.getElementById(\"" + SPAN_BALANCE_SHEET_FISCAL_PERIOD + "\").style.display='inline';\n"
+   			+ "        document.getElementById(\"" + SPAN_NET_EARNINGS_FIELDS + "\").style.display='none';\n"
 
+   			+ "    }\n"
+   			+ "}\n"
+   		;
+   		
+   	   	s += "</script>\n";
+   	   	
+   	   	return s;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {

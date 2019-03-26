@@ -54,7 +54,10 @@ public class GLTrialBalanceAction extends HttpServlet {
 		String sStartingAccount = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT);
 		String sEndingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP);
 		String sStartingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT_GROUP);
-		String sFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_FISCAL_PERIOD_SELECTION);
+		String sFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION);
+		String sNetEarningsFiscalYear = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION);
+		String sNetEarningsStartingFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION);
+		String sNetEarningsEndingFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION);
 		String sReportType = request.getParameter(GLTrialBalanceSelect.PARAM_REPORT_TYPE);
 		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 		boolean bDownloadAsHTML = (request.getParameter(GLTrialBalanceSelect.PARAM_DOWNLOAD_TO_HTML) != null);
@@ -212,15 +215,48 @@ public class GLTrialBalanceAction extends HttpServlet {
 			+ "  </TR>\n"
 		;
 			
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Fiscal year - period:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sFiscalPeriod + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
+		if (sReportType.compareToIgnoreCase(GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES) == 0){
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "Fiscal year:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sNetEarningsFiscalYear + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+			;
+
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "FROM period:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sNetEarningsStartingFiscalPeriod + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+			;
+
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "TO period:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sNetEarningsEndingFiscalPeriod + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+			;
+
+		}else{
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "Fiscal year - period:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sFiscalPeriod + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+			;
+		}
 		
 		String sNoActivity = "N";
 		if (bIncludeAccountsWithNoActivity){
@@ -328,6 +364,9 @@ public class GLTrialBalanceAction extends HttpServlet {
 					sStartingAccountGroup,
 					sEndingAccountGroup,
 					sFiscalPeriod,
+					sNetEarningsFiscalYear,
+					sNetEarningsStartingFiscalPeriod,
+					sNetEarningsEndingFiscalPeriod,
 					sReportType,
 					bIncludeAccountsWithNoActivity,
 					alStartingSegmentIDs,

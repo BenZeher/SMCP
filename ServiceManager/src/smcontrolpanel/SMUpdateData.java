@@ -13961,6 +13961,139 @@ public class SMUpdateData extends java.lang.Object{
 				break;
 			//END CASE
 				
+				//BEGIN CASE
+			case 1362:
+				//Added by BJZ 3/25/2019
+				SQL = "UPDATE `orderheaders`"
+					+ " SET sServiceTypeCode = IF(sServiceTypeCode='SH0001','RS',IF(sServiceTypeCode='SH0002','RI',IF(sServiceTypeCode='SH0003','CS',IF(sServiceTypeCode='SH0004','CI',sServiceTypeCode))))"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+			
+			//BEGIN CASE
+			case 1363:
+				//Added by BJZ 3/25/2019
+				SQL = "UPDATE `invoiceheaders`"
+						+ " SET sServiceTypeCode = IF(sServiceTypeCode='SH0001','RS',IF(sServiceTypeCode='SH0002','RI',IF(sServiceTypeCode='SH0003','CS',IF(sServiceTypeCode='SH0004','CI',sServiceTypeCode))))"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+			//BEGIN CASE
+			case 1364:
+				//Added byBJZ 3/25/2019
+				SQL = "UPDATE `defaultitemcategories`"
+					+ " SET ServiceTypeCode = IF(ServiceTypeCode='SH0001','RS',IF(ServiceTypeCode='SH0002','RI',IF(ServiceTypeCode='SH0003','CS',IF(ServiceTypeCode='SH0004','CI',ServiceTypeCode))))"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+				//BEGIN CASE
+			case 1365:
+				//Added byBJZ 3/25/2019
+				SQL = "UPDATE `servicetypes`"
+					+ " SET sCode = IF(sCode='SH0001','RS',IF(sCode='SH0002','RI',IF(sCode='SH0003','CS',IF(sCode='SH0004','CI',sCode))))"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+			
+				//BEGIN CASE
+			case 1366:
+				//Added by TJR 3/13/2019
+				SQL = "CREATE TABLE `mechanicservicetypes` ("
+					+ "`imechanicid` int(11) NOT NULL DEFAULT '0' COMMENT '[010301]',"
+					+ "`sservicetypecode` varchar(45) NOT NULL DEFAULT '' COMMENT '[011302]',"
+					+ "PRIMARY KEY (`imechanicid`,`sservicetypecode`)"
+					+ ") ENGINE=InnoDB"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
+				
+				
+			//BEGIN CASE:
+			case 1367:
+				//Added by BJZ 3/26/2019
+				SQL = "SELECT lid, iMechType  FROM mechanics";
+				int iMechType = 0;
+				int iMechid = 0;
+				
+				try {
+					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+	
+					while (rs.next()){
+						iMechType = rs.getInt("iMechType");
+						iMechid = rs.getInt("lid");
+						
+						if(iMechType > 0 && iMechType < 16) {
+
+						SQL = "INSERT INTO mechanicservicetypes (imechanicid, sservicetypecode) VALUES ";
+	
+						switch(iMechType) {
+						case 1: SQL += "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")";	break;	
+						case 2: SQL += "(" + Integer.toString(iMechid) + ", " + "'RI'" + ")"; break;
+						case 3: SQL += "(" + Integer.toString(iMechid) + ", " + "'RI'" + "), "
+									 + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")"; break;
+						case 4: SQL += "(" + Integer.toString(iMechid) + ", " + "'CS'" + ")"; break;
+						case 5: SQL += "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")";	break;	
+						case 6: SQL += "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + ")"; break;
+						case 7: SQL += "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")"; break;
+						case 8: SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + ")"; break;
+						case 9: SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")";	break;
+						case 10:SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + ")";	break;
+						case 11:SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")"; break;
+						case 12:SQL += "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'CI'" + ")"; break;
+						case 13:SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")"; break;
+						case 14:SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + ")"; break;
+						case 15:SQL += "(" + Integer.toString(iMechid) + ", " + "'CI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'CS'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RI'" + "), "
+								     + "(" + Integer.toString(iMechid) + ", " + "'RS'" + ")"; break;
+						}
+						SQL += "";
+						if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+						}
+					}
+					rs.close();
+				} catch (SQLException e) {
+					System.out.println("Error [1553627170] populating mechanicsservicetype table - " + e.getMessage());
+				}
+					iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;	
+				//END CASE
+				
+		   //BEGIN CASE:
+			case 1368:
+				//Added by BJZ 3/26/2019
+				SQL = "ALTER TABLE `servicetypes` "
+						+ "CHANGE `id` `id` int(11) NOT NULL AUTO_INCREMENT COMMENT '[011301]', "
+						+ "CHANGE `sCode` `sCode` varchar(6) NOT NULL DEFAULT '' COMMENT '[011302]'";
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
 				
 		//End switch:
 		}

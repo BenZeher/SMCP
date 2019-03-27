@@ -216,7 +216,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
         //Service type list
 	    try{
 	        String SQL = "SELECT"
-	        	+ " " + SMTableservicetypes.iTypeID
+	        	+	 SMTableservicetypes.sCode
 	        	+ ", " + SMTableservicetypes.sName
 	        	+ " FROM " + SMTableservicetypes.TableName
 	        	+ " ORDER BY " + SMTableservicetypes.sCode;
@@ -233,7 +233,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    	ArrayList <String> alServiceTypes = new ArrayList<String>(0);
 	    	while (rsServiceTypes.next()){
 	   			alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
-	   				+ rsServiceTypes.getInt(SMTableservicetypes.iTypeID) + " VALUE=0 >" 
+	   				+ rsServiceTypes.getInt(SMTableservicetypes.sCode) + " VALUE=0 >" 
 	   				+ rsServiceTypes.getString(SMTableservicetypes.sName)
 	   				);
 	    	}

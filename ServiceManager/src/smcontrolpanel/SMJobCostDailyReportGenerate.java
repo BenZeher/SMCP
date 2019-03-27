@@ -30,7 +30,6 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	
 	private boolean bSelectByCategory = false;
-	//private static SimpleDateFormat USTimeOnlyformatter = new SimpleDateFormat("hh:mm:ss a");
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -87,11 +86,10 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 		ArrayList<String> sMechanics = new ArrayList<String>(0);
 		Enumeration<String> paramNames = request.getParameterNames();
 		ArrayList<String> sLocations = new ArrayList<String>(0);
-		ArrayList<String> sServiceTypes = new ArrayList<String>(0);
+
 		if (bSelectByCategory){
 	    	//Get the list of selected mechanics:
 		    String sLocationMarker = "LocationCheckBox";
-		    String sServiceTypeMarker = "ServiceTypeCheckbox";
 		    while(paramNames.hasMoreElements()) {
 		      String sParamName = paramNames.nextElement();
 			  if (sParamName.contains(sLocationMarker)){
@@ -99,30 +97,11 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 						  sParamName.substring(sParamName.indexOf(sLocationMarker) 
 								  + sLocationMarker.length()));
 			  }
-			  if (sParamName.contains(sServiceTypeMarker)){
-				  sServiceTypes.add(
-						  sParamName.substring(sParamName.indexOf(sServiceTypeMarker) 
-								  + sServiceTypeMarker.length()));
-			  }
 		    }
-
 			if(sLocations.size() == 0){
 				sWarning = "You must select a mechanic location";
 				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
-	        }
-			if(sServiceTypes.size() == 0){
-				sWarning = "You must select at least one service type";
-				redirectAfterError(response, sCallingClass, sWarning, sDBID);
-				return;
-	        }
-
-			int iMechType = 0;
-	        for (int i = 0; i < sServiceTypes.size(); i++){
-	        	iMechType = iMechType + (int)Math.pow(
-	        			2, 
-	        			Double.parseDouble(sServiceTypes.get(i))
-	        			);
 	        }
 			
 	        String sLocationsString = "";
@@ -133,21 +112,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 				+ " " + SMTablemechanics.sMechInitial
 				+ " FROM " + SMTablemechanics.TableName
 				+ " WHERE ("
-					+ "(INSTR('" + sLocationsString + "', " + SMTablemechanics.sMechLocation + ") > 0)"
-					+ " AND ("
-			;
-			
-			for (int i = 0; i < sServiceTypes.size(); i ++){
-				if (i == 0){
-					SQL += "(" + SMTablemechanics.iMechType + " & " + 
-					(int)Math.pow(2, Double.parseDouble(sServiceTypes.get(i))) + ")";
-				}else{
-					SQL += " OR (" + SMTablemechanics.iMechType + " & " + 
-					(int)Math.pow(2, Double.parseDouble(sServiceTypes.get(i))) + ")";
-				}
-			}
-			SQL +=  ")"
-				+ ")"
+					+ "(INSTR('" + sLocationsString + "', " + SMTablemechanics.sMechLocation + ") > 0))"
 				;
 			
 			//System.out.println("In " + this.toString() + ".doGet, SQL = " + SQL);
@@ -218,18 +183,6 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     			}else{
     				sCriteria += ", <B>" 
     					+ sLocations.get(i) + "</B>";
-    			}
-    		}
-    		sCriteria += ", selected mechanic service types:&nbsp";
-    		for (int i = 0; i < sServiceTypes.size(); i++){
-    			// TBDL
-    			//System.out.println("Service type: " + sServiceTypes.get(i));
-    			if (i == 0){
-    				sCriteria += "<B>" 
-    					+ sServiceTypes.get(i) + "</B>";
-    			}else{
-    				sCriteria += ", <B>" 
-    					+ sServiceTypes.get(i) + "</B>";
     			}
     		}
     	}

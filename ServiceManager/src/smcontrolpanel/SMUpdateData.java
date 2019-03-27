@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1362;
+	private static final int m_CurrentDatabaseVersion = 1369;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "3/26/2019";
+	private static final String m_sLastRevisionDate = "3/27/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14010,7 +14010,7 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 3/13/2019
 				SQL = "CREATE TABLE `mechanicservicetypes` ("
 					+ "`imechanicid` int(11) NOT NULL DEFAULT '0' COMMENT '[010301]',"
-					+ "`sservicetypecode` varchar(45) NOT NULL DEFAULT '' COMMENT '[011302]',"
+					+ "`sservicetypecode` varchar(6) NOT NULL DEFAULT '' COMMENT '[011302]',"
 					+ "PRIMARY KEY (`imechanicid`,`sservicetypecode`)"
 					+ ") ENGINE=InnoDB"
 				;

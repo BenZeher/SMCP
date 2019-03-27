@@ -87,23 +87,6 @@ public class SMUtilities extends clsServletUtilities {
 	// run on several different systems redundantly.
 
 	
-	
-	public static boolean IsServiceType(int iMechType, int iServiceTypeID) throws SQLException{
-
-		//System.out.println("iMechType = " + iMechType + ", iServiceTypeID = " + iServiceTypeID);
-		for (int i=24; i>iServiceTypeID; i--){
-			if (iMechType >= Math.pow(2, i)){
-				iMechType = iMechType - (int)Math.pow(2, i);
-			}
-		}
-
-		if (iMechType >= Math.pow(2, iServiceTypeID)){
-			return true;
-		}else{
-			return false;
-		}
-	}
-
 	public static String SMCPTitleSubBGColor(
 			String title, 
 			String subtitle, 

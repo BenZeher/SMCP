@@ -10,10 +10,10 @@ import javax.servlet.ServletContext;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
-import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglaccountstructures;
-import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class GLTrialBalanceReport  extends java.lang.Object{
@@ -766,31 +766,16 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			String s = "";
 			
 			s += printColumnHeadings(sReportType);
-			
-			//To get the net changes, we have to go back to the last period BEFORE the 'starting period' that the user selected:
-			String sBeginningPeriod = "";
-			String sBeginningYear = sFiscalYear;
-			if(Integer.parseInt(sStartingFiscalPeriod) > 1){
-				sBeginningPeriod = Integer.toString((Integer.parseInt(sStartingFiscalPeriod) - 1));
-			}else{
-				sBeginningPeriod = "12";
-				sBeginningYear = Integer.toString(Integer.parseInt(sFiscalYear) - 1);
-			}
 
 			String sSQL = "SELECT" + "\n"
-				+ " " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
-				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + "\n"
-				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + "\n"
-				+ ", (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + "\n" 
-					+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-					+ ") AS CURRENTBALANCE" + "\n"
+				+ " " + SMTableglfiscalsets.TableName + ".*" + "\n"
 				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
 				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
 				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
-				+ " FROM " + SMTableglfinancialstatementdata.TableName + "\n"
+				+ " FROM " + SMTableglfiscalsets.TableName + "\n"
 				+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
 				+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-				+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
+				+ " = " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + "\n"
 				+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
 				+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
 					+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid + "\n"
@@ -798,30 +783,17 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
 				+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
 				+ " WHERE (" + "\n"
-				
-					+ "    (" + "\n"
-						+ "        ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sBeginningYear + ")" 
-							+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = " + sBeginningPeriod + "))" + "\n"
-						+ "        OR ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sFiscalYear + ")"
-						+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = " + sEndingFiscalPeriod + "))" + "\n"
-					+ "    )" + "\n"
+					+ "(" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " = " + sFiscalYear + ")" + "\n"
 					
 					//Account range:
-					+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')" + "\n"
-					+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " <= '" + sEndingAccount + "')" + "\n"
+					+ " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " >= '" + sStartingAccount + "')" + "\n"
+					+ " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " <= '" + sEndingAccount + "')" + "\n"
 					
 					//Account group range:
 					+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')" + "\n"
 					+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " <= '" + sEndingAccountGroupCode + "')" + "\n"
 				;
 			
-				//Include accounts with no activity?
-				if(!bIncludeAccountsWithNoActivity){
-					sSQL += " AND ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
-						+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-						+ ")  != 0.00)" + "\n";
-				}
-				
 				//Now process the segments:
 
 				for (int i = 0; i < alStartingSegmentIDs.size(); i++){
@@ -834,7 +806,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 				+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
 					 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
@@ -855,7 +827,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
 					 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
@@ -877,7 +849,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 				+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
@@ -899,8 +871,8 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
-					 			+ ", " 
+		 						+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
+		 						+ ", " 
 					 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
 					 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
@@ -922,7 +894,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -945,7 +917,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			 + "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -969,7 +941,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 			+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -993,7 +965,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1018,7 +990,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1043,7 +1015,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1069,7 +1041,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1095,7 +1067,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1122,7 +1094,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1149,7 +1121,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1177,7 +1149,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1205,7 +1177,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1234,7 +1206,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1264,7 +1236,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1294,7 +1266,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 					 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1325,7 +1297,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						
 						//THEN, if the segment in the account number >= the starting selected value for the segment:
 				 		+ ", IF(SUBSTRING(" 
-					 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					 			+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 					 			+ ", " 
 					 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -1351,8 +1323,7 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				}
 				
 				sSQL += ")"
-				+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
-					+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod
+				+ " ORDER BY " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
 			;
 			
 			System.out.println("[1553548502] - SQL = '" + sSQL + "'");
@@ -1365,10 +1336,8 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			BigDecimal bdNetChangesTotal = new BigDecimal("0.00");
 			BigDecimal bdEarningsTotal = new BigDecimal("0.00");
 			BigDecimal bdNetChangeAmt = new BigDecimal("0.00");
-			BigDecimal bdOpeningBalanceDebitAmt = new BigDecimal("0.00");
-			BigDecimal bdOpeningBalanceCreditAmt = new BigDecimal("0.00");
-			BigDecimal bdClosingBalanceDebitAmt = new BigDecimal("0.00");
-			BigDecimal bdClosingBalanceCreditAmt = new BigDecimal("0.00");
+			
+			String sNetChangeFieldBase = SMTableglfiscalsets.bdnetchangeperiod1.replace("1", ""); 
 			
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
@@ -1376,74 +1345,106 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 					
 					BigDecimal bdDebit = new BigDecimal("0.00");
 					BigDecimal bdCredit = new BigDecimal("0.00");
-					BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
+					BigDecimal bdCurrentBalanceAtStartingPeriod = new BigDecimal("0.00");
+					BigDecimal bdCurrentBalanceAtEndingPeriod = new BigDecimal("0.00");
+					BigDecimal bdOpeningBalanceDebitAmt = new BigDecimal("0.00");
+					BigDecimal bdOpeningBalanceCreditAmt = new BigDecimal("0.00");
+					BigDecimal bdClosingBalanceDebitAmt = new BigDecimal("0.00");
+					BigDecimal bdClosingBalanceCreditAmt = new BigDecimal("0.00");	
 					
-					//If the account is normally a debit balance:
-					if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
-						if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
-							bdDebit = bdAmount;
-							bdCredit = BigDecimal.ZERO;
-						}else{
-							bdDebit = BigDecimal.ZERO;
-							bdCredit = bdAmount.negate();
-						}
-					// But if the account is normally a credit balance:
-					}else{
-						if (bdAmount.compareTo(BigDecimal.ZERO) < 0){
-							bdDebit = BigDecimal.ZERO;
-							bdCredit = bdAmount.negate();
-						}else{
-							bdDebit = bdAmount;
-							bdCredit = BigDecimal.ZERO;
+					
+					BigDecimal bdOpeningBalance = rs.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdopeningbalance);
+					bdCurrentBalanceAtStartingPeriod = bdOpeningBalance;
+					for (int iPeriodIndex = 1; iPeriodIndex < Integer.parseInt(sStartingFiscalPeriod); iPeriodIndex++){
+						bdCurrentBalanceAtStartingPeriod = bdCurrentBalanceAtStartingPeriod.add(rs.getBigDecimal(SMTableglfiscalsets.TableName + "." + sNetChangeFieldBase + Integer.toString(iPeriodIndex)));
+					}
+
+					bdCurrentBalanceAtEndingPeriod = bdOpeningBalance;
+					for (int iPeriodIndex = 1; iPeriodIndex <= Integer.parseInt(sEndingFiscalPeriod); iPeriodIndex++){
+						bdCurrentBalanceAtEndingPeriod = bdCurrentBalanceAtEndingPeriod.add(rs.getBigDecimal(SMTableglfiscalsets.TableName + "." + sNetChangeFieldBase + Integer.toString(iPeriodIndex)));
+					}
+					
+					//If the user chose NOT to include accounts with no activity, drop those out here:
+					if (!bIncludeAccountsWithNoActivity){
+						if (
+							(bdOpeningBalance.compareTo(BigDecimal.ZERO) == 0)
+							&& 	(bdCurrentBalanceAtEndingPeriod.compareTo(BigDecimal.ZERO) == 0)
+						){
+							//loop again:
+							continue;
 						}
 					}
 					
-					if(
-						(rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod) == Integer.parseInt(sBeginningPeriod))
-						&& (rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear) == Integer.parseInt(sBeginningYear))
-					){
-						bdOpeningBalanceDebitAmt = bdDebit;
-						bdOpeningBalanceCreditAmt = bdCredit;
-						bdOpeningBalanceDebitTotal = bdOpeningBalanceDebitTotal.add(bdDebit);
-						bdOpeningBalanceCreditTotal = bdOpeningBalanceCreditTotal.add(bdCredit);
+					bdNetChangeAmt = bdCurrentBalanceAtEndingPeriod.subtract(bdCurrentBalanceAtStartingPeriod);
+					
+					//If the account is normally a debit balance:
+					if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+						if (bdCurrentBalanceAtStartingPeriod.compareTo(BigDecimal.ZERO) > 0){
+							bdOpeningBalanceDebitAmt = bdCurrentBalanceAtStartingPeriod;
+							bdOpeningBalanceCreditAmt = BigDecimal.ZERO;
+						}else{
+							bdOpeningBalanceDebitAmt = BigDecimal.ZERO;
+							bdOpeningBalanceCreditAmt = bdCurrentBalanceAtStartingPeriod.negate();
+						}
+					// But if the account is normally a credit balance:
 					}else{
-						bdClosingBalanceDebitAmt = bdDebit;
-						bdClosingBalanceCreditAmt = bdCredit;
-						bdClosingBalanceDebitTotal = bdClosingBalanceDebitTotal.add(bdDebit);
-						bdClosingBalanceCreditTotal = bdClosingBalanceCreditTotal.add(bdCredit);
+						if (bdCurrentBalanceAtStartingPeriod.compareTo(BigDecimal.ZERO) < 0){
+							bdOpeningBalanceDebitAmt = BigDecimal.ZERO;
+							bdOpeningBalanceCreditAmt = bdCurrentBalanceAtStartingPeriod.negate();
+						}else{
+							bdOpeningBalanceDebitAmt = bdCurrentBalanceAtStartingPeriod;
+							bdOpeningBalanceCreditAmt = BigDecimal.ZERO;
+						}
+					}
+									
+					//If the account is normally a debit balance:
+					if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+						if (bdCurrentBalanceAtEndingPeriod.compareTo(BigDecimal.ZERO) > 0){
+							bdClosingBalanceDebitAmt = bdCurrentBalanceAtEndingPeriod;
+							bdClosingBalanceCreditAmt = BigDecimal.ZERO;
+						}else{
+							bdClosingBalanceDebitAmt = BigDecimal.ZERO;
+							bdClosingBalanceCreditAmt = bdCurrentBalanceAtEndingPeriod.negate();
+						}
+					// But if the account is normally a credit balance:
+					}else{
+						if (bdCurrentBalanceAtEndingPeriod.compareTo(BigDecimal.ZERO) < 0){
+							bdClosingBalanceDebitAmt = BigDecimal.ZERO;
+							bdClosingBalanceCreditAmt = bdCurrentBalanceAtEndingPeriod.negate();
+						}else{
+							bdClosingBalanceDebitAmt = bdCurrentBalanceAtEndingPeriod;
+							bdClosingBalanceCreditAmt = BigDecimal.ZERO;
+						}
 					}
 					
 					//If it's an income statement account, add it to the earnings total:
 					if (rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType).compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
 						//For each record, one of these will be zero, but it's simpler to just add and subtract both each time,
 						// than to worry about which case it is for each record:
-						bdEarningsTotal = bdEarningsTotal.subtract(bdDebit);
-						bdEarningsTotal = bdEarningsTotal.add(bdCredit);
+						bdEarningsTotal = bdEarningsTotal.subtract(bdNetChangeAmt);
 					}
 					
-					//We need to read 2 records to get a complete line for printing: the record for the opening period AND the record for the closing period:
-					if (rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod) == Integer.parseInt(sEndingFiscalPeriod)){
-						s += printNetChangesLine(
-							rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
-							rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
-							bdOpeningBalanceDebitAmt,
-							bdOpeningBalanceCreditAmt,
-							bdNetChangeAmt,
-							bdClosingBalanceDebitAmt,
-							bdClosingBalanceCreditAmt,
-							bOddRow
-						);
-						//Reset the totals for the last two records:
-						bdOpeningBalanceDebitAmt = BigDecimal.ZERO;
-						bdOpeningBalanceCreditAmt = BigDecimal.ZERO;
-						bdClosingBalanceDebitAmt = BigDecimal.ZERO;
-						bdClosingBalanceCreditAmt = BigDecimal.ZERO;
-						bOddRow = !bOddRow;
-					}
+					s += printNetChangesLine(
+						rs.getString(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID),
+						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
+						bdOpeningBalanceDebitAmt,
+						bdOpeningBalanceCreditAmt,
+						bdNetChangeAmt,
+						bdClosingBalanceDebitAmt,
+						bdClosingBalanceCreditAmt,
+						bOddRow
+					);
+					
+					bdOpeningBalanceDebitTotal = bdOpeningBalanceDebitTotal.add(bdOpeningBalanceDebitAmt);
+					bdOpeningBalanceCreditTotal = bdOpeningBalanceCreditTotal.add(bdOpeningBalanceCreditAmt);
+					bdClosingBalanceDebitTotal = bdClosingBalanceDebitTotal.add(bdClosingBalanceDebitAmt);
+					bdClosingBalanceCreditTotal = bdClosingBalanceCreditTotal.add(bdClosingBalanceCreditAmt);
+					bdNetChangesTotal = bdNetChangesTotal.add(bdNetChangeAmt);
+					bOddRow = !bOddRow;
 				}
 				rs.close();
 			} catch (Exception e1) {
-				throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
+				throw new Exception("Error [1553381089] reading GL fiscal sets with SQL - " + e1.getMessage() + ".");
 			}
 			
 			s += printNetChangeseReportTotals(

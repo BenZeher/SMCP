@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTablemechanicservicetypes;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -846,28 +847,24 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 				+ " WHERE (" + SMTablemechanics.sMechInitial + " = '" + sMechanicInitials + "')"
 				;
 		}else{
-			SQL = "SELECT"
-				+ " " + SMTablemechanics.lid
-				+ ", " + SMTablemechanics.sMechInitial
-				+ ", " + SMTablemechanics.sMechFullName
-				+ ", " + SMTablemechanics.sVehicleLabel
-				+ " FROM " + SMTablemechanics.TableName
+			SQL = "SELECT DISTINCT "
+				+ " " + SMTablemechanics.TableName + "." + SMTablemechanics.lid
+				+ ", " + SMTablemechanics.TableName + "." + SMTablemechanics.sMechInitial
+				+ ", " + SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName
+				+ ", " + SMTablemechanics.TableName + "." + SMTablemechanics.sVehicleLabel
+				+ " FROM " + SMTablemechanicservicetypes.TableName
+				+ " LEFT JOIN " + SMTablemechanics.TableName 
+				+ " ON " + SMTablemechanics.TableName + "." +  SMTablemechanics.lid 
+				+ " = " + SMTablemechanicservicetypes.TableName + "." + SMTablemechanicservicetypes.imechanicid
 				+ " WHERE ("
-				+ "(INSTR('" + sLocationsString + "', " + SMTablemechanics.sMechLocation + ") > 0)"
+				+ "(INSTR('" + sLocationsString + "', " + SMTablemechanics.TableName + "." + SMTablemechanics.sMechLocation + ") > 0)"
 				+ " AND ("
 				;
-	
 			for (int i = 0; i < sServiceTypes.size(); i ++){
-				String sServiceCodeAsDouble = sServiceTypes.get(i).substring(
-						"SH".length()+ 1, sServiceTypes.get(i).length());
-				//Powers have to start at ZERO, so we subtract one from the service code to get to zero-based powers:
-				Double dServiceCode = Double.parseDouble(sServiceCodeAsDouble) - 1.00;
-				int iMechType = (int)Math.pow(2, dServiceCode);
-				String sMechType = Integer.toString(iMechType);
 				if (i == 0){
-					SQL += "(" + SMTablemechanics.iMechType + " & " + sMechType + ")";
+					SQL += "(" + SMTablemechanicservicetypes.sservicetypecode + " = '" + sServiceTypes.get(i) + "')";
 				}else{
-					SQL += " OR (" + SMTablemechanics.iMechType + " & " + sMechType + ")"; 
+					SQL += " OR (" + SMTablemechanicservicetypes.sservicetypecode + " = '" + sServiceTypes.get(i) + "')"; 
 				}
 			}
 			SQL +=  ")"

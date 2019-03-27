@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTablemechanicservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 
 /* Servlet to remove a selected mechanic.*/
@@ -72,6 +73,25 @@ public class SMEditMechanicsRemove extends HttpServlet{
 				);
 			} catch (SQLException e) {
 				out.println("Error deleting mechanic with SQL: " + sSQL + " - " + e.getMessage() + ".<BR>");
+				out.println("</BODY></HTML>");
+				return;
+			}
+    		
+    		//delete the records in mechanic servicetypes
+    		sSQL = "DELETE FROM " + SMTablemechanicservicetypes.TableName
+    			+ " WHERE ("
+    				+ "(" + SMTablemechanicservicetypes.imechanicid + " = " + request.getParameter("Mechanic") + ")"
+    			+ ")";
+    		try {
+				clsDatabaseFunctions.executeSQL(
+					sSQL, 
+					getServletContext(), 
+					sDBID, 
+					"MySQL", 
+					SMUtilities.getFullClassName(this.toString() + " - user: " + sUser)
+				);
+			} catch (SQLException e) {
+				out.println("Error deleting mechanic service types table with SQL: " + sSQL + " - " + e.getMessage() + ".<BR>");
 				out.println("</BODY></HTML>");
 				return;
 			}

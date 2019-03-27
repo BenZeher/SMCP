@@ -2,6 +2,7 @@ package smcontrolpanel;
 
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTablemechanicservicetypes;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
@@ -176,16 +177,22 @@ public class SMEditMechanicsEdit extends HttpServlet{
         		out.println ("</TD>");
         		out.println ("<TD>Select the mechanic's location</TD>");
 	        	out.println ("</TR>"); 	
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Type</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Service Type</B></TD>");
 	        	out.println("<TD>");
 	        	
 		        //get service type info
-		        sSQL = SMMySQLs.Get_Servicetypes_SQL();
+		        sSQL = "SELECT * FROM " + SMTableservicetypes.TableName
+		        		+ " LEFT JOIN ("
+		        		+ " SELECT " + SMTablemechanicservicetypes.sservicetypecode + " FROM " + SMTablemechanicservicetypes.TableName
+		        		+ " WHERE (" + SMTablemechanicservicetypes.imechanicid + " = " + sMechanicID + ")"
+		        		+ ") AS MECHST"
+		        		+ " ON " + SMTableservicetypes.sCode + " = MECHST." + SMTablemechanicservicetypes.sservicetypecode	
+		        		;
 		        try{
 			        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        		while (rsServiceTypes.next()){
-	        			s = "<INPUT TYPE=\"CHECKBOX\" NAME=\"SELECTEDTYPE\" VALUE=\"" + rsServiceTypes.getString(SMTableservicetypes.iTypeID) + " - " + rsServiceTypes.getString(SMTableservicetypes.sCode) + "\"";  
-	        			if (SMUtilities.IsServiceType(rsMechInfo.getInt(SMTablemechanics.iMechType), rsServiceTypes.getInt(SMTableservicetypes.iTypeID))){
+	        			s = "<INPUT TYPE=\"CHECKBOX\" NAME=\"SELECTEDTYPE\" VALUE=\"" + rsServiceTypes.getString(SMTableservicetypes.sCode) + "\"";  
+	        			if (rsServiceTypes.getString(SMTablemechanicservicetypes.sservicetypecode) != null ){
 		        			s = s + " CHECKED>";
 		        		}else{
 		        			s = s + ">";
@@ -291,7 +298,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 		        try{
 			        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, conn);
 		      		while (rsServiceTypes.next()){
-		      			out.println("<INPUT TYPE=\"CHECKBOX\" NAME=\"SELECTEDTYPE\" VALUE=\"" + rsServiceTypes.getString(SMTableservicetypes.iTypeID) + " - " + rsServiceTypes.getString(SMTableservicetypes.sCode) + "\"" + ">" + rsServiceTypes.getString(SMTableservicetypes.sName) + "<BR>");
+		      			out.println("<INPUT TYPE=\"CHECKBOX\" NAME=\"SELECTEDTYPE\" VALUE=\"" + rsServiceTypes.getString(SMTableservicetypes.sCode) + "\"" + ">" + rsServiceTypes.getString(SMTableservicetypes.sName) + "<BR>");
 		      		}
 	      		rsServiceTypes.close();
 		        } catch (SQLException e){

@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTablemechanicservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class SMEditMechanicsSave extends HttpServlet{
@@ -46,21 +47,6 @@ public class SMEditMechanicsSave extends HttpServlet{
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
 
-		//construct mechanic's type
-		String sMechTypes[];
-		int iMechType = 0;
-
-		sMechTypes = request.getParameterValues("SELECTEDTYPE");
-		if (sMechTypes != null){ 
-			for (int i = 0; i < sMechTypes.length; i++){
-				//System.out.println("sMechTypes[i] = " + sMechTypes[i]);
-				//System.out.println("index = " + sMechTypes[i].indexOf(" - "));
-				//System.out.println("sMechTypes[" + i + "]:" + sMechTypes[i].substring(0, sMechTypes[i].indexOf(" - ")));
-				iMechType = iMechType + (int)Math.pow(2, Double.parseDouble(sMechTypes[i].substring(0, sMechTypes[i].indexOf(" - "))));
-
-				//System.out.println("iMechType = " + iMechType);
-			}
-		}
 
 		//need to check integrity of input when adding new mechanics.
 		if (
@@ -91,7 +77,6 @@ public class SMEditMechanicsSave extends HttpServlet{
 				}
 				
 				sSQL = "INSERT INTO " + SMTablemechanics.TableName + "(" 
-					+ SMTablemechanics.iMechType 
 					+ ", " + SMTablemechanics.sAssistant 
 					+ ", " + SMTablemechanics.semployeeid
 					+ ", " + SMTablemechanics.sMechFullName 
@@ -103,7 +88,6 @@ public class SMEditMechanicsSave extends HttpServlet{
 					+ ", " + SMTablemechanics.sMechColorCodeCol 
 					+ ", " + SMTablemechanics.sVehicleLabel 
 					+ ") VALUES (" 
-					+ Integer.toString(iMechType) 
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHASSISTANT")) + "'"
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("EMPLOYEEID")) + "'"
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHNAME")) + "'"
@@ -145,7 +129,6 @@ public class SMEditMechanicsSave extends HttpServlet{
 					+ SMTablemechanics.sMechInitial + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHINIT")).trim() + "'"
 					+ ", " + SMTablemechanics.semployeeid + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("EMPLOYEEID")) + "'"
 					+ ", " + SMTablemechanics.sMechFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHNAME")) + "'"
-					+ ", " + SMTablemechanics.iMechType + " = " + iMechType
 					+ ", " + SMTablemechanics.sMechLocation + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("SELECTEDLOC")) + "'"
 					+ ", " + SMTablemechanics.sAssistant + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHASSISTANT")) + "'"
 					+ ", " + SMTablemechanics.sVehicleLabel + " = '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHVEHICLELABEL")) + "'"
@@ -161,6 +144,37 @@ public class SMEditMechanicsSave extends HttpServlet{
 				}
 			out.println ("<BR>");
 			out.println ("<H4>Information saved.</H4><BR><BR>");
+			}
+			
+			//save the service types
+			String sMechServiceTypes[];
+			sMechServiceTypes = request.getParameterValues("SELECTEDTYPE");
+			
+			//First delete all the service types for this mechanic
+			sSQL = "DELETE FROM " + SMTablemechanicservicetypes.TableName 
+					+ " WHERE " + SMTablemechanicservicetypes.imechanicid + "=" + request.getParameter("MECHANICID");
+			try {
+				clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
+			} catch (SQLException e) {
+				out.println("Error deleting from mechanics service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
+			}
+			
+			//Insert all the selected service types if any were selected.
+			if(sMechServiceTypes.length > 0) {
+				sSQL = "INSERT INTO "  + SMTablemechanicservicetypes.TableName 
+					+ " (" + SMTablemechanicservicetypes.imechanicid +  "," + SMTablemechanicservicetypes.sservicetypecode + ")"
+					+ " VALUES ";
+				for (int i = 0; i < sMechServiceTypes.length; i++){
+					if(i > 0) {
+						sSQL += ",";
+					}
+					sSQL += " (" + request.getParameter("MECHANICID") + ",'" + sMechServiceTypes[i] + "')";
+				}
+				try {
+					clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
+				} catch (SQLException e) {
+					out.println("Error inserting mechanics service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
+				}
 			}
 		}	  
 		out.println("</BODY></HTML>");

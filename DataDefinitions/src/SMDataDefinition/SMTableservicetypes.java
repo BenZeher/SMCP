@@ -8,7 +8,6 @@ public class SMTableservicetypes {
 	//Field names:
     public static String sCode = "sCode";
     public static String sName = "sName";
-    public static String iTypeID = "iTypeID";
     public static String mworkorderterms = "mworkorderterms";
     public static String mworeceiptcomment = "mworeceiptcomment";
     public static String id = "id";

@@ -766,9 +766,21 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			String s = "";
 			
 			s += printColumnHeadings(sReportType);
+			
+			//To get the net changes, we have to go back to the last period BEFORE the 'starting period' that the user selected:
+			String sBeginningPeriod = "";
+			String sBeginningYear = sFiscalYear;
+			if(Integer.parseInt(sStartingFiscalPeriod) > 1){
+				sBeginningPeriod = Integer.toString((Integer.parseInt(sStartingFiscalPeriod) - 1));
+			}else{
+				sBeginningPeriod = "12";
+				sBeginningYear = Integer.toString(Integer.parseInt(sFiscalYear) - 1);
+			}
 
 			String sSQL = "SELECT" + "\n"
 				+ " " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
+				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + "\n"
+				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + "\n"
 				+ ", (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + "\n" 
 					+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
 					+ ") AS CURRENTBALANCE" + "\n"
@@ -786,9 +798,13 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
 				+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
 				+ " WHERE (" + "\n"
-					+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sFiscalYear + ")" + "\n"
-					+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " >= " + sStartingFiscalPeriod + ")" + "\n"
-					+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " <= " + sEndingFiscalPeriod + ")" + "\n"
+				
+					+ "    (" + "\n"
+						+ "        ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sBeginningYear + ")" 
+							+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = " + sBeginningPeriod + "))" + "\n"
+						+ "        OR ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = " + sFiscalYear + ")"
+						+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = " + sEndingFiscalPeriod + "))" + "\n"
+					+ "    )" + "\n"
 					
 					//Account range:
 					+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')" + "\n"
@@ -1336,26 +1352,32 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				
 				sSQL += ")"
 				+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+					+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod
 			;
 			
 			System.out.println("[1553548502] - SQL = '" + sSQL + "'");
 				
 			boolean bOddRow = false;
-			BigDecimal bdDebitTotal = new BigDecimal("0.00");
-			BigDecimal bdCreditTotal = new BigDecimal("0.00");
+			BigDecimal bdOpeningBalanceDebitTotal = new BigDecimal("0.00");
+			BigDecimal bdOpeningBalanceCreditTotal = new BigDecimal("0.00");
+			BigDecimal bdClosingBalanceDebitTotal = new BigDecimal("0.00");
+			BigDecimal bdClosingBalanceCreditTotal = new BigDecimal("0.00");
+			BigDecimal bdNetChangesTotal = new BigDecimal("0.00");
 			BigDecimal bdEarningsTotal = new BigDecimal("0.00");
+			BigDecimal bdNetChangeAmt = new BigDecimal("0.00");
 			BigDecimal bdOpeningBalanceDebitAmt = new BigDecimal("0.00");
 			BigDecimal bdOpeningBalanceCreditAmt = new BigDecimal("0.00");
-			BigDecimal bdNetChangeAmt = new BigDecimal("0.00");
-			BigDecimal bdEndingBalanceDebitAmt = new BigDecimal("0.00");
-			BigDecimal bdEndingBalanceCreditAmt = new BigDecimal("0.00");
+			BigDecimal bdClosingBalanceDebitAmt = new BigDecimal("0.00");
+			BigDecimal bdClosingBalanceCreditAmt = new BigDecimal("0.00");
 			
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				while(rs.next()){
+					
 					BigDecimal bdDebit = new BigDecimal("0.00");
 					BigDecimal bdCredit = new BigDecimal("0.00");
 					BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
+					
 					//If the account is normally a debit balance:
 					if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
 						if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
@@ -1376,8 +1398,20 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						}
 					}
 					
-					bdDebitTotal = bdDebitTotal.add(bdDebit);
-					bdCreditTotal = bdCreditTotal.add(bdCredit);
+					if(
+						(rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod) == Integer.parseInt(sBeginningPeriod))
+						&& (rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear) == Integer.parseInt(sBeginningYear))
+					){
+						bdOpeningBalanceDebitAmt = bdDebit;
+						bdOpeningBalanceCreditAmt = bdCredit;
+						bdOpeningBalanceDebitTotal = bdOpeningBalanceDebitTotal.add(bdDebit);
+						bdOpeningBalanceCreditTotal = bdOpeningBalanceCreditTotal.add(bdCredit);
+					}else{
+						bdClosingBalanceDebitAmt = bdDebit;
+						bdClosingBalanceCreditAmt = bdCredit;
+						bdClosingBalanceDebitTotal = bdClosingBalanceDebitTotal.add(bdDebit);
+						bdClosingBalanceCreditTotal = bdClosingBalanceCreditTotal.add(bdCredit);
+					}
 					
 					//If it's an income statement account, add it to the earnings total:
 					if (rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType).compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
@@ -1387,25 +1421,39 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 						bdEarningsTotal = bdEarningsTotal.add(bdCredit);
 					}
 					
-					s += printNetChangesLine(
-						rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
-						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
-						bdOpeningBalanceDebitAmt,
-						bdOpeningBalanceCreditAmt,
-						bdNetChangeAmt,
-						bdEndingBalanceDebitAmt,
-						bdEndingBalanceCreditAmt,
-						bOddRow
-					);
-					
-					bOddRow = !bOddRow;
+					//We need to read 2 records to get a complete line for printing: the record for the opening period AND the record for the closing period:
+					if (rs.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod) == Integer.parseInt(sEndingFiscalPeriod)){
+						s += printNetChangesLine(
+							rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
+							rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
+							bdOpeningBalanceDebitAmt,
+							bdOpeningBalanceCreditAmt,
+							bdNetChangeAmt,
+							bdClosingBalanceDebitAmt,
+							bdClosingBalanceCreditAmt,
+							bOddRow
+						);
+						//Reset the totals for the last two records:
+						bdOpeningBalanceDebitAmt = BigDecimal.ZERO;
+						bdOpeningBalanceCreditAmt = BigDecimal.ZERO;
+						bdClosingBalanceDebitAmt = BigDecimal.ZERO;
+						bdClosingBalanceCreditAmt = BigDecimal.ZERO;
+						bOddRow = !bOddRow;
+					}
 				}
 				rs.close();
 			} catch (Exception e1) {
 				throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
 			}
 			
-			s += printBalanceReportTotals(bdDebitTotal, bdCreditTotal, bdEarningsTotal);
+			s += printNetChangeseReportTotals(
+				bdOpeningBalanceDebitTotal, 
+				bdOpeningBalanceCreditTotal, 
+				bdNetChangesTotal,
+				bdClosingBalanceDebitTotal,
+				bdClosingBalanceCreditTotal,
+				bdEarningsTotal
+			);
 			
 			return s;
 		}
@@ -1509,6 +1557,88 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+  "<B>" + "NET INCOME (LOSS) FOR ACCOUNTS LISTED:" + "</B>"
 			+ "</TD>\n"
 
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdEarningsTotal) + "</B>"
+			+ "</TD>\n"
+
+			+ "  </TR>\n"
+		;
+		return s;
+	}
+	
+	private String printNetChangeseReportTotals(
+			BigDecimal bdOpeningBalanceDebitTotal, 
+			BigDecimal bdOpeningBalanceCreditTotal, 
+			BigDecimal bdNetChanges,
+			BigDecimal bdClosingBalanceDebitTotal,
+			BigDecimal bdClosingBalanceCreditTotal,
+			BigDecimal bdEarningsTotal
+			){
+		String s = "";
+
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		
+		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "TOTAL:" + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+				+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceDebitTotal) + "</B>"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceCreditTotal) + "</B>"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChanges) + "</B>"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdClosingBalanceDebitTotal) + "</B>"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdClosingBalanceCreditTotal) + "</B>"
+			+ "</TD>\n"
+
+			+ "  </TR>\n"
+		;
+		
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		
+		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "NET INCOME (LOSS) FOR ACCOUNTS AND PERIODS LISTED:" + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "&nbsp;"
 			+ "</TD>\n"

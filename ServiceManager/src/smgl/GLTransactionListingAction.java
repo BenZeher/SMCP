@@ -22,8 +22,8 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
-public class GLTrialBalanceAction extends HttpServlet {
-
+public class GLTransactionListingAction extends HttpServlet {
+	
 	private static final long serialVersionUID = 1L;
 
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
@@ -36,7 +36,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.GLTrialBalance)){
+	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.GLTransactionListing)){
 	    	return;
 	    }
 		//Get the session info:
@@ -47,17 +47,13 @@ public class GLTrialBalanceAction extends HttpServlet {
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-		String sEndingAccount = request.getParameter(GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT);
-		String sStartingAccount = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT);
-		String sEndingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP);
-		String sStartingAccountGroup = request.getParameter(GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT_GROUP);
-		String sFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION);
-		String sNetEarningsFiscalYear = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION);
-		String sNetEarningsStartingFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION);
-		String sNetEarningsEndingFiscalPeriod = request.getParameter(GLTrialBalanceSelect.PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION);
-		String sReportType = request.getParameter(GLTrialBalanceSelect.PARAM_REPORT_TYPE);
-		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
-		boolean bDownloadAsHTML = (request.getParameter(GLTrialBalanceSelect.PARAM_DOWNLOAD_TO_HTML) != null);
+		String sEndingAccount = request.getParameter(GLTransactionListingSelect.PARAM_ENDING_ACCOUNT);
+		String sStartingAccount = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_ACCOUNT);
+		String sEndingAccountGroup = request.getParameter(GLTransactionListingSelect.PARAM_ENDING_ACCOUNT_GROUP);
+		String sStartingAccountGroup = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_ACCOUNT_GROUP);
+		String sStartingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_FISCAL_PERIOD_SELECTION);
+		String sEndingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_ENDING_FISCAL_PERIOD_SELECTION);
+		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTransactionListingSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 
 		//Get the starting and ending segment values:
 		ArrayList<String>alStartingSegmentNames = new ArrayList<String>(0);
@@ -73,32 +69,32 @@ public class GLTrialBalanceAction extends HttpServlet {
     	String sParameter = "";
     	while (eParams.hasMoreElements()){
     		sParameter = eParams.nextElement();
-    		if (sParameter.startsWith(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE)){
-    			String sParamWithoutBase = sParameter.replace(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE, "");
+    		if (sParameter.startsWith(GLTransactionListingSelect.PARAM_STARTING_SEGMENT_BASE)){
+    			String sParamWithoutBase = sParameter.replace(GLTransactionListingSelect.PARAM_STARTING_SEGMENT_BASE, "");
     			//System.out.println("[1553288613] - sParamWithoutBase = '" + sParamWithoutBase + "'.");
-    			String sStartingSegmentID = sParamWithoutBase.substring(0, sParamWithoutBase.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			String sStartingSegmentID = sParamWithoutBase.substring(0, sParamWithoutBase.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
     			//System.out.println("[1553288614] - sStartingSegmentID = '" + sStartingSegmentID + "'.");
-    			String sStartingSegmentName = sParamWithoutBase.substring((sStartingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			String sStartingSegmentName = sParamWithoutBase.substring((sStartingSegmentID + GLTransactionListingSelect.PARAM_VALUE_DELIMITER).length());
     			//System.out.println("[1553288615] - sStartingSegmentName = '" + sStartingSegmentName + "'.");
     			String sStartingSegmentValueForSegment = request.getParameter(sParameter);
     			//System.out.println("[1553288616] - sStartingSegmentValueForSegment = '" + sStartingSegmentValueForSegment + "'.");
-    			String sStartingSegmentValueIDAndDescription = sStartingSegmentValueForSegment.substring((sStartingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			String sStartingSegmentValueIDAndDescription = sStartingSegmentValueForSegment.substring((sStartingSegmentID + GLTransactionListingSelect.PARAM_VALUE_DELIMITER).length());
     			//System.out.println("[1553288617] - sStartingSegmentValueIDAndDescription = '" + sStartingSegmentValueIDAndDescription + "'.");
-    			String sStartingSegmentValueID = sStartingSegmentValueIDAndDescription.substring(0, sStartingSegmentValueIDAndDescription.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			String sStartingSegmentValueID = sStartingSegmentValueIDAndDescription.substring(0, sStartingSegmentValueIDAndDescription.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
     			//System.out.println("[1553288618] - sStartingSegmentValueID = '" + sStartingSegmentValueID + "'.");
-    			String sStartingSegmentValueDescription = sStartingSegmentValueIDAndDescription.substring((sStartingSegmentValueID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			String sStartingSegmentValueDescription = sStartingSegmentValueIDAndDescription.substring((sStartingSegmentValueID + GLTransactionListingSelect.PARAM_VALUE_DELIMITER).length());
     			//System.out.println("[1553288619] - sStartingSegmentValueDescription = '" + sStartingSegmentValueDescription + "'.");
     			String sEndingSegmentName = sStartingSegmentName;
     			//System.out.println("[1553288620] - sEndingSegmentName = '" + sEndingSegmentName + "'.");
     			String sEndingSegmentID = sStartingSegmentID;
     			//System.out.println("[1553288621] - sEndingSegmentID = '" + sEndingSegmentID + "'.");
-    			String sEndingSegmentValueForSegment = request.getParameter(sParameter.replaceAll(GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE, GLTrialBalanceSelect.PARAM_ENDING_SEGMENT_BASE));
+    			String sEndingSegmentValueForSegment = request.getParameter(sParameter.replaceAll(GLTransactionListingSelect.PARAM_STARTING_SEGMENT_BASE, GLTransactionListingSelect.PARAM_ENDING_SEGMENT_BASE));
     			//System.out.println("[1553288622] - sEndingSegmentValueForSegment = '" + sEndingSegmentValueForSegment + "'.");
-    			String sEndingSegmentValueIDAndDescription = sEndingSegmentValueForSegment.substring((sEndingSegmentID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			String sEndingSegmentValueIDAndDescription = sEndingSegmentValueForSegment.substring((sEndingSegmentID + GLTransactionListingSelect.PARAM_VALUE_DELIMITER).length());
     			//System.out.println("[1553288623] - sEndingSegmentValueIDAndDescription = '" + sEndingSegmentValueIDAndDescription + "'.");
-    			String sEndingSegmentValueID = sEndingSegmentValueIDAndDescription.substring(0, sEndingSegmentValueIDAndDescription.indexOf(GLTrialBalanceSelect.PARAM_VALUE_DELIMITER));
+    			String sEndingSegmentValueID = sEndingSegmentValueIDAndDescription.substring(0, sEndingSegmentValueIDAndDescription.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
     			//System.out.println("[1553288624] - sEndingSegmentValueID = '" + sEndingSegmentValueID + "'.");
-    			String sEndingSegmentValueDescription = sEndingSegmentValueIDAndDescription.substring((sEndingSegmentValueID + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER).length());
+    			String sEndingSegmentValueDescription = sEndingSegmentValueIDAndDescription.substring((sEndingSegmentValueID + GLTransactionListingSelect.PARAM_VALUE_DELIMITER).length());
     			//System.out.println("[1553288625] - sEndingSegmentValueDescription = '" + sEndingSegmentValueDescription + "'.");
     			
     			//Load up the arrays:
@@ -117,52 +113,11 @@ public class GLTrialBalanceAction extends HttpServlet {
 		
 		String sParamString = "";
 		sParamString += "&CallingClass=" + sCallingClass;
-		
-		/* May not use all thesejust for the occasional redirect on this screen:
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT + "=" + sEndingAccount;
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT + "=" + sStartingAccount;
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_ACCOUNT_GROUP + "=" + sEndingAccountGroup;
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_ACCOUNT_GROUP + "=" + sStartingAccountGroup;
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_FISCAL_PERIOD_SELECTION + "=" + sFiscalPeriod;
-		sParamString += "&" + GLTrialBalanceSelect.PARAM_REPORT_TYPE + "=" + sReportType;
-		if (bDownloadAsHTML){
-			sParamString += "&" + GLTrialBalanceSelect.PARAM_DOWNLOAD_TO_HTML + "=" + "Y";
-		}
-		
-		if (bIncludeAccountsWithNoActivity){
-			sParamString += "&" + GLTrialBalanceSelect.PARAM_PROCESS_FOR_NO_ACTIVITY + "=" + "Y";
-		}
-		
-		for (int i = 0; i < alStartingSegmentNames.size(); i++){
-			sParamString += "&" + GLTrialBalanceSelect.PARAM_STARTING_SEGMENT_BASE + alStartingSegmentIDs.get(i) + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER +  "=" 
-				+ alStartingSegmentNames.get(i)
-				+ "=" + alStartingSegmentIDs.get(i) 
-				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
-				+ alStartingSegmentValueIDs.get(i) 
-				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
-				+ alStartingSegmentValueDescriptions.get(i)
-			;
-			sParamString += "&" + GLTrialBalanceSelect.PARAM_ENDING_SEGMENT_BASE + alEndingSegmentIDs.get(i) + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER +  "=" 
-				+ alEndingSegmentNames.get(i)
-				+ "=" + alEndingSegmentIDs.get(i) 
-				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
-				+ alEndingSegmentValueIDs.get(i) 
-				+ GLTrialBalanceSelect.PARAM_VALUE_DELIMITER 
-				+ alEndingSegmentValueDescriptions.get(i)
-			;
-		}
-		*/
-		
 		sParamString += "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		
 		//Customized title
 		String sReportTitle = "GL Trial Balance";
 		
-		//If the user chose to download it:
-		if (bDownloadAsHTML){
-			String disposition = "attachment; fileName= " + " GL TRIAL BALANCE " + ServletUtilities.clsDateAndTimeConversions.now("MM-dd-yyyy hh:mm") + ".html";
-			response.setHeader("Content-Disposition", disposition);
-		}
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
 			+ "Transitional//EN\">\n" 
 			+ "<HTML>\n" 
@@ -197,63 +152,25 @@ public class GLTrialBalanceAction extends HttpServlet {
 		out.println("<TABLE BORDER=0>\n");
 		
 		String s = "";
-		
-		String sTypeOfReport = GLTrialBalanceSelect.REPORT_TYPE_BALANCES_LABEL;
-		if (sReportType.compareToIgnoreCase(GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES) == 0){
-			sTypeOfReport = GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES_LABEL;
-		}
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Type of report:&nbsp;"
+			+ "FROM period:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sTypeOfReport + "</B>"
+			+ "<B>" + sStartingFiscalPeriod + "</B>"
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
-			
-		if (sReportType.compareToIgnoreCase(GLTrialBalanceSelect.REPORT_TYPE_NET_CHANGES) == 0){
-			s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Fiscal year:&nbsp;"
-				+ "    </TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sNetEarningsFiscalYear + "</B>"
-				+ "    </TD>\n"
-				+ "  </TR>\n"
-			;
 
-			s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "FROM period:&nbsp;"
-				+ "    </TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sNetEarningsStartingFiscalPeriod + "</B>"
-				+ "    </TD>\n"
-				+ "  </TR>\n"
-			;
-
-			s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "TO period:&nbsp;"
-				+ "    </TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sNetEarningsEndingFiscalPeriod + "</B>"
-				+ "    </TD>\n"
-				+ "  </TR>\n"
-			;
-
-		}else{
-			s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Fiscal year - period:&nbsp;"
-				+ "    </TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sFiscalPeriod + "</B>"
-				+ "    </TD>\n"
-				+ "  </TR>\n"
-			;
-		}
+		s += "  <TR>\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			+ "TO period:&nbsp;"
+			+ "    </TD>\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			+ "<B>" + sEndingFiscalPeriod + "</B>"
+			+ "    </TD>\n"
+			+ "  </TR>\n"
+		;
 		
 		String sNoActivity = "N";
 		if (bIncludeAccountsWithNoActivity){
@@ -300,14 +217,14 @@ public class GLTrialBalanceAction extends HttpServlet {
 		;
 		
 		s += "  <TR>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Ending with account group:&nbsp;"
-				+ "    </TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sEndingAccountGroup + "</B>"
-				+ "    </TD>\n"
-				+ "  </TR>\n"
-			;
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			+ "Ending with account group:&nbsp;"
+			+ "    </TD>\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			+ "<B>" + sEndingAccountGroup + "</B>"
+			+ "    </TD>\n"
+			+ "  </TR>\n"
+		;
 		
 		for (int i = 0; i < alStartingSegmentNames.size(); i++){
 			s += "  <TR>\n"
@@ -348,9 +265,10 @@ public class GLTrialBalanceAction extends HttpServlet {
 		}
 		
 		lStartingTime = System.currentTimeMillis();
-		GLTrialBalanceReport rpt = new GLTrialBalanceReport();
+		GLTransactionListingReport rpt = new GLTransactionListingReport();
 		try {
 			out.println(
+				/*
 				rpt.processReport(
 					conn,
 					sDBID,
@@ -360,7 +278,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 					sEndingAccount,
 					sStartingAccountGroup,
 					sEndingAccountGroup,
-					sFiscalPeriod,
+					sStartingFiscalPeriod,
 					sNetEarningsFiscalYear,
 					sNetEarningsStartingFiscalPeriod,
 					sNetEarningsEndingFiscalPeriod,
@@ -371,9 +289,10 @@ public class GLTrialBalanceAction extends HttpServlet {
 					alEndingSegmentIDs,
 					alEndingSegmentValueDescriptions
 				)
+				*/
 			);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1553378988]");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1553715863]");
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ "Warning=" + e.getMessage()
@@ -382,10 +301,10 @@ public class GLTrialBalanceAction extends HttpServlet {
 			);			
 			return;
 		}
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1553378989]");
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1553715864]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
-		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "GL Trial Balance", "[1553378990]");
+		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "GL Trial Balance", "[1553715865]");
 		
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");

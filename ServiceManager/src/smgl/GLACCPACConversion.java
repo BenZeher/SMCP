@@ -1538,7 +1538,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		long lCounter = 0L;
 		long lInsertCounter = 0;
-		long lStartingTime = System.currentTimeMillis();
+		//long lStartingTime = System.currentTimeMillis();
 		int iNumberOfQueriesPerInsert = 100;
 		String SQLInsert = "";
 		//System.out.println("[1553458952] - going into while loop.");

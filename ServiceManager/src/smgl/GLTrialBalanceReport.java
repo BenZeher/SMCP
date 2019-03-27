@@ -12,7 +12,6 @@ import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
 import SMDataDefinition.SMTableglfinancialstatementdata;
-import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -1343,8 +1342,6 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				while(rs.next()){
 					
-					BigDecimal bdDebit = new BigDecimal("0.00");
-					BigDecimal bdCredit = new BigDecimal("0.00");
 					BigDecimal bdCurrentBalanceAtStartingPeriod = new BigDecimal("0.00");
 					BigDecimal bdCurrentBalanceAtEndingPeriod = new BigDecimal("0.00");
 					BigDecimal bdOpeningBalanceDebitAmt = new BigDecimal("0.00");

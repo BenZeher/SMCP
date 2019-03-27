@@ -3927,6 +3927,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLTransactionListingAction</servlet-name>
+        <servlet-class>smgl.GLTransactionListingAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLTransactionListingSelect</servlet-name>
+        <servlet-class>smgl.GLTransactionListingSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLTrialBalanceAction</servlet-name>
         <servlet-class>smgl.GLTrialBalanceAction</servlet-class>
     </servlet>
@@ -7748,6 +7758,16 @@
     <servlet-mapping>
         <servlet-name>GLEditGLOptions</servlet-name>
         <url-pattern>/smgl.GLEditGLOptions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLTransactionListingAction</servlet-name>
+        <url-pattern>/smgl.GLTransactionListingAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLTransactionListingSelect</servlet-name>
+        <url-pattern>/smgl.GLTransactionListingSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

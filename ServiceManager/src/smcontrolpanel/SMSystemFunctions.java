@@ -323,6 +323,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long APViewInvoicesOnHold = 1231L;
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
+	public static long GLTransactionListing = 1234L;
 	
 	
 	private static ArrayList <String>arrFunctions;
@@ -2584,6 +2585,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLTrialBalance);
 			arrFunctionLinks.add("smgl.GLTrialBalanceSelect"); 
 			arrFunctionDescriptions.add("Print the General Ledger Trial Balance. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+
+			arrFunctions.add("GL Transaction Listing");
+			arrFunctionIDs.add(GLTransactionListing);
+			arrFunctionLinks.add("smgl.GLTransactionListingSelect"); 
+			arrFunctionDescriptions.add("Print a selected list of transactions from the General Ledger. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

@@ -33,6 +33,7 @@ public class ICEditAdjustmentEntry extends HttpServlet {
 		String m_sEditable = "";
 		String m_sBatchType = "";
 		String m_sWarning = "";
+		String m_sStatus = "";
 		ICEntry m_Entry;
 		PrintWriter m_pwOut;
 		HttpServletRequest m_hsrRequest;
@@ -91,7 +92,7 @@ public class ICEditAdjustmentEntry extends HttpServlet {
 		}
 		m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
 		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
-	    
+		m_sStatus = clsManageRequestParameters.get_Request_Parameter("Status", m_hsrRequest);
 
 		//Try to load an ICEntryInput object from which to build the form:
 		try {
@@ -153,9 +154,12 @@ public class ICEditAdjustmentEntry extends HttpServlet {
 	    m_pwOut.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    m_pwOut.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-		//If there is a warning from trying to input previously, print it here:
+		//If there is a warning or status from trying to previous input, print it here:
 		if (! m_sWarning.equalsIgnoreCase("")){
 			m_pwOut.println("<B><FONT COLOR=\"RED\">WARNING: " + m_sWarning + "</FONT></B><BR>");
+		}
+		if (! m_sStatus.equalsIgnoreCase("")){
+			m_pwOut.println("<B>STATUS: " + m_sStatus + "</B><BR>");
 		}
 		
 	    //Print a link to main menu:

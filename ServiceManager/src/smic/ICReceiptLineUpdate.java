@@ -64,7 +64,6 @@ public class ICReceiptLineUpdate extends HttpServlet{
 	    CurrentSession.removeAttribute("EntryLine");
 	    //Update the line object:
 	    CurrentSession.setAttribute("EntryLine", m_Line);
-	    //Branch here, depending on the request:
 	    
 	    //First, make sure there is no posting going on:
     	ICOption options = new ICOption();
@@ -121,9 +120,12 @@ public class ICReceiptLineUpdate extends HttpServlet{
     	try {
 			options.resetPostingFlagWithoutConnection(getServletContext(), sDBID);
 		} catch (Exception e) {
+			//Don't trap this, because the user will just have to reset the posting FLAG 
+			//- AND we don't want to lose any error message coming back from the called function
 		}
     	response.sendRedirect(m_sSendRedirect);
 	   
+    	return;
 	}
 	
 	private void process(
@@ -163,7 +165,6 @@ public class ICReceiptLineUpdate extends HttpServlet{
 		    }catch (Exception e) {
 		    	throw new Exception(e.getMessage());
 		    }
-
 		    //Store the saved line in the session
 		    CurrentSession.setAttribute("EntryLine", m_Line);
 		}

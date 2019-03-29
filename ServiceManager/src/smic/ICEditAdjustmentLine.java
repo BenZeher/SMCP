@@ -65,6 +65,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		String m_sLineNumber = clsManageRequestParameters.get_Request_Parameter("LineNumber", m_hsrRequest);
 		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", m_hsrRequest);
 		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", m_hsrRequest);
+		String m_sStatus = clsManageRequestParameters.get_Request_Parameter("Status", m_hsrRequest);
 		String m_sUpdateCostBuckets = clsManageRequestParameters.get_Request_Parameter(UPDATE_COST_BUCKETS_COMMAND, m_hsrRequest);
 
 		//Try to load the line:
@@ -100,9 +101,13 @@ public class ICEditAdjustmentLine extends HttpServlet {
 
 		m_pwOut.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
-		//If there is a warning from trying to input previously, print it here:
+		//If there is a warning or status from previous input, print it here:
 		if (! m_sWarning.equalsIgnoreCase("")){
 			m_pwOut.println("<B><FONT COLOR=\"RED\">WARNING: " + m_sWarning + "</FONT></B><BR>");
+		}
+		//If there is a warning from trying to input previously, print it here:
+		if (! m_sStatus.equalsIgnoreCase("")){
+			m_pwOut.println("<B>STATUS: " + m_sStatus + "</B><BR>");
 		}
 
 		//Print a link to main menu:
@@ -659,7 +664,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 			m_pwOut.println("</SELECT>");
 			m_pwOut.println("</TD>");
 			m_pwOut.println("<TD>");
-			m_pwOut.println("<INPUT TYPE=SUBMIT NAME='SubmitCostBucketUpdate' VALUE='List cost buckets for this item and location' STYLE='height: 0.24in'>");
+			m_pwOut.println("<INPUT TYPE=SUBMIT NAME='" + SUBMIT_UPDATE_COST_BUCKETS_COMMAND + "' VALUE='List cost buckets for this item and location' STYLE='height: 0.24in'>");
 			m_pwOut.println("</TD>");
 			m_pwOut.println("</TR>");
 		}

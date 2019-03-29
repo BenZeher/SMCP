@@ -664,6 +664,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		BigDecimal bdDebitTotal = new BigDecimal("0.00");
 		BigDecimal bdCreditTotal = new BigDecimal("0.00");
 		BigDecimal bdEarningsTotal = new BigDecimal("0.00");
+		BigDecimal bdNetChangeTotal = new BigDecimal("0.00");
+		BigDecimal bdBalanceTotal = new BigDecimal("0.00");
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(rs.next()){
@@ -715,7 +717,12 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
 		}
 		
-		s += printReportTotals(bdDebitTotal, bdCreditTotal, bdEarningsTotal);
+		s += printGrandTotals(
+			bdDebitTotal, 
+			bdCreditTotal, 
+			bdNetChangeTotal,
+			bdBalanceTotal
+		);
 		
 		return s;
 	}
@@ -751,51 +758,190 @@ public class GLTransactionListingReport  extends java.lang.Object{
 	}
 	
 
-	private String printReportTotals(BigDecimal bdDebitTotal, BigDecimal bdCreditTotal, BigDecimal bdEarningsTotal){
+	private String printGrandTotals(BigDecimal bdDebitTotal, BigDecimal bdCreditTotal, BigDecimal bdNetChangeTotal, BigDecimal bdBalanceTotal){
 		String s = "";
 
 		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
 		
 		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  "<B>" + "TOTAL:" + "</B>"
+			+  "&nbsp;"
 			+ "</TD>\n"
 
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 				+ " style = \" border-top: 2px solid black; \""
 			+ " >"
-			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal) + "</B>"
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
-			+ " style = \" border-top: 2px solid black; \""
-			+ " >"
-			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditTotal) + "</B>"
-			+ "</TD>\n"
-
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
-		
-		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  "<B>" + "NET INCOME (LOSS) FOR ACCOUNTS LISTED:" + "</B>"
-			+ "</TD>\n"
-
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "&nbsp;"
 			+ "</TD>\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
 			+ " >"
-			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdEarningsTotal) + "</B>"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD colspan=3 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B> Report totals" + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditTotal) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChangeTotal) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalanceTotal) + "</B>"
 			+ "</TD>\n"
 
 			+ "  </TR>\n"
-		;
+			;
 		return s;
 	}
 	
+	private String printAccountSubTotals(
+			String sFiscalPeriod,
+			BigDecimal bdNetChangeForPeriod, 
+			BigDecimal bdBalanceForPeriod, 
+			BigDecimal bdTotalDebits,
+			BigDecimal bdTotalCredits,
+			BigDecimal bdTotalNetChange,
+			BigDecimal bdTotalBalance
+			){
+		String s = "";
+
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		
+		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+				+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B> Net change and ending balance for fiscal period " + sFiscalPeriod + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+		
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+		
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChangeForPeriod) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalanceForPeriod) + "</B>"
+			+ "</TD>\n"
+			
+		
+		+ "  </TR>\n"
+		;
+		
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		
+		s += "    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+				+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B> Net change and ending balance for fiscal period " + sFiscalPeriod + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+		
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalDebits) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCredits) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalNetChange) + "</B>"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
+			+ " style = \" border-top: 2px solid black; \""
+			+ " >"
+			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalBalance) + "</B>"
+			+ "</TD>\n"
+
+			+ "  </TR>\n"
+			;
+		;
+		return s;
+	}
 
 	private String printColumnHeadings(){
 		String s = "";
@@ -803,48 +949,23 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
 		
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "&nbsp;"
+			+  "Account<BR>number/<BR>Year/period"
 			+ "</TD>"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "&nbsp;"
+			+  "Source"
 			+ "</TD>"
 			
-			+"    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
-			+  "-------Opening Balance-------"
+			+"    <TD COLSPAN class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			+  "Doc Date"
 			+ "</TD>"
 
 			+"    <TD>"
-			+  "&nbsp;"
+			+  "Description/Reference"
 			+ "</TD>"
 
-			+"    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
-			+  "-------Ending Balance-------"
-			+ "</TD>"
-		;	
-		
-		s += "  </TR>\n";
-		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Account"
-			+ "</TD>"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Description"
-			+ "</TD>"
-			
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-			+  "Debits"
-			+ "</TD>"
-
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-			+  "Credits"
-			+ "</TD>"
-			
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-			+  "Net Changes"
+			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			+  "Batch - entry"
 			+ "</TD>"
 
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
@@ -854,10 +975,19 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 			+  "Credits"
 			+ "</TD>"
+			
+			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+			+  "Net change"
+			+ "</TD>"
+			
+			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+			+  "Balance"
+			+ "</TD>"
+
 		;	
 		
 		s += "  </TR>\n";
-			
+		
 		return s;
 	}
 	

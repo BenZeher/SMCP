@@ -144,7 +144,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
 				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
 				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
-				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName ;
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
 			try{
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 				while(rs.next()){
@@ -161,7 +161,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 							+ "<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAM
 							  + sServiceTypeCode					
 							  + "\" CHECKED width=0.25>" 
-							  + sServiceTypeCode + " - " + sServiceTypeName
+							  + sServiceTypeName
 							  + "</LABEL>"
 							  + "<BR>");
 					}

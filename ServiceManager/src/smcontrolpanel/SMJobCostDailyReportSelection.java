@@ -219,7 +219,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        	+	 SMTableservicetypes.sCode
 	        	+ ", " + SMTableservicetypes.sName
 	        	+ " FROM " + SMTableservicetypes.TableName
-	        	+ " ORDER BY " + SMTableservicetypes.sCode;
+	        	+ " ORDER BY " + SMTableservicetypes.sName + " DESC";
 	        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(
 	        	SQL, 
 	        	getServletContext(), 

@@ -63,7 +63,7 @@ public class SMEditServiceTypeSelect extends HttpServlet {
 		try{
 	        String sSQL = "SELECT * FROM " 
 	        	+ SMTableservicetypes.TableName
-	        	+ " ORDER BY " + SMTableservicetypes.sName;
+	        	+ " ORDER BY " + SMTableservicetypes.sName + " DESC";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"" + SMTableservicetypes.id + "\">" );
         	

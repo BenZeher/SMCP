@@ -396,7 +396,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
     			+ " " + SMTableservicetypes.sCode
     			+ ", " + SMTableservicetypes.sName
     			+ " FROM " + SMTableservicetypes.TableName
-    			+ " ORDER BY " + SMTableservicetypes.sCode
+    			+ " ORDER BY " + SMTableservicetypes.sName + " DESC"
     		;
     		try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(

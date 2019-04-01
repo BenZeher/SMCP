@@ -113,7 +113,7 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     			+ "(This only applies to orders and invoices, NOT " + SMBidEntry.ParamObjectName + "s.)</FONT></TD>");
     		out.println("<TD>");
     		
-    		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+    		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
     		try{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
     			while(rs.next()){

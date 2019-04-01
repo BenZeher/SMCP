@@ -179,7 +179,6 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 					}
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
-					+ sServiceType + " - "
 					+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName)
 					+ "<BR>");
 			}

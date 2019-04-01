@@ -156,7 +156,7 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 		out.println("</TR>");
 
 		//select service type
-		sSQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode;
+		sSQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC";
 		int iServiceTypeCount  = 0;
 		try {
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(

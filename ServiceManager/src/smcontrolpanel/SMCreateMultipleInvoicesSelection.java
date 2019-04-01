@@ -130,7 +130,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     		out.println("<TR><TD><B>Include order types:<B></TD></TR>");
     		out.println("<TR><TD>");
 
-    		SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+    		SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
     		try{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     				SQL, 

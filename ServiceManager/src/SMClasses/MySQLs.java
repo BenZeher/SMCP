@@ -487,7 +487,7 @@ public class MySQLs {
 	public static String Get_Servicetypes_SQL(){
 		SQL = "SELECT * FROM " +
 		SMTableservicetypes.TableName +
-		" ORDER BY " + SMTableservicetypes.sCode;
+		" ORDER BY " + SMTableservicetypes.sName + " DESC";
 		
 		//System.out.println ("Get_Servicetypes_SQL = " + SQL);
 		return SQL;

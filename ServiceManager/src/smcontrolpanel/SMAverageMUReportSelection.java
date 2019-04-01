@@ -137,7 +137,7 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		out.println("<TD>Include service types:</TD>");
 		out.println("<TD>");
 		
-		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){

@@ -81,7 +81,7 @@ public class SMSendInvoiceSelection extends HttpServlet {
 		out.println("<TD  VALIGN=\"TOP\" align=\"right\"><B>Include order types:<B></TD>");
 		out.println("<TD>");
 		
-		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){

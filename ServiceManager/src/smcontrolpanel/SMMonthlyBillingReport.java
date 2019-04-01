@@ -127,7 +127,7 @@ public class SMMonthlyBillingReport extends java.lang.Object{
             
             + " ORDER BY"
             + " SALESGROUP"
-            + ", SERVICETYPE"
+            + ", SERVICETYPE DESC"
             + ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation
             + ", " + SMTableinvoiceheaders.sSalesperson
             + ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
@@ -878,6 +878,8 @@ public class SMMonthlyBillingReport extends java.lang.Object{
 			 Map< String,BigDecimal > hmTotalServiceTypeTotals,
 			PrintWriter out
 			){
+		
+		
 		out.println("<TABLE class = \""+SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE+"\" BORDER=0 WIDTH = 100%>\n"
 				+   "<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n"
 				+     "<TD class = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_COLLAPSE_BORDER+"\" ALIGN=RIGHT WIDTH=45%><FONT SIZE=2><B>Total Invoices:</B></FONT></TD>\n"

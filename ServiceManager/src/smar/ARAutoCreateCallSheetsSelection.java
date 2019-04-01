@@ -246,7 +246,7 @@ public class ARAutoCreateCallSheetsSelection extends HttpServlet {
 
 		//Create an array of order types:
 		ArrayList<String>arrOrderTypes = new ArrayList<String>(0);
-		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){

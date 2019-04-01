@@ -225,7 +225,7 @@ public class SMAverageMUReportGenerate extends HttpServlet {
 		String sDesc = "";
 		
 		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName 
-			+ " ORDER BY " + SMTableservicetypes.sCode;
+			+ " ORDER BY " + SMTableservicetypes.sName + " DESC";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);

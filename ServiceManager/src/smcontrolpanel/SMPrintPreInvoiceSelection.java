@@ -111,7 +111,7 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 		out.println("<TD><B>Include service types:<B></TD>");
 		out.println("<TD>");
 		
-		SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sCode ;
+		SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){

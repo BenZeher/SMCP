@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1369;
+	private static final int m_CurrentDatabaseVersion = 1370;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "3/27/2019";
+	private static final String m_sLastRevisionDate = "4/1/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -13985,7 +13985,7 @@ public class SMUpdateData extends java.lang.Object{
 				
 			//BEGIN CASE
 			case 1364:
-				//Added byBJZ 3/25/2019
+				//Added by BJZ 3/25/2019
 				SQL = "UPDATE `defaultitemcategories`"
 					+ " SET ServiceTypeCode = IF(ServiceTypeCode='SH0001','RS',IF(ServiceTypeCode='SH0002','RI',IF(ServiceTypeCode='SH0003','CS',IF(ServiceTypeCode='SH0004','CI',ServiceTypeCode))))"
 						;
@@ -13994,9 +13994,9 @@ public class SMUpdateData extends java.lang.Object{
 				break;
 			//END CASE
 				
-				//BEGIN CASE
+			//BEGIN CASE
 			case 1365:
-				//Added byBJZ 3/25/2019
+				//Added by BJZ 3/25/2019
 				SQL = "UPDATE `servicetypes`"
 					+ " SET sCode = IF(sCode='SH0001','RS',IF(sCode='SH0002','RI',IF(sCode='SH0003','CS',IF(sCode='SH0004','CI',sCode))))"
 						;
@@ -14007,7 +14007,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 				//BEGIN CASE
 			case 1366:
-				//Added by TJR 3/13/2019
+				//Added by BJZ 3/13/2019
 				SQL = "CREATE TABLE `mechanicservicetypes` ("
 					+ "`imechanicid` int(11) NOT NULL DEFAULT '0' COMMENT '[010301]',"
 					+ "`sservicetypecode` varchar(6) NOT NULL DEFAULT '' COMMENT '[011302]',"
@@ -14093,6 +14093,17 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
+			//END CASE
+			
+			//BEGIN CASE
+			case 1369:
+				//Added by BJZ 4/1/2019
+				SQL = "UPDATE `workperformedcodes`"
+					+ " SET sCode = IF(sCode='SH0001','RS',IF(sCode='SH0002','RI',IF(sCode='SH0003','CS',IF(sCode='SH0004','CI',sCode))))"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
 			//END CASE
 				
 		//End switch:

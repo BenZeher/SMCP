@@ -63,7 +63,9 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			){
 
 		String sCurrentServiceType = "";
+		String sCurrentServiceTypeDescription = "";
 		String sLastServiceType = "";
+		String sLastServiceTypeDescription = "";
 		String sCurrentInvoiceNumber = "";
 		String sLastInvoiceNumber = "";
 		String sCurrentLineID = "";
@@ -126,6 +128,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
     	//SQL Statement:
         String SQL = "SELECT "
         	+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iTransactionType
+        	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCodeDescription
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate
@@ -239,7 +242,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         		}
         		SQL += ")"
         	+ ")"
-        	+ " ORDER BY " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
+        	+ " ORDER BY " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCodeDescription + " DESC"
         		+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sOrderNumber
         		+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate
         		//+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceCreationTime
@@ -374,6 +377,10 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 					= rs.getString(SMTableinvoiceheaders.TableName + "." 
 					+ SMTableinvoiceheaders.sServiceTypeCode);
 				
+				sCurrentServiceTypeDescription
+				= rs.getString(SMTableinvoiceheaders.TableName + "." 
+				+ SMTableinvoiceheaders.sServiceTypeCodeDescription);
+				
 				sCurrentInvoiceNumber
 					= rs.getString(SMTableinvoiceheaders.TableName + "." 
 					+ SMTableinvoiceheaders.sInvoiceNumber);
@@ -461,6 +468,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 				){
 			    	printServiceTypeFooter(
 			    			sLastServiceType,
+			    			sLastServiceTypeDescription,
 			    			lTotalNumberOfInvoicesForServiceType,
 			    			bdTotalInvoicePriceForServiceType,
 			    			lTotalNumberOfCreditsForServiceType,
@@ -479,7 +487,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 
 				//If the service type is a new one, print the service type header:
 				if (sCurrentServiceType.compareToIgnoreCase(sLastServiceType) != 0){
-					printServiceTypeHeader(sCurrentServiceType, out);
+					printServiceTypeHeader(sCurrentServiceTypeDescription, out);
 				}
 				
 				//If it's a new invoice number, print the invoice header:
@@ -612,6 +620,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 				
 				//Update the 'rememberers'
 				sLastServiceType = sCurrentServiceType;
+				sLastServiceTypeDescription = sCurrentServiceTypeDescription;
 				sLastInvoiceNumber = sCurrentInvoiceNumber;
 				sLastLineID = sCurrentLineID;
 				sLastInvoicingState = sCurrentInvoicingState;
@@ -787,6 +796,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
     	if (sCurrentServiceType.compareToIgnoreCase("") != 0){
 	    	printServiceTypeFooter(
 				sLastServiceType,
+				sLastServiceTypeDescription,
 				lTotalNumberOfInvoicesForServiceType,
 				bdTotalInvoicePriceForServiceType,
 				lTotalNumberOfCreditsForServiceType,
@@ -1611,13 +1621,14 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		
 		pwOut.println("<HR>");
 	}
-	private void printServiceTypeHeader(String sServiceType, PrintWriter pwOut){
+	private void printServiceTypeHeader(String sServiceTypeDescription, PrintWriter pwOut){
 		
 		pwOut.println("<BR><B><I><U>Service Type: " 
-			+ sServiceType + "</U></I></B><BR>");
+			+ sServiceTypeDescription + "</U></I></B><BR>");
 	}
 	private void printServiceTypeFooter(
 			String sServiceType,
+			String sServiceTypeDescription,
 			long lNumberOfInvoicesForServiceType,
 			BigDecimal bdTotalInvoicePriceWithTaxForServiceType,
 			long lNumberOfCreditsForServiceType,
@@ -1638,7 +1649,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		*/
 		
 		pwOut.println("<TD ALIGN=RIGHT>Number of invoices in " 
-			+ sServiceType + ":</TD>");
+			+ sServiceTypeDescription + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfInvoicesForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfInvoices = BigDecimal.valueOf(lNumberOfInvoicesForServiceType);
@@ -1655,7 +1666,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		//Credits
 		pwOut.println("<TR>");
 		pwOut.println("<TD ALIGN=RIGHT>Number of credits in " 
-			+ sServiceType + ":</TD>");
+			+ sServiceTypeDescription + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfCreditsForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfCredits = BigDecimal.valueOf(lNumberOfCreditsForServiceType);

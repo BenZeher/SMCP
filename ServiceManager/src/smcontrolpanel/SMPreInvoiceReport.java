@@ -70,7 +70,9 @@ public class SMPreInvoiceReport extends java.lang.Object{
 		String sUserName = SMUtilities.getUserNamebyUserID(sUserID, conn);
 		
 		String sCurrentServiceType = "";
+		String sCurrentServiceTypeDescription = "";
 		String sLastServiceType = "";
+		String sLastServiceTypeDescription = "";
 		String sCurrentOrderNumber = "";
 		String sLastOrderNumber = "";
 		String sCurrentLineID = "";
@@ -130,6 +132,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
         	+ " 'Pre-Invoice Report' AS REPORTNAME"
         	+ ", '" + sUserName + "' AS USERNAME"
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+        	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCreationDate
         	+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountPercentage
@@ -288,7 +291,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
                 	+ SMTableorderheaders.iOrderType + " != " + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) + ")"
         			
         	+ ")"
-        	+ " ORDER BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+        	+ " ORDER BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription + " DESC"
         		+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber
         		+ ", " + "DETAILQUERY" + "." + SMTableorderdetails.iLineNumber
         	;
@@ -376,6 +379,10 @@ public class SMPreInvoiceReport extends java.lang.Object{
 				sCurrentServiceType
 					= rs.getString(SMTableorderheaders.TableName + "." 
 					+ SMTableorderheaders.sServiceTypeCode);
+				
+				sCurrentServiceTypeDescription
+				= rs.getString(SMTableorderheaders.TableName + "." 
+						+ SMTableorderheaders.sServiceTypeCodeDescription);
 				
 				sCurrentOrderNumber
 					= rs.getString(SMTableorderheaders.TableName + "." 
@@ -468,6 +475,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 				){
 			    	printServiceTypeFooter(
 			    			sLastServiceType,
+			    			sLastServiceTypeDescription,
 			    			lTotalNumberOfOrdersForServiceType,
 			    			bdTotalOrderPriceForServiceType,
 			    			out
@@ -481,7 +489,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 
 				//If the service type is a new one, print the service type header:
 				if (sCurrentServiceType.compareToIgnoreCase(sLastServiceType) != 0){
-					printServiceTypeHeader(sCurrentServiceType, out);
+					printServiceTypeHeader(sCurrentServiceTypeDescription, out);
 				}
 				
 				//If it's a new order number, print the order header:
@@ -599,6 +607,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 				
 				//Update the 'rememberers'
 				sLastServiceType = sCurrentServiceType;
+				sLastServiceTypeDescription = sCurrentServiceTypeDescription;
 				sLastOrderNumber = sCurrentOrderNumber;
 				sLastLineID = sCurrentLineID;
 				
@@ -759,6 +768,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
     	if (sCurrentServiceType.compareToIgnoreCase("") != 0){
 	    	printServiceTypeFooter(
 				sLastServiceType,
+				sLastServiceTypeDescription,
 				lTotalNumberOfOrdersForServiceType,
 				bdTotalOrderPriceForServiceType,
 				out
@@ -1775,13 +1785,14 @@ public class SMPreInvoiceReport extends java.lang.Object{
 	*/	
 		pwOut.println("<HR>");
 	}
-	private void printServiceTypeHeader(String sServiceType, PrintWriter pwOut){
+	private void printServiceTypeHeader(String sServiceTypeDescription, PrintWriter pwOut){
 		
 		pwOut.println("<BR><B><I><U>Service Type: " 
-			+ sServiceType + "</U></I></B><BR>");
+			+ sServiceTypeDescription + "</U></I></B><BR>");
 	}
 	private void printServiceTypeFooter(
 			String sServiceType,
+			String sCurrentServiceTypeDescription,
 			long lNumberOfOrdersForServiceType,
 			BigDecimal bdTotalOrderPriceWithTaxForServiceType,
 			PrintWriter pwOut
@@ -1792,7 +1803,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 		//Orders
 		pwOut.println("<TR>");
 		pwOut.println("<TD ALIGN=RIGHT>Number of orders in " 
-			+ sServiceType + ":</TD>");
+			+ sCurrentServiceTypeDescription + ":</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(lNumberOfOrdersForServiceType) + "</TD>");
 		pwOut.println("<TD ALIGN=RIGHT>Avg. amount:</TD>");
 		BigDecimal bdNumberOfOrders = BigDecimal.valueOf(lNumberOfOrdersForServiceType);

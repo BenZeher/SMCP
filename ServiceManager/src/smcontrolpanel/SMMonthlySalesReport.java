@@ -240,7 +240,8 @@ public class SMMonthlySalesReport extends java.lang.Object{
 	    		SQL = SQL + ")" + "\n";
 		    }
 		SQL += ")";
-	    SQL += " ORDER BY " + "SALESGROUP, SALETYPE, SALESPERSON, ORDERNUMBER" + "\n"
+		
+SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\n"
 	    ;
 	   // System.out.println("[1376426113] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		

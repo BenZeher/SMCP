@@ -57,7 +57,6 @@ public class SMEditWorkPerformedCodes extends HttpServlet {
 		try{
 	        String sSQL = SMMySQLs.Get_WorkPerformedCode_List_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-	        out.println("Service codes are: SH0001 - Residential Service, SH0002 - Residential Installation, SH0003 - Commercial Service, SH0004 - Commercial Installation.<BR>");
 	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
         	
         	while (rs.next()){

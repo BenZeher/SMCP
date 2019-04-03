@@ -11,11 +11,13 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
-import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class GLTransactionListingReport  extends java.lang.Object{
 
+	private static int BUFFER_LOOP_LIMIT = 50;
+	
 	public GLTransactionListingReport(){
 		
 	}
@@ -38,7 +40,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		) throws Exception{
 		
 		String s = "";
-
 		
 		s += printTableHeading();
 		s += buildTransactionListingReport(
@@ -89,17 +90,27 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String sEndingPeriod = sEndingFiscalPeriod.replace(sEndingYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
 		
 		String sSQL = "SELECT" + "\n"
-			+ " " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
-			+ ", (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + "\n" 
-				+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-				+ ") AS CURRENTBALANCE" + "\n"
+			+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
+			
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
-			+ " FROM " + SMTableglfinancialstatementdata.TableName + "\n"
+			+ " FROM " + SMTablegltransactionlines.TableName + "\n"
 			+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
 			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
+			+ " = " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
 			+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
 			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
 				+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid + "\n"
@@ -107,12 +118,12 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
 			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
 			+ " WHERE (" + "\n"
-				+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " >= " + sStartingYear + ")" + "\n"
-				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " >= " + sStartingPeriod + ")" + "\n"
+				+ "(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " >= " + sStartingYear + ")" + "\n"
+				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " >= " + sStartingPeriod + ")" + "\n"
 				
 				//Account range:
-				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')" + "\n"
-				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " <= '" + sEndingAccount + "')" + "\n"
+				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " >= '" + sStartingAccount + "')" + "\n"
+				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " <= '" + sEndingAccount + "')" + "\n"
 				
 				//Account group range:
 				+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')" + "\n"
@@ -120,11 +131,11 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			;
 		
 			//Include accounts with no activity?
-			if(!bIncludeAccountsWithNoActivity){
-				sSQL += " AND ((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
-					+ " + " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-					+ ")  != 0.00)" + "\n";
-			}
+			//if(!bIncludeAccountsWithNoActivity){
+			//	sSQL += " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdtotalyeartodate
+			//		+ " + " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdopeningbalance
+			//		+ ")  != 0.00)" + "\n";
+			//}
 			
 			//Now process the segments:
 
@@ -138,7 +149,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
 				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
@@ -159,7 +170,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
 				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
@@ -181,7 +192,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
@@ -203,7 +214,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
@@ -226,7 +237,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -249,7 +260,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			 + "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -273,7 +284,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 			+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -297,7 +308,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -322,7 +333,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -347,7 +358,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -373,7 +384,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -399,7 +410,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -426,7 +437,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -453,7 +464,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -481,7 +492,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -509,7 +520,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -538,7 +549,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -568,7 +579,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -598,7 +609,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -629,7 +640,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					
 					//THEN, if the segment in the account number >= the starting selected value for the segment:
 			 		+ ", IF(SUBSTRING(" 
-				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				 			+ ", " 
 				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
 			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
@@ -655,7 +666,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			}
 			
 			sSQL += ")"
-			+ " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+			+ " ORDER BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
 		;
 		
 		//System.out.println("[1553548501] - SQL = '" + sSQL + "'");
@@ -666,12 +679,17 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		BigDecimal bdEarningsTotal = new BigDecimal("0.00");
 		BigDecimal bdNetChangeTotal = new BigDecimal("0.00");
 		BigDecimal bdBalanceTotal = new BigDecimal("0.00");
+		long lRecordCounter = 0;
+		String sStringBuffer = "";
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(rs.next()){
+				
+				//System.out.println("[1554320753] - into the loop...");
+				
 				BigDecimal bdDebit = new BigDecimal("0.00");
 				BigDecimal bdCredit = new BigDecimal("0.00");
-				BigDecimal bdAmount = rs.getBigDecimal("CURRENTBALANCE");
+				BigDecimal bdAmount = rs.getBigDecimal(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount);
 				//If the account is normally a debit balance:
 				if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
 					if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
@@ -703,19 +721,39 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					bdEarningsTotal = bdEarningsTotal.add(bdCredit);
 				}
 				
-				s += printReportLine(
-						rs.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid),
-						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
-						bdDebit,
-						bdCredit,
-						bOddRow);
+				sStringBuffer += printReportLine(
+					rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear),
+					rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod),
+					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype),
+					ServletUtilities.clsDateAndTimeConversions.sqlDateToString(
+						rs.getDate(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate),
+						ServletUtilities.clsDateAndTimeConversions.DATE_FORMAT_STD_Mdyyy),
+					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription),
+					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference),
+					Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber)) 
+						+ " - " 
+						+ Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber)),
+					bdDebit,
+					bdCredit,
+					BigDecimal.ZERO,
+					BigDecimal.ZERO,
+					bOddRow
+				);
+				
+				if ((lRecordCounter % BUFFER_LOOP_LIMIT) == 0){
+					s += sStringBuffer;
+					sStringBuffer = "";
+				}
 				
 				bOddRow = !bOddRow;
+				lRecordCounter++;
 			}
 			rs.close();
 		} catch (Exception e1) {
 			throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
 		}
+		
+		s += sStringBuffer;
 		
 		s += printGrandTotals(
 			bdDebitTotal, 
@@ -728,10 +766,17 @@ public class GLTransactionListingReport  extends java.lang.Object{
 	}
 
 	private String printReportLine(
-			String sGLAccount,
-			String sAccountDescription,
+			int iFiscalYear,
+			int iFiscalPeriod,
+			String sSource,
+			String sDocumentDate,
+			String sDescription,
+			String sReference,
+			String sBatchAndEntry,
 			BigDecimal bdDebitAmt,
 			BigDecimal bdCreditAmt,
+			BigDecimal bdNetChange,
+			BigDecimal bdBalance,
 			boolean bOddRow
 			) throws Exception{
 		String s = "";
@@ -742,15 +787,42 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
 		}
 		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  sGLAccount
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  Integer.toString(iFiscalYear) + " - " + Integer.toString(iFiscalPeriod)
 			+ "</TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  sAccountDescription
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  sSource
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  sDocumentDate
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  sDescription + "<BR>" + sReference
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  sBatchAndEntry
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitAmt)
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditAmt)
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange)
+			+ "</TD>\n"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance)
+			+ "</TD>\n"
+			
 			+ "  </TR>\n"
 		;
 		

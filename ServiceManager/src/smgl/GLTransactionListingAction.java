@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Enumeration;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -268,28 +269,22 @@ public class GLTransactionListingAction extends HttpServlet {
 		GLTransactionListingReport rpt = new GLTransactionListingReport();
 		try {
 			out.println(
-				/*
 				rpt.processReport(
 					conn,
 					sDBID,
 					getServletContext(),
-					bDownloadAsHTML,
 					sStartingAccount,
 					sEndingAccount,
 					sStartingAccountGroup,
 					sEndingAccountGroup,
 					sStartingFiscalPeriod,
-					sNetEarningsFiscalYear,
-					sNetEarningsStartingFiscalPeriod,
-					sNetEarningsEndingFiscalPeriod,
-					sReportType,
+					sEndingFiscalPeriod,
 					bIncludeAccountsWithNoActivity,
 					alStartingSegmentIDs,
 					alStartingSegmentValueDescriptions,
 					alEndingSegmentIDs,
 					alEndingSegmentValueDescriptions
 				)
-				*/
 			);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1553715863]");

@@ -681,6 +681,22 @@ public class clsServletUtilities {
 		return path;
 	}
 	
+	public static String getDatePickerStringWithSelect (String sBoundFieldName, String sCheckedFieldID, ServletContext context){
+
+		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+
+		if (sImagePath != null){
+			return "<img src=\"" + sImagePath + "calendar_icon.png\" "
+					+ "alt=\"calendar_icon.png\" "
+					+ "onclick='scwShow(scwID(\"" + sBoundFieldName + "\"),event); document.getElementById(\""+ sCheckedFieldID + "\").checked = true;' />";
+		}else{
+			return "<img src=\"../images/calendar_icon.png\" "
+					+ "alt=\"calendar_icon.png\" "
+					+ "onclick='scwShow(scwID(\"" + sBoundFieldName + "\"),event); document.getElementById(\""+ sCheckedFieldID + "\").checked = true;' />";
+		}
+
+	}
+	
 	public static String getDatePickerString (String sBoundFieldName, ServletContext context){
 
 		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);

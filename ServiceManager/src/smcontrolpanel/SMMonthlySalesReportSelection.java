@@ -123,12 +123,25 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		out.println("<TD>");
 		out.println("<LABEL NAME = \"" + "DATERANGELABELPREVIOUSMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month</LABEL><BR>");
 		out.println("<LABEL NAME = \"" + "DATERANGELABELCURRENTMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month</LABEL><BR>");
-		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;"
-			+ "Starting:&nbsp;" + clsCreateHTMLFormFields.TDTextBox("StartingDate", sDefaultStartDate, 10, 10, "")
-			+ SMUtilities.getDatePickerString("StartingDate", getServletContext())
-			+ "&nbsp;&nbsp;Ending:&nbsp;" + clsCreateHTMLFormFields.TDTextBox("EndingDate", sDefaultEndDate, 10, 10, "")
-			+ SMUtilities.getDatePickerString("EndingDate", getServletContext()) + "</LABEL>"
-		);
+		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" id=\"SelectedDates\" name=\"DateRange\" value=\"SelectedDates\"> Starting:</LABEL>");
+		out.println(clsCreateHTMLFormFields.TDTextBox(
+							"StartingDate", 
+							sDefaultStartDate, 
+							10, 
+							10, 
+							"", 
+							"document.getElementById('SelectedDates').checked = true;")
+					+ SMUtilities.getDatePickerStringWithSelect("StartingDate", "SelectedDates", getServletContext())
+					+ "&nbsp;&nbsp;Ending:&nbsp;" 
+					+ clsCreateHTMLFormFields.TDTextBox(
+							"EndingDate", 
+							sDefaultEndDate, 
+							10, 
+							10, 
+							"", 
+							"document.getElementById('SelectedDates').checked = true;\"")
+					+ SMUtilities.getDatePickerStringWithSelect("EndingDate","SelectedDates", getServletContext())		
+			);
 		out.println("</TD>");
 		out.println("</TR>");
 		

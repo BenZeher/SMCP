@@ -22,6 +22,13 @@ public class clsCreateHTMLFormFields {
 		//System.out.println(s);
 		return s;
 	}
+	
+	public static String TDTextBox(String sName, String sValue, int iSize, int iMaxLength, String sDesc, String onFocus){
+		
+		String s = "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + " ONFOCUS=\"" + onFocus + "\">" + sDesc;
+		//System.out.println(s);
+		return s;
+	}
 
 	public static String TDDateSelection(String sName, Date datValue, String sDesc){
 	

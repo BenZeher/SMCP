@@ -100,7 +100,13 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 		m_sUserID = sUserID;
 		return true;
 	}
-	public boolean checkToCreateNewBatch(Connection conn, String sCreatedByFullName, ServletContext context, String sDBID, String sUserID){
+	public boolean checkToCreateNewBatch(
+		Connection conn, 
+		String sCreatedByFullName, 
+		ServletContext context, 
+		String sDBID, 
+		String sUserID,
+		String smmddyyyyBatchDate){
 		
 		m_sCreatedByFullName = sCreatedByFullName;
 		
@@ -143,7 +149,7 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
     	}
 
     	try {
-			createNewInvoiceBatch(context, conn, sDBID, sUserID);
+			createNewInvoiceBatch(context, conn, sDBID, sUserID, smmddyyyyBatchDate);
 		} catch (Exception e1) {
 			m_sErrorMessage = "Error [1529951627] - " + e1.getMessage();
 			try {
@@ -163,7 +169,13 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 		
 		return true;
 	}
-	private void createNewInvoiceBatch(ServletContext context, Connection conn, String sDBI, String sUserID) throws Exception{
+	private void createNewInvoiceBatch(
+		ServletContext context, 
+		Connection conn, 
+		String sDBID, 
+		String sUserID,
+		String smmddyyyyBatchDate
+		) throws Exception{
 		//Start a data transaction:
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			throw new Exception("Error [1529951752]  - Could not start data transaction");
@@ -207,7 +219,13 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 		if (apopt.getUsesSMCPAP().compareToIgnoreCase("1") == 0){
 			// Create a batch for SMCP AP
 			try {
-				createInvoiceBatchInAP(conn, m_sExportSequenceNumber, usr.getlid(), usr.getsUserFullName());
+				createInvoiceBatchInAP(
+					conn, 
+					m_sExportSequenceNumber, 
+					usr.getlid(), 
+					usr.getsUserFullName(), 
+					smmddyyyyBatchDate
+				);
 			} catch (Exception e) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				throw new Exception("Error [1489078938] creating AP batch in SMCP - " + e.getMessage());
@@ -225,7 +243,7 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 				APOptions aropt = new APOptions();
 				if (aropt.checkTestingFlag(conn)){
 					try {
-						createInvoiceBatchInAP(conn, m_sExportSequenceNumber, usr.getlid(), usr.getsUserFullName());
+						createInvoiceBatchInAP(conn, m_sExportSequenceNumber, usr.getlid(), usr.getsUserFullName(), smmddyyyyBatchDate);
 					} catch (Exception e) {
 						clsDatabaseFunctions.rollback_data_transaction(conn);
 						throw new Exception("Error [1489078939] creating TEST AP batch in SMCP - " + e.getMessage());
@@ -275,12 +293,13 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 		Connection conn,
 		String sExportSequence,
 		String sUserID,
-		String sUserFullName
+		String sUserFullName,
+		String smmddyyyyBatchDate
 		) throws Exception{
 			
 		//Create a batch in SMCP for the AP invoices:
 		APBatch batch = new APBatch("-1");
-		batch.setsbatchdate(clsDateAndTimeConversions.nowStdMdyyyFormat());
+		batch.setsbatchdate(smmddyyyyBatchDate);
 		batch.setsbatchdescription("Invoices from PO export sequence " + sExportSequence);
 		batch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 		batch.setsbatchtype(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_INVOICE));

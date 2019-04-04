@@ -23,6 +23,7 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableicbatchentries;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -30,6 +31,10 @@ import ServletUtilities.clsStringFunctions;
 
 public class ICEditBatches extends HttpServlet {
 
+	public static final String CREATE_PO_INVOICE_BATCH_LABEL = "Create AP batch from PO invoices -->";
+	public static final String CREATE_PO_INVOICE_BATCH_BUTTON = "CREATEBATCHFROMINVOICES";
+	public static final String PARAM_CREATE_PO_INVOICE_BATCH_DATE = "CREATEINVOICEBATCHDATE";
+	
 	private static final long serialVersionUID = 1L;
 	/*
 	 * Parameters:
@@ -70,6 +75,7 @@ public class ICEditBatches extends HttpServlet {
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getJQueryIncludeString());
+	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    //Display any warnings:
 	    if (request.getParameter("Warning") != null){
 	    	String sWarning = request.getParameter("Warning");
@@ -93,8 +99,7 @@ public class ICEditBatches extends HttpServlet {
 				+ "\">Return to Inventory Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditBatches) 
 	    		+ "\">Summary</A><BR><BR>");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit' METHOD='POST'>");
-	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+
 	    //Add links to create new batches:
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 	    out.println("<TR>");
@@ -139,17 +144,50 @@ public class ICEditBatches extends HttpServlet {
 	    out.println("</TD>");
 
 	    out.println("<TD>");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICCreateBatchFromReceipts?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
-	    		+ sDBID + "\">Create batch from receipts</A>");
+	    out.println("<A HREF=\""+ SMUtilities.getURLLinkBase(getServletContext()) 
+	    		+ "smic.ICCreateBatchFromReceipts?" 
+	    		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID+"\" >Create batch from receipts</A>");
 	    out.println("</TD>");
 	    
-	    out.println("<TD>");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICCreateBatchFromInvoices?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
-	    		+ sDBID + "\">Create batch from invoices</A>");
-	    out.println("</TD>");
-
 	    out.println("</TR>");
 	    out.println("</TABLE>");
+	    
+	    //Create a table for the edit buttons:
+	    ServletUtilities.clsDBServerTime clsServerTime = null;
+		try {
+			clsServerTime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName,  getServletContext());
+		} catch (Exception e) {
+			out.println("<BR><FONT COLOR=RED>Error [1554394239] getting current date - " + e.getMessage() + "<BR>");
+		}
+		
+	    out.println("<TABLE BORDER=0 CELLSPACING=2 style=\"font-size:normal; \">" + "\n");
+	    
+	    //Create invoice batch:
+	    out.println("<FORM NAME='CREATEPOINVOICEBATCHFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICCreateBatchFromInvoices' METHOD='POST'>\n");
+	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
+	    out.println("  <TR>\n");
+	    
+	    out.println("    <TD>"
+	    	+ "<INPUT TYPE=SUBMIT"
+	    	+ " NAME = \"" + CREATE_PO_INVOICE_BATCH_BUTTON + "\""
+	    	+ " VALUE = \"" + CREATE_PO_INVOICE_BATCH_LABEL + "\""
+	    	+ ">"
+	    	+ "    </TD>\n"
+	    	+ "    <TD>"
+	    	+ " using AP batch date:&nbsp;"
+	    	+ " <INPUT TYPE=TEXT NAME=\"" + PARAM_CREATE_PO_INVOICE_BATCH_DATE + "\""
+			+ " VALUE=\"" + clsServerTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY) + "\""
+			+ " SIZE=28"
+			+ " MAXLENGTH=10"
+			+ " STYLE=\"width: .75in; height: 0.25in\""
+			+ ">"
+	    	+ SMUtilities.getDatePickerString(PARAM_CREATE_PO_INVOICE_BATCH_DATE, getServletContext())
+	    	+ "    </TD>\n"
+         );
+	    out.println("  </TR>\n");
+	    out.println("</FORM>\n");
+	    
+	    out.println("</TABLE>\n\n");
 	    
 	    out.println(javaScript());
 	    

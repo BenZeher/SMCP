@@ -54,6 +54,12 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 		m_sCreatedByID = sCreatedByID;
 		return true;
 	}
+	
+	public void setBatchDate(String smmddyyyDate) throws Exception{
+		
+		
+		
+	}
 	public boolean checkToCreateNewReceiptBatch(
 		Connection conn, 
 		ServletContext context, 
@@ -149,6 +155,7 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 			m_sErrorMessage = "Could not load imported batch - import failed";
 			return false;
 		}
+		
 		try {
 			icbatch.postImportedBatchwithout_data_transaction(conn, m_sCreatedByFullName, m_sCreatedByID);
 		} catch (Exception e) {
@@ -590,7 +597,7 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 		}
 		
 	}
-	private boolean createBatch(Connection conn){
+	private boolean createBatch(Connection conn) throws Exception{
 		
 		ICEntryBatch batch = new ICEntryBatch("-1");
 		
@@ -601,6 +608,28 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 		batch.sSetCreatedByID(m_sCreatedByID);
 		batch.sSetLastEditedByFullName(m_sCreatedByFullName);
 		batch.sSetLastEditedByID(m_sCreatedByID);
+		
+		/*
+		ServletUtilities.clsDBServerTime clsCurrentTime = null;
+		try {
+			clsCurrentTime = new ServletUtilities.clsDBServerTime(conn);
+		} catch (Exception e) {
+			throw new Exception ("Error [1554403215] - could not read server time - " + e.getMessage() + ".");
+		}
+		
+		try {
+			batch.setBatchDate(
+				ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					smmddyyyyBatchDate, 
+					ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+					ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+					clsCurrentTime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL)
+					)
+			);
+		} catch (Exception e) {
+			throw new Exception("Error [1554404594] setting batch date - " + batch.getErrorMessages());
+		}
+		*/
 		if (!batch.save_without_data_transaction(conn, m_sCreatedByFullName, m_sCreatedByID)){
 			m_sErrorMessage = "Could not save batch - " + batch.getErrorMessages();
 			return false;

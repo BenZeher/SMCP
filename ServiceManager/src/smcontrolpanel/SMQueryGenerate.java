@@ -231,10 +231,7 @@ public class SMQueryGenerate extends HttpServlet {
 				);
 			}
 			out.println("</FORM>");
-	    }
-	    
-	    //Print the selection criteria and the title here:
-	    if(!bHideHeaderFooter){
+			
 		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
 			   + "  <TR>\n"
 		       + "    <TD><FONT SIZE=2>" + sCriteria + "</FONT></TD>\n"
@@ -246,6 +243,7 @@ public class SMQueryGenerate extends HttpServlet {
 		       + "<BR>"
 		    );
 	    }
+	    
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(
     			getServletContext(), 

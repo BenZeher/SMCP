@@ -44,7 +44,8 @@ public class ICCreateBatchFromInvoices extends HttpServlet {
 	    			  + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	   
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-
+	    String sAPBatchDate = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(ICEditBatches.PARAM_CREATE_PO_INVOICE_BATCH_DATE, request);
+	    
 	    String title = "Creating batch from invoices";
 	    String subtitle = "Please wait . . .";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -70,7 +71,7 @@ public class ICCreateBatchFromInvoices extends HttpServlet {
 	    
 	    ICAutoCreateInvoiceBatch iccreate = new ICAutoCreateInvoiceBatch();
 		iccreate.setCreatedBy(sUserFullName, sUserID);
-		if(iccreate.checkToCreateNewBatch(conn,sUserFullName, getServletContext(), sDBID, sUserID)){
+		if(iccreate.checkToCreateNewBatch(conn,sUserFullName, getServletContext(), sDBID, sUserID, sAPBatchDate)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080808]");
 			String sStatus = "";
 			if (iccreate.getM_sBatchNumber().compareToIgnoreCase("-1") == 0){

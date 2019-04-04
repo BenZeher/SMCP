@@ -115,20 +115,28 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		out.println("<TD><B>Date range (choose 'Previous Month', 'Current Month',<BR>or enter a date range"
 				+ " in mm/dd/yyyy format):</B></TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
-		
-		out.println(
-			"Starting:&nbsp;" 
-				+ clsCreateHTMLFormFields.TDTextBox("StartingDate", sDefaultStartDate, 10, 10, "")
-				//Date picker icon:
-				+ SMUtilities.getDatePickerString("StartingDate", getServletContext())
-				+ "&nbsp;&nbsp;Ending:&nbsp;" + clsCreateHTMLFormFields.TDTextBox(
-						"EndingDate", sDefaultEndDate, 10, 10, "")
-				+ SMUtilities.getDatePickerString("EndingDate", getServletContext())
-			
-		);
+		out.println("<LABEL NAME = \"" + "DATERANGELABELPREVIOUSMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month</LABEL><BR>");
+		out.println("<LABEL NAME = \"" + "DATERANGELABELCURRENTMONTH \" ><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month</LABEL><BR>");
+		out.println("<LABEL NAME = \"" + "DATERANGELABELSELECTEDDATES \" ><input type=\"radio\" id=\"SelectedDates\" name=\"DateRange\" value=\"SelectedDates\"> Starting: </LABEL>");
+	
+		out.println(clsCreateHTMLFormFields.TDTextBox(
+				"StartingDate", 
+				sDefaultStartDate, 
+				10, 
+				10, 
+				"", 
+				"document.getElementById('SelectedDates').checked = true;")
+		+ SMUtilities.getDatePickerStringWithSelect("StartingDate", "SelectedDates", getServletContext())
+		+ "&nbsp;&nbsp;Ending:&nbsp;" 
+		+ clsCreateHTMLFormFields.TDTextBox(
+				"EndingDate", 
+				sDefaultEndDate, 
+				10, 
+				10, 
+				"", 
+				"document.getElementById('SelectedDates').checked = true;\"")
+		+ SMUtilities.getDatePickerStringWithSelect("EndingDate","SelectedDates", getServletContext())		
+				);
 		out.println("</TD>");
 		out.println("</TR>");
 		
@@ -150,9 +158,9 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
 							+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) 
-							+ "\" width=0.25>" + rs.getString(SMTableservicetypes.sName) + "<BR>");	
+							+ "\" width=0.25>" + rs.getString(SMTableservicetypes.sName) + "</LABEL><BR>");	
 				}  
 			}
 			rs.close();
@@ -168,8 +176,8 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD>Group by:</TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"OrderType\" checked> Service type, then salesperson<BR>");
-		out.println("<input type=\"radio\" name=\"GroupBy\" value=\"Salesperson\"> Salesperson, then service type<BR>");
+		out.println("<LABEL><input type=\"radio\" name=\"GroupBy\" value=\"OrderType\" checked> Service type, then salesperson</LABEL><BR>");
+		out.println("<LABEL><input type=\"radio\" name=\"GroupBy\" value=\"Salesperson\"> Salesperson, then service type</LABEL><BR>");
 		out.println("</TD>");
 		out.println("</TR>");
 		
@@ -178,7 +186,7 @@ public class SMAverageMUReportSelection  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD>Show summary only:</TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"Summary\" width=0.25><BR>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"Summary\" width=0.25></LABEL><BR>");
 		out.println("</TD>");
 		out.println("</TR>");
 		

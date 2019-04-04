@@ -8,6 +8,7 @@ import javax.servlet.http.*;
 
 import smar.ARUtilities;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -113,14 +114,24 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     			+ "(This only applies to orders and invoices, NOT " + SMBidEntry.ParamObjectName + "s.)</FONT></TD>");
     		out.println("<TD>");
     		
-    		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
+    		String SQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+    				+ " FROM " + SMTableorderheaders.TableName
+    				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+    				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+    				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+    				+ " GROUP BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+    				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
     		try{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
     			while(rs.next()){
-    				  out.println(
-    						  "<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
-    						  + rs.getString(SMTableservicetypes.sCode) + "\" CHECKED width=0.25>" 
-    						  + rs.getString(SMTableservicetypes.sName) + "<BR>");
+    			if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+    				out.println(
+  						  "<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+  						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
+  						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+    			}
     			}
     			rs.close();
     		}catch (SQLException e){

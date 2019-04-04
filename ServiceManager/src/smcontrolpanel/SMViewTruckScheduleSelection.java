@@ -156,7 +156,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			out.println("</TR>");
 
 			//select service type
-			sSQL = SMMySQLs.Get_Servicetypes_SQL();
+			sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMUnbilledContractReportCriteriaSelection");
 			out.println("<TR><TD ALIGN=RIGHT><H4>If the job OR mechanic is associated with these service types:&nbsp;</H4></TD><TD>");
@@ -165,8 +165,8 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 	    	out.println("<OPTION VALUE=ALLST SELECTED>All Service Types");
 			 */
 			while(rsServiceTypes.next()){
-				String sServiceType = rsServiceTypes.getString(SMTableservicetypes.TableName + "." 
-					+ SMTableservicetypes.sCode).trim();
+			 if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+				String sServiceType = rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode).trim();
 				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
 					+ sServiceType + "\""); 
 				if (
@@ -181,6 +181,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 					+ " width=0.25>" 
 					+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName)
 					+ "<BR>");
+			 }
 			}
 			rsServiceTypes.close();
 			out.println("</TD>");

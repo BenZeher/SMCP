@@ -48,6 +48,7 @@ import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsGoogleCredentials;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
@@ -130,6 +131,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
 	
 			out.println(sStyleScripts());
+			
+			try {
+				out.println(clsGoogleCredentials.sDrivePickerJavascript());
+			} catch (Exception e) {
+				System.out.println(e.getMessage());
+			}
 			
 			if (!displayOrder(sDBID, sUserID, sOrderNumber, out, request, CurrentSession)){
 			}
@@ -2700,4 +2707,5 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 		return s;
 	}
+	
 }

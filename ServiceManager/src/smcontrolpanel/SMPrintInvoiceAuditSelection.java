@@ -105,15 +105,23 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 		out.println("<TD><B>Include service types:<B></TD>");
 		out.println("<TD>");
 		
-		String SQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC" ;
+		String SQL = "SELECT DISTINCT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+				+ " FROM " + SMTableorderheaders.TableName
+				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
-				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
-						  + rs.getString(SMTableservicetypes.sCode) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTableservicetypes.sName) + "<BR>");
-			}
+				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+				out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
+						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+				}
+				}
 			rs.close();
 		}catch (SQLException e){
 			out.println("Could not read service types table - " + e.getMessage());

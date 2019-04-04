@@ -16,6 +16,7 @@ import smar.ARUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablemechanics;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -215,11 +216,16 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 
         //Service type list
 	    try{
-	        String SQL = "SELECT"
-	        	+	 SMTableservicetypes.sCode
-	        	+ ", " + SMTableservicetypes.sName
-	        	+ " FROM " + SMTableservicetypes.TableName
-	        	+ " ORDER BY " + SMTableservicetypes.sName + " DESC";
+	        String SQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+					+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+					+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+					+ " FROM " + SMTableorderheaders.TableName
+					+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+					+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+					+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+					+ " GROUP BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+					+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
+	        
 	        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(
 	        	SQL, 
 	        	getServletContext(), 
@@ -232,10 +238,12 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	
 	    	ArrayList <String> alServiceTypes = new ArrayList<String>(0);
 	    	while (rsServiceTypes.next()){
-	   			alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
-	   				+ rsServiceTypes.getInt(SMTableservicetypes.sCode) + " VALUE=0 >" 
-	   				+ rsServiceTypes.getString(SMTableservicetypes.sName)
-	   				);
+	   			if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+	   				alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
+	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sCode) + " VALUE=0 >" 
+	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sName)
+	   		   				);	
+	   			}		
 	    	}
 	    	rsServiceTypes.close();
 	    	pwOut.println("<TR><TD>");

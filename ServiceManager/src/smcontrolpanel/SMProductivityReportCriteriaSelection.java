@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -100,14 +101,17 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 		        out.println ("</TD></TR>");
     	    
 		        //Service Type List
-    	        sSQL = SMMySQLs.Get_Servicetypes_SQL();
+    	        sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
     	        //System.out.println("Servicetype SQL: " + sSQL);
     	        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     	    	out.println("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Service Type</B></FONT></TD><TD VALIGN=CENTER>");
 	        	//display available status.
 	        	ArrayList<String> alServiceTypes = new ArrayList<String>(0);
 	        	while (rsServiceTypes.next()){
-	        		alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=!2!" + rsServiceTypes.getString(SMTableservicetypes.sCode) + " VALUE=0>" + rsServiceTypes.getString(SMTableservicetypes.sName) + " (" + rsServiceTypes.getString(SMTableservicetypes.sCode) + ")");
+	        		if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+	        			alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=!2!" + rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) 
+		        		+ " VALUE=0>" + rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "");
+	        		}
 	        	}
 	        	rsServiceTypes.close();
 	        	out.println(SMUtilities.Build_HTML_Table(4, alServiceTypes, 0, false));

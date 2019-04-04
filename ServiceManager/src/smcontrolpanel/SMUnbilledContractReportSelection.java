@@ -156,7 +156,15 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 		out.println("</TR>");
 
 		//select service type
-		sSQL = "SELECT * FROM " + SMTableservicetypes.TableName + " ORDER BY " + SMTableservicetypes.sName + " DESC";
+		sSQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+				+ " FROM " + SMTableorderheaders.TableName
+				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+				+ " GROUP BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
 		int iServiceTypeCount  = 0;
 		try {
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(
@@ -174,12 +182,13 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 					"         </div>               "+
 					"      </TD><TD VALIGN=TOP>");
 			while(rsServiceTypes.next()){
-				iServiceTypeCount++;
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICE_TYPE_PARAMETER 
-						+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode) + "\" id = \""+
-						SERVICE_TYPE_PARAMETER+iServiceTypeCount+"\"width=0.25>" 
-						//+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode) + " - " 
-						+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "&nbsp;");
+				if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+					iServiceTypeCount++;
+					out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICE_TYPE_PARAMETER 
+							+ rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" id = \""+
+							SERVICE_TYPE_PARAMETER+iServiceTypeCount+"\"width=0.25>" 
+							+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "&nbsp;");
+				}
 			}
 			rsServiceTypes.close();
 		} catch (SQLException e1) {

@@ -121,7 +121,7 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 			out.println("</TR>");
 
 			//select service type
-			sSQL = SMMySQLs.Get_Servicetypes_SQL();
+			sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(
 				sSQL, 
@@ -132,23 +132,23 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 			);
 			out.println("<TR><TD ALIGN=RIGHT><H4>Include orders with these service types:&nbsp;</H4></TD><TD>");
 			while(rsServiceTypes.next()){
-				String sServiceType = rsServiceTypes.getString(SMTableservicetypes.TableName + "." 
-					+ SMTableservicetypes.sCode).trim();
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
-					+ sServiceType + "\""); 
-				if (
-					(request.getParameter(SERVICETYPE_PARAMETER + sServiceType) != null) 
-					|| bCheckAllLocationsAndTypes
-				){
+				String sServiceType = rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode).trim();
+				if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
+					out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
+							+ sServiceType + "\""); 
+					if (
+						(request.getParameter(SERVICETYPE_PARAMETER + sServiceType) != null) 
+						|| bCheckAllLocationsAndTypes
+						){
 						sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 					}else{
 						sChecked = "";
 					}
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
-					+ sServiceType + " - "
 					+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName)
 					+ "<BR>");
+				}	
 			}
 			rsServiceTypes.close();
 			out.println("</TD>");

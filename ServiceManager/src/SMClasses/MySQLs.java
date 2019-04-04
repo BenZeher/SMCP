@@ -484,6 +484,7 @@ public class MySQLs {
 	}
 		
 	//Service types table SQLs:
+	
 	public static String Get_Servicetypes_SQL(){
 		SQL = "SELECT * FROM " +
 		SMTableservicetypes.TableName +
@@ -492,6 +493,22 @@ public class MySQLs {
 		//System.out.println ("Get_Servicetypes_SQL = " + SQL);
 		return SQL;
 	}
+	
+	public static String Get_Distinct_Servicetypes_SQL(){
+		SQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
+				+ " FROM " + SMTableorderheaders.TableName
+				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
+				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
+				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
+				+ " GROUP BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
+
+		//System.out.println ("Get_Distinct_Servicetypes_SQL = " + SQL);
+		return SQL;
+	}
+	
 	
 	//Salesperson SQLs:
 	public static String Get_Salesperson_List_SQL(){

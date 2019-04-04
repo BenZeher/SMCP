@@ -42,7 +42,11 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER = "leftjustifiedcellnoborder";
 	public static final String TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER = "rightjustifiedcellnoborder";
 	public static final String TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER = "centerjustifiedcellnoborder";
-	
+
+	public static final String TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP = "leftjustifiedcellnoborderaligntop";
+	public static final String TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP = "rightjustifiedcellnoborderaligntop";
+	public static final String TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP = "centerjustifiedcellnoborderaligntop";
+
 	public static final String TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "leftjustifiedcellnoborderbold";
 	public static final String TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "rightjustifiedcellnoborderbold";
 	public static final String TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "centerjustifiedcellnoborderbold";

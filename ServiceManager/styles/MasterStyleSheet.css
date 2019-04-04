@@ -255,6 +255,42 @@ td.centerjustifiedcellnoborder {
   vertical-align:bottom;
 }
 
+/* table cell left justified, NO border, small Arial font, vertically aligned to top */
+td.leftjustifiedcellnoborderaligntop {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: left; 
+  vertical-align:top;
+}
+
+/* table cell right justified, NO border, small Arial font, vertically aligned to top */
+td.rightjustifiedcellnoborderaligntop {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: right; 
+  vertical-align:top;
+}
+
+/* table cell center justified, NO border, small Arial font, vertically aligned to top */
+td.centerjustifiedcellnoborderaligntop {
+  border: 0px solid;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: center; 
+  vertical-align:top;
+}
+
 /* table cell left justified, NO border, small Arial font BOLD */
 td.leftjustifiedcellnoborderbold {
   border: 0px solid;

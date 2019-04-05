@@ -396,7 +396,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ")"
 			;
 
-			System.out.println("[1524253546] - SQL = " + SQLInsert);
+			//System.out.println("[1524253546] - SQL = " + SQLInsert);
 			try {
 				Statement stmtInsert = cnSMCP.createStatement();
 				stmtInsert.execute(SQLInsert);

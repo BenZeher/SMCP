@@ -11,6 +11,7 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
+import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -104,6 +105,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
 			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
 			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+			//+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
@@ -117,6 +121,14 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ " LEFT JOIN " + SMTableglaccountstructures.TableName + "\n"
 			+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
 			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
+			+ " LEFT JOIN " + SMTableglfinancialstatementdata.TableName + " ON "
+			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " = "
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + ")"
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = "
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + ")"
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = "
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")"
+			
 			+ " WHERE (" + "\n"
 				+ "(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " >= " + sStartingYear + ")" + "\n"
 				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " >= " + sStartingPeriod + ")" + "\n"
@@ -715,6 +727,13 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				bdDebit = BigDecimal.ZERO;
 				bdCredit = BigDecimal.ZERO;
 				bdAmount = rs.getBigDecimal(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount);
+				
+				bdNetChangeForFiscalPeriod = bdNetChangeForFiscalPeriod.add(bdAmount);
+				//This value keeps being rewritten on every record within a fiscal period, but there's no harm in that:
+				bdEndingBalanceForPeriod = rs.getBigDecimal(
+						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance).add(
+								rs.getBigDecimal(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate))
+						;
 				
 				//If the account is normally a debit balance:
 				if (rs.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){

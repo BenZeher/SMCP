@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1370;
+	private static final int m_CurrentDatabaseVersion = 1372;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "4/9/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14104,6 +14104,57 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 				break;
+			//END CASE
+		
+			//BEGIN CASE:
+			case 1370:
+				//Added by TJR 4/9/2019
+				SQL = "CREATE TABLE `gltransactionbatches` ("
+					+ "`lbatchnumber` int(11) NOT NULL auto_increment"
+					+ ", `datbatchdate` datetime NOT NULL default '0000-00-00 00:00:00'"
+					+ ", `ibatchstatus` int(11) NOT NULL default '0'"
+					+ ", `sbatchdescription` varchar(128) NOT NULL default ''"
+					+ ", `datlasteditdate` datetime NOT NULL default '0000-00-00 00:00:00'"
+					+ ", `lbatchlastentry` int(11) NOT NULL default '0'"
+					+ ", `screatedby` varchar(128) NOT NULL default ''"
+					+ ", `slasteditedby` varchar(128) NOT NULL default ''"
+					+ ", `lcreatedby`  int(11) NOT NULL default '0'"
+					+ ", `llasteditedby`  int(11) NOT NULL default '0'"
+					+ ", `datpostdate` datetime NOT NULL default '0000-00-00 00:00:00'"
+					+ ", PRIMARY KEY  (`lbatchnumber`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1371:
+				//Added by TJR 4/9/2019
+				SQL = "CREATE TABLE `gltransactionbatchentries` ("
+					+ "lid int(11) NOT NULL auto_increment"
+					+ ", lbatchnumber int(11) NOT NULL DEFAULT '0'"	
+					+ ", lentrynumber int(11) NOT NULL DEFAULT '0'"
+					+ ", ientrytype int(11) NOT NULL DEFAULT '0'"	
+					+ ", sdocnumber varchar(75) NOT NULL DEFAULT ''"
+					+ ", sentrydescription varchar(128) NOT NULL DEFAULT ''"
+					+ ", datentrydate date NOT NULL default '0000-00-00'"
+					+ ", datdocdate date NOT NULL default '0000-00-00'"
+					+ ", llastline int(11) NOT NULL DEFAULT '0'"
+					+ ", ifiscalyear int(11) NOT NULL DEFAULT '0'"
+					+ ", ifiscalperiod int(11) NOT NULL DEFAULT '0'"
+					+ ", lsourceledgertransactionlineid int(11) NOT NULL DEFAULT '0'"
+					+ ", ssourceledger varchar(128) NOT NULL DEFAULT ''"
+					+ ", PRIMARY KEY  (`lid`)"
+					+ ", UNIQUE KEY `batch_entry_key` (`lbatchnumber`,`lentrynumber`)"
+					+ ", KEY `entrynumberkey` (`lentrynumber`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
 			//END CASE
 				
 		//End switch:

@@ -35,7 +35,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMInvoiceAuditList = 4L;
 	public static long ICPrintLabelScanSheets = 5L;
 	public static long SMPrintInvoice = 6L;
-	//public static long SMPrintDeliveryTicket = 7L;
+	public static long GLEditBatches = 7L;
 	public static long SMEditTaxCertificates = 8L;
 	public static long ICEditPhysicalInventory = 9L;
 	public static long SMCanceledJobsReport = 10L;
@@ -2591,6 +2591,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLTransactionListing);
 			arrFunctionLinks.add("smgl.GLTransactionListingSelect"); 
 			arrFunctionDescriptions.add("Print a selected list of transactions from the General Ledger. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Edit Batches");
+			arrFunctionIDs.add(GLEditBatches);
+			arrFunctionLinks.add("smgl.GLEditBatchesSelect"); 
+			arrFunctionDescriptions.add("Add, modify, or delete GL batches. ");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

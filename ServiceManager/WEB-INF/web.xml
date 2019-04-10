@@ -3897,6 +3897,11 @@
     </servlet>
 
     <servlet>
+        <servlet-name>GLEditBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLEditBatchesSelect</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>GLEditCostCenterSelection</servlet-name>
         <servlet-class>smgl.GLEditCostCenterSelection</servlet-class>
     </servlet>
@@ -7728,6 +7733,11 @@
     <servlet-mapping>
         <servlet-name>GLEditAccountsUpdate</servlet-name>
         <url-pattern>/smgl.GLEditAccountsUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GLEditBatchesSelect</servlet-name>
+        <url-pattern>/smgl.GLEditBatchesSelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

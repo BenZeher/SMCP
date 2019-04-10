@@ -5,8 +5,9 @@ import java.sql.Statement;
 
 import javax.servlet.ServletContext;
 
-public class clsAjaxFunctions {
 
+public class clsAjaxFunctions {
+	
 	public static void ajax_Update_MySQL(
 				ServletContext context, 
 				String sDBID, 
@@ -51,4 +52,43 @@ public class clsAjaxFunctions {
 
 				return;
 			}
+	 
+	 public static String ajax_Request_Javascript(
+			 String sRequestServlet, 
+			 String sRequestParams, 
+			 String sDBID, 
+			 ServletContext context) {
+			//call asyncRequest in javascript to send a request to a servlet
+		 
+			String s = "function asyncRequest(sParams) {\n"
+	                + "var xhr = new XMLHttpRequest();\n\n" 
+	                //Define how the response should be handled
+	                + "xhr.onreadystatechange = function(){\n"  
+	                		//If the response is ready then display it in the status
+	                + "    if (this.readyState == 4 && this.status == 200){\n"
+	                			//If there is a warning is the response
+	                + "   		if (this.responseText.includes(\"Warning\")){\n"
+	                + "        		 document.getElementById(\"Warning\").innerHTML = this.responseText; \n"
+	                + "        		 document.getElementById(\"Status\").innerHTML = \"\"; \n"
+	                			//Otherwise display response as status message
+	                + "    		}else{\n"
+	                + "         	document.getElementById(\"Status\").innerHTML = this.responseText; \n"
+	                + "         	document.getElementById(\"Warning\").innerHTML = \"\"; \n"
+	                + "			}\n" 
+	                + "    }"
+	                		//The request completely failed.  
+	                + "     if (this.readyState == 4 && this.status != 200){\n"
+	                + "         document.getElementById(\"Warning\").innerHTML = 'WARNING:' + 'Request to update Left previous job time failed.'; \n"
+	                + "	   }\n" 
+	                +"};\n\n"
+	                
+	                //Send the request
+	                + "xhr.open(\"POST\", \"" + clsServletUtilities.getURLLinkBase(context) + sRequestServlet + "\");\n" 
+	                + "xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n"
+	                + "xhr.send(\"" + sRequestParams + "\");\n"
+					+ "}\n\n"
+					;
+			
+		 return s; 
+	 }
 }

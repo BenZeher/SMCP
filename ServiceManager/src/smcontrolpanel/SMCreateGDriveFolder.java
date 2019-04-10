@@ -32,6 +32,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 	public static String FOLDER_URL_PARAM = "folderURL";
 	public static String RECORD_TYPE_PARAM = "recordtype";
 	public static String KEY_VALUE_PARAM = "keyvalue";
+	public static String ASYNC_VALUE_PARAM = "asyncrequest";
 	public static String ORDER_RECORD_TYPE_PARAM_VALUE = "order";
 	public static String DISPLAYED_ORDER_TYPE_PARAM_VALUE = "displayed order";
 	public static String WORK_ORDER_TYPE_PARAM_VALUE = "work order";
@@ -50,8 +51,11 @@ public class SMCreateGDriveFolder extends HttpServlet{
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
-
+		
+		boolean bAsyncRequest = clsManageRequestParameters.get_Request_Parameter(ASYNC_VALUE_PARAM, request).compareToIgnoreCase("") != 0;
+		
 		PrintWriter out = response.getWriter();
+		
 		String s = "<HTML>";
 		String sRecordType = clsManageRequestParameters.get_Request_Parameter(RECORD_TYPE_PARAM, request);
 		long lFunctionID = 0L;
@@ -60,6 +64,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		String sFolderURL = clsManageRequestParameters.get_Request_Parameter(FOLDER_URL_PARAM, request);
 		if (sFolderURL.compareToIgnoreCase("") == 0){
 			s += "<BR>Error [Error [1439824291] - Folder URL passed in '" + FOLDER_URL_PARAM + "' was blank - cannot continue.</HTML>";
+			if(bAsyncRequest) { response.getWriter().write(s); }
 			out.println(s);
 			return;
 		}
@@ -67,6 +72,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		String sKeyValue = clsManageRequestParameters.get_Request_Parameter(KEY_VALUE_PARAM, request);
 		if (sKeyValue.compareToIgnoreCase("") == 0){
 			s += "<BR>Error [Error [1439824292] - Invalid record key value '" + sKeyValue + "' - '" + sKeyValue + "' - cannot continue.</HTML>";
+			if(bAsyncRequest) { response.getWriter().write(s); }
 			out.println(s);
 			return;
 		}
@@ -216,6 +222,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		//If we didn't get a valid record type parameter, then warn and exit;
 		if (lFunctionID == 0L){
 			s += "<BR>Error [Error [1439824290] - Invalid '" + RECORD_TYPE_PARAM + "' - '" + sRecordType + "' - cannot continue.</HTML>";
+			if(bAsyncRequest) { response.getWriter().write(s); }
 			out.println(s);
 			return;
 		}
@@ -230,6 +237,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 				this.toString() + ".updating record - " + "user: " + sUserID + " [1439824957]");
 		} catch (Exception e) {
 			s += "<BR>Error [Error [1439824294] - Could not get data connection - " + e.getMessage() + " - cannot continue.</HTML>";
+			if(bAsyncRequest) { response.getWriter().write(s); }
 			out.println(s);
 			return;
 		}
@@ -242,6 +250,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080421]");
 			s += "<BR>Error [Error [1439824295] - Could not update Google Drive link with SQL: '" + SQL + " - " + e1.getMessage() + ".</HTML>";
+			if(bAsyncRequest) { response.getWriter().write(s); }
 			out.println(s);
 			return;
 		}
@@ -256,6 +265,11 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		);
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080422]");
 		
+		//if ASYNC request 
+		if(bAsyncRequest) {
+			response.getWriter().write("Update google link succesfully.");
+			return;
+		}	
 		//Assuming all went well, now we can return the user to the appropriate screen:
 		redirectProcess(sRedirectString, response);
 		return;

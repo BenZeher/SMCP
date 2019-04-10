@@ -76,7 +76,10 @@ public class SMDisplayOrderInformation extends HttpServlet {
 	private static final String FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String APPOINTMENTS_TABLE_BG_COLOR = "#e8c355";
 	private static SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM-dd-yyyy");
-
+	
+	//TODO Flag to test google drive picker to create upload files.
+	private static final boolean bTestGoogleDrivePicker = false;
+	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -128,7 +131,22 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			//log usage of this this report
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
-	
+			
+			if(bTestGoogleDrivePicker) {
+				try {
+					out.println(clsServletUtilities.getDrivePickerJSIncludeString(
+							getServletContext(),
+							"",
+							"",
+							"",
+							SMCreateGDriveFolder.ORDER_RECORD_TYPE_PARAM_VALUE,
+							sOrderNumber,
+							sOrderNumber)
+							);
+				} catch (Exception e) {
+					System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+				}
+			}
 			out.println(sStyleScripts());
 			
 			if (!displayOrder(sDBID, sUserID, sOrderNumber, out, request, CurrentSession)){
@@ -460,7 +478,14 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						pwOut.println("Error [1542748927] " + e.getMessage());
 						return false;
 					}
-					sLinks += "<FONT SIZE=2><a href=\"" + sCreateUploadFileLink + "\" target=\"_blank\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";
+				
+					
+					if(bTestGoogleDrivePicker) {
+						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Upload to google drive</a>&nbsp;&nbsp;</FONT>";	
+					}else {
+						sLinks += "<FONT SIZE=2><a href=\"" + sCreateUploadFileLink + "\" target=\"_blank\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";
+					}
+					
 				}
 				
 				//Add a link to print the ticket:

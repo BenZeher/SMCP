@@ -769,6 +769,39 @@ public class clsServletUtilities {
 		}
 	}
 	
+	public static String getDrivePickerJSIncludeString (
+			ServletContext context,
+			String sAppId,
+			String sClientId,
+			String sDeveloperKey,
+			String sRecordType,
+			String sFolderName,
+			String sKeyValue){
+
+		//Hard coded for testing..
+		sAppId = "910376449199";
+		sClientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
+		sDeveloperKey = "AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw";
+		//sFolderName = "Test Drive Picker Folder " + clsDateAndTimeConversions.now("dd.MM.yy");
+		
+		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		if (sScriptPath != null){
+			return ""
+			+ "<script>"
+			+ " var appId = '"+ sAppId + "';\n" 
+			+ " var clientId = '" + sClientId + "';\n" 
+			+ " var developerKey = '" + sDeveloperKey + "';\n" 
+			+ " var folderName = '" + sFolderName + "';\n" 
+			+ " var recordtype = '" + sRecordType + "';\n" 
+			+ " var keyvalue = '" + sKeyValue + "';\n"
+			+ "</script>\n"
+		    + "<script type='text/JavaScript' src='" + sScriptPath + "drivepicker.js'></script>\n"
+			+ "<script type=\"text/javascript\" src=\"https://apis.google.com/js/api.js\"></script>";
+		}else{
+			return "<script type='text/JavaScript' src='../javascript/drivepicker.js'></script>";
+		}
+	}
+	
 	public static String getImagePath(ServletContext context){
 		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
 		if (sImagePath != null){

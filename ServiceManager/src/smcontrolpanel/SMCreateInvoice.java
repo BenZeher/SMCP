@@ -235,12 +235,15 @@ public class SMCreateInvoice extends java.lang.Object{
 				cInvDetail.setM_dExpensedCost(new BigDecimal(0.00));
 				//if the item is expensed "non-stock".
 				if(Integer.parseInt(cOrdDetail.getM_iIsStockItem()) == 0) {
-					//Average the cost of the item from all receipts currently in the system
-					try{
-					cInvDetail.setM_dExpensedCost(Calculate_Invoice_Detail_Expensed_Cost(cOrdDetail.getM_sItemNumber(), conn));
-					}catch (Exception e){
-						throw new Exception ("Failed to calculateinvoice detail expensed cost for item " 
-								+ cOrdDetail.getM_sItemNumber() + " - " + e.getMessage());
+					//AND only if the item is purchaseable:
+					if(item.getCannotBePurchasedFlag().compareToIgnoreCase("0") == 0){
+						//Average the cost of the item from all receipts currently in the system
+						try{
+						cInvDetail.setM_dExpensedCost(Calculate_Invoice_Detail_Expensed_Cost(cOrdDetail.getM_sItemNumber(), conn));
+						}catch (Exception e){
+							throw new Exception ("Failed to calculateinvoice detail expensed cost for item " 
+									+ cOrdDetail.getM_sItemNumber() + " - " + e.getMessage());
+						}
 					}
 				}
 				

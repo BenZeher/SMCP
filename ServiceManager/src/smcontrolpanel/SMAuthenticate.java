@@ -438,7 +438,7 @@ public class SMAuthenticate{
 	                +"};\n\n"
 	                
 	                //Send the request
-	                + "xhr.open(\"POST\", \"" + clsServletUtilities.getURLLinkBase(context) + "smcontrolpanel.SMUserLogin" + "\");\n" 
+	                + "xhr.open(\"POST\", \"" + clsServletUtilities.getURLLinkBase(context) + "smcontrolpanel.SMUserLogin" + "\");\n"
 	                + "xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n"
 	                + "xhr.send(\"" + PARAM_UPDATE_DATABASE + "=Y" + "\");\n"
 					+ "}\n\n"
@@ -712,34 +712,11 @@ public class SMAuthenticate{
 				}else{
 					rs.close();
 					//Store the database version number in the session.
+					//If this is present when loading the notifications later in this class, then we tell the user
+					//the program is updating and lock the screen. 
+					//Then we send an ajax request to execute the update.
 					req.getSession().setAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED,  Integer.toString(iReadDatabaseVersion));	
 					return true;
-/*
-					SMUpdateData dat  = new SMUpdateData();
-					Connection conn = clsDatabaseFunctions.getConnection(
-							context, 
-							sDBIB, 
-							"MySQL", 
-							"In " 
-							+ "SMAuthenticate.checkForUpdates - User: " 
-							+ sUserID
-							+ " - "
-							+ sUserFullName
-							);
-					if (conn == null){
-						pwOut.println("<HTML>Error getting connection to read database revision number from system.</HTML>");
-						return false;
-					}
-					
-					if (!dat.update(conn, sUserID, sDBIB)){
-						pwOut.println("Error updating database to newer database revision number: " + clsStringFunctions.filter(dat.getErrorMessage()));
-						clsDatabaseFunctions.freeConnection(context, conn, "[1547080407]");
-						return false;
-					}else{
-						clsDatabaseFunctions.freeConnection(context, conn, "[1547080408]");
-						return true;
-					}
-*/
 				}
 			}else{
 				rs.close();

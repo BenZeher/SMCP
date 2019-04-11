@@ -56,29 +56,30 @@ public class clsAjaxFunctions {
 	 public static String ajax_Request_Javascript(
 			 String sRequestServlet, 
 			 String sRequestParams, 
-			 String sDBID, 
 			 ServletContext context) {
 			//call asyncRequest in javascript to send a request to a servlet
 		 
-			String s = "function asyncRequest(sParams) {\n"
+			String s = "function asyncRequest() {\n"
 	                + "var xhr = new XMLHttpRequest();\n\n" 
 	                //Define how the response should be handled
 	                + "xhr.onreadystatechange = function(){\n"  
 	                		//If the response is ready then display it in the status
 	                + "    if (this.readyState == 4 && this.status == 200){\n"
 	                			//If there is a warning is the response
-	                + "   		if (this.responseText.includes(\"Warning\")){\n"
-	                + "        		 document.getElementById(\"Warning\").innerHTML = this.responseText; \n"
-	                + "        		 document.getElementById(\"Status\").innerHTML = \"\"; \n"
+	                + "   		if (this.responseText.includes(\"Error\")){\n"
+	                + "			     document.getElementById(\"updatenotificationtext\").style.color = 'red';\n"		
+	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
 	                			//Otherwise display response as status message
 	                + "    		}else{\n"
-	                + "         	document.getElementById(\"Status\").innerHTML = this.responseText; \n"
-	                + "         	document.getElementById(\"Warning\").innerHTML = \"\"; \n"
+	                + "         	document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "         	setTimeout(function(){\n"
+	               + " 				location.reload();\n"	
+	                + "				}, 4000); \n"
 	                + "			}\n" 
 	                + "    }"
 	                		//The request completely failed.  
 	                + "     if (this.readyState == 4 && this.status != 200){\n"
-	                + "         document.getElementById(\"Warning\").innerHTML = 'WARNING:' + 'Request to update Left previous job time failed.'; \n"
+	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
 	                + "	   }\n" 
 	                +"};\n\n"
 	                

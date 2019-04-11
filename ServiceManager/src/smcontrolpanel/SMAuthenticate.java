@@ -23,6 +23,7 @@ import ServletUtilities.clsStringFunctions;
 /** Servlet that authenticates the user.*/
 public class SMAuthenticate{
 	public static final String PARAM_TEST_NEW_LOGON = "TESTNEWLOGON";
+	public static final String PARAM_UPDATE_DATABASE = "UPDATEDATA";
 	private static boolean bDebugMode = false;
 	
 	public static boolean authenticateSMCPCredentials(
@@ -50,6 +51,7 @@ public class SMAuthenticate{
 	    String sSessionID = req.getSession().getId();
 	    String sSessionDatabase =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sSessionUsername =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
+
         if(sSessionID == null) {
         	sSessionID = "";
         }
@@ -59,10 +61,39 @@ public class SMAuthenticate{
         if(sSessionUsername == null) {
         	sSessionUsername = "";
         }
-      
+        
+        //If there is a parameter to update the database then do that and return to the calling class. 
+        //NOTE: If this parameter exists then we know the user has already been authenticated.
+		if(clsManageRequestParameters.get_Request_Parameter(PARAM_UPDATE_DATABASE, req).compareToIgnoreCase("") != 0) {
+			SMUpdateData dat  = new SMUpdateData();
+			Connection conn = clsDatabaseFunctions.getConnection(
+					context, 
+					sSessionDatabase, 
+					"MySQL", 
+					"In " 
+					+ "SMAuthenticate.checkForUpdates - User: " 
+					+ (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID)
+					);
+			if (conn == null){
+				out.write("Error getting connection to read database revision number from system during program update.");
+			}
+			
+			if (!dat.update(conn, (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID), sDatabaseID)){
+				out.write("Error:" + clsStringFunctions.filter(dat.getErrorMessage()));
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080407]");
+			}else{
+				out.write("Successfully updated to SMCP to database version " + SMUpdateData.getDatabaseVersion());
+				clsDatabaseFunctions.freeConnection(context, conn, "[1547080408]");
+				req.getSession().removeAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED);
+			}
+			return false;
+		}
+		
+		
         boolean bAllQuickLinkParametersExist = ((sDatabaseID.compareToIgnoreCase("") != 0) && (sUserName.compareToIgnoreCase("") != 0) && (sPassword.compareToIgnoreCase("") != 0 ));
         boolean bComingFromLoginScreen = clsManageRequestParameters.get_Request_Parameter("CallingClass", req).compareToIgnoreCase("smcontrolpanel.SMLogin") == 0;
-       
+	    boolean bProgramUpdateRequired =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED) != null;
+		
         if((!bAllQuickLinkParametersExist && sDatabaseID.compareToIgnoreCase("") == 0) ) {
         	
         	// MISSING DB
@@ -139,12 +170,13 @@ public class SMAuthenticate{
 	    }
 	    
 	  // If we are coming from the main login screen then we always create a new session.
+	  // If the session still has a parameter to update the database than we always create a new session.
 	  // Otherwise we create a new session if we have the database, user, password in the parameters list (aka quick links) 
 	  // AND the database or user parameter is not already matching the current session information.
 	  // OR If no session values exists for the database id or username then we always create a new session.
 	    
 	    try {
-			if (bComingFromLoginScreen 
+			if (bProgramUpdateRequired || bComingFromLoginScreen 
 				||((bAllQuickLinkParametersExist && ((sDatabaseID.compareToIgnoreCase(sSessionDatabase) != 0 || sUserName.compareToIgnoreCase(sSessionUsername) != 0 )))
 				||(sSessionDatabase.compareToIgnoreCase("") == 0 || sSessionUsername.compareToIgnoreCase("") == 0 )
 				)){
@@ -233,7 +265,11 @@ public class SMAuthenticate{
 					}
 					return false;
 				}else{
-					out.println(createdNewSessionNotification((String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME)));
+					out.println(createNotifications(
+							(String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME),
+							(String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED),
+							context
+							));
 					if (!SMSystemFunctions.isFunctionPermitted(
 						lFunctionID, 
 						sUserID, 
@@ -317,35 +353,114 @@ public class SMAuthenticate{
 		}
 	}
 	
-	private static String createdNewSessionNotification(String sCompanyName){
+	private static String createNotifications(String sCompanyName, String sUpdateRquired, ServletContext context){
+		
 		String s = "";
-		s += "<HTML>" +
-				""+clsServletUtilities.getJQueryIncludeString()+
-				""+clsServletUtilities.getJQueryUIIncludeString()+
-				"<BODY>"+
-				"<div class = \"notification\"style = \"position: fixed;" +
-				" margin: -10px 0 0 -10px;" +
-				"top: 1%;"+
-				"padding-left: 10px;"+
-				"padding-right: 10px;"+
-				"left: 30%;"+
-				" border: 1px solid transparent;" +
-				"border-radius: 0.25rem;" +
-				"color: #155724;" +
-				"background-color: #d4edda;" +
-				"border-color: #c3e6cb;" +
-				"\">" +
-				"You have created a new session in <B>" +sCompanyName+"</B>" +
-				"</div> " +
-				"<script>"+
-				"$(document).ready(function (){\n"+
-				" setTimeout(function (){\n"+
-				" $(\".notification\").fadeOut();\n" +
-				"},4000);\n"+
-				"});\n"+
-				"</script>"+
-				"</BODY>" +
-				"</HTML>";
+		//Include
+		s += "<HTML>"
+				+ clsServletUtilities.getJQueryIncludeString() 
+				+ clsServletUtilities.getJQueryUIIncludeString() 
+				+ "<BODY>";
+		//Style notifications
+		s += "<style>\n";
+		if(sUpdateRquired != null) {
+			s +=  "#updatenotification {\n" 
+					+ " position: fixed;\n" 
+					+ " width: 100%;\n"  
+					+ " height: 100%;\n"  
+					+ " top: 0;\n" 
+					+ " left: 0;\n"  
+					+ " right: 0;\n"  
+					+ " bottom: 0;\n"  
+					+ " background-color: rgba(0,0,0,0.5);\n"  
+					+ " z-index: 2;\n"  
+					+ "}\n"; 
+			
+			s +=  "#updatenotificationtext {\n" 
+					+ " border: 1px solid black;"  
+					+ " align-items: center;"  
+					+ " height: 100hv;\n" 
+					+ " background-color: white;" 
+					+ " display: flex;"  
+					+ " justify-content: center;"  
+					+ "}\n"; 
+		}
+		
+		s +=  "#sessionnotification {\n" 
+				+ " position: fixed;\n"  
+				+ " margin: -10px 0 0 -10px;" 
+				+ " top: 1%;"
+				+ " padding-left: 10px;"
+				+ " padding-right: 10px;"
+				+ " left: 30%;"
+				+ " border: 1px solid transparent;" 
+				+ " border-radius: 0.25rem;"
+				+ " color: #155724;" 
+				+ " background-color: #d4edda;" 
+				+ " border-color: #c3e6cb;" 
+				+ " }\n"; 			
+		s += "</style>";		
+		
+		//HTML for notifications
+		s +="<div id = \"sessionnotification\">" 
+				+ "You have created a new session in <B>" +sCompanyName+"</B>" 
+				+ "</div> ";
+		if(sUpdateRquired != null) {
+			s += "<div id=\"updatenotification\">"
+					+ "<div id=\"updatenotificationtext\">"
+					+ " Updating database from version " + sUpdateRquired + " to version " + Integer.toString(SMUpdateData.getDatabaseVersion()) + ". Please wait..."
+					+ "</div>" 
+			+ "  </div>";	
+		}
+		
+		//Scripts for notifications
+		s +=	"<script>";
+		
+		if(sUpdateRquired != null) {
+			s += "function asyncRequest() {\n"
+					+ "var xhr = new XMLHttpRequest();\n\n" 
+	                + "xhr.onreadystatechange = function(){\n"  
+	                + "    if (this.readyState == 4 && this.status == 200){\n"
+	                + "   		if (this.responseText.includes(\"Error\")){\n"
+	                + "			     document.getElementById(\"updatenotificationtext\").style.color = 'red';\n"		
+	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "    		}else{\n"
+	                + "         	document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "         	setTimeout(function(){\n"
+	                + " 				location.reload();\n"	
+	                + "				}, 4000); \n"
+	                + "			}\n" 
+	                + "    }"
+	                + "     if (this.readyState == 4 && this.status != 200){\n"
+	                + "			     document.getElementById(\"updatenotificationtext\").style.color = 'red';\n"
+	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "	   }\n" 
+	                +"};\n\n"
+	                
+	                //Send the request
+	                + "xhr.open(\"POST\", \"" + clsServletUtilities.getURLLinkBase(context) + "smcontrolpanel.SMUserLogin" + "\");\n" 
+	                + "xhr.setRequestHeader(\"Content-Type\", \"application/x-www-form-urlencoded\");\n"
+	                + "xhr.send(\"" + PARAM_UPDATE_DATABASE + "=Y" + "\");\n"
+					+ "}\n\n"
+					;
+		}
+		
+		s +=   "$(document).ready(function (){\n";
+		
+		if(sUpdateRquired != null) {
+			s += "setTimeout(asyncRequest, 3000);\n";
+		}
+		
+		s +=	 " setTimeout(function (){\n"
+				+ " $(\"#sessionnotification\").fadeOut();\n"
+				+ "},4000);\n";
+		
+		s +=	"});\n";
+		
+				s += "</script>";
+	
+		s +=	"</BODY>"
+				+ "</HTML>";
 		return s;
 	}
 
@@ -522,7 +637,7 @@ public class SMAuthenticate{
 			    			sUserFullName,
 			    			pwOut,
 			    			context,
-			    			(String)session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_SESSIONTAG)
+			    			req
 			    	)){
 			    		bResult = false;
 			    		if (bDebugMode){
@@ -573,7 +688,7 @@ public class SMAuthenticate{
 			String sUserFullName,
 			PrintWriter pwOut, 
 			ServletContext context,
-			String sSessionTag){
+			HttpServletRequest req){
 
 		try{
 			String SQL = "SELECT " + SMTablecompanyprofile.iDatabaseVersion + " FROM " + SMTablecompanyprofile.TableName;
@@ -596,6 +711,10 @@ public class SMAuthenticate{
 					return true;
 				}else{
 					rs.close();
+					//Store the database version number in the session.
+					req.getSession().setAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED,  Integer.toString(iReadDatabaseVersion));	
+					return true;
+/*
 					SMUpdateData dat  = new SMUpdateData();
 					Connection conn = clsDatabaseFunctions.getConnection(
 							context, 
@@ -620,6 +739,7 @@ public class SMAuthenticate{
 						clsDatabaseFunctions.freeConnection(context, conn, "[1547080408]");
 						return true;
 					}
+*/
 				}
 			}else{
 				rs.close();

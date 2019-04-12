@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1373;
+	private static final int m_CurrentDatabaseVersion = 1374;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "4/12/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14167,6 +14167,33 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 				
+			//BEGIN CASE:
+			case 1373:
+				//Added by TJR 4/12/2019
+				SQL = "CREATE TABLE `gltransactionbatchlines` ("
+					+ "lid int(11) NOT NULL auto_increment"
+					+ ", lbatchnumber int(11) NOT NULL DEFAULT '0'"	
+					+ ", lentrynumber int(11) NOT NULL DEFAULT '0'"
+					+ ", llinenumber int(11) NOT NULL DEFAULT '0'"
+					+ ", sdescription varchar(60) NOT NULL DEFAULT ''"
+					+ ", sreference varchar(60) NOT NULL DEFAULT ''"
+					+ ", scomment varchar(60) NOT NULL DEFAULT ''"
+					+ ", dattransactiondate date NOT NULL default '0000-00-00'"
+					+ ", sacctid varchar(45) NOT NULL DEFAULT '' COMMENT '[090101]'"
+					+ ", bddebitamt DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+					+ ", bdcreditamt DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+					+ ", ssourceledger varchar(2) NOT NULL DEFAULT ''"
+					+ ", ssourcetype varchar(2) NOT NULL DEFAULT ''"
+					+ ", PRIMARY KEY  (`lid`)"
+					+ ", UNIQUE KEY `batch_entry_line_key` (`lbatchnumber`,`lentrynumber`, `llinenumber`)"
+					+ ", KEY `linenumberkey` (`llinenumber`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
 		//End switch:
 		}
 		

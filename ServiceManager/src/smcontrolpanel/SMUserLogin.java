@@ -20,6 +20,7 @@ import SMDataDefinition.SMTablesecuritygroupfunctions;
 import SMDataDefinition.SMTablesecurityusergroups;
 import SMDataDefinition.SMTableuserscustomlinks;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 
 /** Servlet that presents the main menu.*/
 public class SMUserLogin extends HttpServlet {
@@ -33,8 +34,11 @@ public class SMUserLogin extends HttpServlet {
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
-		
+
 		if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), -1L)){
+			if(clsManageRequestParameters.get_Request_Parameter(SMAuthenticate.PARAM_UPDATE_DATABASE, request).compareToIgnoreCase("") != 0) {
+				return;
+			}
 			out.println("<HTML>WARNING: Unable to authenticate - please log in again.</BODY></HTML>");
 			return;
 		}else{

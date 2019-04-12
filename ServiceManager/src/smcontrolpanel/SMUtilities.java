@@ -44,6 +44,7 @@ public class SMUtilities extends clsServletUtilities {
 	public static String SMCP_SESSION_PARAM_OPTS = "OPTS";
 	public static String SMCP_SESSION_PARAM_CHECK_SCHEDULE = "YES";
 	public static String SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL = "MODULELEVEL";
+	public static String SMCP_SESSION_PARAM_UPDATE_REQUIRED = "UPDATEREQUIRED";
 	
 	//Request parameters:
 	public static String SMCP_REQUEST_PARAM_PASSWORD = "pw";

@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1372;
+	private static final int m_CurrentDatabaseVersion = 1373;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "4/10/2019";
+	private static final String m_sLastRevisionDate = "4/12/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14151,6 +14151,16 @@ public class SMUpdateData extends java.lang.Object{
 					+ ", UNIQUE KEY `batch_entry_key` (`lbatchnumber`,`lentrynumber`)"
 					+ ", KEY `entrynumberkey` (`lentrynumber`)"
 					+ " ) ENGINE=InnoDB"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1372:
+				//Added by TJR 4/12/2019
+				SQL = "ALTER TABLE `gltransactionbatchentries` ADD COLUMN iautoreverse INT(11) NOT NULL DEFAULT '0'"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

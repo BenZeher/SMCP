@@ -16,6 +16,7 @@ public class SMTablegltransactionbatchentries {
 	public static final String ifiscalperiod = "ifiscalperiod";
 	public static final String lsourceledgertransactionlineid = "lsourceledgertransactionlineid";
 	public static final String ssourceledger = "ssourceledger";
+	public static final String iautoreverse = "iautoreverse";
 	
 	//Field lengths:
 	public static final int sentrydescriptionLength = 128;

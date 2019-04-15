@@ -37,10 +37,10 @@ public class GLTransactionBatchLine {
 		initializeVariables();
 	}
 	
-	public void save_without_data_transaction (Connection conn, String sUserName, int iEntryType, boolean bBatchIsBeingPosted) throws Exception{
+	public void save_without_data_transaction (Connection conn, String sUserName, boolean bBatchIsBeingPosted) throws Exception{
 
 		try {
-			validate_fields(conn, iEntryType, bBatchIsBeingPosted);
+			validate_fields(conn, bBatchIsBeingPosted);
 		} catch (Exception e1) {
 			throw new Exception(e1.getMessage());
 		}
@@ -123,7 +123,7 @@ public class GLTransactionBatchLine {
 		}
 		return;
 	}
-	public void validate_fields(Connection conn, int iEntryType, boolean bBatchIsBeingPosted) throws Exception{
+	public void validate_fields(Connection conn, boolean bBatchIsBeingPosted) throws Exception{
 		
 		String sResult = "";
 		try {
@@ -269,7 +269,7 @@ public class GLTransactionBatchLine {
 			throw new Exception(sResult);
 		}
 	}
-	public void load(Connection conn, String sLid, int iEntryType) throws Exception{
+	public void load(Connection conn, String sLid) throws Exception{
 		String SQL = "SELECT * FROM " + SMTablegltransactionbatchlines.TableName
 			+ " WHERE ("
 				+ "(" + SMTablegltransactionbatchlines.lid + " = " + sLid + ")"

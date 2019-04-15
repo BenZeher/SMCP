@@ -12,24 +12,15 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import SMClasses.SMBatchStatuses;
-import SMDataDefinition.SMTableapbatches;
-import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatchlines;
-import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
-import smap.APAccountSet;
-import smap.APBatch;
-import smap.APVendor;
 import smar.SMOption;
-import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionBatchEntry {

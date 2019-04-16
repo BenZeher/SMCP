@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1374;
+	private static final int m_CurrentDatabaseVersion = 1375;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "4/12/2019";
+	private static final String m_sLastRevisionDate = "4/15/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14192,7 +14192,21 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
-			//END CASE	
+			//END CASE
+			
+			//BEGIN CASE
+			case 1374:
+				//Added by BJZ 4/15/2019
+				SQL = "ALTER TABLE `smoptions`"
+					+ " ADD COLUMN sgoogleapiclientid varchar(128) NOT NULL default ''"
+					+ ", ADD COLUMN sgoogleapiprojectid VARCHAR(128) NOT NULL default ''"
+					+ ", ADD COLUMN iusegoogledrivepickerapi int(11) NOT NULL default '0'"
+					+ ", ADD COLUMN sgoogledomain VARCHAR(128) NOT NULL default ''"
+					;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+				break;
+			//END CASE
 			
 		//End switch:
 		}

@@ -17,6 +17,7 @@ import smar.ARCustomer;
 import smic.ICPOHeader;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTableicpoheaders;
@@ -28,23 +29,10 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class SMCreateGDriveFolder extends HttpServlet{
 	
-	//Param values passed back by create upload script
 	public static String FOLDER_URL_PARAM = "folderURL";
 	public static String RECORD_TYPE_PARAM = "recordtype";
 	public static String KEY_VALUE_PARAM = "keyvalue";
 	public static String ASYNC_VALUE_PARAM = "asyncrequest";
-	public static String ORDER_RECORD_TYPE_PARAM_VALUE = "order";
-	public static String DISPLAYED_ORDER_TYPE_PARAM_VALUE = "displayed order";
-	public static String WORK_ORDER_TYPE_PARAM_VALUE = "work order";
-	public static String SALESLEAD_RECORD_TYPE_PARAM_VALUE = "sales lead";
-	public static String PO_RECORD_TYPE_PARAM_VALUE = "PO";
-	public static String AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE = "customer";
-	public static String AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE = "displayed customer";
-	public static String AP_VENDOR_RECORD_TYPE_PARAM_VALUE = "vendor";
-	public static String AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE = "display vendor";
-	
-	//Param values passed back by rename selected folder script
-	public static String RENAMED_ORDER_FOLDER_URL_PARAM_VALUE = "rename order folder";
 	
 	private static final long serialVersionUID = 1L;
 	
@@ -85,7 +73,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		String SQL = "";
 		String sRedirectString = "";
 		
-		if (sRecordType.compareToIgnoreCase(AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveARFolders;
 			SQL = "UPDATE " + SMTablearcustomer.TableName + " SET " + SMTablearcustomer.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTablearcustomer.sCustomerNumber + " = '" + sKeyValue + "')";
@@ -97,7 +85,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 				+ "&Status=Google Drive folder was updated successfully."
 				;
 		}
-		if (sRecordType.compareToIgnoreCase(AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveARFolders;
 			SQL = "UPDATE " + SMTablearcustomer.TableName + " SET " + SMTablearcustomer.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTablearcustomer.sCustomerNumber + " = '" + sKeyValue + "')";
@@ -110,7 +98,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 				;
 		}
 		
-		if (sRecordType.compareToIgnoreCase(RENAMED_ORDER_FOLDER_URL_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.RENAMED_ORDER_FOLDER_URL_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveOrderFolders;
 			sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditOrderEdit"
 				+ "?" + SMOrderHeader.ParamsOrderNumber + "=" + sKeyValue
@@ -120,7 +108,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			;
 	    	CurrentSession.removeAttribute(SMOrderHeader.ParamObjectName);
 		}
-		if (sRecordType.compareToIgnoreCase(ORDER_RECORD_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveOrderFolders;
 			SQL = "UPDATE " + SMTableorderheaders.TableName + " SET " + SMTableorderheaders.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTableorderheaders.strimmedordernumber + " = '" + sKeyValue + "')";
@@ -134,7 +122,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			//fresh from the data:
 	    	CurrentSession.removeAttribute(SMOrderHeader.ParamObjectName);
 		}
-		if (sRecordType.compareToIgnoreCase(DISPLAYED_ORDER_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.DISPLAYED_ORDER_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveOrderFolders;
 			SQL = "UPDATE " + SMTableorderheaders.TableName + " SET " + SMTableorderheaders.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTableorderheaders.strimmedordernumber + " = '" + sKeyValue + "')";
@@ -148,7 +136,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			//fresh from the data:
 	    	CurrentSession.removeAttribute(SMOrderHeader.ParamObjectName);
 		}
-		if (sRecordType.compareToIgnoreCase(WORK_ORDER_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveWorkOrderFolders;
 			SQL = "UPDATE " + SMTableworkorders.TableName   
 				+ " SET " + SMTableworkorders.TableName + "." + SMTableworkorders.sgdoclink + " = '" + sFolderURL + "'"
@@ -163,7 +151,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			//fresh from the data:
 	    	CurrentSession.removeAttribute(SMTableworkorders.ObjectName);
 		}
-		if (sRecordType.compareToIgnoreCase(PO_RECORD_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDrivePOFolders;
 			SQL = "UPDATE " + SMTableicpoheaders.TableName + " SET " + SMTableicpoheaders.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTableicpoheaders.lid + " = " + sKeyValue + ")";
@@ -176,7 +164,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			//fresh from the data:
 	    	CurrentSession.removeAttribute(ICPOHeader.ParamObjectName);
 		}
-		if (sRecordType.compareToIgnoreCase(SALESLEAD_RECORD_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.SALESLEAD_RECORD_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveSalesLeadFolders;
 			SQL = "UPDATE " + SMTablebids.TableName + " SET " + SMTablebids.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTablebids.lid + " = " + sKeyValue + ")";
@@ -190,7 +178,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 	    	CurrentSession.removeAttribute("BidEntry");
 		}
 		
-		if (sRecordType.compareToIgnoreCase(AP_VENDOR_RECORD_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.AP_VENDOR_RECORD_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveVendorFolders;
 			SQL = "UPDATE " + SMTableicvendors.TableName + " SET " + SMTableicvendors.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTableicvendors.svendoracct + " = '" + sKeyValue + "')";
@@ -204,7 +192,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 	    	CurrentSession.removeAttribute(APVendor.ParamObjectName);
 		}
 		
-		if (sRecordType.compareToIgnoreCase(AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE) == 0){
+		if (sRecordType.compareToIgnoreCase(SMCreateGoogleDriveFolderParamDefinitions.AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE) == 0){
 			lFunctionID = SMSystemFunctions.SMCreateGDriveVendorFolders;
 			SQL = "UPDATE " + SMTableicvendors.TableName + " SET " + SMTableicvendors.sgdoclink + " = '" + sFolderURL + "'"
 				+ " WHERE (" + SMTableicvendors.svendoracct + " = '" + sKeyValue + "')";

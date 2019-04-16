@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
@@ -732,7 +731,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sFolderName
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + SMUtilities.getCreateGDriveReturnURL(req, getServletContext())
-				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE
+				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + sCustomerNumber;
 		s += "&nbsp;&nbsp;<FONT SIZE=2><a href=\"" + sUploadFileLink + "\" target=\"_blank\">Upload File(s) to Google Drive</a></FONT>";
 		return s;

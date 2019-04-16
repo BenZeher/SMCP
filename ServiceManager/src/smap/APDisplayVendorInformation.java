@@ -15,7 +15,6 @@ import javax.servlet.http.HttpSession;
 
 import smar.SMOption;
 import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
@@ -777,7 +776,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sFolderName
 					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + SMUtilities.getCreateGDriveReturnURL(req, getServletContext())
-					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE
+					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE
 					+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + sVendorNumber
 					;
 		}catch(Exception e) {

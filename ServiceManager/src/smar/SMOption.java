@@ -67,6 +67,10 @@ public class SMOption {
 	private String m_sdatcurrentperiodenddate;
 	private String m_isignatureboxwidth;
 	private String m_sgoogleapikey;
+	private String m_sgoogleapiclientid;
+	private String m_sgoogleapiprojectid;
+	private String m_sgoogledomain;
+	private String m_iusegoogledrivepickerapi;
 	private String m_iusegoogleplacesapi;
 	private String m_ssmtpreplytoname;
 		
@@ -118,6 +122,10 @@ public class SMOption {
 		m_sdatcurrentperiodenddate = "";
 		m_isignatureboxwidth = "400";
 		m_sgoogleapikey = "";
+		m_sgoogleapiclientid = "";
+		m_sgoogleapiprojectid = "";
+		m_sgoogledomain = "";
+		m_iusegoogledrivepickerapi  = "0";
 		m_iusegoogleplacesapi = "0";
 	}
     public boolean load (
@@ -175,6 +183,10 @@ public class SMOption {
     			m_sdatcurrentperiodenddate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablesmoptions.datpostingperiodenddate));
     			m_isignatureboxwidth = Integer.toString(rs.getInt(SMTablesmoptions.isignatureboxwidth));
     			m_sgoogleapikey = rs.getString(SMTablesmoptions.sgoogleapikey);
+    			m_sgoogleapiclientid = rs.getString(SMTablesmoptions.sgoogleapiclientid);
+    			m_sgoogleapiprojectid = rs.getString(SMTablesmoptions.sgoogleapiprojectid);
+    			m_sgoogledomain = rs.getString(SMTablesmoptions.sgoogledomain);
+    			m_iusegoogledrivepickerapi = Integer.toString(rs.getInt(SMTablesmoptions.iusegoogledrivepickerapi));
     			m_iusegoogleplacesapi = Integer.toString(rs.getInt(SMTablesmoptions.iusegoogleplacesapi));
     			rs.close();
     			return true;
@@ -285,6 +297,10 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.datpostingperiodenddate + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_sdatcurrentperiodenddate) + "'"
 		+ ", " + SMTablesmoptions.isignatureboxwidth + " = " + clsDatabaseFunctions.FormatSQLStatement(m_isignatureboxwidth) 
 		+ ", " + SMTablesmoptions.sgoogleapikey + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapikey)  + "'"
+		+ ", " + SMTablesmoptions.sgoogleapiclientid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapiclientid)  + "'"
+		+ ", " + SMTablesmoptions.sgoogleapiprojectid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapiprojectid)  + "'"
+		+ ", " + SMTablesmoptions.sgoogledomain + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogledomain)  + "'"
+		+ ", " + SMTablesmoptions.iusegoogledrivepickerapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogledrivepickerapi)  + ""
 		+ ", " + SMTablesmoptions.iusegoogleplacesapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogleplacesapi)  + ""
 		;
 		
@@ -352,6 +368,10 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.datpostingperiodenddate + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(m_sdatcurrentperiodenddate) + "'"
 		+ ", " + SMTablesmoptions.isignatureboxwidth + " = " + clsDatabaseFunctions.FormatSQLStatement(m_isignatureboxwidth) 
 		+ ", " + SMTablesmoptions.sgoogleapikey + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapikey) + "'"
+		+ ", " + SMTablesmoptions.sgoogleapiclientid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapiclientid) + "'"
+		+ ", " + SMTablesmoptions.sgoogleapiprojectid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogleapiprojectid) + "'"
+		+ ", " + SMTablesmoptions.sgoogledomain + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogledomain) + "'"
+		+ ", " + SMTablesmoptions.iusegoogledrivepickerapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogledrivepickerapi) + ""
 		+ ", " + SMTablesmoptions.iusegoogleplacesapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogleplacesapi) + ""
 		;		
     	try {
@@ -750,6 +770,30 @@ public class SMOption {
     }
     public void setsgoogleapikey(String sgoogleapikey){
     	m_sgoogleapikey = sgoogleapikey;
+    }
+    public String getsgoogleapiclientid(){
+    	return m_sgoogleapiclientid;
+    }
+    public void setsgoogleapiclientid(String sgoogleapiclientid){
+    	m_sgoogleapiclientid = sgoogleapiclientid;
+    }
+    public String getsgoogleapiprojectid(){
+    	return m_sgoogleapiprojectid;
+    }
+    public void setsgoogleapiprojectid(String sgoogleapiprojectid){
+    	m_sgoogleapiprojectid = sgoogleapiprojectid;
+    }
+    public String getsgoogledomain(){
+    	return m_sgoogledomain;
+    }
+    public void setsgoogledomain(String sgoogledomain){
+    	m_sgoogledomain = sgoogledomain;
+    }
+    public String getiusegoogledrivepickerapi(){
+    	return m_iusegoogledrivepickerapi;
+    }
+    public void setiusegoogledrivepickerapi(String iusegoogledrivepickerapi){
+    	m_iusegoogledrivepickerapi = iusegoogledrivepickerapi;
     }
     public String getiusegoogleplacesapi(){
     	return m_iusegoogleplacesapi;

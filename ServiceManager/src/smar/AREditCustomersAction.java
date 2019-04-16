@@ -15,7 +15,6 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
@@ -95,7 +94,7 @@ public class AREditCustomersAction extends HttpServlet{
 				String sRedirectString = smopt.getgdriveuploadfileurl()
 		         		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + aropt.getgdrivecustomerparentfolderid()
 		   				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
-		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE
+		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE
 		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + cust.getM_sCustomerNumber()
 		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)

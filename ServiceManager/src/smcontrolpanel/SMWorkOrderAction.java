@@ -624,7 +624,7 @@ public class SMWorkOrderAction extends HttpServlet{
 	       		 sRedirectString = opt.getgdriveuploadfileurl()
 	              		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + opt.getgdriveworkorderparentfolderid()
 	        				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
-	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.WORK_ORDER_TYPE_PARAM_VALUE
+	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + workorder.getlid()
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + opt.getBackGroundColor()
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)

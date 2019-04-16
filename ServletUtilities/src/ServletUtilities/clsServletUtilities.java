@@ -47,6 +47,7 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablesmoptions;
 
 public class clsServletUtilities {
@@ -769,20 +770,58 @@ public class clsServletUtilities {
 		}
 	}
 	
-	public static String getDrivePickerJSIncludeString (
-			ServletContext context,
-			String sAppId,
-			String sClientId,
-			String sDeveloperKey,
-			String sRecordType,
-			String sFolderName,
-			String sKeyValue){
+	public static String getDrivePickerJSIncludeString (String sRecordType, String sKeyValue,  ServletContext context, String sDBID) throws Exception{
 
-		//Hard coded for testing..
-		sAppId = "910376449199";
-		sClientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
-		sDeveloperKey = "AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw";
-		//sFolderName = "Test Drive Picker Folder " + clsDateAndTimeConversions.now("dd.MM.yy");
+		String sAppId = "910376449199";
+		String sClientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
+		String sDeveloperKey = "AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw";
+		String sFolderName = sKeyValue;
+		String SQL = "SELECT * FROM " + SMTablesmoptions.TableName
+			;
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					context, 
+					sDBID, 
+					"MySQL", 
+					"ServletUtilities.getDrivePickerJSIncludeString"
+					+ " [1331745216]"
+				);
+				if (rs.next()){
+					if(rs.getString(SMTablesmoptions.sgoogleapiprojectid).compareToIgnoreCase("") != 0) {
+						sAppId = rs.getString(SMTablesmoptions.sgoogleapiprojectid);
+					}
+					if(rs.getString(SMTablesmoptions.sgoogleapiclientid).compareToIgnoreCase("") != 0) {
+						sClientId =  rs.getString(SMTablesmoptions.sgoogleapiclientid);
+					}
+					if(rs.getString(SMTablesmoptions.sgoogleapikey).compareToIgnoreCase("") != 0) {
+						sDeveloperKey =  rs.getString(SMTablesmoptions.sgoogleapikey);
+					}
+					switch(sRecordType){
+						case SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE:
+							sFolderName = rs.getString(SMTablesmoptions.gdriveorderfolderprefix) 
+							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveorderfoldersuffix);
+							break;
+						case SMCreateGoogleDriveFolderParamDefinitions.DISPLAYED_ORDER_TYPE_PARAM_VALUE:
+							sFolderName = rs.getString(SMTablesmoptions.gdriveorderfolderprefix) 
+							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveorderfoldersuffix);
+							break;
+						case SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE:
+							sFolderName = rs.getString(SMTablesmoptions.gdriveworkorderfolderprefix) 
+							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveworkorderfoldersuffix);
+							break;
+						case SMCreateGoogleDriveFolderParamDefinitions.SALESLEAD_RECORD_TYPE_PARAM_VALUE:
+							sFolderName = rs.getString(SMTablesmoptions.gdrivesalesleadfolderprefix) 
+							+ sKeyValue + rs.getString(SMTablesmoptions.gdrivesalesleadfoldersuffix);
+							break;
+						default:
+							break;
+					}
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new Exception("Error reading API credentials from SMOptions.");
+			}
 		
 		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
 		if (sScriptPath != null){

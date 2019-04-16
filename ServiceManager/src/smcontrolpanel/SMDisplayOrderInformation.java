@@ -78,7 +78,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 	private static SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM-dd-yyyy");
 	
 	//TODO Flag to test google drive picker to create upload files.
-	private static final boolean bTestGoogleDrivePicker = false;
+	//private static final boolean bTestGoogleDrivePicker = false;
 	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
@@ -132,21 +132,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
 			
-			if(bTestGoogleDrivePicker) {
-				try {
-					out.println(clsServletUtilities.getDrivePickerJSIncludeString(
-							getServletContext(),
-							"",
-							"",
-							"",
-							SMCreateGDriveFolder.ORDER_RECORD_TYPE_PARAM_VALUE,
-							sOrderNumber,
-							sOrderNumber)
-							);
-				} catch (Exception e) {
-					System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
-				}
-			}
 			out.println(sStyleScripts());
 			
 			if (!displayOrder(sDBID, sUserID, sOrderNumber, out, request, CurrentSession)){
@@ -177,6 +162,28 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			pwOut.println ("Error [1411071471] getting connection - " + e.getMessage());
 			return false;
 		}
+		
+		SMOption smopt = new SMOption();
+		try {
+			smopt.load(conn);
+		} catch (Exception e1) {
+			pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
+		}
+		
+		boolean bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
+		if(bUseGoogleDrivePicker) {
+			try {
+				pwOut.println(clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE,
+						sOrderNum,
+						getServletContext(),
+						sDBID)
+						);
+			} catch (Exception e) {
+				bUseGoogleDrivePicker = false;
+				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+		}
 		String sLicenseModuleLevel = (String) session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 		boolean bAllowOrderHeaderView = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMViewOrderHeaderInformation, sUserID, conn, sLicenseModuleLevel);
 		boolean bAllowProjectView = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMViewProjectInformation, sUserID, conn, sLicenseModuleLevel);
@@ -201,6 +208,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		boolean bAllowEditLaborBackCharge = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditLaborBackCharges, sUserID, conn, sLicenseModuleLevel);
 		boolean bAllowViewAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMViewAppointmentCalendar, sUserID, conn, sLicenseModuleLevel);
 		boolean bAllowEditAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditAppointmentCalendar, sUserID, conn, sLicenseModuleLevel);
+		
 		
 		BigDecimal bdTotalBilled = new BigDecimal(0);
 		String sDepositAmount = "0.00";
@@ -430,12 +438,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				
 				
 				//Link to view Google Drive folder:
-				SMOption smopt = new SMOption();
-				try {
-					smopt.load(conn);
-				} catch (Exception e1) {
-					pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
-				}
 					
 				if (bAllowDocumentView){
 					if (smopt.getOrderDocsFTPUrl().compareToIgnoreCase("") != 0){
@@ -455,6 +457,10 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				
 				//Link to create folder and/or upload file to Google Drive:	
 				if (bAllowCreateGDriveOrderFolders){
+					
+					if(bUseGoogleDrivePicker) {
+						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Upload to google drive</a>&nbsp;&nbsp;</FONT>";	
+					}else {
 					String sCreateUploadFileLink = "";
 					String sFolderName =  smopt.getgdriveorderfolderprefix() 
 						+ rsOrder.getString(SMTableorderheaders.strimmedordernumber) 
@@ -471,18 +477,13 @@ public class SMDisplayOrderInformation extends HttpServlet {
 								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sFolderName
 								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + SMUtilities.getCreateGDriveReturnURL(req, getServletContext())
-								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.DISPLAYED_ORDER_TYPE_PARAM_VALUE
+								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.DISPLAYED_ORDER_TYPE_PARAM_VALUE
 								+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + sOrderNum.trim()
 								;
 					}catch(Exception e) {
 						pwOut.println("Error [1542748927] " + e.getMessage());
 						return false;
 					}
-				
-					
-					if(bTestGoogleDrivePicker) {
-						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Upload to google drive</a>&nbsp;&nbsp;</FONT>";	
-					}else {
 						sLinks += "<FONT SIZE=2><a href=\"" + sCreateUploadFileLink + "\" target=\"_blank\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";
 					}
 					

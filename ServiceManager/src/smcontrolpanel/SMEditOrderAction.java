@@ -560,7 +560,7 @@ public class SMEditOrderAction extends HttpServlet{
        		 sRedirectString = opt.getgdriverenamefolderurl()
          		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.newfoldername + "=" + sNewFolderName
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.folderid + "=" + sFolderID
-         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.RENAMED_ORDER_FOLDER_URL_PARAM_VALUE
+         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.RENAMED_ORDER_FOLDER_URL_PARAM_VALUE
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.getM_strimmedordernumber()
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + sGDriveReturnURL
              	;
@@ -611,7 +611,7 @@ public class SMEditOrderAction extends HttpServlet{
        		 sRedirectString = opt.getgdriveuploadfileurl()
          		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + opt.getgdriveorderparentfolderid()
    				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
-         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.ORDER_RECORD_TYPE_PARAM_VALUE
+         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.getM_strimmedordernumber()
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + opt.getBackGroundColor()
          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + sGDriveReturnURL

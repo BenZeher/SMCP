@@ -364,7 +364,7 @@ public class SMEditBidAction extends HttpServlet{
 		  		 sRedirectString = opt.getgdriveuploadfileurl()
 		          		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + opt.getgdriveorderparentfolderid()
 		    				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sFolderName
-		          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.SALESLEAD_RECORD_TYPE_PARAM_VALUE
+		          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.SALESLEAD_RECORD_TYPE_PARAM_VALUE
 		          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.slid()
 		          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + opt.getBackGroundColor()
 		          		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)

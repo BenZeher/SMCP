@@ -32,8 +32,7 @@ public class SMTablesmoptions {
 	public static String datlastinvoicingflagtime = "datinvoicingflagdatetime";
 	public static String ilastinvoicinguserid = "iinvoicinguserid";
 	public static String sproposallogofilename = "sproposallogofilename";
-	public static String sgoogleapikey = "sgoogleapikey";
-	public static String iusegoogleplacesapi = "iusegoogleplacesapi";
+
 	
 	//FTP info for FTP'ing export files:
 	public static String sftpexporturl = "sftpexporturl";
@@ -47,14 +46,19 @@ public class SMTablesmoptions {
 	//public static String sbankrecglacct = "sbankrecglacct";
 	public static String icreatebankrecexport = "icreatebankrecexport";
 	
+	public static String sgoogleapikey = "sgoogleapikey";
+	public static String sgoogleapiclientid= "sgoogleapiclientid";
+	public static String sgoogleapiprojectid= "sgoogleapiprojectid";
+	public static String sgoogledomain= "sgoogledomain";
+	public static String iusegoogledrivepickerapi = "iusegoogledrivepickerapi";
+	public static String iusegoogleplacesapi = "iusegoogleplacesapi";
+	
 	//Fields for creating new order folders in Google Drive:
 	public static String gdriveorderparentfolderid = "gdriveorderparentfolderid";
 	public static String gdriveorderfolderprefix = "gdriveorderfolderprefix";
 	public static String gdriveorderfoldersuffix = "gdriveorderfoldersuffix";
 	
 	//Fields for creating new sales lead folders in Google Drive:
-	//TJR - removed 12/11/2015:
-	//public static String gdrivecreatenewfolderurl = "gdrivecreatenewfolderurl";
 	public static String gdrivesalesleadparentfolderid = "gdrivesalesleadparentfolderid";
 	public static String gdrivesalesleadfolderprefix = "gdrivesalesleadfolderprefix";
 	public static String gdrivesalesleadfoldersuffix = "gdrivesalesleadfoldersuffix";

@@ -42,6 +42,10 @@ public class SMOptionInput extends java.lang.Object{
 	public static final String Paramsbankrecglacct = "sbankrecglacct";
 	public static final String Paramicreatebankrecexport = "icreatebankrecexport";
 	public static final String Paramsgoogleapikey = "Paramsgoogleapikey";
+	public static final String Paramsgoogleapiclientid = "Paramsgoogleapiclientid";
+	public static final String Paramsgoogleapiprojectid = "Paramsgoogleapiprojectid";
+	public static final String Paramsgoogledomain = "Paramsgoogledomain";
+	public static final String Paramiusegoogledrivepickerapi = "Paramiusegoogledrivepickerapi";
 	public static final String Paramiusegoogleplacesapi = "Paramiusegoogleplacesapi";
 	
 	//Field for creating new folder google web app URL:
@@ -115,6 +119,10 @@ public class SMOptionInput extends java.lang.Object{
 	private String m_datcurrentperiodenddate;
 	private String m_isignatureboxwidth;
 	private String m_sgoogleapikey;
+	private String m_sgoogleapiclientid;
+	private String m_sgoogleapiprojectid;
+	private String m_sgoogledomain;
+	private String m_iusegoogledrivepickerapi;
 	private String m_iusegoogleplacesapi;
 	
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
@@ -165,6 +173,10 @@ public class SMOptionInput extends java.lang.Object{
 		m_datcurrentperiodenddate = "";
 		m_isignatureboxwidth = "400";
 		m_sgoogleapikey = "";
+		m_sgoogleapiclientid = "";
+		m_sgoogleapiprojectid = "";
+		m_sgoogledomain = "";
+		m_iusegoogledrivepickerapi = "0";
 		m_iusegoogleplacesapi = "0";
 		
 		m_sErrorMessageArray = new ArrayList<String> (0);
@@ -237,6 +249,15 @@ public class SMOptionInput extends java.lang.Object{
 		}
 		m_isignatureboxwidth = ARUtilities.get_Request_Parameter(SMOptionInput.Paramisigantureboxwidth, req).trim();
 		m_sgoogleapikey = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapikey, req).trim();
+		m_sgoogleapiclientid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapiclientid, req).trim();
+		m_sgoogleapiprojectid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapiprojectid, req).trim();
+		m_sgoogledomain = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogledomain, req).trim();
+		
+		if (req.getParameter(SMOptionInput.Paramiusegoogledrivepickerapi) == null){
+			m_iusegoogledrivepickerapi = "0";
+		}else{
+			m_iusegoogledrivepickerapi = "1";
+		}
 		
 		if (req.getParameter(SMOptionInput.Paramiusegoogleplacesapi) == null){
 			m_iusegoogleplacesapi = "0";
@@ -359,6 +380,10 @@ public class SMOptionInput extends java.lang.Object{
 		}
 		
 		smoption.setsgoogleapikey(m_sgoogleapikey);
+		smoption.setsgoogleapiclientid(m_sgoogleapiclientid);
+		smoption.setsgoogleapiprojectid(m_sgoogleapiprojectid);
+		smoption.setsgoogledomain(m_sgoogledomain);
+		smoption.setiusegoogledrivepickerapi(m_iusegoogledrivepickerapi);
 		smoption.setiusegoogleplacesapi(m_iusegoogleplacesapi);
 		smoption.setgdriveorderparentfolderid(m_sgdriveorderparentfolderid);
 		smoption.setgdriveorderfolderprefix(m_sgdriveorderfolderprefix);
@@ -426,6 +451,10 @@ public class SMOptionInput extends java.lang.Object{
 		m_datcurrentperiodenddate = smoption.getscurrentperiodenddate();
 		m_isignatureboxwidth = smoption.getisignatureboxwidth();
 		m_sgoogleapikey = smoption.getsgoogleapikey();
+		m_sgoogleapiclientid = smoption.getsgoogleapiclientid();
+		m_sgoogleapiprojectid = smoption.getsgoogleapiprojectid();
+		m_sgoogledomain= smoption.getsgoogledomain();
+		m_iusegoogledrivepickerapi = smoption.getiusegoogledrivepickerapi();
 		m_iusegoogleplacesapi = smoption.getiusegoogleplacesapi();
 		return true;
 	}
@@ -578,6 +607,30 @@ public class SMOptionInput extends java.lang.Object{
     }
     public void setsgoogleapikey(String ssgoogleapikey){
     	m_sgoogleapikey = ssgoogleapikey;
+    }
+    public String getsgoogleapiclientid(){
+    	return m_sgoogleapiclientid;
+    }
+    public void setsgoogleapiclientid(String sgoogleapiclientid){
+    	m_sgoogleapiclientid = sgoogleapiclientid;
+    }
+    public String getsgoogleapiprojectid(){
+    	return m_sgoogleapiprojectid;
+    }
+    public void setsgoogleapiprojectid(String sgoogleapiprojectid){
+    	m_sgoogleapiprojectid = sgoogleapiprojectid;
+    }
+    public String getsgoogledomain(){
+    	return m_sgoogledomain;
+    }
+    public void setsgoogledomain(String sgoogledomain){
+    	m_sgoogledomain = sgoogledomain;
+    }
+    public String getiusegoogledrivepickerapi(){
+    	return m_iusegoogledrivepickerapi;
+    }
+    public void setiusegoogledrivepickerapi(String iusegoogledrivepickerapi){
+    	m_iusegoogledrivepickerapi = iusegoogledrivepickerapi;
     }
     public String getiusegoogleplacesapi(){
     	return m_iusegoogleplacesapi;

@@ -17,7 +17,6 @@ import javax.servlet.http.HttpSession;
 
 import smap.APVendor;
 import smar.SMOption;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMCriticalDateEntry;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
@@ -2456,7 +2455,7 @@ public class ICEditPOEdit  extends HttpServlet {
 	    		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sFolderName
 	    		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + SMUtilities.getCreateGDriveReturnURL(req, getServletContext())
-				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.PO_RECORD_TYPE_PARAM_VALUE
+				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE
 				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + sPONumber
 	    		;
 		return "&nbsp;&nbsp;<A HREF=\"" + sUploadFileLink + "\">Upload File(s) to Google Drive</a>";

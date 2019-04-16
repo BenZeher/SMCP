@@ -9,7 +9,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import smap.APVendor;
 import smar.SMOption;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -73,7 +72,7 @@ public class ICEditPOAction extends HttpServlet{
 	       		 sRedirectString = smopt.getgdriveuploadfileurl()
 	              		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + icopt.getgdrivepurchaseordersparentfolderid()
 	        				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
-	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.PO_RECORD_TYPE_PARAM_VALUE
+	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.getsID()
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 	              		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)

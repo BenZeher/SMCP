@@ -11,7 +11,6 @@ import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsManageRequestParameters;
 import smar.SMOption;
-import smcontrolpanel.SMCreateGDriveFolder;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
@@ -104,7 +103,7 @@ public class APEditVendorAction extends HttpServlet{
 				 String sRedirectString = smopt.getgdriveuploadfileurl()
 			         		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + apopt.getgdrivevendorparentfolderid()
 			   				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
-			         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGDriveFolder.AP_VENDOR_RECORD_TYPE_PARAM_VALUE
+			         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.AP_VENDOR_RECORD_TYPE_PARAM_VALUE
 			         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.getsvendoracct()
 			         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 			         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)

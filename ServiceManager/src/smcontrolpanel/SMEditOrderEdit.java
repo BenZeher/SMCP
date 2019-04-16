@@ -13,9 +13,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARCustomer;
+import smar.SMOption;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablearcustomershiptos;
 import SMDataDefinition.SMTablearterms;
 import SMDataDefinition.SMTableconveniencephrases;
@@ -378,6 +380,28 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += sCommandScripts(entry, sm);
 		s += sStyleScripts();
 
+		boolean bUseGoogleDrivePicker = false;
+		SMOption smopt = new SMOption();
+		try {
+			smopt.load(sDBID, getServletContext(), sUserID);
+			bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
+		} catch (Exception e1) {
+		}
+		
+		if(bUseGoogleDrivePicker) {
+			try {
+				s +=clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE,
+						entry.getM_strimmedordernumber(),
+						getServletContext(),
+						sDBID)
+						;
+			} catch (Exception e) {
+				bUseGoogleDrivePicker = false;
+				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+		}
+		
 		//Store whether or not the record has been changed:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + RECORDWASCHANGED_FLAG + "\""
@@ -645,7 +669,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "</TR></TD></TABLE style=\" title:ENDOrderArea; \">\n";
 		
 		//Create the order memo table:
-		s += createOrderMemosTable(sm, entry, sm.getAddingNewEntryFlag());
+		s += createOrderMemosTable(sm, entry, sm.getAddingNewEntryFlag(), bUseGoogleDrivePicker);
 		
 		//Create the order commands line at the bottom:
 		s += createOrderCommandsTable(sm, sObjectName, entry, false, false, sDBID, sUserID);
@@ -2118,7 +2142,8 @@ public class SMEditOrderEdit  extends HttpServlet {
 	private String createOrderMemosTable(
 			SMMasterEditEntry sm, 
 			SMOrderHeader entry,
-			boolean bAddingNewEntry) throws SQLException{
+			boolean bAddingNewEntry,
+			boolean bUseGoogleDrivePicker) throws SQLException{
 		String s = "";
 		int iRows = 3;
 		int iCols = 55;
@@ -2138,12 +2163,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 				sm.getsDBID(),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 			&& !sm.getAddingNewEntryFlag()){
+			
 			boolean bGDocLinkExists = checkForGDocLink(getServletContext(), sm.getsDBID(), entry.getM_strimmedordernumber(), sm.getUserID(), sm.getFullUserName());
 
 			if(bGDocLinkExists) {
 				sRenameFolderButton = createRenameFolderButton();
 			}
-			sCreateAndUploadButton = createAndUploadFolderButton();
+			sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
 		}
 		
 		//TJR - temporary:
@@ -2343,11 +2369,16 @@ public class SMEditOrderEdit  extends HttpServlet {
 			;
 	}
 	
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\"" + sOnClickFunction + "\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

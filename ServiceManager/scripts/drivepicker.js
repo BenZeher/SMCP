@@ -42,17 +42,28 @@ function onPickerApiLoad() {
 }
 
 function onAuthApiLoad() {
+	//Try to authorize with current user session (no prompt). 
 	window.gapi.auth.authorize({
 		'client_id' : clientId,
-		'scope' : scope
-		,'hosted_domain' : domain
-	}, handleAuthResult);
+		'scope' : scope,
+		'hosted_domain' : domain,
+		'prompt':'none'
+	}, handleAuthResult);	
 }
 
 function handleAuthResult(authResult) {
-	if (authResult && !authResult.error) {
-		oauthToken = authResult.access_token;
-		createPicker();
+	if (authResult) {
+		if(authResult.error === 'immediate_failed'){
+			//If immediate login fails, prompt to sign in.
+			window.gapi.auth.authorize({
+				'client_id' : clientId,
+				'scope' : scope,
+				'hosted_domain' : domain
+			}, handleAuthResult);
+		}else{
+			oauthToken = authResult.access_token;
+			createPicker();
+		}
 	}
 }
 

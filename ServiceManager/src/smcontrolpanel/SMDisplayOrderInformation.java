@@ -459,7 +459,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				if (bAllowCreateGDriveOrderFolders){
 					
 					if(bUseGoogleDrivePicker) {
-						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Upload to google drive</a>&nbsp;&nbsp;</FONT>";	
+						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";	
 					}else {
 					String sCreateUploadFileLink = "";
 					String sFolderName =  smopt.getgdriveorderfolderprefix() 

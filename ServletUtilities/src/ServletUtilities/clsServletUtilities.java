@@ -801,7 +801,11 @@ public class clsServletUtilities {
 						sDeveloperKey =  rs.getString(SMTablesmoptions.sgoogleapikey);
 					}
 					sDomainAccount =  rs.getString(SMTablesmoptions.sgoogledomain);
-					sDomain = sDomainAccount.substring(sDomainAccount.indexOf("@") + 1);
+					if(sDomainAccount.trim().compareToIgnoreCase("") == 0) {
+						sDomain = "";
+					}else {
+						sDomain = sDomainAccount.substring(sDomainAccount.indexOf("@") + 1);
+					}
 					
 					switch(sRecordType){
 						case SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE:

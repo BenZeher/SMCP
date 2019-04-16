@@ -572,8 +572,7 @@ public class SMEditSMOptions extends HttpServlet {
 				+ ">"
 				+ "</TD>"
 			);
-		m_pwOut.println("<TD>This will restrict APIs to only be accessed by users in your domain and will be owner account  "
-				+ " of all folders created in Google Drive. All credentials below can be managed from the <a href=\"https://console.developers.google.com/apis/dashboard\"> Google API Console </a>");
+		m_pwOut.println("<TD>This will restrict APIs to only be accessed by users in your domain. All API credentials below can be managed from the <a href=\"https://console.developers.google.com/apis/dashboard\"> Google API Console </a>");
 		
 		//Google API Key:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API key</B>:</TD>");

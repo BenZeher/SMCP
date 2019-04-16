@@ -62,7 +62,9 @@ function createPicker() {
 		
 		//Check of the folder already exists
 		gapi.client.drive.files.list({
-			'q' : "name='" + folderName + "'"  
+			'q' : "name='" + folderName + "' " +
+				  "and parents= '" + parentfolderid + "' " +
+				  "and trashed=false"  
 		}).then(function(response) {
 			console.log(response);
 			var files = response.result.files;
@@ -80,6 +82,7 @@ function createPicker() {
 				var fileMetadata = {
 						'name' : folderName,
 						'mimeType' : 'application/vnd.google-apps.folder',
+						'owners' : '',
 						'parents' : [ parentfolderid ]
 					};
 					gapi.client.drive.files.create({
@@ -90,11 +93,13 @@ function createPicker() {
 							var file = response.result;
 							folderID = file.id;
 							console.log('Created Folder Id: ' + folderID);
-							
+	
+  /*						
 							var permissionListRequest = gapi.client.drive.permissions.list({
-							      'fileId': folderID
+							      "fileId": folderID
 							    });
 								permissionListRequest.execute(function(resp) { 
+									 console.log('Lising permisions: ' + resp);
 							      var permissionUpdateRequest = gapi.client.drive.permissions.update({
 							        'fileId': folderID,
 							        'permissionId': resp.permissions[0].id, 
@@ -105,6 +110,7 @@ function createPicker() {
 							        console.log('Updating permision to domain owner: ' + resp3);
 							      });
 							    });
+	*/
 							    //Update folder url in database.
 							    console.log('Updateing data with URL...');
 								asyncUpdate('https://drive.google.com/drive/folders/' + folderID);
@@ -130,13 +136,13 @@ function buildPicker() {
 	
 	//Create the google drive picker
 	picker = new google.picker.PickerBuilder()
-	//		.setTitle('Folder ' + folderName)
 			.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
 			.setAppId(appId)
 			.setOAuthToken(oauthToken)
-//			.addView(view)
 			.addView(uploadView)
+			.addView(view)
 			.setDeveloperKey(developerKey)
+			.setTitle(folderName)
 			.setCallback(pickerCallback)
 			.build();
 	
@@ -145,9 +151,10 @@ function buildPicker() {
 }
 
 function pickerCallback(data) {
-	if (data.action == google.picker.Action.PICKED) {
+	//If the user picked a files then display it.
+	if ((data.action == google.picker.Action.PICKED) && (!data.docs[0].isNew)) {
 		var fileId = data.docs[0].id;
-		alert('The user selected: ' + fileId);
+			window.open(data.docs[0].url);
 	}
 }
 

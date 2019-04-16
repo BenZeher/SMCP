@@ -775,6 +775,9 @@ public class clsServletUtilities {
 		String sAppId = "910376449199";
 		String sClientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
 		String sDeveloperKey = "AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw";
+		String sDomainAccount = "";
+		String sDomain = "";
+		String sParentFolder = "";
 		String sFolderName = sKeyValue;
 		String SQL = "SELECT * FROM " + SMTablesmoptions.TableName
 			;
@@ -797,22 +800,29 @@ public class clsServletUtilities {
 					if(rs.getString(SMTablesmoptions.sgoogleapikey).compareToIgnoreCase("") != 0) {
 						sDeveloperKey =  rs.getString(SMTablesmoptions.sgoogleapikey);
 					}
+					sDomainAccount =  rs.getString(SMTablesmoptions.sgoogledomain);
+					sDomain = sDomainAccount.substring(sDomainAccount.indexOf("@") + 1);
+					
 					switch(sRecordType){
 						case SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE:
 							sFolderName = rs.getString(SMTablesmoptions.gdriveorderfolderprefix) 
 							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveorderfoldersuffix);
+							sParentFolder = rs.getString(SMTablesmoptions.gdriveorderparentfolderid);
 							break;
 						case SMCreateGoogleDriveFolderParamDefinitions.DISPLAYED_ORDER_TYPE_PARAM_VALUE:
 							sFolderName = rs.getString(SMTablesmoptions.gdriveorderfolderprefix) 
 							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveorderfoldersuffix);
+							sParentFolder = rs.getString(SMTablesmoptions.gdriveorderparentfolderid);
 							break;
 						case SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE:
 							sFolderName = rs.getString(SMTablesmoptions.gdriveworkorderfolderprefix) 
 							+ sKeyValue + rs.getString(SMTablesmoptions.gdriveworkorderfoldersuffix);
+							sParentFolder = rs.getString(SMTablesmoptions.gdriveworkorderparentfolderid);
 							break;
 						case SMCreateGoogleDriveFolderParamDefinitions.SALESLEAD_RECORD_TYPE_PARAM_VALUE:
 							sFolderName = rs.getString(SMTablesmoptions.gdrivesalesleadfolderprefix) 
 							+ sKeyValue + rs.getString(SMTablesmoptions.gdrivesalesleadfoldersuffix);
+							sParentFolder = rs.getString(SMTablesmoptions.gdrivesalesleadparentfolderid);
 							break;
 						default:
 							break;
@@ -832,6 +842,9 @@ public class clsServletUtilities {
 			+ " var developerKey = '" + sDeveloperKey + "';\n" 
 			+ " var folderName = '" + sFolderName + "';\n" 
 			+ " var recordtype = '" + sRecordType + "';\n" 
+			+ " var domain = '" + sDomain + "';\n" 
+			+ " var domainaccount = '" + sDomainAccount + "';\n" 
+			+ " var parentfolderid = '" + sParentFolder + "';\n" 
 			+ " var keyvalue = '" + sKeyValue + "';\n"
 			+ "</script>\n"
 		    + "<script type='text/JavaScript' src='" + sScriptPath + "drivepicker.js'></script>\n"

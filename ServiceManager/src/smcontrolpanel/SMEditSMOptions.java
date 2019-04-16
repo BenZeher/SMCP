@@ -562,6 +562,19 @@ public class SMEditSMOptions extends HttpServlet {
 		m_pwOut.println("<TR style=\"background-color:grey; color:white; \">"
 					+ "<TD COLSPAN=3>"+ "<B>&nbsp;Google API Settings</B>"+ "</TD>"+ "</TR>");
 		
+		//Google Account
+		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Master email account</B>:</TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMOptionInput.Paramsgoogledomain + "\""
+				+ " VALUE=\"" + optionInput.getsgoogledomain() + "\""
+				+ "SIZE=40"
+				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
+				+ ">"
+				+ "</TD>"
+			);
+		m_pwOut.println("<TD>This will restrict APIs to only be accessed by users in your domain and will be owner account  "
+				+ " of all folders created in Google Drive. All credentials below can be managed from the <a href=\"https://console.developers.google.com/apis/dashboard\"> Google API Console </a>");
+		
 		//Google API Key:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API key</B>:</TD>");
 		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
@@ -581,7 +594,7 @@ public class SMEditSMOptions extends HttpServlet {
 		m_pwOut.println("<TD>This key is required to use basic geocoding function for mapping addresses. Enable Maps and Places. "
 				+ ""
 				+ " <a href=\"https://cloud.google.com/maps-platform/?apis=maps,places\"" + 
-				 ">Get Google API key</a></TD></TR>");
+				 ">Get an API key</a></TD></TR>");
 		
 		//Use google Places API 
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Use Places API?</B>:</TD>");
@@ -594,8 +607,8 @@ public class SMEditSMOptions extends HttpServlet {
 		}	
 		m_pwOut.println("<TD>This will enable google Places API to suggest address in address fields. Places API and Maps Javascript API must"
 				+ " be enabled with a valid API Key for this to function properly. "
-				+ " <a href=\"https://console.cloud.google.com/apis/\"" + 
-				 ">Google API Console</a></TD></TR>");
+				+ " <a href=\"https://cloud.google.com/maps-platform/places/\"" + 
+				 ">Google Places API</a></TD></TR>");
 		
 		//Use google Driver Picker API 
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Use Drive Picker API?</B>:</TD>");
@@ -606,9 +619,9 @@ public class SMEditSMOptions extends HttpServlet {
 			m_pwOut.println("<TD><INPUT TYPE=\"CHECKBOX\" NAME=\"" + SMOptionInput.Paramiusegoogledrivepickerapi 
 					+ "\" CHECKED></TD>");
 		}	
-		m_pwOut.println("<TD>This will enable google Drive Picker API to upload files to google drive folder. "
+		m_pwOut.println("<TD>This will enable google Drive Picker API to upload/create files to google drive folder. "
 				+ " <a href=\"https://developers.google.com/picker/\"" + 
-				 ">Google API Console</a></TD></TR>");
+				 ">Google Drive Picker API</a></TD></TR>");
 					
 	
 		//API Client ID
@@ -635,17 +648,7 @@ public class SMEditSMOptions extends HttpServlet {
 			);
 		m_pwOut.println("<TD>This is required for certain features of the Drive Picker API.");
 		
-		//Rest Google API domain
-		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google domain</B>:</TD>");
-		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
-				+ SMOptionInput.Paramsgoogledomain + "\""
-				+ " VALUE=\"" + optionInput.getsgoogledomain() + "\""
-				+ "SIZE=40"
-				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
-				+ ">"
-				+ "</TD>"
-			);
-		m_pwOut.println("<TD>Enter your google domain to restrict API use to gmail accounts in your domain.");
+
 		
 		
 		m_pwOut.println("</TABLE>");

@@ -45,7 +45,7 @@ function onAuthApiLoad() {
 	window.gapi.auth.authorize({
 		'client_id' : clientId,
 		'scope' : scope
-		,'hosted_domain' : 'odcdc.com'
+		,'hosted_domain' : domain
 	}, handleAuthResult);
 }
 
@@ -71,13 +71,16 @@ function createPicker() {
 				folderID = files[0].id;
 				console.log(folderName + ' already exists with id: '
 						+ files[0].id);
+				console.log('Updateing data with URL...');
+				 //Update folder url in database.
+				asyncUpdate('https://drive.google.com/drive/folders/' + files[0].id);
 				buildPicker();
 			//Otherwise, create  a new folder and save it to the database.
 			} else {				
 				var fileMetadata = {
 						'name' : folderName,
 						'mimeType' : 'application/vnd.google-apps.folder',
-						'parents' : [ '0ByxluPCydkjOWnNJY1pQOTlkTWM' ]
+						'parents' : [ parentfolderid ]
 					};
 					gapi.client.drive.files.create({
 						resource : fileMetadata,
@@ -86,7 +89,25 @@ function createPicker() {
 						case 200:
 							var file = response.result;
 							folderID = file.id;
-							console.log('Created Folder Id: ' + file.id);
+							console.log('Created Folder Id: ' + folderID);
+							
+							var permissionListRequest = gapi.client.drive.permissions.list({
+							      'fileId': folderID
+							    });
+								permissionListRequest.execute(function(resp) { 
+							      var permissionUpdateRequest = gapi.client.drive.permissions.update({
+							        'fileId': folderID,
+							        'permissionId': resp.permissions[0].id, 
+							        'transferOwnership': true,
+							        'resource': {'role':'owner', 'emailAddress': domainaccount}
+							      });
+							      permissionUpdateRequest.execute(function(resp3) {
+							        console.log('Updating permision to domain owner: ' + resp3);
+							      });
+							    });
+							    //Update folder url in database.
+							    console.log('Updateing data with URL...');
+								asyncUpdate('https://drive.google.com/drive/folders/' + folderID);
 							buildPicker();
 							break;
 						default:
@@ -94,10 +115,6 @@ function createPicker() {
 						}
 					});		
 			}
-			//Always update the folder url
-			console.log('Updateing data with URL: ' + 'https://drive.google.com/drive/folders/' + files[0].id);
-			asyncUpdate('https://drive.google.com/drive/folders/' + files[0].id);
-
 		});
 	} 
 }

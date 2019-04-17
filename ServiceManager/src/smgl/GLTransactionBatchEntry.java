@@ -714,7 +714,24 @@ public class GLTransactionBatchEntry {
 	public void setsautoreverse(String sautoreverse){
 		m_autoreverse = sautoreverse;
 	}
-
+	public BigDecimal getDebitTotal () throws Exception{
+		BigDecimal bdDebitTotal = new BigDecimal("0.00");
+		
+		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
+			bdDebitTotal = bdDebitTotal.add(new BigDecimal (m_arrBatchEntryLines.get(i).getsdebitamt().replaceAll(",", "")));
+		}
+		
+		return bdDebitTotal;
+	}
+	public BigDecimal getCreditTotal () throws Exception{
+		BigDecimal bdCreditTotal = new BigDecimal("0.00");
+		
+		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
+			bdCreditTotal = bdCreditTotal.add(new BigDecimal (m_arrBatchEntryLines.get(i).getscreditamt().replaceAll(",", "")));
+		}
+		
+		return bdCreditTotal;
+	}
 	public GLTransactionBatchEntry copyEntry(){
 		GLTransactionBatchEntry newentry = new GLTransactionBatchEntry();
 		newentry.setsautoreverse(getsautoreverse());

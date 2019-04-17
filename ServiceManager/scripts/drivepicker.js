@@ -12,12 +12,18 @@ var scope = [ 'https://www.googleapis.com/auth/drive' ];
 var folderID;
 var picker;
 var oauthToken;
+var currentlyRunning = false;
 
 function loadPicker() {
+	//prevent mutiple clicks before function is finished.
+	if(currentlyRunning === true){
+		return;
+	}
+	currentlyRunning = true;
+	
 	//If we already searched for the folder ID Just display the picker
 	if(folderID){
 		picker.setVisible(true);
-	
 	//Otherwise authorize the user and load the APIs
 	}else{
 		//load the auth api
@@ -158,7 +164,7 @@ function buildPicker() {
 			.build();
 	
 	//Display the google drive picker
-	picker.setVisible(true);
+	picker.setVisible(true);	
 }
 
 function pickerCallback(data) {
@@ -167,6 +173,8 @@ function pickerCallback(data) {
 		var fileId = data.docs[0].id;
 			window.open(data.docs[0].url);
 	}
+	//Allow function to run again.
+	currentlyRunning = false;
 }
 
 function asyncUpdate(folderurl) {

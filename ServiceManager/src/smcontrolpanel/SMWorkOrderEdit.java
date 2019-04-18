@@ -192,7 +192,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String sPickerScript = "";
 			try {
 			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
-						SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE,
+						SMCreateGoogleDriveFolderParamDefinitions.WORK_ORDER_TYPE_PARAM_VALUE,
 						wohead.getlid(),
 						getServletContext(),
 						smedit.getsDBID())

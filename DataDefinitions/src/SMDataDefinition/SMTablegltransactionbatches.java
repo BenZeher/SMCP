@@ -19,8 +19,8 @@ public class SMTablegltransactionbatches {
 
 	//Field Lengths:
 	public static final int sBatchDescriptionLength = 128;
-	public static final int screatedbyfullnameLength = 124;
-	public static final int slasteditedbyfullnameLength = 124;
+	public static final int screatedbyfullnameLength = 128;
+	public static final int slasteditedbyfullnameLength = 128;
 	
 }
 

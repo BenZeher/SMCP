@@ -125,10 +125,10 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>\n");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLMainMenu?" 
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Accounts Payable Main Menu</A><BR>\n");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLEditBatchesSelect?" 
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesSelect?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Batch List</A><BR>\n");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" 
@@ -148,7 +148,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 			boolean bAddNew,
 			String sLicenseModuleLevel){
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLEditBatchesAction' METHOD='POST'>\n");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesAction' METHOD='POST'>\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatches.lbatchnumber + "\" VALUE=\"" + batch.getsbatchnumber() + "\">\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatches.ibatchstatus + "\" VALUE=\"" + batch.getsbatchstatus() + "\">\n");
@@ -328,7 +328,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	        		sEditableBatch = "Yes";
 	        	}
 	        	
-	        	pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap." 
+	        	pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." 
     	    		+ "smgl.GLEditEntryEdit" 
     	    		+ "?" + SMTablegltransactionbatchentries.lbatchnumber + "=" + entry.getsbatchnumber() 
     	    		+ "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + entry.getsentrynumber()
@@ -396,7 +396,7 @@ public class GLEditBatchesEdit extends HttpServlet {
         	//Print the 'totals' line:
         	try {
 				pwOut.println("  <TR>\n"
-					+ "    <TD ALIGN=RIGHT COLSPAN=" + Integer.toString(iColumnCount - 3) + ">"
+					+ "    <TD ALIGN=RIGHT COLSPAN=" + Integer.toString(iColumnCount - 2) + ">"
 					+ "<B>TOTALS:</B>"
 					+ "    </TD>\n"
 					+ "    <TD ALIGN=RIGHT >"

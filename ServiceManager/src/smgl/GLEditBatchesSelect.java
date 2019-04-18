@@ -90,19 +90,19 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>\n");
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLMainMenu?" 
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to General Ledger Main Menu</A><BR>\n");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.GLEditBatches) 
 	    		+ "\">Summary</A><BR><BR>\n");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLEditBatchesEdit' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesEdit' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
 	    //Add links to create new batches:
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">\n");
 	    out.println("  <TR>\n");
 	    out.println("    <TD>");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-	    	+ "smap.GLEditBatchesEdit?" + SMTablegltransactionbatches.lbatchnumber + "=-1"  
+	    	+ "smgl.GLEditBatchesEdit?" + SMTablegltransactionbatches.lbatchnumber + "=-1"  
 	    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    	+ "\">New transaction batch</A>");
 	    out.println("</TD>\n");
@@ -126,11 +126,11 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    out.println("    <TH class=\"headingleft\" >Date</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Status</TH>\n");
 	    out.println("    <TH class=\"headingright\" >Entries</TH>\n");
-	    out.println("    <TH class=\"headingright\" >Net batch total</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Created by</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Description</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Last edited</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Posted</TH>\n");
+	    out.println("    <TH class=\"headingright\" >Net batch total</TH>\n");
 	    out.println("  </TR>\n");
 
 	    //TO-DO - finish from here:
@@ -190,6 +190,16 @@ public class GLEditBatchesSelect extends HttpServlet {
         				+ " " + rs.getString(SMTableusers.TableName + "." + SMTableusers.sUserLastName);
         		}
         		
+        		GLTransactionBatch batch = new GLTransactionBatch(Long.toString(rs.getLong(SMTablegltransactionbatches.lbatchnumber)));
+        		try {
+					batch.load(getServletContext(), sDBID, sUserID);
+				} catch (Exception e1) {
+					out.println("<BR><FONT COLOR=RED><B>Error [1555609258] loading batch number " 
+						+ Integer.toString(rs.getInt(SMTablegltransactionbatches.TableName + "." + SMTablegltransactionbatches.lbatchnumber))
+						+ " - " + e1.getMessage()
+						+ ".</B></FONT><BR>"
+					);
+				}
         		try {
 					out.println(
 						Build_Row(		
@@ -207,6 +217,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 									rs.getString(SMTablegltransactionbatches.TableName + "." + SMTablegltransactionbatches.datlasteditdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE),
 							clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 									rs.getString(SMTablegltransactionbatches.TableName + "." + SMTablegltransactionbatches.datpostdate), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE),
+							batch.getTotalDebits(),
 							request,
 							getServletContext(),
 							sDBID
@@ -249,13 +260,14 @@ public class GLEditBatchesSelect extends HttpServlet {
 			String sDesc,
 			String sLastEditedDate,
 			String sPostingDate,
+			BigDecimal bdBatchTotal,
 			HttpServletRequest req,
 			ServletContext context,
 			String sDBID
 			){
 
 		String sOutPut = "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smap.APEditBatchesEdit" 
+		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLEditBatchesEdit" 
 	    		+ "?" + SMTablegltransactionbatches.lbatchnumber + "=" + sBatchNumber
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+ "\">"
@@ -289,6 +301,10 @@ public class GLEditBatchesSelect extends HttpServlet {
 		
 		sOutPut += "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
 		sOutPut += sPostingDate;
+		sOutPut += "</TD>\n";
+		
+		sOutPut += "    <TD class=\"fieldrightaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
+		sOutPut += ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBatchTotal);
 		sOutPut += "</TD>\n";
 		
 		return sOutPut;

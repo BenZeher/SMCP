@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARCustomer;
-import smar.SMOption;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
@@ -379,29 +378,24 @@ public class SMEditOrderEdit  extends HttpServlet {
 		
 		s += sCommandScripts(entry, sm);
 		s += sStyleScripts();
-
-		boolean bUseGoogleDrivePicker = false;
-		SMOption smopt = new SMOption();
-		try {
-			smopt.load(sDBID, getServletContext(), sUserID);
-			bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
-		} catch (Exception e1) {
-		}
 		
-		if(bUseGoogleDrivePicker) {
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
 			try {
-				s +=clsServletUtilities.getDrivePickerJSIncludeString(
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
 						SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE,
 						entry.getM_strimmedordernumber(),
 						getServletContext(),
-						sDBID)
-						;
+						sDBID);
 			} catch (Exception e) {
-				bUseGoogleDrivePicker = false;
 				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
 			}
-		}
-		
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				s += sPickerScript;
+				bUseGoogleDrivePicker = true;
+			}
+			
 		//Store whether or not the record has been changed:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + RECORDWASCHANGED_FLAG + "\""

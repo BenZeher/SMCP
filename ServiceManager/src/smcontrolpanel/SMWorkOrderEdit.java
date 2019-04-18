@@ -19,6 +19,7 @@ import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
@@ -187,7 +188,24 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 		smedit.getPWOut().println(SMUtilities.getDatePickerIncludeString(getServletContext()));
-		
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.ORDER_RECORD_TYPE_PARAM_VALUE,
+						wohead.getlid(),
+						getServletContext(),
+						smedit.getsDBID())
+						;
+			} catch (Exception e) {
+				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				smedit.getPWOut().println(sPickerScript);
+				bUseGoogleDrivePicker = true;
+			}
+			
 	    //If there is a warning from trying to input previously, print it here:
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", smedit.getRequest());
 		smedit.getPWOut().println("<B><FONT COLOR=\"RED\"><div id=\"Warning\">");
@@ -214,7 +232,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "<script type='text/javascript' src='scripts/PopupWindow.js'></script>\n"
 			);
 			createEditPage(
-				getEditHTML(smedit, wohead, SMTableworkorders.ObjectName),
+				getEditHTML(smedit, wohead, SMTableworkorders.ObjectName, bUseGoogleDrivePicker),
 				SMWorkOrderHeader.FORM_NAME,
 				smedit.getPWOut(),
 				smedit
@@ -252,7 +270,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		pwOut.println("</FORM>");
 	}
 	
-	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName) throws Exception{
+	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName, boolean bUseGoogleDrivePicker) throws Exception{
 		
 		//Flag to tell if the command have already been displated:
 		boolean bCommandsHaveAlreadyBeenDisplayed = false;
@@ -371,7 +389,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sm.getsDBID(),
 				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				bCommandsHaveAlreadyBeenDisplayed) + "</TD></TR>";
+				bCommandsHaveAlreadyBeenDisplayed,
+				bUseGoogleDrivePicker) + "</TD></TR>";
 
 		bCommandsHaveAlreadyBeenDisplayed = true;
 		
@@ -443,7 +462,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sm.getsDBID(),
 				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				bCommandsHaveAlreadyBeenDisplayed) + "</TD></TR>";
+				bCommandsHaveAlreadyBeenDisplayed,
+				bUseGoogleDrivePicker) + "</TD></TR>";
 		
 		bCommandsHaveAlreadyBeenDisplayed = true;
 		
@@ -515,7 +535,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			String sDBID, 
 			String sViewFlag,
 			String sLicenseModuleLevel,
-			boolean bCommandsHaveAlreadyBeenDisplayed){
+			boolean bCommandsHaveAlreadyBeenDisplayed,
+			boolean bUseGoogleDrivePicker){
 		String s = "";
 		
 		//Create the table:
@@ -607,7 +628,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				getServletContext(), 
 				sDBID,
 				sLicenseModuleLevel)){
-			s += "&nbsp;" + createAndUploadFolderButton();
+			s += "&nbsp;" + createAndUploadFolderButton(bUseGoogleDrivePicker);
 		}
 		
 		if (SMSystemFunctions.isFunctionPermitted(
@@ -617,20 +638,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sDBID,
 				sLicenseModuleLevel)){
 			
-			// TJR - 9/29/2017 - we don't want to reload the work order object here, because it may wipe out any changes to 
-			// the work order which haven't been saved to disk.  
-			// This was causing a problem with the 'View Most Recent Items Used' function, because the user would click
-			// to view the recent items, and the SMWorkOrderAction class would add 50 or so 'recent items' to the 
-			// work order object, then pass it back to this 'Edit' class.  Those 50 recent items were on the work order
-			// but not saved, which is what we wanted to happen.  But reloading the work order object here was wiping
-			// them out.
-			//try {
-			//	if(!wo_order.load(sDBID, sUser, getServletContext())){
-			//		s += "Could not load GDrive link";
-			//	}
-			//} catch (Exception e) {
-			//	s += "Could not load GDrive link";
-			//}
+			
 			String sGDocLink = wo_order.getsgdoclink();
 			if (sGDocLink == null){
 				sGDocLink = "";
@@ -705,11 +713,16 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "</button>\n"
 				;
 	}
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\"" + sOnClickFunction + "\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

@@ -559,6 +559,7 @@ public class SMEditSMOptions extends HttpServlet {
 		}		m_pwOut.println("<TD>Check to automatically copy the sales lead folder URL to the corresponding order header.</TD></TR>");		
 		
 		//Google API Settings
+		//Note: consider hiding this information in a json file on the server so it is not public in the html source when loading the APIs.. 
 		m_pwOut.println("<TR style=\"background-color:grey; color:white; \">"
 					+ "<TD COLSPAN=3>"+ "<B>&nbsp;Google API Settings</B>"+ "</TD>"+ "</TR>");
 		
@@ -572,7 +573,9 @@ public class SMEditSMOptions extends HttpServlet {
 				+ ">"
 				+ "</TD>"
 			);
-		m_pwOut.println("<TD>This will restrict APIs to only be accessed by users in your domain. You must authoize the drive scope for your domain. All API credentials below can be managed from the <a href=\"https://console.developers.google.com/apis/dashboard\"> Google API Console </a>");
+		m_pwOut.println("<TD>This will restrict APIs to only be accessed by users in your domain and will be the owner of all uploaded folders and files. "
+				+ "You must authoize the drive scope for your domain. "
+				+ "All API credentials below can be managed from the <a href=\"https://console.developers.google.com/apis/dashboard\"> Google API Console </a>");
 		
 		//Google API Key:
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API key</B>:</TD>");
@@ -609,6 +612,32 @@ public class SMEditSMOptions extends HttpServlet {
 				+ " <a href=\"https://cloud.google.com/maps-platform/places/\"" + 
 				 ">Google Places API</a></TD></TR>");
 		
+	
+	
+		//API Client ID
+		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API client ID</B>:</TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMOptionInput.Paramsgoogleapiclientid + "\""
+				+ " VALUE=\"" + optionInput.getsgoogleapiclientid() + "\""
+				+ "SIZE=40"
+				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
+				+ ">"
+				+ "</TD>"
+			);
+		m_pwOut.println("<TD>This is required for Drive Picker API.");
+		
+		//API Project ID
+		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API project ID</B>:</TD>");
+		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+				+ SMOptionInput.Paramsgoogleapiprojectid + "\""
+				+ " VALUE=\"" + optionInput.getsgoogleapiprojectid() + "\""
+				+ "SIZE=40"
+				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
+				+ ">"
+				+ "</TD>"
+			);
+		m_pwOut.println("<TD>This is required for certain features of the Drive Picker API.");
+		
 		//Use google Driver Picker API 
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Use Drive Picker API?</B>:</TD>");
 		if (optionInput.getiusegoogledrivepickerapi().compareToIgnoreCase("0") == 0){
@@ -622,32 +651,6 @@ public class SMEditSMOptions extends HttpServlet {
 				+ " <a href=\"https://developers.google.com/picker/\"" + 
 				 ">Google Drive Picker API</a></TD></TR>");
 					
-	
-		//API Client ID
-		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API client id</B>:</TD>");
-		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
-				+ SMOptionInput.Paramsgoogleapiclientid + "\""
-				+ " VALUE=\"" + optionInput.getsgoogleapiclientid() + "\""
-				+ "SIZE=40"
-				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
-				+ ">"
-				+ "</TD>"
-			);
-		m_pwOut.println("<TD>This is required for Drive Picker API.");
-		
-		//API Project ID
-		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google API project id</B>:</TD>");
-		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
-				+ SMOptionInput.Paramsgoogleapiprojectid + "\""
-				+ " VALUE=\"" + optionInput.getsgoogleapiprojectid() + "\""
-				+ "SIZE=40"
-				+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.igoogleapikeylength)
-				+ ">"
-				+ "</TD>"
-			);
-		m_pwOut.println("<TD>This is required for certain features of the Drive Picker API.");
-		
-
 		
 		
 		m_pwOut.println("</TABLE>");

@@ -772,9 +772,9 @@ public class clsServletUtilities {
 	
 	public static String getDrivePickerJSIncludeString (String sRecordType, String sKeyValue,  ServletContext context, String sDBID) throws Exception{
 
-		String sAppId = "910376449199";
-		String sClientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
-		String sDeveloperKey = "AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw";
+		String sAppId = "";
+		String sClientId = "";
+		String sDeveloperKey = "";
 		String sDomainAccount = "";
 		String sDomain = "";
 		String sParentFolder = "";
@@ -791,20 +791,25 @@ public class clsServletUtilities {
 					+ " [1331745216]"
 				);
 				if (rs.next()){
+					//If the drive picker is not set to be used in the settings then return.
+					if(rs.getInt(SMTablesmoptions.iusegoogledrivepickerapi) == 0) {
+						return "";
+					}
+					//get all of the API credentials.
 					if(rs.getString(SMTablesmoptions.sgoogleapiprojectid).compareToIgnoreCase("") != 0) {
-						sAppId = rs.getString(SMTablesmoptions.sgoogleapiprojectid);
+						sAppId = rs.getString(SMTablesmoptions.sgoogleapiprojectid).trim();
 					}
 					if(rs.getString(SMTablesmoptions.sgoogleapiclientid).compareToIgnoreCase("") != 0) {
-						sClientId =  rs.getString(SMTablesmoptions.sgoogleapiclientid);
+						sClientId =  rs.getString(SMTablesmoptions.sgoogleapiclientid).trim();
 					}
 					if(rs.getString(SMTablesmoptions.sgoogleapikey).compareToIgnoreCase("") != 0) {
-						sDeveloperKey =  rs.getString(SMTablesmoptions.sgoogleapikey);
+						sDeveloperKey =  rs.getString(SMTablesmoptions.sgoogleapikey).trim();
 					}
 					sDomainAccount =  rs.getString(SMTablesmoptions.sgoogledomain);
 					if(sDomainAccount.trim().compareToIgnoreCase("") == 0) {
 						sDomain = "";
 					}else {
-						sDomain = sDomainAccount.substring(sDomainAccount.indexOf("@") + 1);
+						sDomain = sDomainAccount.substring(sDomainAccount.indexOf("@") + 1).trim();
 					}
 					
 					switch(sRecordType){
@@ -839,6 +844,7 @@ public class clsServletUtilities {
 		
 		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
 		if (sScriptPath != null){
+			//Note: consider hiding this information in a json file so it is not public in the html source. 
 			return ""
 			+ "<script>"
 			+ " var appId = '"+ sAppId + "';\n" 

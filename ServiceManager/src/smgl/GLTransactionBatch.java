@@ -1,6 +1,7 @@
 package smgl;
 
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -1112,7 +1113,20 @@ public class GLTransactionBatch {
 
 		return bEditable;
 	}
-	
+	public BigDecimal getTotalDebits() throws Exception{
+		BigDecimal bdTotalDebits = new BigDecimal("0.00");
+		for (int i = 0; i < m_arrBatchEntries.size(); i++){
+			bdTotalDebits = bdTotalDebits.add(m_arrBatchEntries.get(i).getDebitTotal());
+		}
+		return bdTotalDebits;
+	}
+	public BigDecimal getTotalCredits() throws Exception{
+		BigDecimal bdTotalCredits = new BigDecimal("0.00");
+		for (int i = 0; i < m_arrBatchEntries.size(); i++){
+			bdTotalCredits = bdTotalCredits.add(m_arrBatchEntries.get(i).getCreditTotal());
+		}
+		return bdTotalCredits;
+	}
 	public ArrayList<GLTransactionBatchEntry> getBatchEntryArray(){
 		return m_arrBatchEntries;
 	}

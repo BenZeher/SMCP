@@ -1,11 +1,21 @@
-/* These global variable are used, but defined outside this file.
-var pickerApiLoaded = false;
-var appId = "910376449199";
-var scope = [ 'https://www.googleapis.com/auth/drive' ];
-var clientId = "910376449199-ij2k22dulac1q590psj4psvjs1qomh6s.apps.googleusercontent.com";
-var developerKey = 'AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBw';
-var folderName = 'NEW Javascript Folder 2';
-var oauthToken;
+/* Created by:  Ben Zeher 4/18/2019
+ * Description: This script creates a folder by name in google drive if it does not already exist. 
+ * Then it loads the google drive picker API to upload and view files from that folder.
+ * It also changed the domain account to owner of the created files and folders if one is provided.
+ * API credentials are provided outside this script (see global variables below)
+ * 
+
+These are the global variables this script has access to defined before loading this script. (example values included)
+ 
+ var clientId = '910376449199-ij2k22dulac1q590psj4psvjs1qomh6sXXX.apps.googleusercontent.com';
+ var developerKey = 'AIzaSyBcA9Iryl-34pnKzGAHneuogjla29tcbBwXXX';
+ var folderName = '136625XXX';
+ var recordtype = 'order';
+ var domain = 'domain.com';
+ var domainaccount = 'email@domain.com';
+ var parentfolderid = '0ByxluPCydkjOQVM4THpSZVdZWTQ';
+ var keyvalue = '136625';
+
 */
 var pickerApiLoaded = false;
 var scope = [ 'https://www.googleapis.com/auth/drive' ];
@@ -92,7 +102,7 @@ function createPicker() {
 						+ files[0].id);
 				console.log('Updateing data with URL...');
 				 //Update folder url in database.
-				asyncUpdate('https://drive.google.com/drive/folders/' + files[0].id);
+				asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + files[0].id);
 				buildPicker();
 			//Otherwise, create  a new folder and save it to the database.
 			} else {				
@@ -111,26 +121,11 @@ function createPicker() {
 							folderID = file.id;
 							console.log('Created Folder Id: ' + folderID);
 	
-  /*						
-							var permissionListRequest = gapi.client.drive.permissions.list({
-							      "fileId": folderID
-							    });
-								permissionListRequest.execute(function(resp) { 
-									 console.log('Lising permisions: ' + resp);
-							      var permissionUpdateRequest = gapi.client.drive.permissions.update({
-							        'fileId': folderID,
-							        'permissionId': resp.permissions[0].id, 
-							        'transferOwnership': true,
-							        'resource': {'role':'owner', 'emailAddress': domainaccount}
-							      });
-							      permissionUpdateRequest.execute(function(resp3) {
-							        console.log('Updating permision to domain owner: ' + resp3);
-							      });
-							    });
-	*/
+							transferOwnership(folderID, domainaccount);
+							
 							    //Update folder url in database.
-							    console.log('Updateing data with URL...');
-								asyncUpdate('https://drive.google.com/drive/folders/' + folderID);
+							    console.log('Updateing SMCP data with URL.');
+							    asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + folderID);
 							buildPicker();
 							break;
 						default:
@@ -140,6 +135,20 @@ function createPicker() {
 			}
 		});
 	} 
+}
+
+function transferOwnership(fileId, domainaccount) {
+	  var body = {
+	    'emailAddress': domainaccount,
+	    'type': 'user',
+	    'role': 'owner'
+	  };
+	  var request = gapi.client.drive.permissions.create({
+	    'fileId': fileId,
+	    'transferOwnership' : true,
+	    'resource': body
+	  });
+	  request.execute(function(resp) {  console.log('Transfering ownsership to ' + domainaccount); });
 }
 
 function buildPicker() {
@@ -171,13 +180,24 @@ function pickerCallback(data) {
 	//If the user picked a files then display it.
 	if ((data.action == google.picker.Action.PICKED) && (!data.docs[0].isNew)) {
 		var fileId = data.docs[0].id;
-			window.open(data.docs[0].url);
+		picker.setVisible(true);
+		window.open(data.docs[0].url);	
+		
+	}else{
+		//If a user uploaded a file then transfer ownership of all those files
+		if (data.action == google.picker.Action.PICKED) {
+			var files = data.docs;
+			for (var i = 0; i < files.length; i++) {
+				var id = files[i].id;
+				transferOwnership(id,domainaccount);
+			}
+		}
 	}
 	//Allow function to run again.
 	currentlyRunning = false;
 }
 
-function asyncUpdate(folderurl) {
+function asyncUpdateFolderURL(folderurl) {
 	var xhr = new XMLHttpRequest();
 	xhr.onreadystatechange = function(){
 		console.log(this.responseText);

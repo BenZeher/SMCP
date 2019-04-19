@@ -328,7 +328,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	        		sEditableBatch = "Yes";
 	        	}
 	        	
-	        	pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." 
+	        	pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext())
     	    		+ "smgl.GLEditEntryEdit" 
     	    		+ "?" + SMTablegltransactionbatchentries.lbatchnumber + "=" + entry.getsbatchnumber() 
     	    		+ "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + entry.getsentrynumber()

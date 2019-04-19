@@ -447,8 +447,11 @@ public class GLTransactionBatchEntry {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_sourceledgertransactionlineid.compareToIgnoreCase("") == 0){
+			m_sourceledgertransactionlineid = "0";
+		}
 		try {
-			m_sfiscalperiod = clsValidateFormFields.validateLongIntegerField(
+			m_sourceledgertransactionlineid = clsValidateFormFields.validateLongIntegerField(
 					m_sourceledgertransactionlineid, 
 				"Source ledger transaction line ID", 
 				0L, 

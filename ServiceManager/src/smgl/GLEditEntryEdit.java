@@ -36,12 +36,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String COMMAND_VALUE_DELETE = "DeleteEntry";
 	public static final String COMMAND_VALUE_SAVE_AND_ADD = "Updateandaddnew";
 	
-	public static final String BUTTON_NAME_TOGGLEUNAPPLIEDTABLE = "TOGGLEUNAPPLIEDTABLEBUTTON";
-	public static final String COMMAND_VALUE_TOGGLEUNAPPLIEDTABLE = "ToggleApplyToDocuments";
-	public static final String PARAM_TOGGLEUNAPPLIEDTABLE = "TOGGLEAPPLYTO";
-	public static final String PARAM_TOGGLEUNAPPLIEDTABLE_VALUE_DISPLAY = "DISPLAYTABLE";
-	public static final String PARAM_TOGGLEUNAPPLIEDTABLE_VALUE_HIDE = "HIDETABLE";
-
 	public static final String CALCULATED_LINE_TOTAL_FIELD = "CALCULATEDLINETOTAL";
 	public static final String CALCULATED_LINE_TOTAL_FIELD_CONTAINER = "CALCULATEDLINETOTALCONTAINER";
 	
@@ -351,11 +345,15 @@ public class GLEditEntryEdit  extends HttpServlet {
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;year:&nbsp;</TD>\n";
 		
 		if (bEditable){
-			int iFiscalYear = 0;
+			int iCurrentFiscalYear = 0;
 			try {
-				iFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
+				iCurrentFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
 			} catch (Exception e) {
 				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
+			}
+			int iFiscalYear = Integer.parseInt(entry.getsfiscalyear());
+			if (iFiscalYear == 0){
+				iFiscalYear = iCurrentFiscalYear;
 			}
 			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ifiscalyear + "\" >\n";
 			sControlHTML += "<OPTION"
@@ -397,11 +395,15 @@ public class GLEditEntryEdit  extends HttpServlet {
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;period:&nbsp;</TD>\n";
 		
 		if (bEditable){
-			int iFiscalPeriod = 0;
+			int iCurrentFiscalPeriod = 0;
 			try {
-				iFiscalPeriod = GLFiscalPeriod.getCurrentFiscalPeriod(sm.getsDBID(), sm.getFullUserName(), getServletContext());
+				iCurrentFiscalPeriod = GLFiscalPeriod.getCurrentFiscalPeriod(sm.getsDBID(), sm.getFullUserName(), getServletContext());
 			} catch (Exception e) {
 				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
+			}
+			int iFiscalPeriod = Integer.parseInt(entry.getsfiscalperiod());
+			if (iFiscalPeriod == 0){
+				iFiscalPeriod = iCurrentFiscalPeriod;
 			}
 			//System.out.println("[1555702651] fiscal period = " + iFiscalPeriod);
 			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ifiscalperiod + "\" >\n";
@@ -441,28 +443,9 @@ public class GLEditEntryEdit  extends HttpServlet {
         		+ "</TD>\n";  
     	
     	s += "  </TR>\n";    
-    	
-        //Description:
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Description:&nbsp;</TD>\n"
- 		    ;
-     	if (bEditable){
-     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.sentrydescription + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsentrydescription()) + "\""
- 	    		+ " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchentries.sentrydescriptionLength)
- 	    		+ " SIZE = " + "60"
- 	    		+ " onchange=\"flagDirty();\""
- 	    		+ ">"
- 	    	;
-     	}else{
-     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.sentrydescription + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsentrydescription()) + "\""
- 	    		+ ">"
- 	    		+ entry.getsentrydescription()
- 	    	;
-     	}
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
- 		
+     	
         //Source Ledger:
+    	s += "  <TR>\n";
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source&nbsp;ledger:&nbsp;</TD>\n"
  		    ;
      	if (bEditable){
@@ -501,9 +484,50 @@ public class GLEditEntryEdit  extends HttpServlet {
      	
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
  		
+        //Source document transaction ID:
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
+ 		    ;
+     	if (bEditable){
+     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlineid()) + "\""
+ 	    		+ " MAXLENGTH=" + "13"
+ 	    		+ " SIZE = " + "10"
+ 	    		+ " onchange=\"flagDirty();\""
+ 	    		+ ">"
+ 	    	;
+     	}else{
+     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlineid()) + "\""
+ 	    		+ ">"
+ 	    		+ entry.getssourceledgertransactionlineid()
+ 	    	;
+     	}
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+     	
      	s += "  </TR>\n";
      	
-    	
+        //Description:
+    	s += "  <TR>\n";
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Description:&nbsp;</TD>\n"
+ 		    ;
+     	if (bEditable){
+     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.sentrydescription + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsentrydescription()) + "\""
+ 	    		+ " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchentries.sentrydescriptionLength)
+ 	    		+ " SIZE = " + "60"
+ 	    		+ " onchange=\"flagDirty();\""
+ 	    		+ ">"
+ 	    	;
+     	}else{
+     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.sentrydescription + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsentrydescription()) + "\""
+ 	    		+ ">"
+ 	    		+ entry.getsentrydescription()
+ 	    	;
+     	}
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+     	s += "  </TR>\n";
+     	
     	s += "</TABLE>\n";
  
     	//Display the first row of control buttons:

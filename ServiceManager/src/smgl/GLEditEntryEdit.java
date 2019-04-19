@@ -3,6 +3,7 @@ package smgl;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -11,13 +12,16 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTablegltransactionbatchentries;
-import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTableapdistributioncodes;
 import SMDataDefinition.SMTableaptransactions;
-import ServletUtilities.clsServletUtilities;
+import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTablegltransactionbatchentries;
+import SMDataDefinition.SMTablegltransactionbatches;
+import SMDataDefinition.SMTablegltransactionbatchlines;
+import SMDataDefinition.SMTableicpoheaders;
+import SMDataDefinition.SMTableicporeceiptheaders;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
@@ -552,64 +556,11 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		return s;
 	}
+
 	private String buildDetailTables(
-			GLTransactionBatchEntry entry, 
-			boolean bEditable, 
-			SMMasterEditEntry sm
-		) throws Exception{
-		String s = "";
-    	s += clsServletUtilities.createHTMLComment("This table contains both the 'open invoices' table and the 'applied' table:");
-    	
-       	//If we are returning from applying or unapplying a line, return to this spot:
-    	if (clsManageRequestParameters.get_Request_Parameter(RETURN_TO_TABLES_BOOKMARK, sm.getRequest()).compareToIgnoreCase("") != 0){
-    		s += "<div name=\"" + BOOKMARK_TOP_OF_TABLES + "\"" + "id=\"" + BOOKMARK_TOP_OF_TABLES + "\"" + " ></div>  \n";
-    	}
-    	
-//		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
-//				+ ">\n";
-    	
-//		s += "  <TR>";
-		
-    	s += clsServletUtilities.createHTMLComment("Start the details table here.");
-    	
-    	/*
-    	if ((bEditable) && (entry.getsvendoracct().compareToIgnoreCase("") != 0)){
-//    		s += "    <TD style = \" vertical-align:top; \" >";
-	    	try {
-				s += displayUnappliedDocumentsForDebitsAndCredits(entry, sm, bEditable);
-			} catch (Exception e) {
-				s += "  <TR>"
-					+ "    <TD><FONT COLOR=RED><B>Error [1494602712] displaying detail lines - " + e.getMessage() + "</B></FONT></TD\n"
-					+ "</TR>\n"
-				;
-			}
-	    	s += "    </TD>";
-    	}
-    	
-    	s += clsServletUtilities.createHTMLComment("Start the applied documents table here.");
-    	s += "    <TD style = \" vertical-align:top; \" >";
-    	try {
-    		if (entry.getientrytype() == SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_INVOICE){
-    			s += displayInvoiceDetailLines(entry, bEditable, sm, bAllowPOViewing, bAllowPOReceiptViewing);
-    		}else{
-    			s += displayDebitOrCreditDetailLines(entry, bEditable, sm);
-    		}
-		} catch (Exception e) {
-			s += "  <TR>"
-				+ "    <TD><FONT COLOR=RED><B>Error [1494602713] displaying detail lines - " + e.getMessage() + "</B></FONT></TD\n"
-				+ "</TR>\n"
-			;
-		}
-    	*/
-		return s;
-	}
-	/*
-	private String displayInvoiceDetailLines(
 		GLTransactionBatchEntry entry, 
 		boolean bEditable, 
-		SMMasterEditEntry smmastereditentry,
-		boolean bAllowPOViewing,
-		boolean bAllowPOReceiptViewing
+		SMMasterEditEntry smmastereditentry
 		) throws Exception{
 		String s = "";
 		
@@ -623,26 +574,32 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "Line&nbsp;#</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution<BR>Acct</TD>\n";
+					+ "Acct</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution&nbsp;Code</TD>\n";
-			
+					+ "Description</TD>\n";
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Amount</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Description</TD>\n";
-			
+					+ "Reference</TD>\n";
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Comment</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ " PO#</TD>\n";
+					+ "Transaction<BR>Date</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source Ledger</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Receipt #</TD>\n";
-			
+					+ "Debit</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Credit</TD>\n";
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Remove?</TD>\n";
 		}else{
@@ -652,58 +609,37 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "Line&nbsp;#</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution&nbsp;Acct</TD>\n";
+					+ "Acct</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution&nbsp;Code</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-					+ "Amount</TD>\n";
-			
+					+ "Description</TD>\n";
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Description</TD>\n";
-			
+					+ "Reference</TD>\n";
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Comment</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-					+ " PO#</TD>\n";
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Transaction<BR>Date</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source<BR>Ledger</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Receipt #</TD>\n";
+					+ "Debit</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+					+ "Credit</TD>\n";
 		}
 	
 		s += "  </TR>\n";
 		
-		//Load the array of distribution code names:
-		//ArrayList<String>arrDistCodeIDs = new ArrayList<String>(0);
-		ArrayList<String>arrDistCodeNames = new ArrayList<String>(0);
 		
-		String SQL = "SELECT * FROM " + SMTableapdistributioncodes.TableName
-			+ " ORDER BY " + SMTableapdistributioncodes.sdistcodename
-		;
-		try {
-			ResultSet rsDistCodes = clsDatabaseFunctions.openResultSet(
-				SQL, 
-				getServletContext(), 
-				smmastereditentry.getsDBID(), 
-				"MySQL", 
-				SMUtilities.getFullClassName(this.toString() + ".displayDetailLines - Distribution codes - user: " 
-				+ smmastereditentry.getUserID()
-				+ " - "
-				+ smmastereditentry.getFullUserName()
-						)
-			);
-			while(rsDistCodes.next()){
-				//arrDistCodeIDs.add(rsDistCodes.getString(SMTableapdistributioncodes.lid));
-				arrDistCodeNames.add(rsDistCodes.getString(SMTableapdistributioncodes.sdistcodename));
-			}
-			rsDistCodes.close();
-		} catch (Exception e) {
-			throw new Exception("Error [1490739516] reading distribution codes - " + e.getMessage());
-		}
-		
-		SQL = "SELECT"
+		String SQL = "SELECT"
 				+ " " + SMTableglaccounts.sAcctID
 				+ ", " + SMTableglaccounts.sDesc
 				+ " FROM " + SMTableglaccounts.TableName
@@ -736,14 +672,19 @@ public class GLEditEntryEdit  extends HttpServlet {
 			}
 			rsGLs.close();
 		} catch (SQLException e) {
-			s += "<B>Error [1491417541] reading GL info - " + e.getMessage() + "</B><BR>";
+			s += "<B>Error [1555708287] reading GL info - " + e.getMessage() + "</B><BR>";
+		}
+		
+		ArrayList<String> arrSourceLedgers = new ArrayList<String>(0);
+		for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
+			arrSourceLedgers.add(GLSourceLedgers.getSourceLedgerDescription(i));
 		}
 		
 		//Load the lines for the current entry:
 		String sBackgroundColor = "";
 		boolean bOddRow = true;
 		for (int i = 0; i < entry.getLineArray().size(); i++){
-			GLTransactionBatchEntryLine line = entry.getLineArray().get(i);
+			GLTransactionBatchLine line = entry.getLineArray().get(i);
 			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
 			if (bOddRow){
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
@@ -763,7 +704,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 				//Store the unseen fields for the lines here:
 				sLineText += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.lid + "\""
+					+ SMTablegltransactionbatchlines.lid + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
 			    	+ ">"
 			    	+ "\n"
@@ -771,8 +712,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			}
 			
 			//Line number:
-			//We have to handle the first line number carefully, because it COULD be a 'default' line automatically added for this vendor,
-			//and so if it hasn't been saved, it has a line number of -1:
 			String sLineNumber = "NEW";
 			if (line.getslinenumber().compareToIgnoreCase("-1") != 0){
 				sLineNumber = line.getslinenumber();
@@ -781,20 +720,20 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ sLineNumber 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.llinenumber + "\""
+				+ SMTablegltransactionbatchlines.llinenumber + "\""
 	    		+ " VALUE=\"" + clsStringFunctions.filter(line.getslinenumber()) + "\""
 	    		+ ">"
 				+ "</TD>\n";
 			
-			// Distribution acct:
+			// acct:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
+						+ SMTablegltransactionbatchlines.sacctid + "\""
 						+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
+						+ SMTablegltransactionbatchlines.sacctid + "\""
 						+ " onchange=\"flagDirty();\""
 						 + " >\n"
 					;
@@ -804,7 +743,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 				int iCounter = 0;
 					for (int j = 0; j < arrGLAccts.size(); j++){
 						sBuffer += "<OPTION";
-						if (arrGLAccts.get(j).toString().compareTo(line.getsdistributionacct()) == 0){
+						if (arrGLAccts.get(j).toString().compareTo(line.getsacctid()) == 0){
 							sBuffer += " selected=yes";
 						}
 						sBuffer += " VALUE=\"" + arrGLAccts.get(j).toString() + "\">" + arrGLDescriptions.get(j).toString() + "\n";
@@ -818,99 +757,19 @@ public class GLEditEntryEdit  extends HttpServlet {
 				sLineText += "</SELECT>"
 				;
 				
-*/
-				/*
-				sLineText += "<INPUT TYPE=TEXT"
-					+ " NAME=\"" + LINE_NUMBER_PARAMETER 
-					+ SMUtilities.PadLeft(line.getslinenumber().trim(), "0", LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-					+ " ID=\"" + LINE_NUMBER_PARAMETER 
-					+ SMUtilities.PadLeft(line.getslinenumber().trim(), "0", LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-			    	+ " VALUE=\"" + SMUtilities.filter(line.getsdistributionacct()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.sdistributionacctLength)
-				    + " SIZE = " + "15"
-				    + " onchange=\"flagDirty();\""
-			    	+ ">"
-				;
-				*/
-/*	
 			}else{
-				sLineText += clsStringFunctions.filter(line.getsdistributionacct());
+				sLineText += clsStringFunctions.filter(line.getsacctid());
 			}
 			sLineText += "</TD>\n";
 			
-			// Distribution code name:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<SELECT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributioncodename + "\""
-					+ " onchange=\"distCodeChange(this, " 
-						+ "'"
-						+ GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct
-						+ "'"
-				+ ");\""
-						+ " >\n"
-						;
-				sLineText += "<OPTION VALUE = \"" + " " + "\" > ** Select code **\n";
-				for (int iDistCodeCounter = 0; iDistCodeCounter < arrDistCodeNames.size(); iDistCodeCounter++){
-					sLineText += "<OPTION";
-					if (arrDistCodeNames.get(iDistCodeCounter).toString().compareTo(line.getsdistributioncodename()) == 0){
-						sLineText += " selected=yes";
-					}
-					sLineText += " VALUE=\"" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\">" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\n";
-				}
-				sLineText += "</SELECT>"
-				;
-
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsdistributioncodename());
-			}
-			sLineText += "</TD>\n";
-			
-			//Amount:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT"
-					+ " style=\"text-align:right;\""
-					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " VALUE=\"" + clsStringFunctions.filter(line.getsbdamount()) + "\""
-				    + " MAXLENGTH=" + "13"
-				    + " SIZE = " + "12"
-				    + " onchange=\"updateLineTotal();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsbdamount())
-					+ "<INPUT TYPE=HIDDEN"
-					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " VALUE=\"" + clsStringFunctions.filter(line.getsbdamount()) + "\""
-			    	+ ">"
-				;
-			}
-			sLineText += "</TD>\n";
-						
 			//Line description:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdescription + "\""
+					+ SMTablegltransactionbatchlines.sdescription + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.sdescriptionLength)
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sdescriptionLength)
 				    + " SIZE = " + "40"
 				    + " onchange=\"flagDirty();\""
 			    	+ ">"
@@ -920,14 +779,31 @@ public class GLEditEntryEdit  extends HttpServlet {
 			}
 			sLineText += "</TD>\n";
 			
+			//Reference:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sreference + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsreference()) + "\""
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sreferenceLength)
+				    + " SIZE = " + "30"
+				    + " onchange=\"flagDirty();\""
+			    	+ ">"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getsreference());
+			}
+			sLineText += "</TD>\n";
+
 			//Comment:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.scomment + "\""
+					+ SMTablegltransactionbatchlines.scomment + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.scommentLength)
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.scommentLength)
 				    + " SIZE = " + "25"
 				    + " onchange=\"flagDirty();\""
 			    	+ ">"
@@ -937,65 +813,102 @@ public class GLEditEntryEdit  extends HttpServlet {
 			}
 			sLineText += "</TD>\n";
 			
-			//PO ID:
+			//Transaction date:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.lpoheaderid + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslpoheaderid()) + "\""
+					+ SMTablegltransactionbatchlines.dattransactiondate + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
 				    + " MAXLENGTH=" + "10"
-				    + " SIZE = " + "9"
+				    + " SIZE = " + "8"
 				    + " onchange=\"flagDirty();\""
 			    	+ ">"
 				;
 			}else{
-	    		String sPurchaseOrderLink = entry.getslpurchaseordernumber();
-	    		if(bAllowPOViewing && entry.getslpurchaseordernumber().compareToIgnoreCase("0") != 0){
-					sPurchaseOrderLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-						+ "smic.ICEditPOEdit"
-						+ "?" + SMTableicpoheaders.lid + "=" + entry.getslpurchaseordernumber()
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smmastereditentry.getsDBID()
-						+ "\">" + entry.getslpurchaseordernumber() + "</A>"
-					;
-				}
-	    		sLineText += sPurchaseOrderLink;
+				sLineText += clsStringFunctions.filter(line.getstransactiondate());
 			}
 			sLineText += "</TD>\n";
 			
-			// Receipt number:
+			//Source Ledger:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.ssourceledger + "\""
+					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.ssourceledger + "\""
+					+ " onchange=\"flagDirty();\""
+					 + " >\n"
+				;
+				
+				String ssSourceLedgerSelections = "";
+				for (int j = 0; j < arrSourceLedgers.size(); j++){
+					ssSourceLedgerSelections += "<OPTION";
+					if (arrSourceLedgers.get(j).toString().compareTo(line.getssourceledger()) == 0){
+						ssSourceLedgerSelections += " selected=yes";
+					}
+					ssSourceLedgerSelections += " VALUE=\"" + arrSourceLedgers.get(j).toString() + "\">" + arrSourceLedgers.get(j).toString() + "\n";
+				}
+				sLineText += ssSourceLedgerSelections;
+				sLineText += "</SELECT>"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getssourceledger());
+			}
+			sLineText += "</TD>\n";
+
+			//Source type:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.lreceiptheaderid + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslreceiptheaderid()) + "\""
-				    + " MAXLENGTH=" + "10"
-				    + " SIZE = " + "9"
+					+ SMTablegltransactionbatchlines.ssourcetype + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getssourcetype()) + "\""
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.ssourcetypeLength)
+				    + " SIZE = " + "4"
 				    + " onchange=\"flagDirty();\""
 			    	+ ">"
 				;
 			}else{
-	    		String sReceiptNumberLink = line.getslreceiptheaderid();
-	    		if(bAllowPOReceiptViewing && line.getslreceiptheaderid().compareToIgnoreCase("0") != 0){
-	    			sReceiptNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-						+ "smic.ICEditReceiptEdit"
-						+ "?" + SMTableicporeceiptheaders.lpoheaderid + "=" + line.getslpoheaderid()
-						+ "&" + SMTableicporeceiptheaders.lid + "=" + line.getslreceiptheaderid()
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smmastereditentry.getsDBID()
-						+ "\">" + line.getslreceiptheaderid() + "</A>"
-					;
-				}
-	    		sLineText += sReceiptNumberLink;
+				sLineText += clsStringFunctions.filter(line.getssourcetype());
 			}
 			sLineText += "</TD>\n";
-
+			
+			//Debit:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				//sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				//	+ createEditLineButton(line.getslinenumber()) + "</TD>\n";
-				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
+				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.bddebitamt + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
+				    + " MAXLENGTH=" + "13"
+				    + " SIZE = " + "12"
+				    + " onchange=\"updateLineTotal();\""
+			    	+ ">"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getsdebitamt());
 			}
+			sLineText += "</TD>\n";
+			
+			//Credit:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.bdcreditamt + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
+				    + " MAXLENGTH=" + "13"
+				    + " SIZE = " + "12"
+				    + " onchange=\"updateLineTotal();\""
+			    	+ ">"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getscreditamt());
+			}
+			sLineText += "</TD>\n";
 			
 			sLineText += "  </TR>\n";
 			bOddRow = !bOddRow;
@@ -1006,8 +919,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 
 		if (bEditable){
 			//Add one blank line so the user can add lines:
-			//NOTE: we ONLY add a new blank line if there is NOT already an UNSAVED 'default' line in the array:
-			GLTransactionBatchEntryLine line = new GLTransactionBatchEntryLine();
+			GLTransactionBatchLine line = new GLTransactionBatchLine();
 			line.setsbatchnumber(entry.getsbatchnumber());
 			line.setsentrynumber(entry.getsentrynumber());
 			line.setslinenumber("0");
@@ -1026,7 +938,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			//Store the unseen fields for the lines here:
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lid + "\""
+				+ SMTablegltransactionbatchlines.lid + "\""
 		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
 		    	+ ">"
 		    	+ "\n"
@@ -1037,26 +949,26 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "(NEW)" 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.llinenumber + "\""
+				+ SMTablegltransactionbatchlines.llinenumber + "\""
 	    		+ " VALUE=\"" + clsStringFunctions.filter(line.getslinenumber()) + "\""
 	    		+ ">"
 				+ "</TD>\n";
 			
-			// Distribution acct:
+			// Acct:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			
 			s  += "<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
+				+ SMTablegltransactionbatchlines.sacctid + "\""
 				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
+				+ SMTablegltransactionbatchlines.sacctid + "\""
 				+ " onchange=\"flagDirty();\""
 				 + " >\n"
 			;
 			for (int i = 0; i < arrGLAccts.size(); i++){
 				s += "<OPTION";
-				if (arrGLAccts.get(i).toString().compareTo(line.getsdistributionacct()) == 0){
+				if (arrGLAccts.get(i).toString().compareTo(line.getsacctid()) == 0){
 					s += " selected=yes";
 				}
 				s += " VALUE=\"" + arrGLAccts.get(i).toString() + "\">" + arrGLDescriptions.get(i).toString() + "\n";
@@ -1065,44 +977,105 @@ public class GLEditEntryEdit  extends HttpServlet {
 			;
 			s += "</TD>\n";
 			
-			// Distribution code name:
+			//Line description:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<SELECT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.sdescription + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sdescriptionLength)
+			    + " SIZE = " + "40"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";			
+			
+			//Reference:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.sreference + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsreference()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sreferenceLength)
+			    + " SIZE = " + "40"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";			
+
+			//Comment:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.scomment + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.scommentLength)
+			    + " SIZE = " + "25"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";
+			
+			//Transaction date:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.dattransactiondate + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
+			    + " MAXLENGTH=" + "10"
+			    + " SIZE = " + "8"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";
+			
+			//Source ledger:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s  += "<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributioncodename + "\""
-						//+ " onchange=\"flagDirty();\""
-						+ " onchange=\"distCodeChange(this, " 
-						+ "'"
-						+ GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct
-						+ "'"
-						+ ");\""
-						+ " >\n"
-						;
-				s += "<OPTION VALUE = \"" + " " + "\" > ** Select code **\n";
-				for (int iDistCodeCounter = 0; iDistCodeCounter < arrDistCodeNames.size(); iDistCodeCounter++){
+					+ SMTablegltransactionbatchlines.ssourceledger + "\""
+					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.ssourceledger + "\""
+					+ " onchange=\"flagDirty();\""
+					 + " >\n"
+				;
+				for (int i = 0; i < arrSourceLedgers.size(); i++){
 					s += "<OPTION";
-					if (arrDistCodeNames.get(iDistCodeCounter).toString().compareTo(line.getsdistributioncodename()) == 0){
+					if (arrSourceLedgers.get(i).toString().compareTo(line.getssourceledger()) == 0){
 						s += " selected=yes";
 					}
-					s += " VALUE=\"" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\">" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\n";
+					s += " VALUE=\"" + arrSourceLedgers.get(i).toString() + "\">" + arrSourceLedgers.get(i).toString() + "\n";
 				}
 				s += "</SELECT>"
 				;
+				s += "</TD>\n";
 			s += "</TD>\n";
 			
-			//Amount:
+			//Source type:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.ssourcetype + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getssourcetype()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.ssourcetypeLength)
+			    + " SIZE = " + "4"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";
+			
+			//Debit:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			s += "<INPUT TYPE=TEXT"
 				+ " style=\"text-align:right;\""
 				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
+				+ SMTablegltransactionbatchlines.bddebitamt + "\""
 				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsbdamount()) + "\""
+				+ SMTablegltransactionbatchlines.bddebitamt + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
 			    + " MAXLENGTH=" + "13"
 			    + " SIZE = " + "12"
 			    + " onchange=\"updateLineTotal();\""
@@ -1110,582 +1083,17 @@ public class GLEditEntryEdit  extends HttpServlet {
 			;
 			s += "</TD>\n";
 			
-			//Line description:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdescription + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.sdescriptionLength)
-			    + " SIZE = " + "40"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-			
-			//Comment:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.scomment + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.scommentLength)
-			    + " SIZE = " + "25"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-			
-			//PO ID:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lpoheaderid + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslpoheaderid()) + "\""
-			    + " MAXLENGTH=" + "10"
-			    + " SIZE = " + "9"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-			
-			// Receipt number:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lreceiptheaderid + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslreceiptheaderid()) + "\""
-			    + " MAXLENGTH=" + "10"
-			    + " SIZE = " + "9"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-	
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "&nbsp;" + "</TD>\n";
-			
-			s += "  </TR>\n";
-		}
-		
-		s += "</TABLE>\n";
-		return s;
-	}
-	
-	*/
-	
-	/*
-	private String displayDebitOrCreditDetailLines(GLTransactionBatchEntry entry, boolean bEditable, SMMasterEditEntry smmastereditentry) throws Exception{
-		String s = "";
-		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
-		
-		//Header row:
-		if (bEditable){
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Line&nbsp;#</TD>\n";
-		
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution<BR>Acct</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Distribution&nbsp;Code</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Applied&nbsp;Amount</TD>\n";
-			
-			//Apply-to doc #
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Apply-to&nbsp;#</TD>\n";
-			
-			//Original apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Original&nbsp;Amt</TD>\n";
-			
-			//Current apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Current&nbsp;Amt</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Description</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Comment</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Remove?</TD>\n";
-		}else{
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Line&nbsp;#</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Distribution&nbsp;Acct</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Distribution&nbsp;Code</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Applied&nbsp;Amount</TD>\n";
-			
-			//Apply-to doc #
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Apply-to&nbsp;#</TD>\n";
-			
-			//Original apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Original&nbsp;Amt</TD>\n";
-			
-			//Current apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-				+ "Current&nbsp;Amt</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Description</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-				+ "Comment</TD>\n";
-			
-		}
-	
-		s += "  </TR>\n";
-		
-		//Load the array of distribution code names:
-		//ArrayList<String>arrDistCodeIDs = new ArrayList<String>(0);
-		ArrayList<String>arrDistCodeNames = new ArrayList<String>(0);
-		
-		String SQL = "SELECT * FROM " + SMTableapdistributioncodes.TableName
-			+ " ORDER BY " + SMTableapdistributioncodes.sdistcodename
-		;
-		try {
-			ResultSet rsDistCodes = clsDatabaseFunctions.openResultSet(
-				SQL, 
-				getServletContext(), 
-				smmastereditentry.getsDBID(), 
-				"MySQL", 
-				SMUtilities.getFullClassName(this.toString() + ".displayDetailLines - Distribution codes - user: " + smmastereditentry.getUserID()
-				+ " - "
-				+ smmastereditentry.getFullUserName()
-				)
-			);
-			while(rsDistCodes.next()){
-				//arrDistCodeIDs.add(rsDistCodes.getString(SMTableapdistributioncodes.lid));
-				arrDistCodeNames.add(rsDistCodes.getString(SMTableapdistributioncodes.sdistcodename));
-			}
-			rsDistCodes.close();
-		} catch (Exception e) {
-			throw new Exception("Error [1490739516] reading distribution codes - " + e.getMessage());
-		}
-		
-		//Variables for carrying the GL distribution accounts:
-		ArrayList<String> arrGLAccts = new ArrayList<String>(0);
-		ArrayList<String> arrGLDescriptions = new ArrayList<String>(0);
-		SQL = "SELECT"
-				+ " " + SMTableglaccounts.sAcctID
-				+ ", " + SMTableglaccounts.sDesc
-				+ " FROM " + SMTableglaccounts.TableName
-				+ " WHERE ("
-					+ "(" + SMTableglaccounts.lActive + " = 1)"
-				+ ")"
-				+ " ORDER BY " + SMTableglaccounts.sAcctID
-			;
-		//First, add a blank item so we can be sure the user chose one:
-		arrGLAccts.add("");
-		arrGLDescriptions.add("*** Select GL ***");
-		try {
-			ResultSet rsGLs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(),
-					smmastereditentry.getsDBID(), "MySQL", SMUtilities.getFullClassName(this.toString())
-					+ ".getEditHTML - user: " + smmastereditentry.getUserID()
-					+ " - " + smmastereditentry.getFullUserName());
-			while (rsGLs.next()) {
-				arrGLAccts.add(rsGLs.getString(SMTableglaccounts.sAcctID));
-				arrGLDescriptions.add(
-						rsGLs.getString(SMTableglaccounts.sAcctID)
-					+ " - "
-					+ rsGLs.getString(SMTableglaccounts.sDesc)
-				);
-			}
-			rsGLs.close();
-		} catch (SQLException e) {
-			s += "<B>Error [1491417541] reading GL info - " + e.getMessage() + "</B><BR>";
-		}
-		
-		//Load the lines for the current entry:
-		String sBackgroundColor = "";
-		boolean bOddRow = true;
-		boolean bAllowTransactionInformationViewing = SMSystemFunctions.isFunctionPermitted(
-			SMSystemFunctions.APViewTransactionInformation, 
-			smmastereditentry.getUserID(),
-			getServletContext(), 
-			smmastereditentry.getsDBID(), 
-			smmastereditentry.getLicenseModuleLevel()
-		);
-		for (int i = 0; i < entry.getLineArray().size(); i++){
-			String sLineText = "";
-			
-			GLTransactionBatchEntryLine line = entry.getLineArray().get(i);
-			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
-			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
-			}
-
-			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
-				+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
-				+ " onmousemove=\"setRowBackgroundColor(this, '" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "');\""
-				+ ">\n"
-			;
-			
-			//Read the AP transaction to get the date values, etc:
-			String sOriginalAmt = "N/A";
-			String sCurrentAmt = "N/A";
-			SQL = "SELECT"
-				+ " * FROM " + SMTableaptransactions.TableName
-				+ " WHERE ("
-					+ "(" + SMTableaptransactions.svendor + " = '" + entry.getsvendoracct() + "')"
-					+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + line.getsapplytodocnumber() + "')"
-				+ ")"
-			;
-			ResultSet rs = clsDatabaseFunctions.openResultSet(
-				SQL, getServletContext(),
-				smmastereditentry.getsDBID(),
-				"MySQL", 
-				SMUtilities.getFullClassName(this.toString()) + ".displayDetailLines - user: " + smmastereditentry.getUserID()
-				+ " - "
-				+ smmastereditentry.getFullUserName()
-					);
-			if (rs.next()){
-				sOriginalAmt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableaptransactions.bdoriginalamt));
-				sCurrentAmt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableaptransactions.bdcurrentamt));
-				
-				@SuppressWarnings("unused")
-				BigDecimal bdAppliedAmt = new BigDecimal("0.00");
-				try {
-					bdAppliedAmt = new BigDecimal(line.getsbdamount().trim().replace(",", ""));
-				} catch (Exception e) {
-					bdAppliedAmt = new BigDecimal("0.00");
-				}
-			}
-			
-			if (bEditable){
-				//Store the unseen fields for the lines here:
-				sLineText += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.lid + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
-			    	+ ">"
-			    	+ "\n"
-			    ;
-			}
-			
-			//Line number:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ line.getslinenumber() 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.llinenumber + "\""
-	    		+ " VALUE=\"" + clsStringFunctions.filter(line.getslinenumber()) + "\""
-	    		+ ">"
-				+ "</TD>\n";
-			
-			// Distribution acct:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText  += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-						+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-						+ " onchange=\"flagDirty();\""
-						 + " >\n"
-					;
-					String sGLAcctSelections = "";
-					for (int j = 0; j < arrGLAccts.size(); j++){
-						sGLAcctSelections += "<OPTION";
-						if (arrGLAccts.get(j).toString().compareTo(line.getsdistributionacct()) == 0){
-							sGLAcctSelections += " selected=yes";
-						}
-						sGLAcctSelections += " VALUE=\"" + arrGLAccts.get(j).toString() + "\">" + arrGLDescriptions.get(j).toString() + "\n";
-					}
-				sLineText += sGLAcctSelections;
-				sLineText += "</SELECT>"
-			;
-
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsdistributionacct());
-			}
-			sLineText += "</TD>\n";
-			
-			// Distribution code name:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<SELECT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributioncodename + "\""
-					+ " onchange=\"distCodeChange(this, " 
-						+ "'"
-						+ GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct
-						+ "'"
-				+ ");\""
-						+ " >\n"
-						;
-				sLineText += "<OPTION VALUE = \"" + " " + "\" > ** Select code **\n";
-				for (int iDistCodeCounter = 0; iDistCodeCounter < arrDistCodeNames.size(); iDistCodeCounter++){
-					sLineText += "<OPTION";
-					if (arrDistCodeNames.get(iDistCodeCounter).toString().compareTo(line.getsdistributioncodename()) == 0){
-						sLineText += " selected=yes";
-					}
-					sLineText += " VALUE=\"" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\">" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\n";
-				}
-				sLineText += "</SELECT>"
-				;
-
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsdistributioncodename());
-			}
-			sLineText += "</TD>\n";
-			
-			//Amount:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			String sLineAmt = line.getsbdamount();
-			boolean bIsCreditNote = entry.getsentrytype().compareToIgnoreCase(Integer.toString(SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_CREDITNOTE)) == 0;
-	    	if (bIsCreditNote){
-	    		//In this case we'll want to show the typically negative amounts as positive to the user:
-	    		try {
-					BigDecimal bdTemp = new BigDecimal(sLineAmt.trim().replace(",", "")).negate();
-					sLineAmt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTemp);
-				} catch (Exception e) {
-					//If we can't parse a valid amount out of the amount string, just show it as is on the screen:
-					sLineAmt = line.getsbdamount();
-				}
-	    	}
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT"
-					+ " style=\"text-align:right;\""
-					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " VALUE=\"" + clsStringFunctions.filter(sLineAmt) + "\""
-				    + " MAXLENGTH=" + "13"
-				    + " SIZE = " + "12"
-				    + " onchange=\"updateLineTotal();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(sLineAmt)
-					+ "<INPUT TYPE=HIDDEN"
-					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-					+ " VALUE=\"" + clsStringFunctions.filter(sLineAmt) + "\""
-			    	+ ">"
-				;
-			}
-			
-			sLineText += "</TD>\n";
-			
-			//Apply-to doc #:
-			String sApplyToDocNumber = line.getsapplytodocnumber();
-			if (bAllowTransactionInformationViewing){
-				sApplyToDocNumber =
-					"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APViewTransactionInformation?"
-					+ SMTableaptransactions.lid + "=" + line.getslapplytodocid()
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smmastereditentry.getsDBID()
-					+ "\">" + sApplyToDocNumber + "</A>"
-				;
-			}
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			sLineText += sApplyToDocNumber;
-			
-			//We'll also store our hidden fields here:
-			sLineText += "<INPUT TYPE=HIDDEN\n"
-				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lapplytodocid + "\""
-				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lapplytodocid + "\""
-				+ " VALUE=\"" + line.getslapplytodocid() + "\""
-		    	+ ">"
-			;
-			
-			sLineText += "<INPUT TYPE=HIDDEN\n"
-				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sapplytodocnumber + "\""
-				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sapplytodocnumber + "\""
-				+ " VALUE=\"" + line.getsapplytodocnumber() + "\""
-		    	+ ">"
-			;
-			
-			sLineText += "</TD>\n";
-			
-			//Original apply-to amt:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			sLineText += clsStringFunctions.PadLeft(sOriginalAmt, " ", NUMBER_PADDING_LENGTH);
-			sLineText += "</TD>\n";
-			
-			//Current apply-to amt:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			sLineText += clsStringFunctions.PadLeft(sCurrentAmt, " ", NUMBER_PADDING_LENGTH);
-			sLineText += "</TD>\n";
-			
-			//Line description:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdescription + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.sdescriptionLength)
-				    + " SIZE = " + "40"
-				    + " onchange=\"flagDirty();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsdescription());
-			}
-			sLineText += "</TD>\n";
-			
-			//Comment:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.scomment + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.scommentLength)
-				    + " SIZE = " + "25"
-				    + " onchange=\"flagDirty();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getscomment());
-			}
-			sLineText += "</TD>\n";
-
-			if (bEditable){
-				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
-			}
-			
-			sLineText += "  </TR>\n";
-			
-			s += sLineText;
-			bOddRow = !bOddRow;
-		}
-
-		if (bEditable){
-			//Add one blank line so the user can add lines:
-			GLTransactionBatchEntryLine line = new GLTransactionBatchEntryLine();
-			line.setsbatchnumber(entry.getsbatchnumber());
-			line.setsentrynumber(entry.getsentrynumber());
-			line.setslinenumber("0");
-			
-			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
-			if (bOddRow){
-				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
-			}
-
-			s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
-				+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
-				+ " onmousemove=\"setRowBackgroundColor(this, '" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "');\""
-				+ ">\n"
-			;
-			
-			//Store the unseen fields for the lines here:
-			s += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.lid + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
-		    	+ ">"
-		    	+ "\n"
-		    ;
-			
-			//Line number:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "(NEW)" 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.llinenumber + "\""
-	    		+ " VALUE=\"" + clsStringFunctions.filter(line.getslinenumber()) + "\""
-	    		+ ">"
-				+ "</TD>\n";
-			
-			// Distribution acct:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			
-			s  += "<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdistributionacct + "\""
-				+ " onchange=\"flagDirty();\""
-				 + " >\n"
-			;
-			for (int i = 0; i < arrGLAccts.size(); i++){
-				s += "<OPTION";
-				if (arrGLAccts.get(i).toString().compareTo(line.getsdistributionacct()) == 0){
-					s += " selected=yes";
-				}
-				s += " VALUE=\"" + arrGLAccts.get(i).toString() + "\">" + arrGLDescriptions.get(i).toString() + "\n";
-			}
-			s += "</SELECT>";
-			s += "</TD>\n";
-			
-			// Distribution code name:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<SELECT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTableGLTransactionBatchEntrylines.sdistributioncodename + "\""
-						//+ " onchange=\"flagDirty();\""
-						+ " onchange=\"distCodeChange(this, " 
-						+ "'"
-						+ GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTableGLTransactionBatchEntrylines.sdistributionacct
-						+ "'"
-						+ ");\""
-						+ " >\n"
-						;
-				s += "<OPTION VALUE = \"" + " " + "\" > ** Select code **\n";
-				for (int iDistCodeCounter = 0; iDistCodeCounter < arrDistCodeNames.size(); iDistCodeCounter++){
-					s += "<OPTION";
-					if (arrDistCodeNames.get(iDistCodeCounter).toString().compareTo(line.getsdistributioncodename()) == 0){
-						s += " selected=yes";
-					}
-					s += " VALUE=\"" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\">" + arrDistCodeNames.get(iDistCodeCounter).toString() + "\n";
-				}
-				s += "</SELECT>"
-				;
-			s += "</TD>\n";
-			
-			//Amount:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			//Credit:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			s += "<INPUT TYPE=TEXT"
 				+ " style=\"text-align:right;\""
 				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
+				+ SMTablegltransactionbatchlines.bdcreditamt + "\""
 				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.bdamount + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsbdamount()) + "\""
+				+ SMTablegltransactionbatchlines.bdcreditamt + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
 			    + " MAXLENGTH=" + "13"
 			    + " SIZE = " + "12"
 			    + " onchange=\"updateLineTotal();\""
@@ -1693,243 +1101,13 @@ public class GLEditEntryEdit  extends HttpServlet {
 			;
 			s += "</TD>\n";
 			
-			//Apply-to doc #
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "&nbsp;</TD>\n";
-			
-			//Original apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "&nbsp;</TD>\n";
-			
-			//Current apply-to doc amt
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "&nbsp;</TD>\n";
-			
-			//Line description:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.sdescription + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.sdescriptionLength)
-			    + " SIZE = " + "40"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-			
-			//Comment:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTableGLTransactionBatchEntrylines.scomment + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTableGLTransactionBatchEntrylines.scommentLength)
-			    + " SIZE = " + "25"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-	
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				+ "&nbsp;" + "</TD>\n";
-			
 			s += "  </TR>\n";
 		}
 		
 		s += "</TABLE>\n";
 		return s;
 	}
-	*/
 	
-	/*
-	private String displayUnappliedDocumentsForDebitsAndCredits(GLTransactionBatchEntry entry, SMMasterEditEntry smmastereditentry, boolean bEditable) throws Exception{
-		String s = "";
-		
-		//Should we display the table or not?
-		
-    	String sDisplayToggle = "none";
-		if (clsManageRequestParameters.get_Request_Parameter(PARAM_TOGGLEUNAPPLIEDTABLE, smmastereditentry.getRequest()).compareToIgnoreCase(PARAM_TOGGLEUNAPPLIEDTABLE_VALUE_DISPLAY) == 0){
-			sDisplayToggle = "block";
-		}
-		
-		s += "<DIV ID=\"" + UNAPPLIED_DOCUMENTS_TABLE_CONTAINER + "\" style = \"display:" + sDisplayToggle +"; \">\n";
-		//Print headings:
-		s += "<BR><B><I><U>APPLY-TO DOCUMENTS</U></I></B> - <I>(Click on the headings to sort)</I>\n";
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
-			+ " ID = \"" + TABLE_UNAPPLIED_DOCUMENTS + "\"\n"
-			+ ">\n";
-		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(0);\" >"
-			+ "Doc<BR>Date</TD>\n";
-
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(1);\" >"
-				+ "Due<BR>Date</TD>\n";
-
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(2);\" >"
-				+ "Doc<BR>Number</TD>\n";
-
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \"  style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(3);\" >"
-			+ "Original<BR>Amt</TD>\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \"  style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(4);\" >"
-			+ "Current<BR>Amt</TD>\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \"  style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(5);\" >"
-				+ "Discount<BR>Date</TD>\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \"  style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(6);\" >"
-				+ "Discount<BR>available</TD>\n";
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \"  style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(7);\" >"
-				+ "On<BR>hold?</TD>\n";
-		
-		if (bEditable){
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
-				+ "Apply?</TD>\n";
-		}
-		
-		s += "  </TR>\n";
-		
-		String SQL = "SELECT"
-			+ " * FROM " + SMTableaptransactions.TableName
-			+ " WHERE ("
-				+ "(" + SMTableaptransactions.svendor + " = '" + entry.getsvendoracct() + "')"
-		;
-		if (entry.getientrytype() == SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_CREDITNOTE){
-			SQL += " AND (" 
-					+ "(" + SMTableaptransactions.idoctype + " = " + Integer.toString(SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_INVOICE) + ")"
-					+ " OR (" + SMTableaptransactions.idoctype + " = " + Integer.toString(SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_DEBITNOTE) + ")"
-				+ ")"
-			;
-		}
-
-		if (entry.getientrytype() == SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_DEBITNOTE){
-			SQL += " AND (" 
-					+ "(" + SMTableaptransactions.idoctype + " = " + Integer.toString(SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_INVOICE) + ")"
-					+ " OR (" + SMTableaptransactions.idoctype + " = " + Integer.toString(SMTableGLTransactionBatchentries.ENTRY_TYPE_INV_CREDITNOTE) + ")"
-				+ ")"
-			;
-		}
-		
-		SQL += " AND (" + SMTableaptransactions.bdcurrentamt + " != 0.00)"
-			+ ")"
-		;
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(
-				SQL, 
-				getServletContext(), 
-				smmastereditentry.getsDBID(), 
-				"MySQL", 
-				SMUtilities.getFullClassName(this.toString()) + ".displayEligibleApplyToDocuments - user: " 
-				+ smmastereditentry.getUserID()
-				+ " - "
-				+ smmastereditentry.getFullUserName()
-					);
-			boolean bOddRow = true;
-			while (rs.next()){
-				//if the document is already applied on this payment, then don't list it:
-				//boolean bDocumentIsAlreadyApplied = false;
-				for (int i = 0; i < entry.getLineArray().size(); i++){
-					GLTransactionBatchEntryLine line = entry.getLineArray().get(i);
-					if (line.getsapplytodocnumber().compareToIgnoreCase(rs.getString(SMTableaptransactions.sdocnumber)) == 0){
-						//bDocumentIsAlreadyApplied = true;
-						break;
-					}
-				}
-				
-				// TJR - 6/15/2017 - we'll allow the user to apply to the same document as many times as needed:
-				//if(!bDocumentIsAlreadyApplied){
-					String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
-					if (bOddRow){
-						sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
-					}
-					s += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
-						+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
-						+ " onmousemove=\"setRowBackgroundColor(this, '" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "');\""
-						+ ">\n";
-					
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(rs.getString(SMTableaptransactions.datdocdate), "M/d/yyyy", "00/00/0000")
-							+ "</TD>\n";
-	
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(rs.getString(SMTableaptransactions.datduedate), "M/d/yyyy", "00/00/0000")
-							+ "</TD>\n";
-	
-					String sDocNumberLink = rs.getString(SMTableaptransactions.sdocnumber);
-					if(SMSystemFunctions.isFunctionPermitted(
-						SMSystemFunctions.APControlPayments, 
-						smmastereditentry.getUserID(), 
-						getServletContext(), 
-						smmastereditentry.getsDBID(), 
-						(String) smmastereditentry.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-						) 
-					){
-						sDocNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-							+ "smap.APControlPaymentsEdit"
-							+ "?" + SMTableaptransactions.svendor + "=" + entry.getsvendoracct()
-							+ "&" + SMTableaptransactions.sdocnumber + "=" + sDocNumberLink
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smmastereditentry.getsDBID()
-							+ "\">" + sDocNumberLink + "</A>"
-						;
-					}
-					
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ sDocNumberLink
-							+ "</TD>\n";
-					
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsStringFunctions.PadLeft(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableaptransactions.bdoriginalamt)), " ", NUMBER_PADDING_LENGTH)
-							+ "</TD>\n";
-	
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsStringFunctions.PadLeft(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableaptransactions.bdcurrentamt)), " ", NUMBER_PADDING_LENGTH)
-							+ "</TD>\n";
-
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(rs.getString(SMTableaptransactions.datdiscountdate), "M/d/yyyy", "00/00/0000")
-							+ "</TD>\n";
-
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ clsStringFunctions.PadLeft(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableaptransactions.bdcurrentdiscountavailable)), " ", NUMBER_PADDING_LENGTH)
-							+ "</TD>\n";
-					
-					String sOnHold = "N";
-					if (rs.getInt(SMTableaptransactions.ionhold) == 1){
-						sOnHold = "<FONT COLOR=RED>Y</FONT>";
-					}
-					s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \" >"
-						+ "<B>" 
-						+ sOnHold 
-						+ "</B>"
-						+ " <INPUT TYPE=HIDDEN"
-						+ " NAME=\"" + rs.getString(SMTableaptransactions.sdocnumber) + SMTableaptransactions.ionhold + "\""
-						+ " ID=\"" + rs.getString(SMTableaptransactions.sdocnumber) + SMTableaptransactions.ionhold + "\""
-						+ " VALUE=\"" + Integer.toString(rs.getInt(SMTableaptransactions.ionhold)) + "\""
-						+ "</TD>\n";
-					
-					if (bEditable){
-						s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \" >"
-							+ createApplyLineButton(rs.getString(SMTableaptransactions.sdocnumber)) + "</TD>\n";
-					}
-					
-					s += "  </TR>\n";
-					bOddRow = !bOddRow;
-				//}
-			}
-			rs.close();
-		} catch (Exception e) {
-			throw new Exception("Error [1492106107] reading open invoices for vendor '" + entry.getsvendoracct() + " with SQL: '" + SQL + "' - " + e.getMessage() + ".");
-		}
-		
-		s += "</TABLE>\n";
-		s += "</DIV><BR>";
-		return s;
-	}
-*/
 	private String sCommandScript(String sDBID, SMMasterEditEntry sm, GLTransactionBatchEntry entry) throws Exception{
 		String s = "";
 		s += "<NOSCRIPT>\n"

@@ -26,12 +26,12 @@ public class GLEditFiscalPeriodsSelect extends HttpServlet {
 	private static String sCalledClassName = "GLEditFiscalPeriodsEdit";
 	public static final String OBJECT_NAME = GLFiscalPeriod.ParamObjectName;
 	public static final String SUBMIT_EDIT_BUTTON_NAME = "SubmitEdit";
-	public static final String SUBMIT_EDIT_BUTTON_VALUE = "Edit Selected " + OBJECT_NAME;
+	public static final String SUBMIT_EDIT_BUTTON_VALUE = "Edit Selected Fiscal Year";
 	public static final String SUBMIT_DELETE_BUTTON_NAME = "SubmitDelete";
-	public static final String SUBMIT_DELETE_BUTTON_VALUE = "Delete Selected " + OBJECT_NAME;
+	public static final String SUBMIT_DELETE_BUTTON_VALUE = "Delete Selected Fiscal Year";
 	public static final String CONFIRM_DELETE_CHECKBOX_NAME = "ConfirmDelete";
 	public static final String SUBMIT_ADD_BUTTON_NAME = "SubmitAdd";
-	public static final String SUBMIT_ADD_BUTTON_VALUE = "Add New " + OBJECT_NAME;
+	public static final String SUBMIT_ADD_BUTTON_VALUE = "Add New Fiscal Year";
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -54,7 +54,7 @@ public class GLEditFiscalPeriodsSelect extends HttpServlet {
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String title = "Manage " + OBJECT_NAME + "s";
+	    String title = "Manage " + "Fiscal Years";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -85,7 +85,7 @@ public class GLEditFiscalPeriodsSelect extends HttpServlet {
 	    GLFiscalPeriod entry = new GLFiscalPeriod(request);
 		try{
 	        String sSQL = "SELECT * FROM " + SMTableglfiscalperiods.TableName
-	        	+ " ORDER BY " + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.ifiscalyear
+	        	+ " ORDER BY " + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.ifiscalyear + " DESC"
 	        ;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 

@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1376;
+	private static final int m_CurrentDatabaseVersion = 1377;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "4/17/2019";
+	private static final String m_sLastRevisionDate = "4/19/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14220,6 +14220,32 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE
+			
+			//BEGIN CASE:
+			case 1376:
+				//Added by TJR 4/19/2019
+				SQL = "ALTER TABLE `glfiscalperiods`"
+					+ " ADD COLUMN `iperiod1locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod2locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod3locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod4locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod5locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod6locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod7locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod8locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod9locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod10locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod11locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod12locked` INT(11) NOT NULL default '1'"
+					+ ", ADD COLUMN `iperiod13locked` INT(11) NOT NULL default '1'"
+				;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			
 			//End switch:
 		}
 		

@@ -239,7 +239,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    		+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y"
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+ "\">"
-	    		+ "Create transaction batch"
+	    		+ "Create transaction entry"
 	    		+ "</A>"
 	    		+ "\n"
 	    		);

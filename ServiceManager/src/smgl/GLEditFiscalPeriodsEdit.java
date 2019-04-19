@@ -26,7 +26,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	
 	private static final String OBJECT_NAME = GLFiscalPeriod.ParamObjectName;
 	private static final String SUBMIT_UPDATE_BUTTON_NAME = "SubmitEditUpdate";
-	private static final String SUBMIT_UPDATE_BUTTON_VALUE = "Update " + OBJECT_NAME;
+	private static final String SUBMIT_UPDATE_BUTTON_VALUE = "Update fiscal year";
 	private static final String ROW_BACKGROUND_DEFAULT_COLOR = "#C2E0FF";
 	public static final String SEGMENT_ID_VALUE = "SEGMENTNAMEVALUE";
 	private static final String MAIN_FORM_NAME = "MAIN";
@@ -153,7 +153,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		//Build page header:
 	    String title;
 	    String subtitle = "";
-	    title = "Edit General Ledger " + OBJECT_NAME + "s";
+	    title = "Edit General Ledger Fiscal Years";
 
 	    smedit.getPWOut().println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), smedit.getsDBID()), sCompanyName));
 	    smedit.getPWOut().println(SMUtilities.getDatePickerIncludeString(getServletContext()));
@@ -750,6 +750,198 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 				+ "</TD>\n"
 			;
 		
+		s += "              </TR>\n";
+		
+		//Period locking:
+		s += "              <TR>\n";
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\""
+			+ " style = \" font-weight:bold; color: black; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "LOCKED?:&nbsp;"
+			+ "</TD>\n"
+		;
+		String sChecked = "";
+		if(entry.get_siperiod1locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod1locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;	
+		
+		if(entry.get_siperiod2locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod2locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod3locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod3locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod4locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod4locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod5locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod5locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod6locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod6locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod7locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod7locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod8locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod8locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod9locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod9locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod10locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod10locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod11locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod11locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod12locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod12locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+		
+		if(entry.get_siperiod13locked().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}else{
+			sChecked = "";
+		}
+		s += "                <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED_WITH_BORDER + "\""
+			+ " style = \" font-weight:bold; color: white; background-color: " + ROW_BACKGROUND_DEFAULT_COLOR + "; \" >"
+			+ "<INPUT TYPE=CHECKBOX + " + sChecked
+			+ " NAME=\"" + SMTableglfiscalperiods.iperiod13locked + "\" width=0.25"
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ "</TD>\n"
+		;
+
 		s += "              </TR>\n";
 		
 		s += "            </TABLE>\n";

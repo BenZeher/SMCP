@@ -36,30 +36,43 @@ public class GLFiscalPeriod extends java.lang.Object{
 	public String m_silockclosingperiod;
 	public String m_sdatbeginningdateperiod1;
 	public String m_sdatendingdateperiod1;
+	public String m_speriod1locked;
 	public String m_sdatbeginningdateperiod2;
 	public String m_sdatendingdateperiod2;
+	public String m_speriod2locked;
 	public String m_sdatbeginningdateperiod3;
 	public String m_sdatendingdateperiod3;
+	public String m_speriod3locked;
 	public String m_sdatbeginningdateperiod4;
 	public String m_sdatendingdateperiod4;
+	public String m_speriod4locked;
 	public String m_sdatbeginningdateperiod5;
 	public String m_sdatendingdateperiod5;
+	public String m_speriod5locked;
 	public String m_sdatbeginningdateperiod6;
 	public String m_sdatendingdateperiod6;
+	public String m_speriod6locked;
 	public String m_sdatbeginningdateperiod7;
 	public String m_sdatendingdateperiod7;
+	public String m_speriod7locked;
 	public String m_sdatbeginningdateperiod8;
 	public String m_sdatendingdateperiod8;
+	public String m_speriod8locked;
 	public String m_sdatbeginningdateperiod9;
 	public String m_sdatendingdateperiod9;
+	public String m_speriod9locked;
 	public String m_sdatbeginningdateperiod10;
 	public String m_sdatendingdateperiod10;
+	public String m_speriod10locked;
 	public String m_sdatbeginningdateperiod11;
 	public String m_sdatendingdateperiod11;
+	public String m_speriod11locked;
 	public String m_sdatbeginningdateperiod12;
 	public String m_sdatendingdateperiod12;
+	public String m_speriod12locked;
 	public String m_sdatbeginningdateperiod13;
 	public String m_sdatendingdateperiod13;
+	public String m_speriod13locked;
 	
 	private String m_snewrecord;
 	
@@ -99,6 +112,20 @@ public class GLFiscalPeriod extends java.lang.Object{
 		m_sdatendingdateperiod12 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatbeginningdateperiod13 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatendingdateperiod13 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
+		m_speriod1locked = "0";
+		m_speriod2locked = "0";
+		m_speriod3locked = "0";
+		m_speriod4locked = "0";
+		m_speriod5locked = "0";
+		m_speriod6locked = "0";
+		m_speriod7locked = "0";
+		m_speriod8locked = "0";
+		m_speriod9locked = "0";
+		m_speriod10locked = "0";
+		m_speriod11locked = "0";
+		m_speriod12locked = "0";
+		m_speriod13locked = "0";
+		
 		m_snewrecord = ADDING_NEW_RECORD_PARAM_VALUE_FALSE;
     }
     public GLFiscalPeriod(HttpServletRequest req) {
@@ -150,6 +177,72 @@ public class GLFiscalPeriod extends java.lang.Object{
 		m_sdatendingdateperiod11 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datendingdateperiod11, req).trim();
 		m_sdatendingdateperiod12 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datendingdateperiod12, req).trim();
 		m_sdatendingdateperiod13 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datendingdateperiod13, req).trim();
+		
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod1locked, req).compareToIgnoreCase("") == 0){
+			m_speriod1locked = "0";
+		}else{
+			m_speriod1locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod2locked, req).compareToIgnoreCase("") == 0){
+			m_speriod2locked = "0";
+		}else{
+			m_speriod2locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod3locked, req).compareToIgnoreCase("") == 0){
+			m_speriod3locked = "0";
+		}else{
+			m_speriod3locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod4locked, req).compareToIgnoreCase("") == 0){
+			m_speriod4locked = "0";
+		}else{
+			m_speriod4locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod5locked, req).compareToIgnoreCase("") == 0){
+			m_speriod5locked = "0";
+		}else{
+			m_speriod5locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod6locked, req).compareToIgnoreCase("") == 0){
+			m_speriod6locked = "0";
+		}else{
+			m_speriod6locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod7locked, req).compareToIgnoreCase("") == 0){
+			m_speriod7locked = "0";
+		}else{
+			m_speriod7locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod8locked, req).compareToIgnoreCase("") == 0){
+			m_speriod8locked = "0";
+		}else{
+			m_speriod8locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod9locked, req).compareToIgnoreCase("") == 0){
+			m_speriod9locked = "0";
+		}else{
+			m_speriod9locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod10locked, req).compareToIgnoreCase("") == 0){
+			m_speriod10locked = "0";
+		}else{
+			m_speriod10locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod11locked, req).compareToIgnoreCase("") == 0){
+			m_speriod11locked = "0";
+		}else{
+			m_speriod11locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod12locked, req).compareToIgnoreCase("") == 0){
+			m_speriod12locked = "0";
+		}else{
+			m_speriod12locked = "1";
+		}
+		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iperiod13locked, req).compareToIgnoreCase("") == 0){
+			m_speriod13locked = "0";
+		}else{
+			m_speriod13locked = "1";
+		}
 		
 		m_snewrecord = clsManageRequestParameters.get_Request_Parameter(ParamsNewRecord, req).trim();
 		if (m_snewrecord.compareToIgnoreCase("") == 0){
@@ -249,6 +342,19 @@ public class GLFiscalPeriod extends java.lang.Object{
 						rs.getString(SMTableglfiscalperiods.datendingdateperiod12), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE);				
 				m_sdatendingdateperiod13 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
 						rs.getString(SMTableglfiscalperiods.datendingdateperiod13), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE);				
+				m_speriod1locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod1locked));
+				m_speriod2locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod2locked));
+				m_speriod3locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod3locked));
+				m_speriod4locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod4locked));
+				m_speriod5locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod5locked));
+				m_speriod6locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod6locked));
+				m_speriod7locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod7locked));
+				m_speriod8locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod8locked));
+				m_speriod9locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod9locked));
+				m_speriod10locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod10locked));
+				m_speriod11locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod11locked));
+				m_speriod12locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod12locked));
+				m_speriod13locked = Integer.toString(rs.getInt(SMTableglfiscalperiods.iperiod13locked));
 				
 				m_snewrecord = ADDING_NEW_RECORD_PARAM_VALUE_FALSE;
 			}else{
@@ -323,6 +429,19 @@ public class GLFiscalPeriod extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.inumberofperiods
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername
 				+ ", " + SMTableglfiscalperiods.datlastediteddateandtime
+				+ ", " + SMTableglfiscalperiods.iperiod1locked
+				+ ", " + SMTableglfiscalperiods.iperiod2locked
+				+ ", " + SMTableglfiscalperiods.iperiod3locked
+				+ ", " + SMTableglfiscalperiods.iperiod4locked
+				+ ", " + SMTableglfiscalperiods.iperiod5locked
+				+ ", " + SMTableglfiscalperiods.iperiod6locked
+				+ ", " + SMTableglfiscalperiods.iperiod7locked
+				+ ", " + SMTableglfiscalperiods.iperiod8locked
+				+ ", " + SMTableglfiscalperiods.iperiod9locked
+				+ ", " + SMTableglfiscalperiods.iperiod10locked
+				+ ", " + SMTableglfiscalperiods.iperiod11locked
+				+ ", " + SMTableglfiscalperiods.iperiod12locked
+				+ ", " + SMTableglfiscalperiods.iperiod13locked
 				
 			+ ") VALUES ("
 				+ "'" + ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
@@ -495,9 +614,22 @@ public class GLFiscalPeriod extends java.lang.Object{
 					clsServletUtilities.DATETIME_FORMAT_FOR_SQL, 
 					clsServletUtilities.EMPTY_SQL_DATETIME_VALUE
 				) + "'"			
-	
+			+ ", " + get_siperiod1locked()
+			+ ", " + get_siperiod2locked()
+			+ ", " + get_siperiod3locked()
+			+ ", " + get_siperiod4locked()
+			+ ", " + get_siperiod5locked()
+			+ ", " + get_siperiod6locked()
+			+ ", " + get_siperiod7locked()
+			+ ", " + get_siperiod8locked()
+			+ ", " + get_siperiod9locked()
+			+ ", " + get_siperiod10locked()
+			+ ", " + get_siperiod11locked()
+			+ ", " + get_siperiod12locked()
+			+ ", " + get_siperiod13locked()
 			+ ")"
 			;
+			
 		}else{
 			SQL = "UPDATE " + SMTableglfiscalperiods.TableName 
 				+ " SET " +  SMTableglfiscalperiods.datbeginningdateperiod1 + " = "
@@ -694,6 +826,20 @@ public class GLFiscalPeriod extends java.lang.Object{
 					clsServletUtilities.DATETIME_FORMAT_FOR_SQL, 
 					clsServletUtilities.EMPTY_SQL_DATETIME_VALUE
 				) + "'"	
+				+ ", " + SMTableglfiscalperiods.iperiod1locked + " = " + get_siperiod1locked()
+				+ ", " + SMTableglfiscalperiods.iperiod2locked + " = " + get_siperiod2locked()
+				+ ", " + SMTableglfiscalperiods.iperiod3locked + " = " + get_siperiod3locked()
+				+ ", " + SMTableglfiscalperiods.iperiod4locked + " = " + get_siperiod4locked()
+				+ ", " + SMTableglfiscalperiods.iperiod5locked + " = " + get_siperiod5locked()
+				+ ", " + SMTableglfiscalperiods.iperiod6locked + " = " + get_siperiod6locked()
+				+ ", " + SMTableglfiscalperiods.iperiod7locked + " = " + get_siperiod7locked()
+				+ ", " + SMTableglfiscalperiods.iperiod8locked + " = " + get_siperiod8locked()
+				+ ", " + SMTableglfiscalperiods.iperiod9locked + " = " + get_siperiod9locked()
+				+ ", " + SMTableglfiscalperiods.iperiod10locked + " = " + get_siperiod10locked()
+				+ ", " + SMTableglfiscalperiods.iperiod11locked + " = " + get_siperiod11locked()
+				+ ", " + SMTableglfiscalperiods.iperiod12locked + " = " + get_siperiod12locked()
+				+ ", " + SMTableglfiscalperiods.iperiod13locked + " = " + get_siperiod13locked()
+				
 				+ " WHERE (" + SMTableglfiscalperiods.ifiscalyear + "=" + get_sifiscalyear() + ")"
 			;
 		}
@@ -899,6 +1045,72 @@ public class GLFiscalPeriod extends java.lang.Object{
 		}
        	
        	try {
+			set_siperiod1locked(clsValidateFormFields.validateIntegerField(get_siperiod1locked(), "Period 1 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod2locked(clsValidateFormFields.validateIntegerField(get_siperiod2locked(), "Period 2 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod3locked(clsValidateFormFields.validateIntegerField(get_siperiod3locked(), "Period 3 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod4locked(clsValidateFormFields.validateIntegerField(get_siperiod4locked(), "Period 4 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod5locked(clsValidateFormFields.validateIntegerField(get_siperiod5locked(), "Period 5 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod6locked(clsValidateFormFields.validateIntegerField(get_siperiod6locked(), "Period6 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod7locked(clsValidateFormFields.validateIntegerField(get_siperiod7locked(), "Period 7 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod8locked(clsValidateFormFields.validateIntegerField(get_siperiod8locked(), "Period 8 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod9locked(clsValidateFormFields.validateIntegerField(get_siperiod9locked(), "Period 9 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod10locked(clsValidateFormFields.validateIntegerField(get_siperiod10locked(), "Period 10 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod11locked(clsValidateFormFields.validateIntegerField(get_siperiod11locked(), "Period 11 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod12locked(clsValidateFormFields.validateIntegerField(get_siperiod12locked(), "Period 12 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	try {
+			set_siperiod13locked(clsValidateFormFields.validateIntegerField(get_siperiod13locked(), "Period 13 locked", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	
+       	try {
 			validate_dates(conn);
 		} catch (Exception e) {
 			s += e.getMessage() + "";
@@ -914,7 +1126,6 @@ public class GLFiscalPeriod extends java.lang.Object{
      	}
 
      	if (s.compareToIgnoreCase("") != 0){
-     		System.out.println("S is equals to "+s);
      		throw new Exception(s);
      	}
      	return;
@@ -1174,27 +1385,26 @@ public class GLFiscalPeriod extends java.lang.Object{
     	);
     	
     	
-    	for (int i = 1; i <= Integer.parseInt(get_sinumberofperiods()); i++){
-    		//If period ending date is earlier or equal to period starting date:
-//    		if (arrEndingDates.get(i).compareToIgnoreCase(arrBeginningDates.get(i)) <= 0){
-//    			s += "  Starting period " + Integer.toString(i) + " must be earlier than ending period " + Integer.toString(i) + ".";
-//    		}
-    		System.out.println("Beginning Dates "+Date.valueOf(arrBeginningDates.get(i)));
-    		System.out.println("Ending Dates "+Date.valueOf(arrEndingDates.get(i)));
-    		if(Date.valueOf(arrEndingDates.get(i)).before(Date.valueOf(arrBeginningDates.get(i))))
-    			s += "  Starting period " + i + " must be earlier than ending period " + i + ".";
-    		
-    		
-    		//If one period is not immediately AFTER the previous one:
-    		if (i > 1){
-    			//clsDateAndTimeConversions.
-    			//if (){
-    			//	
-    			//}
-    		}
-    		
-    		//If the first to the last doesn't comprise a complete year:
-    	}
+    	try {
+			for (int i = 0; i < Integer.parseInt(get_sinumberofperiods()); i++){
+				//If period ending date is earlier or equal to period starting date:
+				if(Date.valueOf(arrEndingDates.get(i)).before(Date.valueOf(arrBeginningDates.get(i)))){
+					s += "  Starting date in period " + i + " must be earlier than ending date in period " + i + ".";
+				}
+				
+				//If one period is not immediately AFTER the previous one:
+				if (i > 1){
+					//clsDateAndTimeConversions.
+					//if (){
+					//	
+					//}
+				}
+				
+				//If the first to the last doesn't comprise a complete year:
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [1555698830] checking starting and ending dates - " + e.getMessage());
+		}
     	
     	//If period 2 starting date is not one day after period 1 ending date:
     	
@@ -1206,7 +1416,7 @@ public class GLFiscalPeriod extends java.lang.Object{
     	
     	
     	if (s.compareToIgnoreCase("") != 0){
-    		throw new Exception("YESSSS");
+    		throw new Exception(s);
     	}
     	return;
     }
@@ -1226,6 +1436,139 @@ public class GLFiscalPeriod extends java.lang.Object{
 		} catch (Exception e) {
 			throw new Exception("Error [1530906208] deleting fiscal year '" + sFiscalYear + "' - " + e.getMessage());
 		}
+	}
+	public static int getCurrentFiscalYear(String sDBID, String sUserFullName, ServletContext context) throws Exception{
+		int iFiscalYear = 0;
+		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, context);
+		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL);
+		String sSQL = "SELECT"
+			+ " " + SMTableglfiscalperiods.ifiscalyear
+			+ " FROM " + SMTableglfiscalperiods.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sCurrentDate + "')"
+				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
+					+ " >= '" + sCurrentDate + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sCurrentDate + "')"
+			+ ")"
+		;
+		//System.out.println("[1555700706] - SQL = '" + sSQL + "'.");
+		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
+		if (rs.next()){
+			iFiscalYear = rs.getInt(SMTableglfiscalperiods.ifiscalyear);
+			rs.close();
+		}else{
+			rs.close();
+			throw new Exception("Error [1555700119] - no fiscal period found for current date: " + sCurrentDate);
+		}
+		return iFiscalYear;
+	}
+	
+	public static int getCurrentFiscalPeriod(String sDBID, String sUserFullName, ServletContext context) throws Exception{
+		int iFiscalYear = 0;
+		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, context);
+		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL);
+		String sSQL = "SELECT"
+			+ " " + SMTableglfiscalperiods.ifiscalyear
+			+ " FROM " + SMTableglfiscalperiods.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sCurrentDate + "')"
+				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
+					+ " >= '" + sCurrentDate + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sCurrentDate + "')"
+			+ ")"
+		;
+		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
+		if (rs.next()){
+			iFiscalYear = rs.getInt(SMTableglfiscalperiods.ifiscalyear);
+			rs.close();
+		}else{
+			rs.close();
+			throw new Exception("Error [1555700120] - no fiscal period found for current date: " + sCurrentDate);
+		}
+		GLFiscalPeriod period = new GLFiscalPeriod();
+		period.set_sifiscalyear(Integer.toString(iFiscalYear));
+		period.load(sDBID, context, sUserFullName);
+		
+		//Now find the correct period:
+		//System.out.println("[1555701768] beginning period date = '" + getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()) + ", sCurrentDate = '" + sCurrentDate + "'.");
+		if (
+			(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()).compareToIgnoreCase(sCurrentDate) <= 0)
+			&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod1()).compareToIgnoreCase(sCurrentDate) >= 0)
+		){
+			return 1;
+		}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod2()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod2()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 2;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod3()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod3()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 3;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod4()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod4()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 4;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod5()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod5()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 5;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod6()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod6()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 6;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod7()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod7()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 7;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod8()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod8()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 8;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod9()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod9()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 9;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod10()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod10()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 10;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod11()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod11()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 11;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod12()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod12()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 12;
+			}
+		if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod13()).compareToIgnoreCase(sCurrentDate) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod13()).compareToIgnoreCase(sCurrentDate) >= 0)
+			){
+				return 13;
+			}
+		
+		return 0;
 	}
 	public void set_sdatbeginningdateperiod1(String sDate) {
 		m_sdatbeginningdateperiod1 = sDate;
@@ -1329,6 +1672,46 @@ public class GLFiscalPeriod extends java.lang.Object{
 	public void set_silockclosingperiod(String sLockClosingPeriod) {
 		m_silockclosingperiod = sLockClosingPeriod;
 	}
+	public void set_siperiod1locked(String sPeriod1Locked) {
+		m_speriod1locked = sPeriod1Locked;
+	}
+	public void set_siperiod2locked(String sPeriod2Locked) {
+		m_speriod2locked = sPeriod2Locked;
+	}
+	public void set_siperiod3locked(String sPeriod3Locked) {
+		m_speriod3locked = sPeriod3Locked;
+	}
+	public void set_siperiod4locked(String sPeriod4Locked) {
+		m_speriod4locked = sPeriod4Locked;
+	}
+	public void set_siperiod5locked(String sPeriod5Locked) {
+		m_speriod5locked = sPeriod5Locked;
+	}
+	public void set_siperiod6locked(String sPeriod6Locked) {
+		m_speriod6locked = sPeriod6Locked;
+	}
+	public void set_siperiod7locked(String sPeriod7Locked) {
+		m_speriod7locked = sPeriod7Locked;
+	}
+	public void set_siperiod8locked(String sPeriod8Locked) {
+		m_speriod8locked = sPeriod8Locked;
+	}
+	public void set_siperiod9locked(String sPeriod9Locked) {
+		m_speriod9locked = sPeriod9Locked;
+	}
+	public void set_siperiod10locked(String sPeriod10Locked) {
+		m_speriod10locked = sPeriod10Locked;
+	}
+	public void set_siperiod11locked(String sPeriod11Locked) {
+		m_speriod11locked = sPeriod11Locked;
+	}
+	public void set_siperiod12locked(String sPeriod12Locked) {
+		m_speriod12locked = sPeriod12Locked;
+	}
+	public void set_siperiod13locked(String sPeriod13Locked) {
+		m_speriod13locked = sPeriod13Locked;
+	}
+	
 	public String get_sdatbeginningdateperiod1() {
 		return m_sdatbeginningdateperiod1;
 	}
@@ -1431,10 +1814,58 @@ public class GLFiscalPeriod extends java.lang.Object{
 	public String get_silockclosingperiod() {
 		return m_silockclosingperiod;
 	}
+	public String get_siperiod1locked() {
+		return m_speriod1locked;
+	}
+	public String get_siperiod2locked() {
+		return m_speriod2locked;
+	}
+	public String get_siperiod3locked() {
+		return m_speriod3locked;
+	}
+	public String get_siperiod4locked() {
+		return m_speriod4locked;
+	}
+	public String get_siperiod5locked() {
+		return m_speriod5locked;
+	}
+	public String get_siperiod6locked() {
+		return m_speriod6locked;
+	}
+	public String get_siperiod7locked() {
+		return m_speriod7locked;
+	}
+	public String get_siperiod8locked() {
+		return m_speriod8locked;
+	}
+	public String get_siperiod9locked() {
+		return m_speriod9locked;
+	}
+	public String get_siperiod10locked() {
+		return m_speriod10locked;
+	}
+	public String get_siperiod11locked() {
+		return m_speriod11locked;
+	}
+	public String get_siperiod12locked() {
+		return m_speriod12locked;
+	}
+	public String get_siperiod13locked() {
+		return m_speriod13locked;
+	}
+
 	public void set_snewrecord(String snewrecord){
 		m_snewrecord = snewrecord;
 	}
 	public String get_snewrecord(){
 		return m_snewrecord;
+	}
+	private static String getSTDDateAsSQLDate(String sStdDate) throws Exception{
+		return ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+			sStdDate, 
+			ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+			ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+			ServletUtilities.clsServletUtilities.EMPTY_SQL_DATE_VALUE
+		);
 	}
 }

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
-import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import ServletUtilities.clsServletUtilities;
@@ -24,7 +23,6 @@ import ServletUtilities.clsStringFunctions;
 import smar.SMOption;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMMasterEditSelect;
-import smcontrolpanel.SMRecreateExportAction;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 

@@ -16,13 +16,11 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
-import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
-import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsStringFunctions;
 import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;

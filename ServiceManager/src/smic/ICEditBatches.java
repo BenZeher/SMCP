@@ -23,7 +23,6 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableicbatchentries;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;

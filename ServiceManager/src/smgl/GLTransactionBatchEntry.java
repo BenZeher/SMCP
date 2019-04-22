@@ -223,9 +223,9 @@ public class GLTransactionBatchEntry {
     			|| (newline.getsdebitamt().compareToIgnoreCase("0.00") != 0)
     			|| (newline.getsdescription().compareToIgnoreCase("") != 0)
     			|| (newline.getsreference().compareToIgnoreCase("") != 0)
-    			|| (newline.getssourceledger().compareToIgnoreCase("") != 0)
-    			|| (newline.getssourcetype().compareToIgnoreCase("") != 0)
-    			|| (newline.getstransactiondate().compareToIgnoreCase("") != 0)
+    			//|| (newline.getssourceledger().compareToIgnoreCase("") != 0)
+    			//|| (newline.getssourcetype().compareToIgnoreCase("") != 0)
+    			//|| (newline.getstransactiondate().compareToIgnoreCase("") != 0)
     		){
     			addLine(newline);
     		}

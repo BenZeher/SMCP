@@ -9,7 +9,7 @@ public class SMTablegltransactionbatchlines {
 	public static final String lbatchnumber  = "lbatchnumber";
 	public static final String lentrynumber = "lentrynumber";
 	public static final String llinenumber = "llinenumber";
-	public static final String sdescription = "description";
+	public static final String sdescription = "sdescription";
 	public static final String sreference = "sreference";
 	public static final String scomment = "scomment";
 	public static final String dattransactiondate = "dattransactiondate";

@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
@@ -650,7 +651,7 @@ public class GLTransactionBatch {
     		}
     	}
     	if (!bEntryWasFound){
-    		throw new Exception("Error [155534061] - entry number '" + sEntryNumber + "' was not found in the batch.");
+    		throw new Exception("Error [1555956129] - entry number '" + sEntryNumber + "' was not found in the batch.");
     	}
     }
     public void post_with_data_transaction (
@@ -670,7 +671,7 @@ public class GLTransactionBatch {
     				this.toString() + ".post_with_data_transaction - User: " + sUserID + " - " + sUserFullName
     				);
     	} catch (Exception e) {
-    		throw new Exception("Error [155534062] getting connection - " + e.getMessage());
+    		throw new Exception("Error [1555956130] getting connection - " + e.getMessage());
     	}
 
     	clsDatabaseFunctions.start_data_transaction(conn);
@@ -681,20 +682,20 @@ public class GLTransactionBatch {
 	    	try {
 	    		unsetPostingFlag(conn);
 	    	} catch (Exception e1) {
-	    		clsDatabaseFunctions.freeConnection(context, conn, "[155534063]");
-	    		throw new Exception("Error [1489704632] UNsetting GL posting flag - " + e1.getMessage());
+	    		clsDatabaseFunctions.freeConnection(context, conn, "[1555956131]");
+	    		throw new Exception("Error [1555956132] UNsetting GL posting flag - " + e1.getMessage());
 	    	}
-	    	clsDatabaseFunctions.freeConnection(context, conn, "[155534064]");
-			throw new Exception("Error [155534065] posting - " + e.getMessage());
+	    	clsDatabaseFunctions.freeConnection(context, conn, "[1555956133]");
+			throw new Exception("Error [1555956134] posting - " + e.getMessage());
 		}
     	clsDatabaseFunctions.commit_data_transaction(conn);
     	try {
     		unsetPostingFlag(conn);
     	} catch (Exception e) {
-    		clsDatabaseFunctions.freeConnection(context, conn, "[155534066]");
-    		throw new Exception("Error [1555347589] UNsetting GL posting flag - " + e.getMessage());
+    		clsDatabaseFunctions.freeConnection(context, conn, "[1555956135]");
+    		throw new Exception("Error [1555956136] UNsetting GL posting flag - " + e.getMessage());
     	}
-    	clsDatabaseFunctions.freeConnection(context, conn, "[155534067]");
+    	clsDatabaseFunctions.freeConnection(context, conn, "[1555956137]");
     	return;
     }    
     
@@ -711,7 +712,7 @@ public class GLTransactionBatch {
     	try {
 			loadBatch(conn);
 		} catch (Exception e) {
-			throw new Exception("Error [1555347590] loading batch number " + getsbatchnumber() + " - " + e.getMessage());
+			throw new Exception("Error [1555956138] loading batch number " + getsbatchnumber() + " - " + e.getMessage());
 		}
     	
     	if (getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.POSTED)) == 0){
@@ -726,20 +727,20 @@ public class GLTransactionBatch {
     	try {
     		setPostingFlag(conn, sUserID);
     	} catch (Exception e) {
-    		throw new Exception("Error [1555347591] - " + e.getMessage());
+    		throw new Exception("Error [1555956139] - " + e.getMessage());
     	}
 
     	try {
     		post_without_data_transaction(conn, sUserID, sUserFullName, log);
     	} catch (Exception e1) {
-    		throw new Exception("Error [1555347592] posting - " + e1.getMessage());
+    		throw new Exception("Error [1555956140] posting - " + e1.getMessage());
     	}
     	
     	//Need to unset posting flag:
     	try {
     		unsetPostingFlag(conn);
     	} catch (Exception e) {
-    		throw new Exception("Error [1555347593] UNsetting GL posting flag - " + e.getMessage());
+    		throw new Exception("Error [1555956141] UNsetting GL posting flag - " + e.getMessage());
     	}
     }
     
@@ -749,27 +750,34 @@ public class GLTransactionBatch {
     	
     	//If there are no entries, don't post
     	if (m_arrBatchEntries.size() == 0){
-    		throw new Exception("Error [1555347594] - batch has no entries in it and can't be posted.");
+    		throw new Exception("Error [1555956142] - batch has no entries in it and can't be posted.");
     	}
     	
     	//Check all of the entries first to make sure they can be posted:
     	try {
 			checkBatchEntries(log, sUserID, conn);
 		} catch (Exception e1) {
-			throw new Exception("Error [1555347595] - " + e1.getMessage());
+			throw new Exception("Error [1555956143] - " + e1.getMessage());
 		}
     	
     	//Next, create transactions for all of the entries:
+    	clsDBServerTime dt = new clsDBServerTime(conn);
+    	setsposteddate(dt.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
     	try {
 			createEntryTransactions(log, sUserID, conn);
 		} catch (Exception e) {
-			throw new Exception("Error [1555347596] creating entry transactions - " + e.getMessage());
+			throw new Exception("Error [1555956144] creating entry transactions - " + e.getMessage());
 		}
 
+    	//Update the fiscal set data:
+    	try {
+			updateFiscalSets(log, sUserID, conn);
+		} catch (Exception e) {
+			throw new Exception("Error [1555957702] updating fiscal sets - " + e.getMessage());
+		}
+    	
     	//Update the batch:
     	setsbatchstatus(Integer.toString(SMBatchStatuses.POSTED));
-    	clsDBServerTime dt = new clsDBServerTime(conn);
-    	setsposteddate(dt.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
     	//System.out.println("[1517597655] this.getsposteddate() = " + this.getsposteddate());
     	
     	if (bDebugMode){    	
@@ -778,13 +786,13 @@ public class GLTransactionBatch {
     			SMLogEntry.LOG_OPERATION_GLBATCHPOST,
         		"In GL post_without_data_transaction Batch #:" + getsbatchnumber(), 
         		"Going into save_without_data_transaction",
-        		"[1555347597]"
+        		"[1555956145]"
     		);
     	}
     	try {
 			save_without_data_transaction(conn, sUserID, sUserFullName, true);
 		} catch (Exception e) {
-			throw new Exception("Error [1555347598] updating batch - " + e.getMessage());
+			throw new Exception("Error [1555956146] updating batch - " + e.getMessage());
 		}
  
     	if (bDebugMode){
@@ -793,13 +801,189 @@ public class GLTransactionBatch {
     			SMLogEntry.LOG_OPERATION_GLBATCHPOST,
         		"In GL post_without_data_transaction Batch #:" + getsbatchnumber(), 
         		"After successful save_without_data_transaction",
-        		"[1555347599]"
+        		"[1555956147]"
     		);
     	}
     	
     	return;
     }
 
+	private void updateFiscalSets(SMLogEntry log, String sUserID, Connection conn) throws Exception{
+    	if (bDebugMode){
+	    	log.writeEntry(
+	        		sUserID, 
+	        		SMLogEntry.LOG_OPERATION_GLBATCHPOST, 
+	        		"In post_without_data_transaction Batch #:" + getsbatchnumber()
+	        		+ " Going into updateFiscalSets",
+	        		"",
+	        		"[1555957796]"
+	        );
+    	}
+    	
+    	//Get a list of all the changes to all the accounts, and update the fiscal sets accordingly:
+    	String SQL = "SELECT"
+    		+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS 'ACCTTOTAL'"
+    		+ ", " + SMTablegltransactionlines.ifiscalperiod
+    		+ ", " + SMTablegltransactionlines.ifiscalyear
+    		+ ", " + SMTablegltransactionlines.sacctid
+    		+ " FROM " + SMTablegltransactionlines.TableName
+    		+ " WHERE ("
+    			 + "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + getsbatchnumber() + ")"
+    		+ ")"
+    		+ " GROUP BY " + SMTablegltransactionlines.sacctid
+    	;
+    	try {
+			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsTransactions.next()){
+				updateFiscalSetsForAccount(
+					conn, 
+					rsTransactions.getString(SMTablegltransactionlines.sacctid),
+					rsTransactions.getInt(SMTablegltransactionlines.ifiscalyear),
+					rsTransactions.getInt(SMTablegltransactionlines.ifiscalperiod),
+					rsTransactions.getBigDecimal("ACCTTOTAL")
+					);
+			}
+			rsTransactions.close();
+		} catch (Exception e) {
+			throw new Exception("Error [1555958198] reading GL transactions - " + e.getMessage());
+		}
+    	
+    	return;
+	}
+	
+	private void updateFiscalSetsForAccount(
+		Connection conn,
+		String sAccount,
+		int iFiscalYear,
+		int iFiscalPeriod,
+		BigDecimal bdAmt
+		) throws Exception{
+		
+		//Determine which field we'll be updating:
+		String sNetChangeField = "";
+		switch(iFiscalPeriod){
+		case 1: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod1;
+		case 2: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod2;
+		case 3: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod3;
+		case 4: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod4;
+		case 5: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod5;
+		case 6: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod6;
+		case 7: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod7;
+		case 8: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod8;
+		case 9: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod9;
+		case 10: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod10;
+		case 11: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod11;
+		case 12: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod12;
+		case 13: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod13;
+		case 14: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod14;
+		case 15: 
+			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod15;
+		}
+		
+		//If the fiscal set record doesn't exist, insert it:
+		boolean bFiscalSetExistsAlready = false;
+		String SQL = "SELECT"
+			+ " " + SMTableglfiscalsets.sAcctID
+			+ " FROM " + SMTableglfiscalsets.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rsFiscalSet = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsFiscalSet.next()){
+				bFiscalSetExistsAlready = true;
+			}
+			rsFiscalSet.close();
+		} catch (Exception e) {
+			throw new Exception();
+		}
+		
+		if (bFiscalSetExistsAlready){
+			//Just update the appropriate fields:
+
+			
+			SQL = "UPDATE " + SMTableglfiscalsets.TableName
+				+ " SET " + sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+				+ ")"
+			;
+			try {
+				Statement stmt = conn.createStatement();
+				stmt.execute(SQL);
+			} catch (Exception e) {
+				throw new Exception(
+					"Error [1555962542] updating GL fiscal set for account '" + sAccount 
+					+ "', fiscal year " + Integer.toString(iFiscalYear) 
+					+ ", period " + Integer.toString(iFiscalPeriod) 
+					+ " - " + e.getMessage());
+			}
+			
+		}else{
+			//We have to create a new fiscal set record:
+			//First get the closing balance from the previous fiscal year:
+			SQL = "SELECT"
+				+ " " + SMTableglfiscalsets.bdopeningbalance
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod1
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod2
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod3
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod4
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod5
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod6
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod7
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod8
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod9
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod10
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod11
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod12
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod13
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod14
+				+ " + " + SMTableglfiscalsets.bdnetchangeperiod15
+				+ " AS 'CLOSINGBALANCE'"
+				+ " FROM " + SMTableglfiscalsets.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear - 1) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+				+ ")"
+			;
+			BigDecimal bdPreviousYearClosingBalance = new BigDecimal("0.00");
+			try {
+				ResultSet rsPreviousYear = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+				if(rsPreviousYear.next()){
+					bdPreviousYearClosingBalance = rsPreviousYear.getBigDecimal("CLOSINGBALANCE");
+				}else{
+					throw new Exception(
+						"Error [1555964773] no record for previous fiscal year for GL account '" + sAccount 
+						+ "', fiscal year " + Integer.toString(iFiscalYear - 1)+ ".");
+				}
+				rsPreviousYear.close();
+			} catch (Exception e) {
+				throw new Exception("Error [1555964774] getting previous fiscal year closing balance for GL account '" + sAccount 
+					+ "', fiscal year " + Integer.toString(iFiscalYear - 1)+ " - " + e.getMessage());
+			}
+			
+			//Now insert a new GL fiscal set record:
+			x
+			
+		}
+		
+	}
     private void createEntryTransactions(SMLogEntry log, String sUserID, Connection conn) throws Exception{
     	if (bDebugMode){
 	    	log.writeEntry(
@@ -808,7 +992,7 @@ public class GLTransactionBatch {
 	        		"In post_without_data_transaction Batch #:" + getsbatchnumber()
 	        		+ " Going into createTransactions",
 	        		"",
-	        		"[1555347600]"
+	        		"[1555956423]"
 	        );
     	}
     	for (int i = 0; i < m_arrBatchEntries.size(); i++){
@@ -825,6 +1009,7 @@ public class GLTransactionBatch {
     	
     	for (int i = 0; i < entry.getLineArray().size(); i++){
     		GLTransactionBatchLine line = entry.getLineArray().get(i);
+
     		//Get the normal GL account type:
         	GLAccount acct = new GLAccount(line.getsacctid());
         	
@@ -867,7 +1052,7 @@ public class GLTransactionBatch {
         		
         		+ ") VALUES ("
         		+ " " + sTransactionAmt				//bdamount
-        		+ " '" + getsposteddateInSQLFormat() + "'" //datpostingdate
+        		+ ", '" + getsposteddateInSQLFormat() + "'" //datpostingdate
         		+ ", '" + entry.getsdatdocdateInSQLFormat() + "'"  //dattransactiondate
         		+ ", 0" //iconsolidatedposting
         		+ ", " + entry.getsfiscalperiod() //ifiscalperiod
@@ -889,7 +1074,7 @@ public class GLTransactionBatch {
     			Statement stmt = conn.createStatement();
     			stmt.execute(SQL);
     		} catch (Exception e) {
-    			throw new Exception("Error [1555349622] inserting transaction for entry number " + entry.getsentrynumber() + " - " + e.getMessage());
+    			throw new Exception("Error [1555956425] inserting transaction for entry number " + entry.getsentrynumber() + " - SQL = '" + SQL + "' -" + e.getMessage());
     		}
     	}
        	return;
@@ -900,7 +1085,7 @@ public class GLTransactionBatch {
     		log.writeEntry(
    				sUserID, 
    				SMLogEntry.LOG_OPERATION_GLBATCHPOST, 
-   				"Entering checkBatchEntries", "Batch #:" + getsbatchnumber(), "[1555349623]");
+   				"Entering checkBatchEntries", "Batch #:" + getsbatchnumber(), "[1555956151]");
     	}
     	String sCheckResults = "";
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
@@ -913,7 +1098,7 @@ public class GLTransactionBatch {
 					sUserID);
 			} catch (Exception e) {
 				//Record any check errors we run across:
-				sCheckResults += "  Error [1555349624] on entry " + entry.getsentrynumber() + e.getMessage() + ".";
+				sCheckResults += "  Error [1555956152] on entry " + entry.getsentrynumber() + e.getMessage() + ".";
 			}
 		}
     	if (sCheckResults.compareToIgnoreCase("") != 0){
@@ -932,13 +1117,13 @@ public class GLTransactionBatch {
     	try {
 			entry.entryIsInBalance(conn);
 		} catch (Exception e) {
-			throw new Exception("Error [1555349625] - " + e.getMessage());
+			throw new Exception("Error [1555956153] - " + e.getMessage());
 		}
     	
 		//Check that the transaction date is within the allowed posting period:
 		SMOption opt = new SMOption();
 		if (!opt.load(conn)){
-			throw new Exception("Error [1555349626] - could not check posting period - " + opt.getErrorMessage() + ".");
+			throw new Exception("Error [1555956154] - could not check posting period - " + opt.getErrorMessage() + ".");
 		}
 		try {
 			opt.checkDateForPosting(
@@ -948,7 +1133,7 @@ public class GLTransactionBatch {
 				sUserID
 			);
 		} catch (Exception e2) {
-			throw new Exception("Error [1555349627] on Entry " + entry.getsentrynumber()
+			throw new Exception("Error [1555956155] on Entry " + entry.getsentrynumber()
 				+ " - " + e2.getMessage() + "."); 
 		}
     	

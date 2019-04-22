@@ -1499,8 +1499,6 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			sLineText += "</TD>\n";
 
 			if (bEditable){
-				//sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-				//	+ createEditLineButton(line.getslinenumber()) + "</TD>\n";
 				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
 					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
 			}

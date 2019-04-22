@@ -1,6 +1,7 @@
 package smgl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -18,9 +19,8 @@ import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTablegltransactionbatchlines;
-import SMDataDefinition.SMTableicpoheaders;
-import SMDataDefinition.SMTableicporeceiptheaders;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMMasterEditEntry;
@@ -187,12 +187,12 @@ public class GLEditEntryEdit  extends HttpServlet {
 		//Store some command values here:
 		//Store whether or not the record has been changed:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\" VALUE=\"" 
-			+ RECORDWASCHANGED_FLAG_VALUE + "\""
-			+ " id=\"" + RECORDWASCHANGED_FLAG + "\"" + ">";
+				+ clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
+				+ " id=\"" + RECORDWASCHANGED_FLAG + "\"" + ">";
 		//Store database id 
-				s += "<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + "" + "\""
-				+ " id=\"" + sm.getsDBID() + "\""
-				+ "\">";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "\" VALUE=\"" + "" + "\""
+		+ " id=\"" + sm.getsDBID() + "\""
+		+ "\">";
 		
 		//Store which command button the user has chosen:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\""
@@ -262,7 +262,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 		;
 		
 		//Auto reverse
-    	//On hold:
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Auto-reverse?</TD>\n"
  		    ;
      	if (bEditable){
@@ -355,10 +354,16 @@ public class GLEditEntryEdit  extends HttpServlet {
 			} catch (Exception e) {
 				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
 			}
-			int iFiscalYear = Integer.parseInt(entry.getsfiscalyear());
+			int iFiscalYear;
+			try {
+				iFiscalYear = Integer.parseInt(entry.getsfiscalyear());
+			} catch (NumberFormatException e) {
+				iFiscalYear = 0;
+			}
 			if (iFiscalYear == 0){
 				iFiscalYear = iCurrentFiscalYear;
 			}
+			
 			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ifiscalyear + "\" >\n";
 			sControlHTML += "<OPTION"
 				+ " VALUE=\"" 
@@ -395,6 +400,7 @@ public class GLEditEntryEdit  extends HttpServlet {
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML 
         		+ "</TD>\n";   	
     	
+    	System.out.println("[1555946928] - got here");
     	//Fiscal period
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;period:&nbsp;</TD>\n";
 		
@@ -405,7 +411,12 @@ public class GLEditEntryEdit  extends HttpServlet {
 			} catch (Exception e) {
 				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
 			}
-			int iFiscalPeriod = Integer.parseInt(entry.getsfiscalperiod());
+			int iFiscalPeriod;
+			try {
+				iFiscalPeriod = Integer.parseInt(entry.getsfiscalperiod());
+			} catch (NumberFormatException e) {
+				iFiscalPeriod = 0;
+			}
 			if (iFiscalPeriod == 0){
 				iFiscalPeriod = iCurrentFiscalPeriod;
 			}
@@ -448,6 +459,8 @@ public class GLEditEntryEdit  extends HttpServlet {
     	
     	s += "  </TR>\n";    
      	
+    	System.out.println("[1555946929] - got here");
+    	
         //Source Ledger:
     	s += "  <TR>\n";
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source&nbsp;ledger:&nbsp;</TD>\n"
@@ -589,10 +602,10 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Transaction<BR>Date</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source Ledger</TD>\n";
+					+ "Source<BR>Ledger</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source Type</TD>\n";
+					+ "Source<BR>Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Debit</TD>\n";
@@ -627,7 +640,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Source<BR>Ledger</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source Type</TD>\n";
+					+ "Source<BR>Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "Debit</TD>\n";
@@ -823,7 +836,13 @@ public class GLEditEntryEdit  extends HttpServlet {
 				    + " MAXLENGTH=" + "10"
 				    + " SIZE = " + "8"
 				    + " onchange=\"flagDirty();\""
-			    	+ ">"
+				    + ">"
+				    + "&nbsp;" + SMUtilities.getDatePickerString(
+				    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+							+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+							+ SMTablegltransactionbatchlines.dattransactiondate,
+							getServletContext()
+						)
 				;
 			}else{
 				sLineText += clsStringFunctions.filter(line.getstransactiondate());
@@ -885,7 +904,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
 				    + " MAXLENGTH=" + "13"
 				    + " SIZE = " + "12"
-				    + " onchange=\"updateLineTotal();\""
+				    //+ " onchange=\"updateLineTotal();\""
 			    	+ ">"
 				;
 			}else{
@@ -902,13 +921,18 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
 				    + " MAXLENGTH=" + "13"
 				    + " SIZE = " + "12"
-				    + " onchange=\"updateLineTotal();\""
+				    //+ " onchange=\"updateLineTotal();\""
 			    	+ ">"
 				;
 			}else{
 				sLineText += clsStringFunctions.filter(line.getscreditamt());
 			}
 			sLineText += "</TD>\n";
+			
+			if (bEditable){
+				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
+			}
 			
 			sLineText += "  </TR>\n";
 			bOddRow = !bOddRow;
@@ -997,7 +1021,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ SMTablegltransactionbatchlines.sreference + "\""
 		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsreference()) + "\""
 			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sreferenceLength)
-			    + " SIZE = " + "40"
+			    + " SIZE = " + "30"
 			    + " onchange=\"flagDirty();\""
 		    	+ ">"
 			;
@@ -1026,6 +1050,12 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    + " SIZE = " + "8"
 			    + " onchange=\"flagDirty();\""
 		    	+ ">"
+			    + "&nbsp;" + SMUtilities.getDatePickerString(
+			    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+						+ SMTablegltransactionbatchlines.dattransactiondate,
+						getServletContext()
+					)
 			;
 			s += "</TD>\n";
 			
@@ -1078,7 +1108,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
 			    + " MAXLENGTH=" + "13"
 			    + " SIZE = " + "12"
-			    + " onchange=\"updateLineTotal();\""
+			    //+ " onchange=\"updateLineTotal();\""
 		    	+ ">"
 			;
 			s += "</TD>\n";
@@ -1096,13 +1126,42 @@ public class GLEditEntryEdit  extends HttpServlet {
 		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
 			    + " MAXLENGTH=" + "13"
 			    + " SIZE = " + "12"
-			    + " onchange=\"updateLineTotal();\""
+			    //+ " onchange=\"updateLineTotal();\""
 		    	+ ">"
 			;
 			s += "</TD>\n";
 			
 			s += "  </TR>\n";
 		}
+		
+		//Print a line for the totals:
+		s += "  <TR style = \"  background-color:" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + ";  \""
+				+ ">\n"
+			;
+		s += "    <TD COLSPAN=8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+		s += "<B>TOTALS:</B>";
+		s += "</TD>\n";
+		
+		BigDecimal bdDebitTotal = entry.getDebitTotal();
+		BigDecimal bdCreditTotal = entry.getCreditTotal();
+		
+		String sDebitTotal = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal);
+		String sCreditTotal = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditTotal);
+		
+		if (bdDebitTotal.compareTo(bdCreditTotal) != 0){
+			sDebitTotal = "<B><FONT COLOR=RED>" + sDebitTotal + "</FONT></B>";
+			sCreditTotal = "<B><FONT COLOR=RED>" + sCreditTotal + "</FONT></B>";
+		}
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+		s += "<B>" + sDebitTotal + "</B>";
+		s += "</TD>\n";
+		
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+		s += "<B>" + sCreditTotal + "</B>";
+		s += "</TD>\n";
+		
+		s += "  </TR>\n";
 		
 		s += "</TABLE>\n";
 		return s;
@@ -1266,7 +1325,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "}\n"
 		;
 		s += "function deleteentry(){\n"
-			+ "    if (confirm('Are you sure you want to delete this " + "invoice" + "?')){\n"
+			+ "    if (confirm('Are you sure you want to delete this " + "entry" + "?')){\n"
 			+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_DELETE + "\";\n"
 			+ "        document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "    }\n"
@@ -1278,13 +1337,13 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 		+ "}\n";
 		
+		/*
 		s += "function updateLineTotal(){\n"
 			+ "    calculatelinetotal();"
 			+ "    flagDirty();\n"
 			+ "}\n"
 		;
 		
-		/*
 		s += "function calculatelinetotal(){\n"
 			+ "    //Turn off the line amt warning by default:\n"
 			//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"

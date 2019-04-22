@@ -284,6 +284,11 @@ public class GLEditBatchesEdit extends HttpServlet {
     	pwOut.println("    <TD>");
     	pwOut.println("<B><U>Total credits</B></U>");
     	pwOut.println("</TD>\n");
+    	
+    	pwOut.println("    <TD>");
+    	pwOut.println("<B><U>Out of balance<BR>Amount</B></U>");
+    	pwOut.println("</TD>\n");
+    	
     	iColumnCount++;
     	
     	pwOut.println("  </TR>\n");
@@ -372,23 +377,39 @@ public class GLEditBatchesEdit extends HttpServlet {
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Debit total
-	        	try {
-					pwOut.println("    <TD ALIGN=RIGHT>");
-					pwOut.println(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(entry.getDebitTotal()));
-					pwOut.println("</TD>\n");
-				} catch (Exception e) {
-					pwOut.println("<BR><B><FONT COLOR=RED>Error [1555534073] getting entry debit totals - " + e.getMessage() + "</FONT></B><BR>");
+	        	BigDecimal bdDebitTotal = new BigDecimal("0.00");
+				try {
+					bdDebitTotal = entry.getDebitTotal();
+				} catch (Exception e1) {
+					pwOut.println("<BR><B><FONT COLOR=RED>Error [1555534073] getting entry debit totals - " + e1.getMessage() + "</FONT></B><BR>");
 				}
+				pwOut.println("    <TD ALIGN=RIGHT>");
+				pwOut.println(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal));
+				pwOut.println("</TD>\n");
 
 	        	//Credit total
-	        	try {
-					pwOut.println("    <TD ALIGN=RIGHT>");
-					pwOut.println(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(entry.getCreditTotal()));
-					pwOut.println("</TD>\n");
-				} catch (Exception e) {
-					pwOut.println("<BR><B><FONT COLOR=RED>Error [1555534074] getting entry credit totals - " + e.getMessage() + "</FONT></B><BR>");
+	        	BigDecimal bdCreditTotal = new BigDecimal("0.00");
+				try {
+					bdCreditTotal = entry.getCreditTotal();
+				} catch (Exception e1) {
+					pwOut.println("<BR><B><FONT COLOR=RED>Error [1555534074] getting entry credit totals - " + e1.getMessage() + "</FONT></B><BR>");
 				}
+				pwOut.println("    <TD ALIGN=RIGHT>");
+				pwOut.println(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditTotal));
+				pwOut.println("</TD>\n");
 	    		
+	        	//Out of balance amount:
+	        	String sOutOfBalanceAmt = "0.00";
+	        	if (bdDebitTotal.compareTo(bdCreditTotal) != 0){
+	        		sOutOfBalanceAmt = "<B><FONT COLOR=RED>" 
+	        			+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal.subtract(bdCreditTotal).abs())
+	        			+ "</FONT></B>"
+	        		;
+	        	}
+				pwOut.println("    <TD ALIGN=RIGHT>");
+				pwOut.println(sOutOfBalanceAmt);
+				pwOut.println("</TD>\n");
+	        	
 	        	pwOut.println(" </TR>\n");
 	        	bOddRow = !bOddRow;
     		}

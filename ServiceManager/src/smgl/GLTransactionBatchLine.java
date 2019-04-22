@@ -217,6 +217,9 @@ public class GLTransactionBatchLine {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_sdebitamt.compareTo("") == 0){
+			m_sdebitamt = "0.00";
+		}
 		m_sdebitamt = m_sdebitamt.replaceAll(",", "");
 		try {
 			m_sdebitamt = clsValidateFormFields.validateBigdecimalField(
@@ -230,10 +233,13 @@ public class GLTransactionBatchLine {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		if (m_screditamt.compareTo("") == 0){
+			m_screditamt = "0.00";
+		}
 		m_screditamt = m_screditamt.replaceAll(",", "");
 		try {
 			m_screditamt = clsValidateFormFields.validateBigdecimalField(
-					m_sdebitamt, 
+					m_screditamt, 
 				"Credit Amount", 
 				SMTablegltransactionbatchlines.bdcreditamtScale,
 				new BigDecimal("-9999999.99"),
@@ -242,6 +248,21 @@ public class GLTransactionBatchLine {
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
+		
+		//either the debit or the credit has to be ZERO for every line:
+		if (
+			(m_sdebitamt.compareToIgnoreCase("0.00") != 0)
+			&& (m_screditamt.compareToIgnoreCase("0.00") != 0)
+		){
+			sResult += "  Lines must be EITHER debits or credits, but line " + getslinenumber() + " has both.";
+		}
+		
+		if (
+				(m_sdebitamt.compareToIgnoreCase("0.00") == 0)
+				&& (m_screditamt.compareToIgnoreCase("0.00") == 0)
+			){
+				sResult += "  must have a DEBIT amount or a CREDIT amount.";
+			}
 		
 		try {
 			m_ssourceledger = clsValidateFormFields.validateStringField(

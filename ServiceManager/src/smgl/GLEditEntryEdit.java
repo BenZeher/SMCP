@@ -16,6 +16,7 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableapdistributioncodes;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTablegltransactionbatchlines;
@@ -63,6 +64,9 @@ public class GLEditEntryEdit  extends HttpServlet {
 	
 	public static final String BOOKMARK_TOP_OF_TABLES = "TopOfTables";
 	public static final String RETURN_TO_TABLES_BOOKMARK = "RETURNTOTABLESPARAM";
+	
+	public static final String PARAM_FISCAL_YEAR_AND_PERIOD = "FISCALYEARANDPERIOD";
+	public static final String FISCAL_YEAR_AND_PERIOD_DELIMITER = " - ";
 	
 	//Hot keys:
 	public static final String DELETE_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>elete"; // D
@@ -342,127 +346,342 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		s += "  <TR>\n";
 		
-    	//Fiscal year
+    	//Fiscal year and period
     	s += "  <TR>\n";
     	
-    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;year:&nbsp;</TD>\n";
+    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;year/period:&nbsp;</TD>\n";
 		
 		if (bEditable){
-			int iCurrentFiscalYear = 0;
-			try {
-				iCurrentFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
-			} catch (Exception e) {
-				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
-			}
-			int iFiscalYear;
-			try {
-				iFiscalYear = Integer.parseInt(entry.getsfiscalyear());
-			} catch (NumberFormatException e) {
-				iFiscalYear = 0;
-			}
-			if (iFiscalYear == 0){
-				iFiscalYear = iCurrentFiscalYear;
-			}
+			//int iCurrentFiscalYear = 0;
+			//try {
+			//	iCurrentFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
+			//} catch (Exception e) {
+			//	s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
+			//}
 			
-			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ifiscalyear + "\" >\n";
+			sControlHTML = "<SELECT NAME = \"" + PARAM_FISCAL_YEAR_AND_PERIOD + "\" >\n";
 			sControlHTML += "<OPTION"
 				+ " VALUE=\"" 
 				+ "-1" 
 				+ "\">" 
-				+ "** SELECT FISCAL YEAR **"
+				+ "** SELECT FISCAL YEAR/PERIOD **"
 				+ "</OPTION>\n"
 			;
 			
-			for (int i = 2015; i < 2050; i++){
-				sControlHTML += "<OPTION";
-				if (iFiscalYear == i){
-					sControlHTML += " selected=YES ";
+			String SQL = "SELECT"
+				+ " * FROM " + SMTableglfiscalperiods.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalperiods.iperiod1locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod2locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod3locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod4locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod5locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod6locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod7locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod8locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod9locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod10locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod11locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod12locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.iperiod13locked + " = 0)"
+				+ ")"
+				+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
+			;
+			
+			try {
+				ResultSet rsOpenFiscalPeriods = ServletUtilities.clsDatabaseFunctions.openResultSet(
+					SQL, getServletContext(), sm.getsDBID(), "MySQL", this.toString() + ".getEditHTML - " + sm.getFullUserName());
+				while (rsOpenFiscalPeriods.next()){
+					int iNumberOfPeriods = rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+					int iFiscalYear = rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.ifiscalyear);
+					int iFiscalPeriod = 1;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod1locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 2;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod2locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 3;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod3locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 4;
+					//System.out.println("[1556051562] - rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod4locked) = '" + rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod4locked) + "'.");
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod4locked) == 0){
+						//System.out.println("[1556051564] - into if clause, entry.getsfiscalyear() = '" + entry.getsfiscalyear() 
+						//+ "', entry.getsfiscalperiod() = '" + entry.getsfiscalperiod() + "'.");
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+						//System.out.println("[1556051563] - period 4 unlocked, sControlHTML = '" + sControlHTML + "'.");
+					}
+					iFiscalPeriod = 5;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod5locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 6;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod6locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 7;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod7locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 8;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod8locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 9;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod9locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 10;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod10locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 11;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod11locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					iFiscalPeriod = 12;
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod12locked) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+							+ "</OPTION>\n"
+						;
+					}
+					if (iNumberOfPeriods > 12){
+						iFiscalPeriod = 13;
+						if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.iperiod2locked) == 0){
+							sControlHTML += "<OPTION";
+							try {
+								if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+									if (Integer.parseInt(entry.getsfiscalperiod()) == iFiscalPeriod){
+										sControlHTML += " selected=YES ";	
+									}
+								}
+							} catch (Exception e) {
+								//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+								//stop anything, just go on:
+							}
+							sControlHTML += " VALUE=\"" 
+								+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+								+ "\">" 
+								+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(iFiscalPeriod) 
+								+ "</OPTION>\n"
+							;
+						}
+					}
 				}
-				sControlHTML += " VALUE=\"" 
-					+ Integer.toString(i) 
-					+ "\">" 
-					+ Integer.toString(i)
-					+ "</OPTION>\n"
-				;
+				rsOpenFiscalPeriods.close();
+			} catch (NumberFormatException e) {
+				sControlHTML += "<BR><B><FONT COLOR=RED>Error [1556051257] reading open fiscal periods - " + e.getMessage() + "</FONT></B><BR>";
 			}
-
+		
 			sControlHTML += "</SELECT>\n";
 			
 			sControlHTML += "    </TD>\n";
 		}else{
-			sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ifiscalyear + "\""
-	    		+ " VALUE=\"" + entry.getsfiscalyear() + "\""
+			sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_FISCAL_YEAR_AND_PERIOD + "\""
+	    		+ " VALUE=\"" + entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod() + "\""
 	    		+ ">"
-	    		+ entry.getsfiscalyear()
+	    		+ entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod()
 			;
 		}
 		
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML 
         		+ "</TD>\n";   	
     	
-    	System.out.println("[1555946928] - got here");
-    	//Fiscal period
-    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;period:&nbsp;</TD>\n";
-		
-		if (bEditable){
-			int iCurrentFiscalPeriod = 0;
-			try {
-				iCurrentFiscalPeriod = GLFiscalPeriod.getCurrentFiscalPeriod(sm.getsDBID(), sm.getFullUserName(), getServletContext());
-			} catch (Exception e) {
-				s += "<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>";
-			}
-			int iFiscalPeriod;
-			try {
-				iFiscalPeriod = Integer.parseInt(entry.getsfiscalperiod());
-			} catch (NumberFormatException e) {
-				iFiscalPeriod = 0;
-			}
-			if (iFiscalPeriod == 0){
-				iFiscalPeriod = iCurrentFiscalPeriod;
-			}
-			//System.out.println("[1555702651] fiscal period = " + iFiscalPeriod);
-			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ifiscalperiod + "\" >\n";
-			sControlHTML += "<OPTION"
-				+ " VALUE=\"" 
-				+ "-1" 
-				+ "\">" 
-				+ "** SELECT FISCAL PERIOD **"
-				+ "</OPTION>\n"
-			;
-			
-			for (int i = 1; i <= 13; i++){
-				sControlHTML += "<OPTION";
-				if (iFiscalPeriod == i){
-					sControlHTML += " selected=YES ";
-				}
-				sControlHTML += " VALUE=\"" 
-					+ Integer.toString(i) 
-					+ "\">" 
-					+ Integer.toString(i)
-					+ "</OPTION>\n"
-				;
-			}
 
-			sControlHTML += "</SELECT>\n";
-			
-			sControlHTML += "    </TD>\n";
-		}else{
-			sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ifiscalperiod + "\""
-	    		+ " VALUE=\"" + entry.getsfiscalperiod() + "\""
-	    		+ ">"
-	    		+ entry.getsfiscalperiod()
-			;
-		}
-		
-    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML 
-        		+ "</TD>\n";  
-    	
-    	s += "  </TR>\n";    
-     	
-    	System.out.println("[1555946929] - got here");
-    	
         //Source Ledger:
-    	s += "  <TR>\n";
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source&nbsp;ledger:&nbsp;</TD>\n"
  		    ;
      	if (bEditable){
@@ -500,9 +719,11 @@ public class GLEditEntryEdit  extends HttpServlet {
      	}
      	
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
- 		
+ 		s += "  </TR>\n";
+     	
         //Source document transaction ID:
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
+ 		s += "  <TR>\n";
+ 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
  		    ;
      	if (bEditable){
      		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + "\""
@@ -520,6 +741,10 @@ public class GLEditEntryEdit  extends HttpServlet {
  	    	;
      	}
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+     	
+     	s += "    <TD>&nbsp;</TD>\n"
+     		+ "    <TD>&nbsp;</TD>"
+     	;
      	
      	s += "  </TR>\n";
      	

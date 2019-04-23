@@ -864,35 +864,52 @@ public class GLTransactionBatch {
 		switch(iFiscalPeriod){
 		case 1: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod1;
+			break;
 		case 2: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod2;
+			break;
 		case 3: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod3;
+			break;
 		case 4: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod4;
+			break;
 		case 5: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod5;
+			break;
 		case 6: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod6;
+			break;
 		case 7: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod7;
+			break;
 		case 8: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod8;
+			break;
 		case 9: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod9;
+			break;
 		case 10: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod10;
+			break;
 		case 11: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod11;
+			break;
 		case 12: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod12;
+			break;
 		case 13: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod13;
+			break;
 		case 14: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod14;
+			break;
 		case 15: 
 			sNetChangeField = SMTableglfiscalsets.bdnetchangeperiod15;
+			break;
 		}
+		
+		//System.out.println("[1556038818] sAccount = '" + sAccount + "', net change field = '" + sNetChangeField + "'.");
 		
 		//If the fiscal set record doesn't exist, insert it:
 		boolean bFiscalSetExistsAlready = false;
@@ -901,6 +918,7 @@ public class GLTransactionBatch {
 			+ " FROM " + SMTableglfiscalsets.TableName
 			+ " WHERE ("
 				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
 			+ ")"
 		;
 		try {
@@ -913,29 +931,39 @@ public class GLTransactionBatch {
 			throw new Exception();
 		}
 		
-		if (bFiscalSetExistsAlready){
-			//Just update the appropriate fields:
-
+		//The fiscal set should ALWAYS exist:
+		//if (bFiscalSetExistsAlready){
+		//Just update the appropriate fields:
+		
+		SQL = "UPDATE " + SMTableglfiscalsets.TableName
+			+ " SET " + sNetChangeField + " = " + sNetChangeField + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+			+ ")"
+		;
+		//System.out.println("[1556038820] UPDATE statement = '" + SQL + "'.");
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception(
+				"Error [1555962542] updating GL fiscal set for account '" + sAccount 
+				+ "', fiscal year " + Integer.toString(iFiscalYear) 
+				+ ", period " + Integer.toString(iFiscalPeriod) 
+				+ " - " + e.getMessage());
+		}
+		
+		//Allow for the possibility that this update affects a starting balance in a subsequent fiscal set:
+		//TODO
+		
+		//Now update the GL financial statement data:
+		//TODO
 			
-			SQL = "UPDATE " + SMTableglfiscalsets.TableName
-				+ " SET " + sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
-				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
-					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-				+ ")"
-			;
-			try {
-				Statement stmt = conn.createStatement();
-				stmt.execute(SQL);
-			} catch (Exception e) {
-				throw new Exception(
-					"Error [1555962542] updating GL fiscal set for account '" + sAccount 
-					+ "', fiscal year " + Integer.toString(iFiscalYear) 
-					+ ", period " + Integer.toString(iFiscalPeriod) 
-					+ " - " + e.getMessage());
-			}
 			
+/*			
 		}else{
+			//System.out.println("[1556038859] fiscal set does not already exist.");
 			//We have to create a new fiscal set record:
 			//First get the closing balance from the previous fiscal year:
 			SQL = "SELECT"
@@ -962,6 +990,7 @@ public class GLTransactionBatch {
 					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
 				+ ")"
 			;
+			
 			BigDecimal bdPreviousYearClosingBalance = new BigDecimal("0.00");
 			try {
 				ResultSet rsPreviousYear = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -979,10 +1008,31 @@ public class GLTransactionBatch {
 			}
 			
 			//Now insert a new GL fiscal set record:
-			x
-			
+			SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
+				+ SMTableglfiscalsets.bdopeningbalance
+				+ ", " + SMTableglfiscalsets.ifiscalyear
+				+ ", " + SMTableglfiscalsets.sAcctID
+				+ ", " + sNetChangeField
+				+ ") VALUES ("
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
+				+ ", " + Integer.toString(iFiscalYear)
+				+ ", '" + sAccount + "'"
+				+ ", " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+				+ ")"
+			;
+			//System.out.println("[1556038860] new fiscal set insert: '" + SQL + "'.");
+			try {
+				Statement stmt = conn.createStatement();
+				stmt.execute(SQL);
+			} catch (Exception e) {
+				throw new Exception(
+					"Error [1556035371] inserting new GL fiscal set for account '" + sAccount 
+					+ "', fiscal year " + Integer.toString(iFiscalYear) 
+					+ " with SQL: '" + SQL + "' - " + e.getMessage());
+			}
 		}
-		
+*/
+		return;
 	}
     private void createEntryTransactions(SMLogEntry log, String sUserID, Connection conn) throws Exception{
     	if (bDebugMode){
@@ -1012,23 +1062,33 @@ public class GLTransactionBatch {
 
     		//Get the normal GL account type:
         	GLAccount acct = new GLAccount(line.getsacctid());
+        	if(!acct.load(conn)){
+        		throw new Exception("Error [1556039863] loading GL account '" + line.getsacctid() + "' - " + acct.getErrorMessageString());
+        	}
         	
         	String sTransactionAmt = "0.00";
-			if (Integer.parseInt(acct.getsbinormalbalancetype()) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+        	//System.out.println("[1556038816] getsdebitamt() = '" + line.getsdebitamt() + "'");
+        	//System.out.println("[1556038817] getscreditamt() = '" + line.getscreditamt() + "'");
+        	
+			if (Integer.parseInt(acct.getsinormalbalancetype()) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+				//System.out.println("[1556038830] account is normally a DEBIT balance");
 				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
 					sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
 				}
 				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
 					sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
 				}
+				//System.out.println("[1556038832] sTransactionAmt = '" + sTransactionAmt + "'.");
 			// But if the account is normally a credit balance:
 			}else{
+				//System.out.println("[1556038831] account is normally a CREDIT balance");
 				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
 					sTransactionAmt = "-" +line.getsdebitamt().replaceAll(",", "");
 				}
 				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
 					sTransactionAmt = line.getscreditamt().replaceAll(",", "");
 				}
+				//System.out.println("[1556038833] sTransactionAmt = '" + sTransactionAmt + "'.");
 			}
 	    	String SQL = "INSERT INTO"
         		+ " " + SMTablegltransactionlines.TableName

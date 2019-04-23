@@ -12,6 +12,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatchlines;
 import ServletUtilities.clsDatabaseFunctions;
@@ -90,8 +91,20 @@ public class GLTransactionBatchEntry {
 		if(getsdatdocdate().compareToIgnoreCase("") == 0){
 			setsdatdocdate(clsDateAndTimeConversions.now(SMUtilities.DATE_FORMAT_FOR_DISPLAY));
 		}
-		setsfiscalyear(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ifiscalyear, req).replace("&quot;", "\""));
-		setsfiscalperiod(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ifiscalperiod, req).replace("&quot;", "\""));
+		
+		String sFiscalYearAndPeriod[] = 
+			clsManageRequestParameters.get_Request_Parameter(
+					GLEditEntryEdit.PARAM_FISCAL_YEAR_AND_PERIOD, req).replace("&quot;", "\"").split(GLEditEntryEdit.FISCAL_YEAR_AND_PERIOD_DELIMITER);
+		try {
+			setsfiscalyear(sFiscalYearAndPeriod[0]);
+		} catch (Exception e) {
+			setsfiscalyear("0");
+		}
+		try {
+			setsfiscalperiod(sFiscalYearAndPeriod[1]);
+		} catch (Exception e) {
+			setsfiscalperiod("0");
+		}
 		setssourceledgertransactionlineid(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.lsourceledgertransactionlineid, req).replace("&quot;", "\""));
 		setssourceledger(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledger, req).replace("&quot;", "\""));
 		if (clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.iautoreverse, req).compareToIgnoreCase("") != 0){
@@ -427,15 +440,7 @@ public class GLTransactionBatchEntry {
 			}
 		}
 		
-		try {
-			m_sfiscalyear = clsValidateFormFields.validateLongIntegerField(
-					m_sfiscalyear, 
-				"Fiscal year", 
-				2000L, 
-				2050L);
-		} catch (Exception e) {
-			sResult += "  " + e.getMessage() + ".";
-		}
+		boolean bFiscalPeriodIsValidInt = true;
 		
 		try {
 			m_sfiscalperiod = clsValidateFormFields.validateLongIntegerField(
@@ -443,6 +448,95 @@ public class GLTransactionBatchEntry {
 				"Fiscal period", 
 				1L, 
 				13L);
+		} catch (Exception e) {
+			bFiscalPeriodIsValidInt = false;
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		if (bFiscalPeriodIsValidInt){
+			int iFiscalPeriod = Integer.parseInt(m_sfiscalperiod);
+			GLFiscalPeriod period = new GLFiscalPeriod();
+			period.set_sifiscalyear(m_sfiscalyear);
+			try {
+				period.load(conn);
+			} catch (Exception e1) {
+				sResult += "  " + "Could not load fiscal year " + m_sfiscalyear + ".";
+			}
+			switch(iFiscalPeriod){
+				case 1:
+					if (period.get_siperiod1locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 1 is locked.";
+					}
+					break;
+				case 2:
+					if (period.get_siperiod2locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 2 is locked.";
+					}
+					break;
+				case 3:
+					if (period.get_siperiod3locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 3 is locked.";
+					}
+					break;
+				case 4:
+					if (period.get_siperiod4locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 4 is locked.";
+					}
+					break;
+				case 5:
+					if (period.get_siperiod5locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 5 is locked.";
+					}
+					break;
+				case 6:
+					if (period.get_siperiod6locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 6 is locked.";
+					}
+					break;
+				case 7:
+					if (period.get_siperiod7locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 7 is locked.";
+					}
+					break;
+				case 8:
+					if (period.get_siperiod8locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 8 is locked.";
+					}
+					break;
+				case 9:
+					if (period.get_siperiod9locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 9 is locked.";
+					}
+					break;
+				case 10:
+					if (period.get_siperiod10locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 10 is locked.";
+					}
+					break;
+				case 11:
+					if (period.get_siperiod11locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 11 is locked.";
+					}
+					break;
+				case 12:
+					if (period.get_siperiod12locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 12 is locked.";
+					}
+					break;
+				case 13:
+					if (period.get_siperiod13locked().compareToIgnoreCase("1") == 0){
+						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 13 is locked.";
+					}
+					break;
+			}
+		}
+		
+		try {
+			m_sfiscalyear = clsValidateFormFields.validateLongIntegerField(
+					m_sfiscalyear, 
+				"Fiscal year", 
+				2000L, 
+				2050L);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}

@@ -112,19 +112,19 @@ public class GLFiscalPeriod extends java.lang.Object{
 		m_sdatendingdateperiod12 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatbeginningdateperiod13 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatendingdateperiod13 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
-		m_speriod1locked = "0";
-		m_speriod2locked = "0";
-		m_speriod3locked = "0";
-		m_speriod4locked = "0";
-		m_speriod5locked = "0";
-		m_speriod6locked = "0";
-		m_speriod7locked = "0";
-		m_speriod8locked = "0";
-		m_speriod9locked = "0";
-		m_speriod10locked = "0";
-		m_speriod11locked = "0";
-		m_speriod12locked = "0";
-		m_speriod13locked = "0";
+		m_speriod1locked = "1";
+		m_speriod2locked = "1";
+		m_speriod3locked = "1";
+		m_speriod4locked = "1";
+		m_speriod5locked = "1";
+		m_speriod6locked = "1";
+		m_speriod7locked = "1";
+		m_speriod8locked = "1";
+		m_speriod9locked = "1";
+		m_speriod10locked = "1";
+		m_speriod11locked = "1";
+		m_speriod12locked = "1";
+		m_speriod13locked = "1";
 		
 		m_snewrecord = ADDING_NEW_RECORD_PARAM_VALUE_FALSE;
     }

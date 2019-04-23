@@ -292,7 +292,7 @@ public class GLEditAccountsEdit extends HttpServlet {
         pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
         	GLAccount.Paraminormalbalancetype, 
         	sBalanceTypeValues, 
-        	glacct.getsbinormalbalancetype(),
+        	glacct.getsinormalbalancetype(),
         	sBalanceTypeDescriptions, 
         	"Normal balance type:", 
         	"Accounts normally carry a DEBIT or CREDIT balance"

@@ -363,10 +363,10 @@ public class GLAccount extends java.lang.Object{
     	
 		//Normal balance type:
 		if (
-			(getsbinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) != 0)
-			&& (getsbinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_CREDIT)) != 0)
+			(getsinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) != 0)
+			&& (getsinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_CREDIT)) != 0)
 		){
-			m_sErrorMessageArray.add("Error [1552316800] - normal balance type '" + getsbinormalbalancetype() + "' is invalid.");
+			m_sErrorMessageArray.add("Error [1552316800] - normal balance type '" + getsinormalbalancetype() + "' is invalid.");
 			bEntriesAreValid = false;
 		}
 		
@@ -615,7 +615,7 @@ public class GLAccount extends java.lang.Object{
 		sQueryString += "&" + Paramlaccountstructureid + "=" + ARUtilities.URLEncode(m_laccountstructureid);
 		sQueryString += "&" + Paramlaccountgroupid + "=" + ARUtilities.URLEncode(m_laccountgroupid);
 		sQueryString += "&" + Parambdannualbudget + "=" + ARUtilities.URLEncode(getsbdannualbudget());
-		sQueryString += "&" + Paraminormalbalancetype + "=" + ARUtilities.URLEncode(getsbinormalbalancetype());
+		sQueryString += "&" + Paraminormalbalancetype + "=" + ARUtilities.URLEncode(getsinormalbalancetype());
 		
 		if (m_iallowaspoexpense.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramiallowaspoexpense + "=" + m_iallowaspoexpense;
@@ -1308,7 +1308,7 @@ public class GLAccount extends java.lang.Object{
 	public void setsinormalbalancetype(String sinormalbalancetype) {
 		m_inormalbalancetype = sinormalbalancetype.trim();
 	}
-	public String getsbinormalbalancetype() {
+	public String getsinormalbalancetype() {
 		return m_inormalbalancetype;
 	}
 	public String getM_iNewRecord() {

@@ -51,8 +51,14 @@ public class clsValidateFormFields {
 		}
 		s = sTestField.trim();
 		try {
-			@SuppressWarnings("unused")
 			long iTest = Long.parseLong(sTestField);
+			if (iTest < iMinimumValue){
+				throw new Exception(sFieldName + " value '" + sTestField + "' is less than the minimum value of " + Long.toString(iMinimumValue) + ".");
+			}
+			if (iTest > iMaximumValue){
+				throw new Exception(sFieldName + " value '" + sTestField + "' is greater than the maximum value of " + Long.toString(iMaximumValue) + ".");
+			}
+
 		} catch (Exception e) {
 			throw new Exception(sFieldName + " value '" + sTestField + "' is invalid - " + e.getMessage() + ".");
 		}

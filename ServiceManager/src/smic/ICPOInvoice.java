@@ -1524,7 +1524,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		
 		//Tax fields:
 		try {
-			m_itaxid = clsValidateFormFields.validateLongIntegerField(m_itaxid, "Tax ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			m_itaxid = clsValidateFormFields.validateLongIntegerField(m_itaxid, "Tax ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e1) {
 			super.addErrorMessage(e1.getMessage());
 			bEntriesAreValid = false;

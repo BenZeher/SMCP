@@ -41,9 +41,7 @@ public class GLTransactionBatch {
 	private String m_slasteditdate;
 	private String m_sbatchlastentry;
 	private String m_lcreatedby;
-	private String m_screatedbyfullname;
 	private String m_llasteditedby;
-	private String m_slasteditedbyfullname;
 	private String m_sdatpostdate;
 	private static final boolean bDebugMode = false;
 
@@ -911,31 +909,11 @@ public class GLTransactionBatch {
 		
 		//System.out.println("[1556038818] sAccount = '" + sAccount + "', net change field = '" + sNetChangeField + "'.");
 		
-		//If the fiscal set record doesn't exist, insert it:
-		boolean bFiscalSetExistsAlready = false;
-		String SQL = "SELECT"
-			+ " " + SMTableglfiscalsets.sAcctID
-			+ " FROM " + SMTableglfiscalsets.TableName
-			+ " WHERE ("
-				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
-				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-			+ ")"
-		;
-		try {
-			ResultSet rsFiscalSet = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rsFiscalSet.next()){
-				bFiscalSetExistsAlready = true;
-			}
-			rsFiscalSet.close();
-		} catch (Exception e) {
-			throw new Exception();
-		}
-		
 		//The fiscal set should ALWAYS exist:
 		//if (bFiscalSetExistsAlready){
 		//Just update the appropriate fields:
 		
-		SQL = "UPDATE " + SMTableglfiscalsets.TableName
+		String SQL = "UPDATE " + SMTableglfiscalsets.TableName
 			+ " SET " + sNetChangeField + " = " + sNetChangeField + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
 			+ " WHERE ("
 				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
@@ -955,7 +933,25 @@ public class GLTransactionBatch {
 		}
 		
 		//Allow for the possibility that this update affects a starting balance in a subsequent fiscal set:
-		//TODO
+		//Update the opening balance for any subsequent fiscal years for this account:
+		SQL = "UPDATE " + SMTableglfiscalsets.TableName
+			+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
+				+ SMTableglfiscalsets.bdopeningbalance + " + " 
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+				+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
+			+ ")"
+		;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception(
+				"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
+				+ "', fiscal year " + Integer.toString(iFiscalYear) 
+				+ " - " + e.getMessage());
+		}		
 		
 		//Now update the GL financial statement data:
 		//TODO

@@ -150,7 +150,7 @@ public class APBatchEntryLine {
 			m_sbatchnumber = clsValidateFormFields.validateLongIntegerField(
 				m_sbatchnumber, 
 				"Batch number", 
-				1, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -275,7 +275,7 @@ public class APBatchEntryLine {
 			m_slpoheaderid = clsValidateFormFields.validateLongIntegerField(
 					m_slpoheaderid, 
 				"PO number", 
-				0, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -284,7 +284,7 @@ public class APBatchEntryLine {
 			m_slreceiptheaderid = clsValidateFormFields.validateLongIntegerField(
 					m_slreceiptheaderid, 
 				"PO Receipt number", 
-				0, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -294,7 +294,7 @@ public class APBatchEntryLine {
 			m_slporeceiptlineid = clsValidateFormFields.validateLongIntegerField(
 				m_slporeceiptlineid, 
 				"PO Receipt line ID", 
-				0, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -309,7 +309,7 @@ public class APBatchEntryLine {
 				m_slapplytodocid = clsValidateFormFields.validateLongIntegerField(
 						m_slapplytodocid, 
 					"Apply-to document ID", 
-					1, 
+					-1L, 
 					clsValidateFormFields.MAX_LONG_VALUE);
 			} catch (Exception e) {
 				sResult += "  " + e.getMessage() + ".";

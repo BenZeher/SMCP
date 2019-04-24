@@ -227,7 +227,7 @@ public class APCheck {
 			m_sbatchnumber = clsValidateFormFields.validateLongIntegerField(
 				m_sbatchnumber, 
 				"Batch number", 
-				1, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

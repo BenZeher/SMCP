@@ -127,7 +127,7 @@ public class GLTransactionBatchLine {
 		
 		String sResult = "";
 		try {
-			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1, clsValidateFormFields.MAX_LONG_VALUE);
+			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -135,7 +135,7 @@ public class GLTransactionBatchLine {
 			m_sbatchnumber = clsValidateFormFields.validateLongIntegerField(
 				m_sbatchnumber, 
 				"Batch number", 
-				1, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

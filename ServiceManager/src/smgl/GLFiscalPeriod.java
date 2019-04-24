@@ -1005,7 +1005,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 			s += e1.getMessage() + "\n";
 		}
        	try {
-			set_slasteditedbyuserid(clsValidateFormFields.validateLongIntegerField(get_slasteditedbyuserid(), "Last edited by user ID", 1, clsValidateFormFields.MAX_LONG_VALUE));
+			set_slasteditedbyuserid(clsValidateFormFields.validateLongIntegerField(get_slasteditedbyuserid(), "Last edited by user ID", -1L, clsValidateFormFields.MAX_LONG_VALUE));
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}

@@ -359,7 +359,7 @@ public class GLTransactionBatchEntry {
 		String sResult = "";
 		
 		try {
-			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1, clsValidateFormFields.MAX_LONG_VALUE);
+			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -367,7 +367,7 @@ public class GLTransactionBatchEntry {
 			m_sbatchnumber = clsValidateFormFields.validateLongIntegerField(
 				m_sbatchnumber, 
 				"Batch number", 
-				1, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -547,7 +547,7 @@ public class GLTransactionBatchEntry {
 			m_sourceledgertransactionlineid = clsValidateFormFields.validateLongIntegerField(
 					m_sourceledgertransactionlineid, 
 				"Source ledger transaction line ID", 
-				0L, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

@@ -2894,7 +2894,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		//Process tax:
 		boolean bTaxIsValid = false;
        	try {
-			m_itaxid = clsValidateFormFields.validateLongIntegerField(m_itaxid, "Tax ID", 1L, clsValidateFormFields.MAX_LONG_VALUE);
+			m_itaxid = clsValidateFormFields.validateLongIntegerField(m_itaxid, "Tax ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 			bTaxIsValid = true;
 		} catch (Exception e1) {
 			super.addErrorMessage(e1.getMessage());

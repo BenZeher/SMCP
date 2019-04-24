@@ -784,7 +784,7 @@ public class APBatchEntry {
 		
 		//First, validate the fields that are common to all types of entries:
 		try {
-			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1, clsValidateFormFields.MAX_LONG_VALUE);
+			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -792,7 +792,7 @@ public class APBatchEntry {
 			m_sbatchnumber = clsValidateFormFields.validateLongIntegerField(
 				m_sbatchnumber, 
 				"Batch number", 
-				1, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -1092,7 +1092,7 @@ public class APBatchEntry {
 			clsValidateFormFields.validateLongIntegerField(
 				getslpurchaseordernumber(), 
 				"Purchase order number", 
-				0L, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE
 			);
 		} catch (Exception e1) {
@@ -1105,7 +1105,7 @@ public class APBatchEntry {
 			clsValidateFormFields.validateLongIntegerField(
 				getslsalesordernumber(), 
 				"Sales order number", 
-				0L, 
+				-1L, 
 				clsValidateFormFields.MAX_LONG_VALUE
 			);
 		} catch (Exception e1) {

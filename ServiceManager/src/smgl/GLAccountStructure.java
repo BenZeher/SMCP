@@ -424,13 +424,13 @@ public class GLAccountStructure extends java.lang.Object{
 			);
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_lid, "ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_lid, "ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID1, "Segment ID 1", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID1, "Segment ID 1", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -442,7 +442,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID2, "Segment ID 2", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID2, "Segment ID 2", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -454,7 +454,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID3, "Segment ID 3", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID3, "Segment ID 3", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -466,7 +466,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID4, "Segment ID 4", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID4, "Segment ID 4", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -478,7 +478,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID5, "Segment ID 5", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID5, "Segment ID 5", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -490,7 +490,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID6, "Segment ID 6", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID6, "Segment ID 6", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -502,7 +502,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID7, "Segment ID 7", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID7, "Segment ID 7", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -514,7 +514,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID8, "Segment ID 8", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID8, "Segment ID 8", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -526,7 +526,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID9, "Segment ID 9", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID9, "Segment ID 9", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}
@@ -538,7 +538,7 @@ public class GLAccountStructure extends java.lang.Object{
 		}
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_slsegmentID10, "Segment ID 10", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_slsegmentID10, "Segment ID 10", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}

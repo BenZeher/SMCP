@@ -41,9 +41,7 @@ public class GLTransactionBatch {
 	private String m_slasteditdate;
 	private String m_sbatchlastentry;
 	private String m_lcreatedby;
-	private String m_screatedbyfullname;
 	private String m_llasteditedby;
-	private String m_slasteditedbyfullname;
 	private String m_sdatpostdate;
 	private static final boolean bDebugMode = false;
 
@@ -935,7 +933,25 @@ public class GLTransactionBatch {
 		}
 		
 		//Allow for the possibility that this update affects a starting balance in a subsequent fiscal set:
-		//TODO
+		//Update the opening balance for any subsequent fiscal years for this account:
+		SQL = "UPDATE " + SMTableglfiscalsets.TableName
+			+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
+				+ SMTableglfiscalsets.bdopeningbalance + " + " 
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+				+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
+			+ ")"
+		;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception(
+				"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
+				+ "', fiscal year " + Integer.toString(iFiscalYear) 
+				+ " - " + e.getMessage());
+		}		
 		
 		//Now update the GL financial statement data:
 		//TODO

@@ -229,7 +229,7 @@ public class GLAccountGroup extends java.lang.Object{
 		String s = "";
 		
 		try {
-			clsValidateFormFields.validateLongIntegerField(m_lid, "ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+			clsValidateFormFields.validateLongIntegerField(m_lid, "ID", -1L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			s += e.getMessage() + "  ";
 		}

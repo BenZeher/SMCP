@@ -77,7 +77,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 				}
 				
 				sSQL = "INSERT INTO " + SMTablemechanics.TableName + "(" 
-					+ ", " + SMTablemechanics.sAssistant 
+					+ " " + SMTablemechanics.sAssistant 
 					+ ", " + SMTablemechanics.semployeeid
 					+ ", " + SMTablemechanics.sMechFullName 
 					+ ", " + SMTablemechanics.sMechInitial 
@@ -88,7 +88,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 					+ ", " + SMTablemechanics.sMechColorCodeCol 
 					+ ", " + SMTablemechanics.sVehicleLabel 
 					+ ") VALUES (" 
-					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHASSISTANT")) + "'"
+					+ " '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHASSISTANT")) + "'"
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("EMPLOYEEID")) + "'"
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHNAME")) + "'"
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("MECHINIT")).trim() + "'"

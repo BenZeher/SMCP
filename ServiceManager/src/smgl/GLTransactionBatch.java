@@ -911,31 +911,11 @@ public class GLTransactionBatch {
 		
 		//System.out.println("[1556038818] sAccount = '" + sAccount + "', net change field = '" + sNetChangeField + "'.");
 		
-		//If the fiscal set record doesn't exist, insert it:
-		boolean bFiscalSetExistsAlready = false;
-		String SQL = "SELECT"
-			+ " " + SMTableglfiscalsets.sAcctID
-			+ " FROM " + SMTableglfiscalsets.TableName
-			+ " WHERE ("
-				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
-				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-			+ ")"
-		;
-		try {
-			ResultSet rsFiscalSet = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rsFiscalSet.next()){
-				bFiscalSetExistsAlready = true;
-			}
-			rsFiscalSet.close();
-		} catch (Exception e) {
-			throw new Exception();
-		}
-		
 		//The fiscal set should ALWAYS exist:
 		//if (bFiscalSetExistsAlready){
 		//Just update the appropriate fields:
 		
-		SQL = "UPDATE " + SMTableglfiscalsets.TableName
+		String SQL = "UPDATE " + SMTableglfiscalsets.TableName
 			+ " SET " + sNetChangeField + " = " + sNetChangeField + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
 			+ " WHERE ("
 				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"

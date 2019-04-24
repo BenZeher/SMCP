@@ -12,7 +12,6 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatchlines;
 import ServletUtilities.clsDatabaseFunctions;

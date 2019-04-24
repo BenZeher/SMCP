@@ -1612,7 +1612,7 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 					//Add a GL entry here:
 					export.addHeader(
 							super.sModuleType(), 
-							ARDocumentTypes.getACCPACSourceTypes(ARDocumentTypes.PREPAYMENT),
+							ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT),
 							"AR Batch Export", 
 							"SMAR"
 					);
@@ -2112,7 +2112,7 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 
 				export.addHeader(
 						super.sModuleType(), 
-						ARDocumentTypes.getACCPACSourceTypes(entry.getDocumentType()),
+						ARDocumentTypes.getSourceTypes(entry.getDocumentType()),
 						"AR Batch Export", 
 						"SMAR"
 				);

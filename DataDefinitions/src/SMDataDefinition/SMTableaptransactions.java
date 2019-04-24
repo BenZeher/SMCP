@@ -74,7 +74,6 @@ public class SMTableaptransactions {
 	public static final int AP_TRANSACTION_TYPE_PAYMENT_PREPAYMENT = SMTableapbatchentries.ENTRY_TYPE_PAYMENT_PREPAYMENT;
 	public static final int AP_TRANSACTION_TYPE_PAYMENT_APPLYTO = SMTableapbatchentries.ENTRY_TYPE_PAYMENT_APPLYTO;
 	public static final int AP_TRANSACTION_TYPE_PAYMENT_MISCPAYMENT = SMTableapbatchentries.ENTRY_TYPE_PAYMENT_MISCPAYMENT;
-	
 	public static final int AP_TRANSACTION_TYPE_REVERSAL = SMTableapbatchentries.ENTRY_TYPE_REVERSAL;
 	
 	public static final int NUMBER_OF_AP_TRANSACTION_TYPES = 8;

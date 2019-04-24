@@ -39,8 +39,10 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
+import smap.APVendor;
 import smar.ARSQLs;
 import smar.ARUtilities;
+import smcontrolpanel.SMUtilities;
 import smic.ICEntryBatch;
 
 public class GLAccount extends java.lang.Object{
@@ -1245,6 +1247,41 @@ public class GLAccount extends java.lang.Object{
 		}
 		return true;
 	}
+	
+	public static String getFindGLAccountLink(
+			String sSearchingClassName, 
+			String sReturnField, 
+			String sParameterString, 
+			ServletContext context,
+			String sDBID){
+			
+			String m_sParameterString = sParameterString;
+			
+			if (m_sParameterString.startsWith("*")){
+				m_sParameterString = m_sParameterString.substring(1);
+			}
+			
+			return  
+				SMUtilities.getURLLinkBase(context) + "smar.ObjectFinder"
+				+ "?"+ "&ObjectName=" + GLAccount.Paramobjectname
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&ResultClass=FinderResults"
+				+ "&SearchingClass=" + sSearchingClassName
+				+ "&ReturnField=" + sReturnField
+				+ "&SearchField1=" + SMTableglaccounts.sDesc
+				+ "&SearchFieldAlias1=Description"
+				+ "&SearchField2=" + SMTableglaccounts.sAcctID
+				+ "&SearchFieldAlias2=Account%20No."
+				+ "&ResultListField1=" + SMTableglaccounts.sAcctID
+				+ "&ResultHeading1=Account%20No."
+				+ "&ResultListField2="  + SMTableglaccounts.sDesc
+				+ "&ResultHeading2=Description"
+				+ "&ResultListField3="  + "IF(" + SMTableglaccounts.lActive + " = 1, 'Y', 'N')"
+				+ "&ResultHeading11=Active?"
+				+ "&ParameterString=*" + m_sParameterString
+				;
+		}
+	
 	public String getM_sacctid() {
 		return m_sacctid;
 	}

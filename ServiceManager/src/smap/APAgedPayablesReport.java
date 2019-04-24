@@ -687,7 +687,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 				+  sIndent + "<I>" + m_sdatapplyingdate + "</I>"
 				+ "</TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-				+ "<I>" + getDocType(m_idoctype) + "</I>"
+				+ "<I>" + SMTableapbatchentries.getDocType(m_idoctype) + "</I>"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 				+ "<I>" + sDocNumber + "</I>"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
@@ -880,7 +880,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 				+  getDocDate()
 				+ "</TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-				+  getDocType(m_idoctype)
+				+  SMTableapbatchentries.getDocType(m_idoctype)
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 				+  sDocNumber
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
@@ -1174,31 +1174,6 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		
 	}
 	
-	private String getDocType(int iDocType){
-		switch(iDocType){
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_CREDITNOTE:
-			return "CN";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_DEBITNOTE:
-			return "DN";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE:
-			return "IN";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_APPLYTO:
-			return "AT";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_MISCPAYMENT:
-			return "MI";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_PAYMENT:
-			return "PY";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_PREPAYMENT:
-			return "PP";
-		case SMTableaptransactions.AP_TRANSACTION_TYPE_REVERSAL:
-			return "RV";
-		case EARNED_DISCOUNT_TYPE:
-			return "ED";
-		default:
-			return "NA";
-		}
-	}
-	
 	//Print the legends:
 	private String printDocTypeLegends(){
 		String s = "";
@@ -1206,8 +1181,8 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		s += "<BR><TABLE BORDER=0>\n";
 		s += "  <TR>\n";
 		for (int i = SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE;i <= 7; i++){
-			if (getDocType(i).compareToIgnoreCase("NA") != 0){
-				s += "    <TD><FONT SIZE=2><I>" + SMTableapbatchentries.getDocumentTypeLabel(i) + " = " + getDocType(i) + "</I></FONT></TD>\n";
+			if (SMTableapbatchentries.getDocType(i).compareToIgnoreCase("NA") != 0){
+				s += "    <TD><FONT SIZE=2><I>" + SMTableapbatchentries.getDocumentTypeLabel(i) + " = " + SMTableapbatchentries.getDocType(i) + "</I></FONT></TD>\n";
 			}
 		}
 		s += "  </TR>\n";

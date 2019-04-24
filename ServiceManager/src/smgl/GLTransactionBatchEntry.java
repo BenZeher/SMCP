@@ -178,12 +178,21 @@ public class GLTransactionBatchEntry {
         			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.sreference) == 0){
         				newline.setsreference(sParamValue);
         			}
-        			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.ssourceledger) == 0){
-        				newline.setssourceledger(sParamValue);
+
+        			if (sFieldName.compareToIgnoreCase(GLEditEntryEdit.PARAM_SOURCE_LEDGER_AND_TYPE) == 0){
+		    			String sSourceLedgerAndType[] =sParamValue.replace("&quot;", "\"").split(GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER);
+	    				try {
+	    					newline.setssourceledger(sSourceLedgerAndType[0]);
+	    				} catch (Exception e) {
+	    					newline.setssourceledger("");
+	    				}
+	    				try {
+	    					newline.setssourcetype(sSourceLedgerAndType[1]);
+	    				} catch (Exception e) {
+	    					newline.setssourcetype("");
+	    				}
         			}
-        			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.ssourcetype) == 0){
-        				newline.setssourcetype(sParamValue);
-        			}
+        			
     			}else{
         			//Now update the field on the line we're reading:
         			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.bdcreditamt) == 0){
@@ -214,11 +223,19 @@ public class GLTransactionBatchEntry {
         			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.sreference) == 0){
         				m_arrBatchEntryLines.get(iLineNumber - 1).setsreference(sParamValue);
         			}
-        			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.ssourceledger) == 0){
-        				m_arrBatchEntryLines.get(iLineNumber - 1).setssourceledger(sParamValue);
-        			}
-        			if (sFieldName.compareToIgnoreCase(SMTablegltransactionbatchlines.ssourcetype) == 0){
-        				m_arrBatchEntryLines.get(iLineNumber - 1).setssourcetype(sParamValue);
+        			if (sFieldName.compareToIgnoreCase(GLEditEntryEdit.PARAM_SOURCE_LEDGER_AND_TYPE) == 0){
+		    			String sSourceLedgerAndType[] = 
+		    					sParamValue.replace("&quot;", "\"").split(GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER);
+	    				try {
+	    					m_arrBatchEntryLines.get(iLineNumber - 1).setssourceledger(sSourceLedgerAndType[0]);
+	    				} catch (Exception e) {
+	    					m_arrBatchEntryLines.get(iLineNumber - 1).setssourceledger("");
+	    				}
+	    				try {
+	    					m_arrBatchEntryLines.get(iLineNumber - 1).setssourcetype(sSourceLedgerAndType[1]);
+	    				} catch (Exception e) {
+	    					m_arrBatchEntryLines.get(iLineNumber - 1).setssourcetype("");
+	    				}
         			}
     			}
     		}

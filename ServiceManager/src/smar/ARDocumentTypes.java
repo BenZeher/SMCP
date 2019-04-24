@@ -14,6 +14,7 @@ public class ARDocumentTypes {
 	public static final int CREDITADJUSTMENT = 8;
 	public static final int RETAINAGE = 9;
 	public static final int APPLYTO = 10;
+	public static final int NUMBER_OF_AR_DOCUMENT_TYPES = 11;
 	
 	public static final String INVOICE_STRING = "0";
 	public static final String CREDIT_STRING = "1";
@@ -44,7 +45,7 @@ public class ARDocumentTypes {
 			default: return "Invoice";
 		}
 	}
-	public static String getACCPACSourceTypes (int iType){
+	public static String getSourceTypes (int iType){
 		switch (iType){
 		case 0: return "IN";
 		case 1: return "CN";

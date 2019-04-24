@@ -856,7 +856,7 @@ public class ARCreateEntryForm {
 					
 					//Doc Type
 					pwOut.println("<TD>");
-					pwOut.println(ARDocumentTypes.getACCPACSourceTypes(trans.getiDocType()));
+					pwOut.println(ARDocumentTypes.getSourceTypes(trans.getiDocType()));
 					pwOut.println("</TD>");
 					
 					//Order number
@@ -1079,7 +1079,7 @@ public class ARCreateEntryForm {
 						//System.out.println("In ARCreateEntryForm - Error loading transaction with ID: " + line.getDocAppliedToID());
 						return false;
 					}
-					sDocType = ARDocumentTypes.getACCPACSourceTypes(trans.getiDocType());
+					sDocType = ARDocumentTypes.getSourceTypes(trans.getiDocType());
 					sOrderNumber = trans.getOrderNumber();
 					sOriginalAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdOriginalAmount());
 					sCurrentAmount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount());
@@ -1428,7 +1428,7 @@ public class ARCreateEntryForm {
 	
 						//Doc type:
 						pwOut.println("<TD>");
-						pwOut.println(ARDocumentTypes.getACCPACSourceTypes(rs.getInt(SMTableartransactions.idoctype)));
+						pwOut.println(ARDocumentTypes.getSourceTypes(rs.getInt(SMTableartransactions.idoctype)));
 						pwOut.println("</TD>");
 						
 						//Order #

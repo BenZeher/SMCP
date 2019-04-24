@@ -3910,7 +3910,7 @@ public class ICEntryBatch {
         		
         		export.addHeader(
         				sModuleType(), 
-        				ICEntryTypes.getACCPACSourceTypes(Integer.parseInt(entry.sEntryType())),
+        				ICEntryTypes.getSourceTypes(Integer.parseInt(entry.sEntryType())),
         				"IC Batch Export", 
         				"SMIC"
         		);

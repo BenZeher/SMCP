@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
@@ -943,6 +944,7 @@ public class GLTransactionBatch {
 				+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
 			+ ")"
 		;
+		//System.out.println("[155603919] fiscal sets UPDATE statement = '" + SQL + "'.");
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -954,80 +956,42 @@ public class GLTransactionBatch {
 		}		
 		
 		//Now update the GL financial statement data:
-		//TODO
-			
-			
-/*			
-		}else{
-			//System.out.println("[1556038859] fiscal set does not already exist.");
-			//We have to create a new fiscal set record:
-			//First get the closing balance from the previous fiscal year:
-			SQL = "SELECT"
-				+ " " + SMTableglfiscalsets.bdopeningbalance
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod1
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod2
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod3
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod4
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod5
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod6
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod7
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod8
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod9
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod10
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod11
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod12
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod13
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod14
-				+ " + " + SMTableglfiscalsets.bdnetchangeperiod15
-				+ " AS 'CLOSINGBALANCE'"
-				+ " FROM " + SMTableglfiscalsets.TableName
-				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear - 1) + ")"
-					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-				+ ")"
-			;
-			
-			BigDecimal bdPreviousYearClosingBalance = new BigDecimal("0.00");
-			try {
-				ResultSet rsPreviousYear = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-				if(rsPreviousYear.next()){
-					bdPreviousYearClosingBalance = rsPreviousYear.getBigDecimal("CLOSINGBALANCE");
-				}else{
-					throw new Exception(
-						"Error [1555964773] no record for previous fiscal year for GL account '" + sAccount 
-						+ "', fiscal year " + Integer.toString(iFiscalYear - 1)+ ".");
-				}
-				rsPreviousYear.close();
-			} catch (Exception e) {
-				throw new Exception("Error [1555964774] getting previous fiscal year closing balance for GL account '" + sAccount 
-					+ "', fiscal year " + Integer.toString(iFiscalYear - 1)+ " - " + e.getMessage());
-			}
-			
-			//Now insert a new GL fiscal set record:
-			SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
-				+ SMTableglfiscalsets.bdopeningbalance
-				+ ", " + SMTableglfiscalsets.ifiscalyear
-				+ ", " + SMTableglfiscalsets.sAcctID
-				+ ", " + sNetChangeField
-				+ ") VALUES ("
-				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
-				+ ", " + Integer.toString(iFiscalYear)
-				+ ", '" + sAccount + "'"
-				+ ", " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
-				+ ")"
-			;
-			//System.out.println("[1556038860] new fiscal set insert: '" + SQL + "'.");
-			try {
-				Statement stmt = conn.createStatement();
-				stmt.execute(SQL);
-			} catch (Exception e) {
-				throw new Exception(
-					"Error [1556035371] inserting new GL fiscal set for account '" + sAccount 
-					+ "', fiscal year " + Integer.toString(iFiscalYear) 
-					+ " with SQL: '" + SQL + "' - " + e.getMessage());
-			}
+		//Have to update these fields:
+		//SMTableglfinancialstatementdata.bdnetchangeforperiod
+		//SMTableglfinancialstatementdata.bdtotalyeartodate
+		SQL = "UPDATE " + SMTableglfinancialstatementdata.TableName
+			+ " SET " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " 
+				+ SMTableglfinancialstatementdata.bdnetchangeforperiod + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
+			+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = "
+				+ SMTableglfinancialstatementdata.bdtotalyeartodate + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
+			+ " WHERE ("
+				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+				+ " AND (" + SMTableglfinancialstatementdata.ifiscalperiod + " = " + Integer.toString(iFiscalPeriod) + ")"
+				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
+			+ ")"
+		;
+		//System.out.println("[155603920] financial statements UPDATE statement = '" + SQL + "'.");
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception(
+				"Error [1556124568] updating GL financial statement data for account '" + sAccount 
+				+ "', fiscal year " + Integer.toString(iFiscalYear) 
+				+ ", period " + Integer.toString(iFiscalPeriod) 
+				+ " - " + e.getMessage());
 		}
-*/
+		
+		//Finally update any other affected glfinancialstatementdata records:
+		//TODO
+		//SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+		//SMTableglfinancialstatementdata.bdopeningbalance
+		//SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+		//SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+		//SMTableglfinancialstatementdata.bdtotalyeartodate
+
 		return;
 	}
     private void createEntryTransactions(SMLogEntry log, String sUserID, Connection conn) throws Exception{

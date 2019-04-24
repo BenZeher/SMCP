@@ -7,6 +7,7 @@ public class ICEntryTypes {
 		public static int ADJUSTMENT_ENTRY = 2;
 		public static int TRANSFER_ENTRY = 3;
 		public static int PHYSICALCOUNT_ENTRY = 4;
+		public static int NUMBER_OF_ENTRY_TYPES = 5;
 		
 		public static String SHIPMENT_LABEL = "Shipment";
 		public static String RECEIPT_LABEL = "Receipt";
@@ -32,7 +33,7 @@ public class ICEntryTypes {
 			}
 		}
 		
-		public static String getACCPACSourceTypes (int iType){
+		public static String getSourceTypes (int iType){
 			switch (iType){
 			case 0: return "SH";
 			case 1: return "RC";

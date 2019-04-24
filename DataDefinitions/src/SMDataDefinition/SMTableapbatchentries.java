@@ -94,8 +94,8 @@ public class SMTableapbatchentries {
 	public static final int ENTRY_TYPE_PAYMENT_MISCPAYMENT = 7;
 
 	public static final int ENTRY_TYPE_REVERSAL = 8;
-	
-	public static final int NUMBER_OF_ENTRY_TYPES = 9;
+	public static final int EARNED_DISCOUNT_TYPE = 9;
+	public static final int NUMBER_OF_ENTRY_TYPES = 10;
 	
 	//public static final int ENTRY_TYPE_ADJUSTMENT = 9;  TJR - 5/12/2017 - Not using this
 	
@@ -136,7 +136,30 @@ public class SMTableapbatchentries {
 				return "Invoice";
 		}
 	}
-	
+	public static String getDocType(int iDocType){
+		switch(iDocType){
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_CREDITNOTE:
+			return "CN";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_DEBITNOTE:
+			return "DN";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE:
+			return "IN";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_APPLYTO:
+			return "AT";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_MISCPAYMENT:
+			return "MI";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_PAYMENT:
+			return "PY";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_PAYMENT_PREPAYMENT:
+			return "PP";
+		case SMTableaptransactions.AP_TRANSACTION_TYPE_REVERSAL:
+			return "RV";
+		case EARNED_DISCOUNT_TYPE:
+			return "ED";
+		default:
+			return "NA";
+		}
+	}
 	public static String getPaymentDocNumberPrefix (int iEntryType){
 		
 		switch(iEntryType){

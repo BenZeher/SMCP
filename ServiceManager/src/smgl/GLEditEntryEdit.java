@@ -62,17 +62,18 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String UPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>U</FONT></B>pdate"; // U
 	public static final String UPDATE_AND_ADD_NEW_BUTTON_LABEL = "Update and add <B><FONT COLOR=RED>n</FONT></B>ew"; // N
 	
+	public static final String FIND_ACCT_BUTTON_LABEL = "Find Acct";
+	
 	public static final String BOOKMARK_TOP_OF_TABLES = "TopOfTables";
 	public static final String RETURN_TO_TABLES_BOOKMARK = "RETURNTOTABLESPARAM";
 	
 	public static final String PARAM_FISCAL_YEAR_AND_PERIOD = "FISCALYEARANDPERIOD";
 	public static final String FISCAL_YEAR_AND_PERIOD_DELIMITER = " - ";
+	public static final String PARAM_SOURCE_LEDGER_AND_TYPE = "SOURCELEDGERANDTYPE";
+	
 	
 	//Hot keys:
 	public static final String DELETE_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>elete"; // D
-	public static final String VIEW_APPLY_TO_DOCUMENTS_BUTTON_LABEL = "Vie<B><FONT COLOR=RED>w</FONT></B> table of apply-to documents"; // W
-	public static final String HIDE_APPLY_TO_DOCUMENTS_BUTTON_LABEL = "<B><FONT COLOR=RED>H</FONT></B>ide table of apply-to documents"; // H
-	public static final String CALCULATE_TERMS_BUTTON_LABEL = "Calculate <B><FONT COLOR=RED>t</FONT></B>erms"; // T
 	
 	private static final long serialVersionUID = 1L;
 
@@ -694,9 +695,14 @@ public class GLEditEntryEdit  extends HttpServlet {
  				+ "</OPTION>\n"
  			;
  			
+ 			//Default the source ledger to Journal Entry, if there isn't one already:
+ 			String sSourceLedger = GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY);
+ 			if (entry.getssourceledger().compareToIgnoreCase("") != 0){
+ 				sSourceLedger = entry.getssourceledger();
+ 			}
  			for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
  				sControlHTML += "<OPTION";
- 				if (entry.getssourceledger().compareToIgnoreCase(GLSourceLedgers.getSourceLedgerDescription(i)) == 0){
+ 				if (sSourceLedger.compareToIgnoreCase(GLSourceLedgers.getSourceLedgerDescription(i)) == 0){
  					sControlHTML += " selected=YES ";
  				}
  				sControlHTML += " VALUE=\"" 
@@ -726,8 +732,12 @@ public class GLEditEntryEdit  extends HttpServlet {
  		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
  		    ;
      	if (bEditable){
+     		String sDefaultID = "0";
+     		if (entry.getssourceledgertransactionlineid().compareToIgnoreCase("") != 0){
+     			sDefaultID = entry.getssourceledgertransactionlineid();
+     		}
      		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlineid()) + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(sDefaultID) + "\""
  	    		+ " MAXLENGTH=" + "13"
  	    		+ " SIZE = " + "10"
  	    		+ " onchange=\"flagDirty();\""
@@ -816,21 +826,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Description</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Reference</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Comment</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Transaction<BR>Date</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source<BR>Ledger</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source<BR>Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Debit</TD>\n";
@@ -838,6 +833,21 @@ public class GLEditEntryEdit  extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Credit</TD>\n";
 
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Transaction&nbsp;Date</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source<BR>Type</TD>\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Description</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Reference</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Comment</TD>\n";
+			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Remove?</TD>\n";
 		}else{
@@ -851,6 +861,21 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Description</TD>\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+					+ "Debit</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+					+ "Credit</TD>\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Transaction&nbsp;Date</TD>\n";
+
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Source<BR>Type</TD>\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+					+ "Description</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Reference</TD>\n";
@@ -858,20 +883,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Comment</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Transaction<BR>Date</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source<BR>Ledger</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source<BR>Type</TD>\n";
-			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-					+ "Debit</TD>\n";
-
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-					+ "Credit</TD>\n";
 		}
 	
 		s += "  </TR>\n";
@@ -911,11 +922,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			rsGLs.close();
 		} catch (SQLException e) {
 			s += "<B>Error [1555708287] reading GL info - " + e.getMessage() + "</B><BR>";
-		}
-		
-		ArrayList<String> arrSourceLedgers = new ArrayList<String>(0);
-		for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
-			arrSourceLedgers.add(GLSourceLedgers.getSourceLedgerDescription(i));
 		}
 		
 		//Load the lines for the current entry:
@@ -966,37 +972,121 @@ public class GLEditEntryEdit  extends HttpServlet {
 			// acct:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				sLineText += "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
+					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
+					+ " VALUE=\"" + clsStringFunctions.filter(line.getsacctid()) + "\""
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sacctidLength)
+				    + " SIZE = " + "14"
+				    + " onchange=\"flagDirty();\""
+			    	+ ">"
+				    
+			    	+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTablegltransactionbatchlines.sacctid + "\""
-						+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTablegltransactionbatchlines.sacctid + "\""
-						+ " onchange=\"flagDirty();\""
-						 + " >\n"
-					;
-				
-				String sBuffer = "";
-				String sGLAcctSelections = "";
-				int iCounter = 0;
-					for (int j = 0; j < arrGLAccts.size(); j++){
-						sBuffer += "<OPTION";
-						if (arrGLAccts.get(j).toString().compareTo(line.getsacctid()) == 0){
-							sBuffer += " selected=yes";
-						}
-						sBuffer += " VALUE=\"" + arrGLAccts.get(j).toString() + "\">" + arrGLDescriptions.get(j).toString() + "\n";
-						
-						if ((iCounter % 50) == 0){
-							sGLAcctSelections += sBuffer;
-							sBuffer = "";
-						}
-					}
-				sLineText += sGLAcctSelections;
-				sLineText += "</SELECT>"
+						+ SMTablegltransactionbatchlines.sacctid)
 				;
-				
 			}else{
 				sLineText += clsStringFunctions.filter(line.getsacctid());
+			}
+			sLineText += "</TD>\n";
+			
+			//Acct description:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			sLineText += clsStringFunctions.filter(line.getsacctid());
+			sLineText += "</TD>\n";
+			
+			//Debit:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "<INPUT TYPE=TEXT"
+					+ " style=\"text-align:right;\""
+					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.bddebitamt + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
+				    + " MAXLENGTH=" + "13"
+				    + " SIZE = " + "8"
+				    //+ " onchange=\"updateLineTotal();\""
+			    	+ ">"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getsdebitamt());
+			}
+			sLineText += "</TD>\n";
+			
+			//Credit:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "<INPUT TYPE=TEXT"
+					+ " style=\"text-align:right;\""	
+					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.bdcreditamt + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
+				    + " MAXLENGTH=" + "13"
+				    + " SIZE = " + "8"
+				    //+ " onchange=\"updateLineTotal();\""
+			    	+ ">"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getscreditamt());
+			}
+			sLineText += "</TD>\n";
+			
+			//Transaction date:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.dattransactiondate + "\""
+			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
+				    + " MAXLENGTH=" + "10"
+				    + " SIZE = " + "8"
+				    + " onchange=\"flagDirty();\""
+				    + ">"
+				    + "&nbsp;" + SMUtilities.getDatePickerString(
+				    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+							+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+							+ SMTablegltransactionbatchlines.dattransactiondate,
+							getServletContext()
+						)
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getstransactiondate());
+			}
+			sLineText += "</TD>\n";
+			
+			//Source type:
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			if (bEditable){
+				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ PARAM_SOURCE_LEDGER_AND_TYPE + "\""
+					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ PARAM_SOURCE_LEDGER_AND_TYPE +  "\""
+					+ " onchange=\"flagDirty();\""
+					 + " >\n"
+				;
+				
+				String ssSourceTypeSelections = "";
+				for (int j = 0; j < GLSourceLedgers.getSourceTypes().size(); j++){
+					ssSourceTypeSelections += "<OPTION";
+					if (GLSourceLedgers.getSourceTypes().get(j).compareTo(line.getssourceledger() 
+						+ GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + line.getssourcetype()) == 0){
+						ssSourceTypeSelections += " selected=yes";
+					}
+					ssSourceTypeSelections += " VALUE=\"" + GLSourceLedgers.getSourceTypes().get(j) + "\">" + GLSourceLedgers.getSourceTypes().get(j) + "\n";
+				}
+				sLineText += ssSourceTypeSelections;
+				sLineText += "</SELECT>"
+				;
+			}else{
+				sLineText += clsStringFunctions.filter(line.getssourceledger() + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + line.getssourcetype());
 			}
 			sLineText += "</TD>\n";
 			
@@ -1051,109 +1141,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			}
 			sLineText += "</TD>\n";
 			
-			//Transaction date:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.dattransactiondate + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
-				    + " MAXLENGTH=" + "10"
-				    + " SIZE = " + "8"
-				    + " onchange=\"flagDirty();\""
-				    + ">"
-				    + "&nbsp;" + SMUtilities.getDatePickerString(
-				    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-							+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-							+ SMTablegltransactionbatchlines.dattransactiondate,
-							getServletContext()
-						)
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getstransactiondate());
-			}
-			sLineText += "</TD>\n";
-			
-			//Source Ledger:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.ssourceledger + "\""
-					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.ssourceledger + "\""
-					+ " onchange=\"flagDirty();\""
-					 + " >\n"
-				;
-				
-				String ssSourceLedgerSelections = "";
-				for (int j = 0; j < arrSourceLedgers.size(); j++){
-					ssSourceLedgerSelections += "<OPTION";
-					if (arrSourceLedgers.get(j).toString().compareTo(line.getssourceledger()) == 0){
-						ssSourceLedgerSelections += " selected=yes";
-					}
-					ssSourceLedgerSelections += " VALUE=\"" + arrSourceLedgers.get(j).toString() + "\">" + arrSourceLedgers.get(j).toString() + "\n";
-				}
-				sLineText += ssSourceLedgerSelections;
-				sLineText += "</SELECT>"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getssourceledger());
-			}
-			sLineText += "</TD>\n";
-
-			//Source type:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.ssourcetype + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getssourcetype()) + "\""
-				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.ssourcetypeLength)
-				    + " SIZE = " + "4"
-				    + " onchange=\"flagDirty();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getssourcetype());
-			}
-			sLineText += "</TD>\n";
-			
-			//Debit:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.bddebitamt + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
-				    + " MAXLENGTH=" + "13"
-				    + " SIZE = " + "12"
-				    //+ " onchange=\"updateLineTotal();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getsdebitamt());
-			}
-			sLineText += "</TD>\n";
-			
-			//Credit:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.bdcreditamt + "\""
-			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
-				    + " MAXLENGTH=" + "13"
-				    + " SIZE = " + "12"
-				    //+ " onchange=\"updateLineTotal();\""
-			    	+ ">"
-				;
-			}else{
-				sLineText += clsStringFunctions.filter(line.getscreditamt());
-			}
-			sLineText += "</TD>\n";
-			
 			if (bEditable){
 				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
 					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
@@ -1168,10 +1155,10 @@ public class GLEditEntryEdit  extends HttpServlet {
 
 		if (bEditable){
 			//Add one blank line so the user can add lines:
-			GLTransactionBatchLine line = new GLTransactionBatchLine();
-			line.setsbatchnumber(entry.getsbatchnumber());
-			line.setsentrynumber(entry.getsentrynumber());
-			line.setslinenumber("0");
+			GLTransactionBatchLine transactionline = new GLTransactionBatchLine();
+			transactionline.setsbatchnumber(entry.getsbatchnumber());
+			transactionline.setsentrynumber(entry.getsentrynumber());
+			transactionline.setslinenumber("0");
 			
 			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
 			if (bOddRow){
@@ -1186,9 +1173,9 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			//Store the unseen fields for the lines here:
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.lid + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getslid()) + "\""
 		    	+ ">"
 		    	+ "\n"
 		    ;
@@ -1197,127 +1184,40 @@ public class GLEditEntryEdit  extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
 				+ "(NEW)" 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.llinenumber + "\""
-	    		+ " VALUE=\"" + clsStringFunctions.filter(line.getslinenumber()) + "\""
+	    		+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getslinenumber()) + "\""
 	    		+ ">"
 				+ "</TD>\n";
 			
 			// Acct:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			
-			s  += "<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.sacctid + "\""
-				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.sacctid + "\""
-				+ " onchange=\"flagDirty();\""
-				 + " >\n"
-			;
-			for (int i = 0; i < arrGLAccts.size(); i++){
-				s += "<OPTION";
-				if (arrGLAccts.get(i).toString().compareTo(line.getsacctid()) == 0){
-					s += " selected=yes";
-				}
-				s += " VALUE=\"" + arrGLAccts.get(i).toString() + "\">" + arrGLDescriptions.get(i).toString() + "\n";
-			}
-			s += "</SELECT>"
-			;
-			s += "</TD>\n";
-			
-			//Line description:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.sdescription + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sdescriptionLength)
-			    + " SIZE = " + "40"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";			
-			
-			//Reference:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.sreference + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsreference()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sreferenceLength)
-			    + " SIZE = " + "30"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";			
-
-			//Comment:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.scomment + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.scommentLength)
-			    + " SIZE = " + "25"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
-			s += "</TD>\n";
-			
-			//Transaction date:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.dattransactiondate + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
-			    + " MAXLENGTH=" + "10"
-			    + " SIZE = " + "8"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			    + "&nbsp;" + SMUtilities.getDatePickerString(
-			    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTablegltransactionbatchlines.dattransactiondate,
-						getServletContext()
-					)
-			;
-			s += "</TD>\n";
-			
-			//Source ledger:
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s  += "<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.ssourceledger + "\""
+			s += "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
 					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-					+ SMTablegltransactionbatchlines.ssourceledger + "\""
-					+ " onchange=\"flagDirty();\""
-					 + " >\n"
+					+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
+					+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getsacctid()) + "\""
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sacctidLength)
+				    + " SIZE = " + "14"
+				    + " onchange=\"flagDirty();\""
+			    	+ ">"
+				    
+			    	+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+						+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+						+ SMTablegltransactionbatchlines.sacctid)
 				;
-				for (int i = 0; i < arrSourceLedgers.size(); i++){
-					s += "<OPTION";
-					if (arrSourceLedgers.get(i).toString().compareTo(line.getssourceledger()) == 0){
-						s += " selected=yes";
-					}
-					s += " VALUE=\"" + arrSourceLedgers.get(i).toString() + "\">" + arrSourceLedgers.get(i).toString() + "\n";
-				}
-				s += "</SELECT>"
-				;
-				s += "</TD>\n";
+
 			s += "</TD>\n";
 			
-			//Source type:
+			// Acct desc:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-				+ SMTablegltransactionbatchlines.ssourcetype + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getssourcetype()) + "\""
-			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.ssourcetypeLength)
-			    + " SIZE = " + "4"
-			    + " onchange=\"flagDirty();\""
-		    	+ ">"
-			;
+			
+			s += transactionline.getsacctid();
+
 			s += "</TD>\n";
 			
 			//Debit:
@@ -1325,14 +1225,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			s += "<INPUT TYPE=TEXT"
 				+ " style=\"text-align:right;\""
 				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.bddebitamt + "\""
 				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.bddebitamt + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdebitamt()) + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getsdebitamt()) + "\""
 			    + " MAXLENGTH=" + "13"
-			    + " SIZE = " + "12"
+			    + " SIZE = " + "8"
 			    //+ " onchange=\"updateLineTotal();\""
 		    	+ ">"
 			;
@@ -1343,15 +1243,99 @@ public class GLEditEntryEdit  extends HttpServlet {
 			s += "<INPUT TYPE=TEXT"
 				+ " style=\"text-align:right;\""
 				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.bdcreditamt + "\""
 				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.bdcreditamt + "\""
-		    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscreditamt()) + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getscreditamt()) + "\""
 			    + " MAXLENGTH=" + "13"
-			    + " SIZE = " + "12"
+			    + " SIZE = " + "8"
 			    //+ " onchange=\"updateLineTotal();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";
+			
+			//Transaction date:
+			String sDefaultTransactionDate = entry.getsdatentrydate();
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.dattransactiondate + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(sDefaultTransactionDate) + "\""
+			    + " MAXLENGTH=" + "10"
+			    + " SIZE = " + "8"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			    + "&nbsp;" + SMUtilities.getDatePickerString(
+			    		GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+						+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+						+ SMTablegltransactionbatchlines.dattransactiondate,
+						getServletContext()
+					)
+			;
+			s += "</TD>\n";
+			
+			//Source type:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ PARAM_SOURCE_LEDGER_AND_TYPE + "\""
+				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ PARAM_SOURCE_LEDGER_AND_TYPE +  "\""
+				+ " onchange=\"flagDirty();\""
+				 + " >\n"
+			;
+			
+			String ssSourceTypeSelections = "";
+			String sDefaultSourceType = "JE" + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE";
+			for (int j = 0; j < GLSourceLedgers.getSourceTypes().size(); j++){
+				ssSourceTypeSelections += "<OPTION";
+				if (GLSourceLedgers.getSourceTypes().get(j).compareTo(sDefaultSourceType) == 0){
+					ssSourceTypeSelections += " selected=yes";
+				}
+				ssSourceTypeSelections += " VALUE=\"" + GLSourceLedgers.getSourceTypes().get(j) + "\">" + GLSourceLedgers.getSourceTypes().get(j) + "\n";
+			}
+			s += ssSourceTypeSelections;
+			s += "\n</SELECT>\n";
+			s += "    </TD>\n";
+			
+			//Line description:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.sdescription + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getsdescription()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sdescriptionLength)
+			    + " SIZE = " + "40"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";			
+			
+			//Reference:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.sreference + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getsreference()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sreferenceLength)
+			    + " SIZE = " + "30"
+			    + " onchange=\"flagDirty();\""
+		    	+ ">"
+			;
+			s += "</TD>\n";			
+
+			//Comment:
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.scomment + "\""
+		    	+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getscomment()) + "\""
+			    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.scommentLength)
+			    + " SIZE = " + "25"
+			    + " onchange=\"flagDirty();\""
 		    	+ ">"
 			;
 			s += "</TD>\n";
@@ -1363,7 +1347,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		s += "  <TR style = \"  background-color:" + TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR + ";  \""
 				+ ">\n"
 			;
-		s += "    <TD COLSPAN=8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+		s += "    <TD COLSPAN=3 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 		s += "<B>TOTALS:</B>";
 		s += "</TD>\n";
 		
@@ -1556,7 +1540,12 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "    }\n"
 			+ "}\n"
 		;
-		 
+
+		s += "function findacct(){\n"
+			+ "    alert('Not yet implemented.');\n"
+			+ "}\n"
+		;
+
 		s += "function flagDirty() {\n"
 			+ "    document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = \"" 
 			+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
@@ -1724,6 +1713,15 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ " name=\"" + DELETE_BUTTON_LABEL + "\""
 				+ " onClick=\"deleteentry();\">"
 				+ DELETE_BUTTON_LABEL
+				+ "</button>\n"
+				;
+	}
+	private String findGLAccountButton(String sFieldName){
+		return "<button type=\"button\""
+				+ " value=\"" + FIND_ACCT_BUTTON_LABEL + "\""
+				+ " name=\"" + FIND_ACCT_BUTTON_LABEL + "\""
+				+ " onClick=\"findacct(sFieldName);\">"
+				+ FIND_ACCT_BUTTON_LABEL
 				+ "</button>\n"
 				;
 	}

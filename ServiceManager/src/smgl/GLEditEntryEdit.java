@@ -63,6 +63,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String UPDATE_AND_ADD_NEW_BUTTON_LABEL = "Update and add <B><FONT COLOR=RED>n</FONT></B>ew"; // N
 	
 	public static final String FIND_ACCT_BUTTON_LABEL = "Find Acct";
+	public static final String ACCT_DESC_LABEL_BASE = "ACCOUNTLABEL";
 	
 	public static final String BOOKMARK_TOP_OF_TABLES = "TopOfTables";
 	public static final String RETURN_TO_TABLES_BOOKMARK = "RETURNTOTABLESPARAM";
@@ -982,12 +983,16 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ " VALUE=\"" + clsStringFunctions.filter(line.getsacctid()) + "\""
 				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sacctidLength)
 				    + " SIZE = " + "14"
-				    + " onchange=\"flagDirty();\""
+				    + " onchange=\"verifyGL(this, "
+				    	+ "'" 
+				    	+ ACCT_DESC_LABEL_BASE 
+						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				    + "');\""
 			    	+ ">"
 				    
-			    	+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTablegltransactionbatchlines.sacctid)
+			    	//+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					//	+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					//	+ SMTablegltransactionbatchlines.sacctid)
 				;
 			}else{
 				sLineText += clsStringFunctions.filter(line.getsacctid());
@@ -996,7 +1001,9 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			//Acct description:
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			sLineText += clsStringFunctions.filter(line.getsacctid());
+			sLineText += "<LABEL ID = \"" + ACCT_DESC_LABEL_BASE 
+				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) + "\" >" 
+				+  clsStringFunctions.filter(line.getsacctid()) + "</LABEL>";
 			sLineText += "</TD>\n";
 			
 			//Debit:
@@ -1203,21 +1210,24 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getsacctid()) + "\""
 				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sacctidLength)
 				    + " SIZE = " + "14"
-				    + " onchange=\"flagDirty();\""
-			    	+ ">"
+				    + " onchange=\"verifyGL(this, "
+			    	+ "'" 
+			    	+ ACCT_DESC_LABEL_BASE 
+					+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+			    + "');\""
 				    
-			    	+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
-						+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
-						+ SMTablegltransactionbatchlines.sacctid)
+			    	//+ findGLAccountButton(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					//	+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					//	+ SMTablegltransactionbatchlines.sacctid)
 				;
 
 			s += "</TD>\n";
 			
-			// Acct desc:
+			//Acct description:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			
-			s += transactionline.getsacctid();
-
+			s += "<LABEL ID = \"" + ACCT_DESC_LABEL_BASE 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) + "\" >" 
+				+  clsStringFunctions.filter(transactionline.getsacctid()) + "</LABEL>";
 			s += "</TD>\n";
 			
 			//Debit:
@@ -1389,24 +1399,29 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		s += "window.onload = function() {\n"
 			+ "    initShortcuts();\n"
-			+ "    calculatelinetotal();\n"
+			//+ "    calculatelinetotal();\n"
 			+ "    jumpToBookmark('" + BOOKMARK_TOP_OF_TABLES + "'); \n"
+			+ "    displayGLDescriptions();\n"
 			+ "}\n"
 		;
 		
 		//Prompt to save:
 		s += "window.onbeforeunload = promptToSave;\n";
 
-		//Load the distribution code GL accounts:
+		//Load the GL accounts:
 		int iCounter = 0;
 		
-		String sdistributioncodeaccounts = "";
+		String sGLAccounts = "";
+		String sGLAccountDescriptions = "";
 		
 		//Add one array item for the 'blank' distribution code, if someone doesn't pick one:
-		sdistributioncodeaccounts += "sdistributioncodeaccounts[\"" + " " + "\"] = \"" + "" + "\";\n";
+		//sGLAccounts += "sglaccounts[\"" + " " + "\"] = \"" + "" + "\";\n";
 		
-		String SQL = "SELECT * FROM " + SMTableapdistributioncodes.TableName
-			+ " ORDER BY " + SMTableapdistributioncodes.sdistcodename
+		String SQL = "SELECT"
+			+ " " + SMTableglaccounts.sAcctID
+			+ ", " + SMTableglaccounts.sDesc
+			+ " FROM " + SMTableglaccounts.TableName
+			+ " ORDER BY " + SMTableglaccounts.sAcctID
 		;
 		
 		try {
@@ -1414,25 +1429,31 @@ public class GLEditEntryEdit  extends HttpServlet {
 				getServletContext(), 
 				sDBID, 
 				"MySQL", 
-				this.toString() + " loading dist code accts [1490748349] SQL: " + SQL 
+				this.toString() + " loading GL accts [1556209941] SQL: " + SQL 
 			);
 			while (rs.next()){
+				if (iCounter == 0){
+					sGLAccounts += "\"" + rs.getString(SMTableglaccounts.sAcctID).trim().replace("\"", "'") + "\"\n";
+					sGLAccountDescriptions += "\"" + rs.getString(SMTableglaccounts.sDesc).trim().replace("\"", "'") + "\"\n";
+				}else{
+					sGLAccounts += ", \"" + rs.getString(SMTableglaccounts.sAcctID).trim().replace("\"", "'") + "\"\n";
+					sGLAccountDescriptions += ", \"" + rs.getString(SMTableglaccounts.sDesc).trim().replace("\"", "'") + "\"\n";
+				}
 				iCounter++;
-				sdistributioncodeaccounts += "sdistributioncodeaccounts[\"" + rs.getString(SMTableapdistributioncodes.sdistcodename).trim() + "\"] = \"" + rs.getString(SMTableapdistributioncodes.sglacct).trim().replace("\"", "'") + "\";\n";
 			}
 			rs.close();
 		} catch (SQLException e) {
-			throw new SQLException("Error reading [1490748350] dist code accts for javascript - " + e.getMessage());
+			throw new SQLException("Error reading [1556209942] GL accts for javascript - " + e.getMessage());
 		}
 		
 		//Create the arrays, if there are any:
 		if (iCounter > 0){
-			s += "var sdistributioncodeaccounts = new Array(" + Integer.toString(iCounter) + ")\n";
-			s += sdistributioncodeaccounts + "\n";
+			s += "var sglaccounts = [\n" + sGLAccounts + "]\n\n";
+			s += "var sglaccountdescriptions = [\n" + sGLAccountDescriptions + "]\n\n";
 		}
 		
 		s += "\n";
-		
+
 		s += "function promptToSave(){\n"		
 			//Don't prompt on these functions:
 			//+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" +  COMMAND_VALUE_FINDVENDOR + "\" ){\n"
@@ -1470,28 +1491,29 @@ public class GLEditEntryEdit  extends HttpServlet {
     		+ "} \n"
 		;
 		
-		 //Unapply line:
-		 s += "function unapplyLine(linenumber){ \n"
-			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \""
-				+ COMMAND_VALUE_UNAPPLYLINE + "\";\n"
-			+ "    document.getElementById(\"" + LINE_NUMBER_TO_UNAPPLY_PARAM + "\").value = linenumber; \n"
-			+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
-			+ "} \n"
+		//Verify a GL account:
+		s += "function verifyGL(obj, labelid){\n"
+			+ "    var glfoundindex = sglaccounts.indexOf(obj.value);\n"
+			+ "    if (glfoundindex > -1){\n"
+			+ "        //alert('Index found = ' + glfoundindex);\n"
+			+ "        var glacctdesc = sglaccountdescriptions[glfoundindex];\n"
+			+ "        //alert('Acct desc = ' + glacctdesc);\n"
+			+ "        document.getElementById(labelid).innerHTML = glacctdesc;\n"
+			+ "    }else{\n"
+			+ "        alert('\\'' + obj.value + '\\' is not a valid GL Account.');\n"
+			+ "        obj.focus();\n"
+			+ "        obj.select();\n"
+			+ "    }"
+			+ "    flagDirty();\n"
+			+ "    return;\n"
+			+ "}\n"
 		;
-		 
-		 //Apply line:
-		 s += "function applyLine(docnumber){ \n"
-			//First, find out if the document we are applying to is ON HOLD:
-			+ "    if (document.getElementById(docnumber + '" + SMTableaptransactions.ionhold + "').value == '1'){ \n"
-			+ "        if (!confirm('This document is on hold.  Are you sure you want to apply a payment to it?')){ \n"
-			+ "            return; \n"
-			+ "        } \n"
-			+ "    } \n"
-			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \""
-				+ COMMAND_VALUE_APPLYTODOC + "\";\n"
-			+ "    document.getElementById(\"" + APPLYTODOCNUMBER_TO_APPLY_PARAM + "\").value = docnumber; \n"
-			+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
-			+ "} \n"
+		
+		//Verify a GL account:
+		s += "function displayGLDescriptions(){\n"
+			+ "    alert('Displaying GL descs');\n"
+			+ "    return;\n"
+			+ "}\n"
 		;
 		
 		//Remove a detail line:

@@ -155,7 +155,7 @@ public class GLEditEntryAction extends HttpServlet{
 				smaction.returnToOriginalURL();
 			}else{
 				String sRedirectString =
-					SMUtilities.getURLLinkBase(getServletContext()) + "smap.GLEditEntryEdit"
+					SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditEntryEdit"
     	    		+ "?" + SMTablegltransactionbatches.lbatchnumber + "=" + entry.getsbatchnumber()
     	    		+ "&" + GLEditBatchesEdit.BATCH_EDITABLE_PARAMETER + "=" + GLEditBatchesEdit.BATCH_EDITABLE_PARAMETER_VALUE_TRUE
     	    		+ "&" + SMTablegltransactionbatchentries.lid + "=-1"

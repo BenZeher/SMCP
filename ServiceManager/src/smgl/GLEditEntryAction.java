@@ -81,8 +81,17 @@ public class GLEditEntryAction extends HttpServlet{
 	    }
 
 		//If it's an edit, process that:
-    	if (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE) == 0){
-	    	try {
+    	if (
+    			(sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE) == 0)
+    			|| (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE_AND_ADD_LINE) == 0)
+    	){
+    		//This tells us that the user is ADDING a line, so we know to set the focus to the first field in the 'new line'
+    		// on the entry screen:
+    		String sAddingFlag = "";
+        	if (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE_AND_ADD_LINE) == 0){
+        		sAddingFlag = "Y";
+        	}
+    		try {
 	    		GLTransactionBatch batch = new GLTransactionBatch(entry.getsbatchnumber());
 	    		batch.updateBatchEntry(entry, getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName());
 			} catch (Exception e) {
@@ -100,6 +109,7 @@ public class GLEditEntryAction extends HttpServlet{
     	    		+ "&" + SMTablegltransactionbatchentries.lid + "=" + entry.getslid()
     	    		+ "&" + GLEditEntryEdit.RECORDWASCHANGED_FLAG + "=" 
 	    			+ clsManageRequestParameters.get_Request_Parameter(GLEditEntryEdit.RECORDWASCHANGED_FLAG, request)
+	    			+ "&" + GLEditEntryEdit.ADDING_LINE_FLAG + "=" + sAddingFlag
     	    		+ "&" + "CallingClass=" + sCallingClass
 				);
 				return;
@@ -118,13 +128,14 @@ public class GLEditEntryAction extends HttpServlet{
 	   	    		SMTablegltransactionbatches.lbatchnumber + "=" + entry.getsbatchnumber()
     	    		+ "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + entry.getsentrynumber()
     	    		+ "&" + SMTablegltransactionbatchentries.lid + "=" + entry.getslid()
+    	    		+ "&" + GLEditEntryEdit.ADDING_LINE_FLAG + "=" + sAddingFlag
     	    		+ "&" + "CallingClass=" + sCallingClass
 				);
 			}
 	    }
     	
 		//If it's an edit, process that:
-    	if (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE_AND_ADD) == 0){
+    	if (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_SAVE_AND_ADD_ENTRY) == 0){
 	    	try {
 	    		GLTransactionBatch batch = new GLTransactionBatch(entry.getsbatchnumber());
 	    		batch.updateBatchEntry(entry, getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName());

@@ -32,14 +32,15 @@ public class GLEditEntryEdit  extends HttpServlet {
 
 	public static final String BUTTON_LABEL_REMOVELINE = "Remove";
 	public static final String COMMAND_VALUE_REMOVELINE = "RemoveLine";
-	public static final String COMMAND_VALUE_EDITLINE = "EditLine";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String ADDING_LINE_FLAG = "ADDINGLINE";
 	public static final String LINE_NUMBER_TO_DELETE_PARAM = "LineNumberParam";
 	public static final String COMMAND_VALUE_SAVE = "SaveEntry";
 	public static final String COMMAND_VALUE_DELETE = "DeleteEntry";
-	public static final String COMMAND_VALUE_SAVE_AND_ADD = "Updateandaddnew";
+	public static final String COMMAND_VALUE_SAVE_AND_ADD_ENTRY = "Updateandaddnewentry";
+	public static final String COMMAND_VALUE_SAVE_AND_ADD_LINE = "Updateandaddnewline";
 	
 	public static final String CALCULATED_LINE_TOTAL_FIELD = "CALCULATEDLINETOTAL";
 	public static final String CALCULATED_LINE_TOTAL_FIELD_CONTAINER = "CALCULATEDLINETOTALCONTAINER";
@@ -60,7 +61,8 @@ public class GLEditEntryEdit  extends HttpServlet {
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	
 	public static final String UPDATE_BUTTON_LABEL = "<B><FONT COLOR=RED>U</FONT></B>pdate"; // U
-	public static final String UPDATE_AND_ADD_NEW_BUTTON_LABEL = "Update and add <B><FONT COLOR=RED>n</FONT></B>ew"; // N
+	public static final String UPDATE_AND_ADD_NEW_ENTRY_BUTTON_LABEL = "Update and add <B><FONT COLOR=RED>n</FONT></B>ew ENTRY"; // N
+	public static final String UPDATE_AND_ADD_NEW_LINE_BUTTON_LABEL = "Updat<B><FONT COLOR=RED>e</FONT></B> and add new LINE"; // E
 	
 	public static final String FIND_ACCT_BUTTON_LABEL = "Find Acct";
 	public static final String ACCT_DESC_LABEL_BASE = "ACCOUNTLABEL";
@@ -785,7 +787,10 @@ public class GLEditEntryEdit  extends HttpServlet {
  
     	//Display the first row of control buttons:
     	if (bEditable){
-    		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAndAddButton() + "&nbsp;" + createDeleteButton() + "\n";
+    		s += "<BR>" + createSaveButton() 
+    		+ "&nbsp;" + createSaveAndAddLineButton()
+    		+ "&nbsp;" + createSaveAndAddEntryButton()
+    		+ "&nbsp;" + createDeleteButton() + "\n";
     	}
     	
     	s += "<BR>\n";
@@ -800,7 +805,10 @@ public class GLEditEntryEdit  extends HttpServlet {
 				;
 		}
     	if (bEditable){
-    		s += "<BR>" + createSaveButton() + "&nbsp;" + createSaveAndAddButton() + "&nbsp;" + createDeleteButton() + "\n";
+       		s += "<BR>" + createSaveButton() 
+    		+ "&nbsp;" + createSaveAndAddLineButton()
+    		+ "&nbsp;" + createSaveAndAddEntryButton()
+    		+ "&nbsp;" + createDeleteButton() + "\n";
     	}
 		
 		return s;
@@ -1190,10 +1198,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			//Line number:
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
 				+ "(NEW)" 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ "<INPUT TYPE=HIDDEN"
+				+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 				+ SMTablegltransactionbatchlines.llinenumber + "\""
-	    		+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getslinenumber()) + "\""
+				+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				+ SMTablegltransactionbatchlines.llinenumber + "\""
+				+ " VALUE=\"" + clsStringFunctions.filter(transactionline.getslinenumber()) + "\""
 	    		+ ">"
 				+ "</TD>\n";
 			
@@ -1399,9 +1411,8 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		s += "window.onload = function() {\n"
 			+ "    initShortcuts();\n"
-			//+ "    calculatelinetotal();\n"
-			+ "    jumpToBookmark('" + BOOKMARK_TOP_OF_TABLES + "'); \n"
 			+ "    displayGLDescriptions();\n"
+			+ "    setfocustofirstline();\n"
 			+ "}\n"
 		;
 		
@@ -1455,20 +1466,15 @@ public class GLEditEntryEdit  extends HttpServlet {
 		s += "\n";
 
 		s += "function promptToSave(){\n"		
-			//Don't prompt on these functions:
-			//+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" +  COMMAND_VALUE_FINDVENDOR + "\" ){\n"
-			//+ "        return;\n"
-			//+ "    }\n"
-			//+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" +  COMMAND_VALUE_FINDAPPLYTODOCUMENTNUMBER + "\" ){\n"
-			//+ "        return;\n"
-			//+ "    }\n"
-			
 			//If the record WAS changed, then
 			+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" 
 				+ RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
-				//If is was anything but the 'SAVE' command that triggered this function...
-			+ "        if (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" 
-				+ COMMAND_VALUE_SAVE + "\" ){\n"
+				//If it was anything but the 'SAVE' command that triggered this function...
+			+ "        if (\n"
+			+ "            (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + COMMAND_VALUE_SAVE + "\" )\n"
+			+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + COMMAND_VALUE_SAVE_AND_ADD_ENTRY + "\" )\n"
+			+ "            && (document.getElementById(\"" + COMMAND_FLAG + "\").value != \"" + COMMAND_VALUE_SAVE_AND_ADD_LINE + "\" )\n"
+			+ "        ){\n"
 						//Prompt to see if the user wants to continue
 			+ "        return 'You have unsaved changes.';\n"
 			+ "        }\n"
@@ -1476,14 +1482,21 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "}\n\n"
 		;
 
-		s += "function jumpToBookmark(bookmarkID){ \n"
-			+ "    var objTopOfTablesBookmark = document.getElementById(bookmarkID); \n"
-			+ "    if (objTopOfTablesBookmark != null){ \n"
-			+ "        var top = document.getElementById(bookmarkID).offsetTop; \n"
-			+ "        window.scrollTo(0, top); \n"
-			+ "    } \n"
+		s += "function setfocustofirstline(){ \n";
+		if (ServletUtilities.clsManageRequestParameters.get_Request_Parameter(ADDING_LINE_FLAG, sm.getRequest()).compareToIgnoreCase("") != 0){
+			s += "    document.getElementById(\"" 
+				+ GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				+ clsStringFunctions.PadLeft("0", "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH)
+				+ SMTablegltransactionbatchlines.sacctid
+				+ "\").focus();\n"
+			;
+		}
+			s += "    return;\n"
 			+ "} \n"
 		;
+//		+ " ID=\"" +  
+//		+ clsStringFunctions.PadLeft(transactionline.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+//		+ SMTablegltransactionbatchlines.llinenumber + "\""
 		
 		//Function for changing row backgroundcolor:
 		s += "function setRowBackgroundColor(row, color) { \n"
@@ -1509,19 +1522,25 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "}\n"
 		;
 		
-		//Verify a GL account:
+		//Populate GL descriptions on startup:
 		s += "function displayGLDescriptions(){\n"
-			+ "    alert('Displaying GL descs');\n"
+			+ "    var elements = document.getElementById('" + sm.MAIN_FORM_NAME + "').elements;\n"
+			+ "    for (var i = 0, element; element = elements[i++];) {\n"
+			+ "        if (element.id.includes('" + SMTablegltransactionbatchlines.sacctid + "')){\n"
+			+ "            if (element.value !== ''){\n"
+			+ "                var labelid = element.id.replace('" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER + "', '');\n"
+			+ "                labelid = '" + ACCT_DESC_LABEL_BASE + "' + labelid;\n"
+			+ "                labelid = labelid.replace('" + SMTablegltransactionbatchlines.sacctid + "', '');\n"
+			+ "                verifyGL(element, labelid);\n"
+			+ "            }\n"
+			+ "        }\n"
+        	+ "    }\n"
 			+ "    return;\n"
 			+ "}\n"
 		;
 		
 		//Remove a detail line:
 		s += "function removeLine(sLineNumber){\n"
-			//+ "    if (!bScreenIsFullyDisplayed()){\n"
-			//+ "        return;\n"
-			//+ "    }\n"
-			//+ "    alert('test');"
 			+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" + RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
 			+ "        alert ('You have made changes that must be saved before removing a line.');\n"
 			+ "        return;\n"
@@ -1534,27 +1553,21 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "}\n"
 		;
 		
-		s += "function editLine(sLineNumber){\n"
-			+ "    if (document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value == \"" + RECORDWASCHANGED_FLAG_VALUE + "\" ){\n"
-			+ "        alert ('You have made changes that must be saved before editing a line.');\n"
-			+ "        return;\n"
-			+ "    }\n"
-			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_REMOVELINE + "\";\n"
-			+ "    document.getElementById(\"" + LINE_NUMBER_TO_DELETE_PARAM + "\").value = \"" + "sLineNumber" + "\";\n"
-			+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
-			+ "}\n"
-		;
-		
 		s += "function save(){\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_SAVE + "\";\n"
 			+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "}\n"
 		;
-		s += "function saveandadd(){\n"
-			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_SAVE_AND_ADD + "\";\n"
+		s += "function saveandaddentry(){\n"
+			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_SAVE_AND_ADD_ENTRY + "\";\n"
 			+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "}\n"
 		;
+		s += "function saveandaddline(){\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_SAVE_AND_ADD_LINE + "\";\n"
+				+ "    document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
+				+ "}\n"
+			;
 		s += "function deleteentry(){\n"
 			+ "    if (confirm('Are you sure you want to delete this " + "entry" + "?')){\n"
 			+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_DELETE + "\";\n"
@@ -1573,63 +1586,19 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ RECORDWASCHANGED_FLAG_VALUE + "\";\n"
 		+ "}\n";
 		
-		/*
-		s += "function updateLineTotal(){\n"
-			+ "    calculatelinetotal();"
-			+ "    flagDirty();\n"
-			+ "}\n"
-		;
-		
-		s += "function calculatelinetotal(){\n"
-			+ "    //Turn off the line amt warning by default:\n"
-			//+ "    document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.display= \"none\"\n"
-			+ "    var linetotal = getFloat(\"0.00\");\n"
-			+ "    var entryamt = getFloat(\"0.00\");\n"
-			+ "    var temp = (document.getElementById(\"" + SMTablegltransactionbatchentries.bdentryamount + "\").value).replace(',','');\n"
-			+ "    if (temp == ''){\n"
-			+ "        entryamt = getFloat(\"0.00\");\n"
-			+ "    }else{\n"
-			+ "        entryamt = getFloat(temp);\n"
-			+ "    }\n"
-			
-			+ "    // For each of the lines on the entry, add the amount:\n"
-			+ "	   for (i=0; i<document.forms[\"MAINFORM\"].elements.length; i++){\n"
-			+ "        //Get the name of the control:\n"
-   			+ "	       var testName = document.forms[\"MAINFORM\"].elements[i].name;\n"
-			+ "        //If the control name starts with '" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER + "', then pick off the rest of it:\n"
-   			+ "        if (testName.substring(0, " + Integer.toString(GLTransactionBatchEntry.LINE_NUMBER_PARAMETER.length()) + "	) == \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER + "\"){\n"
-   			+ "            //If the string ENDS with the field name '" + SMTablegltransactionbatchentries.bdamount + "', then it's a line amount:\n"
-   			+ "            if (testName.endsWith(\"" + SMTablegltransactionbatchentries.bdamount + "\") == true){\n"
-   			+ "                //Add it to the line total:\n"
-   			+ "                temp = document.getElementById(testName).value.replace(',','');\n"
-   			+ "                if (temp != ''){\n"
-   			+ "                    if(!isNaN(temp)){\n"
-   			+ "                        linetotal = linetotal + getFloat(temp);\n"
-   			+ "                    }\n"
-   			+ "                }\n"
-   			+ "            }\n"
-   			+ "        }\n"
-   			+ "    }\n"
-   			;
-		//Calculate and display the line totals:
-		s += "    if (!floatsAreEqual(linetotal, entryamt)){\n"
-   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
-   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"red\"\n"
-   			+ "    }else{\n"
-   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD + "\").innerText=linetotal.toFixed(2);\n"
-   			+ "        document.getElementById(\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\").style.color= \"black\"\n"
-   			+ "    }\n"
-   		;
-
-		s += "}\n"
-   		;
-   		*/
-		
 		//Hot key stuff:
 		s += "function initShortcuts() {\n";
 		
 		s += "    shortcut.add(\"Alt+d\",function() {\n";
 		s += "        deleteentry();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+e\",function() {\n";
+		s += "        saveandaddline();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";
@@ -1644,17 +1613,8 @@ public class GLEditEntryEdit  extends HttpServlet {
 		s += "        'target':document\n";
 		s += "    });\n";
 		
-		//HIDE apply-to docs:
-		s += "    shortcut.add(\"Alt+h\",function() {\n";
-		s += "        toggleUnappliedDocsTable();\n";
-		s += "    },{\n";
-		s += "        'type':'keydown',\n";
-		s += "        'propagate':false,\n";
-		s += "        'target':document\n";
-		s += "    });\n";
-		
 		s += "    shortcut.add(\"Alt+n\",function() {\n";
-		s += "        saveandadd();\n";
+		s += "        saveandaddentry();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";
@@ -1720,12 +1680,21 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "</button>\n"
 				;
 	}
-	private String createSaveAndAddButton(){
+	private String createSaveAndAddEntryButton(){
 		return "<button type=\"button\""
-				+ " value=\"" + UPDATE_AND_ADD_NEW_BUTTON_LABEL + "\""
-				+ " name=\"" + UPDATE_AND_ADD_NEW_BUTTON_LABEL + "\""
-				+ " onClick=\"saveandadd();\">"
-				+ UPDATE_AND_ADD_NEW_BUTTON_LABEL
+				+ " value=\"" + UPDATE_AND_ADD_NEW_ENTRY_BUTTON_LABEL + "\""
+				+ " name=\"" + UPDATE_AND_ADD_NEW_ENTRY_BUTTON_LABEL + "\""
+				+ " onClick=\"saveandaddentry();\">"
+				+ UPDATE_AND_ADD_NEW_ENTRY_BUTTON_LABEL
+				+ "</button>\n"
+				;
+	}
+	private String createSaveAndAddLineButton(){
+		return "<button type=\"button\""
+				+ " value=\"" + UPDATE_AND_ADD_NEW_LINE_BUTTON_LABEL + "\""
+				+ " name=\"" + UPDATE_AND_ADD_NEW_LINE_BUTTON_LABEL + "\""
+				+ " onClick=\"saveandaddline();\">"
+				+ UPDATE_AND_ADD_NEW_LINE_BUTTON_LABEL
 				+ "</button>\n"
 				;
 	}

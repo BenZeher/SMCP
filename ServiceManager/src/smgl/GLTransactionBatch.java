@@ -935,15 +935,41 @@ public class GLTransactionBatch {
 		
 		//Allow for the possibility that this update affects a starting balance in a subsequent fiscal set:
 		//Update the opening balance for any subsequent fiscal years for this account:
-		SQL = "UPDATE " + SMTableglfiscalsets.TableName
-			+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
-				+ SMTableglfiscalsets.bdopeningbalance + " + " 
-				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
-			+ " WHERE ("
-				+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-				+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
-			+ ")"
-		;
+		//TODO - update retained earnings for the year RATHER than the starting balance
+		//if this account is an INCOME statement account.....
+		//TEST THIS!
+		GLAccount glacct = new GLAccount(sAccount);
+		if(!glacct.load(conn)){
+			throw new Exception("Error [1556569790] checking normal balance type for GL account '" 
+				+ sAccount + "' - " + glacct.getErrorMessageString());
+		}
+		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
+			SQL = "UPDATE " + SMTableglfiscalsets.TableName
+					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
+						+ SMTableglfiscalsets.bdopeningbalance + " + " 
+						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+					+ " WHERE ("
+						+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+						+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
+					+ ")"
+				;
+		}else{
+			GLOptions gloptions = new GLOptions();
+			if (!gloptions.load(conn)){
+				throw new Exception("Error [1556569791] checking GL Options closgin account " 
+					+ " - " + gloptions.getErrorMessageString());
+			}
+			SQL = "UPDATE " + SMTableglfiscalsets.TableName
+					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
+						+ SMTableglfiscalsets.bdopeningbalance + " + " 
+						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+					+ " WHERE ("
+						+ "(" + SMTableglfiscalsets.sAcctID + " = '" + gloptions.getsClosingAccount() + "')"
+						+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
+					+ ")"
+				;
+		}
+
 		//System.out.println("[155603919] fiscal sets UPDATE statement = '" + SQL + "'.");
 		try {
 			Statement stmt = conn.createStatement();
@@ -955,43 +981,17 @@ public class GLTransactionBatch {
 				+ " - " + e.getMessage());
 		}		
 		
-		//Now update the GL financial statement data:
-		//Have to update these fields:
-		//SMTableglfinancialstatementdata.bdnetchangeforperiod
-		//SMTableglfinancialstatementdata.bdtotalyeartodate
-		SQL = "UPDATE " + SMTableglfinancialstatementdata.TableName
-			+ " SET " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " 
-				+ SMTableglfinancialstatementdata.bdnetchangeforperiod + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
-			+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = "
-				+ SMTableglfinancialstatementdata.bdtotalyeartodate + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
-			+ " WHERE ("
-				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
-				+ " AND (" + SMTableglfinancialstatementdata.ifiscalperiod + " = " + Integer.toString(iFiscalPeriod) + ")"
-				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
-			+ ")"
-		;
-		//System.out.println("[155603920] financial statements UPDATE statement = '" + SQL + "'.");
 		try {
-			Statement stmt = conn.createStatement();
-			stmt.execute(SQL);
+			updateFinancialStatementData(
+			    sAccount,
+			    iFiscalYear,
+			    iFiscalPeriod,
+			    bdAmt,
+			    conn
+			   );
 		} catch (Exception e) {
-			throw new Exception(
-				"Error [1556124568] updating GL financial statement data for account '" + sAccount 
-				+ "', fiscal year " + Integer.toString(iFiscalYear) 
-				+ ", period " + Integer.toString(iFiscalPeriod) 
-				+ " - " + e.getMessage());
+			throw new Exception(e.getMessage());
 		}
-		
-		//Finally update any other affected glfinancialstatementdata records:
-		//TODO
-		//SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
-		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
-		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
-		//SMTableglfinancialstatementdata.bdopeningbalance
-		//SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
-		//SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
-		//SMTableglfinancialstatementdata.bdtotalyeartodate
-
 		return;
 	}
     private void createEntryTransactions(SMLogEntry log, String sUserID, Connection conn) throws Exception{
@@ -1158,6 +1158,53 @@ public class GLTransactionBatch {
 		}
     	
     	return;
+    }
+    private void updateFinancialStatementData(
+    	String sAccount,
+    	int iFiscalYear,
+    	int iFiscalPeriod,
+    	BigDecimal bdNetChange,
+    	Connection conn
+    	) throws Exception{
+    	//TODO
+		//Now update the GL financial statement data:
+		//Have to update these fields:
+		//SMTableglfinancialstatementdata.bdnetchangeforperiod
+		//SMTableglfinancialstatementdata.bdtotalyeartodate
+		String SQL = "UPDATE " + SMTableglfinancialstatementdata.TableName
+			+ " SET " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " 
+				+ SMTableglfinancialstatementdata.bdnetchangeforperiod + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChange) + ")"
+			+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = "
+				+ SMTableglfinancialstatementdata.bdtotalyeartodate + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChange) + ")"
+			+ " WHERE ("
+				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+				+ " AND (" + SMTableglfinancialstatementdata.ifiscalperiod + " = " + Integer.toString(iFiscalPeriod) + ")"
+				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
+			+ ")"
+		;
+		//System.out.println("[155603920] financial statements UPDATE statement = '" + SQL + "'.");
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception(
+				"Error [1556124568] updating GL financial statement data for account '" + sAccount 
+				+ "', fiscal year " + Integer.toString(iFiscalYear) 
+				+ ", period " + Integer.toString(iFiscalPeriod) 
+				+ " - " + e.getMessage());
+		}
+		
+		//Finally update any other affected glfinancialstatementdata records:
+		//TODO
+		//SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+		//SMTableglfinancialstatementdata.bdopeningbalance
+		//SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+		//SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+		//SMTableglfinancialstatementdata.bdtotalyeartodate
+		
+		return;
     }
     private void setPostingFlag(Connection conn, String sUserID) throws Exception{
     	//First check to make sure no one else is posting:

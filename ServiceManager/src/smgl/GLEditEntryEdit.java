@@ -1532,6 +1532,8 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "                labelid = '" + ACCT_DESC_LABEL_BASE + "' + labelid;\n"
 			+ "                labelid = labelid.replace('" + SMTablegltransactionbatchlines.sacctid + "', '');\n"
 			+ "                verifyGL(element, labelid);\n"
+			+ "                //Need to reset the 'dirty' flag:\n"
+			+ "                document.getElementById(\"" + RECORDWASCHANGED_FLAG + "\").value = '';\n"
 			+ "            }\n"
 			+ "        }\n"
         	+ "    }\n"

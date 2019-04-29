@@ -17,5 +17,6 @@
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/servlet-api.jar"/>
 	<classpathentry exported="true" kind="lib" path="/usr/share/java/commons-io-1.4.jar"/>
 	<classpathentry kind="lib" path="/usr/share/java/javax.mail.jar"/>
+	<classpathentry kind="lib" path="/usr/share/java/jpscs.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

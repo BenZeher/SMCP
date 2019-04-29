@@ -18,10 +18,10 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//Localhost settings:
 		String sURL = "localhost"; //Google Cloud SQL = 35.243.233.33
-		String sDBID = "sm1"; //servmgr1 - default
+		String sDBID = "servmgr1"; //servmgr1 - default
 		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
-		String sUser = "smuser";//"smuser7sT559";
-		String sPassword = "smuser";//"kJ26D3G9bvK8";
+		String sUser = "smuser7sT559";//"smuser7sT559";
+		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
 		
 		//OHD Tampa settings:
 		/*
@@ -63,20 +63,44 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 		
-		String DateTimeString = null;
-		
-		try {
-			System.out.println(clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
-				DateTimeString, 
-				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
-				clsServletUtilities.EMPTY_DATETIME_VALUE
-			)
-			);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		//*********************************************
+		//TEST PERVASIVE CONNECTION:
+		Connection cnAP = null;
+		String sAPDatabaseURL = "74.50.124.130";
+		String sAPDatabaseName = "OHDDAY";
+		String sAPUserName = "Airo";
+		String sAPPassword = "tomcat";
+		try
+			{
+				cnAP = DriverManager.getConnection("jdbc:pervasive://" + sAPDatabaseURL + ":1583/" + sAPDatabaseName + "", sAPUserName, sAPPassword);
+		}catch (Exception localException2) {
+			try {
+				Class.forName("com.pervasive.jdbc.v2.Driver").newInstance();
+				cnAP = DriverManager.getConnection("jdbc:pervasive://" + sAPDatabaseURL + ":1583/" + sAPDatabaseName + "", sAPUserName, sAPPassword);
+			} catch (InstantiationException e) {
+				System.out.println("InstantiationException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (IllegalAccessException e) {
+				System.out.println("IllegalAccessException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (ClassNotFoundException e) {
+				System.out.println("ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (SQLException e) {
+				System.out.println("SQLException getting ACCPAC connection - " + e.getMessage());
+				return;
+			}
 		}
-		System.out.println("DONE");
 		
+		if (cnAP == null){
+			System.out.println("Could not get Pervasive connection");
+			return;
+		}
+		
+		
+		
+		
+		//***********************************************************************
 		//TEST EMAILER
 		
 		//Get the temporary file path for saving files:

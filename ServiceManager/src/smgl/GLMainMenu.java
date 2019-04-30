@@ -208,6 +208,7 @@ public class GLMainMenu extends HttpServlet {
 		//Transactions
 		arMenu.clear();
 		arMenu.add(SMSystemFunctions.GLEditBatches);
+		arMenu.add(SMSystemFunctions.GLClearPostedAndDeletedBatches);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

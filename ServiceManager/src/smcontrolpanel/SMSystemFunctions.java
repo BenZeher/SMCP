@@ -324,6 +324,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMEditServerSettingsFile = 1232L;
 	public static long SMDisplayLoggingOperations = 1233L;
 	public static long GLTransactionListing = 1234L;
+	public static long GLClearPostedAndDeletedBatches = 1235L;
 	
 	
 	private static ArrayList <String>arrFunctions;
@@ -2597,6 +2598,13 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLEditBatches);
 			arrFunctionLinks.add("smgl.GLEditBatchesSelect"); 
 			arrFunctionDescriptions.add("Add, modify, or delete GL batches. ");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Clear Posted And Deleted Batches"); 
+			arrFunctionIDs.add(GLClearPostedAndDeletedBatches); 
+			arrFunctionLinks.add("smgl.GLClearPostedBatchesSelect"); 
+			arrFunctionDescriptions.add("This permission gives the user the ability to"
+					+ " clear posted or deleted GL batches, based on a cutoff date.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

@@ -163,6 +163,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_BKCLEARPOSTEDBANKSTATEMENTS = "BKCLEARPOSTEDBANKSTATEMENTS";
 	public final static String LOG_OPERATION_GLTRIALBALANCE = "GLTRIALBALANCE";
 	public final static String LOG_OPERATION_GLBATCHPOST = "GLBATCHPOST";
+	public final static String LOG_OPERATION_GLCLEARPOSTEDBATCHES = "GLCLEARPOSTEDBATCHES";
 	
 	private Connection conn;
 	private ServletContext context;
@@ -728,6 +729,9 @@ public class SMLogEntry {
 
     	m_arrOperationLabelValues.add(LOG_OPERATION_GLBATCHPOST);
     	m_arrOperationLabelDescriptions.add("Records GL transaction batch posting events");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_GLCLEARPOSTEDBATCHES);
+    	m_arrOperationLabelDescriptions.add("Records clearing of GL Posted Batches");
 
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){

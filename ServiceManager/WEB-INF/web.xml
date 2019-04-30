@@ -3872,6 +3872,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLClearPostedBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLClearPostedBatchesSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLClearPostedBatchesAction</servlet-name>
+        <servlet-class>smgl.GLClearPostedBatchesAction</servlet-class>
+    </servlet>
+   
+    <servlet>
         <servlet-name>GLConvertACCPAC</servlet-name>
         <servlet-class>smgl.GLConvertACCPAC</servlet-class>
     </servlet>
@@ -7728,6 +7738,16 @@
    <servlet-mapping>
         <servlet-name>GLAcctSegmentValueSelect</servlet-name>
         <url-pattern>/smgl.GLAcctSegmentValueSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GLClearPostedBatchesAction</servlet-name>
+        <url-pattern>/smgl.GLClearPostedBatchesAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLClearPostedBatchesSelect</servlet-name>
+        <url-pattern>/smgl.GLClearPostedBatchesSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

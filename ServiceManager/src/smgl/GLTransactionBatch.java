@@ -15,6 +15,7 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
@@ -24,6 +25,7 @@ import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsValidateFormFields;
 import smar.SMOption;
@@ -943,7 +945,7 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1556569790] checking normal balance type for GL account '" 
 				+ sAccount + "' - " + glacct.getErrorMessageString());
 		}
-		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
+		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET) == 0){
 			SQL = "UPDATE " + SMTableglfiscalsets.TableName
 					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
 						+ SMTableglfiscalsets.bdopeningbalance + " + " 
@@ -954,9 +956,12 @@ public class GLTransactionBatch {
 					+ ")"
 				;
 		}else{
+			//Income statement account changes from the previous year go to Retained Earnings (the 'closing' account).
+			// Retained earnings normally carries a 'credit' balance, as do income accounts.
+			// Expense accounts normally carry a debit balance.
 			GLOptions gloptions = new GLOptions();
 			if (!gloptions.load(conn)){
-				throw new Exception("Error [1556569791] checking GL Options closgin account " 
+				throw new Exception("Error [1556569791] checking GL Options closing account " 
 					+ " - " + gloptions.getErrorMessageString());
 			}
 			SQL = "UPDATE " + SMTableglfiscalsets.TableName
@@ -1166,43 +1171,969 @@ public class GLTransactionBatch {
     	BigDecimal bdNetChange,
     	Connection conn
     	) throws Exception{
-    	//TODO
-		//Now update the GL financial statement data:
-		//Have to update these fields:
-		//SMTableglfinancialstatementdata.bdnetchangeforperiod
-		//SMTableglfinancialstatementdata.bdtotalyeartodate
-		String SQL = "UPDATE " + SMTableglfinancialstatementdata.TableName
-			+ " SET " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " 
-				+ SMTableglfinancialstatementdata.bdnetchangeforperiod + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChange) + ")"
-			+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = "
-				+ SMTableglfinancialstatementdata.bdtotalyeartodate + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChange) + ")"
+
+    	//Now update the GL fiscalstatementdata table:
+		String SQL = "SELECT * from " + SMTableglfiscalsets.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
-				+ " AND (" + SMTableglfinancialstatementdata.ifiscalperiod + " = " + Integer.toString(iFiscalPeriod) + ")"
-				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
+				+ "(" + SMTableglfiscalsets.ifiscalyear + ">=" + iFiscalYear + ")"
+				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
 			+ ")"
-		;
-		//System.out.println("[155603920] financial statements UPDATE statement = '" + SQL + "'.");
-		try {
-			Statement stmt = conn.createStatement();
-			stmt.execute(SQL);
-		} catch (Exception e) {
-			throw new Exception(
-				"Error [1556124568] updating GL financial statement data for account '" + sAccount 
-				+ "', fiscal year " + Integer.toString(iFiscalYear) 
-				+ ", period " + Integer.toString(iFiscalPeriod) 
-				+ " - " + e.getMessage());
-		}
+			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + " DESC";
+		ResultSet rsFiscalSets = clsDatabaseFunctions.openResultSet(SQL, conn);
+		String SQLInsert = "";
+		String sPreviousYearSQL = "";
+		long lLastFiscalYear = 0L;
+		//String sLastFiscalPeriodDateOfPreviousYear = "0000-00-00";
+		//String sLastFiscalPeriodDateOfTwoYearsPrevious = "0000-00-00";
+		int iLastPeriodOfPreviousYear = 0;
+		int iLastPeriodOfTwoYearsPrevious = 0;
 		
-		//Finally update any other affected glfinancialstatementdata records:
-		//TODO
-		//SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
-		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
-		//SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
-		//SMTableglfinancialstatementdata.bdopeningbalance
-		//SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
-		//SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
-		//SMTableglfinancialstatementdata.bdtotalyeartodate
+		while(rsFiscalSets.next()){
+			
+			//IF we've moved to a new fiscal year, then we have to determine the LAST period of the two previous fiscal years:
+			if (iFiscalYear != lLastFiscalYear){
+				//We need to determine the LAST PERIOD of the two previous years:
+				String SQLFiscalPeriods = "SELECT * FROM " + SMTableglfiscalperiods.TableName
+					+ " WHERE ("
+						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 1L) + ")"
+						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 2L) + ")"
+					+ ")"
+					+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC"
+				;
+				ResultSet rsRecentFiscalPeriods = clsDatabaseFunctions.openResultSet(SQLFiscalPeriods, conn);
+
+				if (rsRecentFiscalPeriods.next()){
+					//This is the PREVIOUS fiscal year:
+					iLastPeriodOfPreviousYear = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+				}
+				
+				if (rsRecentFiscalPeriods.next()){
+					//This is the fiscal year TWO YEARS PREVIOUS:
+					iLastPeriodOfTwoYearsPrevious = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+				}
+			}
+			
+			//Get the previous year's fiscal set, if there is one:
+			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 1) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
+				+ ")"
+			;
+			ResultSet rsPreviousYearFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, conn);
+			boolean bPreviousYearWasFound = false;
+			if(rsPreviousYearFiscalSet.next()){
+				bPreviousYearWasFound = true;
+			}
+			
+			//Get the fiscal set from TWO YEARS PREVIOUS, if there is one:
+			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 2) + ")"
+					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
+				+ ")"
+			;
+			ResultSet rsTwoYearsPreviousFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, conn);
+			boolean bTwoYearsPreviousWasFound = false;
+			if(rsTwoYearsPreviousFiscalSet.next()){
+				bTwoYearsPreviousWasFound = true;
+			}
+
+			//PERIOD 1:
+			String sPeriod = "1";
+			BigDecimal bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+			BigDecimal bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+			}
+					
+			BigDecimal bdNetChangeForPreviousPeriod = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				// Here we use the value we found above for the last period of the previous year:
+				if (iLastPeriodOfPreviousYear == 13){
+					bdNetChangeForPreviousPeriod = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);
+				}
+				if (iLastPeriodOfPreviousYear == 12){
+					bdNetChangeForPreviousPeriod = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);
+				}
+			}
+			
+			BigDecimal bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bTwoYearsPreviousWasFound){
+				// Here we use the value we found above for the last period of the year two years previous:
+				if (iLastPeriodOfTwoYearsPrevious == 13){
+					bdNetChangeForPreviousPeriodPreviousYear = rsTwoYearsPreviousFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);
+				}
+				if (iLastPeriodOfTwoYearsPrevious == 12){
+					bdNetChangeForPreviousPeriodPreviousYear = rsTwoYearsPreviousFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);
+				}
+			}
+				
+			BigDecimal bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			BigDecimal bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			BigDecimal bdTotalPreviousYearToDate = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+			}
+			BigDecimal bdTotalYearToDate = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579630] - could not insert/update Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 2:
+			sPeriod = "2";
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2);
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2);
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2));
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2));
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579631] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 3:
+			sPeriod = "3";
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2);
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod2);
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3));
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3));
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579632] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 4:	
+			sPeriod = "4"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod3);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579633] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 5:	
+			sPeriod = "5"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod4);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579634] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 6:	
+			sPeriod = "6"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod5);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579636] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 7:	
+			sPeriod = "7"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod6);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579637] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 8:	
+			sPeriod = "8"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod7);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579638] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 9:	
+			sPeriod = "9"; 
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod8);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579639] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}	
+			
+			//PERIOD 10:
+			sPeriod = "10";
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod9);
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579640] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 11:
+			sPeriod = "11";
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod10);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579641] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 12:
+			sPeriod = "12";
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod11);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12));  
+
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579642] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			//PERIOD 13:
+			sPeriod = "13";
+			
+			bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  
+			bdNetChangeForPeriodPreviousYear = new BigDecimal(0);
+			if (bPreviousYearWasFound){
+				bdNetChangeForPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13);  
+			}
+			bdNetChangeForPreviousPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
+			
+			bdNetChangeForPreviousPeriodPreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdNetChangeForPreviousPeriodPreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod12);  
+			}
+			bdOpeningBalance = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			bdOpeningBalancePreviousYear = new BigDecimal("0.00");
+			if (bPreviousYearWasFound){
+				bdOpeningBalancePreviousYear = rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdopeningbalance);
+			}
+			if (bPreviousYearWasFound){
+				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  
+			}
+			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod13));  
+			
+			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+				+ "("
+				+ SMTableglfinancialstatementdata.sacctid
+				+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+				+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ") VALUES ("
+				+ "'" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+				+ ", " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear))
+				+ ", " + sPeriod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod) // bdnetchangeforperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear) //bdnetchangeforperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod) //bdnetchangeforpreviousperiod
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear) //bdnetchangeforpreviousperiodpreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance) // bdopeningbalance
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear) //bdopeningbalancepreviousyear
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate) // bdtotalpreviousyeartodate
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate) // bdtotalyeartodate
+				+ ") ON DUPLICATE KEY UPDATE "
+				+ " " + SMTableglfinancialstatementdata.bdnetchangeforperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriod)
+				+ ", " + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetChangeForPreviousPeriodPreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalance)
+				+ ", " + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdOpeningBalancePreviousYear)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
+			;
+			try {
+				Statement stmtInsert = conn.createStatement();
+				stmtInsert.execute(SQLInsert);
+			} catch (Exception e) {
+				rsFiscalSets.close();
+				throw new Exception("Error [1552579643] - could not insert Period " + sPeriod + " into " + SMTableglfinancialstatementdata.TableName + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+			}
+			
+			rsPreviousYearFiscalSet.close();
+			
+			//Remember the fiscal year:
+			lLastFiscalYear =  rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear);
+			
+		}
+		rsFiscalSets.close();
 		
 		return;
     }

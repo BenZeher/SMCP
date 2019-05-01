@@ -325,6 +325,8 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long SMDisplayLoggingOperations = 1233L;
 	public static long GLTransactionListing = 1234L;
 	public static long GLClearPostedAndDeletedBatches = 1235L;
+	public static long GLClearTransactions = 1236L;
+	public static long GLClearFiscalData = 1237L;
 	
 	
 	private static ArrayList <String>arrFunctions;
@@ -2607,6 +2609,19 @@ public class SMSystemFunctions extends java.lang.Object{
 					+ " clear posted or deleted GL batches, based on a cutoff date.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
+			arrFunctions.add("GL Clear Transactions"); 
+			arrFunctionIDs.add(GLClearTransactions); 
+			arrFunctionLinks.add("smgl.GLClearTransactionsSelect"); 
+			arrFunctionDescriptions.add("This permission gives the user the ability to"
+					+ " clear GL transactions, based on a cutoff date.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Clear Fiscal Data"); 
+			arrFunctionIDs.add(GLClearFiscalData); 
+			arrFunctionLinks.add("smgl.GLClearFiscalDataSelect"); 
+			arrFunctionDescriptions.add("This permission gives the user the ability to"
+					+ " clear GL fiscal and financial data, based on a cutoff date.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 	}
 
 	public String getSecurityFunction(int iIndex){

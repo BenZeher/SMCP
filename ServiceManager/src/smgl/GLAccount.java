@@ -39,7 +39,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
-import smap.APVendor;
 import smar.ARSQLs;
 import smar.ARUtilities;
 import smcontrolpanel.SMUtilities;

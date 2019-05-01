@@ -106,7 +106,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		try {
 			checkAndSetAPPostingFlag (conn, sUserID);
 		} catch (Exception e) {
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047432");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047432]");
 			throw new Exception("Error [1506471592] checking AP Posting Flag - " + e.getMessage());
 		}
 		//Have to make sure there are NO unposted batches:
@@ -125,13 +125,13 @@ public class APClearTransactionsAction extends HttpServlet{
 			if (rs.next()){
 				rs.close();
 				clearPostingFlag(conn);
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047433");
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047433]");
 				throw new Exception("There are unposted batches - these must be posted before you can clear transactions.");
 			}
 			rs.close();
 		} catch (SQLException e1) {
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047434");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047434]");
 			throw new Exception("Error [1506452538] checking for unposted batches - with SQL: " + SQL + " - " + e1.getMessage() + ".");
 		}
 		
@@ -147,7 +147,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		
 		if(!clsDatabaseFunctions.start_data_transaction(conn)){
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047435");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047435]");
 			throw new Exception("Could not start data transaction.");
 		}
 
@@ -156,7 +156,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047436");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047436]");
 			throw new Exception("Error [1506472208] - Could not delete records - " + e.getMessage());
 
 		}
@@ -164,7 +164,7 @@ public class APClearTransactionsAction extends HttpServlet{
 		if(!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clearPostingFlag(conn);
-			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[]1547047437");
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547047437]");
 			throw new Exception("Error [1506472298] - Could not commit data transaction.");
 		}
 

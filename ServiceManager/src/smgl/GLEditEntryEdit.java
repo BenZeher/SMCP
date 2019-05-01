@@ -13,8 +13,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableapdistributioncodes;
-import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTablegltransactionbatchentries;
@@ -1524,7 +1522,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		//Populate GL descriptions on startup:
 		s += "function displayGLDescriptions(){\n"
-			+ "    var elements = document.getElementById('" + sm.MAIN_FORM_NAME + "').elements;\n"
+			+ "    var elements = document.getElementById('" + SMMasterEditEntry.MAIN_FORM_NAME + "').elements;\n"
 			+ "    for (var i = 0, element; element = elements[i++];) {\n"
 			+ "        if (element.id.includes('" + SMTablegltransactionbatchlines.sacctid + "')){\n"
 			+ "            if (element.value !== ''){\n"
@@ -1709,15 +1707,15 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "</button>\n"
 				;
 	}
-	private String findGLAccountButton(String sFieldName){
-		return "<button type=\"button\""
-				+ " value=\"" + FIND_ACCT_BUTTON_LABEL + "\""
-				+ " name=\"" + FIND_ACCT_BUTTON_LABEL + "\""
-				+ " onClick=\"findacct(sFieldName);\">"
-				+ FIND_ACCT_BUTTON_LABEL
-				+ "</button>\n"
-				;
-	}
+//	private String findGLAccountButton(String sFieldName){
+//		return "<button type=\"button\""
+//				+ " value=\"" + FIND_ACCT_BUTTON_LABEL + "\""
+//				+ " name=\"" + FIND_ACCT_BUTTON_LABEL + "\""
+//				+ " onClick=\"findacct(sFieldName);\">"
+//				+ FIND_ACCT_BUTTON_LABEL
+//				+ "</button>\n"
+//				;
+//	}
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

@@ -11,9 +11,11 @@ import java.util.regex.Pattern;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMLogEntry;
-import SMDataDefinition.SMTableglbatches;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionbatchentries;
+import SMDataDefinition.SMTablegltransactionbatches;
+import SMDataDefinition.SMTablegltransactionbatchlines;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -687,7 +689,9 @@ public class SMCustomQuery extends java.lang.Object{
 		if (
 			(sQueryString.contains(SMTableglfinancialstatementdata.TableName))
 			|| (sQueryString.contains(SMTableglfiscalsets.TableName))
-			|| (sQueryString.contains(SMTableglbatches.TableName))
+			|| (sQueryString.contains(SMTablegltransactionbatches.TableName))
+			|| (sQueryString.contains(SMTablegltransactionbatchentries.TableName))
+			|| (sQueryString.contains(SMTablegltransactionbatchlines.TableName))
 			|| (sQueryString.contains(SMTablegltransactionlines.TableName))
 		){
 			if (!SMSystemFunctions.isFunctionPermitted(

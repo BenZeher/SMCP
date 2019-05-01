@@ -253,6 +253,42 @@ public class APEditAPOptions extends HttpServlet {
 				+ "</TD>";
 		s += "<TD>If you want a short suffix in front of the created vendor folder name, enter it here.</TD></TR>";
 		
+		//Feed GL:
+		s += "  <TR>\n"
+			+ "    <TD ALIGN=RIGHT><B>GL feed:</B></TD>\n";
+		s += "    <TD><SELECT NAME = \"" + APOptions.Paramifeedgl + "\">";
+
+		s += "<OPTION";
+		if (entry.getifeedgl().compareToIgnoreCase(
+				Integer.toString(SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY) + "\">";
+		s += "Create GL batch export file for external GLs only";
+		s += "</OPTION>";
+		
+		s += "<OPTION";
+		if (entry.getifeedgl().compareToIgnoreCase(
+				Integer.toString(SMTableapoptions.FEED_GL_SMCP_GL_ONLY)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTableapoptions.FEED_GL_SMCP_GL_ONLY) + "\">";
+		s += "Create GL batch in SMCP GL only";
+		s += "</OPTION>";
+		
+		s += "<OPTION";
+		if (entry.getifeedgl().compareToIgnoreCase(
+				Integer.toString(SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL) + "\">";
+		s += "Create external GL batch AND batch in SMCP GL (normally for testing only)";
+		s += "</OPTION>";
+		
+		s += "</SELECT></TD>";
+		s += "<TD>Determines if batch posting creates SMCP GL batches.</TD></TD>";
+		s += "</TR>";
+		
 		//Uses SMTP AP?  
 		s += "<TR><TD ALIGN=RIGHT><B>Using SMCP AP?</B>:</TD>";
 		if (entry.getUsesSMCPAP().compareToIgnoreCase("0") == 0){

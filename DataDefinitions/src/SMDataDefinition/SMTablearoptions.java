@@ -13,6 +13,9 @@ public class SMTablearoptions {
 	public static String iexportto = "iexportto";
 	public static String ienforcecreditlimit = "ienforcecreditlimit";
 	
+	//Automatically feed SMCP GL?
+	public static String ifeedgl = "ifeedgl";
+	
 	//Fields for creating new customer folders in Google Drive:
 	public static String gdrivecustomersparentfolderid = "gdrivecustomersparentfolderid";
 	public static String gdrivecustomersderfolderprefix = "gdrivecustomersfolderprefix";
@@ -24,5 +27,9 @@ public class SMTablearoptions {
 	public static int gdrivecustomerfolderprefixlength = 32;
 	public static int gdrivecustomerfoldersuffixlength = 32;
 	public static int suserfullnameLength = 128;
+	
+	public static final int FEED_GL_EXTERNAL_GL_ONLY = 0;
+	public static final int FEED_GL_SMCP_GL_ONLY = 1;
+	public static final int FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL = 2;
 
 }

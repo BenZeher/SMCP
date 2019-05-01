@@ -32,6 +32,7 @@ public class APOptions extends java.lang.Object{
 	public static final String Paramaccpacdatabaseuserpw = "accpacdatabaseuserpw";
 	public static final String Paramaccpacdatabasetype = "accpacdatabasetype";
 	public static final String Paramiexportoption = "iexportoption";
+	public static final String Paramifeedgl = "ifeedgl";
 	public static final String FORM_NAME = "MAINFORM";
 	
 	private String m_ibatchpostinginprocess;
@@ -49,6 +50,7 @@ public class APOptions extends java.lang.Object{
 	private String m_saccpacdatabaseuserpw;
 	private String m_iaccpacdatabasetype;
 	private String m_iexportoption;
+	private String m_ifeedgl;
 	
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
 	
@@ -69,6 +71,7 @@ public class APOptions extends java.lang.Object{
 		m_saccpacdatabaseuserpw = "";
 		m_iaccpacdatabasetype = "0";
 		m_iexportoption = "0";
+		m_ifeedgl = "0";
 		m_sErrorMessageArray = new ArrayList<String> (0);
 	}
 	
@@ -93,6 +96,7 @@ public class APOptions extends java.lang.Object{
 		m_gdrivevendorsderfolderprefix = clsManageRequestParameters.get_Request_Parameter(APOptions.Paramgdrivevendorsfolderprefix, req).trim();
 		m_gdrivevendorsfoldersuffix = clsManageRequestParameters.get_Request_Parameter(APOptions.Paramgdrivevendorsfoldersuffix, req).trim();
 		m_iexportoption = clsManageRequestParameters.get_Request_Parameter(APOptions.Paramiexportoption, req).trim();
+		m_ifeedgl = clsManageRequestParameters.get_Request_Parameter(APOptions.Paramifeedgl, req).trim();
 		m_sErrorMessageArray = new ArrayList<String> (0);
 	}
 	public boolean checkTestingFlag(Connection conn) throws Exception{
@@ -134,13 +138,15 @@ public class APOptions extends java.lang.Object{
         			m_gdrivevendorsderfolderprefix = rs.getString(SMTableapoptions.gdrivevendorsderfolderprefix);
         			m_gdrivevendorsfoldersuffix = rs.getString(SMTableapoptions.gdrivevendorsfoldersuffix);
         			m_iexportoption = Integer.toString(rs.getInt(SMTableapoptions.iexportto));
+        			m_ifeedgl = Integer.toString(rs.getInt(SMTableapoptions.ifeedgl));
         			rs.close();
         			return true;
         		}else{
         		rs.close();
         		APOptions defaultAPOptions = new APOptions();
         		SQL = "INSERT INTO " + SMTableapoptions.TableName 
-        			+ " (" +  SMTableapoptions.ibatchpostinginprocess 
+        			+ " (" +  SMTableapoptions.ibatchpostinginprocess
+        			+ ", " + SMTableapoptions.ifeedgl
         			+ ", " + SMTableapoptions.luserid 
         			+ ", " + SMTableapoptions.sprocess 
         			+ ", " + SMTableapoptions.datstartdate 
@@ -156,7 +162,8 @@ public class APOptions extends java.lang.Object{
         			+ ", " + SMTableapoptions.gdrivevendorsderfolderprefix 
        				+ ", " + SMTableapoptions.gdrivevendorsfoldersuffix   //15			
        				+ ") VALUES(" 
-       				+      defaultAPOptions.m_ibatchpostinginprocess 
+       				+      defaultAPOptions.m_ibatchpostinginprocess
+       				+ ", " + defaultAPOptions.m_ifeedgl + ""
        				+ ", " + defaultAPOptions.m_lpostinguserid + ""
        				+ ", '" + defaultAPOptions.m_spostingprocess + "'"
        				+ ", '" + defaultAPOptions.m_datpostingstartdate + "'"
@@ -200,7 +207,7 @@ public class APOptions extends java.lang.Object{
     		throw new Exception("Error getting connection to load APOptions - " + e.getMessage());
     	}
     	if (conn == null){
-    		throw new Exception("Counld not get connection to load APOptions.");
+    		throw new Exception("Could not get connection to load APOptions.");
     	}
     	if (!load(conn)){
     		clsDatabaseFunctions.freeConnection(context, conn, "[1547059459]");
@@ -226,6 +233,7 @@ public class APOptions extends java.lang.Object{
 		+ ", " + SMTableapoptions.saccpacdatabaseuserpw + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_saccpacdatabaseuserpw) + "'"
 		+ ", " + SMTableapoptions.iaccpacdatabasetype + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iaccpacdatabasetype) 
 		+ ", " + SMTableapoptions.iexportto + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iexportoption)
+		+ ", " + SMTableapoptions.ifeedgl + " = " + m_ifeedgl
 		;
 		
 		Connection conn = clsDatabaseFunctions.getConnection(
@@ -415,6 +423,12 @@ public class APOptions extends java.lang.Object{
 	public void setiexportoption(String siexportoption){
 		m_iexportoption = siexportoption;
 	}
+	public String getifeedgl(){
+	    return m_ifeedgl;
+	}
+	public void setifeedgl(String sifeedgl){
+		m_ifeedgl = sifeedgl;
+	}
 	
 	public String getObjectName(){
 	    return ParamObjectName;
@@ -431,6 +445,7 @@ public class APOptions extends java.lang.Object{
 		sQueryString += "&" + Paramgdrivevendorsfolderprefix + "=" + clsServletUtilities.URLEncode(m_gdrivevendorsderfolderprefix);
 		sQueryString += "&" + Paramgdrivevendorsfoldersuffix + "=" + clsServletUtilities.URLEncode(m_gdrivevendorsfoldersuffix);
 		sQueryString += "&" + Paramiexportoption + "=" + clsServletUtilities.URLEncode(m_iexportoption);
+		sQueryString += "&" + Paramiexportoption + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		return sQueryString;
 	}
 

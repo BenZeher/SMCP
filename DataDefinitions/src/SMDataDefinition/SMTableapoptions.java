@@ -34,6 +34,9 @@ public class SMTableapoptions {
 	//get some working data in the AP system.  It won't appear on a screen, but it can be manipulated with SQL commands:
 	public static String icreatetestbatchesfrompoinvoices = "icreatetestbatchesfrompoinvoices";
 	
+	//Automatically feed SMCP GL?
+	public static String ifeedgl = "ifeedgl";
+	
 	//Lengths:
 	public static int suserlength = 128;
 	public static int sprocesslength = 128;
@@ -54,6 +57,10 @@ public class SMTableapoptions {
 	public static final String AP_VERSION_ACCPAC54_LABEL = "ACCPAC Version 5.4";
 	public static final String AP_VERSION_ACCPAC56_LABEL = "ACCPAC Version 5.6";
 	public static final String AP_VERSION_ACCPAC61_LABEL = "ACCPAC Version 6.1";
+	
+	public static final int FEED_GL_EXTERNAL_GL_ONLY = 0;
+	public static final int FEED_GL_SMCP_GL_ONLY = 1;
+	public static final int FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL = 2;
 	
 	public static String getExportFormatLabel(int iExportIndex){
 		

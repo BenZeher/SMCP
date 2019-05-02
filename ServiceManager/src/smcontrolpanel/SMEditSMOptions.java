@@ -1,9 +1,5 @@
 package smcontrolpanel;
 
-import SMDataDefinition.SMTablesmoptions;
-import smar.*;
-import ServletUtilities.*;
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -13,6 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import SMDataDefinition.SMTablesmoptions;
+import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import smar.SMOption;
+import smar.SMOptionInput;
 
 public class SMEditSMOptions extends HttpServlet {
 
@@ -415,13 +417,48 @@ public class SMEditSMOptions extends HttpServlet {
 					+ "\" CHECKED></TD>");
 		}		m_pwOut.println("<TD>Check to automatically create bank reconciliation exports when cash batches are posted.</TD></TR>");
 		
+		//Feed GL:
+		String s = "  <TR>\n"
+			+ "    <TD ALIGN=RIGHT><B>GL feed:</B></TD>\n";
+		s += "    <TD><SELECT NAME = \"" + SMOptionInput.Paramifeedgl + "\">";
 
+		s += "<OPTION";
+		if (optionInput.getsfeedgl().compareToIgnoreCase(
+				Integer.toString(SMTablesmoptions.FEED_GL_EXTERNAL_GL_ONLY)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTablesmoptions.FEED_GL_EXTERNAL_GL_ONLY) + "\">";
+		s += "Create GL batch export file for external GLs only";
+		s += "</OPTION>";
+		
+		s += "<OPTION";
+		if (optionInput.getsfeedgl().compareToIgnoreCase(
+				Integer.toString(SMTablesmoptions.FEED_GL_SMCP_GL_ONLY)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTablesmoptions.FEED_GL_SMCP_GL_ONLY) + "\">";
+		s += "Create GL batch in SMCP GL only";
+		s += "</OPTION>";
+		
+		s += "<OPTION";
+		if (optionInput.getsfeedgl().compareToIgnoreCase(
+				Integer.toString(SMTablesmoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)) == 0){
+			s +=  " selected=yes ";
+		}
+		s += " VALUE=\"" + Integer.toString(SMTablesmoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL) + "\">";
+		s += "Create external GL batch AND batch in SMCP GL (normally for testing only)";
+		s += "</OPTION>";
+		
+		s += "</SELECT></TD>";
+		s += "<TD>Determines if batch posting creates SMCP GL batches.</TD></TD>";
+		s += "</TR>";
+		
+		m_pwOut.println(s);
+		
 		//Google Integration
 		m_pwOut.println("<TR style=\"background-color:grey; color:white; \">"
 			+ "<TD COLSPAN=3>"+ "<B>&nbsp;Google Integration</B>"+ "</TD>"+ "</TR>");
 			;
-			
-
 		
 		//Google Drive integration:
 		//m_pwOut.println("<TR><TD ALIGN=LEFT COLSPAN=3><B><U>GOOGLE DRIVE FOLDER INTEGRATION:</U></B></TD></TR>");

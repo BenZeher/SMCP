@@ -47,6 +47,7 @@ public class SMOptionInput extends java.lang.Object{
 	public static final String Paramsgoogledomain = "Paramsgoogledomain";
 	public static final String Paramiusegoogledrivepickerapi = "Paramiusegoogledrivepickerapi";
 	public static final String Paramiusegoogleplacesapi = "Paramiusegoogleplacesapi";
+	public static final String Paramifeedgl = "Paramifeedgl";
 	
 	//Field for creating new folder google web app URL:
 	public static final String Paramsgdrivecreatenewfolderurl = "gdrivecreatenewfolderurl";
@@ -124,6 +125,7 @@ public class SMOptionInput extends java.lang.Object{
 	private String m_sgoogledomain;
 	private String m_iusegoogledrivepickerapi;
 	private String m_iusegoogleplacesapi;
+	private String m_ifeedgl;
 	
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
 
@@ -178,6 +180,7 @@ public class SMOptionInput extends java.lang.Object{
 		m_sgoogledomain = "";
 		m_iusegoogledrivepickerapi = "0";
 		m_iusegoogleplacesapi = "0";
+		m_ifeedgl = "0";
 		
 		m_sErrorMessageArray = new ArrayList<String> (0);
 	}
@@ -264,6 +267,7 @@ public class SMOptionInput extends java.lang.Object{
 		}else{
 			m_iusegoogleplacesapi = "1";
 		}
+		m_ifeedgl = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramifeedgl, req).trim();
 	}
 	
 	public void clearErrorMessages(){
@@ -400,7 +404,7 @@ public class SMOptionInput extends java.lang.Object{
 		smoption.setcopysalesleadfolderurltoorder(m_icopysalesleadfolderurltoorder);
 		smoption.setscurrentperiodstartdate(m_datcurrentperiodstartdate);
 		smoption.setscurrentperiodenddate(m_datcurrentperiodenddate);
-		
+		smoption.setsfeedgl(m_ifeedgl);
 		return bEntriesAreValid;
 	}
 	
@@ -456,6 +460,7 @@ public class SMOptionInput extends java.lang.Object{
 		m_sgoogledomain= smoption.getsgoogledomain();
 		m_iusegoogledrivepickerapi = smoption.getiusegoogledrivepickerapi();
 		m_iusegoogleplacesapi = smoption.getiusegoogleplacesapi();
+		m_ifeedgl = smoption.getsfeedgl();
 		return true;
 	}
 	public String getM_sdummykey() {
@@ -749,6 +754,12 @@ public class SMOptionInput extends java.lang.Object{
     	m_datcurrentperiodenddate = scurrentperiodenddate;
     }
     
+	public String getsfeedgl() {
+		return m_ifeedgl;
+	}
+	public void setsfeedgl(String sfeedgl) {
+		m_ifeedgl = sfeedgl;
+	}
 	public String getQueryString(){
 	
 		String sQueryString = "";
@@ -797,6 +808,7 @@ public class SMOptionInput extends java.lang.Object{
 		sQueryString += "&" + Paramdatcurrentperiodenddate + "=" + clsServletUtilities.URLEncode(m_datcurrentperiodenddate);
 		sQueryString += "&" + Paramsgoogleapikey + "=" + m_sgoogleapikey;
 		sQueryString += "&" + Paramiusegoogleplacesapi + "=" + m_iusegoogleplacesapi;
+		sQueryString += "&" + Paramifeedgl + "=" + m_ifeedgl;
 
 		return sQueryString;
 	}

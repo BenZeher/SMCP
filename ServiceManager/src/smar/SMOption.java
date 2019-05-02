@@ -73,6 +73,7 @@ public class SMOption {
 	private String m_iusegoogledrivepickerapi;
 	private String m_iusegoogleplacesapi;
 	private String m_ssmtpreplytoname;
+	private String m_ifeedgl;
 		
 	public SMOption(){
 		m_idummykey = 0;
@@ -127,6 +128,7 @@ public class SMOption {
 		m_sgoogledomain = "";
 		m_iusegoogledrivepickerapi  = "0";
 		m_iusegoogleplacesapi = "0";
+		m_ifeedgl = "0";
 	}
     public boolean load (
     	Connection conn
@@ -188,6 +190,7 @@ public class SMOption {
     			m_sgoogledomain = rs.getString(SMTablesmoptions.sgoogledomain);
     			m_iusegoogledrivepickerapi = Integer.toString(rs.getInt(SMTablesmoptions.iusegoogledrivepickerapi));
     			m_iusegoogleplacesapi = Integer.toString(rs.getInt(SMTablesmoptions.iusegoogleplacesapi));
+    			m_ifeedgl = Integer.toString(rs.getInt(SMTablesmoptions.ifeedgl));
     			rs.close();
     			return true;
     		}else{
@@ -302,6 +305,8 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.sgoogledomain + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogledomain)  + "'"
 		+ ", " + SMTablesmoptions.iusegoogledrivepickerapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogledrivepickerapi)  + ""
 		+ ", " + SMTablesmoptions.iusegoogleplacesapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogleplacesapi)  + ""
+		+ ", " + SMTablesmoptions.ifeedgl + " = " + clsDatabaseFunctions.FormatSQLStatement(m_ifeedgl)  + ""
+		
 		;
 		
 		try {
@@ -373,6 +378,7 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.sgoogledomain + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgoogledomain) + "'"
 		+ ", " + SMTablesmoptions.iusegoogledrivepickerapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogledrivepickerapi) + ""
 		+ ", " + SMTablesmoptions.iusegoogleplacesapi + " = " + clsDatabaseFunctions.FormatSQLStatement(m_iusegoogleplacesapi) + ""
+		+ ", " + SMTablesmoptions.ifeedgl + " = " + clsDatabaseFunctions.FormatSQLStatement(m_ifeedgl) + ""
 		;		
     	try {
     		if(!clsDatabaseFunctions.executeSQL(SQL, 
@@ -890,6 +896,12 @@ public class SMOption {
     }
     public void setscurrentperiodenddate (String scurrentperiodenddate){
     	m_sdatcurrentperiodenddate = scurrentperiodenddate;
+    }
+    public String getsfeedgl(){
+   		return m_ifeedgl;    		
+    }
+    public void setsfeedgl (String sfeedgl){
+    	m_ifeedgl = sfeedgl;
     }
     public String getisignatureboxwidth(){
    		return m_isignatureboxwidth;    		

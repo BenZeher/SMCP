@@ -32,8 +32,9 @@ public class SMTablesmoptions {
 	public static String datlastinvoicingflagtime = "datinvoicingflagdatetime";
 	public static String ilastinvoicinguserid = "iinvoicinguserid";
 	public static String sproposallogofilename = "sproposallogofilename";
+	//Automatically feed SMCP GL?
+	public static String ifeedgl = "ifeedgl";
 
-	
 	//FTP info for FTP'ing export files:
 	public static String sftpexporturl = "sftpexporturl";
 	public static String sftpexportuser = "sftpexportuser";
@@ -129,5 +130,10 @@ public class SMTablesmoptions {
 	public static int isignatureboxwidthlength = 11;
 	public static int igoogleapikeylength = 100;
 	public static int ssmtpreplytonamelength = 72;
+	
+	public static final int FEED_GL_EXTERNAL_GL_ONLY = 0;
+	public static final int FEED_GL_SMCP_GL_ONLY = 1;
+	public static final int FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL = 2;
+
 	
 }

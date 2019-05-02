@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1380;
+	private static final int m_CurrentDatabaseVersion = 1381;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "5/2/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14270,6 +14270,16 @@ public class SMUpdateData extends java.lang.Object{
 			case 1379:
 				//Added by TJR 5/1/2019
 				SQL = "ALTER TABLE `aroptions` ADD COLUMN ifeedgl INT(11) NOT NULL DEFAULT '0'";
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1380:
+				//Added by TJR 5/2/2019
+				SQL = "ALTER TABLE `smoptions` ADD COLUMN ifeedgl INT(11) NOT NULL DEFAULT '0'";
 				
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

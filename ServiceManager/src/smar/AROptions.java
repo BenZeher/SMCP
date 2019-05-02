@@ -25,12 +25,14 @@ public class AROptions extends java.lang.Object{
 	public static final String Paramsgdrivecustomerparentfolderid = "gdrivecustomerparentfolderid";
 	public static final String Paramsgdrivecustomerfolderprefix = "gdrivecustomerfolderprefix";
 	public static final String Paramsgdrivecustomerfoldersuffix = "gdrivecustomerfoldersuffix";
+	public static final String Paramifeedgl = "ifeedgl";
 	
 	private String m_sBatchPostingInProcess;
 	private String m_sPostingUserFullName;
 	private String m_sPostingProcess;
 	private String m_sPostingStartDate;
 	private String m_sExportTo;
+	private String m_ifeedgl;
 	private String m_senforcecreditlimit;
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
 	private String m_sgdrivecustomerparentfolderid;
@@ -44,6 +46,7 @@ public class AROptions extends java.lang.Object{
 		m_sPostingProcess = "";
 		m_sPostingStartDate = "00/00/0000 00:00:00";
 		m_sExportTo = "0";
+		m_ifeedgl = "0";
 		m_senforcecreditlimit = "0";
 		m_sgdrivecustomerparentfolderid = "";
 		m_sgdrivecustomerfolderprefix = "";
@@ -58,6 +61,7 @@ public class AROptions extends java.lang.Object{
 		m_sPostingProcess = clsManageRequestParameters.get_Request_Parameter(AROptions.ParamPostingProcess, req).trim();
 		m_sPostingStartDate = clsManageRequestParameters.get_Request_Parameter(AROptions.ParamPostingStartDate, req).trim();
 		m_sExportTo = clsManageRequestParameters.get_Request_Parameter(AROptions.Paramiexportto, req).trim();
+		m_ifeedgl = clsManageRequestParameters.get_Request_Parameter(AROptions.Paramifeedgl, req).trim();
 		if (req.getParameter(AROptions.Paramienforcecreditlimit) == null){
 			m_senforcecreditlimit = "0";
 		}else{
@@ -82,6 +86,7 @@ public class AROptions extends java.lang.Object{
         			m_sPostingProcess = rs.getString(SMTablearoptions.sprocess);
         			m_sPostingStartDate = rs.getString(SMTablearoptions.datstartdate);
         			m_sExportTo = rs.getString(SMTablearoptions.iexportto);
+        			m_ifeedgl = Long.toString(rs.getLong(SMTablearoptions.ifeedgl));
         			m_senforcecreditlimit = Long.toString(rs.getLong(SMTablearoptions.ienforcecreditlimit));
         			m_sgdrivecustomerparentfolderid = rs.getString(SMTablearoptions.gdrivecustomersparentfolderid);
         			m_sgdrivecustomerfolderprefix = rs.getString(SMTablearoptions.gdrivecustomersderfolderprefix);
@@ -97,7 +102,8 @@ public class AROptions extends java.lang.Object{
         			+ ", " + SMTablearoptions.sprocess 
         			+ ", " + SMTablearoptions.datstartdate 
         			+ ", " + SMTablearoptions.iexportto //5
-        			+ ", " + SMTablearoptions.ienforcecreditlimit 
+        			+ ", " + SMTablearoptions.ienforcecreditlimit
+        			+ ", " + SMTablearoptions.ifeedgl
         			+ ", " + SMTablearoptions.gdrivecustomersparentfolderid 
         			+ ", " + SMTablearoptions.gdrivecustomersderfolderprefix 
         			+ ", " + SMTablearoptions.gdrivecustomersfoldersuffix //9
@@ -109,6 +115,7 @@ public class AROptions extends java.lang.Object{
        				+ ", '" + m_sPostingStartDate + "'"
        				+ ", "  + m_sExportTo  //5
        				+ ", "  + m_senforcecreditlimit 
+       				+ ", "  + m_ifeedgl
        				+ ", '" + m_sgdrivecustomerparentfolderid + "'"
         			+ ", '" + m_sgdrivecustomerfolderprefix + "'"
         			+ ", '" + m_sgdrivecustomerfoldersuffix + "'" //9
@@ -160,6 +167,7 @@ public class AROptions extends java.lang.Object{
 		//+ ", " + SMTablearoptions.sprocess + " = '" + m_sPostingProcess + "'"
 		//+ ", " + SMTablearoptions.suser + " = '" + m_sPostingUser + "'"
 		+ " " + SMTablearoptions.iexportto + " = " + m_sExportTo
+		+ ", " + SMTablearoptions.ifeedgl + " = " + m_ifeedgl
 		+ ", " + SMTablearoptions.ienforcecreditlimit + " = " + m_senforcecreditlimit
 		+ ", " + SMTablearoptions.gdrivecustomersparentfolderid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivecustomerparentfolderid) + "'"
 		+ ", " + SMTablearoptions.gdrivecustomersderfolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivecustomerfolderprefix) + "'"
@@ -246,6 +254,14 @@ public class AROptions extends java.lang.Object{
 		this.m_sExportTo = sExportTo;
 	}
 	
+	public String getFeedGl() {
+		return m_ifeedgl;
+	}
+
+	public void setFeedGl(String sFeedGl) {
+		this.m_ifeedgl = sFeedGl;
+	}
+	
 	public String getEnforceCreditLimit() {
 		return m_senforcecreditlimit;
 	}
@@ -280,6 +296,7 @@ public class AROptions extends java.lang.Object{
 		sQueryString += "&" + ParamPostingProcess + "=" + clsServletUtilities.URLEncode(m_sPostingProcess);
 		sQueryString += "&" + ParamPostingStartDate + "=" + clsServletUtilities.URLEncode(m_sPostingStartDate);
 		sQueryString += "&" + Paramiexportto + "=" + clsServletUtilities.URLEncode(m_sExportTo);
+		sQueryString += "&" + Paramifeedgl + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		sQueryString += "&" + Paramienforcecreditlimit + "=" + clsServletUtilities.URLEncode(m_senforcecreditlimit);
 		sQueryString += "&" + Paramsgdrivecustomerparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdrivecustomerparentfolderid);
 		sQueryString += "&" + Paramsgdrivecustomerfolderprefix + "=" + clsServletUtilities.URLEncode(m_sgdrivecustomerfolderprefix);
@@ -294,6 +311,7 @@ public class AROptions extends java.lang.Object{
 		s += "\n" + ParamPostingProcess + "=" + clsServletUtilities.URLEncode(m_sPostingProcess);
 		s += "\n" + ParamPostingStartDate + "=" + clsServletUtilities.URLEncode(m_sPostingStartDate);
 		s += "\n" + Paramiexportto + "=" + clsServletUtilities.URLEncode(m_sExportTo);
+		s += "\n" + Paramifeedgl + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		s += "\n" + Paramienforcecreditlimit + "=" + clsServletUtilities.URLEncode(m_senforcecreditlimit);
 		s += "\n" + Paramsgdrivecustomerparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdrivecustomerparentfolderid);
 		s += "\n" + Paramsgdrivecustomerfolderprefix + "=" + clsServletUtilities.URLEncode(m_sgdrivecustomerfolderprefix);

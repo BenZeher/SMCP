@@ -3734,6 +3734,11 @@
         <servlet-class>smfa.FAEditClassAction</servlet-class>
     </servlet>
 
+   <servlet>
+        <servlet-name>FAEditOptionsEdit</servlet-name>
+        <servlet-class>smfa.FAEditOptionsEdit</servlet-class>
+    </servlet>
+
     <servlet>
         <servlet-name>FAPeriodEndProcessingSelect</servlet-name>
         <servlet-class>smfa.FAPeriodEndProcessingSelect</servlet-class>
@@ -7626,6 +7631,11 @@
     <servlet-mapping>
         <servlet-name>FAEditClassAction</servlet-name>
         <url-pattern>/smfa.FAEditClassAction</url-pattern>
+    </servlet-mapping>
+ 
+    <servlet-mapping>
+        <servlet-name>FAEditOptionsEdit</servlet-name>
+        <url-pattern>/smfa.FAEditOptionsEdit</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

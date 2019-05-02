@@ -445,8 +445,7 @@ public class APOptions extends java.lang.Object{
 		sQueryString += "&" + Paramgdrivevendorsfolderprefix + "=" + clsServletUtilities.URLEncode(m_gdrivevendorsderfolderprefix);
 		sQueryString += "&" + Paramgdrivevendorsfoldersuffix + "=" + clsServletUtilities.URLEncode(m_gdrivevendorsfoldersuffix);
 		sQueryString += "&" + Paramiexportoption + "=" + clsServletUtilities.URLEncode(m_iexportoption);
-		sQueryString += "&" + Paramiexportoption + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
+		sQueryString += "&" + Paramifeedgl + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		return sQueryString;
 	}
-
 }

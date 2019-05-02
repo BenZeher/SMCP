@@ -158,6 +158,7 @@ public class FAMainMenu extends HttpServlet {
 		//Build menus depending on the user's security levels:
 		//Master Edit:
 		arMenu.clear();
+		arMenu.add(SMSystemFunctions.FAEditOptions);
 		arMenu.add(SMSystemFunctions.FAManageAssets);
 		//arMenu.add(SMSystemFunctions.FAEnterAdjustments);
 		//arMenu.add(SMSystemFunctions.FASettings);

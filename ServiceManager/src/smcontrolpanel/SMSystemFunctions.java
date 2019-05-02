@@ -327,7 +327,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLClearPostedAndDeletedBatches = 1235L;
 	public static long GLClearTransactions = 1236L;
 	public static long GLClearFiscalData = 1237L;
-	
+	public static long FAEditOptions = 1238L;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2622,6 +2622,13 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("This permission gives the user the ability to"
 					+ " clear GL fiscal and financial data, based on a cutoff date.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("FA Edit System Options"); 
+			arrFunctionIDs.add(FAEditOptions); 
+			arrFunctionLinks.add("smfa.FAEditOptionsEdit"); 
+			arrFunctionDescriptions.add("This permission gives the user the ability to"
+					+ " set the Fixed Assets system options.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_FIXEDASSETS);
 	}
 
 	public String getSecurityFunction(int iIndex){

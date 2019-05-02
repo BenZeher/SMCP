@@ -31,6 +31,7 @@ public class ICOption extends Thread{
 	private String m_sgdrivepurchaseordersparentfolderid;
 	private String m_sgdrivepurchaseordersfolderprefix;
 	private String m_sgdrivepurchaseordersfoldersuffix;
+	private String m_ifeedgl;
 	private static final int PAUSE_BETWEEN_POSTING_FLAG_CHECKS_IN_MILLISECONDS = 1000;
 	DateFormat dateFormat;
 	
@@ -52,6 +53,7 @@ public class ICOption extends Thread{
 		m_sgdrivepurchaseordersfolderprefix = "";
 		m_sgdrivepurchaseordersfoldersuffix = "";
 		m_iFlagImports = 0;
+		m_ifeedgl = "0";
 	}
 
 	private long getTimeMilliSeconds(){
@@ -228,7 +230,7 @@ public class ICOption extends Thread{
     			m_sgdrivepurchaseordersfoldersuffix = rs.getString(SMTableicoptions.gdrivepurchaseordersfoldersuffix);
     			m_iFlagImports = rs.getInt(SMTableicoptions.iflagimports);
     			m_lpostingtimestamp = rs.getLong(SMTableicoptions.lpostingtimestamp);
-    			
+    			m_ifeedgl = Integer.toString(rs.getInt(SMTableicoptions.ifeedgl));
     			//System.out.println("[1528998596] SELECT " + m_lpostingtimestamp+" "+Thread.currentThread());
     			rs.close();
     			return true;
@@ -326,6 +328,7 @@ public class ICOption extends Thread{
 		+ ", " + SMTableicoptions.gdrivepurchaseordersfolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivepurchaseordersfolderprefix) + "'"
 		+ ", " + SMTableicoptions.gdrivepurchaseordersfoldersuffix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivepurchaseordersfoldersuffix) + "'"
 		+ ", " + SMTableicoptions.lpostingtimestamp + " = " + Long.toString(getPostingTimeStamp()) + ""
+		+ ", " + SMTableicoptions.ifeedgl + " = " + getfeedgl() + ""
 		;
 		//System.out.println("[1530292639] In " + this.toString() + ".saveEditableFields - SQL = " + SQL);
     	try {
@@ -465,6 +468,12 @@ public class ICOption extends Thread{
     }
     public void setgdrivepurchaseordersfoldersuffix(String sgdrivepurchaseordersfoldersuffix){
     	m_sgdrivepurchaseordersfoldersuffix = sgdrivepurchaseordersfoldersuffix;
+    }
+    public String getfeedgl(){
+    	return m_ifeedgl;
+    }
+    public void setfeedgl(String sfeedgl){
+    	m_ifeedgl = sfeedgl;
     }
 	public String getErrorMessage(){
     	return m_serrormessage;

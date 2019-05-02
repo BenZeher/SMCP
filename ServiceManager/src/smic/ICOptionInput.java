@@ -16,6 +16,7 @@ public class ICOptionInput extends java.lang.Object{
 	public static final String ParamCostingMethod = "CostingMethod";
 	public static final String ParamAllowNegativeQtys = "AllowNegativeQtys";
 	public static final String Paramiexportto = "iexportto";
+	public static final String Paramifeedgl = "ifeedgl";
 	public static final String Paramisuppressbarcodesonnonstockitems = "SuppressBarCodesOnNonStockItems";
 	
 	//Fields for creating new purchase orders folders in Google Drive:
@@ -35,6 +36,7 @@ public class ICOptionInput extends java.lang.Object{
 	private String m_sgdrivepurchaseordersparentfolderid;
 	private String m_sgdrivepurchaseordersfolderprefix;
 	private String m_sgdrivepurchaseordersfoldersuffix;
+	private String m_ifeedgl;
 
 	public ICOptionInput(){
 		m_sBatchPostingInProcess = "";
@@ -48,6 +50,7 @@ public class ICOptionInput extends java.lang.Object{
 		m_sgdrivepurchaseordersparentfolderid = "";
 		m_sgdrivepurchaseordersfolderprefix = "";
 		m_sgdrivepurchaseordersfoldersuffix = "";
+		m_ifeedgl = "0";
 		m_sErrorMessageArray = new ArrayList<String> (0);
 	}
 	
@@ -57,7 +60,7 @@ public class ICOptionInput extends java.lang.Object{
 		m_sPostingUserFullName = clsManageRequestParameters.get_Request_Parameter(ICOptionInput.ParamPostingUserFullName, req).trim();
 		m_sPostingProcess = clsManageRequestParameters.get_Request_Parameter(ICOptionInput.ParamPostingProcess, req).trim();
 		m_sPostingStartDate = clsManageRequestParameters.get_Request_Parameter(ICOptionInput.ParamPostingStartDate, req).trim();
-		
+		m_ifeedgl = clsManageRequestParameters.get_Request_Parameter(ICOptionInput.Paramifeedgl, req).trim();
 		m_sCostingMethod = clsManageRequestParameters.get_Request_Parameter(ICOptionInput.ParamCostingMethod, req).trim();
 		if (req.getParameter(ParamAllowNegativeQtys) != null){
 			m_sAllowNegativeQtys = req.getParameter(ParamAllowNegativeQtys);
@@ -139,7 +142,7 @@ public class ICOptionInput extends java.lang.Object{
 			bEntriesAreValid = false;
 			m_sErrorMessageArray.add("Invalid value for 'Suppress bar codes on non-stock items - '" + m_isuppressbarcodesonnonstockitems + "'.");
 		}
-		
+		icoption.setfeedgl(m_ifeedgl);
 		icoption.setgdrivepurchaseordersparentfolderid(m_sgdrivepurchaseordersparentfolderid);
 		icoption.setgdrivepurchaseordersfolderprefix(m_sgdrivepurchaseordersfolderprefix);
 		icoption.setgdrivepurchaseordersfoldersuffix(m_sgdrivepurchaseordersfoldersuffix);
@@ -161,6 +164,7 @@ public class ICOptionInput extends java.lang.Object{
 		m_sgdrivepurchaseordersparentfolderid = icoption.getgdrivepurchaseordersparentfolderid();
 		m_sgdrivepurchaseordersfolderprefix = icoption.getgdrivepurchaseordersfolderprefix();
 		m_sgdrivepurchaseordersfoldersuffix = icoption.getgdrivepurchaseordersfoldersuffix();
+		m_ifeedgl = icoption.getfeedgl();
 		return true;
 	}
 	
@@ -217,6 +221,15 @@ public class ICOptionInput extends java.lang.Object{
 	public void setExportTo(String sExportTo) {
 		this.m_sExportTo = sExportTo;
 	}
+	
+	public String getfeedgl() {
+		return m_ifeedgl;
+	}
+
+	public void setfeedgl(String sfeedgl) {
+		this.m_ifeedgl = sfeedgl;
+	}
+	
 	public String getSuppressBarCodesOnNonStockItems() {
 		return m_isuppressbarcodesonnonstockitems;
 	}
@@ -253,6 +266,7 @@ public class ICOptionInput extends java.lang.Object{
 		sQueryString += "&" + ParamCostingMethod + "=" + clsServletUtilities.URLEncode(m_sCostingMethod);
 		sQueryString += "&" + ParamAllowNegativeQtys + "=" + clsServletUtilities.URLEncode(m_sAllowNegativeQtys);
 		sQueryString += "&" + Paramiexportto + "=" + clsServletUtilities.URLEncode(m_sExportTo);
+		sQueryString += "&" + Paramifeedgl + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		sQueryString += "&" + Paramisuppressbarcodesonnonstockitems + " = " + clsServletUtilities.URLEncode(m_isuppressbarcodesonnonstockitems);
 		sQueryString += "&" + Paramsgdrivepurchaseordersparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdrivepurchaseordersparentfolderid);
 		sQueryString += "&" + Paramsgdrivepurchaseordersfolderprefix + "=" + clsServletUtilities.URLEncode(m_sgdrivepurchaseordersfolderprefix);
@@ -269,6 +283,7 @@ public class ICOptionInput extends java.lang.Object{
 		s += "\n" + ParamCostingMethod + "=" + clsServletUtilities.URLEncode(m_sCostingMethod);
 		s += "\n" + ParamAllowNegativeQtys + "=" + clsServletUtilities.URLEncode(m_sAllowNegativeQtys);
 		s += "\n" + Paramiexportto + "=" + clsServletUtilities.URLEncode(m_sExportTo);
+		s += "\n" + Paramifeedgl + "=" + clsServletUtilities.URLEncode(m_ifeedgl);
 		s += "\n" + Paramisuppressbarcodesonnonstockitems + " = " + clsServletUtilities.URLEncode(m_isuppressbarcodesonnonstockitems);
 		s += "\n" + Paramsgdrivepurchaseordersparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdrivepurchaseordersparentfolderid);
 		s += "\n" + Paramsgdrivepurchaseordersfolderprefix + "=" + clsServletUtilities.URLEncode(m_sgdrivepurchaseordersfolderprefix);

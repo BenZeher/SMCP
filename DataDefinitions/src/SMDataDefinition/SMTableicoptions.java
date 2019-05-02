@@ -27,6 +27,9 @@ public class SMTableicoptions {
 	public static String ssistercompanydb2 = "ssistercompanydb2";
 	public static String iexportto = "iexportto";
 	
+	//Automatically feed SMCP GL?
+	public static String ifeedgl = "ifeedgl";
+	
 	//Fields for creating new purchase order folders in Google Drive:
 	public static String gdrivepurchaseordersparentfolderid = "gdrivepurchaseordersparentfolderid";
 	public static String gdrivepurchaseordersfolderprefix = "gdrivepurchaseordersfolderprefix";
@@ -50,6 +53,10 @@ public class SMTableicoptions {
 	public static String COSTING_METHOD_LIFO_LABEL = "LIFO";
 	public static String COSTING_METHOD_FIFO_LABEL = "FIFO";
 	public static String COSTING_METHOD_AVERAGECOST_LABEL = "Average Cost";
+	
+	public static final int FEED_GL_EXTERNAL_GL_ONLY = 0;
+	public static final int FEED_GL_SMCP_GL_ONLY = 1;
+	public static final int FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL = 2;
 	
 	public static String Get_Costing_Method_Label(int iCostingMethod){
 		

@@ -1018,6 +1018,16 @@ public class APBatch {
     	
     	//Use this to get and save the 'GL Feed' integer:
     	int iFeedGLStatus = 0;
+		APOptions apopt = new APOptions();
+		if(!apopt.load(conn)){
+			throw new Exception("Error [1507061354] reading AP Options table - " + apopt.getErrorMessageString());
+		}
+		
+		try {
+			iFeedGLStatus = Integer.parseInt(apopt.getifeedgl());
+		} catch (Exception e1) {
+			throw new Exception("Error [1556895837] parsing Feed GL status of '" + apopt.getifeedgl() + "'.");
+		}
     	
     	//Handle some clean-up processing here:
     	//If it's a payment batch, then update the 'transaction ID' on any related checks, and also update the 'check numbers' on the payment entries:
@@ -1057,17 +1067,6 @@ public class APBatch {
     		//If we need to automatically create a bank reconciliation batch, do that now:	
 			if (option.getcreatebankrecexport().compareToIgnoreCase("1") == 0){
 				//If the user is using AP:
-				APOptions apopt = new APOptions();
-				if(!apopt.load(conn)){
-					throw new Exception("Error [1507061354] reading AP Options table - " + apopt.getErrorMessageString());
-				}
-				
-				try {
-					iFeedGLStatus = Integer.parseInt(apopt.getifeedgl());
-				} catch (Exception e1) {
-					throw new Exception("Error [1556895837] parsing Feed GL status of '" + apopt.getifeedgl() + "'.");
-				}
-				
 				if (
 					(apopt.getUsesSMCPAP().compareToIgnoreCase("1") == 0)
 					//OR if the 'testing' flag is on:
@@ -1103,6 +1102,7 @@ public class APBatch {
     	}
     	
     	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
+    	System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
     	if (
     		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
     		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
@@ -1121,6 +1121,10 @@ public class APBatch {
 		glbatch.setsbatchdescription("Generated from AP Batch #" + getsbatchnumber());
 		glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 
+		System.out.println("[1556909965] - in createGLTransactionBatch.");
+		
+		System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
+		
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
 			APBatchEntry apentry = m_arrBatchEntries.get(i);
@@ -1152,8 +1156,9 @@ public class APBatch {
 			// so a positive number would become a POSITIVE debit amt,
 			// and a negative number would become a POSITIVE credit amt.
 			
-			glentryline.setscreditamt(apentry.getsentryamount());
-			glentryline.setsdebitamt(apentry.getsentryamount());
+			glentryline.setAmount(apentry.getsentryamount(), conn);
+			//glentryline.setscreditamt(apentry.getsentryamount());
+			//glentryline.setsdebitamt(apentry.getsentryamount());
 			glentryline.setsdescription(apentry.getsentrydescription());
 			glentryline.setsreference("");
 			glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
@@ -1166,17 +1171,15 @@ public class APBatch {
 				GLTransactionBatchLine glline = new GLTransactionBatchLine();
 				APBatchEntryLine apline = apentry.getLineArray().get(j);
 				glline.setsacctid(apline.getsdistributionacct());
-				//TODO:
-				glline.setscomment("AP Control");
+				glline.setscomment(apline.getscomment());
 				
 				//TODO - figure out how credits and debits will work:
-				glline.setscreditamt(apentry.getsentryamount());
-				glline.setsdebitamt(apentry.getsentryamount());
-				glline.setsdescription(apentry.getsentrydescription());
+				//glline.setscreditamt(apentry.getsentryamount());
+				//glline.setsdebitamt(apentry.getsentryamount());
+				glline.setAmount(apline.getsbdamount(), conn);
+				glline.setsdescription(apline.getsdescription());
 				glline.setsreference("");
 				glline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
-				
-				//TODO - figure this out:
 				glline.setssourcetype(apentry.getsentrytype());
 				glline.setstransactiondate(apentry.getsdatentrydate());
 				

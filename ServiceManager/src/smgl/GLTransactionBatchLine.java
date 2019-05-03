@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 
+import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablegltransactionbatchlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -324,7 +325,34 @@ public class GLTransactionBatchLine {
 			throw new Exception("Error [1555098257] - " + e.getMessage());
 		}
 	}
-
+	public void setAmount(String sAmount, Connection conn) throws Exception{
+		//This function determines whether a transaction amount should be recorded as a debit or a credit:
+		//First we have to get the 'normal' balance type:
+		GLAccount glacct = new GLAccount(getsacctid());
+		try {
+			glacct.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [1556906520] reading GL account '" + getsacctid() + " to determine normal balance type - " + glacct.getErrorMessageString());
+		}
+		
+		if (glacct.getsinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) == 0){
+			if (sAmount.contains("-")){
+				setscreditamt(sAmount.replace("-", "").replace(",", ""));
+				setsdebitamt("0.00");
+			}else{
+				setsdebitamt(sAmount.replace(",", ""));
+				setscreditamt("0.00");
+			}
+		}else{
+			if (sAmount.contains("-")){
+				setsdebitamt(sAmount.replace("-", "").replace(",", ""));
+				setscreditamt("0.00");
+			}else{
+				setscreditamt(sAmount.replace(",", ""));
+				setsdebitamt("0.00");
+			}
+		}
+	}
 	public String getslid(){
 		return m_slid;
 	}

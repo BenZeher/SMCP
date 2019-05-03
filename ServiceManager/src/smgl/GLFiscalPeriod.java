@@ -1437,138 +1437,163 @@ public class GLFiscalPeriod extends java.lang.Object{
 			throw new Exception("Error [1530906208] deleting fiscal year '" + sFiscalYear + "' - " + e.getMessage());
 		}
 	}
-	public static int getCurrentFiscalYear(String sDBID, String sUserFullName, ServletContext context) throws Exception{
-		int iFiscalYear = 0;
-		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, context);
-		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL);
-		String sSQL = "SELECT"
-			+ " " + SMTableglfiscalperiods.ifiscalyear
-			+ " FROM " + SMTableglfiscalperiods.TableName
-			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sCurrentDate + "')"
-				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
-					+ " >= '" + sCurrentDate + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sCurrentDate + "')"
-			+ ")"
+	public static int getCurrentFiscalYear(Connection conn) throws Exception{
+		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(conn);
+		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY);
+		return getFiscalYearForSelectedDate(
+			sCurrentDate, 
+			conn)
 		;
-		//System.out.println("[1555700706] - SQL = '" + sSQL + "'.");
-		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
-		if (rs.next()){
-			iFiscalYear = rs.getInt(SMTableglfiscalperiods.ifiscalyear);
-			rs.close();
-		}else{
-			rs.close();
-			throw new Exception("Error [1555700119] - no fiscal period found for current date: " + sCurrentDate);
-		}
-		return iFiscalYear;
 	}
-	
-	public static int getCurrentFiscalPeriod(String sDBID, String sUserFullName, ServletContext context) throws Exception{
+	public static int getFiscalYearForSelectedDate(
+		String sDateInMMDDYYYYFormat, 
+		Connection conn) throws Exception{
+		
 		int iFiscalYear = 0;
-		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, context);
-		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_SQL);
+		String sDateInSQLFormat = ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+			sDateInMMDDYYYYFormat, 
+			clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+			clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+			clsServletUtilities.EMPTY_SQL_DATE_VALUE);
+		
 		String sSQL = "SELECT"
 			+ " " + SMTableglfiscalperiods.ifiscalyear
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sCurrentDate + "')"
+				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sDateInSQLFormat + "')"
 				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
-					+ " >= '" + sCurrentDate + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sCurrentDate + "')"
+					+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sDateInSQLFormat + "')"
 			+ ")"
 		;
-		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, context, sDBID);
+		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, conn);
 		if (rs.next()){
 			iFiscalYear = rs.getInt(SMTableglfiscalperiods.ifiscalyear);
 			rs.close();
 		}else{
 			rs.close();
-			throw new Exception("Error [1555700120] - no fiscal period found for current date: " + sCurrentDate);
+			throw new Exception("Error [1555700119] - no fiscal year found for current date: " + sDateInSQLFormat);
 		}
-		GLFiscalPeriod period = new GLFiscalPeriod();
-		period.set_sifiscalyear(Integer.toString(iFiscalYear));
-		period.load(sDBID, context, sUserFullName);
+		return iFiscalYear;		
+	}
+	public static int getFiscalPeriodForSelectedDate(		
+		String sDateInMMDDYYYYFormat, 
+		Connection conn) throws Exception{
 		
-		//Now find the correct period:
-		//System.out.println("[1555701768] beginning period date = '" + getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()) + ", sCurrentDate = '" + sCurrentDate + "'.");
-		if (
-			(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()).compareToIgnoreCase(sCurrentDate) <= 0)
-			&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod1()).compareToIgnoreCase(sCurrentDate) >= 0)
-		){
-			return 1;
-		}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod2()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod2()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 2;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod3()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod3()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 3;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod4()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod4()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 4;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod5()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod5()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 5;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod6()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod6()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 6;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod7()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod7()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 7;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod8()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod8()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 8;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod9()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod9()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 9;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod10()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod10()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 10;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod11()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod11()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 11;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod12()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod12()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 12;
-			}
-		if (
-				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod13()).compareToIgnoreCase(sCurrentDate) <= 0)
-				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod13()).compareToIgnoreCase(sCurrentDate) >= 0)
-			){
-				return 13;
-			}
+		int iFiscalYear = 0;
+		String sDateInSQLFormat = ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+			sDateInMMDDYYYYFormat, 
+			clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+			clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+			clsServletUtilities.EMPTY_SQL_DATE_VALUE);		
 		
-		return 0;
+		String sSQL = "SELECT"
+				+ " " + SMTableglfiscalperiods.ifiscalyear
+				+ " FROM " + SMTableglfiscalperiods.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sDateInSQLFormat + "')"
+					+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
+						+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sDateInSQLFormat + "')"
+				+ ")"
+			;
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, conn);
+			if (rs.next()){
+				iFiscalYear = rs.getInt(SMTableglfiscalperiods.ifiscalyear);
+				rs.close();
+			}else{
+				rs.close();
+				throw new Exception("Error [1555700120] - no fiscal period found for date: " + sDateInSQLFormat);
+			}
+			GLFiscalPeriod period = new GLFiscalPeriod();
+			period.set_sifiscalyear(Integer.toString(iFiscalYear));
+			period.load(conn);
+			
+			//Now find the correct period:
+			//System.out.println("[1555701768] beginning period date = '" + getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()) + ", sCurrentDate = '" + sCurrentDate + "'.");
+			if (
+				(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod1()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+				&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod1()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+			){
+				return 1;
+			}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod2()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod2()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 2;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod3()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod3()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 3;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod4()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod4()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 4;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod5()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod5()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 5;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod6()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod6()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 6;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod7()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod7()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 7;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod8()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod8()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 8;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod9()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod9()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 9;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod10()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod10()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 10;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod11()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod11()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 11;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod12()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod12()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 12;
+				}
+			if (
+					(getSTDDateAsSQLDate(period.get_sdatbeginningdateperiod13()).compareToIgnoreCase(sDateInSQLFormat) <= 0)
+					&& (getSTDDateAsSQLDate(period.get_sdatendingdateperiod13()).compareToIgnoreCase(sDateInSQLFormat) >= 0)
+				){
+					return 13;
+				}
+			
+			return 0;
+	}
+	public static int getCurrentFiscalPeriod(Connection conn) throws Exception{
+		ServletUtilities.clsDBServerTime servertime = new ServletUtilities.clsDBServerTime(conn);
+		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY);
+		return getFiscalPeriodForSelectedDate(sCurrentDate, conn);
 	}
 	public void set_sdatbeginningdateperiod1(String sDate) {
 		m_sdatbeginningdateperiod1 = sDate;

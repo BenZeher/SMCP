@@ -42,6 +42,11 @@ import ServletUtilities.clsValidateFormFields;
 import smar.SMGLExport;
 import smar.SMOption;
 import smcontrolpanel.SMUtilities;
+import smgl.GLFiscalPeriod;
+import smgl.GLSourceLedgers;
+import smgl.GLTransactionBatch;
+import smgl.GLTransactionBatchEntry;
+import smgl.GLTransactionBatchLine;
 
 public class APBatch {
 
@@ -1011,6 +1016,9 @@ public class APBatch {
     		);
     	}
     	
+    	//Use this to get and save the 'GL Feed' integer:
+    	int iFeedGLStatus = 0;
+    	
     	//Handle some clean-up processing here:
     	//If it's a payment batch, then update the 'transaction ID' on any related checks, and also update the 'check numbers' on the payment entries:
     	if (getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
@@ -1054,6 +1062,12 @@ public class APBatch {
 					throw new Exception("Error [1507061354] reading AP Options table - " + apopt.getErrorMessageString());
 				}
 				
+				try {
+					iFeedGLStatus = Integer.parseInt(apopt.getifeedgl());
+				} catch (Exception e1) {
+					throw new Exception("Error [1556895837] parsing Feed GL status of '" + apopt.getifeedgl() + "'.");
+				}
+				
 				if (
 					(apopt.getUsesSMCPAP().compareToIgnoreCase("1") == 0)
 					//OR if the 'testing' flag is on:
@@ -1077,14 +1091,108 @@ public class APBatch {
 			throw new Exception("Error [1510607243] re-loading batch to create GL export - " + e1.getMessage());
 		}
     	
-    	try {
-			createGLBatch(conn, sUserID, log, arrMatchingLineIDsFromPrepays);
-		} catch (Exception e) {
-			throw new Exception("Error [1489708212] creating GL batch - " + e.getMessage());
-		}
+    	if (
+        		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+        		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)
+        	){
+	    	try {
+				createGLBatch(conn, sUserID, log, arrMatchingLineIDsFromPrepays);
+			} catch (Exception e) {
+				throw new Exception("Error [1489708212] creating GL batch - " + e.getMessage());
+			}
+    	}
+    	
+    	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
+    	if (
+    		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+    		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
+    	){
+    		createGLTransactionBatch(conn, sUserID, sUserFullName);
+    	}
     	
     	return;
     }
+	private void createGLTransactionBatch(Connection conn, String sUserID, String sUsersFullName) throws Exception{
+		
+		GLTransactionBatch glbatch = new GLTransactionBatch("-1");
+		glbatch.setlcreatedby(getlcreatedby());
+		glbatch.setllasteditedby(getllasteditedby());
+		glbatch.setsbatchdate(getsbatchdate());
+		glbatch.setsbatchdescription("Generated from AP Batch #" + getsbatchnumber());
+		glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
+
+		for (int i = 0; i < m_arrBatchEntries.size(); i++){
+			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
+			APBatchEntry apentry = m_arrBatchEntries.get(i);
+			glentry.setsautoreverse("0");
+			glentry.setsdatdocdate(apentry.getsdatdocdate());
+			glentry.setsdatentrydate(apentry.getsdatentrydate());
+			glentry.setsentrydescription(apentry.getsentrydescription());
+			
+			//Figure out the appropriate fiscal period:
+			int iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(apentry.getsdatentrydate(), conn);
+			int iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(apentry.getsdatentrydate(), conn);
+			glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
+			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
+			glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
+			glentry.setssourceledgertransactionlineid("0");
+			
+			//Add one GL transaction batch line for the entry side:
+			GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
+			glentryline.setsacctid(apentry.getscontrolacct());
+			glentryline.setscomment("AP Control");
+			
+			//TODO - figure out how credits and debits will work:
+			//We never save a debit or credit as a NEGATIVE number.
+			//If the account is normally a 'credit' account, it's normally negative:
+			// so a negative number would become a POSITIVE credit amt,
+			// and a positive number would become a POSITIVE debit amt.
+			
+			//If the account is normally a 'debit' account, it's normally positive,
+			// so a positive number would become a POSITIVE debit amt,
+			// and a negative number would become a POSITIVE credit amt.
+			
+			glentryline.setscreditamt(apentry.getsentryamount());
+			glentryline.setsdebitamt(apentry.getsentryamount());
+			glentryline.setsdescription(apentry.getsentrydescription());
+			glentryline.setsreference("");
+			glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
+			glentryline.setssourcetype(apentry.getsentrytype());
+			glentryline.setstransactiondate(apentry.getsdatentrydate());
+			
+			glentry.addLine(glentryline);
+			
+			for (int j = 0; j < apentry.getLineArray().size(); j++){
+				GLTransactionBatchLine glline = new GLTransactionBatchLine();
+				APBatchEntryLine apline = apentry.getLineArray().get(j);
+				glline.setsacctid(apline.getsdistributionacct());
+				//TODO:
+				glline.setscomment("AP Control");
+				
+				//TODO - figure out how credits and debits will work:
+				glline.setscreditamt(apentry.getsentryamount());
+				glline.setsdebitamt(apentry.getsentryamount());
+				glline.setsdescription(apentry.getsentrydescription());
+				glline.setsreference("");
+				glline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
+				
+				//TODO - figure this out:
+				glline.setssourcetype(apentry.getsentrytype());
+				glline.setstransactiondate(apentry.getsdatentrydate());
+				
+				glentry.addLine(glline);
+
+			}
+			glbatch.addBatchEntry(glentry);
+		}
+		
+		try {
+			glbatch.save_without_data_transaction(conn, sUserID, sUsersFullName, false);
+		} catch (Exception e) {
+			throw new Exception("Error [1556897650] saving GL Transaction Batch - " + e.getMessage());
+		}
+		return;
+	}
 	private void flagReversedChecksAsVoid(Connection conn) throws Exception{
 		
 		//For each line in the reversal entry, we have to identify the check that was reversed.  That check might be a 'multipage' check, so we have to void ALL the checks

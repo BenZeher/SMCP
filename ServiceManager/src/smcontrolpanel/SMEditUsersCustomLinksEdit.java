@@ -51,7 +51,7 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 				SMSystemFunctions.SMEditUsersCustomLinks
 				);
 		
-		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditReminders)){
+		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditUsersCustomLinks)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}

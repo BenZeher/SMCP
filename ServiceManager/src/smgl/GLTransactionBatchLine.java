@@ -262,7 +262,7 @@ public class GLTransactionBatchLine {
 				(m_sdebitamt.compareToIgnoreCase("0.00") == 0)
 				&& (m_screditamt.compareToIgnoreCase("0.00") == 0)
 			){
-				sResult += "  must have a DEBIT amount or a CREDIT amount.";
+				sResult += "  (entry " + m_sentrynumber + ") must have a DEBIT amount or a CREDIT amount.";
 			}
 		
 		try {

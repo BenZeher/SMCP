@@ -15,6 +15,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMTableapoptions;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTablearmonthlystatistics;
@@ -23,10 +24,15 @@ import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablebkaccountentries;
 import SMDataDefinition.SMTableentries;
 import SMDataDefinition.SMTableentrylines;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
+import smgl.GLFiscalPeriod;
+import smgl.GLSourceLedgers;
+import smgl.GLTransactionBatch;
+import smgl.GLTransactionBatchEntry;
+import smgl.GLTransactionBatchLine;
 
 public class ARBatch extends SMClasses.SMEntryBatch{
 	private SMLogEntry log;
@@ -391,13 +397,45 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			throw new Exception("Error getting highest artransaction ID - " + e.getMessage());
 		}
 
-		//Create a GL export object to carry all the GL exports:
-		SMGLExport glexport = new SMGLExport();
 		SMOption option = new SMOption();
 		if (!option.load(conn)){
 			throw new Exception("Could not read system options - " + option.getErrorMessage());
 		}
-		glexport.setExportFilePath(option.getFileExportPath());
+		
+		//If the flag is set to use the SMCP GL, we'll create a GL Transaction batch
+		//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
+		AROptions aropt = new AROptions();
+		int iFeedGLStatus = 0;
+		if(!aropt.load(conn)){
+			throw new Exception("Error [1557164337] loading AR Options to check GL feed - " 
+				+ aropt.getErrorMessageString());
+		}
+		
+		try {
+			iFeedGLStatus = Integer.parseInt(aropt.getFeedGl());
+		} catch (Exception e2) {
+			throw new Exception("Error [1557165783] - error parsing AR GL Feed status '" + aropt.getFeedGl());
+		}
+		
+		//Create a GL export object to carry all the GL exports:
+		SMGLExport glexport = null;
+		if (
+			(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+			|| (iFeedGLStatus == SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)
+		){
+			glexport = new SMGLExport();
+		}
+		
+		if (
+			(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+			|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
+		){
+			GLTransactionBatch gltransbatch = createGLTransactionBatch(conn, sUserID, sUserFullName);
+		}
+		
+		if (glexport != null){
+			glexport.setExportFilePath(option.getFileExportPath());
+		}
 		if (bLogDiagnostics){
 			log.writeEntry(
 					sUserID, 
@@ -564,10 +602,12 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				"[1376509266]"
 			);
 		}
-		if (!createGLBatch(conn, glexport)){
-			throw new Exception(getErrorMessages());
+		if (glexport != null){
+			if (!createGLBatch(conn, glexport)){
+				throw new Exception(getErrorMessages());
+			}
 		}
-
+		
 		//Update the batch:
 		super.iBatchStatus(SMBatchStatuses.POSTED);
 		super.setPostingDate(clsDateAndTimeConversions.nowAsSQLDate());
@@ -606,8 +646,148 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				}
 			}
 		}
+		
 		return;
 	}
+
+private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUserID, String sUsersFullName) throws Exception{
+	
+	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
+	glbatch.setlcreatedby(sCreatedByID());
+	glbatch.setllasteditedby(sLastEditedByID());
+	glbatch.setsbatchdate(sStdBatchDateString());
+	glbatch.setsbatchdescription("Generated from AR Batch #" + sBatchNumber());
+	glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
+
+	//System.out.println("[1556909165] - in createGLTransactionBatch.");
+	
+	//System.out.println("[1556909166] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
+	
+	//Get the AR batch entries here:
+	String SQL = "SELECT *"
+		+ " FROM " + SMTableentrylines.TableName
+		+ " LEFT JOIN " + SMTableentries.TableName
+		+ " ON " + SMTableentrylines.TableName + "." + SMTableentrylines.lentryid
+		+ "=" + SMTableentries.TableName + "." + SMTableentries.lid
+		+ " WHERE (" 
+			+ SMTableentrylines.TableName + "." + SMTableentries.ibatchnumber + " = " + super.sBatchNumber()
+		+ ")"
+		+ " ORDER BY " + SMTableentrylines.TableName + "." + SMTableentries.ientrynumber 
+			+ ", " + SMTableentrylines.TableName + "." + SMTableentrylines.lentryid
+			+ " ASC"
+	;
+
+	ResultSet rsBatchEntries = clsDatabaseFunctions.openResultSet(SQL, conn);
+
+	long lLastEntryID = 0L;
+	GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
+	while (rsBatchEntries.next()){
+		if (rsBatchEntries.getLong(SMTableentrylines.lentryid) != lLastEntryID){
+			if(lLastEntryID != 0L){
+				//Add the previous entry to the batch:
+				glbatch.addBatchEntry(glentry);
+				//And start a new entry:
+				glentry = new GLTransactionBatchEntry();
+			}
+			//Now populate the entry:
+			glentry.setsautoreverse("0");
+			glentry.setsdatdocdate(ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+				rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.datdocdate), 
+				clsServletUtilities.DATE_FORMAT_FOR_SQL,
+				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY,
+				clsServletUtilities.EMPTY_DATE_VALUE)
+			);
+			glentry.setsdatentrydate(ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+				sStdLastEditDateString(), 
+				clsServletUtilities.DATE_FORMAT_FOR_SQL,
+				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY,
+				clsServletUtilities.EMPTY_DATE_VALUE)
+			);
+			glentry.setsentrydescription(rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.sdocdescription));
+			
+			//Figure out the appropriate fiscal period:
+			int iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(sStdLastEditDateString(), conn);
+			int iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(sStdLastEditDateString(), conn);
+			glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
+			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
+			glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AR));
+			glentry.setssourceledgertransactionlineid("0");
+			
+			//Add one GL transaction batch line for the entry side UNLESS the entry nets to zero:
+			if(rsBatchEntries.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount).compareTo(BigDecimal.ZERO) != 0){
+				GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
+				glentryline.setsacctid(rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.scontrolacct));
+				glentryline.setscomment("AR Control");
+				//TODO - figure out how credits and debits will work:
+				//We never save a debit or credit as a NEGATIVE number.
+				//If the account is normally a 'credit' account, it's normally negative:
+				// so a negative number would become a POSITIVE credit amt,
+				// and a positive number would become a POSITIVE debit amt.
+				
+				//If the account is normally a 'debit' account, it's normally positive,
+				// so a positive number would become a POSITIVE debit amt,
+				// and a negative number would become a POSITIVE credit amt.
+				
+				glentryline.setAmount(
+					ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						rsBatchEntries.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount)
+					), conn
+				);
+				glentryline.setsdescription(rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.sdocdescription));
+				glentryline.setsreference("");
+				glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AR));
+				glentryline.setssourcetype(
+					ARDocumentTypes.getSourceTypes(
+						rsBatchEntries.getInt(SMTableentries.TableName + "." + SMTableentries.idocumenttype)
+					)
+				);
+				glentryline.setstransactiondate(sStdLastEditDateString());
+				
+				glentry.addLine(glentryline);
+			}
+		}
+		
+		//Now add each line to the entry:
+		GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
+		glentryline.setsacctid(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sglacct));
+		glentryline.setscomment(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.scomment));
+		
+		//TODO - figure out how credits and debits will work:
+		//glline.setscreditamt(apentry.getsentryamount());
+		//glline.setsdebitamt(apentry.getsentryamount());
+		glentryline.setAmount(
+			ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+				rsBatchEntries.getBigDecimal(SMTableentrylines.TableName + "." + SMTableentrylines.damount)),
+			conn
+		);
+		glentryline.setsdescription(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sdescription));
+		glentryline.setsreference("");
+		glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AR));
+		glentryline.setssourcetype(
+			ARDocumentTypes.getSourceTypes(
+				rsBatchEntries.getInt(SMTableentries.TableName + "." + SMTableentries.idocumenttype)
+			)
+		);
+		glentryline.setstransactiondate(sStdLastEditDateString());
+		
+		//Add the line:
+		glentry.addLine(glentryline);
+		
+		//Keep track of which entry we're on:
+		lLastEntryID = rsBatchEntries.getLong(SMTableentrylines.lentryid);
+	}
+	rsBatchEntries.close();
+	
+	//Now add the last glentry:
+	glbatch.addBatchEntry(glentry);
+
+	try {
+		glbatch.save_without_data_transaction(conn, sUserID, sUsersFullName, false);
+	} catch (Exception e) {
+		throw new Exception("Error [1557172272] saving GL Transaction Batch - " + e.getMessage());
+	}
+	return glbatch;
+}
 	private void addBankAcctEntry(
 		Connection conn) throws Exception{
 		
@@ -1610,12 +1790,14 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 					 */
 
 					//Add a GL entry here:
-					export.addHeader(
-							super.sModuleType(), 
-							ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT),
-							"AR Batch Export", 
-							"SMAR"
-					);
+					if (export != null){
+						export.addHeader(
+								super.sModuleType(), 
+								ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT),
+								"AR Batch Export", 
+								"SMAR"
+						);
+					}
 
 					//Get the customer deposit account for this customer:
 					ARCustomer cust = new ARCustomer(sPayeePayor);
@@ -1637,25 +1819,26 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 					if (sReference.length() > 60){
 						sReference = sReference.substring(0, 59).trim();
 					}
-					
-					try {
-						export.addDetail(
-								datMatch,
-								bdAmount.negate(),
-								cust.getARPrepayLiabilityAccount(conn),
-								sComment,
-								sEntryDesc,
-								sReference,
-								conn
-						);
-					} catch (Exception e3) {
-						super.addErrorMessage(e3.getMessage() + " - apply-to entry - 01 for ID# " 
-								+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-						rsPrepays.close();
-						rsInvoices.close();
-						return false;
+					if (export != null){
+						try {
+							export.addDetail(
+									datMatch,
+									bdAmount.negate(),
+									cust.getARPrepayLiabilityAccount(conn),
+									sComment,
+									sEntryDesc,
+									sReference,
+									conn
+							);
+						} catch (Exception e3) {
+							super.addErrorMessage(e3.getMessage() + " - apply-to entry - 01 for ID# " 
+									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+							rsPrepays.close();
+							rsInvoices.close();
+							return false;
+						}
 					}
-
+					
 					//Add a chron record here to record the apply-FROM
 					//Add a chron entry here for the apply TO line:
 					ARTransaction arinvtrans = new ARTransaction();
@@ -1767,24 +1950,25 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 					if (sReference.length() > 60){
 						sReference = sReference.substring(0, 59).trim();
 					}
-					try {
-						export.addDetail(
-								datMatch,
-								bdAmount,
-								cust.getARControlAccount(conn),
-								sComment,
-								sEntryDesc,
-								sReference,
-								conn
-						);
-					} catch (Exception e2) {
-						super.addErrorMessage(e2.getMessage() + " - Doc ID#: " 
-								+ Long.toString(rsPrepays.getLong(SMTableartransactions.lid)) + ".");
-						rsPrepays.close();
-						rsInvoices.close();
-						return false;
+					if (export != null){
+						try {
+							export.addDetail(
+									datMatch,
+									bdAmount,
+									cust.getARControlAccount(conn),
+									sComment,
+									sEntryDesc,
+									sReference,
+									conn
+							);
+						} catch (Exception e2) {
+							super.addErrorMessage(e2.getMessage() + " - Doc ID#: " 
+									+ Long.toString(rsPrepays.getLong(SMTableartransactions.lid)) + ".");
+							rsPrepays.close();
+							rsInvoices.close();
+							return false;
+						}
 					}
-
 					ARTransaction arprepaytrans = new ARTransaction();
 					
 					try {

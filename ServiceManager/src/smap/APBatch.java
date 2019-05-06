@@ -28,6 +28,7 @@ import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableapvendorstatistics;
 import SMDataDefinition.SMTablebkaccountentries;
+import SMDataDefinition.SMTableentries;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicvendors;
@@ -1102,7 +1103,7 @@ public class APBatch {
     	}
     	
     	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
-    	System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
+    	//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
     	if (
     		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
     		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
@@ -1121,9 +1122,9 @@ public class APBatch {
 		glbatch.setsbatchdescription("Generated from AP Batch #" + getsbatchnumber());
 		glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 
-		System.out.println("[1556909965] - in createGLTransactionBatch.");
+		//System.out.println("[1556909965] - in createGLTransactionBatch.");
 		
-		System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
+		//System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
 		
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
@@ -1141,31 +1142,33 @@ public class APBatch {
 			glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
 			glentry.setssourceledgertransactionlineid("0");
 			
-			//Add one GL transaction batch line for the entry side:
-			GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
-			glentryline.setsacctid(apentry.getscontrolacct());
-			glentryline.setscomment("AP Control");
-			
-			//TODO - figure out how credits and debits will work:
-			//We never save a debit or credit as a NEGATIVE number.
-			//If the account is normally a 'credit' account, it's normally negative:
-			// so a negative number would become a POSITIVE credit amt,
-			// and a positive number would become a POSITIVE debit amt.
-			
-			//If the account is normally a 'debit' account, it's normally positive,
-			// so a positive number would become a POSITIVE debit amt,
-			// and a negative number would become a POSITIVE credit amt.
-			
-			glentryline.setAmount(apentry.getsentryamount(), conn);
-			//glentryline.setscreditamt(apentry.getsentryamount());
-			//glentryline.setsdebitamt(apentry.getsentryamount());
-			glentryline.setsdescription(apentry.getsentrydescription());
-			glentryline.setsreference("");
-			glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
-			glentryline.setssourcetype(apentry.getsentrytype());
-			glentryline.setstransactiondate(apentry.getsdatentrydate());
-			
-			glentry.addLine(glentryline);
+			//Add one GL transaction batch line for the entry side UNLESS the entry nets to zero:
+			if(apentry.getsentryamount().compareToIgnoreCase("0.00") != 0){
+				GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
+				glentryline.setsacctid(apentry.getscontrolacct());
+				glentryline.setscomment("AP Control");
+				
+				//TODO - figure out how credits and debits will work:
+				//We never save a debit or credit as a NEGATIVE number.
+				//If the account is normally a 'credit' account, it's normally negative:
+				// so a negative number would become a POSITIVE credit amt,
+				// and a positive number would become a POSITIVE debit amt.
+				
+				//If the account is normally a 'debit' account, it's normally positive,
+				// so a positive number would become a POSITIVE debit amt,
+				// and a negative number would become a POSITIVE credit amt.
+				
+				glentryline.setAmount(apentry.getsentryamount(), conn);
+				//glentryline.setscreditamt(apentry.getsentryamount());
+				//glentryline.setsdebitamt(apentry.getsentryamount());
+				glentryline.setsdescription(apentry.getsentrydescription());
+				glentryline.setsreference("");
+				glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
+				glentryline.setssourcetype(apentry.getsentrytype());
+				glentryline.setstransactiondate(apentry.getsdatentrydate());
+				
+				glentry.addLine(glentryline);
+			}
 			
 			for (int j = 0; j < apentry.getLineArray().size(); j++){
 				GLTransactionBatchLine glline = new GLTransactionBatchLine();

@@ -602,11 +602,6 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				"[1376509266]"
 			);
 		}
-		if (glexport != null){
-			if (!createGLBatch(conn, glexport)){
-				throw new Exception(getErrorMessages());
-			}
-		}
 		
 		//Update the batch:
 		super.iBatchStatus(SMBatchStatuses.POSTED);
@@ -644,6 +639,12 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				} catch (Exception e) {
 					throw new Exception("Error [1403121822] adding bank account entries - " + e.getMessage());
 				}
+			}
+		}
+		
+		if (glexport != null){
+			if (!createGLBatch(conn, glexport)){
+				throw new Exception(getErrorMessages());
 			}
 		}
 		
@@ -2450,14 +2451,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 				return false;
 			}
 	    }				
-		/*
-        log.writeEntry(
-        	sUserName,
-        	SMLogEntry.LOG_OPERATION_ARBATCHPOST, 
-        	"In createGLBatch, file exported successfully", 
-        	""
-        );
-		 */
+
 		return true;
 	}
 

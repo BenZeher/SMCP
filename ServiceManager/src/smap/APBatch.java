@@ -1083,13 +1083,26 @@ public class APBatch {
 			}
 		}
     	
-    	//After all the processing, create the GL export:
+    	//After all the processing, create the GL export(s):
     	//Reload the batch here, to get the updated information in entries, etc.:
     	try {
 			loadBatch(conn);
 		} catch (Exception e1) {
 			throw new Exception("Error [1510607243] re-loading batch to create GL export - " + e1.getMessage());
 		}
+    	
+    	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
+    	//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
+    	if (
+    		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+    		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
+    	){
+    		try {
+				createGLTransactionBatch(conn, sUserID, sUserFullName);
+			} catch (Exception e) {
+				throw new Exception("Error [1557246762] creating GL transaction batch - " + e.getMessage());
+			}
+    	}
     	
     	if (
         		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
@@ -1100,15 +1113,6 @@ public class APBatch {
 			} catch (Exception e) {
 				throw new Exception("Error [1489708212] creating GL batch - " + e.getMessage());
 			}
-    	}
-    	
-    	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
-    	//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
-    	if (
-    		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
-    		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
-    	){
-    		createGLTransactionBatch(conn, sUserID, sUserFullName);
     	}
     	
     	return;

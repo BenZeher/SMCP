@@ -426,11 +426,12 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			glexport = new SMGLExport();
 		}
 		
+		GLTransactionBatch gltransbatch = null;
 		if (
 			(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
 			|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
 		){
-			GLTransactionBatch gltransbatch = createGLTransactionBatch(conn, sUserID, sUserFullName);
+			gltransbatch = createGLTransactionBatch(conn, sUserID, sUserFullName);
 		}
 		
 		if (glexport != null){
@@ -576,8 +577,13 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 
 		//Check ALL the prepays in artransactions and see if any can be linked:
 		//This function will update the parent ID and retainage flag for the prepay matching lines, too
-		if(!linkPrepays(conn, sUserID, sUserFullName, glexport)){
+		if(!linkPrepays(conn, sUserID, sUserFullName, glexport, gltransbatch)){
 			throw new Exception(getErrorMessages());
+		}
+		
+		//We're all done with the GL transaction batch so if it's not null, save it now:
+		if (gltransbatch != null){
+			gltransbatch.save_without_data_transaction(conn, sUserID, sUserFullName, true);
 		}
 		if (bLogDiagnostics){
 			log.writeEntry(
@@ -694,16 +700,11 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			glentry.setsautoreverse("0");
 			glentry.setsdatdocdate(ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
 				rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.datdocdate), 
-				clsServletUtilities.DATE_FORMAT_FOR_SQL,
+				clsServletUtilities.DATETIME_FORMAT_FOR_SQL,
 				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY,
 				clsServletUtilities.EMPTY_DATE_VALUE)
 			);
-			glentry.setsdatentrydate(ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
-				sStdLastEditDateString(), 
-				clsServletUtilities.DATE_FORMAT_FOR_SQL,
-				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY,
-				clsServletUtilities.EMPTY_DATE_VALUE)
-			);
+			glentry.setsdatentrydate(sStdLastEditDateString());
 			glentry.setsentrydescription(rsBatchEntries.getString(SMTableentries.TableName + "." + SMTableentries.sdocdescription));
 			
 			//Figure out the appropriate fiscal period:
@@ -1661,7 +1662,12 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 
 		return true;
 	}
-	private boolean linkPrepays(Connection conn, String sUserID, String sUserFullName, SMGLExport export){
+	private boolean linkPrepays(
+		Connection conn, 
+		String sUserID, 
+		String sUserFullName, 
+		SMGLExport export,
+		GLTransactionBatch gltransactionbatch){
 
 		//Get ALL the open prepays:
 		String SQL = "SELECT *"
@@ -1840,6 +1846,58 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						}
 					}
 					
+					//If we are exporting to the SMCP GL, add an entry here:
+					GLTransactionBatchEntry glentry = null;
+					if (gltransactionbatch != null){
+						glentry = new GLTransactionBatchEntry();
+						glentry.setsautoreverse("0");
+						glentry.setsbatchnumber(sBatchNumber());
+						glentry.setsdatdocdate(sStdBatchDateString());
+						glentry.setsdatentrydate(sStdBatchDateString());
+						glentry.setsentrydescription(sEntryDesc);
+						glentry.setsentrynumber("0");
+						//Figure out the appropriate fiscal period:
+						int iFiscalYear;
+						int iFiscalPeriod;
+						try {
+							iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(sStdLastEditDateString(), conn);
+							iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(sStdLastEditDateString(), conn);
+						} catch (Exception e) {
+							super.addErrorMessage("Error [1557248416] - Could not get fiscal year/period - 01 for ID# " 
+									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+							rsPrepays.close();
+							rsInvoices.close();
+							return false;
+						}
+						glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
+						glentry.setsfiscalyear(Integer.toString(iFiscalYear));
+						glentry.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
+
+						//Now add a GL line:
+						GLTransactionBatchLine glline = new GLTransactionBatchLine();
+						glline.setsacctid(cust.getARPrepayLiabilityAccount(conn));
+						try {
+							glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
+						} catch (Exception e) {
+							super.addErrorMessage("Error [1557248768] - Could not set GL debit/credit amount - 01 for ID# " 
+								+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+							rsPrepays.close();
+							rsInvoices.close();
+							return false;
+						}
+						glline.setsbatchnumber(sBatchNumber());
+						glline.setscomment(sComment);
+						glline.setsdescription(sEntryDesc);
+						glline.setsentrynumber("0");
+						glline.setslinenumber("0");
+						glline.setsreference(sReference);
+						glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
+						glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
+						glline.setstransactiondate(sStdBatchDateString());
+						
+						glentry.addLine(glline);
+					}
+					
 					//Add a chron record here to record the apply-FROM
 					//Add a chron entry here for the apply TO line:
 					ARTransaction arinvtrans = new ARTransaction();
@@ -1970,6 +2028,49 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 							return false;
 						}
 					}
+					
+					if (glentry != null){
+
+						//Now add another GL line:
+						GLTransactionBatchLine glline = new GLTransactionBatchLine();
+						glline.setsacctid(cust.getARControlAccount(conn));
+						try {
+							glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
+						} catch (Exception e) {
+							super.addErrorMessage("Error [1557248769] - Could not set GL debit/credit amount - 01 for ID# " 
+								+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+							rsPrepays.close();
+							rsInvoices.close();
+							return false;
+						}
+						glline.setsbatchnumber(sBatchNumber());
+						glline.setscomment(sComment);
+						glline.setsdescription(sEntryDesc);
+						glline.setsentrynumber("0");
+						glline.setslinenumber("0");
+						glline.setsreference(sReference);
+						glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
+						glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
+						glline.setstransactiondate(sStdBatchDateString());
+						
+						glentry.addLine(glline);
+						
+						//Now that we have the entry and one debit and one credit line, save the GL transaction batch:
+						try {
+							gltransactionbatch.save_without_data_transaction(
+								conn, 
+								sUserID, 
+								sUserFullName, 
+								true);
+						} catch (Exception e) {
+							super.addErrorMessage("Error [1557248770] - Could not save SMCP GL batch when linking prepays for ID# " 
+									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+								rsPrepays.close();
+								rsInvoices.close();
+								return false;
+						}
+					}
+					
 					ARTransaction arprepaytrans = new ARTransaction();
 					
 					try {

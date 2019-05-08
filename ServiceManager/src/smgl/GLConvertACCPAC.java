@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
+import smap.APConvertACCPACAction;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -94,6 +95,15 @@ public class GLConvertACCPAC extends HttpServlet {
 			out.println("<B>***** NOTE: " + sStatus + "</B><BR>");
 		}
 	    
+		String sResult = (String)CurrentSession.getAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
+		if (sResult == null){
+			sResult = "";
+		}
+		if (sResult.compareToIgnoreCase("") != 0){
+			out.println("<B>***** RESULTS:<BR>" + sResult + "</B><BR>");
+		}
+		CurrentSession.removeAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
+		
 		//Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

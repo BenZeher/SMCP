@@ -750,30 +750,32 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 		}
 		
 		//Now add each line to the entry:
-		GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
-		glentryline.setsacctid(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sglacct));
-		glentryline.setscomment(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.scomment));
-		
-		//TODO - figure out how credits and debits will work:
-		//glline.setscreditamt(apentry.getsentryamount());
-		//glline.setsdebitamt(apentry.getsentryamount());
-		glentryline.setAmount(
-			ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-				rsBatchEntries.getBigDecimal(SMTableentrylines.TableName + "." + SMTableentrylines.damount)),
-			conn
-		);
-		glentryline.setsdescription(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sdescription));
-		glentryline.setsreference("");
-		glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AR));
-		glentryline.setssourcetype(
-			ARDocumentTypes.getSourceTypes(
-				rsBatchEntries.getInt(SMTableentries.TableName + "." + SMTableentries.idocumenttype)
-			)
-		);
-		glentryline.setstransactiondate(sStdLastEditDateString());
-		
-		//Add the line:
-		glentry.addLine(glentryline);
+		if(rsBatchEntries.getBigDecimal(SMTableentrylines.TableName + "." + SMTableentrylines.damount).compareTo(BigDecimal.ZERO) != 0){
+			GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
+			glentryline.setsacctid(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sglacct));
+			glentryline.setscomment(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.scomment));
+			
+			//TODO - figure out how credits and debits will work:
+			//glline.setscreditamt(apentry.getsentryamount());
+			//glline.setsdebitamt(apentry.getsentryamount());
+			glentryline.setAmount(
+				ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+					rsBatchEntries.getBigDecimal(SMTableentrylines.TableName + "." + SMTableentrylines.damount)),
+				conn
+			);
+			glentryline.setsdescription(rsBatchEntries.getString(SMTableentrylines.TableName + "." + SMTableentrylines.sdescription));
+			glentryline.setsreference("");
+			glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AR));
+			glentryline.setssourcetype(
+				ARDocumentTypes.getSourceTypes(
+					rsBatchEntries.getInt(SMTableentries.TableName + "." + SMTableentries.idocumenttype)
+				)
+			);
+			glentryline.setstransactiondate(sStdLastEditDateString());
+			
+			//Add the line:
+			glentry.addLine(glentryline);
+		}
 		
 		//Keep track of which entry we're on:
 		lLastEntryID = rsBatchEntries.getLong(SMTableentrylines.lentryid);
@@ -1874,28 +1876,30 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						glentry.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
 
 						//Now add a GL line:
-						GLTransactionBatchLine glline = new GLTransactionBatchLine();
-						glline.setsacctid(cust.getARPrepayLiabilityAccount(conn));
-						try {
-							glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
-						} catch (Exception e) {
-							super.addErrorMessage("Error [1557248768] - Could not set GL debit/credit amount - 01 for ID# " 
-								+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-							rsPrepays.close();
-							rsInvoices.close();
-							return false;
+						if (bdAmount.compareTo(BigDecimal.ZERO) != 0){
+							GLTransactionBatchLine glline = new GLTransactionBatchLine();
+							glline.setsacctid(cust.getARPrepayLiabilityAccount(conn));
+							try {
+								glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
+							} catch (Exception e) {
+								super.addErrorMessage("Error [1557248768] - Could not set GL debit/credit amount - 01 for ID# " 
+									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+								rsPrepays.close();
+								rsInvoices.close();
+								return false;
+							}
+							glline.setsbatchnumber(sBatchNumber());
+							glline.setscomment(sComment);
+							glline.setsdescription(sEntryDesc);
+							glline.setsentrynumber("0");
+							glline.setslinenumber("0");
+							glline.setsreference(sReference);
+							glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
+							glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
+							glline.setstransactiondate(sStdBatchDateString());
+							
+							glentry.addLine(glline);
 						}
-						glline.setsbatchnumber(sBatchNumber());
-						glline.setscomment(sComment);
-						glline.setsdescription(sEntryDesc);
-						glline.setsentrynumber("0");
-						glline.setslinenumber("0");
-						glline.setsreference(sReference);
-						glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
-						glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
-						glline.setstransactiondate(sStdBatchDateString());
-						
-						glentry.addLine(glline);
 					}
 					
 					//Add a chron record here to record the apply-FROM
@@ -2032,28 +2036,30 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 					if (glentry != null){
 
 						//Now add another GL line:
-						GLTransactionBatchLine glline = new GLTransactionBatchLine();
-						glline.setsacctid(cust.getARControlAccount(conn));
-						try {
-							glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
-						} catch (Exception e) {
-							super.addErrorMessage("Error [1557248769] - Could not set GL debit/credit amount - 01 for ID# " 
-								+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-							rsPrepays.close();
-							rsInvoices.close();
-							return false;
+						if (bdAmount.compareTo(BigDecimal.ZERO) != 0){
+							GLTransactionBatchLine glline = new GLTransactionBatchLine();
+							glline.setsacctid(cust.getARControlAccount(conn));
+							try {
+								glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
+							} catch (Exception e) {
+								super.addErrorMessage("Error [1557248769] - Could not set GL debit/credit amount - 01 for ID# " 
+									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
+								rsPrepays.close();
+								rsInvoices.close();
+								return false;
+							}
+							glline.setsbatchnumber(sBatchNumber());
+							glline.setscomment(sComment);
+							glline.setsdescription(sEntryDesc);
+							glline.setsentrynumber("0");
+							glline.setslinenumber("0");
+							glline.setsreference(sReference);
+							glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
+							glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
+							glline.setstransactiondate(sStdBatchDateString());
+							
+							glentry.addLine(glline);
 						}
-						glline.setsbatchnumber(sBatchNumber());
-						glline.setscomment(sComment);
-						glline.setsdescription(sEntryDesc);
-						glline.setsentrynumber("0");
-						glline.setslinenumber("0");
-						glline.setsreference(sReference);
-						glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
-						glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
-						glline.setstransactiondate(sStdBatchDateString());
-						
-						glentry.addLine(glline);
 						
 						//Now that we have the entry and one debit and one credit line, save the GL transaction batch:
 						try {

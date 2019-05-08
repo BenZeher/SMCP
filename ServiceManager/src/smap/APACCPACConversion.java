@@ -982,6 +982,10 @@ public class APACCPACConversion  extends java.lang.Object{
 				rsTransactions.close();
 				throw new Exception("Error [1496281534] - could not insert into " + sTablename + " table - " + e.getMessage());
 			}
+			if ((iCounter % 500) == 0){
+				System.out.println("[1557330503] - AP transaction counter = " + Integer.toString(iCounter)
+					+ ", SQLInsert = '" + SQLInsert + "'.");
+			}
 		}
 		rsTransactions.close();
 		
@@ -1112,6 +1116,10 @@ public class APACCPACConversion  extends java.lang.Object{
 			} catch (Exception e) {
 				rsTransactionLines.close();
 				throw new Exception("Error [1496350502] - could not insert into " + sTablename + " table - " + e.getMessage());
+			}
+			if ((iCounter % 500) == 0){
+				System.out.println("[1557330504] - AP transaction line counter = " + Integer.toString(iCounter)
+					+ ", SQLInsert = '" + SQLInsert + "'.");
 			}
 		}
 		rsTransactionLines.close();

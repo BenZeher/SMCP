@@ -1177,7 +1177,7 @@ public class SMUtilities extends clsServletUtilities {
 			+ SMCP_LICENSE_SUBDIRECTORY + System.getProperty("file.separator")
 			+ SMCP_LICENSE_FILE
 		;
-		//System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
+		System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
 		//Read the file:
 		String sModuleLevel = "";
 		try {
@@ -1190,8 +1190,8 @@ public class SMUtilities extends clsServletUtilities {
 				String sDecryptedLine = decryptLicenseLine(line);
 				String sDecryptedLicenseLine[] = sDecryptedLine.split(LICENSE_KEY_DELIMITER);
 				
-				//System.out.println("[1551824959] - DBID = '" + DBID + "'");
-				//System.out.println("[1551824960] - sDecryptedLine = '" + sDecryptedLine + "'");
+				System.out.println("[1551824959] - DBID = '" + DBID + "'");
+				System.out.println("[1551824960] - sDecryptedLine = '" + sDecryptedLine + "'");
 				if (sDecryptedLicenseLine[0].compareToIgnoreCase(DBID) == 0){
 					sModuleLevel = sDecryptedLicenseLine[1].trim();
 					break;
@@ -1214,7 +1214,7 @@ public class SMUtilities extends clsServletUtilities {
 
 	public static String getSMCPLicenseExpirationDate(ServletContext context, String DBID){
 		
-		System.out.println("[1551823793] checking expiry date");
+		//System.out.println("[1551823793] checking expiry date");
 		
 		//example: getAbsoluteRootPath = '/opt/apache-tomcat-8.0.20/webapps/sm/';
 		//String sFilePath = getAbsoluteRootPath(req, context);
@@ -1235,7 +1235,7 @@ public class SMUtilities extends clsServletUtilities {
 			+ SMCP_LICENSE_SUBDIRECTORY + System.getProperty("file.separator")
 			+ SMCP_LICENSE_FILE
 		;
-		System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
+		//System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
 		//Read the file:
 		String sExpirationDate = SMUtilities.EMPTY_SQL_DATE_VALUE;
 		try {
@@ -1245,14 +1245,14 @@ public class SMUtilities extends clsServletUtilities {
 			String line;
 			System.out.println("[1551823794] heading into while loop");
 			while ((line = bufferedReader.readLine()) != null) {
-				System.out.println("[1551823795] inside while loop");
+				//System.out.println("[1551823795] inside while loop");
 				//Read and decrypt each line:
 				String sDecryptedLine = decryptLicenseLine(line);
 				String sDecryptedLicenseLine[] = sDecryptedLine.split(LICENSE_KEY_DELIMITER);
 				System.out.println("[1551823800] sDecryptedLine = '" + sDecryptedLine + "'");
 				System.out.println("[1551823801] DBID = '" + DBID + "'");
 				if (sDecryptedLicenseLine[0].compareToIgnoreCase(DBID) == 0){
-					System.out.println("[1551823791] sDecryptedLicenseLine.length = " + sDecryptedLicenseLine.length);
+					//System.out.println("[1551823791] sDecryptedLicenseLine.length = " + sDecryptedLicenseLine.length);
 					if (sDecryptedLicenseLine.length > 2){
 						sExpirationDate = sDecryptedLicenseLine[2].trim();
 						System.out.println("[1551823792] sExpirationDate = " + sExpirationDate);

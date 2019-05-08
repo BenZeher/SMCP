@@ -22,6 +22,7 @@ import smcontrolpanel.SMUtilities;
 
 public class GLConvertACCPACAction extends HttpServlet {
 
+	public static final String SESSION_ATTRIBUTE_RESULT = "SESSIONATTRIBUTERESULT";
 	private static final long serialVersionUID = 1L;
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -42,6 +43,7 @@ public class GLConvertACCPACAction extends HttpServlet {
 		
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
+	    CurrentSession.removeAttribute(SESSION_ATTRIBUTE_RESULT);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
@@ -224,11 +226,12 @@ public class GLConvertACCPACAction extends HttpServlet {
     	}
 		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080733]");
 		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080734]");
+		CurrentSession.setAttribute(SESSION_ATTRIBUTE_RESULT, sProcessingResult);
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + sNextFunctionValue
 				+ "&" + "Status=" + "Function was successfully processed.<BR>"
-					+ sProcessingResult
+					//+ sProcessingResult
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		);			
     	return;

@@ -514,7 +514,7 @@ public class APACCPACConversion  extends java.lang.Object{
 		}
 		s+= "ALL unposted bank account entries coming from AP payments have been deleted.<BR>";
 		
-		//Remove any bank account entries that were related to AP:
+		//Remove any posted bank account entries that were related to AP:
 		SQL = "DELETE FROM " + SMTablebkpostedentries.TableName
 			+ " WHERE ("
 				+ "(" + SMTablebkpostedentries.ssourcemodule + " = '" + SMModuleTypes.AP + "')"

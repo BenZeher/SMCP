@@ -125,7 +125,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 				+ "\">Return to user login</A><BR>\n");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to Accounts Payable Main Menu</A><BR>\n");
+				+ "\">Return to General Ledger Main Menu</A><BR>\n");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesSelect?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Batch List</A><BR>\n");

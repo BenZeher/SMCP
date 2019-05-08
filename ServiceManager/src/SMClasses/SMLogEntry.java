@@ -166,6 +166,7 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_GLCLEARPOSTEDBATCHES = "GLCLEARPOSTEDBATCHES";
 	public final static String LOG_OPERATION_GLCLEARTRANS = "GLCLEARTRANS";
 	public final static String LOG_OPERATION_GLCLEARFISCALDATA = "GLCLEARFISCALDATA";
+	public final static String LOG_OPERATION_GLTRANSACTIONLISTING = "GLTRANSACTIONLISTING";
 	
 	private Connection conn;
 	private ServletContext context;
@@ -740,7 +741,10 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_GLCLEARFISCALDATA);
     	m_arrOperationLabelDescriptions.add("Records clearing of GL fiscal data");
-    	
+
+    	m_arrOperationLabelValues.add(LOG_OPERATION_GLTRANSACTIONLISTING);
+    	m_arrOperationLabelDescriptions.add("Records running of the GL transaction listing");
+
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){
     		arrCompleteListings.add(m_arrOperationLabelValues.get(i) + sDelimiter + m_arrOperationLabelDescriptions.get(i));

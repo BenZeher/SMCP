@@ -385,7 +385,7 @@ public class GLTrialBalanceAction extends HttpServlet {
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1553378989]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
-		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "GL Trial Balance", "[1553378990]");
+		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_GLTRIALBALANCE, "REPORT", "GL Trial Balance", "[1553378990]");
 		
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");

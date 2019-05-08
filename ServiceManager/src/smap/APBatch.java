@@ -1123,7 +1123,11 @@ public class APBatch {
 		glbatch.setlcreatedby(getlcreatedby());
 		glbatch.setllasteditedby(getllasteditedby());
 		glbatch.setsbatchdate(getsbatchdate());
-		glbatch.setsbatchdescription("Generated from AP Batch #" + getsbatchnumber());
+		
+		glbatch.setsbatchdescription("AP " 
+			+ SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())) 
+			+ " Batch #" + getsbatchnumber()
+		);
 		glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 
 		//System.out.println("[1556909965] - in createGLTransactionBatch.");
@@ -1136,7 +1140,7 @@ public class APBatch {
 			glentry.setsautoreverse("0");
 			glentry.setsdatdocdate(apentry.getsdatdocdate());
 			glentry.setsdatentrydate(apentry.getsdatentrydate());
-			glentry.setsentrydescription(apentry.getsentrydescription());
+			glentry.setsentrydescription(buildGLTransactionEntryDescription(apentry));
 			
 			//Figure out the appropriate fiscal period:
 			int iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(apentry.getsdatentrydate(), conn);
@@ -1150,7 +1154,7 @@ public class APBatch {
 			if(apentry.getsentryamount().compareToIgnoreCase("0.00") != 0){
 				GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
 				glentryline.setsacctid(apentry.getscontrolacct());
-				glentryline.setscomment("AP Control");
+				glentryline.setscomment("");
 				
 				//TODO - figure out how credits and debits will work:
 				//We never save a debit or credit as a NEGATIVE number.
@@ -1165,7 +1169,8 @@ public class APBatch {
 				glentryline.setAmount(apentry.getsentryamount(), conn);
 				//glentryline.setscreditamt(apentry.getsentryamount());
 				//glentryline.setsdebitamt(apentry.getsentryamount());
-				glentryline.setsdescription(apentry.getsentrydescription());
+
+				glentryline.setsdescription("");
 				glentryline.setsreference("");
 				glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
 				glentryline.setssourcetype(apentry.getsentrytype());
@@ -1178,7 +1183,7 @@ public class APBatch {
 				GLTransactionBatchLine glline = new GLTransactionBatchLine();
 				APBatchEntryLine apline = apentry.getLineArray().get(j);
 				glline.setsacctid(apline.getsdistributionacct());
-				glline.setscomment(apline.getscomment());
+				glline.setscomment("");
 				
 				//TODO - figure out how credits and debits will work:
 				//glline.setscreditamt(apentry.getsentryamount());
@@ -4335,6 +4340,50 @@ public class APBatch {
 			s += "Entry " + (i + 1) + ": " + m_arrBatchEntries.get(i).dumpData();
 		}
 		return s;
+	}
+	private String buildGLTransactionEntryDescription(APBatchEntry apentry) throws Exception{
+		String sEntryDescription = "";
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_INV_CREDITNOTE){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+			;
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_INV_DEBITNOTE){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+			;
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_INV_INVOICE){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+			;
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_APPLYTO){
+			
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_MISCPAYMENT){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+				+ " CK# " + apentry.getschecknumber()
+			;
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_PAYMENT){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+				+ " CK# " + apentry.getschecknumber()
+			;
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_PREPAYMENT){
+			sEntryDescription = apentry.getsvendoracct()
+				+ " " + apentry.getsvendorname()
+				+ " CK# " + apentry.getschecknumber()
+			;				
+		}
+		if (apentry.getientrytype() == SMTableapbatchentries.ENTRY_TYPE_REVERSAL){
+			
+		}
+		
+		return sEntryDescription;
 	}
 	private void initializeVariables(){
 		m_sbatchnumber = "-1";

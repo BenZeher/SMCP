@@ -116,7 +116,7 @@ public class GLTransactionListingAction extends HttpServlet {
 		sParamString += "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		
 		//Customized title
-		String sReportTitle = "GL Trial Balance";
+		String sReportTitle = "GL Transaction Listing";
 		
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
 			+ "Transitional//EN\">\n" 
@@ -298,7 +298,7 @@ public class GLTransactionListingAction extends HttpServlet {
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1553715864]");
 		
 		SMLogEntry log = new SMLogEntry(conn);
-		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_APAGING, "REPORT", "GL Trial Balance", "[1553715865]");
+		log.writeEntry(sUserID ,SMLogEntry.LOG_OPERATION_GLTRANSACTIONLISTING, "REPORT", "GL Transaction Listing", "[1557346149]");
 		
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");

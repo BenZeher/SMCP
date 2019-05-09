@@ -39,17 +39,18 @@ function loadPicker() {
 		//load the auth api
 		gapi.load('auth', onAuthApiLoad);
 	
-		//load the client.drive api
-		gapi.load('client', function() {
-			gapi.client.load('drive', 'v3', drivev2load);
-		});
-		//load the picker api
-		gapi.load('picker', onPickerApiLoad);
 	}
 }
+function loadClientDrive() {
+	//load the client.drive api
+	gapi.load('client', function() {
+		gapi.client.load('drive', 'v3', loadDrivePicker);
+	});
+}
 
-function drivev2load() {
-	//alert('drive v3 loaded');
+function loadDrivePicker() {
+	//load the picker api
+	gapi.load('picker', onPickerApiLoad);
 }
 
 function onPickerApiLoad() {
@@ -78,7 +79,7 @@ function handleAuthResult(authResult) {
 			}, handleAuthResult);
 		}else{
 			oauthToken = authResult.access_token;
-			createPicker();
+			loadClientDrive();
 		}
 	}
 }

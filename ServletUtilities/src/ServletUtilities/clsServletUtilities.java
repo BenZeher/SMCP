@@ -857,8 +857,9 @@ public class clsServletUtilities {
 			+ " var parentfolderid = '" + sParentFolder + "';\n" 
 			+ " var keyvalue = '" + sKeyValue + "';\n"
 			+ "</script>\n"
-		    + "<script type='text/JavaScript' src='" + sScriptPath + "drivepicker.js'></script>\n"
-			+ "<script type=\"text/javascript\" src=\"https://apis.google.com/js/api.js\"></script>";
+			+ "<script type=\"text/javascript\" src=\"https://apis.google.com/js/api.js?key=" + sDeveloperKey + "\"></script>"
+		    + "<script type='text/JavaScript' src='" + sScriptPath + "drivepicker.js'></script>\n";
+			
 		}else{
 			return "<script type='text/JavaScript' src='../javascript/drivepicker.js'></script>";
 		}

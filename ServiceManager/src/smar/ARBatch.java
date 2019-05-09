@@ -1804,7 +1804,10 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 								super.sModuleType(), 
 								ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT),
 								"AR Batch Export", 
-								"SMAR"
+								"SMAR",
+								sStdBatchDateString(),
+								sStdBatchDateString(),
+								buildGLTransactionEntryDescription(ARDocumentTypes.PREPAYMENT)
 						);
 					}
 
@@ -1837,6 +1840,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 									sComment,
 									sEntryDesc,
 									sReference,
+									"0",
 									conn
 							);
 						} catch (Exception e3) {
@@ -2022,6 +2026,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 									sComment,
 									sEntryDesc,
 									sReference,
+									"0",
 									conn
 							);
 						} catch (Exception e2) {
@@ -2406,7 +2411,10 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						super.sModuleType(), 
 						ARDocumentTypes.getSourceTypes(entry.getDocumentType()),
 						"AR Batch Export", 
-						"SMAR"
+						"SMAR",
+						entry.sStdDocDate(),
+						sStdBatchDateString(),
+						buildGLTransactionEntryDescription(entry.getDocumentType())
 				);
 
 				//First, add the entry itself as a GL transaction:
@@ -2452,6 +2460,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 							sComment,
 							sEntryDesc,
 							sReference,
+							"0",
 							conn
 					);
 				} catch (Exception e1) {
@@ -2502,6 +2511,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 								sComment,
 								sLineDesc,
 								sLineReference,
+								Integer.toString(i + 1),
 								conn
 						);
 					} catch (Exception e) {
@@ -3178,5 +3188,54 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			return false;
 		}
 		return true;
+	}
+	private String buildGLTransactionEntryDescription(int ARDocumentType){
+		String sEntryDescription = "";
+		if (ARDocumentType == ARDocumentTypes.APPLYTO){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//;
+		}
+		if (ARDocumentType == ARDocumentTypes.CASHADJUSTMENT){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//;
+		}
+		if (ARDocumentType == ARDocumentTypes.CREDIT){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//;
+		}
+		if (ARDocumentType == ARDocumentTypes.CREDITADJUSTMENT){
+			
+		}
+		if (ARDocumentType == ARDocumentTypes.INVOICE){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//	+ " CK# " + arentry.getschecknumber()
+			//;
+		}
+		if (ARDocumentType == ARDocumentTypes.INVOICEADJUSTMENT){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//	+ " CK# " + arentry.getschecknumber()
+			//;
+		}
+		if (ARDocumentType == ARDocumentTypes.MISCRECEIPT){
+			//sEntryDescription = arentry.getsvendoracct()
+			//	+ " " + arentry.getsvendorname()
+			//	+ " CK# " + arentry.getschecknumber()
+			//;				
+		}
+		if (ARDocumentType == ARDocumentTypes.PREPAYMENT){
+			
+		}
+		if (ARDocumentType == ARDocumentTypes.RECEIPT){
+			
+		}
+		if (ARDocumentType == ARDocumentTypes.REVERSAL){
+			
+		}
+		return sEntryDescription;
 	}
 }

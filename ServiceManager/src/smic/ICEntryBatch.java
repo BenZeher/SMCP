@@ -3912,7 +3912,10 @@ public class ICEntryBatch {
         				sModuleType(), 
         				ICEntryTypes.getSourceTypes(Integer.parseInt(entry.sEntryType())),
         				"IC Batch Export", 
-        				"SMIC"
+        				"SMIC",
+        				entry.sStdEntryDate(),
+        				entry.sStdEntryDate(),
+        				"IC Entry"
         		);
         		        		
         		for (int i = 0; i < entry.getLineCount(); i ++){
@@ -3945,6 +3948,7 @@ public class ICEntryBatch {
 								"Comment",
 								sLineDesc,
 								sLineReference,
+								line.sLineNumber(),
 								conn
 								);
 					} catch (Exception e1) {
@@ -3961,6 +3965,7 @@ public class ICEntryBatch {
 								"Comment",
 								sLineDesc,
 								sLineReference,
+								line.sLineNumber(),
 								conn
 								);
 					} catch (Exception e1) {
@@ -4016,6 +4021,7 @@ public class ICEntryBatch {
 									"Comment",
 									sLineDesc,
 									sLineReference,
+									line.sLineNumber(),
 									conn
 									);
 						} catch (Exception e) {
@@ -4031,6 +4037,7 @@ public class ICEntryBatch {
 									"Comment",
 									sLineDesc,
 									sLineReference,
+									line.sLineNumber(),
 									conn
 									);
 						} catch (Exception e) {

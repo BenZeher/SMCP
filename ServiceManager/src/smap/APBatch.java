@@ -28,7 +28,6 @@ import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableapvendorstatistics;
 import SMDataDefinition.SMTablebkaccountentries;
-import SMDataDefinition.SMTableentries;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicvendors;
@@ -43,11 +42,7 @@ import ServletUtilities.clsValidateFormFields;
 import smar.SMGLExport;
 import smar.SMOption;
 import smcontrolpanel.SMUtilities;
-import smgl.GLFiscalPeriod;
-import smgl.GLSourceLedgers;
 import smgl.GLTransactionBatch;
-import smgl.GLTransactionBatchEntry;
-import smgl.GLTransactionBatchLine;
 
 public class APBatch {
 
@@ -1091,123 +1086,15 @@ public class APBatch {
 			throw new Exception("Error [1510607243] re-loading batch to create GL export - " + e1.getMessage());
 		}
     	
-    	//If the flag is set to use the SMCP GL, create a GL Transaction batch here:
-    	//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
-    	if (
-    		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
-    		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
-    	){
-    		try {
-				createGLTransactionBatch(conn, sUserID, sUserFullName);
-			} catch (Exception e) {
-				throw new Exception("Error [1557246762] creating GL transaction batch - " + e.getMessage());
-			}
-    	}
-    	
-    	if (
-        		(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
-        		|| (iFeedGLStatus == SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)
-        	){
-	    	try {
-				createGLBatch(conn, sUserID, log, arrMatchingLineIDsFromPrepays);
-			} catch (Exception e) {
-				throw new Exception("Error [1489708212] creating GL batch - " + e.getMessage());
-			}
-    	}
+    	try {
+			createGLBatch(conn, sUserID, log, arrMatchingLineIDsFromPrepays, sUserFullName, iFeedGLStatus);
+		} catch (Exception e) {
+			throw new Exception("Error [1489708212] creating GL batch - " + e.getMessage());
+		}
     	
     	return;
     }
-	private void createGLTransactionBatch(Connection conn, String sUserID, String sUsersFullName) throws Exception{
-		
-		GLTransactionBatch glbatch = new GLTransactionBatch("-1");
-		glbatch.setlcreatedby(getlcreatedby());
-		glbatch.setllasteditedby(getllasteditedby());
-		glbatch.setsbatchdate(getsbatchdate());
-		
-		glbatch.setsbatchdescription("AP " 
-			+ SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())) 
-			+ " Batch #" + getsbatchnumber()
-		);
-		glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 
-		//System.out.println("[1556909965] - in createGLTransactionBatch.");
-		
-		//System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
-		
-		for (int i = 0; i < m_arrBatchEntries.size(); i++){
-			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
-			APBatchEntry apentry = m_arrBatchEntries.get(i);
-			glentry.setsautoreverse("0");
-			glentry.setsdatdocdate(apentry.getsdatdocdate());
-			glentry.setsdatentrydate(apentry.getsdatentrydate());
-			glentry.setsentrydescription(buildGLTransactionEntryDescription(apentry));
-			
-			//Figure out the appropriate fiscal period:
-			int iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(apentry.getsdatentrydate(), conn);
-			int iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(apentry.getsdatentrydate(), conn);
-			glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
-			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
-			glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
-			glentry.setssourceledgertransactionlineid("0");
-			
-			//Add one GL transaction batch line for the entry side UNLESS the entry nets to zero:
-			if(apentry.getsentryamount().compareToIgnoreCase("0.00") != 0){
-				GLTransactionBatchLine glentryline = new GLTransactionBatchLine();
-				glentryline.setsacctid(apentry.getscontrolacct());
-				glentryline.setscomment("");
-				
-				//TODO - figure out how credits and debits will work:
-				//We never save a debit or credit as a NEGATIVE number.
-				//If the account is normally a 'credit' account, it's normally negative:
-				// so a negative number would become a POSITIVE credit amt,
-				// and a positive number would become a POSITIVE debit amt.
-				
-				//If the account is normally a 'debit' account, it's normally positive,
-				// so a positive number would become a POSITIVE debit amt,
-				// and a negative number would become a POSITIVE credit amt.
-				
-				glentryline.setAmount(apentry.getsentryamount(), conn);
-				//glentryline.setscreditamt(apentry.getsentryamount());
-				//glentryline.setsdebitamt(apentry.getsentryamount());
-
-				glentryline.setsdescription("");
-				glentryline.setsreference("");
-				glentryline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
-				glentryline.setssourcetype(apentry.getsentrytype());
-				glentryline.setstransactiondate(apentry.getsdatentrydate());
-				
-				glentry.addLine(glentryline);
-			}
-			
-			for (int j = 0; j < apentry.getLineArray().size(); j++){
-				GLTransactionBatchLine glline = new GLTransactionBatchLine();
-				APBatchEntryLine apline = apentry.getLineArray().get(j);
-				glline.setsacctid(apline.getsdistributionacct());
-				glline.setscomment("");
-				
-				//TODO - figure out how credits and debits will work:
-				//glline.setscreditamt(apentry.getsentryamount());
-				//glline.setsdebitamt(apentry.getsentryamount());
-				glline.setAmount(apline.getsbdamount(), conn);
-				glline.setsdescription(apline.getsdescription());
-				glline.setsreference("");
-				glline.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_AP));
-				glline.setssourcetype(apentry.getsentrytype());
-				glline.setstransactiondate(apentry.getsdatentrydate());
-				
-				glentry.addLine(glline);
-
-			}
-			glbatch.addBatchEntry(glentry);
-		}
-		
-		try {
-			glbatch.save_without_data_transaction(conn, sUserID, sUsersFullName, false);
-		} catch (Exception e) {
-			throw new Exception("Error [1556897650] saving GL Transaction Batch - " + e.getMessage());
-		}
-		return;
-	}
 	private void flagReversedChecksAsVoid(Connection conn) throws Exception{
 		
 		//For each line in the reversal entry, we have to identify the check that was reversed.  That check might be a 'multipage' check, so we have to void ALL the checks
@@ -1761,7 +1648,14 @@ public class APBatch {
     	
     	return;
     }
-    private void createGLBatch(Connection conn, String sUserID, SMLogEntry log, ArrayList<Long>arrMathingLineIDsFromAutoPrepays) throws Exception{
+    private void createGLBatch(
+    	Connection conn, 
+    	String sUserID, 
+    	SMLogEntry log, 
+    	ArrayList<Long>arrMatchingLineIDsFromAutoPrepays,
+    	String sUserFullName,
+    	int iFeedGL
+    	) throws Exception{
     	
     	//TJR - here is where the GL batch gets created during posting:
     	if (bDebugMode){
@@ -1800,11 +1694,33 @@ public class APBatch {
     	}
     	
     	//Now add GL entries for any discounts applied by automatically generated pre-pays:
-    	addAutoPrepaysToGLBatch(export, conn, arrMathingLineIDsFromAutoPrepays);
+    	addAutoPrepaysToGLBatch(export, conn, arrMatchingLineIDsFromAutoPrepays);
     	
         String sExportBatchNumber = getsbatchnumber();
         sExportBatchNumber = clsStringFunctions.PadLeft(sExportBatchNumber, "0", 6);
         
+        if (
+        	(iFeedGL == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+        	|| (iFeedGL == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
+        ){
+	        GLTransactionBatch gltransactionbatch = null;
+	        try {
+				gltransactionbatch = export.createGLTransactionBatch(
+					conn, 
+					sUserID, 
+					sUserID, 
+					getsbatchdate(), 
+					"AP " + SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())) + " Batch #" + getsbatchnumber());
+			} catch (Exception e1) {
+				throw new Exception("Error [1557429977] creating GL transactionbatch - " + e1.getMessage());
+			}
+	        
+	        try {
+				gltransactionbatch.save_without_data_transaction(conn, sUserID, sUserFullName, true);
+			} catch (Exception e1) {
+				throw new Exception("Error [1557429977] saving GL transactionbatch - " + e1.getMessage());
+			}
+        }
         try {
 			export.saveExport(sExportBatchNumber, conn);
 		} catch (Exception e) {
@@ -1815,17 +1731,23 @@ public class APBatch {
 		if(!apopt.load(conn)){
 			throw new Exception("Error [1489711675] getting export file type - " + apopt.getErrorMessageString());
 		}
-        if (export.getExportFilePath().compareToIgnoreCase("") != 0){
-	        if (!export.writeExportFile(
-	        		SMModuleTypes.AP, 
-	        		SMTableapbatches.getBatchTypeLabel(Integer.parseInt(getsbatchtype())), 
-	        		sExportBatchNumber,
-	        		Integer.parseInt(apopt.getiexportoption()),
-	        		conn)
-	        	){
-	        	throw new Exception("Error [1489711676] writing to export file - " + apopt.getErrorMessageString());
-	        }
-	    }
+		
+        if (
+           	(iFeedGL == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+           	|| (iFeedGL == SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)
+        ){
+	        if (export.getExportFilePath().compareToIgnoreCase("") != 0){
+		        if (!export.writeExportFile(
+		        		SMModuleTypes.AP, 
+		        		SMTableapbatches.getBatchTypeLabel(Integer.parseInt(getsbatchtype())), 
+		        		sExportBatchNumber,
+		        		Integer.parseInt(apopt.getiexportoption()),
+		        		conn)
+		        	){
+		        	throw new Exception("Error [1489711676] writing to export file - " + apopt.getErrorMessageString());
+		        }
+		    }
+        }
     	return;
     }
     private void createGLBatchForInvBatchType(SMGLExport export, Connection conn, String sUserID) throws Exception{
@@ -1836,7 +1758,10 @@ public class APBatch {
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
     			"AP Batch Export", 
-    			"SMAP"
+    			"SMAP",
+    			entry.getsdatdocdate(),
+    			entry.getsdatentrydate(),
+    			buildGLTransactionEntryDescription(entry)
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -1935,6 +1860,7 @@ public class APBatch {
 					sEntryComment,
 					sEntryDesc,
 					sEntryReference,
+					"0",
 					conn
 				);
 			} catch (Exception e) {
@@ -1977,6 +1903,7 @@ public class APBatch {
 							"From auto-prepay application",
 							sLineDesc,
 							sLineReference,
+							"0",
 							conn
 						);
 						
@@ -1988,6 +1915,7 @@ public class APBatch {
 							"From auto-prepay application",
 							sLineDesc,
 							sLineReference,
+							"0",
 							conn
 						);
 					}
@@ -2029,6 +1957,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 							);
 				} catch (Exception e) {
@@ -2061,6 +1990,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 						);
         			} catch (Exception e) {
@@ -2076,6 +2006,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 						);
     				} catch (Exception e) {
@@ -2095,7 +2026,10 @@ public class APBatch {
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
     			"AP Batch Export", 
-    			"SMAP"
+    			"SMAP",
+    			entry.getsdatdocdate(),
+    			entry.getsdatentrydate(),
+    			buildGLTransactionEntryDescription(entry)
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -2196,6 +2130,7 @@ public class APBatch {
 						sEntryComment,
 						sEntryDesc,
 						sEntryReference,
+						"0",
 						conn
 					);
 				} catch (Exception e) {
@@ -2269,6 +2204,7 @@ public class APBatch {
 						sLineComment,
 						sLineDesc,
 						sLineReference,
+						line.getslinenumber(),
 						conn
 					);
 				} catch (Exception e) {
@@ -2303,6 +2239,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 						);
     				} catch (Exception e) {
@@ -2320,6 +2257,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 							);
     				} catch (Exception e) {
@@ -2339,7 +2277,10 @@ public class APBatch {
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
     			"AP Batch Export", 
-    			"SMAP"
+    			"SMAP",
+    			entry.getsdatdocdate(),
+    			entry.getsdatentrydate(),
+    			buildGLTransactionEntryDescription(entry)
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -2436,6 +2377,7 @@ public class APBatch {
 					sEntryComment,
 					sEntryDesc,
 					sEntryReference,
+					"0",
 					conn
 				);
 			} catch (Exception e) {
@@ -2505,6 +2447,7 @@ public class APBatch {
 						sLineComment,
 						sLineDesc,
 						sLineReference,
+						line.getslinenumber(),
 						conn
 					);
 				} catch (Exception e) {
@@ -2540,6 +2483,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 							);
     				} catch (Exception e) {
@@ -2557,6 +2501,7 @@ public class APBatch {
 							sLineComment,
 							sLineDesc,
 							sLineReference,
+							line.getslinenumber(),
 							conn
 							);
     				} catch (Exception e) {
@@ -2668,6 +2613,7 @@ public class APBatch {
 							"Applied to doc # " + rsPrepays.getString(SMTableapmatchinglines.sappliedtodocnumber),
 							sLineDesc,
 							sLineReference,
+							"0",
 							conn
 							);
 					} catch (Exception e) {
@@ -2694,6 +2640,7 @@ public class APBatch {
 							"Applied to doc # " + rsPrepays.getString(SMTableapmatchinglines.sappliedtodocnumber),
 							sLineDesc,
 							sLineReference,
+							"0",
 							conn
 							);
 					} catch (Exception e) {
@@ -2721,6 +2668,7 @@ public class APBatch {
 								"Applied to doc # " + rsPrepays.getString(SMTableapmatchinglines.sappliedtodocnumber),
 								sLineDesc,
 								sLineReference,
+								"0",
 								conn
 								);
 					} catch (Exception e) {

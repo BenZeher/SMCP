@@ -22,7 +22,7 @@ public class SMTablegltransactionbatchlines {
 	//Field lengths:
 	public static final int sreferenceLength = 60;
 	public static final int scommentLength = 60;
-	public static final int sdescriptionLength = 60;
+	public static final int sdescriptionLength = 96;
 	public static final int ssourceledgerLength = 2;
 	public static final int ssourcetypeLength = 2;
 	public static final int sacctidLength = 45;

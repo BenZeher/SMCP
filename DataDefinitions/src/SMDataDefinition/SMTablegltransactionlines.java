@@ -28,7 +28,7 @@ public class SMTablegltransactionlines {
 	public static final int ssourceledgerLength = 2;
 	public static final int ssourcetypeLength = 2;
 	public static final int stransactiontypeLength = 32;
-	public static final int sdescriptionLength = 60;
+	public static final int sdescriptionLength = 96;
 	public static final int sreferenceLength = 60;
 	
 	public static final int bdamountScale = 2;

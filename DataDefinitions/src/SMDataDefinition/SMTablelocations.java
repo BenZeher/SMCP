@@ -70,7 +70,7 @@ public class SMTablelocations {
     public static int sRemitToPhoneNumberLength = 20;
     public static int sRemitToFaxNumberLength = 20;
     public static int sRemitToContactLength = 60;
-    public static int sSecondOfficeNameLength = 30;
+    public static int sSecondOfficeNameLength = 75;
     public static int sSecondOfficePhoneLength = 20;
     public static int sLogoLength = 255;
     public static int sTollFreeNumberLength = 20;

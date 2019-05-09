@@ -13,13 +13,19 @@ import java.util.ArrayList;
 
 import org.apache.commons.net.ftp.FTP;
 
-import smgl.GLAccount;
+import SMClasses.SMBatchStatuses;
 import SMDataDefinition.SMExportTypes;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableglexportheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsFTPFunctions;
+import ServletUtilities.clsServletUtilities;
+import smgl.GLAccount;
+import smgl.GLFiscalPeriod;
+import smgl.GLTransactionBatch;
+import smgl.GLTransactionBatchEntry;
+import smgl.GLTransactionBatchLine;
 
 public class SMGLExport extends java.lang.Object{
 
@@ -55,7 +61,11 @@ public class SMGLExport extends java.lang.Object{
 			String sSourceLedger,
 			String sSourceType,
 			String sJournalDescription, 
-			String sSourceDescription){
+			String sSourceDescription,
+			String smmddyyyyDocDate,
+			String smmddyyyyEntryDate,
+        	String sEntryDescription
+			){
 
 	    SMGLExportHeader header = new SMGLExportHeader(
 	        	1,
@@ -64,7 +74,10 @@ public class SMGLExport extends java.lang.Object{
 	        	replaceCriticalStringLiterals(sSourceLedger),
 	        	replaceCriticalStringLiterals(sSourceType),
 	        	replaceCriticalStringLiterals(sJournalDescription),
-	        	replaceCriticalStringLiterals(sSourceDescription)
+	        	replaceCriticalStringLiterals(sSourceDescription),
+	           	smmddyyyyDocDate,
+	        	smmddyyyyEntryDate,
+	        	sEntryDescription
 	        	);
 	    
 	    m_HeaderRecordArray.add(header);
@@ -77,6 +90,7 @@ public class SMGLExport extends java.lang.Object{
 		    String sComment,
 		    String sDescription,
 		    String sReference,
+		    String sLineNumber,
 		    Connection conn
 		    ) throws Exception{
 
@@ -101,7 +115,8 @@ public class SMGLExport extends java.lang.Object{
 		            datTransDate,
 		            replaceCriticalStringLiterals(m_HeaderRecordArray.get(m_HeaderRecordArray.size() - 1).getSourceLedger()),
 		            replaceCriticalStringLiterals(m_HeaderRecordArray.get(m_HeaderRecordArray.size() - 1).getSourceType()),
-		            replaceCriticalStringLiterals(sComment)		
+		            replaceCriticalStringLiterals(sComment),
+		            sLineNumber
 			);
 
 			m_HeaderRecordArray.get(m_HeaderRecordArray.size() - 1).addDetail(detail);
@@ -585,21 +600,37 @@ public class SMGLExport extends java.lang.Object{
 		String SQL = "";
 		for (int i = 0; i < m_HeaderRecordArray.size(); i ++){
 			SQL = "INSERT INTO " + SMTableglexportheaders.TableName + "("
-				+ SMTableglexportheaders.lbatchentry
+				+ SMTableglexportheaders.datdocdate
+				+ ", " + SMTableglexportheaders.datentrydate
+				+ ", " + SMTableglexportheaders.lbatchentry
 				+ ", " + SMTableglexportheaders.irecordtype
 				+ ", " + SMTableglexportheaders.lbatchnumber
 				+ ", " + SMTableglexportheaders.sjournaldescription
 				+ ", " + SMTableglexportheaders.ssourcedescription
 				+ ", " + SMTableglexportheaders.ssourceledger
 				+ ", " + SMTableglexportheaders.sssourcetype
+				+ ", " + SMTableglexportheaders.sentrydescription
 				+ ") VALUES ("
-				+ Long.toString(m_HeaderRecordArray.get(i).getBatchEntry())
+				+ "'" + ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					m_HeaderRecordArray.get(i).getDocDate(), 
+					clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+					clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+					clsServletUtilities.EMPTY_SQL_DATE_VALUE
+					) + "'"
+				+ ", '" + ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					m_HeaderRecordArray.get(i).getEntryDate(), 
+					clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+					clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+					clsServletUtilities.EMPTY_SQL_DATE_VALUE
+				) + "'"
+				+ ", " + Long.toString(m_HeaderRecordArray.get(i).getBatchEntry())
 				+ ", " + Integer.toString(m_HeaderRecordArray.get(i).getRecordType()) 
 				+ ", " + sBatchNumber
 				+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getJournalDescription().trim(), SMTableglexportheaders.sjournaldescriptionlength) + "'"
 				+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getSourceDescription().trim(), SMTableglexportheaders.ssourcedescriptionlength) + "'"
 				+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getSourceLedger().trim(), SMTableglexportheaders.ssourceledgerlength) + "'"
 				+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getSourceType().trim(), SMTableglexportheaders.ssourcetypelength) + "'"
+						+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getEntryDescription().trim(), SMTableglexportheaders.sentrydescriptionlength) + "'"
 				+ ")";
 			
 			try {
@@ -622,6 +653,7 @@ public class SMGLExport extends java.lang.Object{
 					+ ", " + SMTableglexportdetails.lbatchnumber
 					+ ", " + SMTableglexportdetails.ldetailjournalid
 					+ ", " + SMTableglexportdetails.ldetailtransactionnumber
+					+ ", " + SMTableglexportdetails.llinenumber
 					+ ", " + SMTableglexportdetails.sdetailaccountid
 					+ ", " + SMTableglexportdetails.sdetailformattedaccountid
 					+ ", " + SMTableglexportdetails.sdetailcomment
@@ -637,6 +669,7 @@ public class SMGLExport extends java.lang.Object{
 					+ ", " + sBatchNumber
 					+ ", " + Long.toString(m_HeaderRecordArray.get(i).getDetailArray().get(j).getJournalID())
 					+ ", " + Integer.toString(j + 1)
+					+ ", " + m_HeaderRecordArray.get(i).getDetailArray().get(j).getLineNumber()
 					+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getDetailArray().get(j).getAccountID().trim(), SMTableglexportdetails.sdetailaccountidlength) + "'"
 					+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getDetailArray().get(j).getsDetailFormattedAccountID().trim(), SMTableglexportdetails.sdetailformattedaccountidlength) + "'"
 					+ ", '" + sizeFieldForSaving(m_HeaderRecordArray.get(i).getDetailArray().get(j).getComment().trim(), SMTableglexportdetails.sdetailcommentlength) + "'"
@@ -673,7 +706,7 @@ public class SMGLExport extends java.lang.Object{
 			return s;
 		}
 		
-		//First, format the field for recorind in the database:
+		//First, format the field for recording in the database:
 		s = clsDatabaseFunctions.FormatSQLStatement(sFieldValue);
 		//If it's not too long, then just send it back:
 		if (s.length() <= iMaxFieldLength){
@@ -792,7 +825,20 @@ public class SMGLExport extends java.lang.Object{
 							replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.ssourceledger)),
 							replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.sssourcetype)),
 							replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.sjournaldescription)),
-							replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.ssourcedescription))
+							replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.ssourcedescription)),
+					    	ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					    		rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.datdocdate), 
+					    		clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+					    		clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+					    		clsServletUtilities.EMPTY_DATE_VALUE
+					    		),
+					    	ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
+					    		rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.datentrydate), 
+					    		clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+					    		clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+					    		clsServletUtilities.EMPTY_DATE_VALUE
+					    		),
+					    	replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.sentrydescription))
 						));
 					lCurrentBatchEntry = rs.getLong(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.lbatchentry);
 				}
@@ -811,7 +857,8 @@ public class SMGLExport extends java.lang.Object{
 			            rs.getDate(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.datdetailtransactiondate),
 			            replaceCriticalStringLiterals(rs.getString(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.sdetailsourceledger)),
 			            replaceCriticalStringLiterals(rs.getString(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.sdetailsourcetype)),
-			            replaceCriticalStringLiterals(rs.getString(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.sdetailcomment))
+			            replaceCriticalStringLiterals(rs.getString(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.sdetailcomment)),
+			            Long.toString(rs.getLong(SMTableglexportdetails.TableName + "." + SMTableglexportdetails.llinenumber))
 					)
 				);
 			}
@@ -825,6 +872,65 @@ public class SMGLExport extends java.lang.Object{
 				writeACCPACDownloadEntry(i, new PrintWriter(System.out));
 			}
 		}
+	}
+	public GLTransactionBatch createGLTransactionBatch(
+		Connection conn,
+		String sCreatedBy,
+		String sLastEditedBy,
+		String sBatchDate,
+		String sBatchDescription) throws Exception{
+		GLTransactionBatch gltransactionbatch = new GLTransactionBatch("-1");
+		
+		gltransactionbatch.setlcreatedby(sCreatedBy);
+		
+		//*************************************
+		gltransactionbatch.setlcreatedby(sCreatedBy);
+		gltransactionbatch.setllasteditedby(sLastEditedBy);
+		gltransactionbatch.setsbatchdate(sBatchDate);
+		gltransactionbatch.setsbatchdescription(sBatchDescription);
+		gltransactionbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
+
+		//System.out.println("[1556909965] - in createGLTransactionBatch.");
+		//System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
+		
+		for (int i = 0; i < m_HeaderRecordArray.size(); i++){
+			//Add an entry:
+			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
+			glentry.setsautoreverse("0");
+			glentry.setsbatchnumber(Long.toString(m_HeaderRecordArray.get(i).getBatchNumber()));
+			glentry.setsdatdocdate(m_HeaderRecordArray.get(i).getDocDate());
+			glentry.setsdatentrydate(m_HeaderRecordArray.get(i).getEntryDate());
+			glentry.setsentrydescription(m_HeaderRecordArray.get(i).getEntryDescription());
+			glentry.setsentrynumber(Long.toString(m_HeaderRecordArray.get(i).getBatchEntry()));
+			int iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(glentry.getsdatentrydate(), conn);
+			int iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(glentry.getsdatentrydate(), conn);
+			glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
+			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
+			glentry.setssourceledger(m_HeaderRecordArray.get(i).getSourceLedger());
+			glentry.setssourceledgertransactionlineid("0");
+			gltransactionbatch.addBatchEntry(glentry);
+			
+			//Now add the lines:
+			for (int j = 0; j < m_HeaderRecordArray.get(i).getDetailArray().size(); j++){
+				SMGLExportDetail detail = m_HeaderRecordArray.get(i).getDetailArray().get(j);
+				GLTransactionBatchLine glline = new GLTransactionBatchLine();
+				glline.setAmount(detail.getsTransactionAmount("#########.00"), conn);
+				glline.setsacctid(detail.getAccountID());
+				glline.setsbatchnumber(glentry.getsbatchnumber());
+				glline.setscomment(detail.getComment());
+				glline.setsdescription(detail.getTransactionDescription());
+				glline.setsentrynumber(glentry.getsentrynumber());
+				glline.setslinenumber(detail.getLineNumber());
+				glline.setsreference(detail.getTransactionReference());
+				glline.setssourceledger(glentry.getssourceledger());
+				glline.setssourcetype(detail.getSourceType());
+				glline.setstransactiondate(detail.getsTransactionDate(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
+				glentry.addLine(glline);
+			}
+			gltransactionbatch.addBatchEntry(glentry);
+		}
+	
+		return gltransactionbatch;
 	}
 	public String getErrorMessage (){
 		return m_sErrorMessage;

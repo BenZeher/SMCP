@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1386;
+	private static final int m_CurrentDatabaseVersion = 1388;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "5/9/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14333,6 +14333,29 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by BJZ 5/9/2019
 				SQL = "ALTER TABLE `locations` CHANGE COLUMN sSecondOfficeName sSecondOfficeName VARCHAR(75) NOT NULL DEFAULT ''";
 				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1386:
+				//Added by TJR 5/9/2019
+				SQL = "ALTER TABLE `glexportdetails` ADD COLUMN llinenumber INT(11) NOT NULL DEFAULT '0'";
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1387:
+				//Added by TJR 5/9/2019
+				SQL = "ALTER TABLE `glexportheaders`"
+					+ " ADD COLUMN datdocdate date NOT NULL default '0000-00-00'"
+					+ ", ADD COLUMN datentrydate date NOT NULL default '0000-00-00'"
+					+ ", ADD COLUMN sentrydescription VARCHAR(96) NOT NULL default ''"
+				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

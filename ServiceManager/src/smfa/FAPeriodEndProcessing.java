@@ -137,11 +137,17 @@ public class FAPeriodEndProcessing extends java.lang.Object{
     	}
 		lRecordNumber = 0;
 		long lNumberOfAssetsDepreciated = 0;
+		ServletUtilities.clsDBServerTime clsCurrentTime = new ServletUtilities.clsDBServerTime(conn);
+		
 		if (m_bProvisional){
 			if (!m_cGLExportBatch.addHeader(SMModuleTypes.FA, 
 					"SS",
 					"PROVISIONAL Depreciation",
-					"PROVISIONAL Processing")){
+					"PROVISIONAL Processing",
+					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					"Monthly Depreciation"
+					)){
 				throw new Exception("Error setting export batch file header - " + m_cGLExportBatch.getErrorMessage()); 
 			}
 			sProvisionalDescription = "PROVISIONAL Depreciation";
@@ -149,7 +155,10 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 			if (!m_cGLExportBatch.addHeader(SMModuleTypes.FA, 
 					"SS",
 					"Periodic Depreciation",
-					"Periodic Processing")){
+					"Periodic Processing",
+					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					"Monthly Depreciation")){
 				throw new Exception("Error setting export batch file header - " + m_cGLExportBatch.getErrorMessage()); 
 			}
 			sProvisionalDescription = "Monthly Depreciation";
@@ -186,6 +195,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 							"Depreciation Acct", 
 							asset.getAssetNumber() + "", 
 							sProvisionalDescription,
+							"0",
 							conn);
 
 					//Add the credit:
@@ -195,6 +205,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 							"Accumulated Depreciation Acct", 
 							asset.getAssetNumber() + "", 
 							sProvisionalDescription,
+							"0",
 							conn);
 					//If, instead, the user chose to consolidate,
 					//then add an entry to the 'consolidated' array:
@@ -227,6 +238,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 						m_sDetailComments.get(i), 
 						"Consolidated entry", 
 						m_sDetailReferences.get(i),
+						"0",
 						conn);
 			}
 		}

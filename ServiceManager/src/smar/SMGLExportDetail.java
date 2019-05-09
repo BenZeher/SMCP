@@ -19,6 +19,7 @@ public class SMGLExportDetail extends java.lang.Object{
     private String m_sDetailSourceType;
     private String m_sDetailComment;
     private String m_sformattedaccountid;
+    private String m_slinenumber;
 	
     SMGLExportDetail(
     		int iRecordType,
@@ -33,7 +34,8 @@ public class SMGLExportDetail extends java.lang.Object{
             java.sql.Date datDetailTransactionDate,
             String sDetailSourceLedger,
             String sDetailSourceType,
-            String sDetailComment    		
+            String sDetailComment,
+            String sLineNumber
         ) {
 	        m_iDetailRecordType = iRecordType;
 	        m_lDetailBatchNumber = lDetailBatchNumber;
@@ -47,7 +49,8 @@ public class SMGLExportDetail extends java.lang.Object{
 	        m_datDetailTransactionDate = datDetailTransactionDate;
 	        m_sDetailSourceLedger = sDetailSourceLedger;
 	        m_sDetailSourceType = sDetailSourceType;
-	        m_sDetailComment = sDetailComment;        
+	        m_sDetailComment = sDetailComment; 
+	        m_slinenumber = sLineNumber;
     }
     
     public int getRecordType(){
@@ -82,6 +85,9 @@ public class SMGLExportDetail extends java.lang.Object{
     }
     public String getComment(){
     	return m_sDetailComment;
+    }
+    public String getLineNumber(){
+    	return m_slinenumber;
     }
     public String getsTransactionAmount(String sFormat){
     	return clsManageBigDecimals.BigDecimalToFormattedString(sFormat, m_dDetailTransactionAmount);

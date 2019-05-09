@@ -20,6 +20,7 @@ public class SMTableglexportdetails {
 	public static final String sdetailsourcetype = "sdetailsourcetype";
 	public static final String sdetailcomment = "sdetailcomment";
 	public static final String sdetailformattedaccountid = "sdetailformattedaccountid";
+	public static final String llinenumber = "llinenumber";
 	    
 	//Field lengths:
 	public static final int sdetailaccountidlength = 45;

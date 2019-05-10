@@ -15,6 +15,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapoptions;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
@@ -397,55 +398,6 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			throw new Exception("Error getting highest artransaction ID - " + e.getMessage());
 		}
 
-		SMOption option = new SMOption();
-		if (!option.load(conn)){
-			throw new Exception("Could not read system options - " + option.getErrorMessage());
-		}
-		
-		//If the flag is set to use the SMCP GL, we'll create a GL Transaction batch
-		//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
-		AROptions aropt = new AROptions();
-		int iFeedGLStatus = 0;
-		if(!aropt.load(conn)){
-			throw new Exception("Error [1557164337] loading AR Options to check GL feed - " 
-				+ aropt.getErrorMessageString());
-		}
-		
-		try {
-			iFeedGLStatus = Integer.parseInt(aropt.getFeedGl());
-		} catch (Exception e2) {
-			throw new Exception("Error [1557165783] - error parsing AR GL Feed status '" + aropt.getFeedGl());
-		}
-		
-		//Create a GL export object to carry all the GL exports:
-		SMGLExport glexport = null;
-		if (
-			(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
-			|| (iFeedGLStatus == SMTableapoptions.FEED_GL_EXTERNAL_GL_ONLY)
-		){
-			glexport = new SMGLExport();
-		}
-		
-		GLTransactionBatch gltransbatch = null;
-		if (
-			(iFeedGLStatus == SMTableapoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
-			|| (iFeedGLStatus == SMTableapoptions.FEED_GL_SMCP_GL_ONLY)
-		){
-			gltransbatch = createGLTransactionBatch(conn, sUserID, sUserFullName);
-		}
-		
-		if (glexport != null){
-			glexport.setExportFilePath(option.getFileExportPath());
-		}
-		if (bLogDiagnostics){
-			log.writeEntry(
-					sUserID, 
-					SMLogEntry.LOG_OPERATION_ARBATCHPOST, 
-					"In post_without_data_transaction, setting export file path to: " + option.getFileExportPath(), 
-					"",
-					"[1376509512]"
-			);
-		}
 		//Next, create artransactions for all of the entries:
 		if (bLogDiagnostics){
 			log.writeEntry(
@@ -575,16 +527,45 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 				);
 		}
 
+		SMOption option = new SMOption();
+		if (!option.load(conn)){
+			throw new Exception("Could not read system options - " + option.getErrorMessage());
+		}
+		
+		//If the flag is set to use the SMCP GL, we'll create a GL Transaction batch
+		//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
+		AROptions aropt = new AROptions();
+		int iFeedGLStatus = 0;
+		if(!aropt.load(conn)){
+			throw new Exception("Error [1557164337] loading AR Options to check GL feed - " 
+				+ aropt.getErrorMessageString());
+		}
+		
+		try {
+			iFeedGLStatus = Integer.parseInt(aropt.getFeedGl());
+		} catch (Exception e2) {
+			throw new Exception("Error [1557165783] - error parsing AR GL Feed status '" + aropt.getFeedGl());
+		}
+		
+		if (bLogDiagnostics){
+			log.writeEntry(
+					sUserID, 
+					SMLogEntry.LOG_OPERATION_ARBATCHPOST, 
+					"In post_without_data_transaction, setting export file path to: " + option.getFileExportPath(), 
+					"",
+					"[1376509512]"
+			);
+		}
+		
+		SMGLExport glexport = new SMGLExport();
+		glexport.setExportFilePath(option.getFileExportPath());
+		
 		//Check ALL the prepays in artransactions and see if any can be linked:
 		//This function will update the parent ID and retainage flag for the prepay matching lines, too
-		if(!linkPrepays(conn, sUserID, sUserFullName, glexport, gltransbatch)){
+		if(!linkPrepays(conn, sUserID, sUserFullName, glexport)){
 			throw new Exception(getErrorMessages());
 		}
 		
-		//We're all done with the GL transaction batch so if it's not null, save it now:
-		if (gltransbatch != null){
-			gltransbatch.save_without_data_transaction(conn, sUserID, sUserFullName, true);
-		}
 		if (bLogDiagnostics){
 			log.writeEntry(
 				sUserID,
@@ -648,15 +629,13 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			}
 		}
 		
-		if (glexport != null){
-			if (!createGLBatch(conn, glexport)){
-				throw new Exception(getErrorMessages());
-			}
+		if (!createGLBatch(conn, glexport)){
+			throw new Exception(getErrorMessages());
 		}
 		
 		return;
 	}
-
+/*
 private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUserID, String sUsersFullName) throws Exception{
 	
 	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
@@ -792,6 +771,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 	}
 	return glbatch;
 }
+*/
 	private void addBankAcctEntry(
 		Connection conn) throws Exception{
 		
@@ -1668,8 +1648,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 		Connection conn, 
 		String sUserID, 
 		String sUserFullName, 
-		SMGLExport export,
-		GLTransactionBatch gltransactionbatch){
+		SMGLExport export){
 
 		//Get ALL the open prepays:
 		String SQL = "SELECT *"
@@ -1852,60 +1831,6 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						}
 					}
 					
-					//If we are exporting to the SMCP GL, add an entry here:
-					GLTransactionBatchEntry glentry = null;
-					if (gltransactionbatch != null){
-						glentry = new GLTransactionBatchEntry();
-						glentry.setsautoreverse("0");
-						glentry.setsbatchnumber(sBatchNumber());
-						glentry.setsdatdocdate(sStdBatchDateString());
-						glentry.setsdatentrydate(sStdBatchDateString());
-						glentry.setsentrydescription(sEntryDesc);
-						glentry.setsentrynumber("0");
-						//Figure out the appropriate fiscal period:
-						int iFiscalYear;
-						int iFiscalPeriod;
-						try {
-							iFiscalYear = GLFiscalPeriod.getFiscalYearForSelectedDate(sStdLastEditDateString(), conn);
-							iFiscalPeriod = GLFiscalPeriod.getFiscalPeriodForSelectedDate(sStdLastEditDateString(), conn);
-						} catch (Exception e) {
-							super.addErrorMessage("Error [1557248416] - Could not get fiscal year/period - 01 for ID# " 
-									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-							rsPrepays.close();
-							rsInvoices.close();
-							return false;
-						}
-						glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
-						glentry.setsfiscalyear(Integer.toString(iFiscalYear));
-						glentry.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
-
-						//Now add a GL line:
-						if (bdAmount.compareTo(BigDecimal.ZERO) != 0){
-							GLTransactionBatchLine glline = new GLTransactionBatchLine();
-							glline.setsacctid(cust.getARPrepayLiabilityAccount(conn));
-							try {
-								glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
-							} catch (Exception e) {
-								super.addErrorMessage("Error [1557248768] - Could not set GL debit/credit amount - 01 for ID# " 
-									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-								rsPrepays.close();
-								rsInvoices.close();
-								return false;
-							}
-							glline.setsbatchnumber(sBatchNumber());
-							glline.setscomment(sComment);
-							glline.setsdescription(sEntryDesc);
-							glline.setsentrynumber("0");
-							glline.setslinenumber("0");
-							glline.setsreference(sReference);
-							glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
-							glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
-							glline.setstransactiondate(sStdBatchDateString());
-							
-							glentry.addLine(glline);
-						}
-					}
-					
 					//Add a chron record here to record the apply-FROM
 					//Add a chron entry here for the apply TO line:
 					ARTransaction arinvtrans = new ARTransaction();
@@ -2035,50 +1960,6 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 							rsPrepays.close();
 							rsInvoices.close();
 							return false;
-						}
-					}
-					
-					if (glentry != null){
-
-						//Now add another GL line:
-						if (bdAmount.compareTo(BigDecimal.ZERO) != 0){
-							GLTransactionBatchLine glline = new GLTransactionBatchLine();
-							glline.setsacctid(cust.getARControlAccount(conn));
-							try {
-								glline.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount), conn);
-							} catch (Exception e) {
-								super.addErrorMessage("Error [1557248769] - Could not set GL debit/credit amount - 01 for ID# " 
-									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-								rsPrepays.close();
-								rsInvoices.close();
-								return false;
-							}
-							glline.setsbatchnumber(sBatchNumber());
-							glline.setscomment(sComment);
-							glline.setsdescription(sEntryDesc);
-							glline.setsentrynumber("0");
-							glline.setslinenumber("0");
-							glline.setsreference(sReference);
-							glline.setssourceledger(Integer.toString(GLSourceLedgers.SOURCE_LEDGER_AR));
-							glline.setssourcetype(ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT));
-							glline.setstransactiondate(sStdBatchDateString());
-							
-							glentry.addLine(glline);
-						}
-						
-						//Now that we have the entry and one debit and one credit line, save the GL transaction batch:
-						try {
-							gltransactionbatch.save_without_data_transaction(
-								conn, 
-								sUserID, 
-								sUserFullName, 
-								true);
-						} catch (Exception e) {
-							super.addErrorMessage("Error [1557248770] - Could not save SMCP GL batch when linking prepays for ID# " 
-									+ Long.toString(rsInvoices.getLong(SMTableartransactions.lid)) + ".");
-								rsPrepays.close();
-								rsInvoices.close();
-								return false;
 						}
 					}
 					
@@ -2554,24 +2435,56 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			super.addErrorMessage("Error [1474646117] getting export file type - " + aropt.getErrorMessageString());
 			return false;
 		}
-		
-		if (export.getExportFilePath().compareToIgnoreCase("") != 0){
-			if (!export.writeExportFile(
-					SMModuleTypes.AR, 
-					super.sBatchTypeLabel(), 
-					sExportBatchNumber,
-					Integer.parseInt(aropt.getExportTo()),
-					conn)
-			){
-				//System.out.println("Error writing GL export file");
-				super.addErrorMessage("Error writing GL export file - " + export.getErrorMessage());
+		int iFeedGL = Integer.parseInt(aropt.getFeedGl());
+		if (
+			(iFeedGL == SMTablearoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+			|| (iFeedGL == SMTablearoptions.FEED_GL_SMCP_GL_ONLY)
+				
+		){
+			GLTransactionBatch gltransactionbatch = null;
+			try {
+				gltransactionbatch = export.createGLTransactionBatch(
+					conn, 
+					sCreatedByID(), 
+					sLastEditedByID(), 
+					sStdBatchDateString(), 
+					"AR " + ARBatchTypes.Get_AR_Batch_Type(iBatchType()) + " Batch #" + lBatchNumber()
+				);
+			} catch (Exception e) {
+				super.addErrorMessage("Error [1557446823] creating SMCP GL batch - " + e.getMessage());
 				return false;
 			}
-	    }				
+			
+			try {
+				gltransactionbatch.save_without_data_transaction(conn, sLastEditedByID(), sLastEditedByFullName(), true);
+			} catch (Exception e) {
+				super.addErrorMessage("Error [1557446824] saving SMCP GL batch - " + e.getMessage());
+				return false;
+			}
+		}
+		
+		if (
+				(iFeedGL == SMTablearoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+				|| (iFeedGL == SMTablearoptions.FEED_GL_EXTERNAL_GL_ONLY)
+					
+		){
+			if (export.getExportFilePath().compareToIgnoreCase("") != 0){
+				if (!export.writeExportFile(
+						SMModuleTypes.AR, 
+						super.sBatchTypeLabel(), 
+						sExportBatchNumber,
+						Integer.parseInt(aropt.getExportTo()),
+						conn)
+				){
+					//System.out.println("Error writing GL export file");
+					super.addErrorMessage("Error writing GL export file - " + export.getErrorMessage());
+					return false;
+				}
+		    }		
+		}
 
 		return true;
 	}
-
 
 	private boolean updateStatistics(
 			Connection conn, 

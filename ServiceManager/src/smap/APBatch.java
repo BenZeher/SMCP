@@ -1710,7 +1710,7 @@ public class APBatch {
 					sUserID, 
 					sUserID, 
 					getsbatchdate(), 
-					"AP " + SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())) + " Batch #" + getsbatchnumber());
+					"AP " + SMTableapbatches.getBatchTypeLabel(Integer.parseInt(getsbatchtype())) + " Batch #" + getsbatchnumber());
 			} catch (Exception e1) {
 				throw new Exception("Error [1557429977] creating GL transactionbatch - " + e1.getMessage());
 			}

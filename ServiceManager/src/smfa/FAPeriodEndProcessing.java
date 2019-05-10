@@ -265,6 +265,10 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 			} catch (Exception e1) {
 				m_sErrorMessageArray.add("Error saving GL export records: " + e1.getMessage());
 			}
+			
+			//Get the GL Feed info and then create GL batches accordingly:
+			
+			
 	        if (m_cGLExportBatch.getExportFilePath().compareToIgnoreCase("") != 0){
 		        if (!m_cGLExportBatch.writeExportFile(
 		        		SMModuleTypes.FA, 

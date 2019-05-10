@@ -894,7 +894,7 @@ public class SMGLExport extends java.lang.Object{
 		//System.out.println("[1556909966] - m_arrBatchEntries.size() = '" + m_arrBatchEntries.size() + "'.");
 		
 		for (int i = 0; i < m_HeaderRecordArray.size(); i++){
-			//Add an entry:
+			//Populate an entry:
 			GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
 			glentry.setsautoreverse("0");
 			glentry.setsbatchnumber(Long.toString(m_HeaderRecordArray.get(i).getBatchNumber()));
@@ -908,25 +908,27 @@ public class SMGLExport extends java.lang.Object{
 			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
 			glentry.setssourceledger(m_HeaderRecordArray.get(i).getSourceLedger());
 			glentry.setssourceledgertransactionlineid("0");
-			gltransactionbatch.addBatchEntry(glentry);
 			
 			//Now add the lines:
 			for (int j = 0; j < m_HeaderRecordArray.get(i).getDetailArray().size(); j++){
 				SMGLExportDetail detail = m_HeaderRecordArray.get(i).getDetailArray().get(j);
-				GLTransactionBatchLine glline = new GLTransactionBatchLine();
-				glline.setAmount(detail.getsTransactionAmount("#########.00"), conn);
-				glline.setsacctid(detail.getAccountID());
-				glline.setsbatchnumber(glentry.getsbatchnumber());
-				glline.setscomment(detail.getComment());
-				glline.setsdescription(detail.getTransactionDescription());
-				glline.setsentrynumber(glentry.getsentrynumber());
-				glline.setslinenumber(detail.getLineNumber());
-				glline.setsreference(detail.getTransactionReference());
-				glline.setssourceledger(glentry.getssourceledger());
-				glline.setssourcetype(detail.getSourceType());
-				glline.setstransactiondate(detail.getsTransactionDate(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
-				glentry.addLine(glline);
+				if (detail.getsTransactionAmount().compareTo(BigDecimal.ZERO) != 0){
+					GLTransactionBatchLine glline = new GLTransactionBatchLine();
+					glline.setAmount(detail.getsTransactionAmount("#########.00"), conn);
+					glline.setsacctid(detail.getAccountID());
+					glline.setsbatchnumber(glentry.getsbatchnumber());
+					glline.setscomment(detail.getComment());
+					//glline.setsdescription(detail.getTransactionDescription());
+					glline.setsentrynumber(glentry.getsentrynumber());
+					glline.setslinenumber(detail.getLineNumber());
+					glline.setsreference(detail.getTransactionReference());
+					glline.setssourceledger(glentry.getssourceledger());
+					glline.setssourcetype(detail.getSourceType());
+					glline.setstransactiondate(detail.getsTransactionDate(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
+					glentry.addLine(glline);
+				}
 			}
+			//Finally, add the entry with the lines to the transaction batch:
 			gltransactionbatch.addBatchEntry(glentry);
 		}
 	

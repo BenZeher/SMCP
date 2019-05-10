@@ -13,12 +13,11 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
-import smar.SMGLExport;
-import smar.SMOption;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccosts;
 import SMDataDefinition.SMTableicentrylines;
@@ -36,6 +35,9 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
+import smar.SMGLExport;
+import smar.SMOption;
+import smgl.GLTransactionBatch;
 
 public class ICEntryBatch {
 
@@ -1443,7 +1445,7 @@ public class ICEntryBatch {
 	        );
     	}
     	
-    	if (!createGLBatch(conn, sUserFullName)){
+    	if (!createGLBatch(conn, sUserID, sUserFullName)){
     		throw new Exception(getErrorMessages());
     	}
     	
@@ -3868,7 +3870,7 @@ public class ICEntryBatch {
     	return bResult;
     }
 
-    private boolean createGLBatch(Connection conn, String sUserFullName){
+    private boolean createGLBatch(Connection conn, String sUserID, String sUserFullName){
     	//TJR - here is where the GL batch gets created during posting:
     	SMGLExport export = new SMGLExport();
     	
@@ -4068,18 +4070,51 @@ public class ICEntryBatch {
 			addErrorMessage("Error [1474646317] getting export file type - " + icopt.getErrorMessage()); 
 			return false;
 		}
-        if (export.getExportFilePath().compareToIgnoreCase("") != 0){
-	        if (!export.writeExportFile(
-	        		SMModuleTypes.IC, 
-	        		sBatchTypeLabel(), 
-	        		sExportBatchNumber,
-	        		(int) icopt.getExportTo(),
-	        		conn)
-	        	){
-	        	addErrorMessage("Error writing GL export file");
+		int iFeedGL = Integer.parseInt(icopt.getfeedgl());
+		if (
+			(iFeedGL == SMTableicoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+			|| (iFeedGL == SMTableicoptions.FEED_GL_SMCP_GL_ONLY)
+				
+		){
+			try {
+				GLTransactionBatch gltransactionbatch = export.createGLTransactionBatch(
+					conn, 
+					sUserID, 
+					sUserID, 
+					getBatchDateInStdFormat(), 
+					"IC " + ICBatchTypes.Get_Batch_Type(iBatchType()) + " Batch #" + sBatchNumber()
+				);
+				
+				gltransactionbatch.save_without_data_transaction(
+					conn, 
+					sUserID, 
+					sUserFullName, 
+					true
+				);
+			} catch (Exception e) {
+	        	addErrorMessage("Error [1557516918] creating GL transaction batch - " + e.getMessage());
 	        	return false;
-	        }
-	    }
+			}
+		}
+		
+		if (
+				(iFeedGL == SMTableicoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+				|| (iFeedGL == SMTableicoptions.FEED_GL_EXTERNAL_GL_ONLY)
+					
+		){
+	        if (export.getExportFilePath().compareToIgnoreCase("") != 0){
+		        if (!export.writeExportFile(
+		        		SMModuleTypes.IC, 
+		        		sBatchTypeLabel(), 
+		        		sExportBatchNumber,
+		        		(int) icopt.getExportTo(),
+		        		conn)
+		        	){
+		        	addErrorMessage("Error [1557516917] writing GL export file - " + export.getErrorMessage());
+		        	return false;
+		        }
+		    }
+		}
     	return true;
     }
 	private boolean updateCreditLineCost(

@@ -262,7 +262,7 @@ public class GLTransactionBatchLine {
 				(m_sdebitamt.compareToIgnoreCase("0.00") == 0)
 				&& (m_screditamt.compareToIgnoreCase("0.00") == 0)
 			){
-				sResult += "  (entry " + m_sentrynumber + ") must have a DEBIT amount or a CREDIT amount.";
+				sResult += ", on entry " + m_sentrynumber + " must have a DEBIT amount or a CREDIT amount.";
 			}
 		
 		try {
@@ -328,14 +328,14 @@ public class GLTransactionBatchLine {
 	public void setAmount(String sAmount, Connection conn) throws Exception{
 		//This function determines whether a transaction amount should be recorded as a debit or a credit:
 		//First we have to get the 'normal' balance type:
-		GLAccount glacct = new GLAccount(getsacctid());
-		try {
-			glacct.load(conn);
-		} catch (Exception e) {
-			throw new Exception("Error [1556906520] reading GL account '" + getsacctid() + " to determine normal balance type - " + glacct.getErrorMessageString());
-		}
+		//GLAccount glacct = new GLAccount(getsacctid());
+		//try {
+		//	glacct.load(conn);
+		//} catch (Exception e) {
+		//	throw new Exception("Error [1556906520] reading GL account '" + getsacctid() + " to determine normal balance type - " + glacct.getErrorMessageString());
+		//}
 		
-		if (glacct.getsinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) == 0){
+		//if (glacct.getsinormalbalancetype().compareToIgnoreCase(Integer.toString(SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT)) == 0){
 			if (sAmount.contains("-")){
 				setscreditamt(sAmount.replace("-", "").replace(",", ""));
 				setsdebitamt("0.00");
@@ -343,15 +343,15 @@ public class GLTransactionBatchLine {
 				setsdebitamt(sAmount.replace(",", ""));
 				setscreditamt("0.00");
 			}
-		}else{
-			if (sAmount.contains("-")){
-				setsdebitamt(sAmount.replace("-", "").replace(",", ""));
-				setscreditamt("0.00");
-			}else{
-				setscreditamt(sAmount.replace(",", ""));
-				setsdebitamt("0.00");
-			}
-		}
+		//}else{
+		//	if (sAmount.contains("-")){
+		//		setscreditamt(sAmount.replace("-", "").replace(",", ""));
+		//		setsdebitamt("0.00");
+		//	}else{
+		//		setsdebitamt(sAmount.replace(",", ""));
+		//		setscreditamt("0.00");
+		//	}
+		//}
 	}
 	public String getslid(){
 		return m_slid;

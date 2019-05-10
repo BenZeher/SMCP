@@ -1,13 +1,11 @@
 package smar;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
+import java.text.DecimalFormat;
 
 import javax.servlet.http.HttpServlet;
-
-import ServletUtilities.clsDateAndTimeConversions;
-import ServletUtilities.clsServletUtilities;
-import smcontrolpanel.SMUtilities;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -62,7 +60,7 @@ public class TESTBatchExport extends HttpServlet{
 			}
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
-		
+
 		//*********************************************
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;

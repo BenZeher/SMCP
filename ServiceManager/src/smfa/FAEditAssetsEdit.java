@@ -315,7 +315,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        	getServletContext(), 
 	        	sDBIB,
 	        	"MySQL",
-	        	this.toString() + ".Edit_Record (load decpreciation type table) - User: " + sUserID
+	        	this.toString() + ".Edit_Record (load depreciation type table) - User: " + sUserID
 	        	+ " - "
 	        	+ sUserFullName
 	        	);

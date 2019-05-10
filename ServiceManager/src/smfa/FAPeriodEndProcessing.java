@@ -9,16 +9,19 @@ import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
+import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMTableapbatches;
+import SMDataDefinition.SMTablefamaster;
+import SMDataDefinition.SMTablefaoptions;
+import SMDataDefinition.SMTablefatransactions;
+import SMDataDefinition.SMTablesmoptions;
+import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsServletUtilities;
 import smar.AROptions;
 import smar.SMGLExport;
 import smar.SMOption;
-import SMClasses.SMModuleTypes;
-import SMDataDefinition.SMTablefamaster;
-import SMDataDefinition.SMTablefatransactions;
-import SMDataDefinition.SMTablesmoptions;
-import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
+import smgl.GLTransactionBatch;
 
 public class FAPeriodEndProcessing extends java.lang.Object{
 
@@ -47,8 +50,10 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 		m_bConsolidate = true;
 	}
 
-	public void doProcess(String sUserID,
-			Connection conn)throws Exception{
+	public void doProcess(
+		String sUserID,
+		String sUserFullName,
+		Connection conn)throws Exception{
 
 		long lRecordNumber = 0;
 		String sProvisionalDescription = "";
@@ -267,20 +272,59 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 			}
 			
 			//Get the GL Feed info and then create GL batches accordingly:
+			int iFeedGL = 0;
+			String faSQL = "SELECT"
+				+ " * FROM " + SMTablefaoptions.TableName
+			;
+			try {
+				ResultSet rsFAOptions = clsDatabaseFunctions.openResultSet(faSQL, conn);
+				if (rsFAOptions.next()){
+					iFeedGL = rsFAOptions.getInt(SMTablefaoptions.ifeedgl);
+				}else{
+					rsFAOptions.close();
+					throw new Exception("Error [1557501017] could not get FA Options record."); 
+				}
+				rsFAOptions.close();
+			} catch (Exception e) {
+				throw new Exception("Error [1557501018] reading FA Options record - " + e.getMessage());
+			}
 			
+			if (
+				(iFeedGL == SMTablefaoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+				|| (iFeedGL == SMTablefaoptions.FEED_GL_SMCP_GL_ONLY)
+			){
+				try {
+					GLTransactionBatch gltransactionbatch = m_cGLExportBatch.createGLTransactionBatch(
+						conn, 
+						sUserID, 
+						sUserID, 
+						clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY), 
+						"FA Periodic Depreciation Batch #" + sBatchNumber
+					);
+
+					gltransactionbatch.save_without_data_transaction(conn, sUserID, sUserFullName, true);
+				} catch (Exception e) {
+					throw new Exception("Error [1557501019] could not create GL batch for SMCP - " + e.getMessage());
+				}
+			}
 			
-	        if (m_cGLExportBatch.getExportFilePath().compareToIgnoreCase("") != 0){
-		        if (!m_cGLExportBatch.writeExportFile(
-		        		SMModuleTypes.FA, 
-		        		"DEPRECIATION", 
-		        		sBatchNumber,
-		        		iExportFileType,
-		        		conn)
-		        	){
-		        	throw new Exception("Error writing GL export file to " 
-		        	+ m_cGLExportBatch.getExportFilePath() + " - " + m_cGLExportBatch.getErrorMessage());
-		        }
-		    }
+			if (
+				(iFeedGL == SMTablefaoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
+				|| (iFeedGL == SMTablefaoptions.FEED_GL_EXTERNAL_GL_ONLY)
+			){			
+		        if (m_cGLExportBatch.getExportFilePath().compareToIgnoreCase("") != 0){
+			        if (!m_cGLExportBatch.writeExportFile(
+			        		SMModuleTypes.FA, 
+			        		"DEPRECIATION", 
+			        		sBatchNumber,
+			        		iExportFileType,
+			        		conn)
+			        	){
+			        	throw new Exception("Error writing GL export file to " 
+			        	+ m_cGLExportBatch.getExportFilePath() + " - " + m_cGLExportBatch.getErrorMessage());
+			        }
+			    }
+			}
 		}
 
 		//TESTING ONLY!!!!

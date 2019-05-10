@@ -65,7 +65,7 @@ public class FAPeriodEndProcessingAction extends HttpServlet{
 		//if anything goes wrong, reverse the whole process.
 		clsDatabaseFunctions.start_data_transaction(conn);
 		try{
-			cProcessor.doProcess(sUserID, conn);
+			cProcessor.doProcess(sUserID, sUserFullName, conn);
 		}catch(Exception e){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			//remove all inserted transactions if there are any:

@@ -918,7 +918,7 @@ public class SMGLExport extends java.lang.Object{
 					glline.setsacctid(detail.getAccountID());
 					glline.setsbatchnumber(glentry.getsbatchnumber());
 					glline.setscomment(detail.getComment());
-					//glline.setsdescription(detail.getTransactionDescription());
+					glline.setsdescription(detail.getTransactionDescription());
 					glline.setsentrynumber(glentry.getsentrynumber());
 					glline.setslinenumber(detail.getLineNumber());
 					glline.setsreference(detail.getTransactionReference());

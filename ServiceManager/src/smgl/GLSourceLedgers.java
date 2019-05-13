@@ -57,18 +57,61 @@ public class GLSourceLedgers {
 		//FA:
 		arrSourceTypes.add("FA" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "SS");
 		
-		//JE:
-		arrSourceTypes.add("JE" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE");
-		
 		//IC:
 		for (int i = 0; i < ICEntryTypes.NUMBER_OF_ENTRY_TYPES; i++){
 			arrSourceTypes.add(getSourceLedgerDescription(SOURCE_LEDGER_IC) + SOURCE_LEDGER_AND_TYPE_DELIMITER + ICEntryTypes.getSourceTypes(i));
 		}
 		
+		//JE:
+		arrSourceTypes.add("JE" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE");
+		
 		//PR:
 		arrSourceTypes.add("PR" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "PR");
 		
 		return arrSourceTypes;
+	}
+	
+	public static ArrayList<String>getSourceTypeDescriptions(){
+		ArrayList<String>arrSourceTypeDescriptions = new ArrayList<String>(0);
+		
+		//AP
+		for (int i = 0; i < SMTableaptransactions.NUMBER_OF_AP_TRANSACTION_TYPES; i++){
+			arrSourceTypeDescriptions.add("<B>" + getSourceLedgerDescription(SOURCE_LEDGER_AP) + SOURCE_LEDGER_AND_TYPE_DELIMITER + SMTableapbatchentries.getDocType(i) + "</B>"
+				+ " = <I>" + getSourceLedgerDescription(SOURCE_LEDGER_AP) + " " + SMTableapbatchentries.getDocumentTypeLabel(i) + "</I>"
+			);	
+		}
+		
+		//AR
+		for (int i = 0; i < ARDocumentTypes.NUMBER_OF_AR_DOCUMENT_TYPES; i++){
+			arrSourceTypeDescriptions.add("<B>" + getSourceLedgerDescription(SOURCE_LEDGER_AR) + SOURCE_LEDGER_AND_TYPE_DELIMITER + ARDocumentTypes.getSourceTypes(i) + "</B>"
+				+ " = <I>" + getSourceLedgerDescription(SOURCE_LEDGER_AR) + " " + ARDocumentTypes.Get_Document_Type_Label(i) + "</I>"
+			);	
+		}
+		
+		//FA
+		arrSourceTypeDescriptions.add("<B>" + "FA" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "SS" + "</B>"
+			+ " = <I>" + "FA Periodic Depreciation" + "</I>"
+		);
+		
+		//IC
+		for (int i = 0; i < ICEntryTypes.NUMBER_OF_ENTRY_TYPES; i++){
+			arrSourceTypeDescriptions.add("<B>" + getSourceLedgerDescription(SOURCE_LEDGER_IC) + SOURCE_LEDGER_AND_TYPE_DELIMITER + ICEntryTypes.getSourceTypes(i) + "</B>"
+				+ " = <I>" + getSourceLedgerDescription(SOURCE_LEDGER_IC) + " " + ICEntryTypes.Get_Entry_Type(i) + "</I>"
+			);	
+		}
+
+		//JE
+		arrSourceTypeDescriptions.add("<B>" + "JE" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE" + "</B>"
+			+ " = <I>" + "JE Journal Entries" + "</I>"
+		);
+
+		
+		//PR
+		arrSourceTypeDescriptions.add("<B>" + "PR" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "PR" + "</B>"
+			+ " = <I>" + "PR Payroll Entries" + "</I>"
+		);
+		
+		return arrSourceTypeDescriptions;
 	}
 	
 }

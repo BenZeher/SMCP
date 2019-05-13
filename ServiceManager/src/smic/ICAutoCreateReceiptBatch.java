@@ -13,6 +13,7 @@ import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableicentrylines;
 import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicporeceiptheaders;
 import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTablelocations;
@@ -317,23 +318,23 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 		
 		if (!createBatch(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [1529955118] creating batch - " + this.getErrorMessage());
+			throw new Exception("Error [1529955119] creating batch - " + this.getErrorMessage());
 		}
 		
 		if (!processRecords(conn, sUserID)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [1529955119] processing records - " + this.getErrorMessage());
+			throw new Exception("Error [1529955120] processing records - " + this.getErrorMessage());
 		}
 		
 		//Here is where we automatically post the batch:
 		if (!postBatch(conn, context, sDBID, sUserFullName)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [1529955119] posting batch - " + this.getErrorMessage());
+			throw new Exception("Error [1529955121] posting batch - " + this.getErrorMessage());
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [1529955120] could not commit data transaction - import failed.");
+			throw new Exception("Error [1529955122] could not commit data transaction - import failed.");
 		}
 		
 		//Now AFTER the data transaction, update all the receipts in the batch as posted:
@@ -368,23 +369,27 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 
 	private boolean processRecords(Connection conn, String sUserID){
 		boolean bNoReceiptsFound = true;
-		String SQL = "SELECT " + SMTableicporeceiptheaders.lid
-		
+		String SQL = "SELECT " 
+		+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid
+		+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
+		+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname
 		+ " FROM " + SMTableicporeceiptheaders.TableName
-
+		+ " LEFT JOIN " + SMTableicpoheaders.TableName
+		+ " ON " + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid + " = "
+			+ SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
 		+ " WHERE ("
-			+ "(" + SMTableicporeceiptheaders.lpostedtoic + " = 0)"
-			+ " AND (" + SMTableicporeceiptheaders.lstatus + " != " 
+			+ "(" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpostedtoic + " = 0)"
+			+ " AND (" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lstatus + " != " 
 				+ Long.toString(SMTableicporeceiptheaders.STATUS_DELETED) + ")" 
 			+ ")"
 		+ " ORDER BY " 
-		+ SMTableicporeceiptheaders.lid;
+		+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid;
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rs.next()){
 				bNoReceiptsFound = false;
 				ICPOReceiptHeader receipt = new ICPOReceiptHeader();
-				receipt.setsID(rs.getString(SMTableicporeceiptheaders.lid));
+				receipt.setsID(rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
 				if (!receipt.load(conn)){
 					m_sErrorMessage = "Could not load receipt " + receipt.getsID();
 					rs.close();
@@ -397,7 +402,11 @@ public class ICAutoCreateReceiptBatch extends java.lang.Object{
 				m_CurrentICEntry.sBatchType(Integer.toString(ICBatchTypes.IC_RECEIPT));
 				m_CurrentICEntry.sEntryDate(receipt.getsdatreceived());
 				m_CurrentICEntry.sDocNumber(receipt.getsID());
-				m_CurrentICEntry.sEntryDescription("PO RECEIPT");
+				m_CurrentICEntry.sEntryDescription("PO RCPT " + receipt.getsreceiptnumber() + " FROM " 
+					+ rs.getString(SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor)
+					+ " " 
+					+ rs.getString(SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname)
+				);
 				m_CurrentICEntry.sEntryType(Integer.toString(ICEntryTypes.RECEIPT_ENTRY));
 				m_CurrentICEntry.sEntryNumber("-1");
 				

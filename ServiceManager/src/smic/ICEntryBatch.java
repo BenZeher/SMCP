@@ -18,6 +18,7 @@ import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableapbatches;
+import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccosts;
 import SMDataDefinition.SMTableicentrylines;
@@ -3917,7 +3918,7 @@ public class ICEntryBatch {
         				"SMIC",
         				entry.sStdEntryDate(),
         				entry.sStdEntryDate(),
-        				"IC Entry"
+        				"IC " + ICEntryTypes.Get_Entry_Type(Integer.parseInt(entry.sEntryType()))
         		);
         		        		
         		for (int i = 0; i < entry.getLineCount(); i ++){
@@ -3925,13 +3926,30 @@ public class ICEntryBatch {
         			ICEntryLine line = entry.getLineByIndex(i);
         			
             		String sLineDesc = line.sDescription();
-            		if (sLineDesc.length() > 60){
-            			sLineDesc = sLineDesc.substring(0, 59).trim();
+           			sLineDesc = "(" + line.sQtySTDFormat() + ") " + line.sItemNumber();
+
+            		if (sLineDesc.length() > SMTableglexportdetails.sdetailtransactiondescriptionlength){
+            			sLineDesc = sLineDesc.substring(0, (SMTableglexportdetails.sdetailtransactiondescriptionlength - 1)).trim();
             		}
                		String sLineReference = "Doc #: " + entry.sDocNumber();
-            		if (sLineReference.length() > 60){
-            			sLineReference = sLineReference.substring(0, 59).trim();
+               		if (Integer.parseInt(entry.sEntryType()) == ICEntryTypes.RECEIPT_ENTRY){
+               			sLineReference = "Rcpt #: " + entry.sDocNumber();
+               		}
+               		if (Integer.parseInt(entry.sEntryType()) == ICEntryTypes.SHIPMENT_ENTRY){
+               			sLineReference = "Inv #: " + entry.sDocNumber();
+               		}
+               		
+            		if (sLineReference.length() > SMTableglexportdetails.sdetailtransactionreferencelength){
+            			sLineReference = sLineReference.substring(0, (SMTableglexportdetails.sdetailtransactionreferencelength - 1)).trim();
             		}
+            		String sLineComment = "";
+               		if (Integer.parseInt(entry.sEntryType()) == ICEntryTypes.RECEIPT_ENTRY){
+               			sLineComment = entry.sEntryDescription();
+               		}
+            		if (sLineComment.length() > SMTableglexportdetails.sdetailcommentlength){
+            			sLineComment = sLineComment.substring(0, (SMTableglexportdetails.sdetailcommentlength - 1)).trim();
+            		}
+            		
             		//Add a GL Entry to the inventory asset account (control)
             		BigDecimal bdCost = new BigDecimal(line.sCostSTDFormat().replace(",", ""));
             		java.sql.Date datEntry;
@@ -3947,7 +3965,7 @@ public class ICEntryBatch {
 								datEntry,
 								bdCost,
 								line.sControlAcct(),
-								"Comment",
+								sLineComment,
 								sLineDesc,
 								sLineReference,
 								line.sLineNumber(),
@@ -3964,7 +3982,7 @@ public class ICEntryBatch {
 								datEntry,
 								bdCost.negate(),
 								line.sDistributionAcct(),
-								"Comment",
+								sLineComment,
 								sLineDesc,
 								sLineReference,
 								line.sLineNumber(),

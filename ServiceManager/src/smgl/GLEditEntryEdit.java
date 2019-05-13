@@ -808,7 +808,14 @@ public class GLEditEntryEdit  extends HttpServlet {
     		+ "&nbsp;" + createSaveAndAddEntryButton()
     		+ "&nbsp;" + createDeleteButton() + "\n";
     	}
+    	
+    	s += "<BR><BR><B><U>SOURCE LEDGER/TYPE LEGEND<a name=\"SourceTypes\"></U></B>:<BR>";
 		
+    	ArrayList<String>arrSourceTypeDescriptions = GLSourceLedgers.getSourceTypeDescriptions();
+    	for (int i = 0; i < arrSourceTypeDescriptions.size(); i++){
+    		s += arrSourceTypeDescriptions.get(i) + "<BR>\n";
+    	}
+    	
 		return s;
 	}
 
@@ -844,7 +851,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Transaction&nbsp;Date</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Source<BR>Type</TD>\n";
+					+ "<a href=\"#SourceTypes\"><strong>Source<BR>Type</strong></a> </TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Description</TD>\n";

@@ -52,7 +52,8 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
-
+	    //This prints out the JavaScript onto the HTML Page.
+	    out.println(checker);
 	    try {
 
         	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMBidReportGenerate\">");
@@ -110,7 +111,8 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 				sSalespersonList.add((String) "<INPUT TYPE=CHECKBOX" + (bCheckSalesperson?" checked":"")  
 	        			+ " NAME=\"SALESPERSON" 
 	        			+ rs.getString(SMTablebids.ssalespersoncode) 
-	        			+ "\">" 
+	        			+ "\" CLASS=\"sales\""
+	        			+ ">" 
 	        			+ rs.getString(SMTablebids.ssalespersoncode)
 	        			+ "&nbsp;" + sFirstName
 	        			+ "&nbsp;" + sLastName
@@ -121,14 +123,10 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 	        
 	        out.println(SMUtilities.Build_HTML_Table(5, sSalespersonList, 100, 0, true ,true));
     	        
-    		// End salesperson table
-			if (bCheckSalesperson){
-				//print a link to uncheck all salesperson
-		        out.println("<A HREF=\"" + request.getRequestURI().toString() + "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "&CheckSalesperson=false" + "\">Click to UN-check all salespersons</A>");
-			}else{
-				//print a link to check all salesperson
-		        out.println("<A HREF=\"" + request.getRequestURI().toString() + "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "&CheckSalesperson=true" + "\">Click to check all salespersons</A>");
-			}
+    	
+	        out.println("<BUTTON TYPE=BUTTON ONCLICK=\" uncheck() \">Click to UN-Check all salespersons</BUTTON>");		
+	        out.println("<BUTTON TYPE=BUTTON ONCLICK=\" check() \">Click to Check all salespersons</BUTTON>");
+		        
     		out.println("<BR><BR>*Salespersons listed are ALL salespersons included in the " + SMBidEntry.ParamObjectName.toLowerCase() + " data "
     				+ "- some may no longer be in the salespersons table, and those may appear with no names.");
     		out.println("</TD></TR>");
@@ -263,4 +261,18 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
  
 	    out.println("</BODY></HTML>");
 	}
+	
+	//JavaScript to Check and Un-Check all salespersons
+	String checker = "<script>\n" + 
+			"function uncheck(){\n" + 
+			"    var list = document.getElementsByClassName('sales');\n" + 
+			"    for (var i = 0; i < list.length; i++) list[i].checked = false;\n" + 
+			"}\n" + 
+			"\n" + 
+			"function check(){\n" + 
+			"    var list = document.getElementsByClassName('sales');\n" + 
+			"    for (var i = 0; i < list.length; i++) list[i].checked = true;\n" + 
+			"}\n" + 
+			"\n" + 
+			"</script>";
 }

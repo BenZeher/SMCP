@@ -57,6 +57,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    		+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 	    
 	    //Get the variables for the class:
 	    String sNumberOfBatchesToDisplay;
@@ -103,6 +104,20 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    	+ "smgl.GLEditBatchesEdit?" + SMTablegltransactionbatches.lbatchnumber + "=-1"  
 	    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    	+ "\">New transaction batch</A>");
+	    
+	    if (SMSystemFunctions.isFunctionPermitted(
+	    	SMSystemFunctions.GLImportBatches, 
+	    	sUserID, 
+	    	getServletContext(), 
+	    	sDBID, 
+	    	sLicenseModuleLevel)
+	    ){
+		    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+	    	+ "smgl.GLImportBatchesSelect"
+	    	+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    	+ "\">Import transaction batch</A>");
+	    }
+	    
 	    out.println("</TD>\n");
 	    
 	    out.println("  </TR>\n");

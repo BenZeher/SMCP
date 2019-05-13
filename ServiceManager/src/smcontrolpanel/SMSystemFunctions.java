@@ -328,6 +328,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLClearTransactions = 1236L;
 	public static long GLClearFiscalData = 1237L;
 	public static long FAEditOptions = 1238L;
+	public static long GLImportBatches = 1239L;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2629,6 +2630,14 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("This permission gives the user the ability to"
 					+ " set the Fixed Assets system options.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_FIXEDASSETS);
+			
+			arrFunctions.add("GL Import Batches"); 
+			arrFunctionIDs.add(GLImportBatches); 
+			arrFunctionLinks.add(""); 
+			arrFunctionDescriptions.add("This permission gives the user the ability to"
+					+ " import CSV files from other accounting systems into new GL batches.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
 	}
 
 	public String getSecurityFunction(int iIndex){

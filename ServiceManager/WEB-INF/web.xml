@@ -3987,6 +3987,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLImportBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLImportBatchesSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLImportBatchesAction</servlet-name>
+        <servlet-class>smgl.GLImportBatchesAction</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLTransactionListingAction</servlet-name>
         <servlet-class>smgl.GLTransactionListingAction</servlet-class>
     </servlet>
@@ -7878,6 +7888,16 @@
     <servlet-mapping>
         <servlet-name>GLEditGLOptions</servlet-name>
         <url-pattern>/smgl.GLEditGLOptions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLImportBatchesAction</servlet-name>
+        <url-pattern>/smgl.GLImportBatchesAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLImportBatchesSelect</servlet-name>
+        <url-pattern>/smgl.GLImportBatchesSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

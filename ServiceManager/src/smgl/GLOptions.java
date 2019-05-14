@@ -87,24 +87,7 @@ public class GLOptions extends java.lang.Object{
 		m_iaccpacdatabasetype = clsManageRequestParameters.get_Request_Parameter(GLOptions.Paramaccpacdatabasetype, req).trim();
 		m_sErrorMessageArray = new ArrayList<String> (0);
 	}
-	public boolean checkTestingFlag(Connection conn) throws Exception{
-		try {
-			//This is for TESTING only:
-			ResultSet rsAPTest = clsDatabaseFunctions.openResultSet("SELECT * FROM " + SMTablegloptions.TableName, conn);
-			if (rsAPTest.next()){
-				if (rsAPTest.getInt(SMTablegloptions.icreatetestbatchesfromsubmodules) == 1){
-					rsAPTest.close();
-					return true;
-				}else{
-					rsAPTest.close();
-					return false;
-				}
-			}
-		} catch (SQLException e) {
-			throw new Exception("Error [1522772561] reading AP 'Testing Flag' - " + e.getMessage());
-		}
-		return false;
-	}
+
     public boolean load (Connection conn){
         	
     	String SQL = "SELECT * FROM " + SMTablegloptions.TableName;

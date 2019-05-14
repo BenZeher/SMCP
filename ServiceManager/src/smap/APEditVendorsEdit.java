@@ -525,7 +525,7 @@ public class APEditVendorsEdit  extends HttpServlet {
 			+ " FROM " + SMTableapvendorgroups.TableName
 			+ " ORDER BY " + SMTableapvendorgroups.sgroupid 
 		;
-		//First, add a bank account so we can be sure the user chose one:
+		//First, add a Vendor Group so we can be sure the user chose one:
 		 arrVendorGroupIDs.add("");
 		 arrVendorGroupDescriptions.add("*** Select vendor group ***");
 				
@@ -548,7 +548,7 @@ public class APEditVendorsEdit  extends HttpServlet {
 		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 			APVendor.Paramivendorgroupid,
 			arrVendorGroupIDs, 
-			entry.getibankcode(), 
+			entry.getsvendorgroupid(), 
 			arrVendorGroupDescriptions, 
 			"Vendor group: <FONT COLOR=RED>*Required*</FONT>", 
 			"",

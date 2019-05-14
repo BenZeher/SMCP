@@ -329,7 +329,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						}
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
-							out.println("<b>Name: </b>" + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + ""); 
+							out.println("<b>Name: </b> VENDOR  " + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Number: </b>" + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Status: </b>" + SMTableicpoheaders.getStatusDescription(rs.getInt((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus))) + ""); 
 							out.println("<br><b>Expected: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTableicpoheaders.datexpecteddate)) + ""); 

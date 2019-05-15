@@ -29,7 +29,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
-import smgl.GLFiscalPeriod;
+import smgl.GLFiscalYear;
 import smgl.GLSourceLedgers;
 import smgl.GLTransactionBatch;
 import smgl.GLTransactionBatchEntry;

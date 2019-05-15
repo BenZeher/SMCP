@@ -24,7 +24,7 @@ public class GLEditFiscalPeriodsSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
 	private static String sCalledClassName = "GLEditFiscalPeriodsEdit";
-	public static final String OBJECT_NAME = GLFiscalPeriod.ParamObjectName;
+	public static final String OBJECT_NAME = GLFiscalYear.ParamObjectName;
 	public static final String SUBMIT_EDIT_BUTTON_NAME = "SubmitEdit";
 	public static final String SUBMIT_EDIT_BUTTON_VALUE = "Edit Selected Fiscal Year";
 	public static final String SUBMIT_DELETE_BUTTON_NAME = "SubmitDelete";
@@ -82,7 +82,7 @@ public class GLEditFiscalPeriodsSelect extends HttpServlet {
 	    String sOutPut = "";
 	    
 	    //Use a drop down list here:
-	    GLFiscalPeriod entry = new GLFiscalPeriod(request);
+	    GLFiscalYear entry = new GLFiscalYear(request);
 		try{
 	        String sSQL = "SELECT * FROM " + SMTableglfiscalperiods.TableName
 	        	+ " ORDER BY " + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.ifiscalyear + " DESC"

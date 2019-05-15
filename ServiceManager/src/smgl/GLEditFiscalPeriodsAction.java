@@ -21,8 +21,8 @@ public class GLEditFiscalPeriodsAction extends HttpServlet{
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLEditFiscalPeriods)){return;}
 	    //Read the entry fields from the request object:
-		GLFiscalPeriod entry = new GLFiscalPeriod(request);
-		smaction.getCurrentSession().removeAttribute(GLFiscalPeriod.ParamObjectName);
+		GLFiscalYear entry = new GLFiscalYear(request);
+		smaction.getCurrentSession().removeAttribute(GLFiscalYear.ParamObjectName);
 		
 		//If it's an edit, process that:
 	    //if(smaction.isEditRequested()){
@@ -34,7 +34,7 @@ public class GLEditFiscalPeriodsAction extends HttpServlet{
 					smaction.getFullUserName()
 				);
 			} catch (Exception e) {
-				smaction.getCurrentSession().setAttribute(GLFiscalPeriod.ParamObjectName, entry);
+				smaction.getCurrentSession().setAttribute(GLFiscalYear.ParamObjectName, entry);
 				smaction.redirectAction(
 					"Could not save: " + e.getMessage(), 
 					"", 

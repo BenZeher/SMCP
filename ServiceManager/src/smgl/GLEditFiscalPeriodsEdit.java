@@ -24,7 +24,7 @@ import smcontrolpanel.SMUtilities;
 public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
-	private static final String OBJECT_NAME = GLFiscalPeriod.ParamObjectName;
+	private static final String OBJECT_NAME = GLFiscalYear.ParamObjectName;
 	private static final String SUBMIT_UPDATE_BUTTON_NAME = "SubmitEditUpdate";
 	private static final String SUBMIT_UPDATE_BUTTON_VALUE = "Update fiscal year";
 	private static final String ROW_BACKGROUND_DEFAULT_COLOR = "#C2E0FF";
@@ -37,13 +37,13 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 				HttpServletResponse response)
 				throws ServletException, IOException {
 		
-		GLFiscalPeriod entry = new GLFiscalPeriod(request);
+		GLFiscalYear entry = new GLFiscalYear(request);
 		
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
 				response,
 				getServletContext(),
-				GLFiscalPeriod.ParamObjectName,
+				GLFiscalYear.ParamObjectName,
 				SMUtilities.getFullClassName(this.toString()),
 				"smgl.GLEditFiscalPeriodsAction",
 				"smcontrolpanel.SMUserLogin",
@@ -119,7 +119,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		//the session will have an object in it, and that's what we'll pick up.
 		HttpSession currentSession = smedit.getCurrentSession();
 		if (currentSession.getAttribute(OBJECT_NAME) != null){
-			entry = (GLFiscalPeriod) currentSession.getAttribute(OBJECT_NAME);
+			entry = (GLFiscalYear) currentSession.getAttribute(OBJECT_NAME);
 			currentSession.removeAttribute(OBJECT_NAME);
 		//But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 		//edit OR after a previous successful edit, we'll load the entry:
@@ -128,11 +128,11 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 			//If it's a request to add a NEW fiscal year:
 		    //If coming from Add button of select screen; set as new record and clear ID
 			if(request.getParameter(GLEditFiscalPeriodsSelect.SUBMIT_ADD_BUTTON_NAME) != null){
-				entry.set_snewrecord(GLFiscalPeriod.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
+				entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
 				entry.set_sifiscalyear("");
 			//But if it's NOT in the session, and we're NOT adding a new fiscal year, then try to load it:
 			}else{
-				entry.set_snewrecord(GLFiscalPeriod.ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
+				entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
 				try {
 					entry.load( smedit.getsDBID(), getServletContext(), smedit.getUserName());
 				} catch (Exception e) {
@@ -200,7 +200,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 			String sFormClassName,
 			PrintWriter pwOut,
 			SMMasterEditEntry sm,
-			GLFiscalPeriod entry
+			GLFiscalYear entry
 	) throws Exception	{
 
 		String sFormString = "<FORM ID='" + sFormClassName + "' NAME='" + sFormClassName + "' ACTION='" 
@@ -217,7 +217,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		pwOut.println("</FORM>");
 	}
 	
-	private String getEditHTML(SMMasterEditEntry smedit, GLFiscalPeriod entry) throws Exception	{
+	private String getEditHTML(SMMasterEditEntry smedit, GLFiscalYear entry) throws Exception	{
 		String s = "";
 		
 		try {
@@ -233,7 +233,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    s +="  <TR>\n"
 	    + "    <TD ALIGN=RIGHT><B>" + "Fiscal year:"  + " </B></TD>\n"
 	    + "    <TD ALIGN=LEFT>";
-	      if(entry.get_snewrecord().compareToIgnoreCase(GLFiscalPeriod.ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0){
+	      if(entry.get_snewrecord().compareToIgnoreCase(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0){
 	    	  s += "<INPUT TYPE=TEXT NAME=\"" + SMTableglfiscalperiods.ifiscalyear + "\""
 				+ " VALUE=\"" + entry.get_sifiscalyear().replace("\"", "&quot;") + "\""
 				+ " MAXLENGTH=" + "4"
@@ -249,7 +249,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    + " " 
 	    + "</TD>\n"
 	    + "  </TR>\n"
-	    + "<INPUT TYPE=HIDDEN NAME=\"" + GLFiscalPeriod.ParamsNewRecord+ "\" VALUE='" + entry.get_snewrecord() + "'>\n"
+	    + "<INPUT TYPE=HIDDEN NAME=\"" + GLFiscalYear.ParamsNewRecord+ "\" VALUE='" + entry.get_snewrecord() + "'>\n"
 	    ;  	
 
 	    //Last edited by:
@@ -319,7 +319,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String buildRowForFiscalPeriodDates(SMMasterEditEntry smedit, GLFiscalPeriod entry) throws Exception{
+	private String buildRowForFiscalPeriodDates(SMMasterEditEntry smedit, GLFiscalYear entry) throws Exception{
 		String s = "";
         s += clsServletUtilities.createHTMLComment("Start a row to contain the dates table here:");
         
@@ -338,7 +338,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		return s;
 	}
 	
-	private String buildDatesTable(SMMasterEditEntry smedit, GLFiscalPeriod entry) throws Exception{
+	private String buildDatesTable(SMMasterEditEntry smedit, GLFiscalYear entry) throws Exception{
 		String s = "";
 		
 		s += "            <TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""

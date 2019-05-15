@@ -48,6 +48,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMTableicoptions;
 import SMDataDefinition.SMTablesmoptions;
 
 public class clsServletUtilities {
@@ -779,6 +780,7 @@ public class clsServletUtilities {
 		String sDomain = "";
 		String sParentFolder = "";
 		String sFolderName = sKeyValue;
+
 		String SQL = "SELECT * FROM " + SMTablesmoptions.TableName
 			;
 			try {
@@ -788,7 +790,7 @@ public class clsServletUtilities {
 					sDBID, 
 					"MySQL", 
 					"ServletUtilities.getDrivePickerJSIncludeString"
-					+ " [1331745216]"
+					+ " [1331745216456]"
 				);
 				if (rs.next()){
 					//If the drive picker is not set to be used in the settings then return.
@@ -832,6 +834,30 @@ public class clsServletUtilities {
 							sFolderName = rs.getString(SMTablesmoptions.gdrivesalesleadfolderprefix) 
 							+ sKeyValue + rs.getString(SMTablesmoptions.gdrivesalesleadfoldersuffix);
 							sParentFolder = rs.getString(SMTablesmoptions.gdrivesalesleadparentfolderid);
+							break;
+						
+						case SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE:
+						     
+							String sSQL = "SELECT * FROM " + SMTableicoptions.TableName;
+							try {
+								ResultSet rsICOptions = clsDatabaseFunctions.openResultSet(
+									sSQL, 
+									context, 
+									sDBID, 
+									"MySQL", 
+									"ServletUtilities.getDrivePickerJSIncludeString"
+									+ " [1331745216234]"
+								);
+								if (rsICOptions.next()){
+									sFolderName = rsICOptions.getString(SMTableicoptions.gdrivepurchaseordersfolderprefix) 
+										+ sKeyValue + rsICOptions.getString(SMTableicoptions.gdrivepurchaseordersfoldersuffix);
+									sParentFolder = rsICOptions.getString(SMTableicoptions.gdrivepurchaseordersparentfolderid);
+								}		
+								rsICOptions.close();
+							}catch (Exception e) {
+								System.out.println("Error - " + e.getMessage());
+								throw new Exception("Error reading parent folder from ICOptions.");	
+							}
 							break;
 						default:
 							break;

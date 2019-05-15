@@ -247,34 +247,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					+ "\">Google Drive folder</A>&nbsp;&nbsp;"
 			    );
 		    }
-	    }
-		
-		boolean bCreateGDrivePOFoldersAllowed = SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMCreateGDrivePOFolders, 
-				smedit.getUserID(), 
-				getServletContext(), 
-				smedit.getsDBID(),
-				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-		);
-		//Create Upload file Link
-		if (entry.getsID().compareToIgnoreCase("-1") != 0 && bCreateGDrivePOFoldersAllowed){
-			//Upload file link
-			try {
-				smedit.getPWOut().println(
-					getGDocUploadLink( 
-						entry.getsID(), 
-						smedit.getsDBID(), 
-						getServletContext(), 
-						request,
-						smedit.getUserName()
-					)
-				);
-			} catch (Exception e) {
-				smedit.getPWOut().println("<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>");
-			}
-
-		}   
-		
+	    }	
 		//Create edit form 
 		String sFormString = "<FORM ID='" +  SMMasterEditEntry.MAIN_FORM_NAME + "' NAME='" + SMMasterEditEntry.MAIN_FORM_NAME + "' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCalledClass() + "'";
@@ -395,6 +368,23 @@ public class ICEditPOEdit  extends HttpServlet {
 		String s = sCommandScripts(entry, sm);
 		s += sStyleScripts();
 
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE,
+						entry.getsID(),
+						getServletContext(),
+						sm.getsDBID());
+			} catch (Exception e) {
+				System.out.println("[1557932202] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				s += sPickerScript;
+				bUseGoogleDrivePicker = true;
+			}
+			
 		s += "<TABLE style=\" max-width:" + HEADER_TABLE_MAX_WIDTH +";border-style:solid; border-color:black; font-size:small; \">";
 
 		//Store the ID so it can be passed back and forth:
@@ -760,7 +750,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			)
 			&& (entry.getsID().compareToIgnoreCase("-1") != 0)
 		){
-			sCreateAndUploadButton = createAndUploadFolderButton();
+			sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
 		}
 		
 		if ((entry.getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_ENTERED)) == 0)
@@ -1918,11 +1908,15 @@ public class ICEditPOEdit  extends HttpServlet {
 			;
 	}
 	
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\"" + sOnClickFunction + "\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

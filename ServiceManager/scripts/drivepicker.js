@@ -96,7 +96,7 @@ function createPicker() {
 		}).then(function(response) {
 			console.log(response);
 			var files = response.result.files;
-			//If the folder alreadt exists, do nothing...
+			//If the folder already exists, do nothing...
 			if (files && files.length > 0) {
 				folderID = files[0].id;
 				console.log(folderName + ' already exists with id: '

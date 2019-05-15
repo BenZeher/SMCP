@@ -24,14 +24,14 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import SMDataDefinition.SMTablegltransactionbatchentries;
+import SMDataDefinition.SMTablegltransactionbatches;
+import SMDataDefinition.SMTablegltransactionbatchlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMUtilities;
-import smic.ICEntry;
-import smic.ICEntryLine;
-import smic.ICItem;
 
 public class GLImportBatchesAction extends HttpServlet{
 	
@@ -280,15 +280,6 @@ public class GLImportBatchesAction extends HttpServlet{
 				"in writeFileAndProcess - bIncludeHeaderRow = " + bIncludesHeaderRow);
 		}
 		
-		if (bDebugMode){
-			System.out.println("[1557853981] In " + this.toString() + ".writeFileAndProcess going into validateFile");
-		}
-		try {
-			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow);
-		} catch (Exception e1) {
-			throw new Exception("Error [1557852638] validating file: " + e1.getMessage());
-		}
-		
 		//Get a connection:
 		Connection conn;
 		try {
@@ -300,6 +291,15 @@ public class GLImportBatchesAction extends HttpServlet{
 			);
 		} catch (Exception e1) {
 			throw new Exception("Error [1557852639] getting a connection - " + e1.getMessage());
+		}
+		
+		if (bDebugMode){
+			System.out.println("[1557853981] In " + this.toString() + ".writeFileAndProcess going into validateFile");
+		}
+		try {
+			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1557852638] validating file: " + e1.getMessage());
 		}
 		
 		if (bDebugMode){
@@ -387,6 +387,7 @@ public class GLImportBatchesAction extends HttpServlet{
 				//Otherwise, if it's NOT the first row of a file with a header row, process:
 				}else{
 					int iFieldCounter = 0;
+					line = filterQuotesAndCommas(line);
 					String[] fields = line.split(",");
 					for (String sDelimitedField : fields) {
 						if (iFieldCounter == FIELD_BATCH_DATE){
@@ -534,7 +535,7 @@ public class GLImportBatchesAction extends HttpServlet{
 	    }
 
 	}
-	private void validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow) throws Exception{
+	private void validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, Connection conn) throws Exception{
 
 		BufferedReader br = null;
 		try {
@@ -543,6 +544,10 @@ public class GLImportBatchesAction extends HttpServlet{
 			String line = null;
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
+				//If it's an empty line, jump out:
+				if (line.compareToIgnoreCase("") == 0){
+					break;
+				}
 				if (bDebugMode){
 					System.out.println("In " + this.toString() + ".validateFile - at line " + iLineCounter);
 				}
@@ -558,6 +563,8 @@ public class GLImportBatchesAction extends HttpServlet{
 				//Otherwise, if it's NOT the first row of a file with a header row, process:
 				}else{
 					int iFieldCounter = 0;
+					line = filterQuotesAndCommas(line);
+					//System.out.println("[1557949137] - Line = '" + line + "'.");
 					String[] fields = line.split(",");
 					for (String sDelimitedField : fields) {
 						if (iFieldCounter > NUMBER_OF_FIELDS_PER_LINE){
@@ -567,7 +574,11 @@ public class GLImportBatchesAction extends HttpServlet{
 							//bResult = false;
 						}else{
 							try {
-								validateImportField(iLineCounter, iFieldCounter, sDelimitedField.trim().replace("\"", ""));
+								int iDataLineNumber = iLineCounter;
+								if (bFileIncludesHeaderRow){
+									iDataLineNumber = iDataLineNumber - 1;
+								}
+								validateImportField(iDataLineNumber, iFieldCounter, sDelimitedField.trim().replace("\"", ""), conn);
 							} catch (Exception e) {
 								throw new Exception(e.getMessage());
 							}
@@ -597,51 +608,140 @@ public class GLImportBatchesAction extends HttpServlet{
 		}
 	}
 
-	private void validateImportField (int iLineNumber, int iFieldIndex, String sField) throws Exception{
+	private void validateImportField (int iLineNumber, int iFieldIndex, String sField, Connection conn) throws Exception{
 		
 		//Strip off any quotation marks:
 		sField = sField.replace("\"", "");
 		
-		if (bDebugMode){
-			System.out.println("In " + this.toString() + "FieldIndex = " + iFieldIndex 
+		//if (bDebugMode){
+			System.out.println("[1557948467] In " + this.toString() + "FieldIndex = " + iFieldIndex 
 				+ ", value = " + sField);
-		}
+		//}
 		if (iFieldIndex == FIELD_BATCH_DATE){
-			//Make sure it's a valid date:
-	    	try {
-				BigDecimal bdqty = new BigDecimal(sField);
-				//Allow zero quantities, but nothing less
-				if (bdqty.compareTo(BigDecimal.ZERO) < 0){
-					throw new Exception("Error [1557852664] qty ('" + sField + "') on line " + iLineNumber + " cannot be less than zero.");
+			ServletUtilities.clsValidateFormFields.validateStandardDateField(sField, "Batch date on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_BATCH_DESC){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatches.sBatchDescriptionLength, "Batch description on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_ENTRY_NUMBER){
+			ServletUtilities.clsValidateFormFields.validateIntegerField(
+				sField, "Entry number on line #" + Integer.toString(iLineNumber), 1, ServletUtilities.clsValidateFormFields.MAX_INT_VALUE);
+		}
+		if (iFieldIndex == FIELD_ENTRY_DESC){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchentries.sentrydescriptionLength, "Entry description on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_ENTRY_DATE){
+			ServletUtilities.clsValidateFormFields.validateStandardDateField(
+				sField, "Entry date on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_ENTRY_DOCUMENTDATE){
+			ServletUtilities.clsValidateFormFields.validateStandardDateField(
+				sField, "Entry document date on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_ENTRY_FISCALYEAR){
+			ServletUtilities.clsValidateFormFields.validateIntegerField(
+				sField, "Fiscal year on line #" + Integer.toString(iLineNumber), 2015, 2050);
+		}
+		if (iFieldIndex == FIELD_ENTRY_FISCALPERIOD){
+			ServletUtilities.clsValidateFormFields.validateIntegerField(
+				sField, "Fiscal period on line #" + Integer.toString(iLineNumber), 1, 13);
+		}
+		if (iFieldIndex == FIELD_ENTRY_SOURCELEDGER){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchentries.ssourceledgerLength, "Source Ledger on line #" + Integer.toString(iLineNumber), false);
+			//If it's not a valid source ledger, reject it:
+			boolean bSourceLedgerIsValid = false;
+			for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
+				if (GLSourceLedgers.getSourceLedgerDescription(i).compareToIgnoreCase(sField) == 0){
+					bSourceLedgerIsValid = true;
+					break;
 				}
-			} catch (Exception e) {
-				throw new Exception("Error [1557852665] Invalid qty ('" + sField + "') on line " + iLineNumber + ".");
+			}
+			if (!bSourceLedgerIsValid){
+				throw new Exception("Entry source ledger on line #" + Integer.toString(iLineNumber) + " is not a valid source ledger.");
+			}
+		}		
+		if (iFieldIndex == FIELD_ENTRY_AUTOREVERSE){
+			if (
+				(sField.compareToIgnoreCase("Y") != 0)
+				&& (sField.compareToIgnoreCase("N") != 0)
+			){
+				throw new Exception("Auto reverse '" + sField + "' on line #" + Integer.toString(iLineNumber) + " must be Y or N.");
 			}
 		}
-		
-		/*
-		private static final int FIELD_BATCH_DATE = 0;
-	private static final int FIELD_BATCH_DESC = 1;
-	private static final int FIELD_ENTRY_NUMBER = 2;
-	private static final int FIELD_ENTRY_DESC = 3;
-	private static final int FIELD_ENTRY_DATE = 4;
-	private static final int FIELD_ENTRY_DOCUMENTDATE = 5;
-	private static final int FIELD_ENTRY_FISCALYEAR = 6;
-	private static final int FIELD_ENTRY_FISCALPERIOD = 7;
-	private static final int FIELD_ENTRY_SOURCELEDGER = 8;
-	private static final int FIELD_ENTRY_AUTOREVERSE = 9;
-	private static final int FIELD_LINE_NUMBER = 10;
-	private static final int FIELD_LINE_DESC = 11;
-	private static final int FIELD_LINE_REFERENCE = 12;
-	private static final int FIELD_LINE_COMMENT = 13;
-	private static final int FIELD_LINE_TRANSACTIONDATE = 14;
-	private static final int FIELD_LINE_GLACCT = 15;
-	private static final int FIELD_LINE_DEBITAMT = 16;
-	private static final int FIELD_LINE_CREDITAMT = 17;
-	private static final int FIELD_LINE_SOURCETYPE = 18;
-		*/
+		if (iFieldIndex == FIELD_LINE_NUMBER){
+			ServletUtilities.clsValidateFormFields.validateIntegerField(
+				sField, "Line number on line #" + Integer.toString(iLineNumber), 1, ServletUtilities.clsValidateFormFields.MAX_INT_VALUE);
+		}
+		if (iFieldIndex == FIELD_LINE_DESC){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchlines.sdescriptionLength, "Line description on line #" + Integer.toString(iLineNumber), true);
+		}
+		if (iFieldIndex == FIELD_LINE_REFERENCE){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchlines.sreferenceLength, "Line reference on line #" + Integer.toString(iLineNumber), true);
+		}
+		if (iFieldIndex == FIELD_LINE_COMMENT){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchlines.scommentLength, "Line comment on line #" + Integer.toString(iLineNumber), true);
+		}
+		if (iFieldIndex == FIELD_LINE_TRANSACTIONDATE){
+			ServletUtilities.clsValidateFormFields.validateStandardDateField(
+				sField, "Line transaction date on line #" + Integer.toString(iLineNumber), false);
+		}
+		if (iFieldIndex == FIELD_LINE_GLACCT){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchlines.sacctidLength, "Line GL account on line #" + Integer.toString(iLineNumber), false);
+			//Also verify that it's a valid GL account:
+			GLAccount glacct = new GLAccount(sField);
+			if (!glacct.load(conn)){
+				throw new Exception("Line GL account '" + sField + "' on line #" + Integer.toString(iLineNumber) + " is not a valid unformatted GL account.");
+			}
+			
+		}
+		if (iFieldIndex == FIELD_LINE_DEBITAMT){
+			ServletUtilities.clsValidateFormFields.validateBigdecimalField(
+				sField, "Debit amount on line #" + Integer.toString(iLineNumber), 
+				SMTablegltransactionbatchlines.bddebitamtScale, 
+				BigDecimal.ZERO, 
+				new BigDecimal("9999999.99")
+			);
+		}
+		if (iFieldIndex == FIELD_LINE_CREDITAMT){
+			ServletUtilities.clsValidateFormFields.validateBigdecimalField(
+				sField, "Credit amount on line #" + Integer.toString(iLineNumber), 
+				SMTablegltransactionbatchlines.bdcreditamtScale, 
+				BigDecimal.ZERO, 
+				new BigDecimal("9999999.99")
+			);
+		}
+		if (iFieldIndex == FIELD_LINE_SOURCETYPE){
+			ServletUtilities.clsValidateFormFields.validateStringField(
+				sField, SMTablegltransactionbatchlines.ssourcetypeLength, "Line source type ('" + sField + "') on line #" + Integer.toString(iLineNumber), true);
+		}
 	}
-
+	private String filterQuotesAndCommas(String sLine){
+		String s = "";
+		boolean bInQuoteDelimitedField = false;
+		for (int i = 0; i < sLine.length(); i++){
+			String sTestChar = sLine.substring(i, i + 1);
+			if (sTestChar.compareToIgnoreCase("\"") == 0){
+				bInQuoteDelimitedField = !bInQuoteDelimitedField;
+				//Drop the double quote characters:
+				continue;
+			}
+			if ((bInQuoteDelimitedField) && (sTestChar.compareToIgnoreCase(",") == 0)){
+				//Drop the comma in this case:
+				continue;
+			}
+			//If we got here, then was can add the character to the string:
+			s += sTestChar;
+			//System.out.println("[1404247911] filtered line: '" + s + "'.");
+		}
+		return s;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

@@ -61,6 +61,25 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 
+		String sLine = " \"123\", \"1,234\" ";
+		String s = sLine;
+		boolean bInQuoteDelimitedField = false;
+		for (int iCharCounter = 0; iCharCounter < sLine.length(); iCharCounter++){
+			String sTestChar = sLine.substring(iCharCounter, iCharCounter + 1);
+			if (sTestChar.compareToIgnoreCase("\"") == 0){
+				bInQuoteDelimitedField = !bInQuoteDelimitedField;
+				//Drop the double quote characters:
+				continue;
+			}
+			if ((bInQuoteDelimitedField) && (sTestChar.compareToIgnoreCase(",") == 0)){
+				//Drop the comma in this case:
+				continue;
+			}
+			//If we got here, then was can add the character to the string:
+			s += sTestChar;
+			//System.out.println("[1404247911] filtered line: '" + s + "'.");
+		}
+		
 		//*********************************************
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;

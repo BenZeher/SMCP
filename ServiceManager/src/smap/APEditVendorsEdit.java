@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableap1099cprscodes;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableapdistributioncodes;
@@ -24,6 +25,7 @@ import SMDataDefinition.SMTableicvendorterms;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
@@ -160,6 +162,23 @@ public class APEditVendorsEdit  extends HttpServlet {
 	
 	private String getEditHTML(SMMasterEditEntry sm, APVendor entry) throws SQLException{
 		String s = sCommandScripts(entry, sm);
+		
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.AP_VENDOR_RECORD_TYPE_PARAM_VALUE,
+						entry.getsvendoracct().replace("\"", "&quot;"),
+						getServletContext(),
+						sm.getsDBID());
+			} catch (Exception e) {
+				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				s += sPickerScript;
+				bUseGoogleDrivePicker = true;
+			}
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + RECORDWASCHANGED_FLAG + "\""
 				+ " VALUE=\"" + clsManageRequestParameters.get_Request_Parameter(RECORDWASCHANGED_FLAG, sm.getRequest()) + "\""
 				+ " id=\"" + RECORDWASCHANGED_FLAG + "\""+ ">";
@@ -869,7 +888,7 @@ public class APEditVendorsEdit  extends HttpServlet {
 					)
 					&& (!sm.getAddingNewEntryFlag())
 				){
-					sCreateAndUploadButton = createAndUploadFolderButton();
+					sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
 				}
 					s += "<BR><B><FONT SIZE=3>Google Drive link:</FONT></B>" + "&nbsp;" + sCreateAndUploadButton + "<BR>"
 						+ "<INPUT TYPE=TEXT NAME=\"" + APVendor.Paramsgdoclink + "\""
@@ -882,11 +901,17 @@ public class APEditVendorsEdit  extends HttpServlet {
 		return s;
 	}
 	
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\"" + sOnClickFunction + "\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

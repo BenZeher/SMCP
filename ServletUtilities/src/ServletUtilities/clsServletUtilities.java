@@ -48,6 +48,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMTableapoptions;
 import SMDataDefinition.SMTableicoptions;
 import SMDataDefinition.SMTablesmoptions;
 
@@ -838,10 +839,10 @@ public class clsServletUtilities {
 						
 						case SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE:
 						     
-							String sSQL = "SELECT * FROM " + SMTableicoptions.TableName;
+							 SQL = "SELECT * FROM " + SMTableicoptions.TableName;
 							try {
 								ResultSet rsICOptions = clsDatabaseFunctions.openResultSet(
-									sSQL, 
+									SQL, 
 									context, 
 									sDBID, 
 									"MySQL", 
@@ -855,8 +856,30 @@ public class clsServletUtilities {
 								}		
 								rsICOptions.close();
 							}catch (Exception e) {
-								System.out.println("Error - " + e.getMessage());
 								throw new Exception("Error reading parent folder from ICOptions.");	
+							}
+							break;
+							
+						case SMCreateGoogleDriveFolderParamDefinitions.AP_VENDOR_RECORD_TYPE_PARAM_VALUE:
+						     
+							SQL = "SELECT * FROM " + SMTableapoptions.TableName;
+							try {
+								ResultSet rsAPOptions = clsDatabaseFunctions.openResultSet(
+									SQL, 
+									context, 
+									sDBID, 
+									"MySQL", 
+									"ServletUtilities.getDrivePickerJSIncludeString"
+									+ " [13317452162349]"
+								);
+								if (rsAPOptions.next()){
+									sFolderName = rsAPOptions.getString(SMTableapoptions.gdrivevendorsderfolderprefix) 
+										+ sKeyValue + rsAPOptions.getString(SMTableapoptions.gdrivevendorsfoldersuffix);
+									sParentFolder = rsAPOptions.getString(SMTableapoptions.gdrivevendorsparentfolderid);
+								}		
+								rsAPOptions.close();
+							}catch (Exception e) {
+								throw new Exception("Error reading parent folder from APOptions.");	
 							}
 							break;
 						default:

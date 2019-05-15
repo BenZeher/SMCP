@@ -191,7 +191,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        //System.out.println("iFunctionCount = " + iFunctionCount + ", iRowCount = " + iRowCount + ", iMod = " + iMod);
 	        while (rsFunctions.next()){
 	        	sCheckedOrNot = Is_Function_In_Group(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID), rsGroupFunctions);
-	        	sFunctionTable.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedOrNot 
+	        	sFunctionTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot 
 	        			+ " NAME=\"Function***Update" 
 	        			+ Integer.toString(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID)) 
 	        			+ "\">" 
@@ -199,7 +199,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        			+ " title=\"" 
 	        			+ rsFunctions.getString(SMTablesecurityfunctions.sDescription) 
 	        			+ "\""
-	        			+ ">"
+	        			+ "></LABEL>"
 	        			+ rsFunctions.getString("sFunctionName")
 	        			+ " (" + Integer.toString(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID)) + ")"
 	        			+ "</span>"

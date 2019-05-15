@@ -18,7 +18,7 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMUtilities;
 
-public class GLFiscalPeriod extends java.lang.Object{
+public class GLFiscalYear extends java.lang.Object{
 
 	public static final String ParamObjectName = "Fiscal period";
 	public static final String ParamsNewRecord = "sNewRecord";
@@ -76,7 +76,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 	
 	private String m_snewrecord;
 	
-	public GLFiscalPeriod(
+	public GLFiscalYear(
         ) {
 		m_sifiscalyear = "0";
 		m_silasteditedbyuserid = "0";
@@ -128,7 +128,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 		
 		m_snewrecord = ADDING_NEW_RECORD_PARAM_VALUE_FALSE;
     }
-    public GLFiscalPeriod(HttpServletRequest req) {
+    public GLFiscalYear(HttpServletRequest req) {
 		m_sifiscalyear = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ifiscalyear, req).trim();
 		m_silasteditedbyuserid = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ilasteditedbyuserid, req).trim();
 		m_slasteditedbyfullusername = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.slasteditedbyfullusername, req).trim();
@@ -849,7 +849,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
 	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080753]");
-	 		throw new Exception("Error [1530901737] saving " + GLFiscalPeriod.ParamObjectName + " record - with SQL:" + SQL + " - " + e.getMessage());
+	 		throw new Exception("Error [1530901737] saving " + GLFiscalYear.ParamObjectName + " record - with SQL:" + SQL + " - " + e.getMessage());
 	 	}
 
 	 	set_snewrecord(ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
@@ -1118,8 +1118,8 @@ public class GLFiscalPeriod extends java.lang.Object{
        	
      	m_snewrecord = m_snewrecord.trim();
      	if (
-     		(m_snewrecord.compareToIgnoreCase(GLFiscalPeriod.ADDING_NEW_RECORD_PARAM_VALUE_FALSE) == 0)
-     		|| (m_snewrecord.compareToIgnoreCase(GLFiscalPeriod.ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0)
+     		(m_snewrecord.compareToIgnoreCase(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_FALSE) == 0)
+     		|| (m_snewrecord.compareToIgnoreCase(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0)
      	){
      	}else{
      		s += "New record flag '" + m_snewrecord + "' is invalid.";
@@ -1503,7 +1503,7 @@ public class GLFiscalPeriod extends java.lang.Object{
 				rs.close();
 				throw new Exception("Error [1555700120] - no fiscal period found for date: " + sDateInSQLFormat);
 			}
-			GLFiscalPeriod period = new GLFiscalPeriod();
+			GLFiscalYear period = new GLFiscalYear();
 			period.set_sifiscalyear(Integer.toString(iFiscalYear));
 			period.load(conn);
 			

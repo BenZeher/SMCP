@@ -239,10 +239,10 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
         	while (rsUsers.next()){
         		sCheckedOrNot = Is_User_In_Group(rsUsers.getString("sUserName"), rsGroupUsers);
         		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"User***Update" 
-        			+  rsUsers.getString(SMTableusers.lid) + "\"></LABEL>" 
+        			+  rsUsers.getString(SMTableusers.lid) + "\">" 
         			+ rsUsers.getString(SMTableusers.sUserFirstName) 
         			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
-        			+ " (" + rsUsers.getString("sUserName") + ")" 
+        			+ " (" + rsUsers.getString("sUserName") + ")</LABEL>" 
         		);
         	}
         	rsUsers.close();

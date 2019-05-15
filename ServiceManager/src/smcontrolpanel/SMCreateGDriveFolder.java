@@ -57,7 +57,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 			return;
 		}
 		
-		String sKeyValue = clsManageRequestParameters.get_Request_Parameter(KEY_VALUE_PARAM, request);
+		String sKeyValue = clsManageRequestParameters.get_Request_Parameter(KEY_VALUE_PARAM, request).replace(".ampersand.", "&");
 		if (sKeyValue.compareToIgnoreCase("") == 0){
 			s += "<BR>Error [Error [1439824292] - Invalid record key value '" + sKeyValue + "' - '" + sKeyValue + "' - cannot continue.</HTML>";
 			if(bAsyncRequest) { response.getWriter().write(s); }

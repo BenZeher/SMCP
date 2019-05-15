@@ -205,7 +205,7 @@ function asyncUpdateFolderURL(folderurl) {
 	};
 	xhr.open("POST", "/sm/smcontrolpanel.SMCreateGDriveFolder");
 	xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
-	xhr.send("asyncrequest=Y&folderURL=" + folderurl + "&recordtype=" + recordtype + "&keyvalue=" + keyvalue );
+	xhr.send("asyncrequest=Y&folderURL=" + folderurl + "&recordtype=" + recordtype + "&keyvalue=" + keyvalue.replace("&", ".ampersand.") );
 	}
 
 

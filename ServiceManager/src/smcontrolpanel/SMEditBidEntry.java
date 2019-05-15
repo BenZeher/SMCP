@@ -17,6 +17,7 @@ import javax.servlet.http.HttpSession;
 import smar.SMOption;
 import SMClasses.SMAppointment;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableappointments;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
@@ -268,6 +269,23 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += sStyleScripts();
 		s += sCommandScripts(sm, entry);
 		
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.SALESLEAD_RECORD_TYPE_PARAM_VALUE,
+						entry.slid(),
+						getServletContext(),
+						sm.getsDBID());
+			} catch (Exception e) {
+				System.out.println("[1557921368] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				s += sPickerScript;
+				bUseGoogleDrivePicker = true;
+			}
+			
 		//Store which command button the user has chosen:
 		String sCreatedBy = " originally created by " + entry.getscreatedbyfullname();
 		//The sales lead ID:
@@ -379,7 +397,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "</TR></TD></TABLE style=\" title:ENDBidDatesArea; \">\n";
 		
 		//Create the order memo table:
-		s += createBidMemosTable(sm, entry);
+		s += createBidMemosTable(sm, entry, bUseGoogleDrivePicker);
 		
 		//Create the bid products table:
 		s += createBidProductsTable(sm, entry);
@@ -1312,7 +1330,8 @@ public class SMEditBidEntry  extends HttpServlet {
 	}
 	private String createBidMemosTable(
 			SMMasterEditEntry sm, 
-			SMBidEntry entry) throws SQLException{
+			SMBidEntry entry,
+			boolean bUseGoogleDrivePicker) throws SQLException{
 		String s = "";
 		int iRows = 8;
 		int iNumberOfColumns = 2;
@@ -1365,7 +1384,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 				&& !sm.getAddingNewEntryFlag()){
 			
-				sCreateAndUploadButton = createAndUploadFolderButton();
+				sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
 			}
 		
 		s += "<TR><TD COLSPAN=" + iNumberOfColumns + "><U><B>Document folder link</B></U>" + sCreateAndUploadButton + "</TD></TR>";
@@ -1694,11 +1713,16 @@ public class SMEditBidEntry  extends HttpServlet {
 			;
 	}
 	
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\""+ sOnClickFunction +"\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

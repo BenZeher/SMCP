@@ -153,6 +153,28 @@ public class APDisplayVendorInformation extends HttpServlet {
 					+ "<BR>");
 				
 				//Links:
+				SMOption smopt = new SMOption();		
+				try {
+					smopt.load(conn);
+				} catch (Exception e1) {
+					//throw new Exception("Error [1452003995] getting SM Options - " + e1.getMessage());
+				}
+				
+				boolean bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
+				if(bUseGoogleDrivePicker) {
+					try {
+						pwOut.println(clsServletUtilities.getDrivePickerJSIncludeString(
+								SMCreateGoogleDriveFolderParamDefinitions.AP_VENDOR_RECORD_TYPE_PARAM_VALUE,
+								rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct).trim(),
+								getServletContext(),
+								sDBID)
+								);
+					} catch (Exception e) {
+						bUseGoogleDrivePicker = false;
+						System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+					}
+				}
+				
 				boolean bAllowCreateGDriveVendorFolders = 
 						SMSystemFunctions.isFunctionPermitted(
 								SMSystemFunctions.SMCreateGDriveVendorFolders, 
@@ -527,7 +549,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 				if (bAllowCreateGDriveVendorFolders){
 					String sUploadLink = "";
 					try {
-						sUploadLink = getGDocUploadLink(rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct), conn, req);
+						sUploadLink = getGDocUploadLink(rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct), conn, req, bUseGoogleDrivePicker);
 					} catch (Exception e) {
 						pwOut.println("<FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT>");
 					}
@@ -750,9 +772,12 @@ public class APDisplayVendorInformation extends HttpServlet {
 		
 		return true;
 	}
-	private String getGDocUploadLink(String sVendorNumber, Connection conn, HttpServletRequest req) throws Exception{
+	private String getGDocUploadLink(String sVendorNumber, Connection conn, HttpServletRequest req, boolean bUseGoogleDrivePicker) throws Exception{
 		String s = "";
-		
+		if(bUseGoogleDrivePicker) {
+			s += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Create folder/Upload File(s)</a></FONT>";
+			return s;
+		}
 		APOptions apopt = new APOptions();
 		SMOption smopt = new SMOption();		
 		try {

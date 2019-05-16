@@ -5,11 +5,8 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.DateFormat;
-import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
-
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -1155,13 +1152,14 @@ public class GLFiscalYear extends java.lang.Object{
     		+ ")"
     		+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC LIMIT 1"
     	;
+    	String sHighestPreviousEndingDate = "";
     	try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				//System.out.println("[1531931647] - SQL = " + SQL);
 				//System.out.println("[1531931648] sPeriod1BeginningDateAsSQL = '" + sPeriod1BeginningDateAsSQL + "', datendingdateperiod13 = '" + rs.getString(SMTableglfiscalperiods.datendingdateperiod13) + "'");
 				
-				String sHighestPreviousEndingDate = "";
+				
 				switch(rs.getInt(SMTableglfiscalperiods.inumberofperiods)){
 				case 1:
 					sHighestPreviousEndingDate = rs.getString(SMTableglfiscalperiods.datendingdateperiod1);
@@ -1410,7 +1408,7 @@ public class GLFiscalYear extends java.lang.Object{
 		}
     	
     	// period i+1 starting date is not a day before period i ending date:
-    	
+    	/*
     	try {
     		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
         		if(Date.valueOf(arrBeginningDates.get(i+1)).before(Date.valueOf(arrEndingDates.get(i)))){
@@ -1420,18 +1418,28 @@ public class GLFiscalYear extends java.lang.Object{
     	}catch(Exception e) {
 			throw new Exception("Error [1557944103] checking starting and ending dates - " + e.getMessage());
     	}
-    	
+    	*/
     	//Now make sure there aren't any skipped DAYS between periods:
     	
     	try {
     		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
     		Calendar EndingCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
-    		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
-    		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
     		Calendar BeginningCalendar = Calendar.getInstance();//Convert Date to Calendar for easy comparison of Calendars
+    		Calendar LastYear  = Calendar.getInstance();
+    		Calendar StartCalendar = BeginningCalendar;
+    		
+    		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
     		BeginningCalendar.setTime(Date.valueOf(arrBeginningDates.get(i+1)));
-    			if(EndingCalendar.compareTo(BeginningCalendar)!=0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
-					s += "  Starting date in period " +(i+1) + " must be the next day  to the date in period " +(i+2) + ".";
+    		LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
+    		
+    		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
+    		LastYear.add(Calendar.DATE,1);
+    			if(EndingCalendar.compareTo(BeginningCalendar)<0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
+					s += "  Starting date in period " +(i+1) + " must be the previous day to the date in Period " +(i+2) + ".";
+				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
+					s += "  Starting date in period " +(i+1) + " must be before the date in period " +(i+2) + ".";
+				}else if(StartCalendar.compareTo(LastYear)!=0) {
+					s += " Starting date in period " + (i+1) +  " must be the next day to  the previous Years last day.";
 				}
         	}
     	}catch(Exception e) {
@@ -1443,21 +1451,34 @@ public class GLFiscalYear extends java.lang.Object{
     	try {
     		if(Integer.parseInt(get_sinumberofperiods())<13) {
     			Calendar defaultBeginning  = Calendar.getInstance();
-    			defaultBeginning.set(2001, 12,01);
+    			defaultBeginning.set(0000, 00, 00);
     			Calendar defaultEnding  = Calendar.getInstance();
-    			defaultEnding.set(2001, 12,31);
+    			defaultEnding.set(0000, 00, 00);
     			for(int i = Integer.parseInt(get_sinumberofperiods()) ; i < 13; i++) {
     				Calendar currentBeginning = Calendar.getInstance();
     				Calendar currentEnding = Calendar.getInstance();
     				currentBeginning.setTime(Date.valueOf(arrBeginningDates.get(i)));
     				currentEnding.setTime(Date.valueOf(arrEndingDates.get(i)));
-    				if(defaultBeginning.compareTo(currentBeginning)!=0 || defaultEnding.compareTo(currentEnding)!=0) {
-    					s +=" Blank Starting Date in period " + (i+1) + " has an uninitialized default date Current Date: " + currentBeginning.getTime()+ " to " + currentEnding.getTime();
-    					s +=" Default Date = " + defaultBeginning.getTime() + " to " + defaultEnding.getTime();
-    				}else if(currentBeginning.getTime()==null|| currentEnding.getTime()==null){
-    					s += "ruh roh [1558011808]";
+    				Integer a,b,c,d,e,f;
+    				a = currentBeginning.get(Calendar.DAY_OF_MONTH);
+    				b = currentBeginning.get(Calendar.MONTH);
+    				c = currentBeginning.get(Calendar.YEAR);
+    				d = currentEnding.get(Calendar.DAY_OF_MONTH);
+    				e = currentEnding.get(Calendar.MONTH);
+    				f = currentEnding.get(Calendar.YEAR);
+    			    if(!a.equals(null)&&!b.equals(null)&&!c.equals(null)) {
+    			    	s +=" Blank Starting Date in period " + (i+1) + " has an uninitialized default date Current Date: " + currentBeginning.getTime()+ " to " + currentEnding.getTime();
+    			    	s +=" Default Years = " + defaultBeginning.get(Calendar.YEAR) + " to " + defaultEnding.get(Calendar.YEAR);
+    			    	s +=" Default Months = " + defaultBeginning.get(Calendar.MONTH) + " to " + defaultEnding.get(Calendar.MONTH);
+    			    	s +=" Default Days = " + defaultBeginning.get(Calendar.DAY_OF_MONTH) + " to " + defaultEnding.get(Calendar.DAY_OF_MONTH);
+    			    }
+    			    //f(defaultBeginning.get(Calendar.DATE)!=currentBeginning.get(Calendar.DATE)){//|| !defaultEnding.equals(currentEnding)) {
+    				//	s +=" Blank Starting Date in period " + (i+1) + " has an uninitialized default date Current Date: " + currentBeginning.getTime()+ " to " + currentEnding.getTime();
+    				//	s +=" Default Date = " + defaultBeginning.getTime() + " to " + defaultEnding.getTime();
+    				//}else if(currentBeginning.getTime()==null|| currentEnding.getTime()==null){
+    				//	s += "ruh roh [1558011808]";
     				
-    				}
+    				//}
     			}
     		}
     	}catch(Exception e) {

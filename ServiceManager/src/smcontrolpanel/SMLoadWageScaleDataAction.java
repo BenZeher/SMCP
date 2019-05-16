@@ -186,8 +186,8 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			);
 			return;
 		}
-    	//if importing is successfully, print out a message:
-    	out.println("Importing of wage scale job records is sucessful.<BR>");
+    	//if importing is successful, print out a message:
+    	out.println("Importing of wage scale job records is successful.<BR>");
     	
     	//create a link to run the real wage scale reports
     	String sLink = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWageScaleReportSelect" 

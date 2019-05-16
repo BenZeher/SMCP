@@ -1703,16 +1703,22 @@ public class APBatchEntry {
 		//Make sure that this check has not already been voided:
 		//System.out.println("[1513618408] - got here");
 		APCheck check = new APCheck();
+		boolean bPrintedCheckWasFound = false;
 		try {
 			check.loadUsingCheckNumber(conn, sUserID, getsvendoracct(), getschecknumber());
+			bPrintedCheckWasFound = true;
 		} catch (Exception e) {
-			s += " " + e.getMessage() + ".";
+			//Dont catch this - it may fail just because there was no PRINTED check, but we'll want
+			//it to go on in that case so we can still reverse the payment...
+			//s += " " + e.getMessage() + ".";
+			bPrintedCheckWasFound = false;
 		}
 		//System.out.println("[1513618409] - check.getsivoid() = '" + check.getsivoid() + ".");
-		if (check.getsivoid().compareToIgnoreCase("1") == 0){
-			s += " " + "Check number " + getschecknumber() + " for vendor " + getsvendoracct() + " has already been reversed.";
+		if (bPrintedCheckWasFound){
+			if (check.getsivoid().compareToIgnoreCase("1") == 0){
+				s += " " + "Check number " + getschecknumber() + " for vendor " + getsvendoracct() + " has already been reversed.";
+			}
 		}
-		
 		return s;
 	}
 	public void update_check_reversal_data(String sDBID, ServletContext context, String sUser) throws Exception {

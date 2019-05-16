@@ -18,6 +18,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablearacctset;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearcustomergroups;
@@ -279,6 +280,23 @@ public class AREditCustomersEdit extends HttpServlet {
 	    
 	    //Add javaScript
 	    pwOut.println(sCommandScripts());
+	    
+	    boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE,
+						cust.getM_sCustomerNumber().replace("\"", "&quot;"),
+						getServletContext(),
+						sDBID);
+			} catch (Exception e) {
+				System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				 pwOut.println(sPickerScript);
+				bUseGoogleDrivePicker = true;
+			} 
 	    
 	    pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
         //Customer number:
@@ -907,7 +925,7 @@ public class AREditCustomersEdit extends HttpServlet {
 			)
 			&& (cust.getM_iNewRecord().compareToIgnoreCase("1") != 0)
 		){
-			sCreateAndUploadButton = createAndUploadFolderButton();
+			sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
 		}
 		
 		pwOut.println("<B>Document folder link:</B>&nbsp;"
@@ -967,11 +985,16 @@ public class AREditCustomersEdit extends HttpServlet {
 			;
 	}
 	
-	private String createAndUploadFolderButton(){
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"createanduploadfolder();\">"
+			+ " onClick=\"" + sOnClickFunction + "\">"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

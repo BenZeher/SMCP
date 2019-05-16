@@ -170,7 +170,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
 		}
 		
-		boolean bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
+		boolean bUseGoogleDrivePicker = smopt.getiusegoogledrivepickerapi().compareToIgnoreCase("0") != 0;
 		if(bUseGoogleDrivePicker) {
 			try {
 				pwOut.println(clsServletUtilities.getDrivePickerJSIncludeString(

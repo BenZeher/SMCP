@@ -49,6 +49,7 @@ import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableapoptions;
+import SMDataDefinition.SMTablearoptions;
 import SMDataDefinition.SMTableicoptions;
 import SMDataDefinition.SMTablesmoptions;
 
@@ -880,6 +881,29 @@ public class clsServletUtilities {
 								rsAPOptions.close();
 							}catch (Exception e) {
 								throw new Exception("Error reading parent folder from APOptions.");	
+							}
+							break;
+							
+						case SMCreateGoogleDriveFolderParamDefinitions.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE:
+						     
+							SQL = "SELECT * FROM " + SMTablearoptions.TableName;
+							try {
+								ResultSet rsAROptions = clsDatabaseFunctions.openResultSet(
+									SQL, 
+									context, 
+									sDBID, 
+									"MySQL", 
+									"ServletUtilities.getDrivePickerJSIncludeString"
+									+ " [521745222349]"
+								);
+								if (rsAROptions.next()){
+									sFolderName = rsAROptions.getString(SMTablearoptions.gdrivecustomersderfolderprefix) 
+										+ sKeyValue + rsAROptions.getString(SMTablearoptions.gdrivecustomersfoldersuffix);
+									sParentFolder = rsAROptions.getString(SMTablearoptions.gdrivecustomersparentfolderid);
+								}		
+								rsAROptions.close();
+							}catch (Exception e) {
+								throw new Exception("Error reading parent folder from AROptions.");	
 							}
 							break;
 						default:

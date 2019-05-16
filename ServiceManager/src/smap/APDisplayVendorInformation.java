@@ -160,7 +160,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					//throw new Exception("Error [1452003995] getting SM Options - " + e1.getMessage());
 				}
 				
-				boolean bUseGoogleDrivePicker = smopt.getiusegoogleplacesapi().compareToIgnoreCase("0") != 0;
+				boolean bUseGoogleDrivePicker = smopt.getiusegoogledrivepickerapi().compareToIgnoreCase("0") != 0;
 				if(bUseGoogleDrivePicker) {
 					try {
 						pwOut.println(clsServletUtilities.getDrivePickerJSIncludeString(

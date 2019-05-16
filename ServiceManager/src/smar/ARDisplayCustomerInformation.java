@@ -32,6 +32,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class ARDisplayCustomerInformation extends HttpServlet {
@@ -171,6 +172,28 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 								sLicenseModuleLevel
 						); 
 				
+				SMOption smopt = new SMOption();
+				try {
+					smopt.load(conn);
+				} catch (Exception e1) {
+					pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
+				}
+				boolean bUseGoogleDrivePicker = smopt.getiusegoogledrivepickerapi().compareToIgnoreCase("0") != 0;
+				
+				if(bUseGoogleDrivePicker) {
+					try {
+						pwOut.println(clsServletUtilities.getDrivePickerJSIncludeString(
+								SMCreateGoogleDriveFolderParamDefinitions.AR_CUSTOMER_RECORD_TYPE_PARAM_VALUE,
+								sCustomerNum,
+								getServletContext(),
+								sDBID)
+								);
+					} catch (Exception e) {
+						bUseGoogleDrivePicker = false;
+						System.out.println("[155481842520] - Failed to load drivepicker.js - " + e.getMessage());
+					}
+				}
+				
 				String sLinks = "";
 				if (bAllowCustomerActivityView){
 					sLinks = 
@@ -207,7 +230,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				if (bAllowCreateGDriveARFolders){
 					String sUploadLink = "";
 					try {
-						sUploadLink = getGDocUploadLink(rsCustomer.getString(SMTablearcustomer.sCustomerNumber), conn, req);
+						sUploadLink = getGDocUploadLink(rsCustomer.getString(SMTablearcustomer.sCustomerNumber), conn, req, bUseGoogleDrivePicker);
 					} catch (Exception e) {
 						pwOut.println("<FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT>");
 					}
@@ -707,9 +730,13 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 		
 		return true;
 	}
-	private String getGDocUploadLink( String sCustomerNumber, Connection conn, HttpServletRequest req) throws Exception{
+	private String getGDocUploadLink( String sCustomerNumber, Connection conn, HttpServletRequest req, boolean bUseGoogleDrivePicker) throws Exception{
 		String s = "";
 
+		if(bUseGoogleDrivePicker) {
+			s += "&nbsp;&nbsp;<FONT SIZE=2><a  onclick=\"loadPicker()\" href=\"#\" >Upload File(s) to Google Drive</a></FONT>";
+		return s;
+		}
 		AROptions aropt = new AROptions();
 		SMOption smopt = new SMOption();		
 		try {

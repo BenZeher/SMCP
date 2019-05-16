@@ -5,7 +5,10 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -1406,14 +1409,60 @@ public class GLFiscalYear extends java.lang.Object{
 			throw new Exception("Error [1555698830] checking starting and ending dates - " + e.getMessage());
 		}
     	
-    	//If period 2 starting date is not one day after period 1 ending date:
+    	// period i+1 starting date is not a day before period i ending date:
     	
+    	try {
+    		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
+        		if(Date.valueOf(arrBeginningDates.get(i+1)).before(Date.valueOf(arrEndingDates.get(i)))){
+    				s += "  Starting date in period " + (i+2) + " must be after the ending date in period " + (i+1)+ ".";
+    			}
+        	}
+    	}catch(Exception e) {
+			throw new Exception("Error [1557944103] checking starting and ending dates - " + e.getMessage());
+    	}
     	
     	//Now make sure there aren't any skipped DAYS between periods:
     	
+    	try {
+    		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
+    		Calendar EndingCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
+    		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
+    		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
+    		Calendar BeginningCalendar = Calendar.getInstance();//Convert Date to Calendar for easy comparison of Calendars
+    		BeginningCalendar.setTime(Date.valueOf(arrBeginningDates.get(i+1)));
+    			if(EndingCalendar.compareTo(BeginningCalendar)!=0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
+					s += "  Starting date in period " +(i+1) + " must be the next day  to the date in period " +(i+2) + ".";
+				}
+        	}
+    	}catch(Exception e) {
+			throw new Exception("Error [1557944615] checking starting and ending dates - " + e.getMessage());
+    	}
     	
     	//Also, if there are fewer than 13 periods being used, make sure that the unused periods get default dates in them:
     	
+    	try {
+    		if(Integer.parseInt(get_sinumberofperiods())<13) {
+    			Calendar defaultBeginning  = Calendar.getInstance();
+    			defaultBeginning.set(2001, 12,01);
+    			Calendar defaultEnding  = Calendar.getInstance();
+    			defaultEnding.set(2001, 12,31);
+    			for(int i = Integer.parseInt(get_sinumberofperiods()) ; i < 13; i++) {
+    				Calendar currentBeginning = Calendar.getInstance();
+    				Calendar currentEnding = Calendar.getInstance();
+    				currentBeginning.setTime(Date.valueOf(arrBeginningDates.get(i)));
+    				currentEnding.setTime(Date.valueOf(arrEndingDates.get(i)));
+    				if(defaultBeginning.compareTo(currentBeginning)!=0 || defaultEnding.compareTo(currentEnding)!=0) {
+    					s +=" Blank Starting Date in period " + (i+1) + " has an uninitialized default date Current Date: " + currentBeginning.getTime()+ " to " + currentEnding.getTime();
+    					s +=" Default Date = " + defaultBeginning.getTime() + " to " + defaultEnding.getTime();
+    				}else if(currentBeginning.getTime()==null|| currentEnding.getTime()==null){
+    					s += "ruh roh [1558011808]";
+    				
+    				}
+    			}
+    		}
+    	}catch(Exception e) {
+			throw new Exception("Error [1557950626] checking starting and ending dates - " + e.getMessage());
+    	}
     	
     	if (s.compareToIgnoreCase("") != 0){
     		throw new Exception(s);

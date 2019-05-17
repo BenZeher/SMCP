@@ -1130,7 +1130,7 @@ public class APBatch {
 						+ "' for vendor '" + entry.getsvendoracct() + "' in check reversal entry number " + entry.getsentrynumber() + ".");
 				}
 			} catch (Exception e) {
-				throw new Exception("Error [1513133328] - Could read reversed check transaction with SQL '" + SQL + " - " + e.getMessage());
+				throw new Exception("Error [1513133328] - Could not read reversed check transaction with SQL '" + SQL + " - " + e.getMessage());
 			}
         	
         	//Now update ALL the checks from that original batch and entry:
@@ -3460,7 +3460,7 @@ public class APBatch {
     	The payment/prepay that's being reversed, will be set to a zero current amt, if it's not already.  (In the case of a pre-pay, it may have a current amt,
     	  and so have to be reduced to zero.
     	
-    	The invoices that we originally being applied to will see their current amts increased, since we are reversing the money we applied to them.
+    	The invoices that were originally being applied to will see their current amts increased, since we are reversing the money we applied to them.
     	
     	1) THE ORIGINAL PAYMENT or PRE-PAY THAT'S BEING REVERSED:
     	    The payment/pre-pay may have a current amt - if it does, then we'll have to reduce it to zero with matching lines FROM the reversal
@@ -3494,46 +3494,30 @@ public class APBatch {
     	//First we'll update the current amt of the payment/pre-pay to be zero:
     	
     	//Let's get the AP transaction ID of the check we are reversing:
-    	long lTransactionIDOfPaymentToBeReversed = -1L;
-    	SQL = "SELECT"
-    		+ " " + SMTableapchecks.ltransactionid
-    		+ " FROM " + SMTableapchecks.TableName
-    		+ " WHERE ("
-    			+ "(" + SMTableapchecks.schecknumber + " = '" + reversalentry.getschecknumber() + "')"
-    		+ ")"
-    	;
-    	try {
-			ResultSet rsCheck = clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rsCheck.next()){
-				lTransactionIDOfPaymentToBeReversed = rsCheck.getLong(SMTableapchecks.ltransactionid);
-			}
-			rsCheck.close();
-		} catch (Exception e1) {
-			throw new Exception("Error [1521211265] getting ID of AP transaction to be reversed - " + e1.getMessage());
-		}
 
-    	if (lTransactionIDOfPaymentToBeReversed == -1){
-    		throw new Exception("Error [1521211266] - could not find Payment/Pre-Pay to be reversed with check number '" + reversalentry.getschecknumber() + "'.");
-    	}
     	
     	//Get the current amt of the payment/prepay transaction:
     	BigDecimal bdCurrentAmtOfPaymentToBeReversed = new BigDecimal("0.00");
     	String sPaymentDocNumber = "";
+    	long lTransactionIDOfPaymentToBeReversed = -1L;
     	SQL = "SELECT"
-    		+ " " + SMTableaptransactions.bdcurrentamt
+    		+ " " + SMTableaptransactions.lid
+       		+ ", " + SMTableaptransactions.bdcurrentamt
     		+ ", " + SMTableaptransactions.sdocnumber
     		+ " FROM " + SMTableaptransactions.TableName
     		+ " WHERE ("
-    			+ "(" + SMTableaptransactions.lid + " = " + Long.toString(lTransactionIDOfPaymentToBeReversed) + ")"
+    			+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalbatchnumber + " != " + reversalentry.getsbatchnumber() + ")"
+    			+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.schecknumber + " = '" + reversalentry.getschecknumber() + "')"
     		+ ")"
     	;
     	ResultSet rsPaymentTransaction = clsDatabaseFunctions.openResultSet(SQL, conn);
     	if (rsPaymentTransaction.next()){
-    		bdCurrentAmtOfPaymentToBeReversed = rsPaymentTransaction.getBigDecimal(SMTableaptransactions.bdcurrentamt);
+      		bdCurrentAmtOfPaymentToBeReversed = rsPaymentTransaction.getBigDecimal(SMTableaptransactions.bdcurrentamt);
     		sPaymentDocNumber = rsPaymentTransaction.getString(SMTableaptransactions.sdocnumber);
+    		lTransactionIDOfPaymentToBeReversed = rsPaymentTransaction.getLong(SMTableaptransactions.lid);
     	}else{
     		rsPaymentTransaction.close();
-    		throw new Exception("Error [1521211266] could not read AP payment transaction to be reversed with SQL '" + SQL + "'.");
+    		throw new Exception("Error [1521211266] could not read AP reversal transaction with SQL '" + SQL + "'.");
     	}
     	
     	//If the original payment still has a 'current amt', then we need to set that to zero (since we are reversing out this payment), and also create a matching line for it:

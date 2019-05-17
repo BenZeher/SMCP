@@ -1,11 +1,9 @@
 package smar;
-import java.math.BigDecimal;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.text.DecimalFormat;
 
 import javax.servlet.http.HttpServlet;
+
+import smap.APBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -61,26 +59,20 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 
-		String sLine = " \"123\", \"1,234\" ";
-		String s = sLine;
-		boolean bInQuoteDelimitedField = false;
-		for (int iCharCounter = 0; iCharCounter < sLine.length(); iCharCounter++){
-			String sTestChar = sLine.substring(iCharCounter, iCharCounter + 1);
-			if (sTestChar.compareToIgnoreCase("\"") == 0){
-				bInQuoteDelimitedField = !bInQuoteDelimitedField;
-				//Drop the double quote characters:
-				continue;
-			}
-			if ((bInQuoteDelimitedField) && (sTestChar.compareToIgnoreCase(",") == 0)){
-				//Drop the comma in this case:
-				continue;
-			}
-			//If we got here, then was can add the character to the string:
-			s += sTestChar;
-			//System.out.println("[1404247911] filtered line: '" + s + "'.");
+		APBatch batch = new APBatch("514");
+
+		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
+		try {
+			batch.post_with_connection(conn, "1", "Tom");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
+		ServletUtilities.clsDatabaseFunctions.commit_data_transaction(conn);
+		System.out.println("DONE");
+
 		
 		//*********************************************
+/*
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;
 		String sAPDatabaseURL = "74.50.124.130";
@@ -113,7 +105,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get Pervasive connection");
 			return;
 		}
-		
+*/		
 		
 		
 		
@@ -243,43 +235,6 @@ public class TESTBatchExport extends HttpServlet{
 		rcpt.setsID("57578");
 		rcpt.delete(conn, "TR", "6");
 		*/
-		/*
-		APBatch batch = new APBatch("469");
-		//clsDatabaseFunctions.start_data_transaction(conn);
-		try {
-			batch.loadBatch(conn);
-		} catch (Exception e) {
-			System.out.print(e.getMessage());
-		}
-		clsDatabaseFunctions.rollback_data_transaction(conn);
-		System.out.println("DONE");
-		*/
-		
-		/*
-		//Test GL conversion rollback:
-		GLACCPACConversion conv = new GLACCPACConversion();
-		try {
-			conv.reverseDataChanges(conn, true);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		System.out.println("DONE");
-		*/
-		/*
-		APBatch batch = new APBatch("255");
-		try {
-			batch.load(conn);
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		clsDatabaseFunctions.start_data_transaction(conn);
-		try {
-			batch.post_with_connection(conn, "1", "Tom");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		clsDatabaseFunctions.commit_data_transaction(conn);
-		System.out.println("DONE");
-		*/
+
 	}
 }

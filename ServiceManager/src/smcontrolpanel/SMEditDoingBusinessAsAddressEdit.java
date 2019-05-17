@@ -169,7 +169,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 		
 		//Check if this is a new record
 		String sID = "";
-		if (sm.getAddingNewEntryFlag()){
+		if (sm.getAddingNewEntryFlag() || entry.getslid().compareToIgnoreCase("-1") == 0){
 			sID = "NEW";
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMDoingbusinessasaddress.ParamNewRecord + "\" VALUE=\"" + "1" + "\">";
 		}else{		
@@ -179,8 +179,14 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 		s += "<TR><TD ALIGN=RIGHT><B>ID</B>:</TD>"
 				+ "<TD>" 
 				+ "<B>" + sID + "</B>" 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMDoingbusinessasaddress.Paramlid + "\" VALUE=\"" 
-					+ entry.getslid() + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMDoingbusinessasaddress.Paramlid + "\" VALUE=\"";
+			
+		if(sm.getAddingNewEntryFlag()) {
+			s += "-1";
+		}else {
+			s += entry.getslid();
+		}
+				s += "\">"
 				+ "</TD>"
 				+ "<TD>&nbsp;</TD>"
 				+ "</TR>"
@@ -252,7 +258,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 	private String createInputFile(SMDoingbusinessasaddress entry) {
 		String s = "";
 		 s += "<TR id = \"ilogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Invoice Logo File:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Invoice Logo File<font color=\"red\">*</font>:</B></TD>"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiInvoicelogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiInvoicelogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsInvoiceLogo()+"\">"
@@ -260,7 +266,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 			  + "<TD>Image logo used for the Invoice. Example: <b>invoicelogo.png</b> </TD>"
 			  + "</TR>"
 			  + "<TR id = \"plogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Proposal Logo File:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Proposal Logo File<font color=\"red\">*</font>:</B></TD>"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiProposallogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiProposallogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsProposalLogo()+"\">"
@@ -268,7 +274,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 			  + "<TD>Image logo used for the proposal. Example: <b>proposallogo.png</b> </TD>"
 			  + "</TR>"
 			  + "<TR id = \"dlogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Delivery Ticket Logo File:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Delivery Ticket Logo File<font color=\"red\">*</font>:</B></TD>"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiDeliveryTicketReceiptLogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiDeliveryTicketReceiptLogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsDeliveryTicketReceiptLogo()+"\">"
@@ -276,7 +282,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 			  + "<TD>Image logo used for the delivery ticket receipt.  Example: <b>deliveryticketlogo.png</b> </TD>"
 			  + "</TR>"
 			  + "<TR id = \"wlogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Work Order Receipt Logo File:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Work Order Receipt Logo File<font color=\"red\">*</font>:</B></TD>"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiWorkOrderReceiptLogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiWorkOrderReceiptLogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsWorkOrderReceiptLogo()+"\">"

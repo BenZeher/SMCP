@@ -87,11 +87,12 @@ public class SMEditDoingBusinessAsAddressAction extends HttpServlet{
 				//If the save succeeded, force the called function to reload it by NOT
 				//putting the entry object in the current session, but by passing it
 				//in the query string instead:
+				smaction.getCurrentSession().setAttribute(SMDoingbusinessasaddress.ParamObjectName, entry);
 				smaction.redirectAction(
 						clsServletUtilities.URLEncode("Error could not save: " + e.getMessage()), 
 						"",
-						SMDoingbusinessasaddress.Paramlid + "=" + entry.getslid()
-						+ "&" + SMDoingbusinessasaddress.ParamNewRecord + "=" + entry.getsNewRecord()
+						//SMDoingbusinessasaddress.Paramlid + "=" + entry.getslid()
+						 "" + SMDoingbusinessasaddress.ParamNewRecord + "=" + entry.getsNewRecord()
 						);
 			}
 	    }

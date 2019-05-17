@@ -187,8 +187,9 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
     }
     public void save_without_data_transaction (Connection conn, String sUserID) throws Exception{
     	try {
+    		validate_entry_fields(conn);
     		checkLogoFileName();
-			validate_entry_fields(conn);
+			
 		} catch (Exception e1) {
 			throw new Exception (e1.getMessage());
 		}

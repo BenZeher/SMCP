@@ -478,7 +478,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				String sCurrentSecurityGroupName = rsSecurityGroups.getString(SMTablesecuritygroups.sSecurityGroupName);
 				sCheckedOrNot = isUserInSecurityGroup(userentry.getlid(), sCurrentSecurityGroupName, sDBID);
 				
-				sSecurityGroupsTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_SECURITY_GROUPS_PREFIX + sCurrentSecurityGroupName +"\">" + sCurrentSecurityGroupName);	
+				sSecurityGroupsTable.add("<LABEL><INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_SECURITY_GROUPS_PREFIX + sCurrentSecurityGroupName +"\">" + sCurrentSecurityGroupName+"</LABEL>");	
 			}
 			sOutPut += SMUtilities.Build_HTML_Table(2, sSecurityGroupsTable,1,true);
 			rsSecurityGroups.close();
@@ -506,7 +506,7 @@ public class SMEditUsersEdit extends HttpServlet {
 				String sCurrentAppointmentGroupName = rsAppointmentGroups.getString(SMTableappointmentgroups.sappointmentgroupname);
 				sCheckedOrNot = isUserInAppointmentGroup(userentry.getlid(), sCurrentAppointmentGroupName, sDBID);
 				
-				sAppointmentGroupsTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_APPOINTMENT_GROUP_PREFIX + sCurrentAppointmentGroupName + "\">" + sCurrentAppointmentGroupName);	 
+				sAppointmentGroupsTable.add("<LABEL><INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_APPOINTMENT_GROUP_PREFIX + sCurrentAppointmentGroupName + "\">" + sCurrentAppointmentGroupName+"</LABEL>");	 
 			}
 			sOutPut += SMUtilities.Build_HTML_Table(1, sAppointmentGroupsTable, 0,true);
 			rsAppointmentGroups.close();
@@ -537,7 +537,7 @@ public class SMEditUsersEdit extends HttpServlet {
 					String sCurrentAlarmSequenceID = rsAlarmSequences.getString(SMTablessalarmsequences.lid);
 					sCheckedOrNot = isUserInAlarmSequence(userentry.getlid(), sCurrentAlarmSequenceID, sDBID);
 				
-					sAlarmSequencesTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_ALARM_SEQUENCES_PREFIX + sCurrentAlarmSequenceID + "\">" + sCurrentAlarmSequenceName);	 
+					sAlarmSequencesTable.add("<LABEL><INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_ALARM_SEQUENCES_PREFIX + sCurrentAlarmSequenceID + "\">" + sCurrentAlarmSequenceName+"</LABEL>");	 
 				}
 				sOutPut += SMUtilities.Build_HTML_Table(1, sAlarmSequencesTable, 0,true);
 				rsAlarmSequences.close();
@@ -571,7 +571,7 @@ public class SMEditUsersEdit extends HttpServlet {
 					String sCurrentDeviceID = rsDevices.getString(SMTablessdevices.lid);
 					sCheckedOrNot = isDeviceUser(userentry.getlid(), sCurrentDeviceID, sDBID);
 				
-					sDevicesTable.add("<INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_DEVICES_PREFIX + sCurrentDeviceID + "\">" + sCurrentDeviceName);	 
+					sDevicesTable.add("<LABEL><INPUT TYPE=\"CHECKBOX\"" + sCheckedOrNot + " NAME=\"" + UPDATE_AS_DEVICES_PREFIX + sCurrentDeviceID + "\">" + sCurrentDeviceName + "</LABEL>");	 
 				}
 				sOutPut += SMUtilities.Build_HTML_Table(1, sDevicesTable, 0,true);
 				rsDevices.close();

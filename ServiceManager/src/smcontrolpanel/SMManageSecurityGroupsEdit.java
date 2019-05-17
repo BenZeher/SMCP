@@ -191,7 +191,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        //System.out.println("iFunctionCount = " + iFunctionCount + ", iRowCount = " + iRowCount + ", iMod = " + iMod);
 	        while (rsFunctions.next()){
 	        	sCheckedOrNot = Is_Function_In_Group(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID), rsGroupFunctions);
-	        	sFunctionTable.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedOrNot 
+	        	sFunctionTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot 
 	        			+ " NAME=\"Function***Update" 
 	        			+ Integer.toString(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID)) 
 	        			+ "\">" 
@@ -202,7 +202,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        			+ ">"
 	        			+ rsFunctions.getString("sFunctionName")
 	        			+ " (" + Integer.toString(rsFunctions.getInt(SMTablesecurityfunctions.iFunctionID)) + ")"
-	        			+ "</span>"
+	        			+ "</span></LABEL>"
 	        			);
 	        	//System.out.println("Added element: " + "<INPUT TYPE=CHECKBOX " + sCheckedOrNot + "\" NAME=\"Function***Update" +  rsFunctions.getString("sFunctionName") + "\">" + rsFunctions.getString("sFunctionName"));
         	}
@@ -238,11 +238,11 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        String sCheckedOrNot = "";
         	while (rsUsers.next()){
         		sCheckedOrNot = Is_User_In_Group(rsUsers.getString("sUserName"), rsGroupUsers);
-        		sUserTable.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"User***Update" 
+        		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"User***Update" 
         			+  rsUsers.getString(SMTableusers.lid) + "\">" 
         			+ rsUsers.getString(SMTableusers.sUserFirstName) 
         			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
-        			+ " (" + rsUsers.getString("sUserName") + ")" 
+        			+ " (" + rsUsers.getString("sUserName") + ")</LABEL>" 
         		);
         	}
         	rsUsers.close();

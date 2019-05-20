@@ -36,7 +36,6 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    String title = "Import wage scale job data.";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-	    
 		//If there is a warning from trying to input previously, print it here:
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
@@ -62,11 +61,11 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    		+ " it only looks for the item number and the quantity, separated by a comma.<BR>"
 	    );
 	    */
-	    out.println("<FORM NAME=\"MAINFORM\" action=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel." + sCalledClassName + "\"" 
+	    out.println("<FORM ONSUBMIT = \"return Validate(this);\" NAME=\"MAINFORM\" action=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel." + sCalledClassName + "\"" 
 	    		+ " method=\"post\""
 	    		+ " enctype=\"multipart/form-data\""
 	    		+ ">");
-
+	   
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    /*
 	    out.println("<INPUT TYPE=HIDDEN NAME='" 
@@ -105,7 +104,7 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    out.println("Choose import file:");
 	    out.println("</TD>");
 	    out.println("<TD>");
-	    out.println("<INPUT TYPE=FILE NAME='ImportFile'>");
+	    out.println("<INPUT TYPE=FILE NAME='ImportFile' accept=\".csv\" onChange=\"validate(this.value)\">");
 	    out.println("</TD>");
 	    //out.println("<TD>");
 	    //out.println("&nbsp;");
@@ -159,9 +158,51 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    out.println("</TR>");
 */
 	    out.println("</TABLE>");
-	    out.println("<INPUT TYPE=SUBMIT NAME='SubmitFile' VALUE='Import file' STYLE='width: 2.00in; height: 0.24in'>");
+	    out.println("<INPUT TYPE=SUBMIT NAME='SubmitFile' VALUE='Import file' STYLE='width: 2.00in; height: 0.24in' >");
 		out.println("</FORM>");
+		//Java-Script to block any non-csv files to be submitted to the Action class. 
+		// validate validates the Chose File button. Validate will block the form from being submitted if the file is not a csv.
+		 out.println("<SCRIPT>"
+					+ "\nfunction validate(file) {\n" + 
+					"    var ext = file.split(\".\");\n" + 
+					"    ext = ext[ext.length-1].toLowerCase();      \n" + 
+					"    var arrayExtensions = [\"csv\"];\n" + 
+					"\n" + 
+					"    if (arrayExtensions.lastIndexOf(ext) == -1) {\n" + 
+					"        alert(\"The file needs to be a .csv file.\");\n" + 
+					"    }\n" + 
+					"}\n"
+					+ "\n"
+					+ "var _validFileExtensions = [\".csv\"];    \n" + 
+					"function Validate(oForm) {\n" + 
+					"    var arrInputs = oForm.getElementsByTagName(\"input\");\n" + 
+					"    for (var i = 0; i < arrInputs.length; i++) {\n" + 
+					"        var oInput = arrInputs[i];\n" + 
+					"        if (oInput.type == \"file\") {\n" + 
+					"            var sFileName = oInput.value;\n" + 
+					"            if (sFileName.length > 0) {\n" + 
+					"                var blnValid = false;\n" + 
+					"                for (var j = 0; j < _validFileExtensions.length; j++) {\n" + 
+					"                    var sCurExtension = _validFileExtensions[j];\n" + 
+					"                    if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {\n" + 
+					"                        blnValid = true;\n" + 
+					"                        break;\n" + 
+					"                    }\n" + 
+					"                }\n" + 
+					"                \n" + 
+					"                if (!blnValid) {\n" + 
+					"                    alert(\"The file needs to be a .csv file.\");\n" + 
+					"                    return false;\n" + 
+					"                }\n" + 
+					"            }\n" + 
+					"        }\n" + 
+					"    }\n" + 
+					"  \n" + 
+					"    return true;\n" + 
+					"}" + 
+					"</SCRIPT>");
 		out.println("</BODY></HTML>");
+		 
 	}
 
 	public void doGet(HttpServletRequest request,

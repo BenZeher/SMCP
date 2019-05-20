@@ -15,6 +15,9 @@ import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionbatchentries;
+import SMDataDefinition.SMTablegltransactionbatches;
+import SMDataDefinition.SMTablegltransactionbatchlines;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
@@ -110,7 +113,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		System.out.println("[1552318885] - removed fiscal sets.");
 		
-		//Remove any segment values that we added from ACCPAC:
+		//Remove any accpunt groups that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountgroups.TableName
 		;
 		try {
@@ -148,6 +151,38 @@ public class GLACCPACConversion  extends java.lang.Object{
 		s+= "GL transactions that were added from ACCPAC have been removed.<BR>";
 		
 		System.out.println("[1553200509] - removed GL transactions.");
+		
+		//Remove any GL transaction batches that we might have been testing:
+		SQL = "TRUNCATE " + SMTablegltransactionbatches.TableName
+		;
+		try {
+			Statement stmt = cnSMCP.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1558378442] - could not remove GL transaction batches - " + e.getMessage());
+		}
+		
+		SQL = "TRUNCATE " + SMTablegltransactionbatchentries.TableName
+		;
+		try {
+			Statement stmt = cnSMCP.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1558378444] - could not remove GL transaction batch entries - " + e.getMessage());
+		}
+		
+		SQL = "TRUNCATE " + SMTablegltransactionbatchlines.TableName
+		;
+		try {
+			Statement stmt = cnSMCP.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1558378445] - could not remove GL transaction batch lines - " + e.getMessage());
+		}
+		
+		s+= "GL transaction batches have been removed.<BR>";
+		
+		System.out.println("[1558378443] - removed GL transaction batches.");
 		
 		return s;
 	}

@@ -1426,11 +1426,12 @@ public class GLFiscalYear extends java.lang.Object{
     		Calendar EndingCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
     		Calendar BeginningCalendar = Calendar.getInstance();//Convert Date to Calendar for easy comparison of Calendars
     		Calendar LastYear  = Calendar.getInstance();
-    		Calendar StartCalendar = BeginningCalendar;
+    		Calendar StartCalendar = Calendar.getInstance();
     		
     		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
     		BeginningCalendar.setTime(Date.valueOf(arrBeginningDates.get(i+1)));
     		LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
+    		StartCalendar.setTime(Date.valueOf(arrBeginningDates.get(i)));
     		
     		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
     		LastYear.add(Calendar.DATE,1);
@@ -1438,8 +1439,8 @@ public class GLFiscalYear extends java.lang.Object{
 					s += "  Starting date in period " +(i+1) + " must be the previous day to the date in Period " +(i+2) + ".";
 				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
 					s += "  Starting date in period " +(i+1) + " must be before the date in period " +(i+2) + ".";
-				}else if(StartCalendar.compareTo(LastYear)!=0) {
-					s += " Starting date in period " + (i+1) +  " must be the next day to  the previous Years last day.";
+				}else if(StartCalendar.compareTo(LastYear)!=0&&i==0) {
+					s += " Starting date in period " + (i+1) +  " must be the next day to  the previous Years last day." + LastYear.getTime().toString();
 				}
         	}
     	}catch(Exception e) {
@@ -1448,7 +1449,6 @@ public class GLFiscalYear extends java.lang.Object{
     	
     	//Also, if there are fewer than 13 periods being used, make sure that the unused periods get default dates in them:
     	
-    	try {
     		if(Integer.parseInt(get_sinumberofperiods())<13) {
     			Calendar defaultBeginning  = Calendar.getInstance();
     			defaultBeginning.set(0000, 00, 00);
@@ -1481,9 +1481,7 @@ public class GLFiscalYear extends java.lang.Object{
     				//}
     			}
     		}
-    	}catch(Exception e) {
-			throw new Exception("Error [1557950626] checking starting and ending dates - " + e.getMessage());
-    	}
+    	
     	
     	if (s.compareToIgnoreCase("") != 0){
     		throw new Exception(s);

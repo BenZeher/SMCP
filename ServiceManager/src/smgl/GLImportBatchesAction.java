@@ -1,13 +1,16 @@
 package smgl;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -56,6 +59,9 @@ public class GLImportBatchesAction extends HttpServlet{
 	private static final int FIELD_LINE_DEBITAMT = 16;
 	private static final int FIELD_LINE_CREDITAMT = 17;
 	private static final int FIELD_LINE_SOURCETYPE = 18;
+	
+	//Fields for older 'ACCPAC STYLE' import files:
+	private static final int ACCPAC_FORMAT_FIELD_RECORD_TYPE = 0;
 
 	//Keys used for local hash mapped member variables.
 	private static final String CALLING_CLASS = "sCallingClass";
@@ -86,6 +92,7 @@ public class GLImportBatchesAction extends HttpServlet{
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
+	    CurrentSession.removeAttribute(GLImportBatchesSelect.SESSION_ERROR_OBJECT);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
@@ -118,11 +125,11 @@ public class GLImportBatchesAction extends HttpServlet{
 					+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 	   	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
-			}		
+			}
+			CurrentSession.setAttribute(GLImportBatchesSelect.SESSION_ERROR_OBJECT, e.getMessage());
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(CALLING_CLASS)
-				+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
-   	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+   	    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
 		}
@@ -296,6 +303,14 @@ public class GLImportBatchesAction extends HttpServlet{
 		if (bDebugMode){
 			System.out.println("[1557853981] In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
+		
+		//Check the file - if it's the older 'ACCPAC' format, rewrite it in the expected format:
+		try {
+			reformatACCPACStyleFile(sTempImportFilePath, fileName);
+		} catch (Exception e2) {
+			throw new Exception("Error [1558461509] validating file: " + e2.getMessage());
+		}
+		
 		try {
 			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, conn);
 		} catch (Exception e1) {
@@ -303,7 +318,7 @@ public class GLImportBatchesAction extends HttpServlet{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess got a connection");
+			System.out.println("[1558382743] In " + this.toString() + ".writeFileAndProcess got a connection");
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
@@ -311,7 +326,7 @@ public class GLImportBatchesAction extends HttpServlet{
 			throw new Exception("Error [1557852640] Could not start data transaction.");
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
+			System.out.println("[1558382744] In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
 		
 		try {
@@ -319,7 +334,7 @@ public class GLImportBatchesAction extends HttpServlet{
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1557852642]");
-			throw new Exception("Error [1557852644] inserting transfers - " + e.getMessage());
+			throw new Exception("Error [1557852644] inserting GL entries - " + e.getMessage());
 			
 		}
 
@@ -334,6 +349,128 @@ public class GLImportBatchesAction extends HttpServlet{
 
 	}
 
+	private void reformatACCPACStyleFile(String sFilePath, String sFileName) throws Exception{
+		BufferedReader br = null;
+		br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
+		
+		ArrayList<String>arrLineBuffer = new ArrayList<String>(0);
+		String line = null;
+		int iLineCounter = 1;
+		
+		String sBatchDate = "";
+		String sBatchDesc = "";
+		String sEntryNumber = "";
+		String sEntryDesc = "";
+		String sEntryDate = "";
+		String sEntryDocumentDate = "";
+		String sEntryFiscalYear = "";
+		String sEntryFiscalPeriod = "";
+		String sEntrySourceLedger = "";
+		String sEntryAutoReverse = "";
+		String sLineNumber = "";
+		String sLineDescription = "";
+		String sLineReference = "";
+		String sLineComment = "";
+		String sLineTransactionDate = "";
+		String sLineGLAcct = "";
+		String sLineDebitAmt = "";
+		String sLineCreditAmt = "";
+		String sLineSourceType = "";
+		String sLastEntryNumber = "0";
+		
+		while ((line = br.readLine()) != null) {
+			//If it's NOT the 'ACCPAC' format, then just exit and go on:
+			System.out.println("[1558463344] - line = '" + line + "'");
+			if (iLineCounter == 1){
+				if (line.substring(0, "RECTYPE".length()).compareToIgnoreCase("RECTYPE") != 0){
+					br.close();
+					return;
+				}
+			}
+			
+			//The first two lines are just headers:
+			if (iLineCounter < 3){
+				iLineCounter++;
+				continue;
+			}
+			
+			//Now we read the actual lines:
+			line = filterQuotesAndCommas(line);
+			String[] fields = line.split(",");
+			if (fields[ACCPAC_FORMAT_FIELD_RECORD_TYPE].compareToIgnoreCase("1") == 0){
+				//It's an 'entry' record:
+				
+				sBatchDate = fields[11].substring(4, 5) + "/" + fields[11].substring(6, 7) + fields[11].substring(0, 3);
+				sBatchDesc = fields[7] + " " + fields[11];
+				sEntryNumber = "";
+				sEntryDesc = "";
+				sEntryDate = "";
+				sEntryDocumentDate = "";
+				sEntryFiscalYear = "";
+				sEntryFiscalPeriod = "";
+				sEntrySourceLedger = "";
+				sEntryAutoReverse = "";
+				
+			}else{
+				//It's a 'line' record:
+				
+				String sOutPutLine = 
+					sBatchDate
+					+ ", \"" + sBatchDesc + "\""
+					+ ", \"" + sEntryNumber + "\""
+					+ ", \"" + sEntryDesc + "\""
+					+ ", \"" + sEntryDate + "\""
+					+ ", \"" + sEntryDocumentDate + "\""
+					+ ", \"" + sEntryFiscalYear  + "\""
+					+ ", \"" + sEntryFiscalPeriod + "\""
+					+ ", \"" + sEntrySourceLedger + "\""
+					+ ", \"" + sEntryAutoReverse + "\""
+					+ ", \"" + sLineNumber + "\""
+					+ ", \"" + sLineDescription + "\""
+					+ ", \"" + sLineReference + "\""
+					+ ", \"" + sLineComment + "\""
+					+ ", \"" + sLineTransactionDate + "\""
+					+ ", \"" + sLineGLAcct + "\""
+					+ ", \"" + sLineDebitAmt + "\""
+					+ ", \"" + sLineCreditAmt + "\""
+					+ ", \"" + sLineSourceType + "\""
+				;
+				arrLineBuffer.add(sOutPutLine);
+			}
+			//for (String sDelimitedField : fields) {
+			//	if (iFieldCounter == ACCPAC_FORMAT_FIELD_RECORD_TYPE){
+			//		//sRecordType = sDelimitedField.trim().replace("\"", "");
+			//	}
+			//
+			//	iFieldCounter++;
+			//}
+			iLineCounter++;
+		}
+		br.close();
+		
+		//Now write the new file to the import file:
+		BufferedWriter bw = null;
+		try {
+			// OVERWRITE MODE SET HERE
+			bw = new BufferedWriter(new FileWriter(sFilePath + System.getProperty("file.separator") + sFileName, false));
+			for (int i = 0; i < arrLineBuffer.size(); i++){
+				bw.write(arrLineBuffer.get(i));
+				bw.newLine();
+				bw.flush();
+			}
+		} catch (IOException e) {
+			throw new Exception("Error [1463665651] writing to file '" 
+				+ sFilePath + System.getProperty("file.separator") + sFileName + "' - " + e.getMessage());
+		} finally {                       // always close the file
+			if (bw != null) try {
+				bw.close();
+			} catch (IOException ioe2) {
+				// just ignore it
+			}
+		}
+		return;
+	}
+	
 	private void createGLBatch(
 			String sFilePath,
 			String sFileName,
@@ -347,35 +484,35 @@ public class GLImportBatchesAction extends HttpServlet{
 	) throws Exception{
 		
 		BufferedReader br = null;
+		br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
+		String line = null;
+		int iLineCounter = 1;
+		String sBatchDate = "";
+		String sBatchDesc = "";
+		String sEntryNumber = "";
+		String sEntryDesc = "";
+		String sEntryDate = "";
+		String sEntryDocumentDate = "";
+		String sEntryFiscalYear = "";
+		String sEntryFiscalPeriod = "";
+		String sEntrySourceLedger = "";
+		String sEntryAutoReverse = "";
+		String sLineNumber = "";
+		String sLineDescription = "";
+		String sLineReference = "";
+		String sLineComment = "";
+		String sLineTransactionDate = "";
+		String sLineGLAcct = "";
+		String sLineDebitAmt = "";
+		String sLineCreditAmt = "";
+		String sLineSourceType = "";
+		String sLastEntryNumber = "0";
+		
+		GLTransactionBatch glbatch = new GLTransactionBatch("-1");
+		GLTransactionBatchEntry glentry = null;
+		GLTransactionBatchLine glline = null;
+		
 		try {
-			br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
-			String line = null;
-			int iLineCounter = 1;
-			String sBatchDate = "";
-			String sBatchDesc = "";
-			String sEntryNumber = "";
-			String sEntryDesc = "";
-			String sEntryDate = "";
-			String sEntryDocumentDate = "";
-			String sEntryFiscalYear = "";
-			String sEntryFiscalPeriod = "";
-			String sEntrySourceLedger = "";
-			String sEntryAutoReverse = "";
-			String sLineNumber = "";
-			String sLineDescription = "";
-			String sLineReference = "";
-			String sLineComment = "";
-			String sLineTransactionDate = "";
-			String sLineGLAcct = "";
-			String sLineDebitAmt = "";
-			String sLineCreditAmt = "";
-			String sLineSourceType = "";
-			String sLastEntryNumber = "0";
-			
-			GLTransactionBatch glbatch = new GLTransactionBatch("-1");
-			GLTransactionBatchEntry glentry = null;
-			GLTransactionBatchLine glline = null;
-			
 			while ((line = br.readLine()) != null) {
 				//If the file has a header row and if this is the first line, then it's the header line
 				//so reset the line counter and don't do any validation of it:
@@ -384,6 +521,7 @@ public class GLImportBatchesAction extends HttpServlet{
 						&& (iLineCounter == 1)
 					)
 				{
+					iLineCounter++;
 				//Otherwise, if it's NOT the first row of a file with a header row, process:
 				}else{
 					int iFieldCounter = 0;
@@ -450,30 +588,29 @@ public class GLImportBatchesAction extends HttpServlet{
 						
 						iFieldCounter++;
 					}
-					
 					if (glbatch.getsbatchdescription().compareToIgnoreCase("") == 0){
 						glbatch.setsbatchdescription(sBatchDesc);
 						glbatch.setsbatchdate(sBatchDate);
 					}
-					
-					if (sLastEntryNumber.compareToIgnoreCase(glentry.getsentrynumber()) != 0){
+					if (sLastEntryNumber.compareToIgnoreCase(sEntryNumber) != 0){
 						if (glentry != null){
 							glbatch.addBatchEntry(glentry);
 						}
 						glentry = new GLTransactionBatchEntry();
-						
-						if (glentry.getsentrynumber().compareToIgnoreCase("") == 0){
-							glentry.setsautoreverse(sEntryAutoReverse);
-							glentry.setsdatdocdate(sEntryDocumentDate);
-							glentry.setsdatentrydate(sEntryDate);
-							glentry.setsentrydescription(sEntryDesc);
-							glentry.setsentrynumber(sEntryNumber);
-							glentry.setsfiscalperiod(sEntryFiscalPeriod);
-							glentry.setsfiscalyear(sEntryFiscalYear);
-							glentry.setssourceledger(sEntrySourceLedger);
+						if (sEntryAutoReverse.compareToIgnoreCase("Y") == 0){
+							glentry.setsautoreverse("1");
+						}else{
+							glentry.setsautoreverse("0");
 						}
+						glentry.setsdatdocdate(sEntryDocumentDate);
+						glentry.setsdatentrydate(sEntryDate);
+						glentry.setsentrydescription(sEntryDesc);
+						glentry.setsentrynumber(sEntryNumber);
+						glentry.setsfiscalperiod(sEntryFiscalPeriod);
+						glentry.setsfiscalyear(sEntryFiscalYear);
+						glentry.setssourceledger(sEntrySourceLedger);
+						sLastEntryNumber = sEntryNumber;
 					}
-					
 					glline = new GLTransactionBatchLine();
 					glline.setsacctid(sLineGLAcct);
 					glline.setscomment(sLineComment);
@@ -490,14 +627,13 @@ public class GLImportBatchesAction extends HttpServlet{
 					
 				iLineCounter++;
 			}
-			
-			//Now add the last line and entry:
-			glentry.addLine(glline);
-			glbatch.addBatchEntry(glentry);
-			
-			//Save the batch:
-			glbatch.save_without_data_transaction(conn, sUserID, sUserFullName, false);
-		}
+		}	
+		//Now add the last line and entry:
+		glentry.addLine(glline);
+		glbatch.addBatchEntry(glentry);
+		
+		//Save the batch:
+		glbatch.save_without_data_transaction(conn, sUserID, sUserFullName, false);
 			
 		} catch (FileNotFoundException ex) {
 			throw new Exception("Error [1557852649] File not found error reading file:= " + ex.getMessage() + ".");
@@ -544,6 +680,7 @@ public class GLImportBatchesAction extends HttpServlet{
 			String line = null;
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
+				
 				//If it's an empty line, jump out:
 				if (line.compareToIgnoreCase("") == 0){
 					break;
@@ -564,7 +701,6 @@ public class GLImportBatchesAction extends HttpServlet{
 				}else{
 					int iFieldCounter = 0;
 					line = filterQuotesAndCommas(line);
-					//System.out.println("[1557949137] - Line = '" + line + "'.");
 					String[] fields = line.split(",");
 					for (String sDelimitedField : fields) {
 						if (iFieldCounter > NUMBER_OF_FIELDS_PER_LINE){
@@ -613,10 +749,10 @@ public class GLImportBatchesAction extends HttpServlet{
 		//Strip off any quotation marks:
 		sField = sField.replace("\"", "");
 		
-		//if (bDebugMode){
-			System.out.println("[1557948467] In " + this.toString() + "FieldIndex = " + iFieldIndex 
+		if (bDebugMode){
+			System.out.println("[1557948467] In validateImportField, line " + iLineNumber + ", FieldIndex = " + iFieldIndex 
 				+ ", value = " + sField);
-		//}
+		}
 		if (iFieldIndex == FIELD_BATCH_DATE){
 			ServletUtilities.clsValidateFormFields.validateStandardDateField(sField, "Batch date on line #" + Integer.toString(iLineNumber), false);
 		}
@@ -722,23 +858,27 @@ public class GLImportBatchesAction extends HttpServlet{
 				sField, SMTablegltransactionbatchlines.ssourcetypeLength, "Line source type ('" + sField + "') on line #" + Integer.toString(iLineNumber), true);
 		}
 	}
-	private String filterQuotesAndCommas(String sLine){
+	private String filterQuotesAndCommas(String sLine) throws Exception{
 		String s = "";
 		boolean bInQuoteDelimitedField = false;
-		for (int i = 0; i < sLine.length(); i++){
-			String sTestChar = sLine.substring(i, i + 1);
-			if (sTestChar.compareToIgnoreCase("\"") == 0){
-				bInQuoteDelimitedField = !bInQuoteDelimitedField;
-				//Drop the double quote characters:
-				continue;
+		try {
+			for (int i = 0; i < sLine.length(); i++){
+				String sTestChar = sLine.substring(i, i + 1);
+				if (sTestChar.compareToIgnoreCase("\"") == 0){
+					bInQuoteDelimitedField = !bInQuoteDelimitedField;
+					//Drop the double quote characters:
+					continue;
+				}
+				if ((bInQuoteDelimitedField) && (sTestChar.compareToIgnoreCase(",") == 0)){
+					//Drop the comma in this case:
+					continue;
+				}
+				//If we got here, then was can add the character to the string:
+				s += sTestChar;
+				//System.out.println("[1404247911] filtered line: '" + s + "'.");
 			}
-			if ((bInQuoteDelimitedField) && (sTestChar.compareToIgnoreCase(",") == 0)){
-				//Drop the comma in this case:
-				continue;
-			}
-			//If we got here, then was can add the character to the string:
-			s += sTestChar;
-			//System.out.println("[1404247911] filtered line: '" + s + "'.");
+		} catch (Exception e) {
+			throw new Exception("[1558383531] - error in filerQuotesAndCommas - " + e.getMessage());
 		}
 		return s;
 	}

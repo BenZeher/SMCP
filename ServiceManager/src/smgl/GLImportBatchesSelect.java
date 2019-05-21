@@ -23,6 +23,7 @@ public class GLImportBatchesSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sObjectName = "GL Batch";
 	public static final String PARAM_INCLUDES_HEADER_ROW = "INCLUDESHEADERROW";
+	public static final String SESSION_ERROR_OBJECT = "GLIMPORTBATCHESSESSIONERROROBJECT";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -49,8 +50,13 @@ public class GLImportBatchesSelect extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-	    if (! sWarning.equalsIgnoreCase("")){
+		//String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+	    String sWarning = "";
+	    if ((String) CurrentSession.getAttribute(SESSION_ERROR_OBJECT) != null){
+	    	sWarning = (String) CurrentSession.getAttribute(SESSION_ERROR_OBJECT);
+	    }
+	    CurrentSession.removeAttribute(SESSION_ERROR_OBJECT);
+	    if (!sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);

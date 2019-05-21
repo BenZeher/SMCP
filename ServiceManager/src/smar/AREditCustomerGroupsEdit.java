@@ -39,6 +39,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
 	    		 + " " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
@@ -130,7 +131,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-	    Edit_Record(group, out, sDBID, sUserFullName);
+	    Edit_Record(group, out, sDBID, sUserFullName, sUserID);
 		
 		out.println("</BODY></HTML>");
 		return;
@@ -139,7 +140,8 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 			ARCustomerGroup group, 
 			PrintWriter pwOut, 
 			String sDBID,
-			String sUserFullName
+			String sUserFullName,
+			String sUserID
 			){
 	    
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smar." + sCalledClassName + "' METHOD='POST'>");
@@ -150,7 +152,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 		}else{
 			pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARCustomerGroup.ParamsAddingNewRecord + "\" VALUE=1>");
 		}
-		
+		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + ARCustomerGroup.ParamlLastEditUserID + "' VALUE='" + sUserID + "'>");
         //Date last maintained:
 		pwOut.println("Date last maintained: " + group.getM_datLastMaintained());
 		pwOut.println(" by user: " + group.getM_sLastEditUserFullName() + "<BR>");

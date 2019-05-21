@@ -860,149 +860,227 @@ public class GLFiscalYear extends java.lang.Object{
     	
     	String s = "";
     	
-    	boolean bAllowEmptyDateFor1stPeriod = get_sinumberofperiods().compareTo("1") != 0;
+    	boolean bAllowEmptyDateFor1stPeriod = Integer.parseInt(get_sinumberofperiods())<1;
     	try {
-    		    		set_sdatbeginningdateperiod1(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod1(), "Beginning date period 1", bAllowEmptyDateFor1stPeriod));
+    		   set_sdatbeginningdateperiod1(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod1(), "Beginning date period 1", bAllowEmptyDateFor1stPeriod));
+    		   if(bAllowEmptyDateFor1stPeriod==true && clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod1(), "Beginning date period 1", bAllowEmptyDateFor1stPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    		   			s+= "The Default Starting Value for Period 1 is not set to 00/00/0000 ";
+    		  	}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}
-    	boolean bAllowEmptyDateFor2ndPeriod = get_sinumberofperiods().compareTo("2") != 0;
+    	boolean bAllowEmptyDateFor2ndPeriod = Integer.parseInt(get_sinumberofperiods())<2;
     	try {
     		set_sdatbeginningdateperiod2(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod2(), "Beginning date period 2", bAllowEmptyDateFor2ndPeriod));
+    		if(bAllowEmptyDateFor2ndPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod2(), "Beginning date period 2", bAllowEmptyDateFor2ndPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 2 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor3rdPeriod = get_sinumberofperiods().compareTo("3") != 0;
+    	boolean bAllowEmptyDateFor3rdPeriod = Integer.parseInt(get_sinumberofperiods())<3;
     	try {
     		set_sdatbeginningdateperiod3(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod3(), "Beginning date period 3", bAllowEmptyDateFor3rdPeriod));
+    		if(bAllowEmptyDateFor3rdPeriod ==true&&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod3(), "Beginning date period 3", bAllowEmptyDateFor3rdPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 3 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor4thPeriod = get_sinumberofperiods().compareTo("4") != 0;
+    	boolean bAllowEmptyDateFor4thPeriod = Integer.parseInt(get_sinumberofperiods())<4;
     	try {
     		set_sdatbeginningdateperiod4(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod4(), "Beginning date period 4", bAllowEmptyDateFor4thPeriod));
+    		if(bAllowEmptyDateFor4thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod4(), "Beginning date period  4", bAllowEmptyDateFor4thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 4 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor5thPeriod = get_sinumberofperiods().compareTo("5") != 0;
+    	boolean bAllowEmptyDateFor5thPeriod = Integer.parseInt(get_sinumberofperiods())<5;
     	try {
     		set_sdatbeginningdateperiod5(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod5(), "Beginning date period 5", bAllowEmptyDateFor5thPeriod));
+    		if(bAllowEmptyDateFor5thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod5(), "Beginning date period 5", bAllowEmptyDateFor5thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 5 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor6thPeriod = get_sinumberofperiods().compareTo("6") != 0;
+    	boolean bAllowEmptyDateFor6thPeriod = Integer.parseInt(get_sinumberofperiods())<6;
     	try {
     		set_sdatbeginningdateperiod6(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod6(), "Beginning date period 6", bAllowEmptyDateFor6thPeriod));
+    		if(bAllowEmptyDateFor6thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod6(), "Beginning date period 6", bAllowEmptyDateFor6thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 6 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}   
-    	boolean bAllowEmptyDateFor7thPeriod = get_sinumberofperiods().compareTo("7") != 0;
+    	boolean bAllowEmptyDateFor7thPeriod = Integer.parseInt(get_sinumberofperiods())<7;
     	try {
     		set_sdatbeginningdateperiod7(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod7(), "Beginning date period 7", bAllowEmptyDateFor7thPeriod));
+    		if(bAllowEmptyDateFor7thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod7(), "Beginning date period 7", bAllowEmptyDateFor7thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 7 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor8thPeriod = get_sinumberofperiods().compareTo("8") != 0;
+    	boolean bAllowEmptyDateFor8thPeriod = Integer.parseInt(get_sinumberofperiods())<8;
     	try {
     		set_sdatbeginningdateperiod8(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod8(), "Beginning date period 8", bAllowEmptyDateFor8thPeriod));
+    		if(bAllowEmptyDateFor8thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod8(), "Beginning date period 8", bAllowEmptyDateFor8thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 8 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor9thPeriod = get_sinumberofperiods().compareTo("9") != 0;
+    	boolean bAllowEmptyDateFor9thPeriod = Integer.parseInt(get_sinumberofperiods())<9;
     	try {
     		set_sdatbeginningdateperiod9(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod9(), "Beginning date period 9", bAllowEmptyDateFor9thPeriod));
+    		if(bAllowEmptyDateFor9thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod9(), "Beginning date period 9", bAllowEmptyDateFor9thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 9 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor10thPeriod = get_sinumberofperiods().compareTo("10") != 0;
+    	boolean bAllowEmptyDateFor10thPeriod = Integer.parseInt(get_sinumberofperiods())<10;
     	try {
     		set_sdatbeginningdateperiod10(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod10(), "Beginning date period 10", bAllowEmptyDateFor10thPeriod));
+    		if(bAllowEmptyDateFor10thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod10(), "Beginning date period 10", bAllowEmptyDateFor10thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 10 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor11thPeriod = get_sinumberofperiods().compareTo("11") != 0;
+    	boolean bAllowEmptyDateFor11thPeriod = Integer.parseInt(get_sinumberofperiods())<11;
     	try {
     		set_sdatbeginningdateperiod11(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod11(), "Beginning date period 11", bAllowEmptyDateFor11thPeriod));
+    		if(bAllowEmptyDateFor11thPeriod==true &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod11(), "Beginning date period 11", bAllowEmptyDateFor11thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 11 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
-    	boolean bAllowEmptyDateFor12thPeriod = get_sinumberofperiods().compareTo("12") != 0;
+    	boolean bAllowEmptyDateFor12thPeriod = Integer.parseInt(get_sinumberofperiods())<12;
     	try {
     		set_sdatbeginningdateperiod12(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod12(), "Beginning date period 12", bAllowEmptyDateFor12thPeriod));
+    		if(bAllowEmptyDateFor12thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod12(), "Beginning date period 12", bAllowEmptyDateFor12thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 12 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	
     	//If this fiscal year has 13 periods, then we need to require a valid date for the 13th period
-    	boolean bAllowEmptyDateFor13thPeriod = get_sinumberofperiods().compareTo("13") != 0;
+    	boolean bAllowEmptyDateFor13thPeriod = Integer.parseInt(get_sinumberofperiods())<13;
     	try {
     		set_sdatbeginningdateperiod13(clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod13(), "Beginning date period 13", bAllowEmptyDateFor13thPeriod));
+    		if(bAllowEmptyDateFor13thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatbeginningdateperiod13(), "Beginning date period 13", bAllowEmptyDateFor13thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Starting Value for Period 13 is not set to 00/00/0000  ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}   	
     	
     	try {
     		set_sdatendingdateperiod1(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod1(), "Ending date period 1", bAllowEmptyDateFor1stPeriod));
+    		 if(bAllowEmptyDateFor1stPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod1(), "Ending date period 1", bAllowEmptyDateFor1stPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+	    			s+= "The Default Ending Value for Period 1 is not set to 00/00/0000  ";
+	    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}
     	try {
     		set_sdatendingdateperiod2(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod2(), "Ending date period 2", bAllowEmptyDateFor2ndPeriod));
+    		if(bAllowEmptyDateFor2ndPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod2(), "Ending date period 2", bAllowEmptyDateFor2ndPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 2 is not set to 00/00/0000  ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod3(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod3(), "Ending date period 3", bAllowEmptyDateFor3rdPeriod));
+    		if(bAllowEmptyDateFor3rdPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod3(), "Ending date period 3", bAllowEmptyDateFor3rdPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 3 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod4(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod4(), "Ending date period 4", bAllowEmptyDateFor4thPeriod));
+    		if(bAllowEmptyDateFor4thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod4(), "Ending date period  4", bAllowEmptyDateFor4thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 4 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod5(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod5(), "Ending date period 5", bAllowEmptyDateFor5thPeriod));
+    		if(bAllowEmptyDateFor5thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod5(), "Ending date period 5", bAllowEmptyDateFor5thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 5 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod6(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod6(), "Ending date period 6", bAllowEmptyDateFor6thPeriod));
+    		if(bAllowEmptyDateFor6thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod6(), "Ending date period 6", bAllowEmptyDateFor6thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 6 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod7(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod7(), "Ending date period 7", bAllowEmptyDateFor7thPeriod));
+    		if(bAllowEmptyDateFor7thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod7(), "Ending date period 7", bAllowEmptyDateFor7thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 7 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod8(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod8(), "Ending date period 8", bAllowEmptyDateFor8thPeriod));
+    		if(bAllowEmptyDateFor8thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod8(), "Ending date period 8", bAllowEmptyDateFor8thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 8 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod9(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod9(), "Ending date period 9", bAllowEmptyDateFor9thPeriod));
+    		if(bAllowEmptyDateFor9thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod9(), "Ending date period 9", bAllowEmptyDateFor9thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 9 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod10(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod10(), "Ending date period 10", bAllowEmptyDateFor10thPeriod));
+    		if(bAllowEmptyDateFor10thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod10(), "Ending date period 10", bAllowEmptyDateFor10thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 10 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod11(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod11(), "Ending date period 11", bAllowEmptyDateFor11thPeriod));
+    		if(bAllowEmptyDateFor11thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod11(), "Ending date period 11", bAllowEmptyDateFor11thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 11 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod12(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod12(), "Ending date period 12", bAllowEmptyDateFor12thPeriod));
+    		if(bAllowEmptyDateFor12thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod12(), "Ending date period 12", bAllowEmptyDateFor12thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 12 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}    	
     	try {
     		set_sdatendingdateperiod13(clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod13(), "Ending date period 13", bAllowEmptyDateFor13thPeriod));
+    		if(bAllowEmptyDateFor13thPeriod &&clsValidateFormFields.validateStandardDateField(get_sdatendingdateperiod13(), "Ending date period 13", bAllowEmptyDateFor13thPeriod).compareToIgnoreCase("00/00/0000")!=0) {
+    			s+= "The Default Ending Value for Period 13 is not set to 00/00/0000 ";
+    		}
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}   
@@ -1482,7 +1560,7 @@ public class GLFiscalYear extends java.lang.Object{
     				Date a = Date.valueOf(arrBeginningDates.get(i));
     				Date b = Date.valueOf(arrBeginningDates.get(i));
     				if(a.getTime()!=0 && b.getTime()!=0) {
-    					s+= " Default Date not Set in period " + (i+1) +". It must be set to 00/00/0000" ;
+    					s+= " Default Date not Set in period " + (i+1) +". It must be set to 00/00/0000 " ;
     				}
     			}
     		}

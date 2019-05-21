@@ -247,7 +247,55 @@ public class ICEditPOEdit  extends HttpServlet {
 					+ "\">Google Drive folder</A>&nbsp;&nbsp;"
 			    );
 		    }
-	    }	
+	    }
+		
+		boolean bCreateGDrivePOFoldersAllowed = SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMCreateGDrivePOFolders, 
+				smedit.getUserID(), 
+				getServletContext(), 
+				smedit.getsDBID(),
+				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+		);
+		
+		boolean bUseGoogleDrivePicker = false;
+		String sPickerScript = "";
+			try {
+			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+						SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE,
+						entry.getsID(),
+						getServletContext(),
+						smedit.getsDBID());
+			} catch (Exception e) {
+				System.out.println("[1557932202] - Failed to load drivepicker.js - " + e.getMessage());
+			}
+	
+			if(sPickerScript.compareToIgnoreCase("") != 0) {
+				smedit.getPWOut().println(sPickerScript);
+				bUseGoogleDrivePicker = true;
+			}
+			
+		//Create Upload file Link
+		if (entry.getsID().compareToIgnoreCase("-1") != 0 && bCreateGDrivePOFoldersAllowed){
+			//Upload file link
+			try {
+					smedit.getPWOut().println(
+							getGDocUploadLink(
+							   bUseGoogleDrivePicker,
+								entry.getsID(), 
+								smedit.getsDBID(), 
+								getServletContext(), 
+								request,
+								smedit.getUserName()
+							)
+						);
+				
+				
+			} catch (Exception e) {
+				smedit.getPWOut().println("<BR><FONT COLOR=RED><B>" + e.getMessage() + "</B></FONT><BR>");
+			}
+
+		}   
+		
 		//Create edit form 
 		String sFormString = "<FORM ID='" +  SMMasterEditEntry.MAIN_FORM_NAME + "' NAME='" + SMMasterEditEntry.MAIN_FORM_NAME + "' ACTION='" 
 				+ SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCalledClass() + "'";
@@ -268,7 +316,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			}
 
 		try {
-			smedit.getPWOut().println(getEditHTML(smedit, entry, bEditingPOAllowed, bPODocumentViewingAllowed));
+			smedit.getPWOut().println(getEditHTML(smedit, entry, bEditingPOAllowed, bPODocumentViewingAllowed, bUseGoogleDrivePicker));
 		} catch (SQLException e) {
 			String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
@@ -330,8 +378,8 @@ public class ICEditPOEdit  extends HttpServlet {
 	private String getEditHTML(SMMasterEditEntry sm, 
 							   ICPOHeader entry, 
 							   boolean bEditingPOAllowed, 
-							   boolean bPODocumentViewingAllowed
-							   //boolean bCanConfirmPO
+							   boolean bPODocumentViewingAllowed,
+							   boolean bUseGoogleDrivePicker
 							   ) throws SQLException{
 
 		//First, load the locations:
@@ -368,22 +416,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		String s = sCommandScripts(entry, sm);
 		s += sStyleScripts();
 
-		boolean bUseGoogleDrivePicker = false;
-		String sPickerScript = "";
-			try {
-			 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
-						SMCreateGoogleDriveFolderParamDefinitions.PO_RECORD_TYPE_PARAM_VALUE,
-						entry.getsID(),
-						getServletContext(),
-						sm.getsDBID());
-			} catch (Exception e) {
-				System.out.println("[1557932202] - Failed to load drivepicker.js - " + e.getMessage());
-			}
-	
-			if(sPickerScript.compareToIgnoreCase("") != 0) {
-				s += sPickerScript;
-				bUseGoogleDrivePicker = true;
-			}
+
 			
 		s += "<TABLE style=\" max-width:" + HEADER_TABLE_MAX_WIDTH +";border-style:solid; border-color:black; font-size:small; \">";
 
@@ -2419,11 +2452,16 @@ public class ICEditPOEdit  extends HttpServlet {
 		return s;
 	}
 	private String getGDocUploadLink( 
+		boolean bUseGoogleDrivePicker,
 		String sPONumber, 
 		String sDBID, 
 		ServletContext context, 
 		HttpServletRequest req,
 		String sUser) throws Exception{
+		
+		if(bUseGoogleDrivePicker){
+			return "<a onclick=\"loadPicker()\" href=\"#\">Upload File(s) to Google Drive</a>";	
+		}
 		
 		ICOption icopt = new ICOption();
 		SMOption smopt = new SMOption();		

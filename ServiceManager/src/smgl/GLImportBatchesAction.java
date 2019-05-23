@@ -66,7 +66,7 @@ public class GLImportBatchesAction extends HttpServlet{
 	//Keys used for local hash mapped member variables.
 	private static final String CALLING_CLASS = "sCallingClass";
 	
-	private static boolean bDebugMode = true;
+	private static boolean bDebugMode = false;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -308,7 +308,7 @@ public class GLImportBatchesAction extends HttpServlet{
 		try {
 			reformatACCPACStyleFile(sTempImportFilePath, fileName);
 		} catch (Exception e2) {
-			throw new Exception("Error [1558461509] validating file: " + e2.getMessage());
+			throw new Exception("Error [1558461509] checking for ACCPAC style format: " + e2.getMessage());
 		}
 		
 		try {
@@ -376,11 +376,10 @@ public class GLImportBatchesAction extends HttpServlet{
 		String sLineDebitAmt = "";
 		String sLineCreditAmt = "";
 		String sLineSourceType = "";
-		String sLastEntryNumber = "0";
 		
 		while ((line = br.readLine()) != null) {
 			//If it's NOT the 'ACCPAC' format, then just exit and go on:
-			System.out.println("[1558463344] - line = '" + line + "'");
+			//System.out.println("[1558463344] - line = '" + line + "'");
 			if (iLineCounter == 1){
 				if (line.substring(0, "RECTYPE".length()).compareToIgnoreCase("RECTYPE") != 0){
 					br.close();
@@ -399,20 +398,49 @@ public class GLImportBatchesAction extends HttpServlet{
 			String[] fields = line.split(",");
 			if (fields[ACCPAC_FORMAT_FIELD_RECORD_TYPE].compareToIgnoreCase("1") == 0){
 				//It's an 'entry' record:
-				
-				sBatchDate = fields[11].substring(4, 5) + "/" + fields[11].substring(6, 7) + fields[11].substring(0, 3);
-				sBatchDesc = fields[7] + " " + fields[11];
-				sEntryNumber = "";
-				sEntryDesc = "";
-				sEntryDate = "";
-				sEntryDocumentDate = "";
-				sEntryFiscalYear = "";
-				sEntryFiscalPeriod = "";
-				sEntrySourceLedger = "";
-				sEntryAutoReverse = "";
+				//System.out.println("[1558547351] fields[11] = '" + fields[11] + "'.");
+				sBatchDate = fields[11].substring(4, 6) 
+					+ "/" + fields[11].substring(6, 8) 
+					+ "/" + fields[11].substring(0, 4);
+				//System.out.println("[1558547352] sBatchDate = '" + sBatchDate + "'.");
+				//System.out.println("[1558547353] fields[7] = '" + fields[7] + "'.");
+				sBatchDesc = fields[7].trim() + " " + fields[11].trim();
+				//System.out.println("[1558547354] sBatchDesc = '" + sBatchDesc + "'.");
+				sEntryNumber = fields[2].trim();
+				sEntryDesc = fields[7].trim();
+				sEntryDate = fields[11].substring(4, 6) 
+					+ "/" + fields[11].substring(6, 8) 
+					+ "/" + fields[11].substring(0, 4);
+				sEntryFiscalYear = fields[5].trim();
+				sEntryFiscalPeriod = fields[6].trim();
+				sEntrySourceLedger = "JE";
+				sEntryAutoReverse = "N";
 				
 			}else{
 				//It's a 'line' record:
+				
+				//These fields are coming from the DETAIL lines:
+				
+				sEntryDocumentDate = fields[20].substring(4, 6) 
+						+ "/" + fields[20].substring(6, 8) 
+						+ "/" + fields[20].substring(0, 4);
+				sLineNumber = fields[3].trim();
+				sLineDescription = fields[19].trim();
+				sLineReference = "";
+				sLineComment = "";
+				sLineTransactionDate = fields[20].substring(4, 6) 
+						+ "/" + fields[20].substring(6, 8) 
+						+ "/" + fields[20].substring(0, 4);
+				sLineGLAcct = fields[4].trim().replace("-", "");
+				String sAmount = fields[6].trim().replace(",", "");
+				if (sAmount.startsWith("-")){
+					sLineDebitAmt = "0.00";
+					sLineCreditAmt = sAmount.replaceAll("-", "");
+				}else{
+					sLineDebitAmt = sAmount;
+					sLineCreditAmt = "0.00";
+				}
+				sLineSourceType = "JE";
 				
 				String sOutPutLine = 
 					sBatchDate
@@ -436,6 +464,7 @@ public class GLImportBatchesAction extends HttpServlet{
 					+ ", \"" + sLineSourceType + "\""
 				;
 				arrLineBuffer.add(sOutPutLine);
+				System.out.println("[1558555054] sOutPutLine = '" + sOutPutLine + "'.");
 			}
 			//for (String sDelimitedField : fields) {
 			//	if (iFieldCounter == ACCPAC_FORMAT_FIELD_RECORD_TYPE){
@@ -468,6 +497,9 @@ public class GLImportBatchesAction extends HttpServlet{
 				// just ignore it
 			}
 		}
+		
+		//TEST:
+		//throw new Exception("ACCPAC TEST");
 		return;
 	}
 	

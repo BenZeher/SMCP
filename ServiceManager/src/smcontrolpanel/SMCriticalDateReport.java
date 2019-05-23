@@ -19,7 +19,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class SMCriticalDateReport extends java.lang.Object{
 
 	private String m_sErrorMessage;
-	private boolean bDebugMode = true;
+	private boolean bDebugMode = false;
 
 	public SMCriticalDateReport(
 	){

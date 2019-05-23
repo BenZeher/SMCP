@@ -272,9 +272,21 @@ public class SMCriticalDateEdit  extends HttpServlet {
 					+ ", " + SMTablebids.TableName + "." + SMTablebids.sprojectname
 					+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername
 					+ " FROM " + SMTablebids.TableName
-					+ " WHERE " +  SMTablebids.TableName + "." + SMTablebids.sphonenumber + " = '" + entry.getdocnumber() + "'";
+					+ " WHERE " +  SMTablebids.TableName + "." + SMTablebids.lid + " = '" + entry.getdocnumber() + "'";
 			}else if(iType == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
-				sSQL = "";
+				sSQL = "SELECT "
+						+  SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname
+						+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber  
+						+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id  
+						+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername
+						+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+						+ " FROM " + SMTablesalescontacts.TableName
+						+ " LEFT JOIN " + SMTablesalesperson.TableName 
+						+ " ON " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode
+						+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+						+ " WHERE " +  SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id + " = '" + entry.getdocnumber() + "'";
 			}else if(iType == SMTablecriticaldates.AR_CALL_SHEET_RECORD_TYPE) {
 				sSQL = "";
 			}else{
@@ -293,6 +305,8 @@ public class SMCriticalDateEdit  extends HttpServlet {
 					+ sm.getFullUserName()
 					);
 				if (rsInfo.next()){
+					
+					
 					if( iType == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) {
 						s += "<TR><TD ALIGN=RIGHT><b>Ship To Name: </B></TD>";
 						s += "<TD ALIGN=LEFT>" + rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "</TD></TR>"; 
@@ -321,6 +335,37 @@ public class SMCriticalDateEdit  extends HttpServlet {
 							+ "\">" 
 							+ Integer.toString(rsInfo.getInt((SMTablebids.TableName + "." 
 							+ SMTablebids.lid).replace("`", "")))  
+							+ "</A></TD></TR>";	
+					}
+					
+					
+					if(iType == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
+						String sSalesPersonFirstName = rsInfo.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim();
+						String sSalesPersonLastName = rsInfo.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim();
+						if(sSalesPersonFirstName == null) { sSalesPersonFirstName = ""; }
+						if(sSalesPersonLastName == null) { sSalesPersonLastName = ""; }
+						String sSalesPersonFullName =  sSalesPersonFirstName + " " + sSalesPersonLastName;
+						if(sSalesPersonFullName.trim() == "") {
+							sSalesPersonFullName = "N/A";
+						}
+						
+						s +="<TR><TD ALIGN=RIGHT><b>Customer Account: </b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
+								+ SMUtilities.getURLLinkBase(getServletContext()) 
+								+ "smar.AREditCustomersEdit?CustomerNumber=" + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", ""))
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+								+ "\">" 
+								+ rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")) 
+								+ "</A> - " + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "")).trim() + "</TD></TR>";
+						s +="<TR><TD ALIGN=RIGHT><b>Sales Person: </b></TD><TD ALIGN=LEFT>" + sSalesPersonFullName + "</TD></TR>";
+						s +="<TR><TD ALIGN=RIGHT><b>Contact Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "")).trim() + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Sales Contact ID: </b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
+							+ SMUtilities.getURLLinkBase(getServletContext()) 
+							+ "smcontrolpanel.SMSalesContactEdit?id=" + Integer.toString(rsInfo.getInt((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id).replace("`", ""))) 
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+							+ "\">" 
+							+ Integer.toString(rsInfo.getInt((SMTablesalescontacts.TableName + "." 
+							+ SMTablesalescontacts.id).replace("`", "")))  
 							+ "</A></TD></TR>";	
 					}
 					

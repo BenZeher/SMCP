@@ -17,6 +17,7 @@ import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -81,6 +82,7 @@ public class SMSalesContactEdit extends HttpServlet {
 			return;
 	    }
 		
+		out.println(SMUtilities.getMasterStyleSheetLink());
 		//get current URL
 		String sCurrentURL;
 		sCurrentURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() 
@@ -91,7 +93,7 @@ public class SMSalesContactEdit extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=OriginalURL VALUE=\"" 
 	    		+ clsManageRequestParameters.get_Request_Parameter("OriginalURL", request) + "\">");
-	    out.println("<TABLE BORDER=1>");
+	    out.println("<TABLE BORDER=1 WIDTH=\"80%\">");
 	    
 	    boolean bIsNewRecord = false;
 	    if (request.getParameter("id") == null){
@@ -349,6 +351,124 @@ public class SMSalesContactEdit extends HttpServlet {
 		        				rs.getString(SMTablesalescontacts.mnotes).trim() + 
 		        				"</TEXTAREA></TD></TR>");
 
+		        	//Related critical dates
+		        	Connection conn;
+    				try {
+    					conn = clsDatabaseFunctions.getConnectionWithException(
+    						getServletContext(), 
+    						sDBID, 
+    						"MySQL", 
+    						SMUtilities.getFullClassName(this.toString()) + ".displayOrder - userID: " + sUserID
+    					);
+    				} catch (Exception e) {
+    					out.println ("Error [1411071471] getting connection - " + e.getMessage());
+    					return;
+    				}
+    				String sLicenseModuleLevel = (String) request.getSession(true).getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+		        	boolean bAllowEditCriticaldDates = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditCriticalDate, sUserID, conn, sLicenseModuleLevel);
+		        	
+		        	out.println("<TR><TD ALIGN=RIGHT>Critical Dates:&nbsp;</TD>" +
+		        				"<TD VALIGN=CENTER>");
+		        	
+		        	String SQL = "SELECT * "
+		    				+ " FROM " + SMTablecriticaldates.TableName			
+		    				+ " WHERE ("
+		    				+ "		(" + SMTablecriticaldates.itype + " = " + Integer.toString(SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) + ")"
+		    				+ " AND (" + SMTablecriticaldates.sdocnumber + " = '" + request.getParameter("id") + "')"
+		    				+ " )"
+		    				+ " ORDER BY " + SMTablecriticaldates.sCriticalDate + " , " + SMTablecriticaldates.sId
+		    				;    
+		        	ResultSet rsCriticalDates =  clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+		        	out.println("<TABLE BORDER=0 WIDTH=100%><TR>");
+		        	
+		        	if(rsCriticalDates.isBeforeFirst()) {	
+		        		out.println("<TD class = \" centerjustifiedheading \" ><FONT SIZE=2><B>ID</B></FONT></TD>");
+		        		out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Date</B></FONT></TD>");
+		        		out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Resolved?</B></FONT></TD>");
+		        		out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Responsible</FONT></B></TD>");
+		        		out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Assigned&nbsp;by</FONT></B></TD>");
+		        		out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Comments</FONT></B></TD>");
+					}
+		        	out.println("</TR>");
+		        	
+					boolean bOddRow = false;
+					String sRowColorClass = "";
+					while (rsCriticalDates.next()){
+    					
+						if(!bOddRow){
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\"";
+						}else{
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\"";
+						}
+						if (rsCriticalDates.getLong(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sId) > 0L){
+							out.println("<TR  class =" + sRowColorClass +" >");
+							String sCriticalDateID = Long.toString(rsCriticalDates.getLong(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sId)); 
+							String sCriticalDateIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+							+ "smcontrolpanel.SMCriticalDateEdit"
+							+ "?" + SMTablecriticaldates.sId + "=" + sCriticalDateID 
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+							+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sCriticalDateID) + "</A>";
+			
+							if (bAllowEditCriticaldDates){
+								out.println("<TD ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\"><FONT SIZE=2>" + sCriticalDateIDLink + "</FONT></TD>");	
+							}else{
+								out.println("<TD ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\"><FONT SIZE=2>" + sCriticalDateID + "</FONT></TD>");
+							}
+			
+							String sFontColor = "BLACK";
+							//Critical Date
+							out.println("<TD ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\"><FONT SIZE=2 COLOR=" + sFontColor + ">" 
+								+ clsDateAndTimeConversions.resultsetDateStringToString(
+										rsCriticalDates.getString(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate)) 
+								+ "</FONT></TD>")
+							;
+							
+							//Resolved:
+							out.println("<TD  ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\"><FONT SIZE=2 COLOR=" + sFontColor + " >");
+
+							if(rsCriticalDates.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sResolvedFlag) == 1) {
+								out.println("Yes");
+							}else {
+								out.println("No");
+							}
+							
+							out.println("</FONT></TD>");
+							
+							//Responsible
+							out.println("<TD VALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\" nowrap><FONT SIZE=2 COLOR=" + sFontColor + ">" 
+								+ rsCriticalDates.getString(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sresponsibleuserfullname) 
+								+ "</FONT></TD>")
+							;
+			
+							//Assigned by				
+							out.println("<TD ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\" nowrap><FONT SIZE=2 COLOR=" + sFontColor + ">" 
+									+ rsCriticalDates.getString(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sassignedbyuserfullname) 
+									+ "</FONT></TD>")
+								;
+							
+							//Comments
+							out.println("<TD ALIGN=TOP style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\"><FONT SIZE=2 COLOR=" + sFontColor + ">" 
+									+ rsCriticalDates.getString(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments) 
+									+ "</FONT></TD>")
+								;
+							out.println("</TR>");
+							
+							bOddRow = !bOddRow;
+						}
+					}
+					rsCriticalDates.close();
+	  
+					out.println("<TR><TD COLSPAN=6>");
+					out.println(SMCriticalDateEntry.addNewCriticalDateLink(
+							Integer.toString(SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE), 
+							request.getParameter("id"), 
+							sUserID, 
+							getServletContext(), 
+							sDBID));
+					out.println("</TD></TR>");	
+					out.println("</TD></TR>");
+		   				out.println("</TABLE>");		
+		   				
 		        	//Related sales leads
 		        	sSQL = "SELECT * FROM" 
 		        		+ " " + SMTablebids.TableName 
@@ -360,15 +480,21 @@ public class SMSalesContactEdit extends HttpServlet {
 		        				"<TD VALIGN=CENTER>");
 		        	ResultSet rsbids =  clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        		String sOriginationDate = "";
-					out.println("<TABLE WIDTH=100%>"
-    						+ "<TR>" 
-    						+ "<TD ALIGN=CENTER WIDTH=15% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>" + "Origination Date</B></TD>"
-    						+ "<TD ALIGN=CENTER WIDTH=10% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>ID</B></TD>" 
-    						+ "<TD ALIGN=LEFT WIDTH=30% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>Customer Name</B></TD>" 
-    						+ "<TD ALIGN=LEFT WIDTH=35% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>Project Name</B></TD>" 
-    						+ "<TD ALIGN=CENTER WIDTH=10% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>Status</B></TD>" 
+	        		out.println("<TABLE WIDTH=100%>");
+	        		if(rsbids.isBeforeFirst()) {
+	        			
+	        			out.println("<TR>" 
+    						+ "<TD class = \" centerjustifiedheading \" ><FONT SIZE=2><B>" + "Origination&nbsp;Date</B></FONT></TD>"
+    						+ "<TD class = \" centerjustifiedheading \" ><FONT SIZE=2><B>ID</B></FONT></TD>" 
+    						+ "<TD class = \" leftjustifiedheading \" ><FONT SIZE=2><B>Customer&nbsp;Name</B></FONT></TD>" 
+    						+ "<TD class = \" leftjustifiedheading \" ><FONT SIZE=2><B>Project&nbsp;Name</B></FONT></TD>" 
+    						+ "<TD class = \" centerjustifiedheading \" ><FONT SIZE=2><B>Status</B></FONT></TD>" 
     						+ "</TR>"
     					);
+	        		}
+	        		
+	        		bOddRow = false;
+					sRowColorClass = "";
 					while (rsbids.next()){
 		        		try{
 		        			sOriginationDate = Dateformatter.format(rsbids.getDate(SMTablebids.dattimeoriginationdate));
@@ -378,7 +504,14 @@ public class SMSalesContactEdit extends HttpServlet {
 		        		if (rsbids.getString(SMTablebids.dattimeoriginationdate).compareTo("0000-00-00 00:00:00") == 0){
 		        			sOriginationDate = "00/00/0000";
 		        		}
-    					out.println("<TR>" 
+		        		
+		        		if(!bOddRow){
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\"";
+						}else{
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\"";
+						}
+		        		
+    					out.println("<TR class=" +sRowColorClass + ">" 
     						+ "<TD ALIGN=CENTER style=\"vertical-align:bottom; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" + sOriginationDate + "</TD>" 
     						+ "<TD ALIGN=CENTER style=\"vertical-align:bottom; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" 
     						+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry" 
@@ -392,6 +525,7 @@ public class SMSalesContactEdit extends HttpServlet {
     						+ "<TD ALIGN=CENTER style=\"vertical-align:bottom; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" + rsbids.getString(SMTablebids.sstatus) + "</TD>" 
     						+ "</TR>"
    						);
+    					bOddRow = !bOddRow;
 					}
     				rsbids.close();
     				
@@ -399,20 +533,9 @@ public class SMSalesContactEdit extends HttpServlet {
     				out.println("</TD></TR>");
 		        	
     				//Related appointments
-    				Connection conn;
-    				try {
-    					conn = clsDatabaseFunctions.getConnectionWithException(
-    						getServletContext(), 
-    						sDBID, 
-    						"MySQL", 
-    						SMUtilities.getFullClassName(this.toString()) + ".displayOrder - userID: " + sUserID
-    					);
-    				} catch (Exception e) {
-    					out.println ("Error [1411071471] getting connection - " + e.getMessage());
-    					return;
-    				}
     				
-    				String sLicenseModuleLevel = (String) request.getSession(true).getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+    				
+    				
     				boolean bAllowEditAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditAppointmentCalendar, sUserID, conn, sLicenseModuleLevel);
     	//			boolean bAllowViewAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMViewAppointmentCalendar, sUserName, conn, sLicenseModuleLevel);
     				
@@ -425,15 +548,19 @@ public class SMSalesContactEdit extends HttpServlet {
 		        	out.println("<TR><TD ALIGN=RIGHT>Related " + SMAppointment.ParamObjectName + "s:&nbsp;</TD>" +
 	        				"<TD VALIGN=CENTER>");
 		        	ResultSet rsappointments =  clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-					out.println("<TABLE WIDTH=100%>"
-    						+ "<TR>" 
-    						+ "<TD ALIGN=CENTER WIDTH=15% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>" + "Date/Time</B></TD>"
-    						+ "<TD ALIGN=CENTER WIDTH=10% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>ID</B></TD>" 
-    						+ "<TD ALIGN=LEFT WIDTH=25% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>Schedule for</B></TD>" 
-    						+ "<TD ALIGN=LEFT WIDTH=50% style=\"vertical-align:bottom; border-bottom:thin solid black; font-family: Arial; font-weight: normal; font-size: small;\"><B>Comment</B></TD>" 
+		        	out.println("<TABLE WIDTH=100%>");
+		        	if(rsappointments.isBeforeFirst()) {
+		        		out.println( "<TR>" 
+    						+ "<TD class = \" centerjustifiedheading \" ><FONT SIZE=2><B>" + "Date/Time</B></FONT></TD>"
+    						+ "<TD class = \" leftjustifiedheading \" ><FONT SIZE=2><B>ID</B></FONT></TD>" 
+    						+ "<TD class = \" leftjustifiedheading \" ><FONT SIZE=2><B>Schedule&nbsp;for</B></FONT></TD>" 
+    						+ "<TD class = \" leftjustifiedheading \" ><FONT SIZE=2><B>Comment</B></FONT></TD>" 
     						+ "</TR>"
     					);
+		        	}
 					String sAppointmentDate = "";
+					bOddRow = false;
+					sRowColorClass = "";
 					while (rsappointments.next()){
 		        		try{
 		        			sAppointmentDate = Dateformatter.format(rsappointments.getDate(SMTableappointments.datentrydate));
@@ -441,7 +568,13 @@ public class SMSalesContactEdit extends HttpServlet {
 			        		sOriginationDate = "N/A";
 		        		}
 
-    					out.println("<TR>");
+		        		if(!bOddRow){
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + "\"";
+						}else{
+							sRowColorClass = "\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + "\"";
+						}
+		        		
+    					out.println("<TR class=" + sRowColorClass +">");
     					out.println("</TD>" 
         						+ "<TD ALIGN=CENTER style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" 
         						 + sAppointmentDate + "<br> " 
@@ -464,9 +597,19 @@ public class SMSalesContactEdit extends HttpServlet {
     					out.println("<TD ALIGN=LEFT style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" + SMUtilities.getFullNamebyUserID(rsappointments.getString(SMTableappointments.luserid), conn) + "</TD>"); 
     					out.println("<TD ALIGN=LEFT style=\"vertical-align:top; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\">" + rsappointments.getString(SMTableappointments.mcomment) + "</TD>"); 
     					out.println("</TR>");
+    					bOddRow = !bOddRow;
 					}	    	
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080658]");
 				rsappointments.close();
+
+				out.println("<TR><TD COLSPAN=6>");
+				out.println(addNewAppointmentLink(
+						request, 
+						sUserID, 
+						getServletContext(), 
+						sDBID));
+				out.println("</TD></TR>");	
+				
 				out.println("</TABLE>");
 				out.println("</TD></TR>");
 		    	}else{
@@ -484,8 +627,17 @@ public class SMSalesContactEdit extends HttpServlet {
 	    	    
 	    //save and remove buttons
 		out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITSAVE\" VALUE=\" Save \">");
-		
-    	int iSalesContactID = -1;
+		out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITREMOVE\" VALUE=\" Remove \" ONCLICK=\"return confirm('This Sales Contact will be deleted.')\">  ");
+		out.println("</BODY></HTML>");
+	}
+
+	private String addNewAppointmentLink(
+			HttpServletRequest request,
+			String sUserID, 
+			ServletContext servletContext,
+			String sDBID) {
+		String s = "";
+       int iSalesContactID = -1;
     	
     	try {
 			iSalesContactID = Integer.parseInt(request.getParameter("id"));
@@ -532,8 +684,6 @@ public class SMSalesContactEdit extends HttpServlet {
 									.getFullClassName(this.toString())
 									+ ".getEditHTML - user: " 
 									+ sUserID
-									+ " - "
-									+ sUserFullName
 							);
 					if (rsDefaultUser.next()) {
 						sDefautUserID = rsDefaultUser.getString(SMTableusers.TableName + "." + SMTableusers.lid);
@@ -556,19 +706,16 @@ public class SMSalesContactEdit extends HttpServlet {
 			} catch (SQLException e) {
 				System.out.println("ERROR: " + e.getMessage());
 			}
-		out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITREMOVE\" VALUE=\" Remove \" ONCLICK=\"return confirm('This Sales Contact will be deleted.')\">  ");
-   		if (SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMEditAppointmentCalendar, 
-				sUserID, 
-				getServletContext(), 
-				sDBID,
-				(String) request.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-   			out.println("&nbsp;<input type=\"button\" onclick=\"window.open('" + sRedirectString + "');\" value=\"Create Appointment\" />"
-					);
-   			}
-
+    		if (SMSystemFunctions.isFunctionPermitted(
+    				SMSystemFunctions.SMEditAppointmentCalendar, 
+    				sUserID, 
+    				getServletContext(), 
+    				sDBID,
+    				(String) request.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+       			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/> Add new appointment</A></FONT>";
+       			}
 		}
-		out.println("</BODY></HTML>");
+		return s;
 	}
 
 	public void doGet(HttpServletRequest request,

@@ -907,7 +907,7 @@ public class ARSQLs extends SMClasses.MySQLs {
 			+ ", " + sLastEditUserID + ""
 		+ ")"
 		;
-		//System.out.println ("Insert_CustomerGroup_SQL = " + SQL);
+		System.out.println ("[1558360566] - Insert_CustomerGroup_SQL = " + SQL);
 		return SQL;
 	}
 	

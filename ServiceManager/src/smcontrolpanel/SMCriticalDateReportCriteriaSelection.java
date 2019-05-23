@@ -102,6 +102,11 @@ import java.util.ArrayList;
 	        	out.println("<TR><TD style = \" font-size:large; font-weight:bold; \" ALIGN=CENTER VALIGN=TOP >Type </TD><TD>");
 	        	
 	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
+    					+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) + "\" "
+    					+ "CHECKED /> Sales Contact "
+    					+ "</LABEL>");
+	        	
+	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) + "\" "
 	        				+ "ID=\"" + ParamOrders + "\" "
 	        				+ "CHECKED/> Orders "

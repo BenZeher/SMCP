@@ -7,11 +7,11 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
-
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablesalesgroups;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -19,7 +19,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class SMCriticalDateReport extends java.lang.Object{
 
 	private String m_sErrorMessage;
-	private boolean bDebugMode = false;
+	private boolean bDebugMode = true;
 
 	public SMCriticalDateReport(
 	){
@@ -311,6 +311,23 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ "</A>"); 
 						}
 						
+						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
+							out.println("<b>Customer Account: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Phone: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Last Invoice Date: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 
+								+ SMUtilities.getURLLinkBase(context) 
+								+ "smcontrolpanel.SMSalesContactEdit?id=" 
+								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
+								+ SMTablebids.lid).replace("`", ""))) 
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+								+ "\">" 
+								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
+								+ SMTablebids.lid).replace("`", "")))  
+								+ "</A>");	
+						}
+						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 							out.println("<b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
@@ -398,6 +415,15 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToPhone
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber;
 			}
+			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
+				SQL += ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname
+					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber  
+					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id  
+					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber
+			//		+ ", " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sDateOfLastInvoice
+					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername;
+			}	
+			
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += ", " + SMTablebids.TableName + "." + SMTablebids.scontactname
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sphonenumber  
@@ -427,6 +453,11 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ " = " + SMTablesalesgroups.iSalesGroupId
 					;
 			}	
+			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
+				SQL += " LEFT JOIN " + SMTablesalescontacts.TableName
+				+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
+				+ "" + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id + "";
+		}
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTablebids.TableName
 					+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 

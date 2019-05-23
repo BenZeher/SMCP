@@ -103,6 +103,10 @@ function createPicker() {
 						+ files[0].id);
 				console.log('Updateing data with URL...');
 				 //Update folder url in database.
+				var sgdoclinkElement = document.getElementsByName("sgdoclink")[0];
+				if(sgdoclinkElement){
+					sgdoclinkElement.value = 'https://drive.google.com/drive/folders/' + files[0].id;
+				}
 				asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + files[0].id);
 				buildPicker();
 			//Otherwise, create  a new folder and save it to the database.
@@ -126,7 +130,11 @@ function createPicker() {
 							
 							    //Update folder url in database.
 							    console.log('Updateing SMCP data with URL.');
-							    asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + folderID);
+							    var sgdoclinkElement = document.getElementsByName("sgdoclink")[0];
+								if(sgdoclinkElement){
+									sgdoclinkElement.value = 'https://drive.google.com/drive/folders/' + folderID;
+								}
+								asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + folderID);
 							buildPicker();
 							break;
 						default:

@@ -27,6 +27,7 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
+import SMClasses.SMBatchStatuses;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTablegltransactionbatchlines;
@@ -306,7 +307,11 @@ public class GLImportBatchesAction extends HttpServlet{
 		
 		//Check the file - if it's the older 'ACCPAC' format, rewrite it in the expected format:
 		try {
-			reformatACCPACStyleFile(sTempImportFilePath, fileName);
+			if(reformatACCPACStyleFile(sTempImportFilePath, fileName)){
+				//If it WAS an 'ACCCPAC' style import, then the resulting import file will NOT
+				//have a header row:
+				bIncludesHeaderRow = false;
+			};
 		} catch (Exception e2) {
 			throw new Exception("Error [1558461509] checking for ACCPAC style format: " + e2.getMessage());
 		}
@@ -349,7 +354,8 @@ public class GLImportBatchesAction extends HttpServlet{
 
 	}
 
-	private void reformatACCPACStyleFile(String sFilePath, String sFileName) throws Exception{
+	//This function returns TRUE if it IS an 'ACCPAC STYLE' file, FALSE if not:
+	private boolean reformatACCPACStyleFile(String sFilePath, String sFileName) throws Exception{
 		BufferedReader br = null;
 		br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
 		
@@ -383,7 +389,7 @@ public class GLImportBatchesAction extends HttpServlet{
 			if (iLineCounter == 1){
 				if (line.substring(0, "RECTYPE".length()).compareToIgnoreCase("RECTYPE") != 0){
 					br.close();
-					return;
+					return false;
 				}
 			}
 			
@@ -394,6 +400,7 @@ public class GLImportBatchesAction extends HttpServlet{
 			}
 			
 			//Now we read the actual lines:
+			//System.out.println("[1558640023] - iLineCounter = " + iLineCounter + ", line = '" + line + "'.");
 			line = filterQuotesAndCommas(line);
 			String[] fields = line.split(",");
 			if (fields[ACCPAC_FORMAT_FIELD_RECORD_TYPE].compareToIgnoreCase("1") == 0){
@@ -500,7 +507,7 @@ public class GLImportBatchesAction extends HttpServlet{
 		
 		//TEST:
 		//throw new Exception("ACCPAC TEST");
-		return;
+		return true;
 	}
 	
 	private void createGLBatch(
@@ -620,10 +627,10 @@ public class GLImportBatchesAction extends HttpServlet{
 						
 						iFieldCounter++;
 					}
-					if (glbatch.getsbatchdescription().compareToIgnoreCase("") == 0){
-						glbatch.setsbatchdescription(sBatchDesc);
-						glbatch.setsbatchdate(sBatchDate);
-					}
+					//We'll just re-set these on every line, since it won't hurt anything:
+					glbatch.setsbatchdescription(sBatchDesc);
+					glbatch.setsbatchdate(sBatchDate);
+					glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
 					if (sLastEntryNumber.compareToIgnoreCase(sEntryNumber) != 0){
 						if (glentry != null){
 							glbatch.addBatchEntry(glentry);

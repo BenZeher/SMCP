@@ -7,6 +7,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
+
+import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
 import SMDataDefinition.SMTableicpoheaders;
@@ -312,10 +314,17 @@ public class SMCriticalDateReport extends java.lang.Object{
 						}
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
-							out.println("<b>Customer Account: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim() + ""); 
+							out.println("<b>Customer Account: </b>" + "<A HREF=\"" 
+									+ SMUtilities.getURLLinkBase(context) 
+									+ "smar.ARDisplayCustomerInformation?CustomerNumber=" 
+									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("&", "%26")).trim() 
+									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+									+ "\">" 
+									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim()  
+									+ "</A>");
 							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Phone: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Last Invoice Date: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Last Invoice Date: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
 							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMSalesContactEdit?id=" 
@@ -420,7 +429,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber  
 					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id  
 					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber
-			//		+ ", " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sDateOfLastInvoice
+					+ ", MAXINVOICEDATETABLE.MAXDATE AS LASTINVOICEDATE"
 					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername;
 			}	
 			
@@ -456,7 +465,14 @@ public class SMCriticalDateReport extends java.lang.Object{
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
 				SQL += " LEFT JOIN " + SMTablesalescontacts.TableName
 				+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
-				+ "" + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id + "";
+				+ "" + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id + ""
+					+ " LEFT JOIN "
+					+ "( SELECT MAX(" + SMTableartransactions.TableName + "." + SMTableartransactions.datdocdate + ") as MAXDATE,"
+						+ SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + " as CUSTOMER"
+						+ " FROM " + SMTableartransactions.TableName 
+						+ " WHERE " + SMTableartransactions.TableName + "." +SMTableartransactions.idoctype + " = 0"
+						+ " GROUP BY " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + ") as MAXINVOICEDATETABLE"
+				+ " ON MAXINVOICEDATETABLE.CUSTOMER = " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber;
 		}
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTablebids.TableName
@@ -541,7 +557,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					
 		}
 		
-		//System.out.println("[1552014955] - SQL = '" + SQL + "'");
+		System.out.println("[1552014955] - SQL = '" + SQL + "'");
 		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " SQL: " + SQL);

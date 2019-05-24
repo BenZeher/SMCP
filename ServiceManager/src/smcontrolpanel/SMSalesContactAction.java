@@ -207,18 +207,15 @@ public class SMSalesContactAction extends HttpServlet{
 						    			lid = rsLastID.getLong(SMTablebids.lid);
 						    		}
 						    		try {
-						    			if (sOriginalURL.compareToIgnoreCase("") != 0){
-						    				response.sendRedirect(
-						    						clsServletUtilities.URLDecode(sOriginalURL) + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID);
-						    			}else{
+	
 											response.sendRedirect(
 													"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 													+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 													+ "&id=" + lid
-													+ "&Status=Successfully inserted sales contact record; new ID is: "
-														+ "<FONT SIZE=4 COLOR=BLUE><B>" + lid + "</B></FONT><BR><BR>"
+													+ "&Status=" + clsServletUtilities.URLEncode("Successfully inserted sales contact record; new ID is: "
+														+ lid)
 												);
-						    			}
+					
 									} catch (Exception e) {
 										out.println("<R>Failed to reload edit screen - " + e.getMessage() + ".<BR>");
 									}

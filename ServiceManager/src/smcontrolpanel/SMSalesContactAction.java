@@ -207,7 +207,6 @@ public class SMSalesContactAction extends HttpServlet{
 						    			lid = rsLastID.getLong(SMTablebids.lid);
 						    		}
 						    		try {
-	
 											response.sendRedirect(
 													"" + SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 													+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

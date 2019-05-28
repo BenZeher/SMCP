@@ -104,7 +104,7 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    out.println("Choose import file:");
 	    out.println("</TD>");
 	    out.println("<TD>");
-	    out.println("<INPUT TYPE=FILE NAME='ImportFile' accept=\".csv\" onChange=\"validate(this.value)\">");
+	    out.println("<INPUT TYPE=FILE NAME='ImportFile' accept=\".csv,.W09\" onChange=\"validate(this.value)\">");
 	    out.println("</TD>");
 	    //out.println("<TD>");
 	    //out.println("&nbsp;");
@@ -166,14 +166,14 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 					+ "\nfunction validate(file) {\n" + 
 					"    var ext = file.split(\".\");\n" + 
 					"    ext = ext[ext.length-1].toLowerCase();      \n" + 
-					"    var arrayExtensions = [\"csv\"];\n" + 
+					"    var arrayExtensions = [\"csv\",\"w09\"];\n" + 
 					"\n" + 
 					"    if (arrayExtensions.lastIndexOf(ext) == -1) {\n" + 
-					"        alert(\"The file needs to be a .csv file.\");\n" + 
+					"        alert(\"[1559068225] The file needs to be a .csv or .W09 file.\");\n" + 
 					"    }\n" + 
 					"}\n"
 					+ "\n"
-					+ "var _validFileExtensions = [\".csv\"];    \n" + 
+					+ "var _validFileExtensions = [\".csv\",\".W09\"];    \n" + 
 					"function Validate(oForm) {\n" + 
 					"    var arrInputs = oForm.getElementsByTagName(\"input\");\n" + 
 					"    for (var i = 0; i < arrInputs.length; i++) {\n" + 
@@ -191,7 +191,7 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 					"                }\n" + 
 					"                \n" + 
 					"                if (!blnValid) {\n" + 
-					"                    alert(\"The file needs to be a .csv file.\");\n" + 
+					"                    alert(\"[1559068240] The file needs to be a .csv or .W09 file.\");\n" + 
 					"                    return false;\n" + 
 					"                }\n" + 
 					"            }\n" + 

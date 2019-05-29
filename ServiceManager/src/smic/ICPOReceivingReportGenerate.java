@@ -248,7 +248,10 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID    		);			
         	return;
     	}
-    	
+    	if(!bOutputToCSV) {
+        	out.println(sPageHeader);
+    	}
+
     	ICPOReceivingReport rpt = new ICPOReceivingReport();
     	String sReportBody = "";
     	try {
@@ -270,7 +273,6 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
 			;
 		} catch (Exception e) {
 			
-			out.println(sPageHeader);
 			out.println("Error [1545430039] - Could not print report - " + e.getMessage());
 			out.println("</BODY></HTML>");
 			return;

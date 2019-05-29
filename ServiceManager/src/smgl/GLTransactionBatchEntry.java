@@ -471,7 +471,7 @@ public class GLTransactionBatchEntry {
 		
 		if (bFiscalPeriodIsValidInt){
 			int iFiscalPeriod = Integer.parseInt(m_sfiscalperiod);
-			GLFiscalPeriod period = new GLFiscalPeriod();
+			GLFiscalYear period = new GLFiscalYear();
 			period.set_sifiscalyear(m_sfiscalyear);
 			try {
 				period.load(conn);

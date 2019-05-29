@@ -115,7 +115,8 @@ function createPicker() {
 						'name' : folderName,
 						'mimeType' : 'application/vnd.google-apps.folder',
 						'owners' : '',
-						'parents' : [ parentfolderid ]
+						'parents' : [ parentfolderid ],
+						'description' : 'Created from SMCP google drive picker.'
 					};
 					gapi.client.drive.files.create({
 						resource : fileMetadata,
@@ -157,7 +158,9 @@ function transferOwnership(fileId, domainaccount) {
 	    'transferOwnership' : true,
 	    'resource': body
 	  });
-	  request.execute(function(resp) {  console.log('Transfering ownsership to ' + domainaccount); });
+	  request.execute(function(resp) {
+		  console.log('Transfering ownsership to ' + domainaccount + ' response: ' + resp);   
+	  });
 }
 
 function buildPicker() {
@@ -194,13 +197,15 @@ function pickerCallback(data) {
 		
 	}else{
 		//If a user uploaded a file then transfer ownership of all those files
-		if (data.action == google.picker.Action.PICKED) {
+		if((data.action == google.picker.Action.PICKED) && (domainaccount)){
 			var files = data.docs;
 			for (var i = 0; i < files.length; i++) {
 				var id = files[i].id;
 				transferOwnership(id,domainaccount);
 			}
 		}
+		
+
 	}
 	//Allow function to run again.
 	currentlyRunning = false;

@@ -1295,14 +1295,18 @@ public class GLFiscalYear extends java.lang.Object{
 				}
 				
 				//System.out.println("[1531931649] - sHighestPreviousEndingDate = " + sHighestPreviousEndingDate);
-				
-				if (
+				// This is not needed. This is done farther down so all errors are displayed at the same time.
+			/*	if (
 					sPeriod1BeginningDateAsSQL.compareToIgnoreCase(sHighestPreviousEndingDate) <= 0
 				){
-					s += "  Fiscal period 1 is earlier than the last fiscal period in fiscal year " 
-						+ Long.toString(rs.getLong(SMTableglfiscalperiods.ifiscalyear)) + ".";
+		    		Calendar LastYear  = Calendar.getInstance();
+					LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
+					int year = LastYear.get(Calendar.YEAR);
+		    		int day = LastYear.get(Calendar.DATE);
+		    		int month = LastYear.get(Calendar.MONTH)+1;
+		    		s += " The Ending date in Period 1 is overlaping with the previous Fiscal Years final Ending Date: "+month+"/"+day+"/" + year + ". \n";
 					rs.close();
-				}
+				} */
 			}
 			rs.close();
 		} catch (Exception e) {
@@ -1480,74 +1484,13 @@ public class GLFiscalYear extends java.lang.Object{
 			for (int i = 0; i < Integer.parseInt(get_sinumberofperiods()); i++){
 				//If period ending date is earlier or equal to period starting date:
 				if(Date.valueOf(arrEndingDates.get(i)).before(Date.valueOf(arrBeginningDates.get(i)))){
-					s += "  Starting date in period " + (i+1) + " must be earlier than ending date in period " + (i+1) + ".";
+					s += "  Starting date in Period " + (i+1) + " must be earlier than ending date in Period " + (i+1) + ". \t";
 				}
 			}
 		} catch (Exception e) {
-			throw new Exception("Error [1555698830] checking starting and ending dates - " + e.getMessage());
+			throw new Exception("Error [1555698830] checking starting and ending dates - " + e.getMessage()+"\t");
 		}
     	
-
-    	// period i+1 starting date is not a day before period i ending date:
-    	/*
-    	try {
-    		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
-        		if(Date.valueOf(arrBeginningDates.get(i+1)).before(Date.valueOf(arrEndingDates.get(i)))){
-    				s += "  Starting date in period " + (i+2) + " must be after the ending date in period " + (i+1)+ ".";
-    			}
-        	}
-    	}catch(Exception e) {
-			throw new Exception("Error [1557944103] checking starting and ending dates - " + e.getMessage());
-    	}
-    	*/
-
-    	//If period 2 starting date is not one day after period 1 ending date:
-    	
-
-    	//Now make sure there aren't any skipped DAYS between periods:
-    	
-    	try {
-    		for(int i = 0; i  < Integer.parseInt(get_sinumberofperiods())-1; i++) {
-    		Calendar EndingCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
-    		Calendar BeginningCalendar = Calendar.getInstance();//Convert Date to Calendar for easy comparison of Calendars
-    		Calendar LastYear  = Calendar.getInstance();
-    		Calendar StartCalendar = Calendar.getInstance();
-    		
-    		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
-    		BeginningCalendar.setTime(Date.valueOf(arrBeginningDates.get(i+1)));
-    		LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
-    		StartCalendar.setTime(Date.valueOf(arrBeginningDates.get(i)));
-    		int year = LastYear.get(Calendar.YEAR);
-       		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
-    		LastYear.add(Calendar.DATE,1);
-    			if(EndingCalendar.compareTo(BeginningCalendar)<0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
-					s += "  Starting date in period " +(i+1) + " must be the previous day to the date in Period " +(i+2) + ".";
-				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
-					s += "  Starting date in period " +(i+1) + " must be before the date in period " +(i+2) + ".";
-				}else if(StartCalendar.compareTo(LastYear)>0&&i==0) {
-					s += " Fiscal period " + (i+1) +  "  is not the last day to the last fiscal period in fiscal year " + year;
-				}
-        	}
-    	}catch(Exception e) {
-			throw new Exception("Error [1557944615] checking starting and ending dates - " + e.getMessage());
-    	}
-    	
-    	try {
-    		Calendar EndingCalendar = Calendar.getInstance();
-    		Calendar NextYear = Calendar.getInstance();
-    		EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(Integer.parseInt(get_sinumberofperiods())-1)));
-    		NextYear.setTime(Date.valueOf(arrEndingDates.get(Integer.parseInt(get_sinumberofperiods())-2)));
-    		int year = NextYear.get(Calendar.YEAR)+1;
-    		NextYear.set(year, 0, 1);
-    		EndingCalendar.add(Calendar.DATE, 1);
-    		if(EndingCalendar.compareTo(NextYear)<0) {
-    			s += " Fiscal period " + Integer.parseInt(get_sinumberofperiods()) +"  does not encompass the whole year  " + (year-1) ;
-    		}
-    	}catch (Exception e){
-    		throw new Exception("Error [1558450722] checking  ending date of last period - " + e.getMessage());
-    	}
-    	
-
     	/*This checks 3 cases:
     	 * Case1: the Starting date of the next period is before the ending date of the current period
     	 * Case2: the Ending date of the current period is not next to the beginning date of the next period (some dates are being passed over)
@@ -1565,22 +1508,36 @@ public class GLFiscalYear extends java.lang.Object{
     		LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
     		StartCalendar.setTime(Date.valueOf(arrBeginningDates.get(i)));
     		int year = LastYear.get(Calendar.YEAR);
+    		int day = LastYear.get(Calendar.DATE);
+    		int month = LastYear.get(Calendar.MONTH)+1;
        		EndingCalendar.add(Calendar.DATE, 1);//Make the End of the current month +1 so it will be the beginning of the next month.
     		LastYear.add(Calendar.DATE,1);//Make the end of the last year +1 so it will be the beginning of the first period.
-    			if(EndingCalendar.compareTo(BeginningCalendar)<0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
-					s += "  Starting date in period " +(i+1) + " must be the previous day to the date in Period " +(i+2) + ". /n";
+    			if(StartCalendar.compareTo(LastYear)<0&&i==0) {
+    				s += " The Ending date in Period 1 is overlaping with the previous Fiscal Years final Ending Date: "+month+"/"+day+"/" + year + ". \n";	
+    				if(EndingCalendar.compareTo(BeginningCalendar)<0) {
+    					s += "  There are missing days between Ending date in Period " +(i+1) + " and Beginning Date in Period " +(i+2) + ". \t";
+    				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
+    					s += "  The Ending date in Period " +(i+1) + " is overlaping with Beginning Date in Period " +(i+2) + ". \t";
+    				}
+    			}else if(StartCalendar.compareTo(LastYear)>0&&i==0) {
+					s += " There are missing days between Ending Date in  Period " + (i+1) +  " and  previous Fiscal Years final Ending Date: "+month+"/"+day+"/" + year + ". \t";
+					if(EndingCalendar.compareTo(BeginningCalendar)<0) {
+    					s += "  There are missing days between Ending date in Period " +(i+1) + " and Beginning Date in Period " +(i+2) + ". \t";
+    				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
+    					s += "  The Ending date in Period " +(i+1) + " is overlaping with Beginning Date in Period " +(i+2) + ". \t";
+    				}
+				}else if(EndingCalendar.compareTo(BeginningCalendar)<0){ //if The Ending day of the month +1 is not the Beginning Day of the next month, there will be an issue.
+					s += "  There are missing days between Ending date in Period " +(i+1) + " and Beginning Date in Period " +(i+2) + ". \t";
 				}else if(EndingCalendar.compareTo(BeginningCalendar)>0) {
-					s += "  Starting date in period " +(i+1) + " must be before the date in period " +(i+2) + ". /n";
-				}else if(StartCalendar.compareTo(LastYear)>0&&i==0) {
-					s += " Fiscal period " + (i+1) +  "  is not the last day to the last fiscal period in fiscal year " + year + ". /n";
-				}
-        	}
+					s += "  The Ending date in Period " +(i+1) + " is overlaping with Beginning Date  in Period " +(i+2) + ". \t";
+				} 
+			}
     	}catch(Exception e) {
-			throw new Exception("Error [1557944615] checking starting and ending dates - " + e.getMessage() + ". /n");
+			throw new Exception("Error [1557944615] checking starting and ending dates - " + e.getMessage() + ". \t");
     	}
     	
-    	//This ensures that you account that the final period ends on the last day of the year. This can be altered or changed depending on what is necessary. 
-    	try {
+    //This was not needed, since the next year will consider the previous years information. This was to ensure that the year encompassed every day.
+    /*	try {
     		if(Integer.parseInt(get_sinumberofperiods())!=1) {
     			Calendar EndingCalendar = Calendar.getInstance();
     			Calendar NextYear = Calendar.getInstance();
@@ -1607,7 +1564,7 @@ public class GLFiscalYear extends java.lang.Object{
     	}catch (Exception e){
     		throw new Exception("Error [1558450722] checking the ending date of last period - " + e.getMessage());
     	}
-    	
+  */  
 
     	if (s.compareToIgnoreCase("") != 0){
     		throw new Exception(s);

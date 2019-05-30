@@ -148,7 +148,8 @@ function createPicker() {
 }
 
 function transferOwnership(fileId, domainaccount) {
-	  var body = {
+	console.log('Transfering ownsership of files.');  
+	var body = {
 	    'emailAddress': domainaccount,
 	    'type': 'user',
 	    'role': 'owner'
@@ -159,7 +160,7 @@ function transferOwnership(fileId, domainaccount) {
 	    'resource': body
 	  });
 	  request.execute(function(resp) {
-		  console.log('Transfering ownsership to ' + domainaccount + ' response: ' + resp);   
+		  console.log('Transfered ownsership to ' + domainaccount + ' response: ' + resp);   
 	  });
 }
 
@@ -189,24 +190,24 @@ function buildPicker() {
 }
 
 function pickerCallback(data) {
+	
+	//If a user uploaded a file and there is domain account to tranfer to then transfer ownership of all those files
+	if((data.action == google.picker.Action.PICKED) && (domainaccount)){
+		var files = data.docs;
+		for (var i = 0; i < files.length; i++) {
+			var id = files[i].id;
+			transferOwnership(id,domainaccount);
+		}
+	}
+	
 	//If the user picked a files then display it.
 	if ((data.action == google.picker.Action.PICKED) && (!data.docs[0].isNew)) {
 		var fileId = data.docs[0].id;
 		picker.setVisible(true);
 		window.open(data.docs[0].url);	
 		
-	}else{
-		//If a user uploaded a file then transfer ownership of all those files
-		if((data.action == google.picker.Action.PICKED) && (domainaccount)){
-			var files = data.docs;
-			for (var i = 0; i < files.length; i++) {
-				var id = files[i].id;
-				transferOwnership(id,domainaccount);
-			}
-		}
-		
-
 	}
+
 	//Allow function to run again.
 	currentlyRunning = false;
 }

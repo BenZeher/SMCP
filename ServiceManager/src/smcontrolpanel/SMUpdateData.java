@@ -20,7 +20,7 @@ public class SMUpdateData extends java.lang.Object{
 
 	private static final int m_CurrentDatabaseVersion = 1390;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "5/30/2019";
+	private static final String m_sLastRevisionDate = "5/31/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14374,19 +14374,19 @@ public class SMUpdateData extends java.lang.Object{
 			//BEGIN CASE:
 			case 1389:
 				//Added by TJR 5/30/2019
-				SQL = "SELECT COUNT(*) FROM faoptions";
+				SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM faoptions";
 				long lCount = 0L;
 				try {
 					ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 					if(rs.next()){
-						lCount = rs.getLong(0);
+						lCount = rs.getLong("RECORDCOUNT");
 					}
 					rs.close();
 				} catch (SQLException e) {
 					m_sErrorMessage = "Error [1559238787] reading faoptions table - " + e.getMessage();
 							return false;
 				}
-				if (lCount == 0){
+				if (lCount == 0L){
 					SQL = "INSERT INTO faoptions ("
 						+ "ifeedgl"
 						+ ") VALUES ("

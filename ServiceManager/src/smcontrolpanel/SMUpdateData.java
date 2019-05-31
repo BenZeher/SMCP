@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1389;
+	private static final int m_CurrentDatabaseVersion = 1390;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "5/31/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14367,6 +14367,35 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE `gltransactionbatchlines` CHANGE COLUMN scomment scomment VARCHAR(254) NOT NULL DEFAULT ''";
 				
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1389:
+				//Added by TJR 5/30/2019
+				SQL = "SELECT COUNT(*) FROM faoptions";
+				long lCount = 0L;
+				try {
+					ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+					if(rs.next()){
+						lCount = rs.getLong(0);
+					}
+					rs.close();
+				} catch (SQLException e) {
+					m_sErrorMessage = "Error [1559238787] reading faoptions table - " + e.getMessage();
+							return false;
+				}
+				if (lCount == 0){
+					SQL = "INSERT INTO faoptions ("
+						+ "ifeedgl"
+						+ ") VALUES ("
+						+ "0"
+						+ ")"
+					;
+					if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				}
+				
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

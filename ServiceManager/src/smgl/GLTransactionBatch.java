@@ -1014,13 +1014,15 @@ public class GLTransactionBatch {
 			GLTransactionBatchEntry entry = m_arrBatchEntries.get(i);
     		createIndividualTransaction(
     			entry, 
-    			conn
+    			conn,
+    			sUserID
     		);
     	}
     }
     private void createIndividualTransaction(
     		GLTransactionBatchEntry entry,
-    		Connection conn) throws Exception{
+    		Connection conn,
+    		String sUserID) throws Exception{
     	
     	for (int i = 0; i < entry.getLineArray().size(); i++){
     		GLTransactionBatchLine line = entry.getLineArray().get(i);
@@ -1102,7 +1104,133 @@ public class GLTransactionBatch {
     			throw new Exception("Error [1555956425] inserting transaction for entry number " + entry.getsentrynumber() + " - SQL = '" + SQL + "' -" + e.getMessage());
     		}
     	}
+    	
+    	//If it's an 'auto-reverse', try to create reversing transactions in the next period:
+    	if (entry.getsautoreverse().compareToIgnoreCase("1") == 0){
+    		//Create a 'reversing' entry:
+    		try {
+				createReversingEntry(entry, conn, sUserID);
+			} catch (Exception e) {
+				throw new Exception("Error [1559328811] creating auto-reversed entry for entry number " + entry.getsentrynumber() + " - " + e.getMessage());
+			}
+    	}
+    	
        	return;
+    }
+    
+    private void createReversingEntry(GLTransactionBatchEntry entry, Connection conn, String sUserID) throws Exception{
+    	
+    	//First, get the next fiscal period:
+    	String sNextFiscalPeriod = GLFiscalYear.getNextFiscalPeriod(entry.getsfiscalyear(), entry.getsfiscalperiod(), conn);
+    	String sNextFiscalYear = GLFiscalYear.getNextFiscalYear(entry.getsfiscalyear(), entry.getsfiscalperiod(), conn);
+    	entry.setsfiscalperiod(sNextFiscalPeriod);
+    	entry.setsfiscalyear(sNextFiscalYear);
+    	
+    	//Now validate the entry with the updated fiscal year and period:
+    	try {
+			entry.validate_fields(conn, sUserID, true);
+		} catch (Exception e1) {
+			throw new Exception("Error [1559330702] - validating reversing entry for entry number " + entry.getsentrynumber() + " - " + e1.getMessage());
+		}
+    	
+    	for (int i = 0; i < entry.getLineArray().size(); i++){
+    		GLTransactionBatchLine line = entry.getLineArray().get(i);
+
+    		//Get the normal GL account type:
+        	GLAccount acct = new GLAccount(line.getsacctid());
+        	if(!acct.load(conn)){
+        		throw new Exception("Error [1559329651] loading GL account '" + line.getsacctid() + "' - " + acct.getErrorMessageString());
+        	}
+        	
+        	String sTransactionAmt = "0.00";
+        	//System.out.println("[1556038816] getsdebitamt() = '" + line.getsdebitamt() + "'");
+        	//System.out.println("[1556038817] getscreditamt() = '" + line.getscreditamt() + "'");
+        	
+        	//This is the normal logic for determining the debits and credits:
+			if (Integer.parseInt(acct.getsinormalbalancetype()) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+				//System.out.println("[1556038830] account is normally a DEBIT balance");
+				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
+					sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
+				}
+				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
+					sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
+				}
+				//System.out.println("[1556038832] sTransactionAmt = '" + sTransactionAmt + "'.");
+			// But if the account is normally a credit balance:
+			}else{
+				//System.out.println("[1556038831] account is normally a CREDIT balance");
+				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
+					sTransactionAmt = "-" +line.getsdebitamt().replaceAll(",", "");
+				}
+				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
+					sTransactionAmt = line.getscreditamt().replaceAll(",", "");
+				}
+				//System.out.println("[1556038833] sTransactionAmt = '" + sTransactionAmt + "'.");
+			}
+			
+			//But now - because this is a REVERSAL of the original entry, we are going to reverse the sign
+			//of the amount:
+			
+			if (sTransactionAmt.startsWith("-")){
+				sTransactionAmt = sTransactionAmt.replaceAll("-", "");
+			}else{
+				sTransactionAmt = "-" + sTransactionAmt;
+			}
+			
+			String sDescription = "(REVERSED) " + line.getsdescription();
+			if (sDescription.length() > SMTablegltransactionlines.sdescriptionLength){
+				sDescription = sDescription.substring(0, SMTablegltransactionlines.sdescriptionLength - 1);
+			}
+			
+	    	String SQL = "INSERT INTO"
+        		+ " " + SMTablegltransactionlines.TableName
+        		+ " ("
+        		+ " " + SMTablegltransactionlines.bdamount
+        		+ ", " + SMTablegltransactionlines.datpostingdate
+        		+ ", " + SMTablegltransactionlines.dattransactiondate
+        		+ ", " + SMTablegltransactionlines.iconsolidatedposting
+        		+ ", " + SMTablegltransactionlines.ifiscalperiod
+        		+ ", " + SMTablegltransactionlines.ifiscalyear
+        		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
+        		+ ", " + SMTablegltransactionlines.loriginalentrynumber
+        		+ ", " + SMTablegltransactionlines.loriginallinenumber
+        		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+        		+ ", " + SMTablegltransactionlines.sacctid
+        		+ ", " + SMTablegltransactionlines.sdescription
+        		+ ", " + SMTablegltransactionlines.sreference
+        		+ ", " + SMTablegltransactionlines.ssourceledger
+        		+ ", " + SMTablegltransactionlines.ssourcetype
+        		+ ", " + SMTablegltransactionlines.stransactiontype
+        		
+        		+ ") VALUES ("
+        		+ " " + sTransactionAmt				//bdamount
+        		+ ", '" + getsposteddateInSQLFormat() + "'" //datpostingdate
+        		+ ", '" + entry.getsdatdocdateInSQLFormat() + "'"  //dattransactiondate
+        		+ ", 0" //iconsolidatedposting
+        		+ ", " + entry.getsfiscalperiod() //ifiscalperiod
+        		+ ", " + entry.getsfiscalyear() //ifiscalyear
+           		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
+        		+ ", " + line.getsentrynumber() //loriginalentrynumber
+        		+ ", " + line.getslinenumber() //loriginallinenumber
+        		+ ", " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
+        		+ ", '" + line.getsacctid() + "'" //sacctid
+        		+ ", '" + sDescription + "'" //sdescription
+        		+ ", '" + line.getsreference() + "'" //sreference
+        		+ ", '" + line.getssourceledger() + "'" //ssourceledger
+        		+ ", '" + line.getssourcetype() + "'" //ssourcetype
+        		+ ", 0" //stransactiontype
+        		+ ")"
+        	;
+
+        	try {
+    			Statement stmt = conn.createStatement();
+    			stmt.execute(SQL);
+    		} catch (Exception e) {
+    			throw new Exception("Error [1555956425] inserting transaction for entry number " + entry.getsentrynumber() + " - SQL = '" + SQL + "' -" + e.getMessage());
+    		}
+    	}
+    	
+    	return;
     }
 
     private void checkBatchEntries(SMLogEntry log, String sUserID, Connection conn) throws Exception{
@@ -1162,6 +1290,9 @@ public class GLTransactionBatch {
 				+ " - " + e2.getMessage() + "."); 
 		}
     	
+		//If it's an 'auto reverse', check that the reversing entry can be made in the next period:
+		//TODO
+		
     	return;
     }
     private void updateFinancialStatementData(

@@ -1746,6 +1746,42 @@ public class GLFiscalYear extends java.lang.Object{
 		String sCurrentDate = servertime.getCurrentDateTimeInSelectedFormat(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY);
 		return getFiscalPeriodForSelectedDate(sCurrentDate, conn);
 	}
+	
+	public static String getNextFiscalPeriod(String sFiscalYear, String sFiscalPeriod, Connection conn)
+		throws Exception{
+		
+		GLFiscalYear fycurrent = new GLFiscalYear();
+		fycurrent.set_sifiscalyear(sFiscalYear);
+		try {
+			fycurrent.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [1559329380] loading fiscal year " + sFiscalYear + "' - " + e.getMessage());
+		}
+		//If it's the last period of the year, then we have to get the next fiscal year and use the first period:
+		if (fycurrent.get_sinumberofperiods().compareToIgnoreCase(sFiscalPeriod) == 0){
+			return "1";
+		}else{
+			return Integer.toString((Integer.parseInt(sFiscalPeriod) + 1));
+		}
+	}
+	public static String getNextFiscalYear(String sFiscalYear, String sFiscalPeriod, Connection conn)
+			throws Exception{
+			
+			GLFiscalYear fycurrent = new GLFiscalYear();
+			fycurrent.set_sifiscalyear(sFiscalYear);
+			try {
+				fycurrent.load(conn);
+			} catch (Exception e) {
+				throw new Exception("Error [1559329381] loading fiscal year " + sFiscalYear + "' - " + e.getMessage());
+			}
+			//If it's the last period of the year, then we have to get the next fiscal year:
+			if (fycurrent.get_sinumberofperiods().compareToIgnoreCase(sFiscalPeriod) == 0){
+				return Integer.toString((Integer.parseInt(sFiscalYear) + 1));
+			}else{
+				return sFiscalYear;
+			}
+		}
+	
 	public void set_sdatbeginningdateperiod1(String sDate) {
 		m_sdatbeginningdateperiod1 = sDate;
 	}

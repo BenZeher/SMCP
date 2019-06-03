@@ -88,7 +88,7 @@ public class SMInvoicePrinter extends Object{
 		}else{
 			m_sHTMLBreakTag = "<BR>";
 		}
-		m_sLogoImageFileType = SMUtilities.getImageFileGraphicsType(SMUtilities.getFileSuffix(m_sLogoImagePath));
+		m_sLogoImageFileType = SMUtilities.getImageFileGraphicsType(SMUtilities.getFileSuffix(m_InvoiceLogo));
 	}
 	
 	public static final String getPageBreak(){
@@ -460,9 +460,10 @@ public class SMInvoicePrinter extends Object{
 				//&& (m_sBase64LogoImage.compareToIgnoreCase("") != 0)
 			 ){	
 				try {
-					m_sBase64LogoImage = clsBase64Functions.loadFileIntoBase64Image(m_InvoiceLogo, m_sLogoImageFileType);
+					m_sBase64LogoImage = clsBase64Functions.loadFileIntoBase64Image(m_sLogoImagePath + m_InvoiceLogo, m_sLogoImageFileType);
 				} catch (Exception e) {
 					//Base 64 encoding failed for some reason - set the image to an empty string:
+					System.out.println("base64 emcoding failed for invoice image. Error [1559565996] - " + e.getMessage());
 					m_sBase64LogoImage = "";
 				}
 				

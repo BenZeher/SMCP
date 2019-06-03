@@ -1308,8 +1308,14 @@ public class clsServletUtilities {
 	public static String getImageFileGraphicsType(String  sFileSuffix) {
 		//Do a little filtering:
 		String sImageFileType = sFileSuffix;
-		if (sImageFileType.compareToIgnoreCase("jpeg") == 0){
+		if (sImageFileType.contains(".jpeg")){
 			sImageFileType = "jpg";
+		}
+		if (sImageFileType.contains(".gif")){
+			sImageFileType = "gif";
+		}
+		if (sImageFileType.contains(".png")){
+			sImageFileType = "png";
 		}
 		return sImageFileType;
 	}

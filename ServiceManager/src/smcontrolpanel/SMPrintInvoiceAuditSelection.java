@@ -70,7 +70,7 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
     			"            var a = document.getElementById(\"ORDERCHECK\").value;\n" + 
     			"            var b = document.getElementById(\"INVOICECHECK\").value;\n" + 
     			"            if(a!=\"\"&&b!=\"\"){\n" + 
-    			"                alert(\"Input only Order number or Invoice Number.  [1559586871]\");\n" + 
+    			"                alert(\"Input only Order Number or Invoice Number.  [1559586871]\");\n" + 
     			"                return false;\n" + 
     			"            };\n" + 
     			"            return true;\n" + 

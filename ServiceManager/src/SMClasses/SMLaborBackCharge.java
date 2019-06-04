@@ -499,6 +499,10 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	  if (m_svendoritemnumber.length() > SMTablelaborbackcharges.svendoritemnumberlength){
 	      sErrors += "Vendor item number cannot be more than " + Integer.toString(SMTablelaborbackcharges.svendoritemnumberlength) + " characters.  ";
 	    }
+	  if (m_svendoritemnumber.compareToIgnoreCase("") == 0){
+		  sErrors += "Vendor item number cannot be blank.   ";
+      }
+	  
 	  
       if(m_bdcreditreceived.compareToIgnoreCase("") == 0){
     	  m_bdcreditreceived = "0.00";

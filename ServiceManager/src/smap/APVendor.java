@@ -1058,7 +1058,7 @@ public class APVendor extends clsMasterEntry{
         	(m_ivendorgroupid.compareToIgnoreCase("0") == 0)
         	|| (m_ivendorgroupid.compareToIgnoreCase("") == 0)
         ){
-        	super.addErrorMessage("Vendor group is invalid).");
+        	super.addErrorMessage("Vendor group is invalid.");
         	bEntriesAreValid = false;
         }
         

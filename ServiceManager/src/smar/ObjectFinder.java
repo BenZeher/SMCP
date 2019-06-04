@@ -84,7 +84,6 @@ public class ObjectFinder extends HttpServlet {
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
 	    //Get the parameters:
 	    String sObjectName = clsManageRequestParameters.get_Request_Parameter(FinderResults.FINDER_OBJECT_NAME_PARAM, request);
@@ -95,6 +94,13 @@ public class ObjectFinder extends HttpServlet {
 	    String sParameterString = "";
 	    if (request.getParameter(FinderResults.FINDER_PARAMETER_STRING_PARAM) != null){
 	    	sParameterString = request.getParameter(FinderResults.FINDER_PARAMETER_STRING_PARAM);
+	    }
+	    
+	    String sDBID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
+	    //The DBID should always be passed in by the request, so there's no conflict with an existing session.
+	    //But just in case it's NOT, we'll get it from the session as a last resort...
+	    if (sDBID.compareToIgnoreCase("") == 0){
+	    	sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    }
 	    
 	    String title = "Find " + sObjectName + ".";

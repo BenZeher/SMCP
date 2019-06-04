@@ -106,7 +106,7 @@ public class ICDisplayItemSelection  extends HttpServlet {
 			+ "&ResultHeading5=Picking%20Sequence"
 			*/
 						
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "\"> Find item</A></P>");
 		
 		out.println("</TR></TABLE>");

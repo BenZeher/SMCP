@@ -150,8 +150,8 @@ public class SMEditBidAction extends HttpServlet{
 				+ "&ResultHeading6=On%20Hold"
 				+ "&ResultListField7="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading7=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID() 
-				+ "*" + SMEditBidEntry.CUSTOMER_SEARCH + "=yes"
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID() 
+				+ "&ParameterString=*" + SMEditBidEntry.CUSTOMER_SEARCH + "=yes"
 				+ "*" + SMBidEntry.ParamID + "=" + entry.slid()
 				+ "*" + "&" + SMEditBidEntry.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMEditOrderEdit.RECORDWASCHANGED_FLAG, request)
 				+ "*CallingClass=" + smaction.getCallingClass()
@@ -322,8 +322,8 @@ public class SMEditBidAction extends HttpServlet{
 				+ "&ResultHeading5=Customer%20Name"
 				+ "&ResultListField6="  + SMTablesalescontacts.salespersoncode
 				+ "&ResultHeading6=Salesperson"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID() 
-				+ "*" + SMEditBidEntry.SALES_CONTACT_ID_SEARCH + "=yes"
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID() 
+				+ "&ParameterString=*" + SMEditBidEntry.SALES_CONTACT_ID_SEARCH + "=yes"
 				+ "*" + SMBidEntry.ParamID + "=" + entry.slid()
 				+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "*" + "&" + SMEditBidEntry.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMEditOrderEdit.RECORDWASCHANGED_FLAG, request)

@@ -77,8 +77,8 @@ public class SMEditOrderHandler extends HttpServlet{
 				+ "&ResultHeading6=On%20Hold"
 				+ "&ResultListField7="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading7=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "*" + SMEditOrderSelection.RETURNINGFROMFINDCUSTOMER_PARAM + "=TRUE"
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&ParameterString=*" + SMEditOrderSelection.RETURNINGFROMFINDCUSTOMER_PARAM + "=TRUE"
 			;
 			redirectProcess(sRedirectString, response);
 			return;

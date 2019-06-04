@@ -122,7 +122,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 				+ "&ResultHeading4=Phone"
 				+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading5=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				//+ "*" + "EndingCustomer=" + SMUtilities.get_Request_Parameter(ARAutoCreateCallSheetsSelection.ENDING_CUSTOMER_FIELD, request)
 				+ sParamString
 				;
@@ -157,7 +157,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 				+ "&ResultHeading4=Phone"
 				+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading5=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				//+ "*" + "EndingCustomer=" + SMUtilities.get_Request_Parameter(ARAutoCreateCallSheetsSelection.ENDING_CUSTOMER_FIELD, request)
 				+ sParamString
 				;

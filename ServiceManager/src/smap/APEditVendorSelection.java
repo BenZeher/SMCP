@@ -78,7 +78,7 @@ public class APEditVendorSelection extends HttpServlet {
 			+ APVendor.getFindVendorLink(
 				clsServletUtilities.getFullClassName(this.toString()), 
 				APVendor.Paramsvendoracct, 
-				SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID(),
+				"",
 				getServletContext(),
 				smselect.getsDBID()
 			)

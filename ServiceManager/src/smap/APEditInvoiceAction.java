@@ -205,7 +205,7 @@ public class APEditInvoiceAction extends HttpServlet{
 				APVendor.getFindVendorLink(
 					smaction.getCallingClass(), 
 					APEditInvoiceEdit.FOUND_VENDOR_PARAMETER, 
-					SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID(), 
+					"", 
 					getServletContext(),
 					smaction.getsDBID()
 				)

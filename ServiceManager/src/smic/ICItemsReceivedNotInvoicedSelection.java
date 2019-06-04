@@ -148,7 +148,7 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 					+ APVendor.getFindVendorLink(
 						clsServletUtilities.getFullClassName(this.toString()), 
 						PARAM_VENDOR, 
-						SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID,
+						"",
 						getServletContext(),
 						sDBID
 					)

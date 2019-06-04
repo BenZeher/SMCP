@@ -91,7 +91,7 @@ public class SMDisplayJobCostSelect  extends HttpServlet {
 				+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
 			+ "&" + FinderResults.RESULT_FIELD_ALIAS + "4=CANCELEDDATE"
 			+ "&ResultHeading4=Canceled"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "\"> Find order</A></TD>");
 		
 		out.println("</TR></TABLE>");

@@ -268,8 +268,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ APVendor.getFindVendorLink(
 				clsServletUtilities.getFullClassName(this.toString()), 
 				SMMaterialReturn.Paramsvendoracct, 
-				SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
-					+ "*" + SMMaterialReturn.Paramlid + "=" + entry.getslid(),
+				SMMaterialReturn.Paramlid + "=" + entry.getslid(),
 				getServletContext(),
 				sm.getsDBID()
 			)

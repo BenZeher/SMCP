@@ -109,7 +109,7 @@ public class AREditCustomers extends HttpServlet {
 			+ "&ResultHeading6=On%20Hold"
 			+ "&ResultListField7="  + SMTablearcustomer.sCustomerGroup
 			+ "&ResultHeading7=Customer%20Group"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "\">Find customer</A></P>";
 		
 		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";

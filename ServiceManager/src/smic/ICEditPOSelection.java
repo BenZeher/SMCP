@@ -114,7 +114,7 @@ public class ICEditPOSelection extends HttpServlet {
 		+ "&ResultHeading7=PO%20Date"
 		+ "&ResultListField8="  + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.screatedbyfullname
 		+ "&ResultHeading8=Created%20By"
-		+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
+		//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "\"> Search ALL purchase orders</A>";
 
 		//Search OPEN Purchase Orders
@@ -152,7 +152,7 @@ public class ICEditPOSelection extends HttpServlet {
 		+ "&ResultHeading7=PO%20Date"
 		+ "&ResultListField8="  + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.screatedbyfullname
 		+ "&ResultHeading8=Created%20By"
-		+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
+		//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "\"> Search OPEN purchase orders</A>";
 		
 		//Search purchase order by Item.
@@ -188,7 +188,7 @@ public class ICEditPOSelection extends HttpServlet {
 		+ "&ResultHeading9=PO%20Date"
 		+ "&ResultListField10="  + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.screatedbyfullname
 		+ "&ResultHeading10=Created%20By"
-		+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
+		//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "\"> Search purchase orders by Item</A></P>";
 
 		return s;

@@ -107,7 +107,7 @@ public class APAgedPayablesGenerate extends HttpServlet {
 			sParamString += "*" + APAgedPayablesSelect.PARAM_INCLUDE_TRANSACTIONS_ON_HOLD + "=" + "Y";
 		}
 		
-		sParamString += "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		//sParamString += "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		
 		//Special cases - if this class was called by a finder for the 'starting customer' field:
 		if (request.getParameter(APAgedPayablesSelect.FIND_STARTING_VENDOR_BUTTON_NAME) != null){

@@ -185,7 +185,7 @@ public class SMEditOrderSelection extends HttpServlet {
 					+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
 				+ "&" + FinderResults.RESULT_FIELD_ALIAS + "7=CANCELEDDATE"
 				+ "&ResultHeading7=Canceled"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order</A>"
 
 				//Add EXTENDED order find:
@@ -257,7 +257,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				+ "&ResultHeading16=Canceled"
 				+ "&ResultListField17="  + SMTableorderheaders.sOrderCreatedByFullName
 				+ "&ResultHeading17=Created%20By"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order (extended search)</A>"
 				//Add order DETAIL find:
 				+ "&nbsp;&nbsp;"
@@ -292,7 +292,7 @@ public class SMEditOrderSelection extends HttpServlet {
 					+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
 				+ "&" + FinderResults.RESULT_FIELD_ALIAS + "9=CANCELEDDATE"
 				+ "&ResultHeading9=Canceled"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order (detail search)</A>"
 				//Quote finder:
 				+"&nbsp;&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
@@ -323,7 +323,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				+ "&ResultHeading6=Order%20Date"
 				//+ "&ResultListField4="  + SMTablearcustomer.sPhoneNumber
 				//+ "&ResultHeading4=Phone"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find quote</A>"
 		
 				//Proposal finder:
@@ -391,7 +391,7 @@ public class SMEditOrderSelection extends HttpServlet {
 							+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
 					+ "&" + FinderResults.RESULT_FIELD_ALIAS + "16=CANCELEDDATE"
 				+ "&ResultHeading16=Canceled"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find proposal</A>"
 				+ "</TD>");
 

@@ -83,7 +83,7 @@ public class SMSalesContactSelect extends HttpServlet {
 		    				"&ResultHeading3=Contact%20Name" +
 		    				"&ResultListField4="  + SMTablesalescontacts.sphonenumber +
 		    				"&ResultHeading4=Phone%20Number" +
-		    				"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
+		    				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
 		    				"\"> Find sales contact</A>" +
 			    			"</TD>" +
 		    			"</TR>" +

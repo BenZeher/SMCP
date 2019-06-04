@@ -98,7 +98,7 @@ public class SMCreateCreditNoteCriteriaSelection extends HttpServlet {
 	    				+ "&ResultHeading3=Ship%20To%20Name"
 	    				//+ "&ResultListField4="  + SMTablearcustomer.sPhoneNumber
 	    				//+ "&ResultHeading4=Phone"
-	    				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    				+ "\"> Find invoice</A>" +
     	"</TD></TR>");
     	    	

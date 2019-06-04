@@ -98,7 +98,7 @@ public class SMEditBidSelect extends HttpServlet {
 				"&ResultHeading6=Project%20Type" +
 				"&ResultListField7="  + SMTablebids.sstatus +
 				"&ResultHeading7=Status" +
-				"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
+				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMBidEntry.ParamObjectName + "</A>";
 		
 		return s;

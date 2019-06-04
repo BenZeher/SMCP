@@ -145,8 +145,8 @@ public class SMChangeCustomerEdit  extends HttpServlet {
 			+ "&ResultHeading6=On%20Hold"
 			+ "&ResultListField7="  + SMTablearcustomer.sCustomerGroup
 			+ "&ResultHeading7=Customer%20Group"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
-				+ "*" + STRIMMEDORDERNUMBER_PARAM + "=" + clsManageRequestParameters.get_Request_Parameter(STRIMMEDORDERNUMBER_PARAM, sm.getRequest())
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+			+ "&ParameterString=*" + STRIMMEDORDERNUMBER_PARAM + "=" + clsManageRequestParameters.get_Request_Parameter(STRIMMEDORDERNUMBER_PARAM, sm.getRequest())
 			+ "\"> Find customer</A>"
 			;
 		

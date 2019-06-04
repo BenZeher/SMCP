@@ -115,7 +115,7 @@ public class AREditCallSheetsSelection extends HttpServlet {
 				+ "&ResultHeading8=Last%20contact"
 				+ "&ResultListField9=" + ARCallSheet.ParamdatNextContact
 				+ "&ResultHeading9=Next%20Contact"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 				+ "\"> Find call sheet</A>";
 		
 		//If a drop-down is requested, show that:

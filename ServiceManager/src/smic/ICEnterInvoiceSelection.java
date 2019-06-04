@@ -110,7 +110,7 @@ public class ICEnterInvoiceSelection extends HttpServlet {
 			+ "&ResultHeading5=PO%20ID"
 			+ "&ResultListField6="  + SMTableicpoinvoiceheaders.bdinvoicetotal
 			+ "&ResultHeading6=Amount"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 			+ "\"> Find invoice</A></P>";
 		return s;
 	}

@@ -102,7 +102,7 @@ public class SMWageScaleReportSelect  extends HttpServlet {
 					+ "CONCAT('<FONT COLOR=RED>', DATE_FORMAT(" + SMTableorderheaders.datOrderCanceledDate + ",'%c/%e/%Y'), '</FONT>')) AS 'CANCELEDDATE'")
 				+ "&" + FinderResults.RESULT_FIELD_ALIAS + "7=CANCELEDDATE"
 				+ "&ResultHeading7=Canceled"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order</A>"
 
 				//Add EXTENDED order find:
@@ -174,7 +174,7 @@ public class SMWageScaleReportSelect  extends HttpServlet {
 				+ "&ResultHeading16=Canceled"
 				+ "&ResultListField17="  + SMTableorderheaders.sOrderCreatedByFullName
 				+ "&ResultHeading15=Created%20By"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order (extended search)</A>"
 				+ "</TD></TR>");
 

@@ -97,7 +97,7 @@ public class APControlPaymentsSelect extends HttpServlet {
 			+ APVendor.getFindVendorLink(
 				SMUtilities.getFullClassName(this.toString()), 
 				SMTableaptransactions.svendor, 
-				SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID(), 
+				"", 
 				getServletContext(),
 				smselect.getsDBID()
 			)
@@ -193,7 +193,7 @@ public class APControlPaymentsSelect extends HttpServlet {
 				+ " ' AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.bdcurrentamt + " != 0.00)' +\n"
 				+ " ' AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.idoctype + " = " + SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE + ")' +\n"
 				+ " '&" + FinderResults.FINDER_BOX_TITLE + "=Open invoices for vendor: ' + svendor +\n"
-				+ " '&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() + "' +\n"
+				//+ " '&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() + "' +\n"
 				+ " '*" + SMTableaptransactions.svendor + "=' + svendor +\n"
 			
 				+ "''; \n"

@@ -164,8 +164,9 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			+ "&ResultHeading4=Phone"
 			+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 			+ "&ResultHeading5=Customer%20Group"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			+ "*" + "EndingCustomer=" + clsManageRequestParameters.get_Request_Parameter("EndingCustomer", request)
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "*" 
+			+ "EndingCustomer=" + clsManageRequestParameters.get_Request_Parameter("EndingCustomer", request)
 			+ sParamString
 			;
 			response.sendRedirect(sRedirectString);
@@ -200,8 +201,9 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			+ "&ResultHeading4=Phone"
 			+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 			+ "&ResultHeading5=Customer%20Group"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			+ "*" + "StartingCustomer=" + clsManageRequestParameters.get_Request_Parameter("StartingCustomer", request)
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "*" 
+			+ "StartingCustomer=" + clsManageRequestParameters.get_Request_Parameter("StartingCustomer", request)
 			+ sParamString
 			;
 			response.sendRedirect(sRedirectString);

@@ -106,7 +106,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 			+ clsManageRequestParameters.get_Request_Parameter(APVendorTransactionsSelect.PARAM_TRANSACTION_TYPE_PREFIX + Integer.toString(SMTableaptransactions.AP_TRANSACTION_TYPE_REVERSAL), request);
 		
 		
-		sParamString += "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		//sParamString += "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 		
 		//Special cases - if this class was called by a finder for the 'starting vendor' field:
 		if (request.getParameter(APVendorTransactionsSelect.FIND_STARTING_VENDOR_BUTTON_NAME) != null){

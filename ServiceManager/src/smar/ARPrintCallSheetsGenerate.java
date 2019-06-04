@@ -150,9 +150,9 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 				+ "&ResultHeading4=Phone"
 				+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading5=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				//+ "*" + "EndingCustomer=" + SMUtilities.get_Request_Parameter(ARPrintCallSheetsSelection.ENDING_CUSTOMER_FIELD, request)
-				+ sParamString
+				+ "&ParameterString=*" +  sParamString
 				;
 			response.sendRedirect(sRedirectString);
 			return;
@@ -185,9 +185,9 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 				+ "&ResultHeading4=Phone"
 				+ "&ResultListField5="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading5=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				//+ "*" + "EndingCustomer=" + SMUtilities.get_Request_Parameter(ARPrintCallSheetsSelection.ENDING_CUSTOMER_FIELD, request)
-				+ sParamString
+				+ "&ParameterString=*" + sParamString
 				;
 			response.sendRedirect(sRedirectString);
 			return;
@@ -228,9 +228,9 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 				+ "&ResultHeading7=Phone"
 				+ "&ResultListField8="  + SMTablecallsheets.sJobPhone
 				+ "&ResultHeading8=Ship-to%20Phone"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				//+ "*" + "EndingCustomer=" + SMUtilities.get_Request_Parameter(ARPrintCallSheetsSelection.ENDING_CUSTOMER_FIELD, request)
-				+ sParamString
+				+ "&ParameterString=*" + sParamString
 				;
 			response.sendRedirect(sRedirectString);
 			return;

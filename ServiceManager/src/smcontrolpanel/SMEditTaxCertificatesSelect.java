@@ -113,8 +113,8 @@ public class SMEditTaxCertificatesSelect extends HttpServlet {
 			+ "&ResultHeading8=Jurisdiction"
 			+ "&ResultListField9="  + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.datexpired
 			+ "&ResultHeading9=Date%20Expired"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
-					"\"> Find " + SMTaxCertificate.ParamObjectName + "</A>";
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
+			+ 		"\"> Find " + SMTaxCertificate.ParamObjectName + "</A>";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

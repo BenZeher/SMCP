@@ -73,7 +73,7 @@ public class AREditCallSheetsAction extends HttpServlet{
 				+ "&ResultHeading6=On%20Hold"
 				+ "&ResultListField7="  + SMTablearcustomer.sCustomerGroup
 				+ "&ResultHeading7=Customer%20Group"
-				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				//	+ "*RETURNINGFROMFINDER=TRUE"
 				;
 

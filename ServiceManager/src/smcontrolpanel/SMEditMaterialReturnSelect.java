@@ -95,7 +95,7 @@ public class SMEditMaterialReturnSelect extends HttpServlet {
 				"&ResultHeading4=Initiated%20By" +
 				"&ResultListField5="  + SMTablematerialreturns.iresolved +
 				"&ResultHeading5=Resolved?" +
-				"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
+				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>";
 		return s;
 	}

@@ -95,7 +95,7 @@ public class ARSelectCustomerStatistics extends HttpServlet {
 			+ "&ResultListField6="  + SMTablearcustomer.iOnHold
 			+ "&ResultHeading6=On%20Hold"
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "\"> Find customer</A></P>";
 		
 		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='View selected customer's statistics' STYLE='width: 2.00in; height: 0.24in'></P>";

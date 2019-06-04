@@ -161,7 +161,7 @@ public class AREditCustomerShipTos extends HttpServlet {
 			+ "&ResultHeading5=Active"
 			+ "&ResultListField6="  + SMTablearcustomer.iOnHold
 			+ "&ResultHeading6=On%20Hold"
-			+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "\"> Find customer</A></P>"
 			);

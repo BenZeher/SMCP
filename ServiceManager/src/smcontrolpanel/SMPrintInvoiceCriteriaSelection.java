@@ -85,7 +85,7 @@ public class SMPrintInvoiceCriteriaSelection extends HttpServlet {
 	    				+ "&ResultHeading3=Ship%20To%20Name"
 	    				+ "&ResultListField4="  + SMTableinvoiceheaders.strimmedordernumber
 	    				+ "&ResultHeading4=Order%20Number"
-	    				+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+	    				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    				+ "\"> Find invoice</A><HR>" +
 	    				clsCreateHTMLFormFields.TDCheckBox("PrintMultipleInvoices", 
 	    									   bPrintMultiple, 

@@ -48,7 +48,7 @@ public class SMCreatePOFromOrderAction extends HttpServlet{
 				APVendor.getFindVendorLink(
 					smaction.getCallingClass(), 
 					SMCreatePOFromOrderEdit.FOUND_VENDOR_PARAMETER, 
-					SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID(), 
+					"", 
 					getServletContext(),
 					smaction.getsDBID()
 				)

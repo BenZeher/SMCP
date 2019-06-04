@@ -12,6 +12,7 @@ import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablecallsheets;
+import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -63,18 +64,24 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sJobPhone
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sOrderNumber
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sPhone
-			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sResponsibility
+			+ ", CONCAT(COALESCE(" + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + ",'')"
+			+ ", ' ' ,"
+			+ " COALESCE(" + SMTableusers.TableName +"."+SMTableusers.sUserLastName +", ''))"
+			+ " AS sResponsibility"
 			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit
 			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName
 			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.iOnHold
 			+ ", " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCurrentBalance
 
-			+ " FROM (" + SMTablecallsheets.TableName + " LEFT JOIN " + SMTablearcustomer.TableName
+			+ " FROM (((" + SMTablecallsheets.TableName + " LEFT JOIN " + SMTablearcustomer.TableName
 			+ " ON " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sAcct + " = " 
 			+ SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ")"
 			+ " LEFT JOIN " + SMTablearcustomerstatistics.TableName + " ON " + SMTablecallsheets.TableName + "." 
 			+ SMTablecallsheets.sAcct + " = " + SMTablearcustomerstatistics.TableName + "." 
-			+ SMTablearcustomerstatistics.sCustomerNumber
+			+ SMTablearcustomerstatistics.sCustomerNumber+ ")"
+			+ "LEFT JOIN " + SMTableusers.TableName + " ON " + SMTablecallsheets.TableName + "."
+			+ SMTablecallsheets.sResponsibility + " = " + SMTableusers.TableName +"."
+			+ SMTableusers.lid +")"
 			+ " WHERE ("
 			;
 		

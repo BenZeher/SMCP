@@ -105,7 +105,7 @@ public class ICEditAdjustmentLine extends HttpServlet {
 		if (! m_sWarning.equalsIgnoreCase("")){
 			m_pwOut.println("<B><FONT COLOR=\"RED\">WARNING: " + m_sWarning + "</FONT></B><BR>");
 		}
-		//If there is a warning from trying to input previously, print it here:
+		//If there is a status from trying to input previously, print it here:
 		if (! m_sStatus.equalsIgnoreCase("")){
 			m_pwOut.println("<B>STATUS: " + m_sStatus + "</B><BR>");
 		}

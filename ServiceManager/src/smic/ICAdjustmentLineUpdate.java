@@ -118,6 +118,7 @@ public class ICAdjustmentLineUpdate extends HttpServlet{
     				+ "&LineNumber=" + m_Line.sLineNumber()
     				+ "&BatchType=" + m_sBatchType
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    				+ "&Warning=" + e.getMessage()
     			;
     	    if (m_sUpdateCostBuckets.compareToIgnoreCase("") != 0){
     	    	m_sSendRedirect += "&" + ICEditAdjustmentLine.UPDATE_COST_BUCKETS_COMMAND + "=Y";

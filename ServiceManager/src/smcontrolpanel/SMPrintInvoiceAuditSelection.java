@@ -23,6 +23,8 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class SMPrintInvoiceAuditSelection extends HttpServlet {
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
 	public static final String SALESGROUP_PARAM_SEPARATOR = ",";
+	public static final String INVOICE_NUMBER = "INVOICECHECK";
+	public static final String ORDER_NUMBER = "ORDERCHECK";
 	private static final long serialVersionUID = 1L;
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -68,20 +70,31 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
     			"            var a = document.getElementById(\"ORDERCHECK\").value;\n" + 
     			"            var b = document.getElementById(\"INVOICECHECK\").value;\n" + 
     			"            if(a!=\"\"&&b!=\"\"){\n" + 
-    			"                alert(\"You should only have an Order number or an Invoice Number Selected, not both. [1559586871]\");\n" + 
+    			"                alert(\"Input only Order number or Invoice Number.  [1559586871]\");\n" + 
     			"                return false;\n" + 
     			"            };\n" + 
     			"            return true;\n" + 
     			"        }\n" + 
     			"</SCRIPT>");
+    	out.println("<B><BR>Input Date Range, or Invoice Number, or  Order Number</B><BR>\n");
     	out.println("<TABLE BORDER=1 CELLPADDING=1>");
-    	
 		String sDefaultStartDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.nowAsSQLDate(), "M/d/yyyy");
 		String sDefaultEndDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.nowAsSQLDate(), "M/d/yyyy");
 		
 		//TODO FOR TESTING ONLY:
 		//sDefaultStartDate = "11/3/2008";
 		//sDefaultEndDate = "11/5/2008";
+		out.println(/*"<TD COLSPAN=2>\n"
+				+ "<B><BR><P style=\"text-align:center;\">Input Date Range, or Invoice Number, or  Order Number</P><BR></B>\n"
+				+ "</TD>\n"
+				+ "</TR>\n "
+				+"<TR>\n"
+				+ "<TD COLSPAN=2 BGCOLOR=\"#DCDCDC\">\n"
+				+ "<B><P style=\"text-align:center;\">Date Range</P></B>\n"
+				+ "</TD>\n"
+				+ "</TR>\n "*/"<TR style=\"background-color:grey; color:white; \">\n<TD COLSPAN=2>\n"
+				+ "<B>&nbsp;DATE RANGE</B>"
+				+ "</TD>\n</TR>\n" );
 		
 		out.println("<TR>");
 		out.println("<TD>" + "<B>Starting with invoice date (mm/dd/yyyy):</B></TD><TD>" 
@@ -183,16 +196,30 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 		out.println("</TD>");
 		out.println("</TR>");
 		out.println("<TR>\n"+ 
-					"<TR><TD COLSPAN=2 BGCOLOR=\"#DCDCDC\"><B><BR><P style=\"text-align:center;\">Only Input a Date Range, an Invoice Number, or an Order Number</P><BR></B></TD></TR> " + 
+				/*"<TR>\n"
+				+ "<TD COLSPAN=2 BGCOLOR=\"#DCDCDC\" >\n"
+				+ "<B><P style=\"text-align:center;\">Invoice Number</P></B>\n"
+				+ "</TD>\n"*/
+				"<TR style=\"background-color:grey; color:white; \">\n<TD COLSPAN=2>\n"
+				+ "<B>&nbsp;INVOICE NUMBER</B>"
+				+ "</TD>\n</TR>\n"
+				+ "</TR>\n " + 
 				"<TD><B>Invoice Number:<B></TD>\n" + 
 				"<TD>\n" + 
-				"<input id=\"INVOICECHECK\" name=\"INVOICECHECK\" type=\"text\" />\n" + 
+				"<input id=\""+INVOICE_NUMBER+"\" name=\""+INVOICE_NUMBER+"\" type=\"text\" />\n" + 
 				"</TD>\n" + 
 				"</TR>\n" + 
+				/*"<TR>\n"
+				+ "<TD COLSPAN=2 BGCOLOR=\"#DCDCDC\" >\n"
+				+ "<B><P style=\"text-align:center;\">Order Number</P></B>\n"
+				+ "</TD>\n"
+				+ "</TR>\n " */  "<TR style=\"background-color:grey; color:white; \">\n<TD COLSPAN=3>"
+				+ "<B>&nbsp;ORDER NUMBER</B>"
+				+ "</TD>\n</TR>\n"+
 				"<TR>\n" + 
 				"<TD><B>Order Number:<B></TD>\n" + 
 				"<TD>\n" + 
-				"<input id=\"ORDERCHECK\" name=\"ORDERCHECK\" type=\"text\" />\n" + 
+				"<input id=\""+ORDER_NUMBER+"\" name=\""+ORDER_NUMBER+"\" type=\"text\" />\n" + 
 				"</TD>\n" + 
 				"</TR>");
         out.println("</TABLE>");

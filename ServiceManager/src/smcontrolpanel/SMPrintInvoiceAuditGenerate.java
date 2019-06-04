@@ -317,8 +317,13 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 	    
     	//Customized title
     	String sReportTitle = "Invoice Audit List";
-
-    	String sCriteria = "Starting with invoice date <B>" + sStartingDate + "</B>"
+    	String sCriteria = "";
+    	if(sOrderNumber!="") {
+    		sCriteria  = "Results of Invoices for Order Number: <B>" + sOrderNumber + "</B>";
+    	}else if (sInvoiceNumber!="") {
+    		sCriteria  = "Results for Invoice Number: <B>" + sInvoiceNumber + "</B>";
+    	}else {
+    	 sCriteria = "Starting with invoice date <B>" + sStartingDate + "</B>"
     		+ ", ending with invoice date <B>" + sEndingDate + "</B>"
     		+ ", starting with invoice creation date <B>" + sStartingCreationDate + "</B>"
     		+ ", ending with invoice creation date <B>" + sEndingCreationDate + "</B>"
@@ -341,7 +346,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
        					0, sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR)) + "</B>";
     		}
     	}
-    	
+    	}
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +

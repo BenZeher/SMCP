@@ -60,9 +60,20 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 				+ "\">Return to user login</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMInvoiceAuditList)
 	    	+ "\">Summary</A><BR><BR>");
-    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintInvoiceAuditGenerate\">");
+    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintInvoiceAuditGenerate\" onsubmit=\"return validate();\" >");
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE=\"" + this.getClass().getName() + "\">");
+    	out.println("<SCRIPT> \n" + 
+    			"        function validate() {\n" + 
+    			"            var a = document.getElementById(\"ORDERCHECK\").value;\n" + 
+    			"            var b = document.getElementById(\"INVOICECHECK\").value;\n" + 
+    			"            if(a!=\"\"&&b!=\"\"){\n" + 
+    			"                alert(\"You should only have an Order number or an Invoice Number Selected, not both. [1559586871]\");\n" + 
+    			"                return false;\n" + 
+    			"            };\n" + 
+    			"            return true;\n" + 
+    			"        }\n" + 
+    			"</SCRIPT>");
     	out.println("<TABLE BORDER=1 CELLPADDING=1>");
     	
 		String sDefaultStartDate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.nowAsSQLDate(), "M/d/yyyy");
@@ -171,7 +182,19 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 		
 		out.println("</TD>");
 		out.println("</TR>");
-		
+		out.println("<TR>\n"+ 
+					"<TR><TD COLSPAN=2 BGCOLOR=\"#DCDCDC\"><B><BR><P style=\"text-align:center;\">Only Input a Date Range, an Invoice Number, or an Order Number</P><BR></B></TD></TR> " + 
+				"<TD><B>Invoice Number:<B></TD>\n" + 
+				"<TD>\n" + 
+				"<input id=\"INVOICECHECK\" name=\"INVOICECHECK\" type=\"text\" />\n" + 
+				"</TD>\n" + 
+				"</TR>\n" + 
+				"<TR>\n" + 
+				"<TD><B>Order Number:<B></TD>\n" + 
+				"<TD>\n" + 
+				"<input id=\"ORDERCHECK\" name=\"ORDERCHECK\" type=\"text\" />\n" + 
+				"</TD>\n" + 
+				"</TR>");
         out.println("</TABLE>");
         
     	out.println("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----List----\">");

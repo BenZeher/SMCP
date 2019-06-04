@@ -245,7 +245,23 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
         		);			
             	return;
 		}
-
+		
+		String sInvoiceNumber = "";
+		String sOrderNumber = "";
+		
+		sInvoiceNumber = request.getParameter("INVOICECHECK");
+		sOrderNumber = request.getParameter("ORDERCHECK");
+		
+		  if (sOrderNumber!=""&&sInvoiceNumber!=""){
+	    		sWarning = "You cannot search both an Order and an Invoice.";
+	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1559586548]");
+	    		response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+					+ "Warning=" + clsServletUtilities.URLEncode(sWarning)
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+		    }
+		
     	//Get the list of selected order types:
     	ArrayList<String> sOrderTypes = new ArrayList<String>(0);
 	    Enumeration<String> paramNames = request.getParameterNames();
@@ -315,7 +331,7 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
     			sCriteria += ", <B>" +sOrderTypes.get(i) + "</B>";
     		}
     	}
-   		sCriteria = sCriteria + ", including sales groups: ";
+    	sCriteria += ", including sales groups: ";
     	for (int i = 0; i < sSalesGroups.size(); i++){
     		if (i == 0){
     			sCriteria += "<B>" + sSalesGroups.get(i).substring(
@@ -384,7 +400,10 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
     			sURLLinkBase,
     			out,
     			getServletContext(),
-    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+    			sOrderNumber,
+    			sInvoiceNumber
+    			)){
     		out.println("Could not print report - " + iar.getErrorMessage());
     	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080614]");

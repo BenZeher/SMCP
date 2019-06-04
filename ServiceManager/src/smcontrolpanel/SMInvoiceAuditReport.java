@@ -59,7 +59,9 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			String sURLLinkBase,
 			PrintWriter out,
 			ServletContext context,
-			String sLicenseModuleLevel
+			String sLicenseModuleLevel,
+			String sOrderNumber,
+			String sInvoiceNumber
 			){
 
 		String sCurrentServiceType = "";
@@ -210,9 +212,21 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         	+ ")"
         	
         	+ " LEFT JOIN " + SMTablesalesgroups.TableName + " ON " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iSalesGroup
-        	+ " = " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId
+        	+ " = " + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId;
         	
-        	+ " WHERE ("
+        if(sOrderNumber!="") {
+        	SQL += " WHERE ("
+        			//Select by Order Number
+        			+"("+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sOrderNumber +"=" 
+        			+ sOrderNumber+")";
+        }else if(sInvoiceNumber!=""){
+        	SQL += " WHERE ("
+        			//Select by Order Number
+        			+"("+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sInvoiceNumber +"=" 
+        			+ sInvoiceNumber+")";
+        }else {
+        	
+        	SQL += " WHERE ("
         		//Select by invoice dates
         		+ "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" 
         			+ sStartingDate + "')"
@@ -223,10 +237,10 @@ public class SMInvoiceAuditReport extends java.lang.Object{
            		+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate + " >= '" 
         			+ sStartingCreationDate + "')"
         		+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate + " <= '" 
-        			+ sEndingCreationDate + " 23:59:59')"
-        			
+        			+ sEndingCreationDate + " 23:59:59'))";
+        
         		//Get the order types:
-            	+ " AND (INSTR('" + sOrderTypesString + "', " + SMTableinvoiceheaders.TableName + "." 
+            	SQL+= " AND (INSTR('" + sOrderTypesString + "', " + SMTableinvoiceheaders.TableName + "." 
         			+ SMTableinvoiceheaders.sServiceTypeCode + ") > 0)"
         			
         		//Get the sales groups:
@@ -240,8 +254,8 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         					+ sSalesGroups.get(i).substring(sSalesGroups.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")";
         			}
         		}
-        		SQL += ")"
-        	+ ")"
+        }
+        	SQL += ")"
         	+ " ORDER BY " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCodeDescription + " DESC"
         		+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sOrderNumber
         		+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate
@@ -299,6 +313,8 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 						sEndingCreationDate,
 						sOrderTypes,
 						sSalesGroups,
+						sOrderNumber,
+						sInvoiceNumber,
 						conn
 				)
 				+ "</FONT><BR>"
@@ -1843,6 +1859,8 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			String sEndCreationDate,
 			ArrayList <String> sOrderTypesList,
 			ArrayList <String> sSalesGroupList,
+			String sOrderNumber,
+			String sInvoiceNumber,
 			Connection con
 	){
 		
@@ -1861,22 +1879,39 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			+ " FROM " + SMTableinvoicemgrcomments.TableName + " INNER JOIN"
 			+ " " + SMTableinvoiceheaders.TableName + " ON"
 			+ " " + SMTableinvoicemgrcomments.TableName + "." + SMTableinvoicemgrcomments.sinvoicenumber
-			+ " = " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
-			+ " WHERE ("
-				+ "(" + SMTableinvoiceheaders.TableName+ "." + SMTableinvoiceheaders.datInvoiceDate 
-				+ ">= '" + sStartDate + "')"
-				+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate
-				+ " <= '" + sEndDate + "')"
-				
-				+ " AND (" + SMTableinvoiceheaders.TableName+ "." + SMTableinvoiceheaders.datInvoiceCreationDate 
-				+ ">= '" + sStartCreationDate + "')"
-				+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate
-				+ " <= '" + sEndCreationDate + " 23:59:59')"
-				
-				+ " AND (INSTR('" + sListOfOrderTypes + "', " + SMTableinvoiceheaders.TableName 
-				+ "." + SMTableinvoiceheaders.sServiceTypeCode + ") > 0)"
-				
-	     		//Get the sales groups:
+			+ " = " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber;
+			
+        if(sOrderNumber!="") {
+        	SQL += " WHERE ("
+        			//Select by Order Number
+        			+"("+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sOrderNumber +"=" 
+        			+ sOrderNumber+")";
+        }else if(sInvoiceNumber!=""){
+        	SQL += " WHERE ("
+        			//Select by Order Number
+        			+"("+SMTableinvoiceheaders.TableName+"."+SMTableinvoiceheaders.sInvoiceNumber +"=" 
+        			+ sInvoiceNumber+")";
+        }else {
+        	
+        	SQL += " WHERE ("
+        		//Select by invoice dates
+        		+ "(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" 
+        			+ sStartDate + "')"
+        		+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" 
+        			+ sEndDate + "'))"
+        	
+        		//Select by invoice creation dates:
+           		+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate + " >= '" 
+        			+ sStartCreationDate + "')"
+        		+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceCreationDate + " <= '" 
+        			+ sEndCreationDate + " 23:59:59')"
+        
+        		//Get the order types:
+        		+ " AND (INSTR('" + sListOfOrderTypes + "', " + SMTableinvoiceheaders.TableName 
+        	
+        		+ "." + SMTableinvoiceheaders.sServiceTypeCode + ") > 0)"
+        			
+        		//Get the sales groups:
         		+ " AND (";
         		for (int i = 0; i < sSalesGroupList.size(); i++){
         			if (i == 0){
@@ -1887,9 +1922,9 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         					+ sSalesGroupList.get(i).substring(sSalesGroupList.get(i).indexOf(SMPrintInvoiceAuditSelection.SALESGROUP_PARAM_SEPARATOR) + 1) + ")";
         			}
         		}
+        }
         		SQL += ")"
 				
-			+ ")"
 			+ " GROUP BY " + SMTableinvoicemgrcomments.TableName + "." + SMTableinvoicemgrcomments.suserfullname
 			;
         if (bDebugMode){

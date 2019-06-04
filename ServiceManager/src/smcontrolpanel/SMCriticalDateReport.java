@@ -272,13 +272,13 @@ public class SMCriticalDateReport extends java.lang.Object{
 				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=7%><FONT SIZE=2><B>Sales Lead </B></FONT></TD>");
 				out.println("</TR>");
 				boolean bHasDetail = false;    //2
-
+				 int iCritCount = 0;
 				try{
 
 					ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 					while(rs.next()){
 						bHasDetail = true;
-
+						iCritCount++;
 						out.println("<TR style=\"border-bottom: 1px solid black;\">");
 						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>"  + SMTablecriticaldates.getTypeDescriptions(rs.getInt(SMTablecriticaldates.itype)) + "</FONT></TD>");
 						out.println("<TD ALIGN=CENTER VALIGN=TOP nowrap><FONT SIZE=2>" + rs.getString((SMTablecriticaldates.sresponsibleuserfullname).replace("`", "")) + "</FONT></TD>");
@@ -380,7 +380,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 					out.println("<TR><TD ALIGN=CENTER COLSPAN=9>&nbsp;</TD></TR>");
 					out.println("<TR><TD ALIGN=CENTER COLSPAN=9><FONT SIZE=3><B>No Critical Date Information to Display</B></FONT></TD></TR>");
 				}
-				out.println("</TABLE>");
+				  out.println("<TR><TD ALIGN=RIGHT COLSPAN=9)><FONT SIZE=4><B>Total  " + SMCriticalDateEntry.ParamObjectName + "s: " + iCritCount + "</B></FONT></TD></TR>");
+				out.println("</TABLE>\n");
+
 	}
 	
 	public String getErrorMessage (){

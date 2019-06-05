@@ -185,8 +185,8 @@ public class SMListQuickLinks extends HttpServlet {
 		arQuikLinkOtherParams.add("");
 		arQuikLinkFunctions.add(SMSystemFunctions.SMIndividualMonthlySales);
 		arQuikLinkOtherParams.add("");
-		arQuikLinkFunctions.add(SMSystemFunctions.SMSalesContactReport);
-		arQuikLinkOtherParams.add("");
+	//	arQuikLinkFunctions.add(SMSystemFunctions.SMSalesContactReport);
+	//	arQuikLinkOtherParams.add("");
 		arQuikLinkFunctions.add(SMSystemFunctions.SMEditBids);
 		arQuikLinkOtherParams.add("");
 		arQuikLinkFunctions.add(SMSystemFunctions.SMSalesLeadReport);

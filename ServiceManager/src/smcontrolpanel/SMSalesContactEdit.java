@@ -193,41 +193,6 @@ public class SMSalesContactEdit extends HttpServlet {
 	    		out.println("<TR><TD ALIGN=RIGHT>Phone Number:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"\"></TR>");
 	    		out.println("<TR><TD ALIGN=RIGHT>Email Address:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"EmailAddress\" VALUE=\"\" SIZE=30 MAXLENGTH=75></TR>");
 	    		
-	    		Calendar c = Calendar.getInstance();
-	    		//last contact date, default to today.
-	    		c.setTimeInMillis(System.currentTimeMillis());
-	    		out.println("<TR><TD ALIGN=RIGHT>Last Contact Date:&nbsp;</TD>"); 
-	    		out.println("<TD>");
-	    		out.println(
-	    				clsCreateHTMLFormFields.TDTextBox(
-	    						"LastContactDate",
-	    						clsDateAndTimeConversions.now("M/d/yyyy"),
-	    						10, 
-	    						10, 
-	    						""
-	    					) 
-	    				+ SMUtilities.getDatePickerString("LastContactDate", getServletContext())
-	    				);
-	    		out.println("</TD>");
-		    	out.println("</TR>");
-        	
-	    		//next contact date, default to a month from now
-	    		c.add(Calendar.MONTH, 1);
-	    		out.println("<TR><TD ALIGN=RIGHT>Next Contact Date:&nbsp;</TD>"); 
-	    		out.println("<TD>"); 
-	    		out.println(
-	    				clsCreateHTMLFormFields.TDTextBox(
-	    						"NextContactDate", 
-	    						clsDateAndTimeConversions.utilDateToString((new Date(c.getTimeInMillis())),"M/d/yyyy"), 
-	    						10, 
-	    						10, 
-	    						""
-	    					) 
-	    				+ SMUtilities.getDatePickerString("NextContactDate", getServletContext())
-	    				);
-	    		out.println("</TD>"); 
-	    		out.println("</TR>");
-	    		
 	        	//Is Active?
 	        	out.println ("<TR><TD ALIGN=RIGHT>Active?&nbsp;</TD><TD>");
 	        	out.println ("<INPUT TYPE=\"RADIO\" NAME=\"IsInActive\" VALUE=0 CHECKED>Yes<BR>");
@@ -299,38 +264,6 @@ public class SMSalesContactEdit extends HttpServlet {
 		    		out.println("<TR><TD ALIGN=RIGHT>Phone Number:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"" + rs.getString(SMTablesalescontacts.sphonenumber) + "\"></TD></TR>");
 		    		out.println("<TR><TD ALIGN=RIGHT>Email Address:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"EmailAddress\" VALUE=\"" + rs.getString(SMTablesalescontacts.semailaddress) + "\"></TD></TR>");
 		    		
-		    		//last contact date
-		    		out.println("<TR><TD ALIGN=RIGHT>Last Contact Date:&nbsp;</TD>"); 
-		    		out.println("<TD>");
-		    		out.println(
-		    				clsCreateHTMLFormFields.TDTextBox(
-		    						"LastContactDate",
-		    						clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablesalescontacts.datlastcontactdate), "M/d/yyyy"),
-		    						10, 
-		    						10, 
-		    						""
-		    					) 
-		    				+ SMUtilities.getDatePickerString("LastContactDate", getServletContext())
-		    				);
-		    		out.println("</TD>");
-			    	out.println("</TR>");
-	        	
-		    		//next contact date
-		    		out.println("<TR><TD ALIGN=RIGHT>Next Contact Date:&nbsp;</TD>"); 
-		    		out.println("<TD>");
-		    		out.println(
-		    				clsCreateHTMLFormFields.TDTextBox(
-		    						"NextContactDate",
-		    						clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablesalescontacts.datnextcontactdate), "M/d/yyyy"),
-		    						10, 
-		    						10, 
-		    						""
-		    					) 
-		    				+ SMUtilities.getDatePickerString("NextContactDate", getServletContext())
-		    				);
-		    		out.println("</TD>");
-			    	out.println("</TR>");
-		        	
 		        	//Is Active?
 		        	out.println ("<TR><TD ALIGN=RIGHT>Active?&nbsp;</TD><TD>");
 		        	if (rs.getInt(SMTablesalescontacts.binactive) == 0){
@@ -529,15 +462,20 @@ public class SMSalesContactEdit extends HttpServlet {
 					}
     				rsbids.close();
     				
+    				out.println("<TR><TD COLSPAN=6>");
+    				out.println(addNewSalesLeadLink(
+    						request, 
+    						sUserID, 
+    						getServletContext(), 
+    						sDBID));
+    				out.println("</TD></TR>");	
+    				
 					out.println("</TABLE>");
     				out.println("</TD></TR>");
 		        	
     				//Related appointments
-    				
-    				
-    				
+
     				boolean bAllowEditAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMEditAppointmentCalendar, sUserID, conn, sLicenseModuleLevel);
-    	//			boolean bAllowViewAppointments = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.SMViewAppointmentCalendar, sUserName, conn, sLicenseModuleLevel);
     				
 		        	sSQL = "SELECT * FROM" 
 		        		+ " " + SMTableappointments.TableName 
@@ -631,6 +569,32 @@ public class SMSalesContactEdit extends HttpServlet {
 		out.println("</BODY></HTML>");
 	}
 
+	private String addNewSalesLeadLink(
+			HttpServletRequest request, 
+			String sUserID, 
+			ServletContext servletContext,
+			String sDBID) {
+		 //Create redirect string for appointment
+		String s = ""; 
+		 String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry?"
+				+ SMBidEntry.ParamID + "=-1"
+			+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y" 
+			+ "&" + SMBidEntry.Paramisalescontactid + "=" + request.getParameter("id")
+   			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				;
+
+		if (SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMEditBids, 
+				sUserID, 
+				getServletContext(), 
+				sDBID,
+				(String) request.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+  			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/>Add new sales lead</A></FONT>";
+  			}
+		
+		return s;
+	}
+
 	private String addNewAppointmentLink(
 			HttpServletRequest request,
 			String sUserID, 
@@ -712,7 +676,7 @@ public class SMSalesContactEdit extends HttpServlet {
     				getServletContext(), 
     				sDBID,
     				(String) request.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-       			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/> Add new appointment</A></FONT>";
+       			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/>Add new appointment</A></FONT>";
        			}
 		}
 		return s;

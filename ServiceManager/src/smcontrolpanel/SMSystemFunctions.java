@@ -621,13 +621,13 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionLinks.add("smcontrolpanel.CustomerCallLogListCriteriaSelection"); 
 		arrFunctionDescriptions.add("Required to run the Customer Call Log report, listing customer calls.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
-
+/*
 		arrFunctions.add("SM Sales Contact Report"); 
 		arrFunctionIDs.add(SMSalesContactReport); 
 		arrFunctionLinks.add("smcontrolpanel.SMSalesContactListCriteriaSelection"); 
 		arrFunctionDescriptions.add("Required to run the Sales Contact report.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_SALESMANAGEMENT);
-
+*/
 		arrFunctions.add("AR Edit Account Sets"); 
 		arrFunctionIDs.add(AREditAccountSets); 
 		arrFunctionLinks.add("smar.AREditAccountSets"); 

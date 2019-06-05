@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1390;
+	private static final int m_CurrentDatabaseVersion = 1392;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "6/4/2019";
+	private static final String m_sLastRevisionDate = "6/5/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14396,6 +14396,33 @@ public class SMUpdateData extends java.lang.Object{
 					if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				}
 				
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1390:
+				//Added by BJZ 6/5/2019
+				SQL = "ALTER TABLE `callsheets` "
+						+ " CHANGE id id	int(11) NOT NULL AUTO_INCREMENT COMMENT '[020301]'"
+						+ ", CHANGE sResponsibility sResponsibility varchar(8) NOT NULL DEFAULT '' COMMENT '[010202]'"
+						+ ", CHANGE sAcct sAcct varchar(12) NOT NULL DEFAULT '' COMMENT '[020101]'"
+						+ ", CHANGE sOrderNumber sOrderNumber varchar(22) DEFAULT NULL COMMENT '[030103]'"
+						+ ", CHANGE sCollector sCollector varchar(8) NOT NULL DEFAULT '' COMMENT '[010103]'"
+						+ ", CHANGE sAlertInits sAlertInits varchar(8) DEFAULT NULL COMMENT '[010103]'"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1391:
+				//Added by BJZ 6/5/2019
+				SQL = "ALTER TABLE `users` "
+						+ " CHANGE sIdentifierInitials sIdentifierInitials varchar(5) DEFAULT '' COMMENT '[010103]'"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

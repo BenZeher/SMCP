@@ -12,7 +12,7 @@ import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablecallsheets;
-import SMDataDefinition.SMTableusers;
+import SMDataDefinition.SMTablesalesperson;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -64,9 +64,9 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sJobPhone
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sOrderNumber
 			+ ", " + SMTablecallsheets.TableName + "." + SMTablecallsheets.sPhone
-			+ ", CONCAT(COALESCE(" + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + ",'')"
+			+ ", CONCAT(COALESCE(" + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName + ",'')"
 			+ ", ' ' ,"
-			+ " COALESCE(" + SMTableusers.TableName +"."+SMTableusers.sUserLastName +", ''))"
+			+ " COALESCE(" + SMTablesalesperson.TableName +"."+SMTablesalesperson.sSalespersonLastName +", ''))"
 			+ " AS sResponsibility"
 			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit
 			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName
@@ -79,9 +79,9 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 			+ " LEFT JOIN " + SMTablearcustomerstatistics.TableName + " ON " + SMTablecallsheets.TableName + "." 
 			+ SMTablecallsheets.sAcct + " = " + SMTablearcustomerstatistics.TableName + "." 
 			+ SMTablearcustomerstatistics.sCustomerNumber+ ")"
-			+ "LEFT JOIN " + SMTableusers.TableName + " ON " + SMTablecallsheets.TableName + "."
-			+ SMTablecallsheets.sResponsibility + " = " + SMTableusers.TableName +"."
-			+ SMTableusers.lid +")"
+			+ "LEFT JOIN " + SMTablesalesperson.TableName + " ON " + SMTablecallsheets.TableName + "."
+			+ SMTablecallsheets.sResponsibility + " = " + SMTablesalesperson.TableName +"."
+			+ SMTablesalesperson.sSalespersonCode +")"
 			+ " WHERE ("
 			;
 		

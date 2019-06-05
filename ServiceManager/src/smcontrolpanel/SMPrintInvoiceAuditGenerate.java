@@ -249,10 +249,10 @@ public class SMPrintInvoiceAuditGenerate extends HttpServlet {
 		String sInvoiceNumber = "";
 		String sOrderNumber = "";
 		
-		sInvoiceNumber = request.getParameter("INVOICECHECK");
-		sOrderNumber = request.getParameter("ORDERCHECK");
-		
-		  if (sOrderNumber!=""&&sInvoiceNumber!=""){
+		sInvoiceNumber = clsManageRequestParameters.get_Request_Parameter("INVOICECHECK", request);
+		sOrderNumber = clsManageRequestParameters.get_Request_Parameter("ORDERCHECK", request);
+
+		  if (sOrderNumber!="" && sInvoiceNumber!="" ){
 	    		sWarning = "You cannot search both an Order and an Invoice.";
 	    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1559586548]");
 	    		response.sendRedirect(

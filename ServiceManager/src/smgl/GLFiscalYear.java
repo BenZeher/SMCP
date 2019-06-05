@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import javax.servlet.ServletContext;
@@ -367,10 +368,11 @@ public class GLFiscalYear extends java.lang.Object{
 	}
     public void save(ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
 		
+    	String currentDateTime = new SimpleDateFormat(clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY).format(new Date(System.currentTimeMillis()));
     	//Set the user ID and full name first:
     	set_slasteditedbyuserid(sUserID);
     	set_slasteditedbyuserfullname(sUserFullName);
-    	
+    	set_sdattimelastedited(clsValidateFormFields.validateDateTimeField(currentDateTime, "Time last edited", clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY, true));
     	//Get connection
 		Connection conn;
 		try {

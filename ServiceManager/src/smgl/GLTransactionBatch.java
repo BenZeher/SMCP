@@ -1088,11 +1088,11 @@ public class GLTransactionBatch {
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
         		+ ", " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
-        		+ ", '" + line.getsacctid() + "'" //sacctid
-        		+ ", '" + line.getsdescription() + "'" //sdescription
-        		+ ", '" + line.getsreference() + "'" //sreference
-        		+ ", '" + line.getssourceledger() + "'" //ssourceledger
-        		+ ", '" + line.getssourcetype() + "'" //ssourcetype
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsdescription()) + "'" //sdescription
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourceledger()) + "'" //ssourceledger
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
         		+ ", 0" //stransactiontype
         		+ ")"
         	;
@@ -1213,11 +1213,11 @@ public class GLTransactionBatch {
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
         		+ ", " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
-        		+ ", '" + line.getsacctid() + "'" //sacctid
-        		+ ", '" + sDescription + "'" //sdescription
-        		+ ", '" + line.getsreference() + "'" //sreference
-        		+ ", '" + line.getssourceledger() + "'" //ssourceledger
-        		+ ", '" + line.getssourcetype() + "'" //ssourcetype
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourceledger()) + "'" //ssourceledger
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
         		+ ", 0" //stransactiontype
         		+ ")"
         	;
@@ -1226,7 +1226,7 @@ public class GLTransactionBatch {
     			Statement stmt = conn.createStatement();
     			stmt.execute(SQL);
     		} catch (Exception e) {
-    			throw new Exception("Error [1555956425] inserting transaction for entry number " + entry.getsentrynumber() + " - SQL = '" + SQL + "' -" + e.getMessage());
+    			throw new Exception("Error [1555956625] inserting transaction for entry number " + entry.getsentrynumber() + " - SQL = '" + SQL + "' -" + e.getMessage());
     		}
     	}
     	

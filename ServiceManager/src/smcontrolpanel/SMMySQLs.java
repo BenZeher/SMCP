@@ -213,8 +213,6 @@ public class SMMySQLs extends SMClasses.MySQLs{
 												  String sContactName,
 												  String sPhoneNumber,
 												  String sEmailAddress,
-												  String sLastContactDate,
-												  String sNextContactDate,
 												  int iInactive,
 												  String sDescription,
 												  String sNote
@@ -227,8 +225,6 @@ public class SMMySQLs extends SMClasses.MySQLs{
 			" " + SMTablesalescontacts.scontactname + "," +
 			" " + SMTablesalescontacts.sphonenumber + "," +
 			" " + SMTablesalescontacts.semailaddress + "," +
-			" " + SMTablesalescontacts.datlastcontactdate + "," +
-			" " + SMTablesalescontacts.datnextcontactdate + "," +
 			" " + SMTablesalescontacts.binactive + "," +
 			" " + SMTablesalescontacts.sdescription + "," +
 			" " + SMTablesalescontacts.mnotes + ")" +
@@ -239,8 +235,6 @@ public class SMMySQLs extends SMClasses.MySQLs{
 			" '" + clsDatabaseFunctions.FormatSQLStatement(sContactName) + "'," + 
 			" '" + sPhoneNumber + "'," + 
 			" '" + clsDatabaseFunctions.FormatSQLStatement(sEmailAddress) + "'," + 
-			" '" + sLastContactDate + "'," + 
-			" '" + sNextContactDate + "'," + 
 			" " + iInactive + "," + 
 			" '" + clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'," + 
 			" '" + clsDatabaseFunctions.FormatSQLStatement(sNote) + "')"; 

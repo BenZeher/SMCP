@@ -3,7 +3,6 @@ package smcontrolpanel;
 import SMDataDefinition.*;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
 import java.io.IOException;
@@ -11,7 +10,6 @@ import java.io.PrintWriter;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.sql.ResultSet;
-import java.text.ParseException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -53,27 +51,6 @@ public class SMSalesContactAction extends HttpServlet{
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    //System.out.println("In " + this.toString() + " sCallingClass = " + sCallingClass);
 	    //System.out.println("In " + this.toString() + " sOriginalURL = " + sOriginalURL);
-    	java.sql.Date datLastContactDate;
-    	try {
-    		datLastContactDate = clsDateAndTimeConversions.StringTojavaSQLDate(
-    				"M/d/yyyy", clsManageRequestParameters.get_Request_Parameter("LastContactDate", request));
-		} catch (ParseException e) {
-    		out.println("Invalid last contact date - '" 
-    				+ clsManageRequestParameters.get_Request_Parameter("LastContactDate", request) + "'");
-    		return;
-		}
-		String sLastContactDate = clsDateAndTimeConversions.sqlDateToString(datLastContactDate, "yyyy-MM-dd");		
-
-    	java.sql.Date datNextContactDate;
-    	try {
-    		datNextContactDate = clsDateAndTimeConversions.StringTojavaSQLDate(
-    				"M/d/yyyy", clsManageRequestParameters.get_Request_Parameter("NextContactDate", request));
-		} catch (ParseException e) {
-    		out.println("Invalid next contact date - '" 
-    				+ clsManageRequestParameters.get_Request_Parameter("NextContactDate", request) + "'");
-    		return;
-		}
-		String sNextContactDate = clsDateAndTimeConversions.sqlDateToString(datNextContactDate, "yyyy-MM-dd");		
 
     	
 	    if(request.getParameter("SUBMITSAVE") != null){
@@ -103,8 +80,6 @@ public class SMSalesContactAction extends HttpServlet{
 				    		clsManageRequestParameters.get_Request_Parameter("PhoneNumber", request)) + "'"
 				    	+ ", " + SMTablesalescontacts.semailaddress + " = '" + clsDatabaseFunctions.FormatSQLStatement(
 				    		clsManageRequestParameters.get_Request_Parameter("EmailAddress", request)) + "'"
-				    	+ ", " + SMTablesalescontacts.datlastcontactdate + " = '" + sLastContactDate + "'"
-				    	+ ", " + SMTablesalescontacts.datnextcontactdate + " = '" + sNextContactDate + "'" 
 				    	+ ", " + SMTablesalescontacts.binactive + " = " + Integer.parseInt(clsManageRequestParameters.get_Request_Parameter("IsInActive", request))
 				    	+ ", " + SMTablesalescontacts.sdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(
 				    		clsManageRequestParameters.get_Request_Parameter("Description", request)) + "'"
@@ -183,8 +158,6 @@ public class SMSalesContactAction extends HttpServlet{
 																		 request.getParameter("ContactName"), 
 																		 request.getParameter("PhoneNumber"), 
 																		 request.getParameter("EmailAddress"), 
-																		 sLastContactDate, 
-																		 sNextContactDate,
 																		 Integer.parseInt(request.getParameter("IsInActive")),
 																		 request.getParameter("Description"), 
 																		 request.getParameter("Note"));

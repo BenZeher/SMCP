@@ -20,7 +20,6 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
-import smar.SMOption;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionBatchEntry {

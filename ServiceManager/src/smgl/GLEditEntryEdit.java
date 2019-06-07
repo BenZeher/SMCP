@@ -126,6 +126,22 @@ public class GLEditEntryEdit  extends HttpServlet {
 					);
 					return;
 				}
+	    	}else{
+	    		//But if we ARE adding a new entry, default the fiscal period and year to the latest unlocked period:
+	    		String sLastUnlockedFiscalYearAndPeriod = "";
+	    		try {
+					sLastUnlockedFiscalYearAndPeriod = GLFiscalYear.getLatestUnlockedFiscalYearAndPeriod(
+						getServletContext(), 
+						smedit.getsDBID(), 
+						this.toString(), 
+						smedit.getUserID(), 
+						smedit.getFullUserName()
+					);
+				} catch (Exception e) {
+					//Don't choke on this - it's not critical...
+				}
+	    		entry.setsfiscalperiod(sLastUnlockedFiscalYearAndPeriod.split(" - ")[1]);
+	    		entry.setsfiscalyear(sLastUnlockedFiscalYearAndPeriod.split(" - ")[0]);
 	    	}
 	    }
 	    

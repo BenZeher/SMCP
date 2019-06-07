@@ -10,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import SMClasses.SMModuleTypes;
-import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTablefaoptions;
 import SMDataDefinition.SMTablefatransactions;

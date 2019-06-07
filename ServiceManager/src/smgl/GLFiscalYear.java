@@ -1229,13 +1229,6 @@ public class GLFiscalYear extends java.lang.Object{
        	//Have to validate that dates don't cross existing dates, and that ending dates aren't earlier than starting dates 
        	// and that no two periods overlap:
     	
-    	//First: make sure the first period beginning date is later than any EXISTING dates:
-		String sPeriod1BeginningDateAsSQL = clsDateAndTimeConversions.convertDateFormat(
-				get_sdatbeginningdateperiod1(), 
-				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
-				clsServletUtilities.DATE_FORMAT_FOR_SQL, 
-				clsServletUtilities.EMPTY_SQL_DATE_VALUE
-			);
     	String SQL = "SELECT"
     		+ " *"
     		+ " FROM " + SMTableglfiscalperiods.TableName
@@ -1814,79 +1807,79 @@ public class GLFiscalYear extends java.lang.Object{
 
 				if (rs.getInt(SMTableglfiscalperiods.iperiod13locked) == 0){
 					if (iNumberOfPeriods >= 13){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "13";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "13";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod12locked) == 0){
 					if (iNumberOfPeriods >= 12){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "12";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "12";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod11locked) == 0){
 					if (iNumberOfPeriods >= 11){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "11";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "11";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod10locked) == 0){
 					if (iNumberOfPeriods >= 10){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "10";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "10";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod9locked) == 0){
 					if (iNumberOfPeriods >= 9){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "9";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "9";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod8locked) == 0){
 					if (iNumberOfPeriods >= 8){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "8";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "8";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod7locked) == 0){
 					if (iNumberOfPeriods >= 7){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "7";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "7";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod6locked) == 0){
 					if (iNumberOfPeriods >= 6){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "6";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "6";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod5locked) == 0){
 					if (iNumberOfPeriods >= 5){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "5";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "5";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod4locked) == 0){
 					if (iNumberOfPeriods >= 4){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "4";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "4";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod3locked) == 0){
 					if (iNumberOfPeriods >= 3){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "3";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "3";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod2locked) == 0){
 					if (iNumberOfPeriods >= 2){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "2";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "2";
 						break;
 					}
 				}
 				if (rs.getInt(SMTableglfiscalperiods.iperiod1locked) == 0){
 					if (iNumberOfPeriods >= 1){
-						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "1";
+						sYearAndPeriod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "1";
 						break;
 					}
 				}

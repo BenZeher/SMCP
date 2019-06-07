@@ -43,6 +43,7 @@ public class GLTransactionListingAction extends HttpServlet {
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
 
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
@@ -264,6 +265,8 @@ public class GLTransactionListingAction extends HttpServlet {
 			return;
 		}
 		
+		boolean bAllowBatchViewing = SMSystemFunctions.isFunctionPermitted(SMSystemFunctions.GLEditBatches, sUserID, conn, sLicenseModuleLevel);
+		
 		lStartingTime = System.currentTimeMillis();
 		GLTransactionListingReport rpt = new GLTransactionListingReport();
 		try {
@@ -282,7 +285,8 @@ public class GLTransactionListingAction extends HttpServlet {
 					alStartingSegmentIDs,
 					alStartingSegmentValueDescriptions,
 					alEndingSegmentIDs,
-					alEndingSegmentValueDescriptions
+					alEndingSegmentValueDescriptions,
+					bAllowBatchViewing
 				)
 			);
 		} catch (Exception e) {

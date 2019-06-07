@@ -14,6 +14,7 @@ import SMDataDefinition.SMTableglaccountstructures;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class GLTransactionListingReport  extends java.lang.Object{
 
@@ -37,7 +38,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		ArrayList<String>alStartingSegmentIDs,
 		ArrayList<String>alStartingSegmentValueDescriptions,
 		ArrayList<String>alEndingSegmentIDs,
-		ArrayList<String>alEndingSegmentValueDescriptions
+		ArrayList<String>alEndingSegmentValueDescriptions,
+		boolean bAllowBatchViewing
 		) throws Exception{
 		
 		String s = "";
@@ -57,7 +59,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			alEndingSegmentValueDescriptions,
 			conn,
 			sDBID, 
-			context
+			context,
+			bAllowBatchViewing
 		);			
 
 		s += printTableFooting();
@@ -79,7 +82,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		ArrayList<String>alEndingSegmentValueDescriptions,
 		Connection conn,
 		String sDBID, 
-		ServletContext context) throws Exception{
+		ServletContext context,
+		boolean bAllowBatchViewing) throws Exception{
 		
 		String s = "";
 		
@@ -805,6 +809,23 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				bdGrandCreditTotal = bdGrandCreditTotal.add(bdCredit);
 				bdGrandNetChangeTotal = bdGrandNetChangeTotal.add(bdAmount);
 				
+				String sBatchAndEntry = Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber)) 
+					+ " - " 
+					+ Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber)
+				);
+				
+				if (bAllowBatchViewing){
+					sBatchAndEntry = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLEditEntryEdit?"
+						+ "lbatchnumber=" + Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber))
+						+ "&lentrynumber=" + Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber))
+						//+ "&lid=" + Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.l))
+						+ "&Editable=Yes"
+						+ "&CallingClass=smgl.GLEditBatchesEdit"
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+						+ "\">" + sBatchAndEntry + "</A>"
+					;
+				}
+				
 				sStringBuffer += printReportLine(
 					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid),
 					rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear),
@@ -816,9 +837,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 						ServletUtilities.clsDateAndTimeConversions.DATE_FORMAT_STD_Mdyyy),
 					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription),
 					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference),
-					Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber)) 
-						+ " - " 
-						+ Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber)),
+					sBatchAndEntry,
 					bdDebit,
 					bdCredit,
 					bOddRow

@@ -15,8 +15,6 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
-import SMDataDefinition.SMTableapbatches;
-import SMDataDefinition.SMTableapoptions;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTablearmonthlystatistics;
@@ -29,11 +27,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
-import smgl.GLFiscalYear;
-import smgl.GLSourceLedgers;
 import smgl.GLTransactionBatch;
-import smgl.GLTransactionBatchEntry;
-import smgl.GLTransactionBatchLine;
 
 public class ARBatch extends SMClasses.SMEntryBatch{
 	private SMLogEntry log;
@@ -534,18 +528,6 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 		
 		//If the flag is set to use the SMCP GL, we'll create a GL Transaction batch
 		//System.out.println("[1556909964] - iFeedGL = '" + iFeedGLStatus + "'.");
-		AROptions aropt = new AROptions();
-		int iFeedGLStatus = 0;
-		if(!aropt.load(conn)){
-			throw new Exception("Error [1557164337] loading AR Options to check GL feed - " 
-				+ aropt.getErrorMessageString());
-		}
-		
-		try {
-			iFeedGLStatus = Integer.parseInt(aropt.getFeedGl());
-		} catch (Exception e2) {
-			throw new Exception("Error [1557165783] - error parsing AR GL Feed status '" + aropt.getFeedGl());
-		}
 		
 		if (bLogDiagnostics){
 			log.writeEntry(

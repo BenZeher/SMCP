@@ -17,7 +17,6 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
-import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccosts;

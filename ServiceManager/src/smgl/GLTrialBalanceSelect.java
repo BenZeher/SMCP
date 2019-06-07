@@ -2,11 +2,9 @@ package smgl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -125,8 +123,9 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		//Get a drop down of the available periods:
 		alValues.clear();
 		alOptions.clear();
+		String sLatestUnlockedYearAndPeriod = "";
 		try {
-			String sLatestUnlockedPeriod = GLFiscalYear.getLatestUnlockedFiscalYearAndPeriod(
+			sLatestUnlockedYearAndPeriod = GLFiscalYear.getLatestUnlockedFiscalYearAndPeriod(
 					getServletContext(),
 					sDBID,
 					this.toString(),
@@ -174,7 +173,12 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			+ " ID = \"" + 	PARAM_BALANCE_SHEET_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
 		for (int i=0;i<alValues.size();i++){
-			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			//System.out.println("[1559924487] sLatestUnlockedYearAndPeriod = '" + sLatestUnlockedYearAndPeriod + "', alValues.get(i) = '" + alValues.get(i) + "'.");
+			if (alValues.get(i).compareToIgnoreCase(sLatestUnlockedYearAndPeriod) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
 		}
 		out.println("</SELECT>");
 		out.println("</SPAN>\n");
@@ -212,17 +216,27 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		out.println("&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION + "\""
 			+ " ID = \"" + PARAM_NET_EARNINGS_FISCAL_YEAR_SELECTION + "\""
 			+ ">");
+		String sLastUnlockedFiscalYear = sLatestUnlockedYearAndPeriod.split(PARAM_VALUE_DELIMITER)[0];
 		for (int i=0;i<alValues.size();i++){
-			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			if (Integer.toString(i).compareToIgnoreCase(sLastUnlockedFiscalYear) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
 		}
 		out.println("</SELECT>");
 		
 		//Net Earnings STARTING fiscal periods:
+		String sLastUnlockedPeriod = sLatestUnlockedYearAndPeriod.split(PARAM_VALUE_DELIMITER)[1];
 		out.println("&nbsp;FROM:&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
 			+ " ID = \"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
 		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
-			out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			if (Integer.toString(i).compareToIgnoreCase(sLastUnlockedPeriod) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			}
 		}
 		out.println("</SELECT>");
 		
@@ -231,7 +245,11 @@ public class GLTrialBalanceSelect extends HttpServlet {
 			+ " ID = \"" + PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
 		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
-			out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			if (Integer.toString(i).compareToIgnoreCase(sLastUnlockedPeriod) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
+			}
 		}
 		out.println("</SELECT>");
 		out.println("</SPAN>\n");

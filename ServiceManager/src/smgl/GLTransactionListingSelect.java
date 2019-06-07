@@ -127,8 +127,24 @@ public class GLTransactionListingSelect extends HttpServlet {
 		out.println("FROM:&nbsp;<SELECT NAME=\"" + PARAM_STARTING_FISCAL_PERIOD_SELECTION + "\"" 
 			+ " ID = \"" + 	PARAM_STARTING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
+		String sLatestUnlockedFiscalYearAndPeriod = "";
+		try {
+			sLatestUnlockedFiscalYearAndPeriod = GLFiscalYear.getLatestUnlockedFiscalYearAndPeriod(
+				getServletContext(), 
+				sDBID, 
+				this.toString(), 
+				sUserID, 
+				sUserFullName);
+		} catch (Exception e) {
+			//Don't choke on this - it's not critical
+		}
+		
 		for (int i=0;i<alValues.size();i++){
-			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			if (sLatestUnlockedFiscalYearAndPeriod.compareToIgnoreCase(alValues.get(i)) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
 		}
 		out.println("</SELECT>");
 
@@ -137,7 +153,11 @@ public class GLTransactionListingSelect extends HttpServlet {
 			+ " ID = \"" + 	PARAM_ENDING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
 		for (int i=0;i<alValues.size();i++){
-			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			if (sLatestUnlockedFiscalYearAndPeriod.compareToIgnoreCase(alValues.get(i)) == 0){
+				out.println("<OPTION selected=yes VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}else{
+				out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+			}
 		}
 		out.println("</SELECT>");
 		out.println("    </TD>");

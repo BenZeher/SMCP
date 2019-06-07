@@ -161,8 +161,7 @@ public class SMSalesContactListCriteriaSelection extends HttpServlet {
         	out.println("</TABLE>");
 	    	
         	out.println("<INPUT TYPE=HIDDEN NAME=\"OrderBy\" VALUE=\"" + SMTablesalescontacts.salespersoncode + ", " + 
-        																 SMTablesalescontacts.scustomernumber + ", " + 
-        																 SMTablesalescontacts.datnextcontactdate + "\">");
+        																 SMTablesalescontacts.scustomernumber + "\">");
         	out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----List----\">");
         	out.println ("</FORM>");
 		    

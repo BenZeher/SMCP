@@ -117,6 +117,7 @@ public class SMPurgeData extends java.lang.Object{
 				throw new Exception (e.getMessage());
 			}
 		}
+		/*
 		if (bPurgeSalesContacts){
 			try {
 				purgeSalesContacts(conn, datPurgeDeadline);
@@ -124,6 +125,7 @@ public class SMPurgeData extends java.lang.Object{
 				throw new Exception (e.getMessage());
 			}
 		}
+		*/
 		if (bPurgeSystemLog){
 			try {
 				purgeSystemLogs(conn, datPurgeDeadline);
@@ -485,6 +487,8 @@ public class SMPurgeData extends java.lang.Object{
 		}
 
 	}
+	
+	/*
 	private static void purgeSalesContacts(
 			Connection conn, 
 			java.sql.Date datPurgeDeadline
@@ -505,6 +509,8 @@ public class SMPurgeData extends java.lang.Object{
 			throw new Exception("Could not delete sales contact records - " + e.getMessage() + ".");
 		}
 	}
+	
+	*/
 	private static void purgeSystemLogs(
 			Connection conn, 
 			java.sql.Date datPurgeDeadline

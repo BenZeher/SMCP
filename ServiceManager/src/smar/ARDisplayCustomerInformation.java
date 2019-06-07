@@ -681,8 +681,6 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Contact&nbsp;Name</TD>"
 						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Phone&nbsp;Number</TD>"
 						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Email&nbsp;Address</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Contact&nbsp;Date</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Next&nbsp;Contact&nbsp;Date</TD>"
 						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left; width:50%;\">Notes</TD>"
 						+ "</TR>");	
 					while(rsSalesContact.next()){
@@ -700,8 +698,6 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.scontactname)+"</FONT></TD>\n"
 								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.sphonenumber)+"</FONT></TD>\n"
 								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.semailaddress)+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ clsDateAndTimeConversions.resultsetDateStringToString(rsSalesContact.getString(SMTablesalescontacts.datlastcontactdate))+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ clsDateAndTimeConversions.resultsetDateStringToString(rsSalesContact.getString(SMTablesalescontacts.datnextcontactdate))+"</FONT></TD>\n"
 								+ " <TD style=\"padding-right: 10px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.mnotes)+"</FONT></TD>\n");
 								pwOut.println( "</TR>");
 								iCertCount++;

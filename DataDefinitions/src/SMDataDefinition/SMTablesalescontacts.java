@@ -33,8 +33,6 @@ public class SMTablesalescontacts {
 	public static String scontactname = "scontactname";
 	public static String sphonenumber = "sphonenumber";
 	public static String semailaddress = "semailaddress";
-	public static String datlastcontactdate = "datlastcontactdate";
-	public static String datnextcontactdate = "datnextcontactdate";
 	public static String mnotes = "mnotes";
 	public static String binactive = "binactive";
 	public static String sdescription = "sdescription";

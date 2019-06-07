@@ -91,14 +91,7 @@ public class SMMySQLs extends SMClasses.MySQLs{
 		if (sSalesperson.compareToIgnoreCase("ALLSP") != 0){
 			SQL += " AND ("  + SMTablesalescontacts.salespersoncode + " = '" + sSalesperson + "')";
 		}
-		if (iCheckLastContactDate == 1){
-			SQL += " AND (" + SMTablesalescontacts.datlastcontactdate + " >= '" + sLastContactStartingDate + "')" 
-				+ " AND (" + SMTablesalescontacts.datlastcontactdate + " <= '" + sLastContactEndingDate + "')";
-		}
-		if (iCheckNextContactDate == 1){
-			SQL += " AND (" + SMTablesalescontacts.datnextcontactdate + " >= '" + sNextContactStartingDate + "')" 
-				+ " AND (" + SMTablesalescontacts.datnextcontactdate + " <= '" + sNextContactEndingDate + "')";
-		}
+
 		if (iActiveOnly == 1){
 			SQL += " AND (" + SMTablesalescontacts.binactive + " = 0)"; 
 		}
@@ -149,15 +142,6 @@ public class SMMySQLs extends SMClasses.MySQLs{
 			if (sContact.trim().compareTo("") != 0){
 				SQL = SQL + " AND " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname + " = '" + sContact + "'";
 			}
-		}
-		
-		if (iCheckLastContactDate == 1){
-			SQL = SQL + " AND " + SMTablesalescontacts.datlastcontactdate + " >= '" + tsLastContactStartingDate.toString() + "'" + 
-				               " AND " + SMTablesalescontacts.datlastcontactdate + " <= '" + tsLastContactEndingDate.toString() + "'";
-		}
-		if (iCheckNextContactDate == 1){
-			SQL = SQL + " AND " + SMTablesalescontacts.datnextcontactdate + " >= '" + tsNextContactStartingDate.toString() + "'" + 
-				               " AND " + SMTablesalescontacts.datnextcontactdate + " <= '" + tsNextContactEndingDate.toString() + "'";
 		}
 		if (iActiveOnly == 1){
 			SQL = SQL + " AND " + SMTablesalescontacts.binactive + " = 0"; 

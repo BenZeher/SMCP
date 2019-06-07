@@ -182,8 +182,6 @@ public class SMSalesContactList extends HttpServlet {
 				out.println("<TD ALIGN=CENTER><B>Contact Name</B></TD>");
 				out.println("<TD ALIGN=CENTER><B>Phone</B></TD>");
 				out.println("<TD ALIGN=CENTER><B>Email</B></TD>");
-				out.println("<TD ALIGN=CENTER><B>Last Contact Date</B></TD>");
-				out.println("<TD ALIGN=CENTER><B>Next Contact Date</B></TD>");
 				out.println("<TD ALIGN=CENTER><B>Status</B></TD>");
 				out.println("<TD ALIGN=LEFT><B>Description</B></TD>");
 			out.println("</TR>");
@@ -244,10 +242,6 @@ public class SMSalesContactList extends HttpServlet {
 					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + rs.getString(SMTablesalescontacts.sphonenumber) + "&nbsp;</TD>");
 					//Email
 					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + rs.getString(SMTablesalescontacts.semailaddress) + "&nbsp;</TD>");
-					//Last Contact Date
-    				out.println("<TD ALIGN=CENTER VALIGN=TOP>" + USDateOnlyformatter.format(rs.getDate(SMTablesalescontacts.datlastcontactdate)) + "</TD>");
-    				//Next Contact Date
-    				out.println("<TD ALIGN=CENTER VALIGN=TOP>" + USDateOnlyformatter.format(rs.getDate(SMTablesalescontacts.datnextcontactdate)) + "</TD>");
     				//Status
     				out.print("<TD ALIGN=CENTER VALIGN=TOP>");
     				if (rs.getInt(SMTablesalescontacts.binactive) == 0){

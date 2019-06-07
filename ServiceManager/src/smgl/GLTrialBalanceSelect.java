@@ -2,9 +2,11 @@ package smgl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -123,6 +125,16 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		//Get a drop down of the available periods:
 		alValues.clear();
 		alOptions.clear();
+		try {
+			String sLatestUnlockedPeriod = GLFiscalYear.getLatestUnlockedFiscalYearAndPeriod(
+					getServletContext(),
+					sDBID,
+					this.toString(),
+					sUserID,
+					sUserFullName);
+		} catch (Exception e) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553266436] getting latest unlocked period - " + e.getMessage() + "</B></FONT><BR>");
+		}
 		String sSQL = "SELECT DISTINCT"
 			+ " CONCAT(CAST(" + SMTableglfinancialstatementdata.ifiscalyear + " AS CHAR), '" 
 				+ PARAM_VALUE_DELIMITER 

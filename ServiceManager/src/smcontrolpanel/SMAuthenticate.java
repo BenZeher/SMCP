@@ -82,13 +82,12 @@ public class SMAuthenticate{
 				out.write("Error:" + clsStringFunctions.filter(dat.getErrorMessage()));
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547080407]");
 			}else{
-				out.write("Successfully updated to SMCP to database version " + SMUpdateData.getDatabaseVersion());
+				out.write("Successfully updated SMCP to database version " + SMUpdateData.getDatabaseVersion());
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547080408]");
 				req.getSession().removeAttribute(SMUtilities.SMCP_SESSION_PARAM_UPDATE_REQUIRED);
 			}
 			return false;
 		}
-		
 		
         boolean bAllQuickLinkParametersExist = ((sDatabaseID.compareToIgnoreCase("") != 0) && (sUserName.compareToIgnoreCase("") != 0) && (sPassword.compareToIgnoreCase("") != 0 ));
         boolean bComingFromLoginScreen = clsManageRequestParameters.get_Request_Parameter("CallingClass", req).compareToIgnoreCase("smcontrolpanel.SMLogin") == 0;

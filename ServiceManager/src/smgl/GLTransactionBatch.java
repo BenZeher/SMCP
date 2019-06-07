@@ -28,7 +28,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsValidateFormFields;
-import smar.SMOption;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionBatch {
@@ -314,6 +313,8 @@ public class GLTransactionBatch {
 		}
 
 		//Insure that the batch date is within the posting period:
+		// TJR - 6/6/2019 - removed this constraint because all we care about is if the fiscal period is valid:
+		/*
         SMOption opt = new SMOption();
         if (!opt.load(conn)){
         	sResult += "  " + "Error [1555340486] loading SM Options to check batch date range - " + opt.getErrorMessage() + ".";
@@ -324,7 +325,7 @@ public class GLTransactionBatch {
     			sResult += "  " + "Error [1555340487]  - " + e.getMessage() + ".";
     		}
         }
-		
+		*/
 		//Validate the entries:
 		//System.out.println("[1490382128] m_arrBatchEntries.size() = " + m_arrBatchEntries.size());
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
@@ -1274,7 +1275,10 @@ public class GLTransactionBatch {
 		}
     	
 		//Check that the transaction date is within the allowed posting period:
-		SMOption opt = new SMOption();
+    	// TJR - 6/6/2019 - removed this constraint: the only thing we care about is the
+    	// fiscal year and period, not any dates...
+		/*
+    	SMOption opt = new SMOption();
 		if (!opt.load(conn)){
 			throw new Exception("Error [1555956154] - could not check posting period - " + opt.getErrorMessage() + ".");
 		}
@@ -1289,7 +1293,7 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1555956155] on Entry " + entry.getsentrynumber()
 				+ " - " + e2.getMessage() + "."); 
 		}
-    	
+    	*/
 		//If it's an 'auto reverse', check that the reversing entry can be made in the next period:
 		//TODO
 		

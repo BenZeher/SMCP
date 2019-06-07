@@ -1763,6 +1763,24 @@ public class GLACCPACConversion  extends java.lang.Object{
 			}
 		}
 		rsGLFiscalPeriods.close();
+		
+		//If there are any periods in any year PAST the specified number of periods (such as a period 13 in a year with 12 periods), then
+		// Set the unused period dates to '00/00/0000':
+		String SQLUpdate = "UPDATE " + SMTableglfiscalperiods.TableName
+			+ " SET " + SMTableglfiscalperiods.datbeginningdateperiod13 + " = '0000-00-00'"
+			+ ", " + SMTableglfiscalperiods.datendingdateperiod13 + " = '0000-00-00'"
+			+ ", " + SMTableglfiscalperiods.iperiod13locked + " = 1"
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalperiods.inumberofperiods + " = 12)"
+			+ ")"
+		;
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQLUpdate);
+		} catch (Exception e) {
+			rsGLFiscalPeriods.close();
+			throw new Exception("Error [1530811942] - could not update unused period dates in " + sTablename + " table with SQL '" + SQLUpdate + "' - " + e.getMessage());
+		}
 
 		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL fiscal period records into " + sTablename + "<BR>";
 		

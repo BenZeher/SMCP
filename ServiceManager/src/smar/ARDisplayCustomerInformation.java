@@ -701,7 +701,6 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 								+ " <TD style=\"padding-right: 10px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.mnotes)+"</FONT></TD>\n");
 								pwOut.println( "</TR>");
 								iCertCount++;
-							
 						}
 						pwOut.println("</TABLE>");
 						rsTaxCert.close();

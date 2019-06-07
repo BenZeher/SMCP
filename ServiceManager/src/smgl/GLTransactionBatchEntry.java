@@ -423,6 +423,8 @@ public class GLTransactionBatchEntry {
 		}
 
 		// Make sure the entry date is always within the posting date range:
+		// TJR - 6/6/2019 - all we care about is the fiscal period, not any dates
+		/*
         SMOption opt = new SMOption();
         if (!opt.load(conn)){
         	sResult += "  " + "Error [1555336103] loading SM Options to check posting date range - " + opt.getErrorMessage() + ".";
@@ -433,7 +435,7 @@ public class GLTransactionBatchEntry {
     			sResult += "  " + "Error [1555336104]  - " + e.getMessage() + ".";
     		}
         }
-		
+		*/
 		try {
 			m_slastline = clsValidateFormFields.validateLongIntegerField(
 				Integer.toString(m_arrBatchEntryLines.size()), 

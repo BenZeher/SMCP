@@ -1784,6 +1784,121 @@ public class GLFiscalYear extends java.lang.Object{
 			}
 		}
 	
+	public static String getLatestUnlockedFiscalYearAndPeriod(
+			ServletContext context,
+			String sDBID,
+			String sClassName,
+			String sUserID,
+			String sUserFullName
+		) throws Exception{
+		
+		//This function will return a single string, with the fiscal year first, followed by a hyphen, then the
+		// fiscal period after the hyphen.  For example: '2019-4'
+		String sYearAndPeriod = "";
+		String sDelimiter = " - ";
+		
+		//Get a list of the fiscal years, then get the latest unlocked fiscal period:
+		String sSQL = "SELECT * FROM " + SMTableglfiscalperiods.TableName
+			+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC"
+		;
+		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				context, 
+				sDBID,
+				"MySQL",
+				sClassName + " - User: " + sUserID
+				+ " - "
+				+ sUserFullName);
+		while (rs.next()){
+			int iNumberOfPeriods = rs.getInt(SMTableglfiscalperiods.inumberofperiods );
+
+				if (rs.getInt(SMTableglfiscalperiods.iperiod13locked) == 0){
+					if (iNumberOfPeriods >= 13){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "13";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod12locked) == 0){
+					if (iNumberOfPeriods >= 12){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "12";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod11locked) == 0){
+					if (iNumberOfPeriods >= 11){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "11";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod10locked) == 0){
+					if (iNumberOfPeriods >= 10){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "10";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod9locked) == 0){
+					if (iNumberOfPeriods >= 9){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "9";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod8locked) == 0){
+					if (iNumberOfPeriods >= 8){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) + sDelimiter + "8";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod7locked) == 0){
+					if (iNumberOfPeriods >= 7){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "7";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod6locked) == 0){
+					if (iNumberOfPeriods >= 6){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "6";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod5locked) == 0){
+					if (iNumberOfPeriods >= 5){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "5";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod4locked) == 0){
+					if (iNumberOfPeriods >= 4){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "4";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod3locked) == 0){
+					if (iNumberOfPeriods >= 3){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "3";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod2locked) == 0){
+					if (iNumberOfPeriods >= 2){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "2";
+						break;
+					}
+				}
+				if (rs.getInt(SMTableglfiscalperiods.iperiod1locked) == 0){
+					if (iNumberOfPeriods >= 1){
+						sYearAndPeriod = "'" + Integer.toString(rs.getInt(SMTableglfiscalperiods.ifiscalyear)) +  sDelimiter + "1";
+						break;
+					}
+				}
+		}
+		rs.close();
+		
+		if (sYearAndPeriod.compareToIgnoreCase("") == 0){
+			throw new Exception("Error [1559850334] - could not find an unlocked fiscal period.");
+		}
+		return sYearAndPeriod;
+	}
+	
 	public void set_sdatbeginningdateperiod1(String sDate) {
 		m_sdatbeginningdateperiod1 = sDate;
 	}

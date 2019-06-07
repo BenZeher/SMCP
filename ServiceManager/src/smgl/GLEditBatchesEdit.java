@@ -349,8 +349,11 @@ public class GLEditBatchesEdit extends HttpServlet {
 
 	        	//Entry date
 	        	pwOut.println("    <TD>");
+	        	
 	        	String sEntryDate = entry.getsdatentrydate();
-
+	        	// TJR - 6/6/2019 - we don't care about dates in the GL, only fiscal periods
+	        	// so we're removing this constraint:
+	        	/*
 	    		try {
 	    			opt.checkDateForPosting(
 	    				entry.getsdatentrydate(), 
@@ -361,6 +364,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    		} catch (Exception e2) {
 	    			sEntryDate = "<div style = \" color: red; font-weight: bold; \">" + sEntryDate + "</div>"; 
 	    		}
+	    		*/
 	        	pwOut.println(sEntryDate);
 	        	pwOut.println("</TD>\n");
 	        	

@@ -101,6 +101,7 @@ public class SMWageScaleReportGenerate extends HttpServlet {
 	    				+ "Warning=" + sWarning
 	    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	        		);			
+	    		return;
 			}
 		}
 		

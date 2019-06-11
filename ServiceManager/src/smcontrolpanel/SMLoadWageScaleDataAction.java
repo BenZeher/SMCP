@@ -151,145 +151,124 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
-	    
+	    // Set values needed to write data to temp values for scope reasons
+		   boolean bIncludesHeaderRow = false;
+		   String encryptionKey = "";
+		   String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		   String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
+					+ System.getProperty("file.separator")
+					+ "uploads";
+			 //Read the file from the request:
+	        DiskFileItemFactory factory = new DiskFileItemFactory();
+	        // maximum size that will be stored in memory
+	        factory.setSizeThreshold(4196);
+	        // the location for saving data that is larger than getSizeThreshold()
+	        factory.setRepository(new File(sTempFilePath));
+	        ServletFileUpload upload = new ServletFileUpload(factory);
+	        // maximum size before a FileUploadException will be thrown
+	        upload.setSizeMax(1000000);
+	        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
+	        if (bDebugMode){
+	        	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
+	        }
+	    	List<FileItem> fileItems = null;
+	    	
+		    try {
+				//Check to see if the file has a header row:
+				bIncludesHeaderRow = false;
+				
+				//populate fileItems
+				try {
+					fileItems = upload.parseRequest(request);
+				} catch (FileUploadException e1) {
+					this.addToErrorMessage("<BR>"
+						+ "Error on upload.parseRequest: " + e1.getMessage());
+					if (bDebugMode){
+						System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+							+ e1.getMessage());
+					}
+					throw new Exception("Error [1548682854] - " + e1.getMessage());
+				}
+				Iterator<FileItem> iter = fileItems.iterator();
+				//Get the CallingClass, Includes Header Row, and Encryption Key Information
+				while (iter.hasNext()) {
+				    FileItem item = (FileItem) iter.next();
+				    if (item.isFormField()) {
+				    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
+				    		sCallingClass = item.getString();
+							if (bDebugMode){
+								System.out.println(
+									"In " + this.toString() 
+									+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+							}		
+				    	}
+				    	if (item.getFieldName().compareToIgnoreCase(
+					    	"INCLUDESHEADERROW") == 0){
+				    			bIncludesHeaderRow = true;
+									if (bDebugMode){
+										System.out.println(
+											"In " + this.toString() 
+											+ ".writeFileAndProcess, parameter "
+											+ "INCLUDESHEADERROW = " + bIncludesHeaderRow + "."); 
+									}
+				    	}
+				    	
+				    	if (item.getFieldName().compareToIgnoreCase(
+						    	SMWageScaleDataEntry.ParamEncryptionKey) == 0){ 
+				    				encryptionKey = item.getString();
+				    				if(encryptionKey.compareToIgnoreCase("") == 0){
+				    					this.addToErrorMessage("Encryption Key is required");
+				    					throw new Exception("Error [1548682855] - Encryption key is required.");
+				    				}
+				    				if(encryptionKey.compareToIgnoreCase("") != 0 && 
+				    					encryptionKey.length() < SMWageScaleDataEntry.MinimumEncryptionKeyLength){
+				    					this.addToErrorMessage("Encryption Key must at least " 
+				    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
+				    					throw new Exception("Error [1548682856] - Encryption Key must be at least " 
+				    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
+				    				}
+								}  	
+				    }
+				}
+			} catch (Exception e) {
+				if (bDebugMode){
+					System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
+						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+						+ "?Warning=" + sError
+						+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					);
+				}		
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+						+ "?Warning=" + sError
+						+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+				);
+				return;
+			}
 	    //Verify there are no wage scale records before uploading file
 	    if (!validateWageScaleRecords(getServletContext(), sDBID, sUserName, sUserFullName)){
 	    	sError = "ALL wage scale records must be deleted before uploading a new file";
 	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + sError
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 	    	return;
 	    }
-	    // Set values needed to write data to temp values for scope reasons
-	   boolean bIncludesHeaderRow = false;
-	   String encryptionKey = "";
-	   String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
-	   String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
-				+ System.getProperty("file.separator")
-				+ "uploads";
+	    //Create a Temporary File Folder if not present
 	    if (!createTempImportFileFolder(sTempFilePath)){
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;
 		}
-    	
-		//First, remove any temporary files:
+    	//Delete Temporary Files if present
 		if (!deleteCurrentTempImportFiles(sTempFilePath)){
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
-			);
-			return;
-		}
-		 //Read the file from the request:
-        DiskFileItemFactory factory = new DiskFileItemFactory();
-        // maximum size that will be stored in memory
-        factory.setSizeThreshold(4196);
-        // the location for saving data that is larger than getSizeThreshold()
-        factory.setRepository(new File(sTempFilePath));
-        ServletFileUpload upload = new ServletFileUpload(factory);
-        // maximum size before a FileUploadException will be thrown
-        upload.setSizeMax(1000000);
-        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-        if (bDebugMode){
-        	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
-        }
-    	List<FileItem> fileItems = null;
-    	
-	    try {
-			
-			String sGetCallingClass = "";
-			
-			//Check to see if the file has a header row:
-			bIncludesHeaderRow = false;
-			//populate fileItems
-			try {
-				fileItems = upload.parseRequest(request);
-			} catch (FileUploadException e1) {
-				this.addToErrorMessage("<BR>"
-					+ "Error on upload.parseRequest: " + e1.getMessage());
-				if (bDebugMode){
-					System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
-						+ e1.getMessage());
-				}
-				throw new Exception("Error [1548682854] - " + e1.getMessage());
-			}
-			Iterator<FileItem> iter = fileItems.iterator();
-			//??
-			while (iter.hasNext()) {
-			    FileItem item = (FileItem) iter.next();
-			    if (item.isFormField()) {
-			    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-			    		sGetCallingClass = item.getString();
-						if (bDebugMode){
-							System.out.println(
-								"In " + this.toString() 
-								+ ".writeFileAndProcess, parameter CallingClass = " + sGetCallingClass + "."); 
-						}		
-			    	}
-			    	if (item.getFieldName().compareToIgnoreCase(
-				    	"INCLUDESHEADERROW") == 0){
-			    			bIncludesHeaderRow = true;
-								if (bDebugMode){
-									System.out.println(
-										"In " + this.toString() 
-										+ ".writeFileAndProcess, parameter "
-										+ "INCLUDESHEADERROW = " + bIncludesHeaderRow + "."); 
-								}
-			    	}
-			    	
-			    	if (item.getFieldName().compareToIgnoreCase(
-					    	SMWageScaleDataEntry.ParamEncryptionKey) == 0){ 
-			    				encryptionKey = item.getString();
-			    				if(encryptionKey.compareToIgnoreCase("") == 0){
-			    					this.addToErrorMessage("Encryption Key is required");
-			    					throw new Exception("Error [1548682855] - Encryption key is required.");
-			    				}
-			    				if(encryptionKey.compareToIgnoreCase("") != 0 && 
-			    					encryptionKey.length() < SMWageScaleDataEntry.MinimumEncryptionKeyLength){
-			    					this.addToErrorMessage("Encryption Key must at least " 
-			    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
-			    					throw new Exception("Error [1548682856] - Encryption Key must be at least " 
-			    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
-			    				}
-							}  	
-			    }
-			}
-			//set calling class for writeFileAndProcess
-			sCallingClass = sGetCallingClass;
-		} catch (Exception e) {
-			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
-					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);
-			}		
-			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
-					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;
@@ -301,22 +280,14 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		} catch (Exception e) {
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
 			}		
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
 					+ "?Warning=" + sError
-					//+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + m_sPhysicalInventoryID
-					//+ "&" + ICPhysicalCountEntry.ParamDesc + "=" + m_sCountDesc
-					//+ "&" + ICPhysicalInventoryEntry.ParamStartingItemNumber + "=" + m_sValidStartingItem
-					//+ "&" + ICPhysicalInventoryEntry.ParamEndingItemNumber + "=" + m_sValidEndingItem
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;

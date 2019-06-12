@@ -1045,9 +1045,9 @@ public class TimeCardSQLs {
 		String SQL = "UPDATE " + LeaveAdjustments.TableName + " SET" +
 				" " + LeaveAdjustments.sPeriodDate + " = '" + sTruePeriodEndDate + "'" + 
 		      " WHERE" + 
-		   		" " + LeaveAdjustments.sEmployeeID + " = '" + sEmp + "'" + 
+		   		" (" + LeaveAdjustments.sEmployeeID + " = '" + sEmp + "')" + 
 		   		" AND " + 
-		   		" " + LeaveAdjustments.sPeriodDate + " = '" + TimeCardUtilities.TEMPORARY_POSTING_DATE + "'";
+		   		" (" + LeaveAdjustments.sPeriodDate + " = '" + TimeCardUtilities.TEMPORARY_POSTING_DATE + "')";
 		//System.out.println ("SQL = " + SQL);
 		return SQL;
 	}

@@ -2702,7 +2702,6 @@
         <servlet-class>smic.ICEditCategoriesSelection</servlet-class>
     </servlet>
 
-
     <servlet>
         <servlet-name>ICEditICOptions</servlet-name>
         <servlet-class>smic.ICEditICOptions</servlet-class>

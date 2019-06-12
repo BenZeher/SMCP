@@ -1177,7 +1177,7 @@ public class SMUtilities extends clsServletUtilities {
 			+ SMCP_LICENSE_SUBDIRECTORY + System.getProperty("file.separator")
 			+ SMCP_LICENSE_FILE
 		;
-		System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
+		//System.out.println("[1466801032] - sFilePath = '" + sFilePath + "'");	
 		//Read the file:
 		String sModuleLevel = "";
 		try {
@@ -1190,8 +1190,8 @@ public class SMUtilities extends clsServletUtilities {
 				String sDecryptedLine = decryptLicenseLine(line);
 				String sDecryptedLicenseLine[] = sDecryptedLine.split(LICENSE_KEY_DELIMITER);
 				
-				System.out.println("[1551824959] - DBID = '" + DBID + "'");
-				System.out.println("[1551824960] - sDecryptedLine = '" + sDecryptedLine + "'");
+				//System.out.println("[1551824959] - DBID = '" + DBID + "'");
+				//System.out.println("[1551824960] - sDecryptedLine = '" + sDecryptedLine + "'");
 				if (sDecryptedLicenseLine[0].compareToIgnoreCase(DBID) == 0){
 					sModuleLevel = sDecryptedLicenseLine[1].trim();
 					break;

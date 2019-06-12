@@ -19,7 +19,6 @@ import SMDataDefinition.SMTablematerialreturns;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableordermgrcomments;
-import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablessdeviceevents;
 import SMDataDefinition.SMTablessuserevents;
 import SMDataDefinition.SMTablesystemlog;

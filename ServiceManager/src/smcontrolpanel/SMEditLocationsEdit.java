@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARUtilities;
-import SMDataDefinition.SMTablechangeorders;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;

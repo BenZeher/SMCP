@@ -15,8 +15,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARUtilities;
+import SMDataDefinition.SMTablechangeorders;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTableorderdetails;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
@@ -545,9 +547,41 @@ public class SMEditLocationsEdit extends HttpServlet {
 			String sCode,
 			PrintWriter pwOut,
 			String sDBID){
-		
+		boolean bError = false;
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
+		//if there are any unshiped items with this location do not delete it. 
+		String SQL = "SELECT DISTINCT " + SMTableorderdetails.strimmedordernumber
+			+ " FROM " + SMTableorderdetails.TableName
+			+ " WHERE ("
+			+ "(" + SMTableorderdetails.sLocationCode + " = '"  + sCode + "')"
+			+ " AND (" + SMTableorderdetails.dQtyOrdered + " > 0.00)"
+			+ ")"
+			;
+		
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					sDBID, 
+					"MySQL",
+					this.toString() + ".loadChangeOrders - user: "  
+					);
+			
+			while(rs.next()) {
+				pwOut.println ("Order '"+ rs.getString(SMTableorderdetails.strimmedordernumber) 
+				+ "' contains item(s) with location code '" + sCode + "' that have not been shipped.<BR>");
+				bError = true;
+			}
+		if(bError) {
+			return false;
+		}
+			
+		} catch (SQLException e) {
+			pwOut.println (e.getMessage());
+			return false;
+		}
+
 		//Include all the SQLs needed to delete a record:
 		sSQLList.add((String) SMMySQLs.Delete_Location_SQL(sCode));
 		try {

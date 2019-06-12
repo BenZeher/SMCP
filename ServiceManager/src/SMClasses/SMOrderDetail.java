@@ -236,6 +236,13 @@ public class SMOrderDetail extends clsMasterEntry{
    	       	bLineIsValid = false;
         }
         //m_sLocationCode;
+        Double dbQtyOrdered = 0.0;
+        try {
+        	dbQtyOrdered = Double.parseDouble(m_dQtyOrdered);
+        }catch (Exception e){
+       
+        }
+        if( dbQtyOrdered > 0.0) {
         m_sLocationCode = m_sLocationCode.trim();
         SQL = "SELECT " + SMTablelocations.sLocation
         	+ " FROM " + SMTablelocations.TableName
@@ -254,6 +261,7 @@ public class SMOrderDetail extends clsMasterEntry{
 			super.addErrorMessage("Error checking location: '" + m_sLocationCode + "' - " + e.getMessage());
 		   	bLineIsValid = false;
 		}
+        }
     	//m_datDetailExpectedShipDate;
         if (!isDateValid("Expected ship date", m_datDetailExpectedShipDate, true)){bLineIsValid = false;}
     	m_dQtyOrdered = m_dQtyOrdered.trim();

@@ -3118,12 +3118,21 @@
         <servlet-name>ICPOReceivingReportSelection</servlet-name>
         <servlet-class>smic.ICPOReceivingReportSelection</servlet-class>
     </servlet>
-
+    
     <servlet>
         <servlet-name>ICPostPhysicalInventory</servlet-name>
         <servlet-class>smic.ICPostPhysicalInventory</servlet-class>
     </servlet>
-
+    
+ 	<servlet>
+        <servlet-name>ICPOUnpostedGenerate</servlet-name>
+        <servlet-class>smic.ICPOUnpostedGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICPOUnpostedReport</servlet-name>
+        <servlet-class>smic.ICPOUnpostedReport</servlet-class>
+    </servlet>
     <servlet>
         <servlet-name>ICPrintLabelScanSheetAction</servlet-name>
         <servlet-class>smic.ICPrintLabelScanSheetAction</servlet-class>
@@ -7032,7 +7041,17 @@
         <servlet-name>ICPostPhysicalInventory</servlet-name>
         <url-pattern>/smic.ICPostPhysicalInventory</url-pattern>
     </servlet-mapping>
-
+    
+    <servlet-mapping>
+        <servlet-name>ICPOUnpostedGenerate</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPOUnpostedReport</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedReport</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>ICPrintLabelScanSheetAction</servlet-name>
         <url-pattern>/smic.ICPrintLabelScanSheetAction</url-pattern>

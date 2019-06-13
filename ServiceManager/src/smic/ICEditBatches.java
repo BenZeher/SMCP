@@ -98,7 +98,21 @@ public class ICEditBatches extends HttpServlet {
 				+ "\">Return to Inventory Main Menu</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditBatches) 
 	    		+ "\">Summary</A><BR><BR>");
-
+	    
+	    //New Table for Unposted PO's and Receipts
+	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:85%\">");
+	    out.println("<TR>");
+	    
+	    out.println("<TD>");
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+	    		+ "smic.ICPOUnpostedGenerate?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">View Unposted POs</A><BR>");
+	    out.println("</TD>");
+	    
+	    out.println("</TR>");
+	    out.println("</TABLE>");
+	    
+	    
 	    //Add links to create new batches:
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 	    out.println("<TR>");

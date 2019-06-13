@@ -1,9 +1,12 @@
 package smar;
+import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
 import smap.APBatch;
+import smgl.GLACCPACConversion;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -59,26 +62,15 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 
-		APBatch batch = new APBatch("514");
-
-		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
-		try {
-			batch.post_with_connection(conn, "1", "Tom");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		ServletUtilities.clsDatabaseFunctions.commit_data_transaction(conn);
-		System.out.println("DONE");
-
 		
-		//*********************************************
-/*
+		/*********************************************
+
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;
-		String sAPDatabaseURL = "74.50.124.130";
-		String sAPDatabaseName = "OHDDAY";
-		String sAPUserName = "Airo";
-		String sAPPassword = "tomcat";
+		String sAPDatabaseURL = "madg01.com";
+		String sAPDatabaseName = "comp3";
+		String sAPUserName = "jdbc";
+		String sAPPassword = "TScb15^%!";
 		try
 			{
 				cnAP = DriverManager.getConnection("jdbc:pervasive://" + sAPDatabaseURL + ":1583/" + sAPDatabaseName + "", sAPUserName, sAPPassword);
@@ -105,9 +97,75 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get Pervasive connection");
 			return;
 		}
-*/		
+		*/
+		
+		//*****************************************************
+		// TEST MS SQL Connection:
+		Connection cnAP = null;
+		String sAPDatabaseURL = "madg01.com";
+		String sAPDatabaseName = "comp3";
+		String sAPUserName = "jdbc";
+		String sAPPassword = "TScb15^%!";
+		try
+		{
+			cnAP = DriverManager.getConnection("jdbc:microsoft:sqlserver://" + sAPDatabaseURL + ":1433;DatabaseName=" + sAPDatabaseName, sAPUserName, sAPPassword);
+		}
+		catch (Exception localException2) {
+			try {
+				//Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
+				//Class.forName("com.microsoft.jdbc.sqlserver.sqlserverdriver").newInstance();
+				Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+				//cnGL = DriverManager.getConnection("jdbc:microsoft:sqlserver://" + sGLDatabaseURL + ":1433;DatabaseName=" + sGLDatabaseName, sGLUserName, sGLPassword);
+				cnAP = DriverManager.getConnection("jdbc:sqlserver://" + sAPDatabaseURL + ":1433;DatabaseName=" + sAPDatabaseName, sAPUserName, sAPPassword);
+				//String Url = "jdbc:sqlserver://localhost:1433;databaseName=movies";
+		        //Connection connection = DriverManager.getConnection(Url,"sa", "xxxxxxx);
+			} catch (InstantiationException e) {
+				System.out.println("InstantiationException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (IllegalAccessException e) {
+				System.out.println("IllegalAccessException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (ClassNotFoundException e) {
+				System.out.println("ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
+				return;
+			} catch (SQLException e) {
+				System.out.println("SQLException getting ACCPAC connection - " + e.getMessage());
+				return;
+			}
+		}
+		if (cnAP == null){
+			System.out.println("Could not get MS SQL connection");
+			return;
+		}
 		
 		
+		//Test GL conversion function:
+		try {
+			GLACCPACConversion conv = new GLACCPACConversion();
+			String s = conv.processGLAccountStructureTables(
+					conn, 
+					cnAP, 
+					0, 
+					"airo");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("DONE");
+		
+		/*
+				APBatch batch = new APBatch("514");
+
+		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
+		try {
+			batch.post_with_connection(conn, "1", "Tom");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		ServletUtilities.clsDatabaseFunctions.commit_data_transaction(conn);
+		System.out.println("DONE");
+		*/
+
 		
 		//***********************************************************************
 		//TEST EMAILER

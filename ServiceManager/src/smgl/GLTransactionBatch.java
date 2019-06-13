@@ -1038,6 +1038,7 @@ public class GLTransactionBatch {
         	//System.out.println("[1556038816] getsdebitamt() = '" + line.getsdebitamt() + "'");
         	//System.out.println("[1556038817] getscreditamt() = '" + line.getscreditamt() + "'");
         	
+        	/* This is the old logic - testing a new logic below - 6/13/2019 - TJR
 			if (Integer.parseInt(acct.getsinormalbalancetype()) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
 				//System.out.println("[1556038830] account is normally a DEBIT balance");
 				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
@@ -1058,6 +1059,13 @@ public class GLTransactionBatch {
 				}
 				//System.out.println("[1556038833] sTransactionAmt = '" + sTransactionAmt + "'.");
 			}
+			*/
+        	
+        	//TEST THIS INSTEAD - 6/13/2019 - TJR:
+			if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
+				sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
+			}
+        	
 	    	String SQL = "INSERT INTO"
         		+ " " + SMTablegltransactionlines.TableName
         		+ " ("

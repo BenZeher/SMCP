@@ -64,7 +64,7 @@ public class ICPOUnpostedInvoiceReport {
 			+ "</TD>\n"
 					
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
-			+ " Invoice Total"
+			+ " Invoice Total" +sHeadingPadding
 			+ "</TD>\n"
 
 		;

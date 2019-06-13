@@ -99,19 +99,26 @@ public class ICEditBatches extends HttpServlet {
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditBatches) 
 	    		+ "\">Summary</A><BR><BR>");
 	    
-	    //New Table for Unposted PO's and Receipts
+	    //New Table for Unposted PO Invoices and Receipts
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:85%\">");
 	    out.println("<TR>");
 	    
 	    out.println("<TD>");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-	    		+ "smic.ICPOUnpostedGenerate?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">View Unposted POs</A><BR>");
+	    		+ "smic.ICPOUnpostedInvoiceGenerate?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">View Unposted PO Invoices</A><BR>");
+	    out.println("</TD>");
+	    
+	    out.println("<TD>");
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+	    		+ "smic.ICPOUnpostedReceiptsGenerate?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">View Unposted PO Receipts</A><BR>");
 	    out.println("</TD>");
 	    
 	    out.println("</TR>");
 	    out.println("</TABLE>");
 	    
+	    out.println("<BR>");
 	    
 	    //Add links to create new batches:
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");

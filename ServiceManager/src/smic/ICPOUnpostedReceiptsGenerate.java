@@ -14,12 +14,11 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
-public class ICPOUnpostedGenerate extends HttpServlet {
+public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 	
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	private static final long serialVersionUID = 1L;
@@ -39,7 +38,7 @@ public class ICPOUnpostedGenerate extends HttpServlet {
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sCallingClass = "smic.ICEditBatches?";
-		String sReportTitle = "I/C UnPosted POs";
+		String sReportTitle = "I/C Unposted PO Receipts";
 		String sParamString = "*CallingClass=" + sCallingClass;
 		
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
@@ -92,11 +91,11 @@ public class ICPOUnpostedGenerate extends HttpServlet {
 		
 		lStartingTime = System.currentTimeMillis();
 		ServletContext context = getServletContext();
-		ICPOUnpostedReport rpt = new ICPOUnpostedReport();
+		ICPOUnpostedReceiptsReport rpt = new ICPOUnpostedReceiptsReport();
 		try {
-			out.println(rpt.processReport(conn,context,sDBID));
+			out.println(rpt.processReport(conn,context,sDBID,sCallingClass));
 		}catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1560442301]");
+				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1560448161]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + e.getMessage()

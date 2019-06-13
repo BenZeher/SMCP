@@ -3125,14 +3125,25 @@
     </servlet>
     
  	<servlet>
-        <servlet-name>ICPOUnpostedGenerate</servlet-name>
-        <servlet-class>smic.ICPOUnpostedGenerate</servlet-class>
+        <servlet-name>ICPOUnpostedInvoiceGenerate</servlet-name>
+        <servlet-class>smic.ICPOUnpostedInvoiceGenerate</servlet-class>
     </servlet>
     
     <servlet>
-        <servlet-name>ICPOUnpostedReport</servlet-name>
-        <servlet-class>smic.ICPOUnpostedReport</servlet-class>
+        <servlet-name>ICPOUnpostedInvoiceReport</servlet-name>
+        <servlet-class>smic.ICPOUnpostedInvoiceReport</servlet-class>
     </servlet>
+    
+    <servlet>
+        <servlet-name>ICPOUnpostedReceiptsGenerate</servlet-name>
+        <servlet-class>smic.ICPOUnpostedReceiptsGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICPOUnpostedReceiptsReport</servlet-name>
+        <servlet-class>smic.ICPOUnpostedReceiptsReport</servlet-class>
+    </servlet>
+    
     <servlet>
         <servlet-name>ICPrintLabelScanSheetAction</servlet-name>
         <servlet-class>smic.ICPrintLabelScanSheetAction</servlet-class>
@@ -7043,13 +7054,23 @@
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>ICPOUnpostedGenerate</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedGenerate</url-pattern>
+        <servlet-name>ICPOUnpostedInvoiceGenerate</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedInvoiceGenerate</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>ICPOUnpostedReport</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedReport</url-pattern>
+        <servlet-name>ICPOUnpostedInvoiceReport</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedInvoiceReport</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPOUnpostedReceiptsGenerate</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedReceiptsGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPOUnpostedReceiptsReport</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedReceiptsReport</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

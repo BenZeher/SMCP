@@ -6,27 +6,24 @@ import java.sql.ResultSet;
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableapbatchentries;
-import SMDataDefinition.SMTableapbatches;
-import SMDataDefinition.SMTableapmatchinglines;
-import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMUtilities;
 
-public class ICPOUnpostedReport {
+public class ICPOUnpostedInvoiceReport {
 	
 	public String processReport(Connection conn,
 			ServletContext context,
-			String sDBID)
+			String sDBID, 
+			String sCallingClass)
 			throws Exception {
 		
 		String s = "";
 		s += printTableHeading();
 		s += printColumnHeadings();
-		s += printReport(conn, context, sDBID);
+		s += printReport(conn, context, sDBID,sCallingClass);
 		s += printTableFooting();
 		return s;
 	}
@@ -84,7 +81,8 @@ public class ICPOUnpostedReport {
 	
 	private String printReport(Connection conn,
 			ServletContext context,
-			String sDBID) 
+			String sDBID,
+			String sCallingClass) 
 			throws Exception {
 		String s = "";
 		String sIndent = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -106,18 +104,18 @@ public class ICPOUnpostedReport {
 				SQL+=" ORDER BY"
 				+ " " +SMTableicpoinvoiceheaders.TableName +"."+SMTableicpoinvoiceheaders.lexportsequencenumber;
 				
-				String sPOID = "";
+				String sInvoiceID = "";
 				try {
 					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 					while (rs.next()){
-						sPOID =Long.toString(rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
-						String sPOIDLink = getLink(sPOID,context, sDBID);
+						sInvoiceID =Long.toString(rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
+						String sInvoiceIDLink = getLink(sInvoiceID,context, sDBID,sCallingClass);
 						s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
 						s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 							
 							+  sIndent
 							//PO ID Link
-							+ "<I>" + sPOIDLink + "</I>"
+							+ "<I>" + sInvoiceIDLink + "</I>"
 							+ "</TD>\n"
 							
 							//Vendor ID
@@ -159,17 +157,19 @@ public class ICPOUnpostedReport {
 						;
 					}
 				}catch (Exception e) {
-					throw new Exception("Error [1502730448] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
+					throw new Exception("Error [1560448179] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
 				}
 		return s;
 	}
-	private String getLink(String sPOID,
+	private String getLink(String sInvoiceID,
 			ServletContext context, 
-			String sDBID) {
-		String sPOIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditPOEdit?"
-	    		+ SMTableicpoinvoiceheaders.lid + "=" + sPOID
+			String sDBID, 
+			String sCallingClass) {
+		String sInvoiceIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEnterInvoiceEdit?"
+	    		+ SMTableicpoinvoiceheaders.lid + "=" + sInvoiceID
+				+ "&Callingclass=" + sCallingClass 
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\">" + sPOID + "</A>";
-		return sPOIDLink;
+				+ "\">" + sInvoiceID + "</A>";
+		return sInvoiceIDLink;
 	}
 }

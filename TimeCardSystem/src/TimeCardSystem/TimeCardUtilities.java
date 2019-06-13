@@ -393,13 +393,19 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 					 * time separately if there happen to be a step up in the 
 					 * period.
 					 */
-					if (rsLumpSumDetails.getDouble("dNumberOfMonths") <= dMonths){
+					Double dNumberOfMonths = null;
+					try {
+						dNumberOfMonths = rsLumpSumDetails.getDouble("dNumberOfMonths");
+						if (dNumberOfMonths <= dMonths){
 						dHours = rsLumpSumDetails.getDouble("dNumberOfHours");
 						//record all the step-ups.
 						alStepUpMonth.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfMonths")));
 						alAccumuRates.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfHours")));
 					}else{
 						break;
+					}
+					}catch (Exception e){
+						System.out.println("[15604469733] Error in EmployeeLeaveManager - " + e.getMessage());
 					}
 				}
 				//Calendar cStepUp = Calendar.getInstance();
@@ -451,8 +457,8 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 			return dHours;
 
 		}catch(Exception ex){
-			System.out.println("<BR><BR>Error in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
-			System.out.println("Exception: " + ex.getMessage() + "<BR>");
+			System.out.println("[1560447064] Error in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
+			System.out.println("[1560447064] Exception: " + ex.getMessage() + "<BR>");
 			return 0;
 		}
 	}

@@ -499,15 +499,24 @@ public class EmployeeLeaveManager extends HttpServlet {
 					 * time separately if there happen to be a step up in the 
 					 * period.
 					 */
-					if (rsLumpSumDetails.getDouble("dNumberOfMonths") <= dMonths){
-						dHours = rsLumpSumDetails.getDouble("dNumberOfHours");
-						//record all the step-ups.
-						alStepUpMonth.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfMonths")));
-						alAccumuRates.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfHours")));
+					Double dNumberOfMonths = null;
+					try {
+						dNumberOfMonths = rsLumpSumDetails.getDouble("dNumberOfMonths");
 						
-					}else{
-						break;
+						if (dNumberOfMonths <= dMonths){
+							dHours = rsLumpSumDetails.getDouble("dNumberOfHours");
+							//record all the step-ups.
+							alStepUpMonth.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfMonths")));
+							alAccumuRates.add(Double.valueOf(rsLumpSumDetails.getDouble("dNumberOfHours")));
+							
+						}else{
+							break;
+						}
+					}catch (Exception e) {
+						System.out.println("[1560446943] Error in EmployeeLeaveManager - " + e.getMessage());
 					}
+					
+
 				}
 				//Calendar cStepUp = Calendar.getInstance();
 				/* LTO 20080610
@@ -558,8 +567,8 @@ public class EmployeeLeaveManager extends HttpServlet {
 			return dHours;
 			
 		}catch(Exception ex){
-	    	System.out.println("<BR><BR>Error in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
-	    	System.out.println("Exception: " + ex.getMessage() + "<BR>");
+	    	System.out.println("Error [1560446995] in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
+	    	System.out.println("[1560446995] Exception: " + ex.getMessage() + "<BR>");
 	    	return 0;
 		}
 	}

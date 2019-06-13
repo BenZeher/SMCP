@@ -320,8 +320,8 @@ private static double CalculateLeaveTotal(String sAwardPeriod,  			//paramString
 /* 430 */       return dNumberOfHours;
 /*     */     }
 /*     */     catch (Exception localException) {
-/* 433 */       System.out.println("<BR><BR>Error in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
-/* 434 */       System.out.println("Exception: " + localException.getMessage() + "<BR>"); }
+/* 433 */       System.out.println("[1560447031] Error in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
+/* 434 */       System.out.println("[1560447031] Exception: " + localException.getMessage() + "<BR>"); }
 /* 435 */     return 0.0D;
 /*     */   }
 /*     */ 

@@ -277,7 +277,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			}
 	    //Verify there are no wage scale records before uploading file
 	  
-	    System.out.println(sTempFilePath+ " \n"+fileItems.toString()+"\n"+SMUtilities.getAbsoluteRootPath(request, getServletContext()) +"\n"+fileName+"[1560456895]");
+	   // System.out.println(sTempFilePath+ " \n"+fileItems.toString()+"\n"+SMUtilities.getAbsoluteRootPath(request, getServletContext()) +"\n"+fileName+"[1560456895]");
 	    try {
 		    writeFileAndProcess(sTempFilePath, CurrentSession, request, out, sDBID, sUserName, sUserID, sUserFullName,fileName, bIncludesHeaderRow, encryptionKey,fileItems,upload);
 			deleteCurrentTempImportFiles(sTempFilePath);
@@ -348,7 +348,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		    }else{
 		    	//It's a file - 
 		    	FileItem fi = item;
-		    	System.out.println(fi.getName() + " AND " + fileName + " IN "+ sTempImportFilePath + "\n");
+		    	//System.out.println(fi.getName() + " AND " + fileName + " IN "+ sTempImportFilePath + "\n");
 		        // write the file
 		        try {
 					fi.write(new File(sTempImportFilePath, fileName));

@@ -90,7 +90,6 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	*/
 	private static boolean bDebugMode = false;
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM/dd/yyyy");
-	private static final String sCallingClass="smcontrolpanel.SMLoadWageScaleDataSelect";
 	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

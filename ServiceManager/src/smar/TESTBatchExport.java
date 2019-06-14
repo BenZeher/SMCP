@@ -5,14 +5,12 @@ import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
-import smap.APBatch;
-import smgl.GLACCPACConversion;
-
 public class TESTBatchExport extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	public static void main(String[] args){
 		
+		@SuppressWarnings("unused")
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
@@ -140,6 +138,7 @@ public class TESTBatchExport extends HttpServlet{
 		
 		
 		//Test GL conversion function:
+		/*
 		try {
 			GLACCPACConversion conv = new GLACCPACConversion();
 			String s = conv.processGLAccountStructureTables(
@@ -153,6 +152,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
+		*/
 		
 		/*
 				APBatch batch = new APBatch("514");

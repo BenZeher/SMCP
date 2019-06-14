@@ -109,6 +109,7 @@ public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");
 		out.println("  </BODY>\n"
 			+ "    </HTML>\n");
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1560522300]");
 		return;	
 	}
 	public void doGet(HttpServletRequest request,

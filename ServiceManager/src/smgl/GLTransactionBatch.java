@@ -1064,6 +1064,8 @@ public class GLTransactionBatch {
         	//TEST THIS INSTEAD - 6/13/2019 - TJR:
 			if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
 				sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
+			}else{
+				sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
 			}
         	
 	    	String SQL = "INSERT INTO"

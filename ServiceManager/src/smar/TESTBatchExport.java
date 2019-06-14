@@ -145,6 +145,7 @@ public class TESTBatchExport extends HttpServlet{
 			String s = conv.processGLAccountStructureTables(
 					conn, 
 					cnAP, 
+					"comp3",
 					0, 
 					"airo");
 		} catch (Exception e) {

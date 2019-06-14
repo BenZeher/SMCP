@@ -200,7 +200,15 @@ public class GLConvertACCPACAction extends HttpServlet {
     	long lStartingTime = System.currentTimeMillis();
     	System.out.println("[1552318878] - going into processSelectedFunction");
     	try {
-    		sProcessingResult = processSelectedFunction(iFunctionValue, iACCPACDatabaseType, sUserName, sUserID, sUserFullName, cnSMCP, cnACCPAC);
+    		sProcessingResult = processSelectedFunction(
+    			iFunctionValue, 
+    			iACCPACDatabaseType, 
+    			sUserName, 
+    			sUserID, 
+    			sUserFullName, 
+    			cnSMCP, 
+    			cnACCPAC,
+    			sACCPACDatabasename);
 		} catch (Exception e2) {
     		sWarning = e2.getMessage() + ".";
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080731]");
@@ -243,7 +251,8 @@ public class GLConvertACCPACAction extends HttpServlet {
 		String sUserID,
 		String sUserFullName,
 		Connection cnSMCP, 
-		Connection cnACCPAC
+		Connection cnACCPAC,
+		String sDatabaseName
 		) throws Exception{
 		
 		GLACCPACConversion conv = new GLACCPACConversion();
@@ -258,7 +267,7 @@ public class GLConvertACCPACAction extends HttpServlet {
     	case GLConvertACCPAC.PROCESS_GL_SEGMENT_VALUES_VALUE:
     		return conv.processGLAcctSegmentValueTables(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
     	case GLConvertACCPAC.PROCESS_GL_ACCOUNT_STRUCTURES_VALUE:
-    		return conv.processGLAccountStructureTables(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
+    		return conv.processGLAccountStructureTables(cnSMCP, cnACCPAC, sDatabaseName, iACCPACDatabaseType, sUser);
     	case GLConvertACCPAC.PROCESS_GL_ACCOUNT_GROUPS_VALUE:
     		return conv.processGLAccountGroups(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
     	case GLConvertACCPAC.PROCESS_GL_ACCOUNT_MASTER_VALUE:

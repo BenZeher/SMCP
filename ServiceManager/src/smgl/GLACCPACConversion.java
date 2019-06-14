@@ -300,6 +300,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 	public String processGLAccountStructureTables(
 			Connection cnSMCP, 
 			Connection cnACCPAC, 
+			String sDatabaseName,
 			int iAPDatabaseType, 
 			String sUser) throws Exception{
 		
@@ -345,20 +346,20 @@ public class GLACCPACConversion  extends java.lang.Object{
 			 + ", ISNULL(SEGMENT9.ABLKDESC, '') AS 'SEGMENT9DESC'"
 			 + ", ISNULL(SEGMENT10.ABLKDESC, '') AS 'SEGMENT10DESC'"
 			 
-			 + " FROM [comp1].[dbo].[GLABRX]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT1\" ON [GLABRX].[ABRKID1]=SEGMENT1.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT2\" ON [GLABRX].[ABRKID2]=SEGMENT2.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT3\" ON [GLABRX].[ABRKID3]=SEGMENT3.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT4\" ON [GLABRX].[ABRKID4]=SEGMENT4.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT5\" ON [GLABRX].[ABRKID5]=SEGMENT5.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT6\" ON [GLABRX].[ABRKID6]=SEGMENT6.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT7\" ON [GLABRX].[ABRKID7]=SEGMENT7.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT8\" ON [GLABRX].[ABRKID8]=SEGMENT8.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT9\" ON [GLABRX].[ABRKID9]=SEGMENT9.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT10\" ON [GLABRX].[ABRKID10]=SEGMENT10.[ACCTBLKID]"
+			 + " FROM [" + sDatabaseName + "].[dbo].[GLABRX]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT1\" ON [GLABRX].[ABRKID1]=SEGMENT1.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT2\" ON [GLABRX].[ABRKID2]=SEGMENT2.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT3\" ON [GLABRX].[ABRKID3]=SEGMENT3.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT4\" ON [GLABRX].[ABRKID4]=SEGMENT4.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT5\" ON [GLABRX].[ABRKID5]=SEGMENT5.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT6\" ON [GLABRX].[ABRKID6]=SEGMENT6.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT7\" ON [GLABRX].[ABRKID7]=SEGMENT7.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT8\" ON [GLABRX].[ABRKID8]=SEGMENT8.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT9\" ON [GLABRX].[ABRKID9]=SEGMENT9.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT10\" ON [GLABRX].[ABRKID10]=SEGMENT10.[ACCTBLKID]"
 			 + " ORDER BY [GLABRX].[ACCTBRKID]"
 		;
-		System.out.println("[1560445567] ACCPAC SQL = '" + SQL + "'.");
+		//System.out.println("[1560445567] ACCPAC SQL = '" + SQL + "'.");
 		Statement stmtACCPAC = cnACCPAC.createStatement();
 		ResultSet rs = stmtACCPAC.executeQuery(SQL);
 		int iCounter = 0;
@@ -432,7 +433,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ")"
 			;
 
-			System.out.println("[1524253546] - SQL = " + SQLInsert);
+			//System.out.println("[1524253546] - SQL = " + SQLInsert);
 			try {
 				Statement stmtInsert = cnSMCP.createStatement();
 				stmtInsert.execute(SQLInsert);

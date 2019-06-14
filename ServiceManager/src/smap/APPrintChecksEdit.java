@@ -228,9 +228,14 @@ public class APPrintChecksEdit extends HttpServlet {
 	    //IF we are printing just one payment entry, then get the bank for THAT payment entry:
 	    if (objSingleBatchEntry != null){
 	    	bank.setslid(objSingleBatchEntry.getslbankid());
-	    //Otherwise, just pick off the first one in the batch:
+	    //Otherwise, just pick off the first one in the batch that has a valid bank ID:
 	    }else{
-	    	bank.setslid(batch.getBatchEntryArray().get(0).getslbankid());
+	    	for (int i = 0; i < batch.getBatchEntryArray().size(); i++){
+	    		if (batch.getBatchEntryArray().get(i).getslbankid().compareToIgnoreCase("0") != 0){
+	    			bank.setslid(batch.getBatchEntryArray().get(0).getslbankid());
+	    			break;
+	    		}
+	    	}
 	    }
 	    
 	    try {

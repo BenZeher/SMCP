@@ -2647,10 +2647,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		if(workorder.getlid().compareToIgnoreCase("-1") != 0){
 			sWorkOrderID = workorder.getlid();
 		}
-		s += "<button class=\"btn d-block d-lg-none\" type=\"button\" data-toggle=\"collapse\" data-target=\"#headerTable\" aria-expanded=\"false\" aria-controls=\"headerTable\">" + sWorkOrderID + " </button>";
+		s += "<button class=\"btn d-block d-lg-none\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + sWorkOrderID + " </button>";
 		s += "<div class=\"d-none d-lg-block\" id=\"headerTable\">";
 		
-		s += "<TABLE class = \"table\" >\n";	
+		s += "<TABLE class = \"innermost table\" style=\"title:OrderHeaderTable;\" width=100%  >\n";	
 		s += "<TR>";
 		String sOrderNumber = workorder.getstrimmedordernumber();
 		if (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0){

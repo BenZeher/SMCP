@@ -156,6 +156,7 @@ public class ICPOUnpostedInvoiceReport {
 							+ "  </TR>\n"
 						;
 					}
+					rs.close();
 				}catch (Exception e) {
 					throw new Exception("Error [1560448179] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
 				}

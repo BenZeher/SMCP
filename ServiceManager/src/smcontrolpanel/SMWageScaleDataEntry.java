@@ -426,7 +426,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 	        	if (rs.next()){
 	        		//this order number is valid
 	        	}else{
-	    			super.addErrorMessage("[1368033915] Error validating order number on line " + iLine + "."); 
+	    			super.addErrorMessage("%5B1368033915%5D Error validating order number on line " + iLine + "."); 
 	            	bEntriesAreValid = false;
 	            	return bEntriesAreValid;
 	        	}

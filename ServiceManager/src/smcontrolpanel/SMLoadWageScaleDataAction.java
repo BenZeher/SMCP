@@ -112,7 +112,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sStatus = "";
 	    sError = "";
-	    
+	    sCallingClass = "smcontrolpanel.SMLoadWageScaleDataSelect";
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
 	    		+ request.getContentType()

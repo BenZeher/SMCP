@@ -492,14 +492,14 @@ public class SMQueryGenerate extends HttpServlet {
 		
 		//Now build the list of criteria:
 		for (int i = 0; i < arrQueryParameterNames.size(); i++){
-			System.out.println("[1553031177] - arrQueryParameterNames.get(i) = '" + arrQueryParameterNames.get(i) + "'");
+			//System.out.println("[1553031177] - arrQueryParameterNames.get(i) = '" + arrQueryParameterNames.get(i) + "'");
 			//If the control on the form was NOT a drop down list, then the user's choice was simply whatever was placed in the text field:
 			String sUserChoice = clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req);
 			//But if the control was a DROP DOWN LIST, then we have to go get the actual user's choice, because it may be different than the 'value' of the control:
 			
 			//See if we have a parameter whose name includes the control's name AND the select value:
 			String sDropDownChoiceParam = SMQueryParameters.QUERYDROPDOWNCHOICEBASE + arrQueryParameterNames.get(i) + clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req).trim();
-			System.out.println("[1553031178] - sDropDownChoiceParam = '" + sDropDownChoiceParam + "'");
+			//System.out.println("[1553031178] - sDropDownChoiceParam = '" + sDropDownChoiceParam + "'");
 			if (req.getParameter(sDropDownChoiceParam) != null){
 				sUserChoice = clsManageRequestParameters.get_Request_Parameter(sDropDownChoiceParam, req);
 				System.out.println("[1553031179] - sUserChoice = '" + sUserChoice + "'");

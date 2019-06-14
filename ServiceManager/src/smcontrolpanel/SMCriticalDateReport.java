@@ -559,7 +559,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					
 		}
 		
-		System.out.println("[1552014955] - SQL = '" + SQL + "'");
+		//System.out.println("[1552014955] - SQL = '" + SQL + "'");
 		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " SQL: " + SQL);

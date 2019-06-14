@@ -90,7 +90,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	*/
 	private static boolean bDebugMode = false;
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM/dd/yyyy");
-	
+	private static final String sCallingClass="smcontrolpanel.SMLoadWageScaleDataSelect";
 	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -151,13 +151,44 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
+	    
+	    if (!validateWageScaleRecords(getServletContext(), sDBID, sUserName, sUserFullName)){
+	    	sError = "ALL wage scale records must be deleted before uploading a new file";
+	    	response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?Warning=" + sError
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+			);
+	    	return;
+	    }
+		   String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		   String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
+					+ "uploads"
+					+ System.getProperty("file.separator");
+	    //Create a Temporary File Folder if not present
+	    if (!createTempImportFileFolder(sTempFilePath)){
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?Warning=" + sError
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
+		}
+    	//Delete Temporary Files if present
+		if (!deleteCurrentTempImportFiles(sTempFilePath)){
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
+					+ "?Warning=" + sError
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
+		}
+	    
+	    
 	    // Set values needed to write data to temp values for scope reasons
 		   boolean bIncludesHeaderRow = false;
 		   String encryptionKey = "";
-		   String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
-		   String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
-					+ System.getProperty("file.separator")
-					+ "uploads";
+
 			 //Read the file from the request:
 	        DiskFileItemFactory factory = new DiskFileItemFactory();
 	        // maximum size that will be stored in memory
@@ -246,34 +277,8 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 				return;
 			}
 	    //Verify there are no wage scale records before uploading file
-	    if (!validateWageScaleRecords(getServletContext(), sDBID, sUserName, sUserFullName)){
-	    	sError = "ALL wage scale records must be deleted before uploading a new file";
-	    	response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			);
-	    	return;
-	    }
-	    //Create a Temporary File Folder if not present
-	    if (!createTempImportFileFolder(sTempFilePath)){
-			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
-			);
-			return;
-		}
-    	//Delete Temporary Files if present
-		if (!deleteCurrentTempImportFiles(sTempFilePath)){
-			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
-					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
-			);
-			return;
-		}
-	    
+	  
+	    System.out.println(sTempFilePath+ " \n"+fileItems.toString()+"\n"+SMUtilities.getAbsoluteRootPath(request, getServletContext()) +"\n"+fileName+"[1560456895]");
 	    try {
 		    writeFileAndProcess(sTempFilePath, CurrentSession, request, out, sDBID, sUserName, sUserID, sUserFullName,fileName, bIncludesHeaderRow, encryptionKey,fileItems,upload);
 			deleteCurrentTempImportFiles(sTempFilePath);
@@ -344,7 +349,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		    }else{
 		    	//It's a file - 
 		    	FileItem fi = item;
-		    	//String fileName = fi.getName();
+		    	System.out.println(fi.getName() + " AND " + fileName + " IN "+ sTempImportFilePath + "\n");
 		        // write the file
 		        try {
 					fi.write(new File(sTempImportFilePath, fileName));

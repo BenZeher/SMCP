@@ -71,10 +71,6 @@ public class SMEditBidEntry  extends HttpServlet {
 	public static final String FIND_CUSTOMER_COMMAND_VALUE = "FINDCUSTOMER";
 	public static final String FIND_CUSTOMER_BUTTON_LABEL = "<B><FONT COLOR=RED>F</FONT></B>ind customer"; //F
 	public static final String CUSTOMER_SEARCH = "CUSTOMERSEARCH";
-	public static final String DELETE_BUTTON_LABEL = "<B><FONT COLOR=RED>D</FONT></B>elete"; //D
-	public static final String DELETE_COMMAND_VALUE = "DELETELEAD";
-	public static final String DELETE_CHECKBOX_LABEL = "Confirm:";
-	public static final String DELETE_CHECKBOX_NAME = "CONFIRMDELETELEAD";
 	public static final String ADD_NEW_BUTTON_LABEL = "Create <B><FONT COLOR=RED>n</FONT></B>ew lead"; //N
 	public static final String ADD_NEW_COMMAND_VALUE = "CREATENEWLEAD";
 	public static final String TEST_MAP_LINK_BUTTON_LABEL = "<B><FONT COLOR=RED>T</FONT></B>est map link"; //T
@@ -1585,7 +1581,6 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "<TR><TD style = \"text-align: left; \" >";
 
 		s += createUpdateButton();
-		s += createDeleteButton();
 		s += createAddNewButton();
 		s += createCloneButton();
 		s += createUpdateAnotherButton();
@@ -1682,15 +1677,6 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ " name=\"" + FIND_CUSTOMER_BUTTON_LABEL + "\""
 			+ " onClick=\"findcustomer();\">"
 			+ FIND_CUSTOMER_BUTTON_LABEL
-			+ "</button>\n"
-			;
-	}
-	private String createDeleteButton(){
-		return "<button type=\"button\""
-			+ " value=\"" + DELETE_BUTTON_LABEL + "\""
-			+ " name=\"" + DELETE_BUTTON_LABEL + "\""
-			+ " onClick=\"deletelead();\">"
-			+ DELETE_BUTTON_LABEL
 			+ "</button>\n"
 			;
 	}
@@ -1894,11 +1880,8 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ "        flagDirty();\n"
 			+ "    }\n"
 
-			//Don't prompt on updates, deletes, sales contact finds, or customer finds:
+			//Don't prompt on updates, sales contact finds, or customer finds:
 			+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" + UPDATE_COMMAND_VALUE + "\" ){\n"
-			+ "        return;\n"
-			+ "    }\n"
-			+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" + DELETE_COMMAND_VALUE + "\" ){\n"
 			+ "        return;\n"
 			+ "    }\n"
 			+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" + FIND_CUSTOMER_COMMAND_VALUE + "\" ){\n"
@@ -1937,16 +1920,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ "}\n"
 		;
 
-		//Delete:
-		s += "function deletelead(){\n"
-				+ "   var bresult = confirm(\"This sales lead will be deleted. \");\n"
-				+ "   if (bresult) {\n"
-				+ "      document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
-					     + DELETE_COMMAND_VALUE + "\";\n"
-				+ "    document.forms[\"MAINFORM\"].submit();\n"
-				+ "   }\n"
-				+ "}\n"
-			;
+
 		
 		//Find customer
 		s += "function findcustomer(){\n"
@@ -2090,14 +2064,6 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		s += "    shortcut.add(\"Alt+c\",function() {\n";
 		s += "        clone();\n";
-		s += "    },{\n";
-		s += "        'type':'keydown',\n";
-		s += "        'propagate':false,\n";
-		s += "        'target':document\n";
-		s += "    });\n";
-
-		s += "    shortcut.add(\"Alt+d\",function() {\n";
-		s += "        deletelead();\n";
 		s += "    },{\n";
 		s += "        'type':'keydown',\n";
 		s += "        'propagate':false,\n";

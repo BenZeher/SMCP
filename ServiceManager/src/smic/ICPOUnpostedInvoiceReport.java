@@ -1,6 +1,5 @@
 package smic;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletContext;
@@ -14,7 +13,7 @@ import smcontrolpanel.SMUtilities;
 
 public class ICPOUnpostedInvoiceReport {
 	
-	public String processReport(Connection conn,
+	public String processReport(
 			ServletContext context,
 			String sDBID, 
 			String sCallingClass)
@@ -23,7 +22,7 @@ public class ICPOUnpostedInvoiceReport {
 		String s = "";
 		s += printTableHeading();
 		s += printColumnHeadings();
-		s += printReport(conn, context, sDBID,sCallingClass);
+		s += printReport(context, sDBID,sCallingClass);
 		s += printTableFooting();
 		return s;
 	}
@@ -79,8 +78,7 @@ public class ICPOUnpostedInvoiceReport {
 		return s;
 	}
 	
-	private String printReport(Connection conn,
-			ServletContext context,
+	private String printReport(ServletContext context,
 			String sDBID,
 			String sCallingClass) 
 			throws Exception {
@@ -98,7 +96,8 @@ public class ICPOUnpostedInvoiceReport {
 				+SMTableicpoinvoiceheaders.TableName;
 				
 				SQL+= " WHERE ("
-				+ SMTableicpoinvoiceheaders.TableName +"."+SMTableicpoinvoiceheaders.lexportsequencenumber + " <= 0 )"
+				+ SMTableicpoinvoiceheaders.TableName +"."+SMTableicpoinvoiceheaders.lexportsequencenumber + " <= 0 "
+				+ ")"
 				;
 				
 				SQL+=" ORDER BY"
@@ -106,7 +105,7 @@ public class ICPOUnpostedInvoiceReport {
 				
 				String sInvoiceID = "";
 				try {
-					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
 					while (rs.next()){
 						sInvoiceID =Long.toString(rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 						String sInvoiceIDLink = getLink(sInvoiceID,context, sDBID,sCallingClass);

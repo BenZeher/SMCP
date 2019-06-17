@@ -1,6 +1,5 @@
 package smic;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletContext;
@@ -14,7 +13,7 @@ import smcontrolpanel.SMUtilities;
 
 public class ICPOUnpostedReceiptsReport {
 	
-	public String processReport(Connection conn,
+	public String processReport(
 			ServletContext context,
 			String sDBID,
 			String sCallingClass)
@@ -23,7 +22,7 @@ public class ICPOUnpostedReceiptsReport {
 		String s = "";
 		s += printTableHeading();
 		s += printColumnHeadings();
-		s += printReport(conn, context, sDBID,sCallingClass);
+		s += printReport(context, sDBID,sCallingClass);
 		s += printTableFooting();
 		return s;
 	}
@@ -54,10 +53,6 @@ public class ICPOUnpostedReceiptsReport {
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Created by" + sHeadingPadding
 			+ "</TD>\n"
-			
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Status" + sHeadingPadding
-			+ "</TD>\n"
 
 		;
 		s += "  </TR>\n";
@@ -71,7 +66,7 @@ public class ICPOUnpostedReceiptsReport {
 		return s;
 	}
 	
-	private String printReport(Connection conn,
+	private String printReport(
 			ServletContext context,
 			String sDBID,
 			String sCallingClass) 
@@ -83,24 +78,23 @@ public class ICPOUnpostedReceiptsReport {
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid 
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datreceived
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname
-				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lstatus
 				+ " FROM "
 				+SMTableicporeceiptheaders.TableName;
 				
 				SQL+= " WHERE ("
-				+ SMTableicporeceiptheaders.TableName +"."+SMTableicporeceiptheaders.lpostedtoic + " <= 0 )"
-				+ "AND ("+SMTableicporeceiptheaders.TableName + "."+ SMTableicporeceiptheaders.datdeleted + " = 0)"
+				+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpostedtoic + " <= 0 )"
+				+ "AND (" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datdeleted + " = 0)"
 				;
 				
 				SQL+=" ORDER BY"
-				+ " " +SMTableicporeceiptheaders.TableName +"."+SMTableicporeceiptheaders.datreceived 
-				+ ", "+SMTableicporeceiptheaders.TableName + "."+SMTableicporeceiptheaders.lid
+				+ " " +SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datreceived 
+				+ ", "+SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid
 				;
 				
 				String sPOID = "";
 				String sReceiptID = "";
 				try {
-					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
 					while (rs.next()){
 						sPOID =Long.toString(rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid));
 						sReceiptID = Long.toString(rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
@@ -128,16 +122,6 @@ public class ICPOUnpostedReceiptsReport {
 							+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 							+ "<I>" + rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname) + "</I>"
 							+ "</TD>\n";
-							
-						if(rs.getLong(SMTableicporeceiptheaders.lstatus)!=0) {
-								s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-									+ "<I>"+ "Deleted"+  "</I>"
-									+ "</TD>\n";
-						}else {
-							s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-									+ "<I>"+ "Entered"+  "</I>"
-									+ "</TD>\n";
-						}
 							
 							s+=  "&nbsp;"
 							+ "</TD>\n"

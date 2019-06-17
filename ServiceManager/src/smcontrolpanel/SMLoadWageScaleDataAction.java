@@ -109,27 +109,14 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sStatus = "";
 	    sError = "";
-	    sCallingClass = "smcontrolpanel.SMLoadWageScaleDataSelect";
-	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
-	    		+ request.getContentType()
-	    		+ " - getRequestURI: "
-	    		+ request.getRequestURI()
-	    	);
+	    String sCallingClass = "";
+		String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
+					+ "uploads"
+					+ System.getProperty("file.separator");
 
-			Enumeration<?> headerNames = request.getHeaderNames();
-	    	while (headerNames.hasMoreElements()){
-	    		String sHeaderName = headerNames.nextElement().toString();
-	    		if (bDebugMode){
-	    			System.out.println("headerName = " + sHeaderName);
-	    			System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
-	    		}
-	    	}
-	    }
-	    
     	//Customized title
 
 	    String title = "Import wage scale job data.";
@@ -150,6 +137,87 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
+	    // Set values needed to write data to temp values for scope reasons
+	   boolean bIncludesHeaderRow = false;
+	   String encryptionKey = "";
+
+		 //Read the file from the request:
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        // maximum size that will be stored in memory
+        factory.setSizeThreshold(4196);
+        // the location for saving data that is larger than getSizeThreshold()
+        factory.setRepository(new File(sTempFilePath));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        // maximum size before a FileUploadException will be thrown
+        upload.setSizeMax(1000000);
+        List<FileItem> fileItems = null;
+    	
+	    try {
+			//Check to see if the file has a header row:
+			bIncludesHeaderRow = false;
+			
+			//populate fileItems
+			try {
+				fileItems = upload.parseRequest(request);
+			} catch (FileUploadException e1) {
+				this.addToErrorMessage("<BR>"
+					+ "Error on upload.parseRequest: " + e1.getMessage());
+				if (bDebugMode){
+					System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+						+ e1.getMessage());
+				}
+				throw new Exception("Error [1548682854] - " + e1.getMessage());
+			}
+			
+			Iterator<FileItem> iter = fileItems.iterator();
+			//Get the CallingClass, Includes Header Row, and Encryption Key Information
+			while (iter.hasNext()) {
+			    FileItem item = (FileItem) iter.next();
+			    if (item.isFormField()) {
+			    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
+			    		sCallingClass = item.getString();
+						if (bDebugMode){
+							System.out.println(
+								"In " + this.toString() 
+								+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
+						}		
+			    	}
+			    	if (item.getFieldName().compareToIgnoreCase(
+				    	"INCLUDESHEADERROW") == 0){
+			    			bIncludesHeaderRow = true;
+								if (bDebugMode){
+									System.out.println(
+										"In " + this.toString() 
+										+ ".writeFileAndProcess, parameter "
+										+ "INCLUDESHEADERROW = " + bIncludesHeaderRow + "."); 
+								}
+			    	}
+			    	
+			    	if (item.getFieldName().compareToIgnoreCase(
+					    	SMWageScaleDataEntry.ParamEncryptionKey) == 0){ 
+			    				encryptionKey = item.getString();
+			    				if(encryptionKey.compareToIgnoreCase("") == 0){
+			    					this.addToErrorMessage("Encryption Key is required");
+			    					throw new Exception("Error [1548682855] - Encryption key is required.");
+			    				}
+			    				if(encryptionKey.compareToIgnoreCase("") != 0 && 
+			    					encryptionKey.length() < SMWageScaleDataEntry.MinimumEncryptionKeyLength){
+			    					this.addToErrorMessage("Encryption Key must at least " 
+			    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
+			    					throw new Exception("Error [1548682856] - Encryption Key must be at least " 
+			    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
+			    				}
+							}  	
+			    }
+			}
+		} catch (Exception e) {		
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					+ "?Warning=" + sError
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
+		}
 	    
 	    if (!validateWageScaleRecords(getServletContext(), sDBID, sUserName, sUserFullName)){
 	    	sError = "ALL wage scale records must be deleted before uploading a new file";
@@ -160,10 +228,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			);
 	    	return;
 	    }
-		   String fileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
-		   String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
-					+ "uploads"
-					+ System.getProperty("file.separator");
+
 	    //Create a Temporary File Folder if not present
 	    if (!createTempImportFileFolder(sTempFilePath)){
 			response.sendRedirect(
@@ -182,104 +247,9 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			);
 			return;
 		}
-	    
-	    
-	    // Set values needed to write data to temp values for scope reasons
-		   boolean bIncludesHeaderRow = false;
-		   String encryptionKey = "";
-
-			 //Read the file from the request:
-	        DiskFileItemFactory factory = new DiskFileItemFactory();
-	        // maximum size that will be stored in memory
-	        factory.setSizeThreshold(4196);
-	        // the location for saving data that is larger than getSizeThreshold()
-	        factory.setRepository(new File(sTempFilePath));
-	        ServletFileUpload upload = new ServletFileUpload(factory);
-	        // maximum size before a FileUploadException will be thrown
-	        upload.setSizeMax(1000000);
-	        boolean isMultipart = ServletFileUpload.isMultipartContent(request);
-	        if (bDebugMode){
-	        	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
-	        }
-	    	List<FileItem> fileItems = null;
-	    	
-		    try {
-				//Check to see if the file has a header row:
-				bIncludesHeaderRow = false;
-				
-				//populate fileItems
-				try {
-					fileItems = upload.parseRequest(request);
-				} catch (FileUploadException e1) {
-					this.addToErrorMessage("<BR>"
-						+ "Error on upload.parseRequest: " + e1.getMessage());
-					if (bDebugMode){
-						System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
-							+ e1.getMessage());
-					}
-					throw new Exception("Error [1548682854] - " + e1.getMessage());
-				}
-				Iterator<FileItem> iter = fileItems.iterator();
-				//Get the CallingClass, Includes Header Row, and Encryption Key Information
-				while (iter.hasNext()) {
-				    FileItem item = (FileItem) iter.next();
-				    if (item.isFormField()) {
-				    	if (item.getFieldName().compareToIgnoreCase("CallingClass") == 0){
-				    		sCallingClass = item.getString();
-							if (bDebugMode){
-								System.out.println(
-									"In " + this.toString() 
-									+ ".writeFileAndProcess, parameter CallingClass = " + sCallingClass + "."); 
-							}		
-				    	}
-				    	if (item.getFieldName().compareToIgnoreCase(
-					    	"INCLUDESHEADERROW") == 0){
-				    			bIncludesHeaderRow = true;
-									if (bDebugMode){
-										System.out.println(
-											"In " + this.toString() 
-											+ ".writeFileAndProcess, parameter "
-											+ "INCLUDESHEADERROW = " + bIncludesHeaderRow + "."); 
-									}
-				    	}
-				    	
-				    	if (item.getFieldName().compareToIgnoreCase(
-						    	SMWageScaleDataEntry.ParamEncryptionKey) == 0){ 
-				    				encryptionKey = item.getString();
-				    				if(encryptionKey.compareToIgnoreCase("") == 0){
-				    					this.addToErrorMessage("Encryption Key is required");
-				    					throw new Exception("Error [1548682855] - Encryption key is required.");
-				    				}
-				    				if(encryptionKey.compareToIgnoreCase("") != 0 && 
-				    					encryptionKey.length() < SMWageScaleDataEntry.MinimumEncryptionKeyLength){
-				    					this.addToErrorMessage("Encryption Key must at least " 
-				    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
-				    					throw new Exception("Error [1548682856] - Encryption Key must be at least " 
-				    				         + Integer.toString(SMWageScaleDataEntry.MinimumEncryptionKeyLength) + " characters");
-				    				}
-								}  	
-				    }
-				}
-			} catch (Exception e) {
-				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
-						+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
-						+ "?Warning=" + sError
-						+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					);
-				}		
-				response.sendRedirect(
-						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
-						+ "?Warning=" + sError
-						+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
-				);
-				return;
-			}
-	    //Verify there are no wage scale records before uploading file
-	  
-	   // System.out.println(sTempFilePath+ " \n"+fileItems.toString()+"\n"+SMUtilities.getAbsoluteRootPath(request, getServletContext()) +"\n"+fileName+"[1560456895]");
+	    System.out.println("[1560799115]");
 	    try {
-		    writeFileAndProcess(sTempFilePath, CurrentSession, request, out, sDBID, sUserName, sUserID, sUserFullName,fileName, bIncludesHeaderRow, encryptionKey,fileItems,upload);
+		    writeFileAndProcess(sTempFilePath, CurrentSession, request, out, sDBID, sUserName, sUserID, sUserFullName,fileName, bIncludesHeaderRow, encryptionKey);
 			deleteCurrentTempImportFiles(sTempFilePath);
 		} catch (Exception e) {
 			if (bDebugMode){
@@ -291,7 +261,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			}		
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + sError
+					+ "?Warning=" + e.getMessage()
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;
@@ -326,6 +296,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    }
 	    return true;
 	}
+	@SuppressWarnings("unchecked")
 	private boolean  writeFileAndProcess(String sTempImportFilePath,
 										HttpSession ses, 
 										HttpServletRequest req,
@@ -336,22 +307,50 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 										String sUserFullName,
 										String fileName,
 										boolean bIncludesHeaderRow,
-										String encryptionKey,
-										List<FileItem> fileItems, 
-										ServletFileUpload upload
+										String encryptionKey
 										) throws Exception{
+		
+		 //Read the file from the request:
+        DiskFileItemFactory factory = new DiskFileItemFactory();
+        // maximum size that will be stored in memory
+        factory.setSizeThreshold(4196);
+        // the location for saving data that is larger than getSizeThreshold()
+        factory.setRepository(new File(sTempImportFilePath));
+        ServletFileUpload upload = new ServletFileUpload(factory);
+        // maximum size before a FileUploadException will be thrown
+        upload.setSizeMax(1000000);
+        List<FileItem> fileItems = null;
+        System.out.println("[1560799118]");
+		//Check to see if the file has a header row:
+		bIncludesHeaderRow = false;
+		
+		//populate fileItems
+		try {
+			fileItems = upload.parseRequest(req);
+		} catch (FileUploadException e1) {
+			this.addToErrorMessage("<BR>"
+				+ "Error on upload.parseRequest: " + e1.getMessage());
+			if (bDebugMode){
+				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+					+ e1.getMessage());
+			}
+			throw new Exception("Error [1548682854] - " + e1.getMessage());
+		}
+        
     	Iterator<FileItem> iter = fileItems.iterator();
+    	System.out.println("[1560799117] - fileItems.size() = '" + fileItems.size() + "'.");
 		while (iter.hasNext()) {
 		    FileItem item = (FileItem) iter.next();
 		    if(item.isFormField()) {
-		    	
+		    	continue;
 		    }else{
 		    	//It's a file - 
 		    	FileItem fi = item;
 		    	//System.out.println(fi.getName() + " AND " + fileName + " IN "+ sTempImportFilePath + "\n");
 		        // write the file
+		    	System.out.println("[1560799113] sTempImportFilePath = '" + sTempImportFilePath + "', fileName = '" + fileName + "'");
 		        try {
-					fi.write(new File(sTempImportFilePath, fileName));
+					fi.write(new File(sTempImportFilePath, fileName)); 
 				} catch (Exception e) {
 					this.addToErrorMessage("<BR>"
 						+ "Error writing temporary file: " + e.getMessage());
@@ -360,11 +359,13 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 				//InputStream uploadedStream = item.getInputStream();
 		    }
 		}
-		
-		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow)){
-			throw new Exception("Error [1548682858] - error validating file.");
+		System.out.println("[1560799116]");
+		try {
+			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow);
+		} catch (Exception e) {
+			throw new Exception(" [1560799723] - " + e.getMessage());
 		}
-		
+		System.out.println("[1560799119]");
 		//Get a connection:
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
@@ -382,23 +383,22 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			this.addToErrorMessage("Could not start data transaction.");
 			throw new Exception("Error [1548682859] - couldn't start data transaction.");
 		}
 		
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
-		
+		System.out.println("[1560799120]");
 		if (!insertRecords(sTempImportFilePath, fileName, conn, bIncludesHeaderRow, encryptionKey, sUserID)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [1548682860] - couldn't insert records.");
 		}else{
 			if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-				this.addToErrorMessage("Could not commit data transaction.");
 				throw new Exception("Error [1548682861] - couldn't commit data transaction.");
 			}
 		}
+		System.out.println("[1560799121]");
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080584]");
 		return true;
 
@@ -576,13 +576,13 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 
 	}
 	@SuppressWarnings("unused")
-	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow) {
+	private void validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow) throws Exception{
 
 		BufferedReader br = null;
-		boolean bResult = true;
 		try {
 
 			br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
+			System.out.println("[1560800264] sFilePath + System.getProperty(\"file.separator\") + sFileName) = '" + sFilePath + System.getProperty("file.separator") + sFileName + "'.");
 			String line = null;
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
@@ -621,32 +621,28 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 						iFieldCounter++;
 					}
 					if (iFieldCounter < NUMBER_OF_FIELDS_PER_LINE){
-						this.addToErrorMessage("<BR>Line number " + iLineCounter + " has less than " 
-							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it.");
-						bResult = false;
+						
+						throw new Exception(" [1560799687] Line number " + iLineCounter + " has less than " 
+							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it. ");
 					}
 				}
 			}
 			if (iLineCounter == 0){
-				this.addToErrorMessage("<BR>The file has no lines in it.");
-				bResult = false;
+				throw new Exception(" [1560799719] The file has no lines in it.");
 			}
 		} catch (FileNotFoundException ex) {
-			this.addToErrorMessage("<BR>" + "File not found error reading file:= " + ex.getMessage() + ".");
-			bResult = false;
+			throw new Exception("[1560799720]" + "File not found error reading file:= " + ex.getMessage() + ".");
 		} catch (IOException ex) {
-			this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-			bResult = false;
+			throw new Exception("[1560799721]" + "IO exception error reading file:= " + ex.getMessage() + ".");
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				this.addToErrorMessage("<BR>" + "IO exception error reading file:= " + ex.getMessage() + ".");
-				bResult = false;
+				throw new Exception("[1560799722]" + "IO exception error reading file:= " + ex.getMessage() + ".");
 			}
 		}
-		return bResult;
+		return;
 	}
 	
 	private boolean validateWageScaleRecords(ServletContext context, String sDBID, String sUserID, String sUserFullName ) {

@@ -2,7 +2,6 @@ package smic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -30,16 +28,15 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 		long lStartingTime = 0;
 		PrintWriter out = response.getWriter();
 		
-	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.APVendorTransactionsReport)){
+	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ICEditBatches)){
 	    	return;
 	    }
 	    
 	    HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sCallingClass = "smic.ICEditBatches?";
+		//static final
 		String sReportTitle = "I/C Unposted PO Invoices";
-		String sParamString = "*CallingClass=" + sCallingClass;
 		
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
 			+ "Transitional//EN\">\n" 
@@ -71,36 +68,17 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 		out.println("<BR>\n");
 		out.println("<TABLE BORDER=0>\n");
 		
-		Connection conn = null;
-		try {
-			conn = clsDatabaseFunctions.getConnectionWithException(
-					getServletContext(), 
-					sDBID, 
-					"MySQL", 
-					this.toString() + ".doGet - UserID: " + sUserID
-			);
-		} catch (Exception e1) {
-			response.sendRedirect(
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + e1.getMessage()
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ sParamString.replace("*", "&")
-			);			
-			return;
-		}
 		
 		lStartingTime = System.currentTimeMillis();
 		ServletContext context = getServletContext();
 		ICPOUnpostedInvoiceReport rpt = new ICPOUnpostedInvoiceReport();
 		try {
-			out.println(rpt.processReport(conn,context,sDBID,sCallingClass));
+			out.println(rpt.processReport(context,sDBID,sCallingClass));
 		}catch (Exception e) {
-				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1560448172]");
 				response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "Warning=" + e.getMessage()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ sParamString.replace("*", "&")
 				);			
 				return;
 			}
@@ -109,7 +87,6 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");
 		out.println("  </BODY>\n"
 			+ "    </HTML>\n");
-		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1560522302]");
 		return;	
 	}
 	public void doGet(HttpServletRequest request,

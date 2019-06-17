@@ -68,32 +68,7 @@ public class SMLoadWageScaleDataSelect extends HttpServlet {
 	    		+ ">");
 
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
-	    /*
-	    out.println("<INPUT TYPE=HIDDEN NAME='" 
-	    		+ ICPhysicalInventoryEntry.ParamID 
-	    		+ "' VALUE='" 
-	    		+ SMUtilities.get_Request_Parameter(ICPhysicalInventoryEntry.ParamID, request) 
-	    		+ "'>"
-	    );
-	    out.println("<INPUT TYPE=HIDDEN NAME='" 
-	    		+ ICPhysicalInventoryEntry.ParamStartingItemNumber 
-	    		+ "' VALUE='" 
-	    		+ SMUtilities.get_Request_Parameter(ICPhysicalInventoryEntry.ParamStartingItemNumber, request) 
-	    		+ "'>"
-	    );
-	    out.println("<INPUT TYPE=HIDDEN NAME='" 
-	    		+ ICPhysicalInventoryEntry.ParamEndingItemNumber 
-	    		+ "' VALUE='" 
-	    		+ SMUtilities.get_Request_Parameter(ICPhysicalInventoryEntry.ParamEndingItemNumber, request) 
-	    		+ "'>"
-	    );
-	    out.println("<INPUT TYPE=HIDDEN NAME='" 
-	    		+ ICPhysicalInventoryEntry.ParamLocation 
-	    		+ "' VALUE='" 
-	    		+ SMUtilities.get_Request_Parameter(ICPhysicalInventoryEntry.ParamLocation, request) 
-	    		+ "'>"
-	    );
-*/
+
 	    out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" 
 	    	+ SMUtilities.getFullClassName(this.toString()) + "'>");
 	    

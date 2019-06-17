@@ -354,15 +354,18 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
                		rsInvoices.close();
             		throw new Exception("Error [1489168003]" 
             			+ " Could not load vendor information for vendor : '" + inv.getM_svendor() 
-            			+ "' - " + ven.getErrorMessages());
+            			+ "'"
+            			+ " for PO Invoice ID " + inv.getM_slid()
+            			+ " - " + ven.getErrorMessages());
         		}
             	APAccountSet apset = new APAccountSet();
             	apset.setlid(ven.getiapaccountset());
             	if (!apset.load(conn)){
                		rsInvoices.close();
             		throw new Exception("Error [1489168004]" 
-            			+ " Could not load AP account set info for vendor : '" + inv.getM_svendor() 
-            			+ "' - " + ven.getErrorMessages());
+            			+ " Could not load AP account set info for vendor : '" + inv.getM_svendor() + "'"
+            			+ " for PO Invoice ID " + inv.getM_slid()
+            			+ " - " + ven.getErrorMessages());
         		}
             	entry.setscontrolacct(apset.getspayablescontrolacct());
             	entry.setsvendoracct(inv.getM_svendor());

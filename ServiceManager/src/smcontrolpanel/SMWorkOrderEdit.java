@@ -2647,10 +2647,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		if(workorder.getlid().compareToIgnoreCase("-1") != 0){
 			sWorkOrderID = workorder.getlid();
 		}
-		s += "<button class=\"btn d-block d-lg-none\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + sWorkOrderID + " </button>";
-		s += "<div class=\"d-none d-lg-block\" id=\"headerTable\">";
+		s += "<div class=\"d-block d-md-none\">";
+		s += "<h3 class=\"d-flex justify-content-between\">Work Order " + sWorkOrderID + "";
+		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button></h3><BR>";
+		s += "<div class=\"container d-flex justify-content-between\">";
+		s += "<a href=\"https://www.google.com/maps\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">place" + "</i></a>";
+		s += "<a href=\"tel:12223334444\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">phone" + "</i></a>";
+		s += "<a href=\"mailto:support@airotech.com\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">email" + "</i></a>";
+		s+= "</div>";
+		s += "</div>";
+		s += "<div class=\"d-none d-md-block\" id=\"headerTable\">";
 		
-		s += "<TABLE class = \"innermost table\" style=\"title:OrderHeaderTable;\" width=100%  >\n";	
 		s += "<TR>";
 		String sOrderNumber = workorder.getstrimmedordernumber();
 		if (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0){
@@ -2801,7 +2808,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			
 			;
 		s += "</TR>";
-		s += "</TABLE title:OrderHeaderTable; \">\n";	
+
+		
+		
 		
 		s += "<TABLE class = \" innermost \" style=\" title:OrderHeaderTable2; \" width=100% >\n";	
 		s += "<TR>";
@@ -2872,6 +2881,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//This line should keep the font widths 'screen' wide:
 		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\" />"
 		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
+		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
 		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
 		+ "</HEAD>\n" 

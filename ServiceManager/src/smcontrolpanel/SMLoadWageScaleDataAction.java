@@ -277,7 +277,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		try {
 			validateFile(sTempImportFilePath, sFileName, bIncludesHeaderRow);
 		} catch (Exception e) {
-			throw new Exception(" [1560799723] - " + e.getMessage());
+			throw new Exception(" %5B1560799723%5D - " + e.getMessage());
 		}
 		//Get a connection:
 		Connection conn = clsDatabaseFunctions.getConnection(
@@ -292,18 +292,18 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		);
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			throw new Exception("Error [1548682859] - couldn't start data transaction.");
+			throw new Exception("Error %5B1548682859%5D - couldn't start data transaction.");
 		}
 		
 		try {
 			insertRecords(sTempImportFilePath, sFileName, conn, bIncludesHeaderRow, sEncryptionKey, sUserID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception("Error [1548682860] - couldn't insert records - " + e.getMessage() + ".");
+			throw new Exception("Error %5B1548682860%5D - couldn't insert records - " + e.getMessage() + ".");
 		}
 
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			throw new Exception("Error [1548682861] - couldn't commit data transaction.");
+			throw new Exception("Error %5B1548682861%5D - couldn't commit data transaction.");
 		}
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080584]");
@@ -316,21 +316,21 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			boolean bFileIncludesHeaderRow,
 			String encryptKey,
 			String sUserID
-	) throws Exception{
-		
+			) throws Exception{
+
 		BufferedReader br = null;
 		try {
 
 			br = new BufferedReader(new FileReader(sFilePath + System.getProperty("file.separator") + sFileName));
 			String line = null;
 			int iLineCounter = 0;
-			
+
 			SMWageScaleDataEntry record = new SMWageScaleDataEntry();
 			record.setEncryptionKey(encryptKey);
-			
+
 			while ((line = br.readLine()) != null) {
 				iLineCounter++;
-				
+
 				if (bFileIncludesHeaderRow && (iLineCounter == 1)){
 					//If the file has a header row and if this is the first line, then it's the header line
 					//so reset the line counter and don't do any validation of it:
@@ -340,9 +340,9 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 					//Otherwise, if it's NOT the first row of a file with a header row, process:
 					int iFieldCounter = 0;
 					String[] fields = line.split(",");
-					
+
 					for (String sDelimitedField : fields) {
-						
+
 						if (iFieldCounter == FIELD_EMPLOYEENAME){
 							record.setEmployeeName(clsDatabaseFunctions.FormatSQLStatement(sDelimitedField.trim().replace("\"", "")));
 						}
@@ -374,7 +374,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 							try{
 								record.setPeriodEndDate(USDateformatter.parse(sDelimitedField.trim().replace("\"", "")));
 							}catch(ParseException ex){
-								throw new Exception("Error [20191691351531] setting period end date '" + sDelimitedField + "' parsing line " + iLineCounter + " - " + record.getErrorMessages() + ".");
+								throw new Exception("Error %5B20191691351531%5D setting period end date '" + sDelimitedField + "' parsing line " + iLineCounter + " - " + record.getErrorMessages() + ".");
 							}
 						}
 						if (iFieldCounter == FIELD_REGHOURS){
@@ -424,25 +424,25 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 						}
 						iFieldCounter++;
 					}
-					
+
 					if(!record.save_without_data_transaction(iLineCounter, conn, sUserID)){
-						throw new Exception("Error [2019169143296] " + "Could not save line " + iLineCounter + " - " + record.getErrorMessages());
+						throw new Exception("Error %5B2019169143296%5D " + "Could not save line " + iLineCounter + " - " + record.getErrorMessages());
 					}
 				}
 			}
 		} catch (FileNotFoundException ex) {
-			throw new Exception("Error [20191691432395] " + "File not found error reading file - " + ex.getMessage() + ".");
+			throw new Exception("Error %5B20191691432395%5D " + "File not found error reading file - " + ex.getMessage() + ".");
 		} catch (IOException ex) {
-			throw new Exception("Error [20191691433148] " + "IO exception error reading file - " + ex.getMessage() + ".");
+			throw new Exception("Error %5B20191691433148%5D " + "IO exception error reading file - " + ex.getMessage() + ".");
 		} catch (NumberFormatException ex){
-			throw new Exception("Error [20191691433376] " + "Number format exception error reading file - " + ex.getMessage() + ".");
+			throw new Exception("Error %5B20191691433376%5D " + "Number format exception error reading file - " + ex.getMessage() + ".");
 		}
 		finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				throw new Exception("Error [2019169143460] " + "IO exception error reading file - " + ex.getMessage() + ".");
+				throw new Exception("Error %5B2019169143460%5D " + "IO exception error reading file - " + ex.getMessage() + ".");
 			}
 		}
 		return;
@@ -476,15 +476,15 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
 				iLineCounter++;
-				
+
 				//If the file has a header row and if this is the first line, then it's the header line
 				//so reset the line counter and don't do any validation of it:
 				if (
 						bFileIncludesHeaderRow
 						&& (iLineCounter == 1)
-					)
+						)
 				{
-				//Otherwise, if it's NOT the first row of a file with a header row, process:
+					//Otherwise, if it's NOT the first row of a file with a header row, process:
 				}else if (!line.isEmpty()){
 					//only count number of fields if the line is not empty.
 					int iFieldCounter = 0;
@@ -494,25 +494,25 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 						iFieldCounter++;
 					}
 					if (iFieldCounter < NUMBER_OF_FIELDS_PER_LINE){
-						
-						throw new Exception(" [1560799687] Line number " + iLineCounter + " has less than " 
-							+ NUMBER_OF_FIELDS_PER_LINE + " fields in it. ");
+
+						throw new Exception(" %5B1560799687%5D Line number " + iLineCounter + " has less than " 
+								+ NUMBER_OF_FIELDS_PER_LINE + " fields in it. ");
 					}
 				}
 			}
 			if (iLineCounter == 0){
-				throw new Exception(" [1560799719] The file has no lines in it.");
+				throw new Exception(" %5B1560799719%5D The file has no lines in it.");
 			}
 		} catch (FileNotFoundException ex) {
-			throw new Exception("[1560799720]" + " File not found error reading file - " + ex.getMessage() + ".");
+			throw new Exception("%5B1560799720%5D" + " File not found error reading file - " + ex.getMessage() + ".");
 		} catch (IOException ex) {
-			throw new Exception("[1560799721]" + " IO exception error reading file - " + ex.getMessage() + ".");
+			throw new Exception("%5B1560799721%5D" + " IO exception error reading file - " + ex.getMessage() + ".");
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				throw new Exception("[1560799722]" + " IO exception error reading file - " + ex.getMessage() + ".");
+				throw new Exception("%5B1560799722%5D" + " IO exception error reading file - " + ex.getMessage() + ".");
 			}
 		}
 		return;
@@ -554,6 +554,11 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		}else{
 			return s.trim();
 		}
+	}
+	private String convertMessage(String s) {
+		s.replaceAll("[","%5B");
+		s.replaceAll("]","%5D");
+		return s;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

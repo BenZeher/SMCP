@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import javax.servlet.ServletContext;

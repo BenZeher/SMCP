@@ -198,7 +198,7 @@ public class GLConvertACCPACAction extends HttpServlet {
     	
     	String sProcessingResult = "";
     	long lStartingTime = System.currentTimeMillis();
-    	System.out.println("[1552318878] - going into processSelectedFunction");
+    	//System.out.println("[1552318878] - going into processSelectedFunction");
     	try {
     		sProcessingResult = processSelectedFunction(
     			iFunctionValue, 
@@ -257,7 +257,7 @@ public class GLConvertACCPACAction extends HttpServlet {
 		
 		GLACCPACConversion conv = new GLACCPACConversion();
 		
-		System.out.println("[1552318879] - iSelectedFunction = '" + iSelectedFunction + "'.");
+		//System.out.println("[1552318879] - iSelectedFunction = '" + iSelectedFunction + "'.");
 		
     	switch(iSelectedFunction){
     	case GLConvertACCPAC.ROLLBACK_OPTION_VALUE:

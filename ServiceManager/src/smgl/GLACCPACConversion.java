@@ -33,7 +33,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String s = "Rolling back critical changes to SMCP data...<BR>";
 		//We only remove CRITICAL data changes, i.e., those that might affect processing:
 
-		System.out.println("[1552318880] - starting reverseDataChanges.");
+		//System.out.println("[1552318880] - starting reverseDataChanges.");
 		
 		//Remove any segments that we added from ACCPAC:
 		String SQL = "TRUNCATE " + SMTableglaccountsegments.TableName
@@ -46,7 +46,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Segments that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318881] - removed segments.");
+		//System.out.println("[1552318881] - removed segments.");
 		
 		//Remove any segment values that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglacctsegmentvalues.TableName
@@ -59,7 +59,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Segment Values that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318882] - removed segment values.");
+		//System.out.println("[1552318882] - removed segment values.");
 		
 		//Remove any account structures that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountstructures.TableName
@@ -72,7 +72,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Structures that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318883] - removed account structures.");
+		//System.out.println("[1552318883] - removed account structures.");
 		
 		//Remove any GL accounts that were added in a previous conversion:
 		SQL = "DELETE FROM " + SMTableglaccounts.TableName
@@ -88,7 +88,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Accounts that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318884] - removed accounts created from ACCPAC.");
+		//System.out.println("[1552318884] - removed accounts created from ACCPAC.");
 		
 		//Remove any GL financial statement data that was added in a previous conversion:
 		SQL = "TRUNCATE " + SMTableglfiscalsets.TableName
@@ -111,9 +111,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		s+= "GL financial statement data that was added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318885] - removed fiscal sets.");
+		//System.out.println("[1552318885] - removed fiscal sets.");
 		
-		//Remove any accpunt groups that we added from ACCPAC:
+		//Remove any account groups that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountgroups.TableName
 		;
 		try {
@@ -124,7 +124,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Groups that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318886] - removed account groups.");
+		//System.out.println("[1552318886] - removed account groups.");
 		
 		//Remove any fiscal calendars that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglfiscalperiods.TableName
@@ -137,7 +137,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Fiscal Periods that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318887] - removed fiscal periods.");
+		//System.out.println("[1552318887] - removed fiscal periods.");
 		
 		//Remove any GL transactions that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTablegltransactionlines.TableName
@@ -150,7 +150,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL transactions that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1553200509] - removed GL transactions.");
+		//System.out.println("[1553200509] - removed GL transactions.");
 		
 		//Remove any GL transaction batches that we might have been testing:
 		SQL = "TRUNCATE " + SMTablegltransactionbatches.TableName
@@ -182,7 +182,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		s+= "GL transaction batches have been removed.<BR>";
 		
-		System.out.println("[1558378443] - removed GL transaction batches.");
+		//System.out.println("[1558378443] - removed GL transaction batches.");
 		
 		return s;
 	}

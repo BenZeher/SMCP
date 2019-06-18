@@ -268,12 +268,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			throw new Exception(e.getMessage());
 		}
 		pwOut.println("</FORM>");
-		
-		
-		//pwOut.println("<script src=\"https://code.jquery.com/jquery-3.3.1.slim.min.js\" integrity=\"sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo\" crossorigin=\"anonymous\"></script>\n");
-		pwOut.println("<script src=\"https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js\" integrity=\"sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1\" crossorigin=\"anonymous\"></script>\n");
 		pwOut.println(" <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\" integrity=\"sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM\" crossorigin=\"anonymous\"></script>\n");
-		//pwOut.println("</BODY>");
 	}
 	
 	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName, boolean bUseGoogleDrivePicker) throws Exception{
@@ -2647,18 +2642,41 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		if(workorder.getlid().compareToIgnoreCase("-1") != 0){
 			sWorkOrderID = workorder.getlid();
 		}
+		
+		String sLinkToConfigureWorkOrder = "";
+		if (SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMConfigureWorkOrders, 
+				sm.getUserID(), 
+				context, 
+				sm.getsDBID(),
+				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+			sLinkToConfigureWorkOrder = "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
+				+ "smcontrolpanel.SMConfigWorkOrderEdit?" + SMWorkOrderHeader.Paramlid + "=" 
+				+ sWorkOrderID
+				+ "&CallingClass=" + SMUtilities.getFullClassName(sm.getCallingClass())
+				+ "&" + SMConfigWorkOrderEdit.REMOVE_WORK_ORDER_ATTRIBUTE_FROM_SESSION + "=Y"
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
+				+ "\">"
+				+ "Configure</A>";
+		;
+		}
+		
+		//Make the toolbar for 
 		s += "<div class=\"d-block d-md-none\">";
-		s += "<h3 class=\"d-flex justify-content-between\">Work Order " + sWorkOrderID + "";
-		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button></h3><BR>";
+		s += "<div class=\"d-flex justify-content-between\"> <div style=\"font-size:large; padding: 7px;\"><b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font></div>";
+		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"
+		+ "</div><BR>";
 		s += "<div class=\"container d-flex justify-content-between\">";
 		s += "<a href=\"https://www.google.com/maps\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">place" + "</i></a>";
 		s += "<a href=\"tel:12223334444\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">phone" + "</i></a>";
 		s += "<a href=\"mailto:support@airotech.com\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">email" + "</i></a>";
 		s+= "</div>";
+		s += "<hr/>";
 		s += "</div>";
-		s += "<div class=\"d-none d-md-block\" id=\"headerTable\">";
 		
-		s += "<TR>";
+		
+		s += "<div class=\"container-fluid  d-none d-md-block\" id=\"headerTable\">";
+		s += "<div class=\"row flex-md-nowrap\">";
 		String sOrderNumber = workorder.getstrimmedordernumber();
 		if (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0){
 			if (SMSystemFunctions.isFunctionPermitted(
@@ -2729,7 +2747,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "?" + SMOrderHeader.ParamsOrderNumber + "=" + orderheader.getM_strimmedordernumber() 
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
 				+ "#WorkOrders"
-				+ "\">" + "Work order list" + "</A>"
+				+ "\">" + "Work&nbsp;order&nbsp;list" + "</A>"
 			;
 		}
 		//Link to create Delivery Ticket
@@ -2741,82 +2759,45 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sm.getsDBID(),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)))
 			&& (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0)){
-			sLinkToCreateDeliveryTicket = "&nbsp<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(context) 
+			sLinkToCreateDeliveryTicket = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 				+ "smcontrolpanel.SMEditDeliveryTicketEdit?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
 				+ "&" + SMTabledeliverytickets.strimmedordernumber + "=" + workorder.getstrimmedordernumber()
 				+ "&" + SMTabledeliverytickets.iworkorderid + "=" + workorder.getlid()
 				+ "&" + SMTabledeliverytickets.smechanicname + "=" + workorder.getmechanicsname()
 				+ "&" + SMTabledeliverytickets.lid + "=-1"
-				+ "\"> Add&nbsp;interactive&nbsp;delivery&nbsp;ticket</A>&nbsp;  </FONT>";
+				+ "\">Add&nbsp;delivery&nbsp;ticket</A>";
 		}
-		
-		s +=
-			"<TD class=\" fieldlabel \">WO&nbsp;#:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + sWorkOrderID;
-	
-		String sLinkToConfigureWorkOrder = "";
-		if (SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMConfigureWorkOrders, 
-				sm.getUserID(), 
-				context, 
-				sm.getsDBID(),
-				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-			sLinkToConfigureWorkOrder = "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
-				+ "smcontrolpanel.SMConfigWorkOrderEdit?" + SMWorkOrderHeader.Paramlid + "=" 
-				+ sWorkOrderID
-				+ "&CallingClass=" + SMUtilities.getFullClassName(sm.getCallingClass())
-				+ "&" + SMConfigWorkOrderEdit.REMOVE_WORK_ORDER_ATTRIBUTE_FROM_SESSION + "=Y"
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
-				+ "\">"
-				+ "Configure</A>";
-		;
-		}
+		s += "<div style=\"white-space: nowrap;\" class=\"col p-1 d-none d-md-block\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "";
+
 		if (sLinkToConfigureWorkOrder.compareToIgnoreCase("") != 0){
-			s += sLinkToConfigureWorkOrder;
+			s += " " + sLinkToConfigureWorkOrder;
 		}
-		s += "</TD>";
+		s += "</div>";
 		
 		if (sLinkToWorkOrderList.compareToIgnoreCase("") != 0){
-			s += "<TD class=\"readonlyleftfield\">" + sLinkToWorkOrderList + "</TD>"
+			s +=  "<div class=\"col p-1\">" + sLinkToWorkOrderList + "</div>"
 			;
 		}
 		if (sLinkToCreateDeliveryTicket.compareToIgnoreCase("") != 0){
-			s += "<TD class=\"readonlyleftfield\">" + sLinkToCreateDeliveryTicket + "</TD>"
+			s +=  "<div class=\"col p-1\">" +sLinkToCreateDeliveryTicket + "</div>"
 			;
 		}
-		s +=  "<TD class=\" fieldlabel \">Scheduled:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + workorder.getsscheduleddate() + "</TD>"
+		s +=  "<div class=\"col p-1\"><b>Scheduled:</b>&nbsp;" + "" + workorder.getsscheduleddate() + "</div>"
 			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramscheduleddate+ "\" value=\"" + workorder.getsscheduleddate() + "\">"
 				
-			+ "<TD class=\" fieldlabel \">Posted?:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + sPosted + "</TD>"
+			+ "<div class=\"col p-1\"><b>Posted?:</b>&nbsp;" + sPosted + "</div>"
 				
-			+ "<TD class=\" fieldlabel \">Imported?:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + sImported + "</TD>"
+			+ "<div class=\"col p-1\"><b>Imported?:</b>&nbsp;" + sImported + "</div>"
 
-			+ "<TD class=\" fieldlabel \">Order&nbsp;#:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + 	sOrderNumber + "</TD>"
-			
-			+ "<TD class=\" fieldlabel \">Terms:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sTerms() + "</TD>"
-
-			+ "<TD class=\" fieldlabel \">Sales&nbsp;#:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + 	orderheader.getM_sSalesperson() + "-" + sSalespersonName + "</TD>"
-
-			+ "<TD class=\" fieldlabel \">Special&nbsp;wage&nbsp;rate:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sSpecialWageRate() + "</TD>"			
-			
-			;
-		s += "</TR>";
-
+			+ "<div class=\"col p-1\"><b>Order&nbsp;#:</b>&nbsp;" + sOrderNumber + "</div>"
+			+ "<div class=\"col p-1\"><b>Terms:</b>&nbsp;" + orderheader.getM_sTerms() + "</div>"
+			+ "<div style= \"white-space: nowrap;\" class=\"col p-1\"><b>Sales&nbsp;#:</b>&nbsp;" + orderheader.getM_sSalesperson() + "-" + sSalespersonName + "</div>"
+			+ "<div class=\"col p-1\"><b>wage&nbsp;rate:</b>&nbsp;" + orderheader.getM_sSpecialWageRate() + "</div>";
+		s += "</div>";	
 		
 		
-		
-		s += "<TABLE class = \" innermost \" style=\" title:OrderHeaderTable2; \" width=100% >\n";	
-		s += "<TR>";
-		
-		s += "<TD class=\" fieldlabel \">Bill&nbsp;to:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sBillToName() + "</TD>";
+		s += "<div class=\"row flex-md-nowrap\">";
+		s += "<div style= \"white-space:nowrap;\" class=\"col p-1\"><b>Bill&nbsp;to:&nbsp;</b>" + orderheader.getM_sBillToName() + "</div>";
 		
 		String sMapAddress = orderheader.getM_sShipToAddress1().trim();
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToAddress2().trim();
@@ -2827,42 +2808,31 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToZip().trim();
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToCountry().trim();
 		
-		s += "<TD class=\" fieldlabel \">Ship&nbsp;to:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShipToName() 
-			//+ "</TD>"
-			
-			//+ "<TD class=\"readonlyleftfield\">" 
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() 
 			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress) + "\">" + sMapAddress + "</A>"
-			+ "</TD>"
+			+ "</div>"
 			
 			//Ship to contact:
-			+ "<TD class=\" fieldlabel \">Contact:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoContact() + "</TD>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Contact:</b>&nbsp;" + orderheader.getM_sShiptoContact() + "</div>"
 
 			//Ship to phone:
-			+ "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Phone:</b>&nbsp;" + orderheader.getM_sShiptoPhone() + "</div>"
 		
 			//Second phone:
-			+ "<TD class=\" fieldlabel \">2nd Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_ssecondaryshiptophone() + "</TD>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>2nd Phone:</b>&nbsp;" + orderheader.getM_ssecondaryshiptophone() + "</div>"
 			;
 
 		//Make these fields read only:
 		//Starting time:
-		s += "<TD class=\" fieldlabel \">Starting time:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + workorder.getsstartingtime() 
-			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsstartingtime+ "\" value=\"" + workorder.getsstartingtime() + "\">"
-			+ "</TD>";
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Starting time:</b>&nbsp;" + workorder.getsstartingtime() + "</div>"
+		+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsstartingtime+ "\" value=\"" + workorder.getsstartingtime() + "\">";
 
 		//Assistant:
-		s += "<TD class=\" fieldlabel \">Assistant:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + workorder.getsassistant() 
-			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsassistant+ "\" value=\"" + workorder.getsassistant() + "\">"
-			+ "</TD>";
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Assistant:</b>&nbsp;" + workorder.getsassistant() + "</div>"
+			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsassistant+ "\" value=\"" + workorder.getsassistant() + "\">";
 
 		//Close the table:
-		s += "</TABLE style = \" title:OrderHeaderTable2; \">\n";
+		s += "</div>\n";
 		s += "</div>\n";
 		return s;
 	}
@@ -2879,21 +2849,18 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TITLE>" + subtitle + "</TITLE>"
 		+ SMUtilities.faviconLink()
 		//This line should keep the font widths 'screen' wide:
-		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1, shrink-to-fit=no\" />"
+		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"
 		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
 		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
 		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
 		+ "</HEAD>\n" 
-		+ "<BODY BGCOLOR="
-		+ "\"" 
-		+ sbackgroundcolor
-		+ "\""
-		+ " style=\"font-family: " + sfontfamily + ";\""
-		+ "\">"
+		+ "<BODY"
+		+ " style=\"font-family: " + sfontfamily + " !important; background-color:" +sbackgroundcolor + " !important; \""
+		+ " class=\"override\">"
 		;
-		s += "<TABLE BORDER=0>"
-		+"<TR><TD VALIGN=BOTTOM><H3>" + scompanyname + ": " + title + "</H3></TD>"
+		s += "<TABLE BORDER=0 style=\"font-size: medium;\">"
+		+"<TR><TD VALIGN=BOTTOM><B>" + scompanyname + ": " + title + "</B></TD>"
 		;
 
 		if (subtitle.compareTo("") != 0){  

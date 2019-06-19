@@ -2661,7 +2661,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		;
 		}
 		
-		//Make the toolbar for 
+		//Make the toolbar for small screens 
 		s += "<div class=\"d-block d-md-none\">";
 		s += "<div class=\"d-flex justify-content-between\"> <div style=\"font-size:large; padding: 7px;\"><b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font></div>";
 		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"

@@ -298,7 +298,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD ALIGN=LEFT VALIGN=TOP nowrap><FONT SIZE=2>");
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
-							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")) + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")));
+							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim() + "");
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Contact: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + ""); 

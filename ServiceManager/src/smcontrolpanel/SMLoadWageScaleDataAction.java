@@ -555,11 +555,6 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			return s.trim();
 		}
 	}
-	private String convertMessage(String s) {
-		s.replaceAll("[","%5B");
-		s.replaceAll("]","%5D");
-		return s;
-	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

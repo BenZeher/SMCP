@@ -322,7 +322,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 									+ "\">" 
 									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim()  
 									+ "</A>");
-							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Customer Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Phone: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Last Invoice Date: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
 							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 

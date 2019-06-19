@@ -15,6 +15,7 @@ import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablesalesgroups;
+import SMDataDefinition.SMTablesalesperson;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 
@@ -296,9 +297,10 @@ public class SMCriticalDateReport extends java.lang.Object{
 						
 						out.println("<TD ALIGN=LEFT VALIGN=TOP nowrap><FONT SIZE=2>");
 						
-						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) {
-							out.println("<b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + ""); 
+						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
+							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")) + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")));
+							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");
+							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Contact: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Phone: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Order Number:</b>" + "<A HREF=\"" 
@@ -425,7 +427,10 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToContact
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone 
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToPhone
-						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber;
+						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber
+						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName;
 			}
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
 				SQL += ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname
@@ -463,6 +468,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ " LEFT JOIN " + SMTablesalesgroups.TableName
 					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup
 					+ " = " + SMTablesalesgroups.iSalesGroupId
+					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
+					+ " = " + SMTablesalesperson.sSalespersonCode
 					;
 			}	
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {

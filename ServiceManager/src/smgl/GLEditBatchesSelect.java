@@ -140,7 +140,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    out.println("    <TH class=\"headingleft\" >Status</TH>\n");
 	    out.println("    <TH class=\"headingright\" >Entries</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Created by</TH>\n");
-	    out.println("    <TH class=\"headingleft\" >Description</TH>\n");
+	    out.println("    <TH class=\"headingleft\" >Batch description</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Last edited</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Posted</TH>\n");
 	    out.println("    <TH class=\"headingright\" >Net batch total</TH>\n");

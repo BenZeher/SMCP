@@ -177,7 +177,7 @@ public class GLEditBatchesEdit extends HttpServlet {
         if (batch.bEditable()){
             //Description:
         	pwOut.println(
-        		"Description:&nbsp;"
+        		"Batch description:&nbsp;"
         		+ "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatches.sbatchdescription + "\""
         		+ " VALUE=\"" + clsStringFunctions.filter(batch.getsbatchdescription()) + "\""
         		+ " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatches.sBatchDescriptionLength)
@@ -243,7 +243,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    		);
         }
         else{
-        	pwOut.println("Description: <B>"+ batch.getsbatchdescription() + "</B><BR>");
+        	pwOut.println("Batch description: <B>"+ batch.getsbatchdescription() + "</B><BR>");
        		pwOut.println(batch.getsbatchstatuslabel() + " batches cannot be edited or deleted.\n");
         }
         
@@ -265,7 +265,7 @@ public class GLEditBatchesEdit extends HttpServlet {
     	iColumnCount++;
     	    	
     	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Description</B></U>");
+    	pwOut.println("<B><U>Entry&nbsp;description</B></U>");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
     	

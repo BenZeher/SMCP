@@ -719,19 +719,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				
 				//System.out.println("[1554320753] - into the loop...");
 				
-				if (rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareTo(sPreviousAccount) != 0){
-					sStringBuffer += printAccountHeadingLine(
-						rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid), 
-						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc), 
-						getStartingAccountBalance(
-							conn,
-							rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid),
-							sFiscalYear,
-							sStartingPeriod
-						)
-					);
-				}
-				
 				//If the fiscal period has changed, print the fiscal period totals:
 				if (
 					(rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
@@ -764,6 +751,19 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					bdEndingBalanceForAccount = BigDecimal.ZERO;
 					bdTotalDebitsForAccount = BigDecimal.ZERO;
 					bdTotalCreditsForAccount = BigDecimal.ZERO;
+				}
+				
+				if (rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareTo(sPreviousAccount) != 0){
+					sStringBuffer += printAccountHeadingLine(
+						rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid), 
+						rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc), 
+						getStartingAccountBalance(
+							conn,
+							rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid),
+							sFiscalYear,
+							sStartingPeriod
+						)
+					);
 				}
 				
 				bdDebit = BigDecimal.ZERO;
@@ -1078,7 +1078,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+  "<B>" + sAccount + "</B>"
 			+ "</TD>"
 
-			+ "    <TD COLSPAN=4 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+			+ "    <TD COLSPAN=4 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "<B>" + sDescription + "</B>"
 			+ "</TD>"
 
@@ -1101,7 +1101,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "</TD>"
 
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Year - Period"
+			+  "Year<BR>- Period"
 			+ "</TD>"
 
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
@@ -1113,11 +1113,11 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "</TD>"
 
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Description/Reference"
+			+  "Line description/<BR>Line reference"
 			+ "</TD>"
 
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Batch - entry"
+			+  "Batch<BR>- entry"
 			+ "</TD>"
 
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"

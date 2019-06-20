@@ -52,7 +52,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 	public static final String SIGNATUREBLOCK_TABLE_BG_COLOR = "#FFBCA2";
 	public static final String COMMENTS_TABLE_BG_COLOR = "#F2C3FA";
 	public static final String JOBTIMES_TABLE_BG_COLOR = "#F2C3FA";
-	public static final String ITEM_QTY_FIELD_WIDTH = "8";
+	public static final String ITEM_QTY_FIELD_WIDTH = "6";
 	public static final String FORM_NAME = "MAINFORM";
 	public static final String CONVENIENCEPHRASECONTROL_MARKER = "CPM";
 	public static final String WORK_ORDER_ITEMLINE_MARKER = "WOILM";

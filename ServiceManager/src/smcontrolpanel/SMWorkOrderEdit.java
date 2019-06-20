@@ -378,7 +378,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				wo_entry, 
 				orderheader, 
 				SMUtilities.getFullClassName(this.toString()),
-				SMWorkOrderHeader.SAVING_FROM_EDIT_SCREEN) 
+				SMWorkOrderHeader.SAVING_FROM_EDIT_SCREEN,
+				bUseGoogleDrivePicker) 
 			+ "</TD></TR>";
 
 		s += createInstructionsTable(wo_entry, orderheader);
@@ -773,7 +774,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ " NAME=\"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			+ " id = \"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			//+ " VALUE=\"" + "" + "\""
-			+ " SIZE=" + "60"
+			+ " SIZE=" + "30"
 			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.sdescriptionlength)
 			+ ">"
 		;
@@ -1232,7 +1233,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//If there is no line id, then this line is not saved and it has to be editable:
 		if (wodetail.getslid().compareToIgnoreCase("-1") == 0){
 			s += "<TD class=\" fieldcontrol \" >"
-			+ "<INPUT TYPE=TEXT NAME=\""
+			+ "<INPUT  TYPE=TEXT NAME=\""
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
 				+  SMWorkOrderDetail.Paramsitemnumber
@@ -1256,7 +1257,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "\"";
 			
 			s += " onchange=\"flagDirty();\""
-			+ " SIZE=" + "18"
+			+ " SIZE=" + "7"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderdetails.sItemNumberLength)
 			+ ">"
 			+ "\n"
@@ -1332,7 +1333,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "\"";
 			
 			s += " onchange=\"flagDirty();\""
-			+ " SIZE=" + "60"
+			+ " SIZE=" + "10"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderdetails.sItemDescLength)
 			+ ">"
 			+ "</TD>"
@@ -2000,7 +2001,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "\"";
 			
 			s += " onchange=\"flagDirty();\""
-				+ " SIZE=" + "18"
+				+ " SIZE=" + "8"
 				+ " MAXLENGTH=" + Integer.toString(SMTableorderdetails.sItemNumberLength)
 				+ ">"
 				+ "\n"
@@ -2040,7 +2041,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "\""
 				+ " VALUE=\"" + "" + "\""
 				+ " onchange=\"flagDirty();\""
-				+ " SIZE=" + "60"
+				+ " style=\"width:100%\""
 				+ " MAXLENGTH=" + Integer.toString(SMTableorderdetails.sItemDescLength)
 				+ ">"
 				+ "</TD>"
@@ -2634,7 +2635,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			SMWorkOrderHeader workorder, 
 			SMOrderHeader orderheader,
 			String sClassName,
-			int iSavingFromWhichScreen) throws Exception{
+			int iSavingFromWhichScreen,
+			boolean bUseGoogleDrivePicker) throws Exception{
 		String s = "";
 		
 
@@ -2661,22 +2663,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		;
 		}
 		
-		//Make the toolbar for small screens 
-		s += "<div class=\"d-block d-md-none\">";
-		s += "<div class=\"d-flex justify-content-between\"> <div style=\"font-size:large; padding: 7px;\"><b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font></div>";
-		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"
-		+ "</div><BR>";
-		s += "<div class=\"container d-flex justify-content-between\">";
-		s += "<a href=\"https://www.google.com/maps\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">place" + "</i></a>";
-		s += "<a href=\"tel:12223334444\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">phone" + "</i></a>";
-		s += "<a href=\"mailto:support@airotech.com\"><i class=\"material-icons\" style=\"font-size:35px;color:black\">email" + "</i></a>";
-		s+= "</div>";
-		s += "<hr/>";
-		s += "</div>";
+
 		
-		
-		s += "<div class=\"container-fluid  d-none d-md-block\" id=\"headerTable\">";
-		s += "<div class=\"row flex-md-nowrap\">";
 		String sOrderNumber = workorder.getstrimmedordernumber();
 		if (workorder.getstrimmedordernumber().compareToIgnoreCase("") != 0){
 			if (SMSystemFunctions.isFunctionPermitted(
@@ -2767,21 +2755,93 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "&" + SMTabledeliverytickets.lid + "=-1"
 				+ "\">Add&nbsp;delivery&nbsp;ticket</A>";
 		}
-		s += "<div style=\"white-space: nowrap;\" class=\"col p-1 d-none d-md-block\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "";
 
-		if (sLinkToConfigureWorkOrder.compareToIgnoreCase("") != 0){
-			s += " " + sLinkToConfigureWorkOrder;
+		String sMapAddress = "";
+		if(orderheader.getM_sShipToAddress1().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += "" +orderheader.getM_sShipToAddress1().trim() ;
 		}
+		if(orderheader.getM_sShipToAddress2().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += "<br>" +orderheader.getM_sShipToAddress2().trim() ;
+		}
+		if(orderheader.getM_sShipToAddress3().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += "<br>" +orderheader.getM_sShipToAddress3().trim() ;
+		}		
+		if(orderheader.getM_sShipToAddress4().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += "<br>" + orderheader.getM_sShipToAddress4().trim() ;
+		}		
+		if(orderheader.getM_sShipToCity().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += "<br>" + orderheader.getM_sShipToCity().trim() + " ";
+		}		
+		if(orderheader.getM_sShipToState().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += orderheader.getM_sShipToState().trim() + " ";
+		}
+		if(orderheader.getM_sShipToZip().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += orderheader.getM_sShipToZip().trim() + "";
+		}
+		if(orderheader.getM_sShipToCountry().trim().compareToIgnoreCase("") != 0) {
+			sMapAddress += orderheader.getM_sShipToCountry().trim() + "";
+		}
+		//Make the toolbar for small screens 
+		s += "<div class=\"d-block d-md-none\">";
+		s += "<div class=\"d-flex justify-content-between\"> <div style=\"font-size:large; padding: 7px;\"><b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font></div>";
+		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"
+		+ "</div><BR>";
+		s += "<div class=\"row \">";
+	
+		s += "<div class=\"col\">"
+				+ "<a href=\"" +  clsServletUtilities.createGoogleMapLink(sMapAddress.replace("<br>", "")) + "\">"
+				+ "<div class=\"text-center\">"
+				+ "<i class=\"t material-icons\" style=\"font-size:35px;color:black\">place" + "</i>" 
+				+ "<br>" + sMapAddress + ""
+						+ "</div></a>"
+		  + "</div>";
+		
+		s += "<div class=\"col\">"
+				+ "<a href=\"tel:" + orderheader.getM_sShiptoPhone() + "\">"
+				+ "<div class=\"text-center\">"
+				+ "<i class=\"material-icons\" style=\"font-size:35px;color:black\">phone" + "</i>"
+				+ "<br>" + orderheader.getM_sShiptoContact() + "<br>" + orderheader.getM_sShiptoPhone() + "</div></a>"
+		+ "</div>";
+		
+		if(bUseGoogleDrivePicker) {
+			s += "<div class=\"col\">"
+					+ "<a id=\"myLink\" href=\"#\" onclick=\"loadPicker();return false;\">"
+					+ "<div class=\"text-center\">"
+					+ "<i class=\"material-icons\" style=\"font-size:35px;color:black\">folder" + "</i>"
+					+ "<br>" + "Documents" + "</div></a>"
+			+ "</div>";
+		}
+		
+		s+= "</div>";
+		s += "<hr/>";
 		s += "</div>";
 		
-		if (sLinkToWorkOrderList.compareToIgnoreCase("") != 0){
-			s +=  "<div class=\"col p-1\">" + sLinkToWorkOrderList + "</div>"
-			;
+		
+		s += "<div class=\"container-fluid  d-none d-md-block\" id=\"headerTable\">";
+
+		
+		if(sLinkToWorkOrderList.compareToIgnoreCase("") != 0 
+				|| sLinkToCreateDeliveryTicket.compareToIgnoreCase("") != 0
+				|| sLinkToConfigureWorkOrder.compareToIgnoreCase("") != 0) {
+			s += "<div class=\"row flex-md-nowrap justify-content-start\">";
+			if (sLinkToConfigureWorkOrder.compareToIgnoreCase("") != 0){
+				s +=  "<div class=\"p-1 d-none d-md-block\">" + sLinkToConfigureWorkOrder 
+						+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>";
+			}
+			if (sLinkToWorkOrderList.compareToIgnoreCase("") != 0){
+				s +=  "<div class=\"p-1\">" + sLinkToWorkOrderList 
+						+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</div>";
+			}
+			if (sLinkToCreateDeliveryTicket.compareToIgnoreCase("") != 0){
+				s +=  "<div class=\"p-1\">" + sLinkToCreateDeliveryTicket + "</div>";
+			}
+			s += "</div>";
 		}
-		if (sLinkToCreateDeliveryTicket.compareToIgnoreCase("") != 0){
-			s +=  "<div class=\"col p-1\">" +sLinkToCreateDeliveryTicket + "</div>"
-			;
-		}
+		
+
+
+		s += "<div class=\"row flex-md-nowrap\">";
+		s += "<div style=\"white-space: nowrap;\" class=\"col p-1 d-none d-md-block\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "</div>";
 		s +=  "<div class=\"col p-1\"><b>Scheduled:</b>&nbsp;" + "" + workorder.getsscheduleddate() + "</div>"
 			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramscheduleddate+ "\" value=\"" + workorder.getsscheduleddate() + "\">"
 				
@@ -2793,23 +2853,25 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "<div class=\"col p-1\"><b>Terms:</b>&nbsp;" + orderheader.getM_sTerms() + "</div>"
 			+ "<div style= \"white-space: nowrap;\" class=\"col p-1\"><b>Sales&nbsp;#:</b>&nbsp;" + orderheader.getM_sSalesperson() + "-" + sSalespersonName + "</div>"
 			+ "<div class=\"col p-1\"><b>wage&nbsp;rate:</b>&nbsp;" + orderheader.getM_sSpecialWageRate() + "</div>";
+		//Starting time:
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Starting time:</b>&nbsp;" + workorder.getsstartingtime() + "</div>"
+		+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsstartingtime+ "\" value=\"" + workorder.getsstartingtime() + "\">";
+
+		//Assistant:
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Assistant:</b>&nbsp;" + workorder.getsassistant() + "</div>"
+			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsassistant+ "\" value=\"" + workorder.getsassistant() + "\">";
+
+		
 		s += "</div>";	
 		
 		
 		s += "<div class=\"row flex-md-nowrap\">";
 		s += "<div style= \"white-space:nowrap;\" class=\"col p-1\"><b>Bill&nbsp;to:&nbsp;</b>" + orderheader.getM_sBillToName() + "</div>";
 		
-		String sMapAddress = orderheader.getM_sShipToAddress1().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToAddress2().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToAddress3().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToAddress4().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToCity().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToState().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToZip().trim();
-		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToCountry().trim();
+
 		
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() 
-			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress) + "\">" + sMapAddress + "</A>"
+		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() + "</div><div style=\"white-space:nowrap;\" class=\"col\">"
+			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress.replace("<br>", "")) + "\">" + sMapAddress.replace("<br>", "") + "</A>"
 			+ "</div>"
 			
 			//Ship to contact:
@@ -2821,16 +2883,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			//Second phone:
 			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>2nd Phone:</b>&nbsp;" + orderheader.getM_ssecondaryshiptophone() + "</div>"
 			;
-
-		//Make these fields read only:
-		//Starting time:
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Starting time:</b>&nbsp;" + workorder.getsstartingtime() + "</div>"
-		+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsstartingtime+ "\" value=\"" + workorder.getsstartingtime() + "\">";
-
-		//Assistant:
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Assistant:</b>&nbsp;" + workorder.getsassistant() + "</div>"
-			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsassistant+ "\" value=\"" + workorder.getsassistant() + "\">";
-
 		//Close the table:
 		s += "</div>\n";
 		s += "</div>\n";
@@ -2849,7 +2901,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TITLE>" + subtitle + "</TITLE>"
 		+ SMUtilities.faviconLink()
 		//This line should keep the font widths 'screen' wide:
-		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"
+		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0 maximum-scale=1\" />"
 		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
 		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
@@ -3647,6 +3699,14 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "\n"
 			;
 
+		s+= "@media screen and (max-width: 991px) {\n" + 
+				" .picker.modal-dialog {\n" + 
+				"    max-width: 355px !important;\n" + 
+				" }\n" + 
+				" .picker.modal-dialog-content.picker-dialog-content{\n" + 
+				"     max-width: 355px !important;\n" + 
+				" }\n" + 
+				"}";
 		s += "</style>"
 			+ "\n"
 			;
@@ -3660,85 +3720,39 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 		doPost(request, response);
 	}
-	//This function stores the values for radio buttons and input fields, but hidden on a form so the values can be carried
-	//but not edited:
-	private static String Create_Invisible_Edit_Form_RadioButton_Input_Row (
+	
+	private static String Create_Edit_Form_Switch_Input_Row (
 			String sFieldName,
-			String sLabel,
-			String sRemark,
-			ArrayList <String> sButtonLabels,
-			ArrayList <String> sButtonValues,
-			String sDefaultButtonValue
-	){
-
-		String sRow = "<TR style=\"display:none;\">";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
-
-		sRow += "<TD ALIGN=LEFT>";
-
-		sRow += Create_Edit_Form_RadioButton_Input_Field(
-				sFieldName, 
-				sButtonLabels, 
-				sButtonValues, 
-				sDefaultButtonValue,
-				"");
-
-		sRow += "</TD>";
-
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
-		return sRow;
-	}
-		//This function creates a set of radio buttons for editing on an HTML form:
-	private static String Create_Edit_Form_RadioButton_Input_Field (
-			String sFieldName,
-			ArrayList <String> sLabels,
-			ArrayList <String> sValues,
+			String sDateFieldName,
+			String sPresetDate,
 			String sDefaultValue,
-			String sOnChange
-	){
-		String sOnChangeAsyncFunction = "";
-		String s = "";
-		//NOTE: to separate the options on the screen, add a <BR> or spaces to the labels as needed.
-		for (int i = 0; i < sLabels.size(); i ++){
-			//Only apply the async onchange function 
-			if (sValues.get(i).compareToIgnoreCase("1") == 0){
-				sOnChangeAsyncFunction = sOnChange;
-			}else {
-				sOnChangeAsyncFunction = "";
-			}
-			
-			if (sValues.get(i).compareToIgnoreCase(sDefaultValue) == 0){
-				s += "<INPUT TYPE=\"RADIO\" NAME=\"" + sFieldName + "\" onchange=\"flagDirty();" + sOnChangeAsyncFunction + "\" ID=\"" + sFieldName + "\""
-				+ "\" VALUE=" + sValues.get(i) + " CHECKED>" + sLabels.get(i);
-			}else{
-				s += "<INPUT TYPE=\"RADIO\" NAME=\"" + sFieldName + "\" onchange=\"flagDirty();" + sOnChangeAsyncFunction + "\" ID=\"" + sFieldName + "\""
-				+ "\" VALUE=" + sValues.get(i) + ">" + sLabels.get(i);
-			}
-		}
-		return s;
-	}
-	private static String Create_Edit_Form_RadioButton_Input_Row (
-			String sFieldName,
 			String sLabel,
 			String sRemark,
-			ArrayList <String> sButtonLabels,
-			ArrayList <String> sButtonValues,
-			String sDefaultButtonValue,
-			String sOnChange
+			String sOnChange,
+			boolean bDisabled,
+			ServletContext context
 	){
 
 		String sRow = "<TR>";
 		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
 
 		sRow += "<TD ALIGN=LEFT>";
-
-		sRow += Create_Edit_Form_RadioButton_Input_Field(
-				sFieldName, 
-				sButtonLabels, 
-				sButtonValues, 
-				sDefaultButtonValue,
-				sOnChange);
+		String sDisabled = "";
+		if(!bDisabled) {sDisabled="disabled";}
+		sRow +=" <div class=\"custom-control custom-switch\">\n" +
+				"  <input name=\"" + sFieldName + "\""
+						+ " type=\"checkbox\""
+						+ " class=\"custom-control-input\""
+						+ " id=\""+ sFieldName + "\""
+						+ " value=\"1\" "
+						+ sDefaultValue + " "
+						+ sDisabled
+						+ " data-size=\"large\""
+						+ " onchange=\"" + sOnChange + "\">"
+						+ "\n" + 
+			"  <label class=\"custom-control-label\" for=\"" + sFieldName + "\">" + "" + "</label>\n" +
+			 Create_Edit_Form_DateTime_Input_Field(sDateFieldName, sPresetDate, context) +
+				"</div>\n";
 
 		sRow += "</TD>";
 
@@ -3761,7 +3775,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += " VALUE=\"" + sDatePortion + "\"";
 		s += " onchange=\"flagDirty();\"";
 		s += " ID=\"" + sDateFieldName + "\"";
-		s += "SIZE=28";
+		s += "SIZE=7";
 		s += " MAXLENGTH=10";
 		s += " STYLE=\"width: " + ".75" + " in; height: 0.25in\"";
 		s += ">";
@@ -3827,7 +3841,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String sClassName) throws Exception{
 		String s = "";
 		
-		s += "<TABLE class = \" innermost \" style=\" title:JobEntryTimesTable; background-color: "
+		s += "<TABLE class = \"  innermost \" style=\" title:JobEntryTimesTable; background-color: "
 			+ SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \" width=100% >\n";
 		s += "<TR>";
 		//Record the four permissions for editing time:
@@ -3857,8 +3871,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL));
 		
 		//Start the mechanics' site times here:
-		ArrayList<String> sValues = new ArrayList<String>();
-		ArrayList<String> sDescriptions = new ArrayList<String>();
 		String sDefaultDate = SMUtilities.EMPTY_DATETIME_VALUE;
 		clsDBServerTime st = null;
 		
@@ -3871,200 +3883,112 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 		//Left previous site:
 		String sPresetDate = sDefaultDate;
-		sValues.clear();
-	    sDescriptions.clear();
-	    sValues.add("0");
-	    sValues.add("1");
-	    sDescriptions.add("Not Specified<SUP>1</SUP>&nbsp;&nbsp;");
 	    if (workorder.getdattimeleftprevious().replace("\"", "&quot;").compareToIgnoreCase(
 	    		clsMasterEntry.EMPTY_DATETIME_STRING) != 0){
 	    	sPresetDate = workorder.getdattimeleftprevious().replace("\"", "&quot;");
 	    }       	
-	
-	    sDescriptions.add(SMWorkOrderEdit.Create_Edit_Form_DateTime_Input_Field(
-				SMWorkOrderHeader.Paramdattimeleftprevious, 
-				sPresetDate,
-				context
-	    		)
-	    );
+	    
 	    String sDefaultValue = "";
 		if (workorder.getdattimeleftprevious().startsWith(SMWorkOrderHeader.EMPTY_DATE_STRING)){
-			sDefaultValue = "0";
+			sDefaultValue = "";
 		}else{
-			sDefaultValue = "1";		
+			sDefaultValue = "checked";		
 		}
-	
 		//If we are displaying the job time fields AND the user has permissions to this particular 'job time':
-		if (bAllowEditingLeftPreviousSiteTime){
-			s += Create_Edit_Form_RadioButton_Input_Row(
+			s += Create_Edit_Form_Switch_Input_Row(
 				SMWorkOrderHeader.Paramhasdattimeleftprevious, 
-				"<B>Left previous job:</B>", 
-				"", 
-				sDescriptions, 
-				sValues, 
+				SMWorkOrderHeader.Paramdattimeleftprevious,
+				sPresetDate,
 				sDefaultValue,
-				"asyncUpdate('" + SMTableworkorders.dattimeleftprevious + "');"		
-				)
-			;
-		}else{
-			s += Create_Invisible_Edit_Form_RadioButton_Input_Row(
-				SMWorkOrderHeader.Paramhasdattimeleftprevious, 
 				"<B>Left previous job:</B>", 
 				"", 
-				sDescriptions, 
-				sValues, 
-				sDefaultValue
-				)
-			;
-		}
+				"asyncUpdate('" + SMTableworkorders.dattimeleftprevious + "');",
+				bAllowEditingLeftPreviousSiteTime,
+				context
+				);
+
 		
 		//Arrived at current site:
 		sPresetDate = sDefaultDate;
-	    sValues.clear();
-	    sDescriptions.clear();
-	    sValues.add("0");
-	    sValues.add("1");
-	    sDescriptions.add("Not Specified<SUP>1</SUP>&nbsp;&nbsp;");
 	    if (workorder.getdattimearrivedatcurrent().replace("\"", "&quot;").compareToIgnoreCase(
 	    		clsMasterEntry.EMPTY_DATETIME_STRING) != 0){
 	    	sPresetDate = workorder.getdattimearrivedatcurrent().replace("\"", "&quot;");
 	    }
-	
-	    sDescriptions.add(SMWorkOrderEdit.Create_Edit_Form_DateTime_Input_Field(
-	    		SMWorkOrderHeader.Paramdattimearrivedatcurrent, 
-				sPresetDate,
-				context
-	    		)
-	    );
+	    
 	    sDefaultValue = "";
 		if (workorder.getdattimearrivedatcurrent().startsWith(SMWorkOrderHeader.EMPTY_DATE_STRING)){
-			sDefaultValue = "0";
+			sDefaultValue = "";
 		}else{
-			sDefaultValue = "1";		
-		}
-	
-		if (bAllowEditingArrivedAtCurrentSiteTime){	    	
-			s += Create_Edit_Form_RadioButton_Input_Row(
-				SMWorkOrderHeader.Paramhasdattimearrivedatcurrent, 
-				"<B>Arrived at current job:</B>", 
-				"", 
-				sDescriptions, 
-				sValues, 
-				sDefaultValue,
-				"asyncUpdate('" + SMTableworkorders.dattimearrivedatcurrent + "');"
-				)
-			;
-		}else{
-			s += Create_Invisible_Edit_Form_RadioButton_Input_Row(
-				SMWorkOrderHeader.Paramhasdattimearrivedatcurrent, 
-				"<B>Arrived at current job:</B>", 
-				"", 
-				sDescriptions, 
-				sValues, 
-				sDefaultValue
-				)
-			;
+			sDefaultValue = "checked";		
 		}
 		
+			s += Create_Edit_Form_Switch_Input_Row(
+				SMWorkOrderHeader.Paramhasdattimearrivedatcurrent, 
+				SMWorkOrderHeader.Paramdattimearrivedatcurrent,
+				sPresetDate,
+				sDefaultValue,
+				"<B>Arrived at current job:</B>", 
+				"", 
+				"asyncUpdate('" + SMTableworkorders.dattimearrivedatcurrent + "');",
+				bAllowEditingArrivedAtCurrentSiteTime,
+				context
+				);
+
 		//Left current site:
 		sPresetDate = sDefaultDate;
-	    sValues.clear();
-	    sDescriptions.clear();
-	    sValues.add("0");
-	    sValues.add("1");
-	    sDescriptions.add("Not Specified<SUP>1</SUP>&nbsp;&nbsp;");
 	    if (workorder.getdattimeleftcurrent().replace("\"", "&quot;").compareToIgnoreCase(
 	    		clsMasterEntry.EMPTY_DATETIME_STRING) != 0){
 	    	sPresetDate = workorder.getdattimeleftcurrent().replace("\"", "&quot;");
 	    }
-	    	
-	
-	    sDescriptions.add(SMWorkOrderEdit.Create_Edit_Form_DateTime_Input_Field(
-    		SMWorkOrderHeader.Paramdattimeleftcurrent, 
-			sPresetDate,
-			context
-    		)
-	    );
+
 	    sDefaultValue = "";
 		if (workorder.getdattimeleftcurrent().startsWith(SMWorkOrderHeader.EMPTY_DATE_STRING)){
-			sDefaultValue = "0";
+			sDefaultValue = "";
 		}else{
-			sDefaultValue = "1";		
+			sDefaultValue = "checked";		
 		}
-	
-		if (bAllowEditingLeftCurrentSiteTime){    	
-			s += Create_Edit_Form_RadioButton_Input_Row(
+		
+		s += Create_Edit_Form_Switch_Input_Row(
 				SMWorkOrderHeader.Paramhasdattimeleftcurrent, 
-				"<B>Left current job:</B>", 
-				"", 
-				sDescriptions, 
-				sValues, 
+				SMWorkOrderHeader.Paramdattimeleftcurrent,
+				sPresetDate,
 				sDefaultValue,
-				"asyncUpdate('" + SMTableworkorders.dattimeleftcurrent + "');"
-				)
-			;
-		}else{
-			s += Create_Invisible_Edit_Form_RadioButton_Input_Row(
-				SMWorkOrderHeader.Paramhasdattimeleftcurrent, 
 				"<B>Left current job:</B>", 
 				"", 
-				sDescriptions, 
-				sValues, 
-				sDefaultValue
-				)
-			;
-		}
+				"asyncUpdate('" + SMTableworkorders.dattimeleftcurrent + "');",
+				bAllowEditingLeftCurrentSiteTime,
+				context
+				);
+		
 		
 		//Arrived at next site:
 		sPresetDate = sDefaultDate;
-	    sValues.clear();
-	    sDescriptions.clear();
-	    sValues.add("0");
-	    sValues.add("1");
-	    sDescriptions.add("Not Specified<SUP>1</SUP>&nbsp;&nbsp;");
 	    if (workorder.getdattimearrivedatnext().replace("\"", "&quot;").compareToIgnoreCase(
 	    		clsMasterEntry.EMPTY_DATETIME_STRING) != 0){
 	    	sPresetDate = workorder.getdattimearrivedatnext().replace("\"", "&quot;");
 	    }
-	    	
-	    sDescriptions.add(SMWorkOrderEdit.Create_Edit_Form_DateTime_Input_Field(
-    		SMWorkOrderHeader.Paramdattimearrivedatnext, 
-			sPresetDate,
-			context
-    		)
-	    );
 	    sDefaultValue = "";
 		if (workorder.getdattimearrivedatnext().startsWith(SMWorkOrderHeader.EMPTY_DATE_STRING)){
-			sDefaultValue = "0";
+			sDefaultValue = "";
 		}else{
-			sDefaultValue = "1";		
+			sDefaultValue = "checked";		
 		}
-	
-		if (bAllowArrivedAtNextSiteTime){    	
-			s += Create_Edit_Form_RadioButton_Input_Row(
+		
+		s += Create_Edit_Form_Switch_Input_Row(
 				SMWorkOrderHeader.Paramhasdattimearrivedatnext, 
-				"<B>Arrived at next job:</B>", 
-				"", 
-				sDescriptions, 
-				sValues, 
+				SMWorkOrderHeader.Paramdattimearrivedatnext,
+				sPresetDate,
 				sDefaultValue,
-				"asyncUpdate('" + SMTableworkorders.dattimearrivedatnext + "');"
-				)
-			;
-		}else{
-			s += Create_Invisible_Edit_Form_RadioButton_Input_Row(
-				SMWorkOrderHeader.Paramhasdattimearrivedatnext, 
-				"<B>Arrived at next job:</B>", 
+				"<B>Arrived at next job::</B>", 
 				"", 
-				sDescriptions, 
-				sValues, 
-				sDefaultValue
-				)
-			;
-		}
+				"asyncUpdate('" + SMTableworkorders.dattimearrivedatnext + "');",
+				bAllowArrivedAtNextSiteTime,
+				context
+				);
+		
 		s += "<TR>";
 		s += "<TD>";
-		s += "<SUP>1</SUP>&nbsp;Date/time fields are left blank until a specified date or time is selected.";
+//		s += "<SUP>1</SUP>&nbsp;Date/time fields are left blank until a specified date or time is selected.";
 		//To have any calculations appear, we need at least TWO times to appear:
 		int iTimePermissionsCounter = 0;
 		if (bAllowEditingLeftPreviousSiteTime) iTimePermissionsCounter++;
@@ -4095,7 +4019,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "<TR><TD ALIGN=RIGHT>Travel time TO the job:</TD><TD>"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""	
-					+ " SIZE=" + "45"
+					+ " SIZE=" + "25"
 					+ "></TD></TR>"		
 				;
 			}
@@ -4103,7 +4027,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel time TO the job:</TD><TD>"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""	
-					+ " SIZE=" + "45"
+					+ " SIZE=" + "25"
 					+ "></TD></TR>"			
 				;
 			}
@@ -4112,7 +4036,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel time TO AND FROM the job:</TD><TD>"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""	
-					+ " SIZE=" + "45"
+					+ " SIZE=" + "25"
 					+ "></TD></TR>"			
 				;
 			}
@@ -4120,7 +4044,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "<TR><TD ALIGN=RIGHT>Time at the job ONLY:</TD><TD>"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""	
-					+ " SIZE=" + "45"
+					+ " SIZE=" + "25"
 					+ "></TD></TR>"			
 				;
 			}
@@ -4128,7 +4052,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel FROM the job:</TD><TD>"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""	
-					+ " SIZE=" + "45"
+					+ " SIZE=" + "25"
 					+ "></TD></TR>"			
 				;
 			}

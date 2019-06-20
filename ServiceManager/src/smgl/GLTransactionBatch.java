@@ -27,6 +27,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMUtilities;
 
@@ -248,6 +249,8 @@ public class GLTransactionBatch {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1555339578]");
 			throw new Exception("Error [1555339579] saving - " + e.getMessage());
 		}
+		//System.out.println("[2019171161597] " + " saved as batch number: " + this.getsbatchnumber());
+		
 		clsDatabaseFunctions.commit_data_transaction(conn);
 		clsDatabaseFunctions.freeConnection(context, conn, "[1555339580]");
 		return;
@@ -810,6 +813,76 @@ public class GLTransactionBatch {
     	return;
     }
 
+    public String reverse_batch (
+    		ServletContext context,
+    		String sDBID,
+    		String sUserID,
+    		String sUserFullName,
+    		PrintWriter out
+    		) throws Exception{
+
+    	//First, make sure the batch is loaded:
+    	try {
+    		load(context, sDBID, sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [1555957138] loading batch number " + getsbatchnumber() + " - " + e.getMessage());
+		}
+    	
+    	if (getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.POSTED)) != 0){
+    		throw new Exception("Unposted batches cannot be reversed");
+    	}
+    	if (getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.DELETED)) == 0){
+    		throw new Exception("Deleted batches cannot be reversed");
+    	}
+    	
+    	GLTransactionBatch reversedbatch = new GLTransactionBatch("-1");
+    	ServletUtilities.clsDBServerTime clsCurrentTime = new ServletUtilities.clsDBServerTime(sDBID, sUserFullName, context);
+    	reversedbatch.setlcreatedby(sUserID);
+    	reversedbatch.setllasteditedby(sUserID);
+    	reversedbatch.setsbatchdate(clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
+    	reversedbatch.setsbatchdescription("REVERSED BATCH #" + getsbatchnumber());
+    	//reversedbatch.setslasteditdate(clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
+    	
+    	for (int i = 0; i < getBatchEntryArray().size(); i++){
+    		GLTransactionBatchEntry oldentry = getBatchEntryArray().get(i);
+    		GLTransactionBatchEntry newentry = new GLTransactionBatchEntry();
+    		newentry.setsautoreverse(oldentry.getsautoreverse());
+    		newentry.setsdatdocdate(oldentry.getsdatdocdate());
+    		newentry.setsdatentrydate(clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY));
+    		newentry.setsentrydescription(oldentry.getsentrydescription());
+    		newentry.setsfiscalperiod(oldentry.getsfiscalperiod());
+    		newentry.setsfiscalyear(oldentry.getsfiscalyear());
+    		newentry.setssourceledger(oldentry.getssourceledger());
+    		newentry.setssourceledgertransactionlineid(oldentry.getssourceledgertransactionlineid());
+    		for (int j = 0; j < oldentry.getLineArray().size(); j++){
+    			GLTransactionBatchLine oldline = oldentry.getLineArray().get(j);
+    			GLTransactionBatchLine newline = new GLTransactionBatchLine();
+    			newline.setsacctid(oldline.getsacctid());
+    			newline.setscomment(oldline.getscomment());
+    			//These get reversed:
+    			newline.setscreditamt(oldline.getsdebitamt());
+    			newline.setsdebitamt(oldline.getscreditamt());
+    			newline.setsdescription(oldline.getsdescription());
+    			newline.setsreference(oldline.getsreference());
+    			newline.setssourceledger(oldline.getssourceledger());
+    			newline.setssourcetype(oldline.getssourcetype());
+    			newline.setstransactiondate(oldline.getstransactiondate());
+    			
+    			newentry.addLine(newline);
+    		}
+    		reversedbatch.addBatchEntry(newentry);
+    	}
+    	
+    	//System.out.println("[20191711613494] " + "Ready to save");
+    	try {
+    		reversedbatch.save_with_data_transaction (context, sDBID, sUserID, sUserFullName, false);
+		} catch (Exception e) {
+			throw new Exception("Error [2019171168450] " + "Could not save reversed batch - " + e.getMessage());
+		}
+    	//System.out.println("[2019171162070] " + "reversedbatch.getsbatchnumber() = '" + reversedbatch.getsbatchnumber() + "'.");
+    	return reversedbatch.getsbatchnumber();
+    }
+	
 	private void updateFiscalSets(SMLogEntry log, String sUserID, Connection conn) throws Exception{
     	if (bDebugMode){
 	    	log.writeEntry(

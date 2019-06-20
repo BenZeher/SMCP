@@ -104,12 +104,45 @@ public class GLEditBatchesAction extends HttpServlet{
 					);
 				return;
 		} else{
-			//CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
 			response.sendRedirect(
 				SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&" + SMTablegltransactionbatches.lbatchnumber + "=" + batch.getsbatchnumber()
 	    	    + "&" + "Warning=" + "You clicked the Post button, but did not confirm by checking the checkbox."
+				);
+		    return;
+		}
+	}
+	
+	if (request.getParameter("Reverse") != null){
+		if (request.getParameter("ConfirmReversal") != null){
+			String sNewBatchNumber = "";
+			try {
+				//System.out.println("[20191711623581] going to reverse batch");
+				sNewBatchNumber = batch.reverse_batch(getServletContext(), sDBID, sUserID, sUserFullName, out);
+				//System.out.println("[20191711622303] " + "sNewBatchNumber = '" + sNewBatchNumber + "'.");
+			} catch (Exception e) {
+				response.sendRedirect(
+					SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + SMTablegltransactionbatches.lbatchnumber + "=" + batch.getsbatchnumber()
+		    	    + "&" + "Warning=" + e.getMessage()
+					);
+			    return;
+			}
+			response.sendRedirect(
+					SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
+					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + SMTablegltransactionbatches.lbatchnumber + "=" + batch.getsbatchnumber()
+					+ "&" + "Status=Batch number " + batch.getsbatchnumber() + " was successfully reversed into new batch number " + sNewBatchNumber + "."
+					);
+				return;
+		} else{
+			response.sendRedirect(
+				SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
+				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + SMTablegltransactionbatches.lbatchnumber + "=" + batch.getsbatchnumber()
+	    	    + "&" + "Warning=" + "You clicked the Reverse button, but did not confirm by checking the checkbox."
 				);
 		    return;
 		}

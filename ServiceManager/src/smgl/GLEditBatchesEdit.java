@@ -243,6 +243,10 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    		);
         }
         else{
+        	
+        	pwOut.println("  <INPUT TYPE=SUBMIT NAME='Reverse' VALUE='Reverse " + sObjectName + "' STYLE='height: 0.24in'>");
+        	pwOut.println("  <LABEL>Check to confirm reversal: <INPUT TYPE=CHECKBOX NAME=\"ConfirmReversal\"></LABEL><BR><BR>\n");
+        	
         	pwOut.println("Batch description: <B>"+ batch.getsbatchdescription() + "</B><BR>");
        		pwOut.println(batch.getsbatchstatuslabel() + " batches cannot be edited or deleted.\n");
         }

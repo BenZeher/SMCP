@@ -250,19 +250,19 @@ public class SMEditTaxEdit extends HttpServlet {
 		s += "<TABLE BORDER=12 CELLSPACING=2>";		
 	
 		//Vendor Group:
-	    s +="<TR>"
-	    + "<TD ALIGN=RIGHT><B>" + "ID:"  + " </B></TD>"
+	    s +="<TR>\n"
+	    + "<TD ALIGN=RIGHT><B>" + "ID:"  + " </B></TD>\n"
 	    + "<TD ALIGN=LEFT>";
 	      if(entry.get_snewrecord().compareToIgnoreCase(SMTax.ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0){
 	         s+= "(NEW)";
 	      }else{
 	         s+= entry.get_slid();
 	      }
-	    s+= "</TD>"
+	    s+= "</TD>\n"
 	    + "<TD ALIGN=LEFT>" 
 	    + " " 
-	    + "</TD>"
-	    + "</TR>"
+	    + "</TD>\n"
+	    + "</TR>\n"
 	    + "<INPUT TYPE=HIDDEN NAME=\"" + SMTabletax.lid + "\" VALUE='" + entry.get_slid() + "'>"
 	    + "<INPUT TYPE=HIDDEN NAME=\"" + SMTax.ParamsNewRecord + "\" VALUE='" + entry.get_snewrecord() + "'>"
 	    ;  	
@@ -273,66 +273,66 @@ public class SMEditTaxEdit extends HttpServlet {
 	    }
 	    
 	    //Jurisdiction
-        s += "<TR>"
-    	  + "<TD ALIGN=RIGHT><B>" + "Jurisdiction" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>"
+        s += "<TR>\n"
+    	  + "<TD ALIGN=RIGHT><B>" + "Jurisdiction" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>\n"
     	  + "<TD ALIGN=LEFT>"
     	  + "<INPUT TYPE=TEXT NAME=\"" + SMTabletax.staxjurisdiction + "\""
     	  + " VALUE=\"" + entry.get_staxjurisdiction().replace("\"", "&quot;") + "\""
     	  + " MAXLENGTH=" + Integer.toString(SMTabletax.staxjurisdictionLength)
     	  + " STYLE=\"height: 0.25in\""
     	  + " " + sReadOnly
-    	  + "></TD>"
+    	  + "></TD>\n"
     	  + "<TD ALIGN=LEFT><I>" 
     	  + "Name of the tax jurisdiction (state abbreviation, e.g.)" 
-    	  + "</I></TD>"
-    	  + "</TR>"
+    	  + "</I></TD>\n"
+    	  + "</TR>\n"
     	  ;
         
 	    //Tax type
-        s += "<TR>"
-    	  + "<TD ALIGN=RIGHT><B>" + "Tax type" + REQUIRED_FIELD_FLAG + ":"  + " </B></TD>"
+        s += "<TR>\n"
+    	  + "<TD ALIGN=RIGHT><B>" + "Tax type" + REQUIRED_FIELD_FLAG + ":"  + " </B></TD>\n"
     	  + "<TD ALIGN=LEFT>"
     	  + "<INPUT TYPE=TEXT NAME=\"" + SMTabletax.staxtype + "\""
     	  + " VALUE=\"" + entry.get_staxtype().replace("\"", "&quot;") + "\""
     	  + " MAXLENGTH=" + Integer.toString(SMTabletax.staxtypeLength)
     	  + " STYLE=\"height: 0.25in\""
     	  + " " + sReadOnly
-    	  + "></TD>"
+    	  + "></TD>\n"
     	  + "<TD ALIGN=LEFT><I>" 
     	  + "Typically 'Use', 'Retail sales', 'Exempt', e.g. - something familiar to users to help them choose the correct tax on sales oerders, etc." 
-    	  + "</I></TD>"
-    	  + "</TR>"
+    	  + "</I></TD>\n"
+    	  + "</TR>\n"
     	  ;
         
 	    //Description
-        s += "<TR>"
-    	  + "<TD ALIGN=RIGHT><B>" + "Description" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>"
+        s += "<TR>\n"
+    	  + "<TD ALIGN=RIGHT><B>" + "Description" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>\n"
     	  + "<TD ALIGN=LEFT>"
     	  + "<INPUT TYPE=TEXT NAME=\"" + SMTabletax.sdescription + "\""
     	  + " VALUE=\"" + entry.get_staxdescription().replace("\"", "&quot;") + "\""
     	  + " MAXLENGTH=" + Integer.toString(SMTabletax.sdescriptionLength)
     	 // + " WIDTH=120"
     	  + " STYLE=\"height: 0.25in; width: 4.00in; \""
-    	  + "></TD>"
+    	  + "></TD>\n"
     	  + "<TD ALIGN=LEFT><I>" 
     	  + "Longer description of this particular tax" 
-    	  + "</I></TD>"
-    	  + "</TR>"
+    	  + "</I></TD>\n"
+    	  + "</TR>\n"
     	  ;
         
 	    //Tax rate
-        s += "<TR>"
-    	  + "<TD ALIGN=RIGHT><B>" + "Tax rate (percentage)" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>"
+        s += "<TR>\n"
+    	  + "<TD ALIGN=RIGHT><B>" + "Tax rate (percentage)" + REQUIRED_FIELD_FLAG + "</FONT>:"  + " </B></TD>\n"
     	  + "<TD ALIGN=LEFT>"
     	  + "<INPUT TYPE=TEXT NAME=\"" + SMTabletax.bdtaxrate + "\""
     	  + " VALUE=\"" + entry.get_bdtaxrate().replace("\"", "&quot;") + "\""
     	  + " MAXLENGTH=10"
     	  + " STYLE=\"height: 0.25in\""
-    	  + "></TD>"
+    	  + "></TD>\n"
     	  + "<TD ALIGN=LEFT><I>" 
     	  + "Enter the rate as a percentage amount - a 5.25% tax should be entered as '5.25'" 
-    	  + "</I></TD>"
-    	  + "</TR>"
+    	  + "</I></TD>\n"
+    	  + "</TR>\n"
     	  ;
         
 	    //Load the GL Accounts:

@@ -137,21 +137,21 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 					if (sCurrentItemCategory == null ||
 							rsItemOnHandList.getString("CATEGORY").compareTo(sCurrentItemCategory) != 0){
 						if (sCurrentItemCategory != null){
-							out.println("<TR><TD COLSPAN=6><HR></TD></TR>");
+							out.println("<TR>\n<TD COLSPAN=6><HR></TD>\n</TR>\n");
 						}
 						sCurrentItemCategory = rsItemOnHandList.getString("CATEGORY");
-						out.println("<TR><TD COLSPAN=6><TABLE BORDER=1><TR><TD><FONT SIZE=3><B>Item Category:&nbsp;" + sCurrentItemCategory + "</B></FONT></TD></TR></TABLE></TD></TR>");
-						out.println("<TR><TD COLSPAN=6><HR></TD></TR>");
-						out.println("<TR>" +
-								//"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Order Number</B></FONT></TD>" +
-								"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Item Number</B></FONT></TD>" +
-								"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Item Desc</B></FONT></TD>" +
-								"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Category</B></FONT></TD>" +
-								"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Location</B></FONT></TD>" + 
-								"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Qty On Hand</B></FONT></TD>" + 
-								"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Total Cost</B></FONT></TD>" + 
-								"</TR>");
-						out.println("<TR><TD COLSPAN=6><HR></TD></TR>");
+						out.println("<TR>\n<TD COLSPAN=6><TABLE BORDER=1><TR>\n<TD>\n<FONT SIZE=3><B>Item Category:&nbsp;" + sCurrentItemCategory + "</B></FONT></TD>\n</TR>\n</TABLE></TD>\n</TR>\n");
+						out.println("<TR>\n<TD COLSPAN=6><HR></TD>\n</TR>\n");
+						out.println("<TR>\n" +
+								//"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Order Number</B></FONT></TD>\n" +
+								"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Item Number</B></FONT></TD>\n" +
+								"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Item Desc</B></FONT></TD>\n" +
+								"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Category</B></FONT></TD>\n" +
+								"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Location</B></FONT></TD>\n" + 
+								"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Qty On Hand</B></FONT></TD>\n" + 
+								"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Total Cost</B></FONT></TD>\n" + 
+								"</TR>\n");
+						out.println("<TR>\n<TD COLSPAN=6><HR></TD>\n</TR>\n");
 
 					}
 					//System.out.println("6");
@@ -172,22 +172,22 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 						+ "\">" + sItemNumber + "</A>";
 					}						
 					out.println("<TR BGCOLOR=" + sbgColor + ">" +
-							//"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItem "</FONT></TD>" +
-							"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>" +
-							"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2>" + rsItemOnHandList.getString("DESCRIPTION") + "</FONT></TD>" +
-							"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("CATEGORY") + "</FONT></TD>" +
-							"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("LOCATION") + "</FONT></TD>" + 
-							"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("OH") + "</FONT></TD>" + 
-							"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("TOTALCOST") + "</FONT></TD>" + 
-							"</TR>");
+							//"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItem "</FONT></TD>\n" +
+							"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>\n" +
+							"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2>" + rsItemOnHandList.getString("DESCRIPTION") + "</FONT></TD>\n" +
+							"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("CATEGORY") + "</FONT></TD>\n" +
+							"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("LOCATION") + "</FONT></TD>\n" + 
+							"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("OH") + "</FONT></TD>\n" + 
+							"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2>" + rsItemOnHandList.getString("TOTALCOST") + "</FONT></TD>\n" + 
+							"</TR>\n");
 				}
 				bList = true;
 			}
 			if (!bHasRecord){
-				out.println("<TR><TD ALIGN=CENTER COLSPAN=6><B>No Record Found</B></TD></TR>");
+				out.println("<TR>\n<TD ALIGN=CENTER COLSPAN=6><B>No Record Found</B></TD>\n</TR>\n");
 
 			}
-			out.println("<TR><TD COLSPAN=6><HR></TD></TR>");
+			out.println("<TR>\n<TD COLSPAN=6><HR></TD>\n</TR>\n");
 			out.println("</TABLE>");
 			//out.println("End Time: " + USTimeOnlyformatter.format(new Date(System.currentTimeMillis())) + "<BR>");
 			rsItemOnHandList.close();

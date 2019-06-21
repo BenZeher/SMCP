@@ -72,34 +72,34 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 		    	bHasRecord = true;
 		    	
 		    	if (sCurrentLocation.compareTo(rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation)) != 0){
-		    		out.println("<TR><TD COLSPAN=5><HR><BR><BR></TD></TR>");
-		    		out.println("<TR><TD COLSPAN=5><TABLE BORDER=1><TR><TD><B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD></TR></TABLE></TD></TR>");
+		    		out.println("<TR>\n<TD COLSPAN=5><HR><BR><BR></TD>\n</TR>\n");
+		    		out.println("<TR>\n<TD COLSPAN=5><TABLE BORDER=1><TR>\n<TD>\n<B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>\n</TR>\n</TABLE></TD>\n</TR>\n");
 		    		sCurrentLocation = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation);
 		    		sCurrentServiceType = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode);
-			    	out.println("<TR><TD COLSPAN=5><HR></TD></TR>" + 
-			    				"<TR>" +
-		    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>" +
-		    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>" +
-		    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>" +
-		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>" +
-		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>" + 
-								"</TR>" + 
-			    				"<TR><TD COLSPAN=5><HR></TD></TR>");
+			    	out.println("<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n" + 
+			    				"<TR>\n" +
+		    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>\n" +
+		    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>\n" +
+		    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>\n" +
+		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>\n" +
+		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>\n" + 
+								"</TR>\n" + 
+			    				"<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n");
 		    	}
 
 		    	if (sCurrentServiceType.compareTo(rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode)) != 0){
-		    		out.println("<TR><TD COLSPAN=5><HR><BR><BR></TD></TR>");
-		    		out.println("<TR><TD COLSPAN=5><TABLE BORDER=1><TR><TD><B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD></TR></TABLE></TD></TR>");
+		    		out.println("<TR>\n<TD COLSPAN=5><HR><BR><BR></TD>\n</TR>\n");
+		    		out.println("<TR>\n<TD COLSPAN=5><TABLE BORDER=1><TR>\n<TD>\n<B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>\n</TR>\n</TABLE></TD>\n</TR>\n");
 		    		sCurrentServiceType = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode);
-			    	out.println("<TR><TD COLSPAN=5><HR></TD></TR>" + 
-		    				"<TR>" +
-	    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>" +
-	    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>" +
-	    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>" +
-	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>" +
-	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>" + 
-							"</TR>" + 
-		    				"<TR><TD COLSPAN=5><HR></TD></TR>");
+			    	out.println("<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n" + 
+		    				"<TR>\n" +
+	    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>\n" +
+	    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>\n" +
+	    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>\n" +
+	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>\n" +
+	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>\n" + 
+							"</TR>\n" + 
+		    				"<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n");
 		    	} 
 		    	bFlipper = !bFlipper;
 		    	if (bFlipper){
@@ -108,18 +108,18 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 		    		sbgColor = "\"#DDDDDD\"";
 		    	}
 		    	out.println("<TR BGCOLOR=" + sbgColor + ">" +
-								"<TD ALIGN=CENTER><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson) + "</FONT></TD>" +
-								"<TD ALIGN=CENTER><FONT SIZE=2>" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate)) + "</FONT></TD>" +
+								"<TD ALIGN=CENTER><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson) + "</FONT></TD>\n" +
+								"<TD ALIGN=CENTER><FONT SIZE=2>" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate)) + "</FONT></TD>\n" +
 								"<TD ALIGN=LEFT><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber) 
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
-								+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber).trim() + "</A></FONT></TD>" +
-								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).trim() + "</FONT></TD>" +
-								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim() + "</FONT></TD>" + 
-							"</TR>");    
+								+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber).trim() + "</A></FONT></TD>\n" +
+								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).trim() + "</FONT></TD>\n" +
+								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim() + "</FONT></TD>\n" + 
+							"</TR>\n");    
 		    }
 		    if (!bHasRecord){
-		    	out.println("<TR><TD ALIGN=CENTER><HR></TD></TR>");
-		    	out.println("<TR><TD ALIGN=CENTER><B>No Record Found</B></TD></TR>");
+		    	out.println("<TR>\n<TD ALIGN=CENTER><HR></TD>\n</TR>\n");
+		    	out.println("<TR>\n<TD ALIGN=CENTER><B>No Record Found</B></TD>\n</TR>\n");
 		    	
 		    }
 			

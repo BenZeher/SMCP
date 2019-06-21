@@ -38,9 +38,9 @@ public class clsCreateHTMLFormFields {
 		s = "Month <SELECT NAME=\"" + sName + "SelectedMonth\">";
 		for (int i=1; i<=12;i++){
 			if (i == c.get(Calendar.MONTH) + 1){
-				s = s + "<OPTION SELECTED VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION SELECTED VALUE = " + i + ">" + i;
 			}else{
-				s = s + "<OPTION VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s = s + "</SELECT>";
@@ -48,18 +48,18 @@ public class clsCreateHTMLFormFields {
 		s = s + "Day <SELECT NAME=\"" + sName + "SelectedDay\">";
 		for (int i=1; i<=31;i++){
 			if (i == c.get(Calendar.DAY_OF_MONTH)){
-				s = s + "<OPTION SELECTED VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION SELECTED VALUE = " + i + ">" + i;
 			}else{
-				s = s + "<OPTION VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s = s + "</SELECT>";	
 		s = s + "Year <SELECT NAME=\"" + sName + "SelectedYear\">";
 		for (int i=1900; i<=2069;i++){
 			if (i == c.get(Calendar.YEAR)){
-				s = s + "<OPTION SELECTED VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION SELECTED VALUE = " + i + ">" + i;
 			}else{
-				s = s + "<OPTION VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s = s + "</SELECT>" + sDesc;	
@@ -80,18 +80,18 @@ public class clsCreateHTMLFormFields {
 		s = "Hour <SELECT NAME=\"" + sName + "SelectedHour\">";
 		for (int i=0; i<=12;i++){
 			if (i == iHour){
-				s = s + "<OPTION SELECTED VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION SELECTED VALUE = " + i + ">" + i;
 			}else{
-				s = s + "<OPTION VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s = s + "</SELECT>";
 		s = s + "Minute <SELECT NAME=\"" + sName + "SelectedMinute\">";
 		for (int i=0; i<=59;i++){
 			if (i == iMinute){
-				s = s + "<OPTION SELECTED VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION SELECTED VALUE = " + i + ">" + i;
 			}else{
-				s = s + "<OPTION VALUE = " + i + ">" + i;
+				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s = s + "</SELECT>";	
@@ -99,15 +99,15 @@ public class clsCreateHTMLFormFields {
 		for (int i=Calendar.AM; i<=Calendar.PM;i++){
 			if (i == iAMPM){
 				if (i == Calendar.AM){
-					s = s + "<OPTION SELECTED VALUE = " + Calendar.AM + ">" + "AM";
+					s = s + "\n<OPTION SELECTED VALUE = " + Calendar.AM + ">" + "AM";
 				}else{
-					s = s + "<OPTION SELECTED VALUE = " + Calendar.PM + ">" + "PM";
+					s = s + "\n<OPTION SELECTED VALUE = " + Calendar.PM + ">" + "PM";
 				}		
 			}else{
 				if (i == Calendar.AM){
-					s = s + "<OPTION VALUE = " + Calendar.AM + ">" + "AM";
+					s = s + "\n<OPTION VALUE = " + Calendar.AM + ">" + "AM";
 				}else{
-					s = s + "<OPTION VALUE = " + Calendar.PM + ">" + "PM";
+					s = s + "\n<OPTION VALUE = " + Calendar.PM + ">" + "PM";
 				}
 			}
 		}
@@ -174,7 +174,7 @@ public class clsCreateHTMLFormFields {
 	
 			String s = "<SELECT NAME=\"" + sName + "\">";
 			for (int i=0;i<alValues.size();i++){
-				s = s + "<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
+				s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
 			}
 			s = s + "</SELECT>";
 			//System.out.println(s);
@@ -193,7 +193,7 @@ public class clsCreateHTMLFormFields {
 	
 			String s = "<SELECT NAME=\"" + sName + "\">";
 			for (int i=0;i<alValues.size();i++){
-				s = s + "<OPTION VALUE=\"" + (String)alValues.get(i) + "\"";
+				s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\"";
 				if (((String)alValues.get(i)).compareTo(sSelected) == 0){
 					s = s + " SELECTED";
 				}
@@ -222,9 +222,9 @@ public class clsCreateHTMLFormFields {
 			String s = "<SELECT NAME=\"" + sName + "\" SIZE=" + iSize + ">";
 			for (int i=0;i<alValues.size();i++){
 				if (alValues.get(i).compareToIgnoreCase(sDefaultValue) == 0){
-					s = s + "<OPTION VALUE=\"" + (String)alValues.get(i) + "\" CHECKED > " + (String)alTexts.get(i);
+					s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\" CHECKED > " + (String)alTexts.get(i);
 				}else{
-					s = s + "<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
+					s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
 				}
 			}
 			s = s + "</SELECT>";
@@ -277,7 +277,7 @@ public class clsCreateHTMLFormFields {
 	
 		String sField = "<SELECT NAME = \"" + sFieldName + "\">\n";
 		for (int i = 0; i < sValues.size(); i++){
-			sField += "<OPTION";
+			sField += "\n<OPTION";
 			if (sValues.get(i).toString().compareTo(sDefaultValue) == 0){
 				sField += " selected=yes";
 			}

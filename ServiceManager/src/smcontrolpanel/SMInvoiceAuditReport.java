@@ -964,14 +964,14 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		
 		if (sInvoiceDetailComment != null){
 			if (sInvoiceDetailComment.trim().compareToIgnoreCase("") != 0){
-				pwOut.println("<TR><TD>&nbsp;</TD><TD ALIGN=LEFT COLSPAN=8><FONT SIZE=2><B>Invoice Detail Comments:</B></FONT></TD></TR>");
+				pwOut.println("<TR>\n<TD>&nbsp;</TD>\n<TD ALIGN=LEFT COLSPAN=8><FONT SIZE=2><B>Invoice Detail Comments:</B></FONT></TD>\n</TR>\n");
 				pwOut.println(parseLineComment(sInvoiceDetailComment, sLineNumber));
 			}
 		}
 
 		if (sInternalDetailComment != null){
 			if (sInternalDetailComment.trim().compareToIgnoreCase("") != 0){
-				pwOut.println("<TR><TD>&nbsp;</TD><TD ALIGN=LEFT COLSPAN=8><FONT SIZE=2><B>Internal Detail Comments:</B></FONT></TD></TR>");
+				pwOut.println("<TR>\n<TD>&nbsp;</TD>\n<TD ALIGN=LEFT COLSPAN=8><FONT SIZE=2><B>Internal Detail Comments:</B></FONT></TD>\n</TR>\n");
 				pwOut.println(parseLineComment(sInternalDetailComment, sLineNumber));
 			}
 		}
@@ -995,12 +995,12 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		
 		String sParsedComment = "";
 		String sPrefix = 
-			"<TR><TD ALIGN=RIGHT><FONT SIZE=2>" 
+			"<TR>\n<TD ALIGN=RIGHT><FONT SIZE=2>" 
 			+ sLineNo
-			+ "&nbsp;</TD><TD>"
+			+ "&nbsp;</TD>\n<TD>\n"
 		;
 		
-		String sSuffix = "</FONT></TD></TR>";
+		String sSuffix = "</FONT></TD>\n</TR>\n";
 		
 		String sRemainingLine = sInvComment;
 		int iCommentLineCounter = 97;
@@ -1011,7 +1011,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 				sParsedComment
 				//+ "(" 
 				+ (char)iCommentLineCounter + ")"
-				+ "</FONT></TD>"
+				+ "</FONT></TD>\n"
 				+ "<TD COLSPAN=9><FONT SIZE=2>"
 				;
 			

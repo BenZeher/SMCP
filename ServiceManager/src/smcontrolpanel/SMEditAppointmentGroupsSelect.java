@@ -62,8 +62,8 @@ public class SMEditAppointmentGroupsSelect extends HttpServlet {
 	    
 	    s += 
 	    	"<B>Appointment Group:<BR>"
-	    	+ "<SELECT NAME=\"" + SMTableappointmentgroups.igroupid + "\">"
-	    	+ "<OPTION VALUE=\"" + "" + "\">*** Select appointment group ***";
+	    	+ "\n<SELECT NAME=\"" + SMTableappointmentgroups.igroupid + "\">"
+	    	+ "\n<OPTION VALUE=\"" + "" + "\">*** Select appointment group ***";
 	    
 	    //Drop down the list:
 	    String SQL = "SELECT "
@@ -85,7 +85,7 @@ public class SMEditAppointmentGroupsSelect extends HttpServlet {
 			while (rs.next()) {
 				String sReadCode = Long.toString(rs.getLong(SMTableappointmentgroups.igroupid));
 	
-				s += "<OPTION";
+				s += "\n<OPTION";
 				if (sReadCode.compareToIgnoreCase(sID) == 0) {
 					s += " SELECTED=yes";
 				}

@@ -471,7 +471,6 @@ public class GLImportBatchesAction extends HttpServlet{
 					+ ", \"" + sLineSourceType + "\""
 				;
 				arrLineBuffer.add(sOutPutLine);
-				System.out.println("[1558555054] sOutPutLine = '" + sOutPutLine + "'.");
 			}
 			//for (String sDelimitedField : fields) {
 			//	if (iFieldCounter == ACCPAC_FORMAT_FIELD_RECORD_TYPE){

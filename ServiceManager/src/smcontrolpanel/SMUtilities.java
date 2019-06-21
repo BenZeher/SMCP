@@ -1243,19 +1243,15 @@ public class SMUtilities extends clsServletUtilities {
 			FileReader fileReader = new FileReader(file);
 			BufferedReader bufferedReader = new BufferedReader(fileReader);
 			String line;
-			System.out.println("[1551823794] heading into while loop");
 			while ((line = bufferedReader.readLine()) != null) {
 				//System.out.println("[1551823795] inside while loop");
 				//Read and decrypt each line:
 				String sDecryptedLine = decryptLicenseLine(line);
 				String sDecryptedLicenseLine[] = sDecryptedLine.split(LICENSE_KEY_DELIMITER);
-				System.out.println("[1551823800] sDecryptedLine = '" + sDecryptedLine + "'");
-				System.out.println("[1551823801] DBID = '" + DBID + "'");
 				if (sDecryptedLicenseLine[0].compareToIgnoreCase(DBID) == 0){
 					//System.out.println("[1551823791] sDecryptedLicenseLine.length = " + sDecryptedLicenseLine.length);
 					if (sDecryptedLicenseLine.length > 2){
 						sExpirationDate = sDecryptedLicenseLine[2].trim();
-						System.out.println("[1551823792] sExpirationDate = " + sExpirationDate);
 					}
 					break;
 				}

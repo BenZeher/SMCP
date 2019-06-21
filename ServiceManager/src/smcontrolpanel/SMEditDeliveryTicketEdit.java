@@ -230,15 +230,15 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		s += "<TABLE style=\" title:ParentTable; border-style:solid; border-color:black; font-size:small; font-family:Arial; width:100%\">\n";
 		
 		//Header Information table:
-		s += "<TR><TD>"; 
+		s += "<TR>\n<TD>\n"; 
 		s += createOrderHeaderTable( sm, getServletContext(), entry, orderheader);
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		
 		//Command buttons table:
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		isInTheTopTableOfCommands = true;
 		s += createCommandsTable(entry, bIsPosted, isInTheTopTableOfCommands);
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 				
 		//Get terms:
 		s += getTerms(entry, sm, bIsPosted);
@@ -247,42 +247,42 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		//Items on Order table:
 		if((entry.getstrimmedordernumber()).compareToIgnoreCase("") != 0){
 			if(!bIsPosted){
-			s += "<TR><TD>";
+			s += "<TR>\n<TD>\n";
 			s += createOrderDetailLines(sm, entry);
-			s += "</TD></TR>";
+			s += "</TD>\n</TR>\n\n";
 			}
 		}	
 		
 		//Items delivered table:
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		s += createItemsDeliveredTable(entry, bIsPosted);	
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		
 		//Comments table:
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		s += createCommentsTable(entry, bIsPosted);	
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		
 		//Signature block table:
 		if(bIsPosted){
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		s += createSignatureBlockTable(sm, entry);
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		}
 		
 		//Delivered By: table
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		s += createDeliveredByTable(entry, bIsPosted, sm);
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		
 		//Command buttons table:
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		isInTheTopTableOfCommands = false;
 		s += createCommandsTable(entry, bIsPosted, isInTheTopTableOfCommands);
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n\n";
 		
 		//End outer table here:
-		s+= "</TD>"+ "</TR>";
+		s+= "</TD>\n"+ "</TR>\n\n";
 		s += "</TABLE style= \"title:ParentTable;\">\n";
 		return s;
 	}
@@ -356,7 +356,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
 			+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
 
-		s += "<TR><TD style = \"text-align: left; \" >";
+		s += "<TR>\n<TD style = \"text-align: left; \" >";
 
 		//ACCEPT SIGNATURE BUTTON:
 		//If it's NOT posted show the 'Accept Signature' button:
@@ -407,7 +407,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:OrderHeaderTable; \" width=100% >\n";	
 		
-		s += "<TR>";
+		s += "<TR>\n";
 		String sDeliveryTicketID = "(NEW)";
 		if(deliveryticket.getslid().compareToIgnoreCase("-1") != 0){
 			sDeliveryTicketID = deliveryticket.getslid();
@@ -483,45 +483,45 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		}
 		
 		s +=
-			"<TD class=\" fieldlabel \">Delivery Ticket&nbsp;#:&nbsp;</TD>"
+			"<TD class=\" fieldlabel \">Delivery Ticket&nbsp;#:&nbsp;</TD>\n"
 			+ "<TD class=\"readonlyleftfield\">" + sDeliveryTicketID;
 		s+= "<INPUT TYPE=HIDDEN NAME='" + SMDeliveryTicket.Paramlid + "' VALUE='" + deliveryticket.getslid() + "'>";
 	
-		s += "</TD>";
+		s += "</TD>\n";
 		
 		if (sLinkToDeliveryTicketList.compareToIgnoreCase("") != 0){
-			s += "<TD class=\"readonlyleftfield\">" + sLinkToDeliveryTicketList + "</TD>"
+			s += "<TD class=\"readonlyleftfield\">" + sLinkToDeliveryTicketList + "</TD>\n"
 			;
 		}			
-		s+= "<TD class=\" fieldlabel \">Posted?:&nbsp;</TD>"
-		+ "<TD class=\"readonlyleftfield\">" + sPosted + "</TD>";
+		s+= "<TD class=\" fieldlabel \">Posted?:&nbsp;</TD>\n"
+		+ "<TD class=\"readonlyleftfield\">" + sPosted + "</TD>\n";
 		
-		s+= "<TD class=\" fieldlabel \">Initiated by:&nbsp;</TD>"
-		+ "<TD class=\"readonlyleftfield\">" + sInitiatedBy + "</TD>";
+		s+= "<TD class=\" fieldlabel \">Initiated by:&nbsp;</TD>\n"
+		+ "<TD class=\"readonlyleftfield\">" + sInitiatedBy + "</TD>\n";
 		
-		s+= "<TD class=\" fieldlabel \">Initiated on:&nbsp;</TD>"
-		+ "<TD class=\"readonlyleftfield\">" + sInitiatedTime + "</TD>";
+		s+= "<TD class=\" fieldlabel \">Initiated on:&nbsp;</TD>\n"
+		+ "<TD class=\"readonlyleftfield\">" + sInitiatedTime + "</TD>\n";
 
 		s+= "<INPUT TYPE=HIDDEN NAME=\"" + SMDeliveryTicket.Paramdatinitiated + "\" VALUE=\"" + deliveryticket.getsdatinitiated() + "\">"
 		+ "<INPUT TYPE=HIDDEN NAME=\"" + SMDeliveryTicket.Paramlinitiatedbyid + "\" VALUE=\"" + deliveryticket.getlinitiatedbyid() + "\">"
 		+ "<INPUT TYPE=HIDDEN NAME=\"" + SMDeliveryTicket.Paramsinitiatedbyfullname + "\" VALUE=\"" + deliveryticket.getsinitiatedbyfullname() + "\">"
-		+ "</TD>"
+		+ "</TD>\n"
 		;
 		
-		s+= "<TD class=\" fieldlabel \">Order Number:&nbsp;</TD>"
-		+ "<TD class=\"readonlyleftfield\">" + sOrderNumber + "</TD>";
+		s+= "<TD class=\" fieldlabel \">Order Number:&nbsp;</TD>\n"
+		+ "<TD class=\"readonlyleftfield\">" + sOrderNumber + "</TD>\n";
 		
-		s+= "<TD class=\" fieldlabel \">WO Number:&nbsp;</TD>"
-				+ "<TD class=\"readonlyleftfield\">" + sWONumber + "</TD>";
+		s+= "<TD class=\" fieldlabel \">WO Number:&nbsp;</TD>\n"
+				+ "<TD class=\"readonlyleftfield\">" + sWONumber + "</TD>\n";
 
-		s += "</TR>";
+		s += "</TR>\n\n";
 		s += "</TABLE title:OrderHeaderTable; \">\n";	
 		
 		s += "<TABLE class = \" innermost \" style=\" title:OrderHeaderTable2; \" width=100% >\n";	
-		s += "<TR>";
+		s += "<TR>\n";
 		
-		s += "<TD class=\" fieldlabel \">Bill&nbsp;to:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sBillToName() + "</TD>";
+		s += "<TD class=\" fieldlabel \">Bill&nbsp;to:&nbsp;</TD>\n"
+			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sBillToName() + "</TD>\n";
 		
 		String sMapAddress = orderheader.getM_sShipToAddress1().trim();
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToAddress2().trim();
@@ -532,25 +532,25 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToZip().trim();
 		sMapAddress	= sMapAddress.trim() + " " + orderheader.getM_sShipToCountry().trim();
 		
-		s += "<TD class=\" fieldlabel \">Ship&nbsp;to:&nbsp;</TD>"
+		s += "<TD class=\" fieldlabel \">Ship&nbsp;to:&nbsp;</TD>\n"
 			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShipToName() 
-			//+ "</TD>"
+			//+ "</TD>\n"
 			
 			//+ "<TD class=\"readonlyleftfield\">" 
 			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress) + "\">" + sMapAddress + "</A>"
-			+ "</TD>"
+			+ "</TD>\n"
 			
 			//Ship to contact:
-			+ "<TD class=\" fieldlabel \">Contact:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoContact() + "</TD>"
+			+ "<TD class=\" fieldlabel \">Contact:&nbsp;</TD>\n"
+			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoContact() + "</TD>\n"
 
 			//Ship to phone:
-			+ "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>"
+			+ "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>\n"
+			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>\n"
 		
 			//Second phone:
-			+ "<TD class=\" fieldlabel \">2nd Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_ssecondaryshiptophone() + "</TD>"
+			+ "<TD class=\" fieldlabel \">2nd Phone:&nbsp;</TD>\n"
+			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_ssecondaryshiptophone() + "</TD>\n"
 			;
 
 		//Close the table:
@@ -622,43 +622,43 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 	    	//Create table heading 
 	    	s+=	"<TABLE class = ' innermost ' style=' title:OrderDetailLinesTable; background-color:"+ 
 	    			SMDeliveryTicket.ITEMS_TABLE_BG_COLOR + "' width=100% >";
-	    	s += "<TR><TD ALIGN=LEFT><B>Order Lines:<B></TR>";
-	    	s += "<TR>";
-			s+= "<TD class=\" fieldrightheading \"><FONT SIZE=2>Quantity</FONT></TD>";
-			s+= "<TD class=\" fieldleftheading \"><FONT SIZE=2>Qty left on order </FONT></TD>";
-			s+= "<TD class=\" fieldleftheading \"><FONT SIZE=2>Qty already shipped </FONT></TD>";
-			s+="<TD class=\" fieldleftheading \"><FONT SIZE=2>Item Number  </FONT></TD>";
-			s+="<TD class=\" fieldleftheading \"><FONT SIZE=2>Item Description  </FONT></TD>";
-			s+="<TD class=\" fieldrightheading \"><FONT SIZE=2>UOM</FONT> </TD>";
-			s+="</TR>";
+	    	s += "<TR>\n<TD ALIGN=LEFT><B>Order Lines:<B></TR>\n\n";
+	    	s += "<TR>\n";
+			s+= "<TD class=\" fieldrightheading \"><FONT SIZE=2>Quantity</FONT></TD>\n";
+			s+= "<TD class=\" fieldleftheading \"><FONT SIZE=2>Qty left on order </FONT></TD>\n";
+			s+= "<TD class=\" fieldleftheading \"><FONT SIZE=2>Qty already shipped </FONT></TD>\n";
+			s+="<TD class=\" fieldleftheading \"><FONT SIZE=2>Item Number  </FONT></TD>\n";
+			s+="<TD class=\" fieldleftheading \"><FONT SIZE=2>Item Description  </FONT></TD>\n";
+			s+="<TD class=\" fieldrightheading \"><FONT SIZE=2>UOM</FONT> </TD>\n";
+			s+="</TR>\n\n";
 			
 	    	//Create row for each item on the order
 			int numberOfItems = 0;
 	    	while (rs.next()){
 	    		numberOfItems++;
-    			s += "<TR>";
-    			s+="<TD ALIGN=RIGHT><INPUT TYPE='text' NAME='" + SMDeliveryTicket.ITEM_LINE_QTY +  Integer.toString(numberOfItems) +"' maxlength='3' style='width: 30px;'>&nbsp;&nbsp;&nbsp;&nbsp;</TD>";
-    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderdetails.dQtyOrdered), SMTableorderdetails.dQtyOrderedScale) + "</FONT></TD>";
+    			s += "<TR>\n";
+    			s+="<TD ALIGN=RIGHT><INPUT TYPE='text' NAME='" + SMDeliveryTicket.ITEM_LINE_QTY +  Integer.toString(numberOfItems) +"' maxlength='3' style='width: 30px;'>&nbsp;&nbsp;&nbsp;&nbsp;</TD>\n";
+    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderdetails.dQtyOrdered), SMTableorderdetails.dQtyOrderedScale) + "</FONT></TD>\n";
     			BigDecimal bdTotalQtyShippedToDate = new BigDecimal("0.0000");
     			bdTotalQtyShippedToDate = new BigDecimal(clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderdetails.dQtyShipped), SMTableorderdetails.dQtyShippedScale)).add(
     				new BigDecimal(clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderdetails.dQtyShipped), SMTableorderdetails.dQtyShippedScale)));
-    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyShippedToDateScale, bdTotalQtyShippedToDate) + "</FONT></TD>";
-    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sItemNumber) + "</FONT></TD>";
+    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyShippedToDateScale, bdTotalQtyShippedToDate) + "</FONT></TD>\n";
+    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sItemNumber) + "</FONT></TD>\n";
     			s+="<INPUT TYPE=HIDDEN NAME='" + SMDeliveryTicket.ITEM_LINE_NUMBER + Integer.toString(numberOfItems) +"' VALUE='" + rs.getString(SMTableorderdetails.sItemNumber) + "'>";
-    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sItemDesc) + "</FONT></TD>";
+    			s+="<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sItemDesc) + "</FONT></TD>\n";
     			s+="<INPUT TYPE=HIDDEN NAME='" + SMDeliveryTicket.ITEM_LINE_DESC + Integer.toString(numberOfItems) + "' VALUE='" + URLEncoder.encode(rs.getString(SMTableorderdetails.sItemDesc), "UTF-8") + "'>";
-    			s+="<TD ALIGN=RIGHT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</FONT></TD>";
-    			s+="</TR>";
+    			s+="<TD ALIGN=RIGHT><FONT SIZE=2>" + rs.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</FONT></TD>\n";
+    			s+="</TR>\n\n";
     		}
 	    	//store number of items 
 	    	s += "<INPUT TYPE=HIDDEN NAME='" + SMDeliveryTicket.NUMBER_OF_ITEM_LINES_USED +"' VALUE='" + Integer.toString(numberOfItems) +"'>";
 			s += "<INPUT TYPE=HIDDEN NAME='" + SMDeliveryTicket.Paramstrimmedordernumber + "' VALUE='" + entry.getstrimmedordernumber().replace("\"", "&quot;") + "'>";
-	    	s += "<TR><TD>";
+	    	s += "<TR>\n<TD>\n";
 	    	//Add Items button (same as save button)
 	    	s += "<button type=\"button\"" + " value=\"" + SAVE_BUTTON_LABEL + "\"" 
 	    		+ " name=\"" + SAVE_BUTTON_LABEL + "\"" 
 	    		+ " onClick=\"save();\">"+ ADD_ITEMS_BUTTON_LABEL + "</button>\n";
-	    	s += "</TD></TR>";
+	    	s += "</TD>\n</TR>\n\n";
 	    	//Close Table
 	    	s+=	"</TABLE style=' title:OrderDetailLinesTable; ' >";    	
 	    	rs.close();
@@ -678,7 +678,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 				+ SMDeliveryTicket.ITEMS_TABLE_BG_COLOR + "; width=100%; \" >\n";
 			
 			//Signature:
-			s += "<TR><TD>";
+			s += "<TR>\n<TD>\n";
 			s += "<B>Signature:</B>&nbsp;";
 			//Add signature here:
 			String sSignatureBoxWidth = deliveryticket.getlsignatureboxwidth();
@@ -704,12 +704,12 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 	
 			s += "&nbsp;<B>Date signed:</B>&nbsp;";
 			s += deliveryticket.getsdatsigned();
-			s += "</TD>";
-			s += "</TR>";
-			s += "<TR><TD>";
+			s += "</TD>\n";
+			s += "</TR>\n\n";
+			s += "<TR>\n<TD>\n";
 			s += "<B>Printed name and title:</B>&nbsp;";
-			s += deliveryticket.getssignedbyname() + "</TD>";
-			s += "</TR>";
+			s += deliveryticket.getssignedbyname() + "</TD>\n";
+			s += "</TR>\n\n";
 			
 		//Close the table:
 		s += "</TABLE style = \" title:SignatureBlockTable; \">\n";
@@ -723,7 +723,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		s += "<TABLE class = \" innermost \" style=\" title:DeliveryLines; background-color:"+ 
 				SMDeliveryTicket.ORDERCOMMANDS_TABLE_BG_COLOR + "\" width=100% >\n";
 		
-				s+= "<TR><TD width='10%' valign='top'><B>Items Delivered:</B>";
+				s+= "<TR>\n<TD width='10%' valign='top'><B>Items Delivered:</B>";
 	
 				if (!isPosted){
 				s+= "<TEXTAREA NAME='" + SMDeliveryTicket.Paramsdetaillines 
@@ -732,9 +732,9 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 				}else{
 				s += "<TD class= 'readonlyleftfield' >"  
 				+ (entry.getsdetaillines().replace("\n", "<BR>")).replace("\"", "&quote;")
-				+ "</TD>";
+				+ "</TD>\n";
 				}
-				s += "</TD></TR>";
+				s += "</TD>\n</TR>\n\n";
 		
 		s += "</TABLE style=\" title:DeliveryLines; \">\n";
 		return s;
@@ -744,7 +744,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:Comments;  background-color:"+ 
 				SMDeliveryTicket.DETAIL_TABLE_BG_COLOR + "\" width=100% >\n";
-				s += "<TR><TD width='10%' valign='top'>";
+				s += "<TR>\n<TD width='10%' valign='top'>";
 				s += "<B>Comments:</B>";
 				if(!isPosted){
 				s +=  "<TEXTAREA NAME='"+ SMDeliveryTicket.Parammcomments + "'"
@@ -755,9 +755,9 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 				else{
 				s += "<TD class= 'readonlyleftfield' >"
 				+ (entry.getmcomments().replace("\n", "<BR>")).replace("\"", "&quote;")
-				+ "</TD>";
+				+ "</TD>\n";
 				}
-				s += "</TD></TR>";
+				s += "</TD>\n</TR>\n\n";
 				s += "</TABLE style=\" title:Comments; \">\n";
 		return s;
 	}
@@ -786,14 +786,14 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		+ "\">"
 		;
 		s += "<TABLE BORDER=0>"
-		+"<TR><TD VALIGN=BOTTOM><H3>" + scompanyname + ": " + title + "</H3></TD>"
+		+"<TR>\n<TD VALIGN=BOTTOM><H3>" + scompanyname + ": " + title + "</H3></TD>\n"
 		;
 
 		if (subtitle.compareTo("") != 0){  
-			s = s + "<TD VALIGN=BOTTOM><H4>&nbsp;-&nbsp;" + subtitle + "</H4></TD>";
+			s = s + "<TD VALIGN=BOTTOM><H4>&nbsp;-&nbsp;" + subtitle + "</H4></TD>\n";
 		}
 
-		s = s + "</TR></TABLE>";
+		s = s + "</TR>\n\n</TABLE>";
 		return s;
 	}
 	
@@ -810,7 +810,7 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 		String s = "";
 		s += "<TABLE class = \" innermost \" style=\" title:DeliveredBy;  background-color:"+ 
 				SMDeliveryTicket.DETAIL_TABLE_BG_COLOR + "\" width=100% >\n";
-				s += "<TR><TD width='10%' valign='top'>";
+				s += "<TR>\n<TD width='10%' valign='top'>";
 				s += "<B>Delivered By:</B>";
 				if(!isPosted){
 				s +=  "<INPUT TYPE='TEXT' NAME='"+ SMDeliveryTicket.Paramsdeliveredby + "'"
@@ -856,9 +856,9 @@ public class SMEditDeliveryTicketEdit  extends HttpServlet {
 				else{
 				s += "<TD class= 'readonlyleftfield' >"
 				+ (entry.getsdeliveredby().replace("\n", "<BR>")).replace("\"", "&quote;")
-				+ "</TD>";
+				+ "</TD>\n";
 				}
-				s += "</TD></TR>";
+				s += "</TD>\n</TR>\n\n";
 				s += "</TABLE style=\" title:Comments; \">\n";
 		return s;
 	}

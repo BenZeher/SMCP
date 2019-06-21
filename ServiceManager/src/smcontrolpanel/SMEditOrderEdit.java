@@ -272,7 +272,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 		smedit.getPWOut().println("&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smcontrolpanel.SMEditOrderSelection?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
-				+ smedit.getsDBID() + "\">Manage orders</A>");
+				+ smedit.getsDBID() + "\">\nManage orders</A>");
 		//Add a link to edit sales leads:
 		if (SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMEditBids, 
@@ -282,7 +282,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
 			smedit.getPWOut().println("&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 				+ "smcontrolpanel.SMEditBidSelect?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
-				+ smedit.getsDBID() + "\">Edit " + SMBidEntry.ParamObjectName + "s</A>");
+				+ smedit.getsDBID() + "\">\nEdit " + SMBidEntry.ParamObjectName + "s</A>");
 		}
 		if ((entry.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE)) != 0)
 			&& (!smedit.getAddingNewEntryFlag())){
@@ -299,7 +299,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 					+ "&" + SMWorkOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
 					+ "&" + SMConfigWorkOrderEdit.REMOVE_WORK_ORDER_ATTRIBUTE_FROM_SESSION + "=Y"
 					+ "&SubmitEdit=true&CallingClass=smcontrolpanel.SMEditOrderEdit"
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">Schedule this order</A>");
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">\nSchedule this order</A>");
 				;
 			}
 			
@@ -331,18 +331,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 						+ "&" + SMBidEntry.Paramsshiptozip + "=" + clsServletUtilities.URLEncode(entry.getM_sShipToZip())
 						+ "&CallingClass=smcontrolpanel.SMEditBidEntry"
 						+ "&OriginalCallingClass=smcontrolpanel.SMEditBidSelect"
-						+ "\">Create&nbsp;follow&nbsp;up&nbsp;sales&nbsp;lead</A>");
+						+ "\">\nCreate&nbsp;follow&nbsp;up&nbsp;sales&nbsp;lead</A>");
 				;
 			}
 		}
 		
 		smedit.getPWOut().println("&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMURLHistoryList?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
-				+ smedit.getsDBID() + "\">Return to...</A><BR>");
+				+ smedit.getsDBID() + "\">\nReturn to...</A><BR>");
 		
 		//String sWarning = SMUtilities.get_Request_Parameter("Warning", request);
 		String sMessage = clsManageRequestParameters.get_Request_Parameter("Message", request);
 		//if (! sWarning.equalsIgnoreCase("")){
-		//	smedit.getPWOut().println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
+		//	smedit.getPWOut().println("<B><FONT COLOR=\"RED\">\nWARNING: " + sWarning + "</FONT></B><BR>");
 		//}
 		if (! sMessage.equalsIgnoreCase("")){
 			smedit.getPWOut().println("<B>" + sMessage + "</B><BR>");
@@ -406,7 +406,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + PRICECHANGE_FLAG + "\" VALUE=\"" 
 			+ clsManageRequestParameters.get_Request_Parameter(PRICECHANGE_FLAG, sm.getRequest()) + "\""
 			+ " id=\"" + PRICECHANGE_FLAG + "\""
-			+ "\">";
+			+ "\">\n";
 		
 		//If the ship to address is changed, this gets reset - that way the server knows to update the geocode:
 		//If it's a new order we ALWAYS get the geocode:
@@ -414,98 +414,98 @@ public class SMEditOrderEdit  extends HttpServlet {
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SHIPTOCHANGE_FLAG + "\" VALUE=\"" 
 				+ SHIPTOCHANGED_VALUE + "\""
 				+ " id=\"" + SHIPTOCHANGE_FLAG + "\""
-				+ "\">";
+				+ "\">\n";
 		//Otherwise, we only get it if it's re-submitted back to this class or changed with javascript:
 		}else{
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SHIPTOCHANGE_FLAG + "\" VALUE=\"" 
 				+ clsManageRequestParameters.get_Request_Parameter(SHIPTOCHANGE_FLAG, sm.getRequest()) + "\""
 				+ " id=\"" + SHIPTOCHANGE_FLAG + "\""
-				+ "\">";
+				+ "\">\n";
 		}
 		
 		//Store which command button the user has chosen:
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\""
 		+ " id=\"" + COMMAND_FLAG + "\""
-		+ "\">";
+		+ "\">\n";
 		
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdatLastPostingDate + "\" VALUE=\"" 
-			+ entry.getM_datLastPostingDate() + "\">";
+			+ entry.getM_datLastPostingDate() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdatOrderCreationDate + "\" VALUE=\"" 
-			+ entry.getM_datOrderCreationDate() + "\">";
+			+ entry.getM_datOrderCreationDate() + "\">\n";
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdatShipmentDate + "\" VALUE=\"" 
-			+ entry.getM_datShipmentDate() + "\">";*/
+			+ entry.getM_datShipmentDate() + "\">\n";*/
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdOrderTaxAmount + "\" VALUE=\"" 
-			+ entry.getsordersalestaxamount() + "\">";
+			+ entry.getsordersalestaxamount() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdTaxBase + "\" VALUE=\"" 
-			+ entry.getM_dTaxBase() + "\">";
+			+ entry.getM_dTaxBase() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdTotalAmountItems + "\" VALUE=\"" 
-			+ entry.getM_dTotalAmountItems() + "\">";
+			+ entry.getM_dTotalAmountItems() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiNextDetailNumber + "\" VALUE=\"" 
-			+ entry.getM_iNextDetailNumber() + "\">";
+			+ entry.getM_iNextDetailNumber() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiNumberOfInvoices + "\" VALUE=\"" 
-			+ entry.getM_iNumberOfInvoices() + "\">";
+			+ entry.getM_iNumberOfInvoices() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiNumberOfLinesOnOrder + "\" VALUE=\"" 
-			+ entry.getM_iNumberOfLinesOnOrder() + "\">";
+			+ entry.getM_iNumberOfLinesOnOrder() + "\">\n";
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiNumberOfLinesQtyShipped + "\" VALUE=\"" 
-			+ entry.getM_iNumberOfLinesQtyShipped() + "\">";*/
+			+ entry.getM_iNumberOfLinesQtyShipped() + "\">\n";*/
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiOnHold + "\" VALUE=\"" 
-			+ entry.getM_iOnHold() + "\">";
+			+ entry.getM_iOnHold() + "\">\n";
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiOrderCompleted + "\" VALUE=\"" 
-			+ entry.getM_iOrderCompleted() + "\">";*/
+			+ entry.getM_iOrderCompleted() + "\">\n";*/
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiOverCreditLimit + "\" VALUE=\"" 
-			+ entry.getM_iOverCreditLimit() + "\">";*/
+			+ entry.getM_iOverCreditLimit() + "\">\n";*/
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiPrintStatus + "\" VALUE=\"" 
-			+ entry.getM_iPrintStatus() + "\">";*/
+			+ entry.getM_iPrintStatus() + "\">\n";*/
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamLASTEDITDATE + "\" VALUE=\"" 
-			+ entry.getM_LASTEDITDATE() + "\">";
+			+ entry.getM_LASTEDITDATE() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamLASTEDITPROCESS + "\" VALUE=\"" 
-			+ entry.getM_LASTEDITPROCESS() + "\">";
+			+ entry.getM_LASTEDITPROCESS() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamLASTEDITTIME + "\" VALUE=\"" 
-			+ entry.getM_LASTEDITTIME() + "\">";
+			+ entry.getM_LASTEDITTIME() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamLASTEDITUSERFULLNAME + "\" VALUE=\"" 
-			+ entry.getM_LASTEDITUSERFULLNAME() + "\">";
+			+ entry.getM_LASTEDITUSERFULLNAME() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamLASTEDITUSERID + "\" VALUE=\"" 
-				+ entry.getM_LASTEDITUSERID() + "\">";
+				+ entry.getM_LASTEDITUSERID() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParammFieldNotes + "\" VALUE=\"" 
-			+ entry.getM_sFieldNotes() + "\">";
+			+ entry.getM_sFieldNotes() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsClonedFrom + "\" VALUE=\"" 
-			+ entry.getM_sClonedFrom() + "\">";
+			+ entry.getM_sClonedFrom() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsCustomerControlAcctSet + "\" VALUE=\"" 
-			+ entry.getM_sCustomerControlAcctSet() + "\">";
+			+ entry.getM_sCustomerControlAcctSet() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.Paramsgeocode + "\" VALUE=\"" 
-			+ entry.getM_sgeocode() + "\">";
+			+ entry.getM_sgeocode() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsiID + "\" VALUE=\"" 
-			+ entry.getM_siID() + "\">";
+			+ entry.getM_siID() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsLastInvoiceNumber + "\" VALUE=\"" 
-			+ entry.getM_sLastInvoiceNumber() + "\">";
+			+ entry.getM_sLastInvoiceNumber() + "\">\n";
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsLastPrintedBy + "\" VALUE=\"" 
-			+ entry.getM_sLastPrintedBy() + "\">";*/
+			+ entry.getM_sLastPrintedBy() + "\">\n";*/
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsLastPrintedDate + "\" VALUE=\"" 
-			+ entry.getM_sLastPrintedDate() + "\">";*/
+			+ entry.getM_sLastPrintedDate() + "\">\n";*/
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsOrderCreatedByFullName + "\" VALUE=\"" 
-			+ entry.getM_sOrderCreatedByFullName() + "\">";
+			+ entry.getM_sOrderCreatedByFullName() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamlOrderCreatedByID + "\" VALUE=\"" 
-				+ entry.getM_lOrderCreatedByID() + "\">";
+				+ entry.getM_lOrderCreatedByID() + "\">\n";
 		/*s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsOrderCreationTime + "\" VALUE=\"" 
-			+ entry.getM_sOrderCreationTime() + "\">";*/
+			+ entry.getM_sOrderCreationTime() + "\">\n";*/
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsOrderNumber + "\" VALUE=\"" 
-			+ entry.getM_sOrderNumber() + "\">";
+			+ entry.getM_sOrderNumber() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.Paramstrimmedordernumber + "\" VALUE=\"" 
-			+ entry.getM_strimmedordernumber() + "\">";
+			+ entry.getM_strimmedordernumber() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsCustomerCode + "\" VALUE=\"" 
-			+ entry.getM_sCustomerCode() + "\">";
+			+ entry.getM_sCustomerCode() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdatOrderCanceledDate + "\" VALUE=\"" 
-			+ entry.getM_datOrderCanceledDate() + "\">";
+			+ entry.getM_datOrderCanceledDate() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountAmount + "\" VALUE=\"" 
-			+ entry.getM_dPrePostingInvoiceDiscountAmount() + "\">";
+			+ entry.getM_dPrePostingInvoiceDiscountAmount() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamdPrePostingInvoiceDiscountPercentage + "\" VALUE=\"" 
-			+ entry.getM_dPrePostingInvoiceDiscountPercentage() + "\">";
+			+ entry.getM_dPrePostingInvoiceDiscountPercentage() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.Parambddepositamount + "\" VALUE=\"" 
-			+ entry.getM_bddepositamount() + "\">";
+			+ entry.getM_bddepositamount() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsPrePostingInvoiceDiscountDesc + "\" VALUE=\"" 
-			+ entry.getM_sPrePostingInvoiceDiscountDesc() + "\">";
+			+ entry.getM_sPrePostingInvoiceDiscountDesc() + "\">\n";
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "\" VALUE=\"" 
-			+ clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, sm.getRequest()) + "\">";
+			+ clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, sm.getRequest()) + "\">\n";
 		
 		//We have to keep track of these dates because when the date picker is invoked, it can change the 
 		//value of these fields, but it won't trigger an 'onchange' event and we won't know the user has
@@ -587,9 +587,9 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 			+ "smcontrolpanel.SMDisplayOrderInformation"
 			+ "?" + SMOrderHeader.ParamsOrderNumber + "=" + sOrderNumber 
-			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() + "\">" + sOrderNumber + "</A>"
+			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() + "\">\n" + sOrderNumber + "</A>"
 			+ "&nbsp;<B>" + sObjectName + " date:</B>&nbsp" + entry.getM_datOrderDate()
-			+ "<BR><span style = \" font-size: small; \">"
+			+ "<BR><span style = \" font-size: small; \">\n"
 			;
 		String sTax = "";
 		try {
@@ -625,7 +625,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 		
 		//Start the outer table here:
-		s += "<TABLE style=\" title:ParentTable; border-style:solid; border-color:black; font-size:small; font-family:Arial;\">\n";		
+		s += "<TABLE style=\" title:ParentTable; border-style:solid; border-color:black; font-size:small; font-family:Arial;\">\n\n";		
 		
 		//Create the order commands line at the top:
 		boolean bAllowServiceTicketPrinting = SMSystemFunctions.isFunctionPermitted(
@@ -643,24 +643,24 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += createOrderCommandsTable(sm, sObjectName, entry, bAllowServiceTicketPrinting, bAllowInstallationTicketPrinting, sDBID, sUserID);
 		
 		//Create the customer area table:
-		s += "<TR><TD><TABLE style=\" title:CustomerArea; \" width=100% >\n";
+		s += "<TR><TD>\n<TABLE style=\" title:CustomerArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSETTINGS_BG_COLOR + "; \">" 
-			+ createCustomerSettingsTable(sm, entry, cus, sObjectName) + "</TD>\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERBILLTO_BG_COLOR + "; \">" 
-			+ createCustomerBillToTable(sm, entry) + "</TD>\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSHIPTO_BG_COLOR + "; \">" 
-			+ createCustomerShipToTable(sm, entry) + "</TD>\n";
-		s += "</TR></TD></TABLE style=\" title:ENDCustomerArea; \">\n";
+		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSETTINGS_BG_COLOR + "; \">\n" 
+			+ createCustomerSettingsTable(sm, entry, cus, sObjectName) + "</TD>\n\n";
+		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERBILLTO_BG_COLOR + "; \">\n" 
+			+ createCustomerBillToTable(sm, entry) + "</TD>\n\n";
+		s += "<TD style=\" vertical-align:top; background-color: " + CUSTOMERSHIPTO_BG_COLOR + "; \">\n" 
+			+ createCustomerShipToTable(sm, entry) + "</TD>\n\n";
+		s += "</TR>\n</TD>\n</TABLE style=\" title:ENDCustomerArea; \">\n\n";
 
 		//Create the order area table:
-		s += "<TR><TD><TABLE style=\" title:OrderArea; \" width=100% >\n";
+		s += "<TR><TD>\n<TABLE style=\" title:OrderArea; \" width=100% >\n";
 		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; background-color: " + ORDERDATES_BG_COLOR + "; \">" 
-			+ createOrderSettings2Table(sm, entry) + "</TD>\n";
-		s += "<TD style=\" vertical-align:top; background-color: " + PROJECTFIELDS_BG_COLOR + "; \">" 
-			+ createProjectFieldsTable(sm, entry) + "</TD>\n";
-		s += "</TR></TD></TABLE style=\" title:ENDOrderArea; \">\n";
+		s += "<TD style=\" vertical-align:top; background-color: " + ORDERDATES_BG_COLOR + "; \">\n" 
+			+ createOrderSettings2Table(sm, entry) + "</TD>\n\n";
+		s += "<TD style=\" vertical-align:top; background-color: " + PROJECTFIELDS_BG_COLOR + "; \">\n" 
+			+ createProjectFieldsTable(sm, entry) + "</TD>\n\n";
+		s += "</TR>\n</TD>\n</TABLE style=\" title:ENDOrderArea; \">\n\n";
 		
 		//Create the order memo table:
 		s += createOrderMemosTable(sm, entry, sm.getAddingNewEntryFlag(), bUseGoogleDrivePicker);
@@ -669,8 +669,8 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += createOrderCommandsTable(sm, sObjectName, entry, false, false, sDBID, sUserID);
 		
 		//Close the parent table:
-		s += "</TR>";
-		s += "</TABLE style=\" title:ENDParentTable; \">";
+		s += "</TR>\n";
+		s += "</TABLE style=\" title:ENDParentTable; \">\n";
 		s += "<p><FONT COLOR=RED>*</FONT>&nbsp;Required fields on both ORDER and QUOTE.<BR>" +
 				"<FONT COLOR=RED>**</FONT>&nbsp;Required fields on ORDER only.</p>";
 		
@@ -686,18 +686,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String s = "";
 		String SQL = "";
 		//Create the table:
-		s += "<TABLE class = \" innermost \" style=\" title:CustomerSettings; \">\n";
+		s += "<TABLE class = \" innermost \" style=\" title:CustomerSettings; \">\n\n";
 		
 		//The customer price level:
 		s += "<TR>";
-		s += "<TD class=\"fieldlabel\">Price level<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\"fieldcontrol\">"
+		s += "<TD class=\"fieldlabel\">\nPrice level<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\"fieldcontrol\">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamiCustomerDiscountLevel + "\""
 			+ " id = \"" + SMOrderHeader.ParamiCustomerDiscountLevel + "\""
 			+ " onchange=\"flagPricesDirty();\""
 			+ " style=\"width:100%;\""
 			+ ">";
-		s += "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT PRICE LEVEL ***</OPTION>";
+		s += "<OPTION VALUE=\"" + "" + "\">\n" + "*** SELECT PRICE LEVEL ***</OPTION>";
 		for (int i = 0; i <= 5; i++){
 			s += "<OPTION";
 			if (entry.getM_iCustomerDiscountLevel().compareToIgnoreCase(Integer.toString(i)) == 0){
@@ -707,15 +707,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 			if (i == 0){
 				sDesc = "BASE LEVEL";
 			}
-			s += " VALUE=\"" + Integer.toString(i) + "\">" + sDesc + "</OPTION>";
+			s += " VALUE=\"" + Integer.toString(i) + "\">\n" + sDesc + "</OPTION>";
 		}
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//Terms
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Terms<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class= \" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nTerms<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class= \" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamsTerms + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamsTerms + "\""
 			+ " onchange=\"flagDirty();\""
@@ -728,7 +728,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " FROM " + SMTablearterms.TableName
 			+ " ORDER BY " + SMTablearterms.sTermsCode
 		;
-		s += "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT TERMS ***</OPTION>";
+		s += "<OPTION VALUE=\"" + "" + "\">\n" + "*** SELECT TERMS ***</OPTION>";
 		try {
 			ResultSet rsTerms = clsDatabaseFunctions.openResultSet(
 				SQL, 
@@ -742,7 +742,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (entry.getM_sTerms().compareToIgnoreCase(sTerms) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sTerms + "\">" + rsTerms.getString(SMTablearterms.sDescription) + "</OPTION>";
+				s += " VALUE=\"" + sTerms + "\">\n" + rsTerms.getString(SMTablearterms.sDescription) + "</OPTION>";
 			}
 			rsTerms.close();
 		} catch (SQLException e) {
@@ -750,12 +750,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//Price list:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Price list:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nPrice list:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamsDefaultPriceListCode + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamsDefaultPriceListCode + "\""
 			+ " onchange=\"flagPricesDirty();\""
@@ -781,7 +781,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (entry.getM_sDefaultPriceListCode().trim().compareToIgnoreCase(sPLCode) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sPLCode + "\">" + sPLCode + " - " 
+				s += " VALUE=\"" + sPLCode + "\">\n" + sPLCode + " - " 
 				+ rsPriceList.getString(SMTablepricelistcodes.sdescription).trim()
 					+ "</OPTION>";
 			}
@@ -791,18 +791,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		//Tax type:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Tax<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nTax<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.Paramitaxid + "\"" 
 			+ " id = \"" + SMOrderHeader.Paramitaxid + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " style=\"width:100%;\""
 			+ ">";
-		s += "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT TAX ***</OPTION>";
+		s += "<OPTION VALUE=\"" + "" + "\">\n" + "*** SELECT TAX ***</OPTION>";
 		SQL = "SELECT"
 			+ " " + SMTabletax.lid
 			+ ", " + SMTabletax.staxjurisdiction
@@ -860,7 +860,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 						sInactiveFlag = " (INACTIVE)";
 					}
 					s += "<OPTION" + sOptionSelected
-						+ " VALUE=\"" + sTaxID + "\">" 
+						+ " VALUE=\"" + sTaxID + "\">\n" 
 						+ rsTax.getString(SMTabletax.staxjurisdiction)
 						+ " - " + rsTax.getString(SMTabletax.staxtype)
 						+ " - " + rsTax.getString(SMTabletax.sdescription)
@@ -882,7 +882,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		//when the order is saved:
 		if (!bCurrentTaxWasFound){
 			s += "<OPTION selected=YES"
-				+ " VALUE=\"" + entry.getitaxid() + "\">" 
+				+ " VALUE=\"" + entry.getitaxid() + "\">\n" 
 				+ entry.getstaxjurisdiction()
 				+ " - " + entry.getstaxtype()
 				+ " (NOT FOUND)"
@@ -899,18 +899,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamsTaxJurisdiction + "\" VALUE=\"" 
 				+ entry.getstaxjurisdiction() + "\""
 				+ " id=\"" + SMOrderHeader.ParamsTaxJurisdiction + "\""
-				+ "\">";
+				+ "\">\n";
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.ParamiTaxClass + "\" VALUE=\"" 
 				+ entry.getM_iTaxClass() + "\""
 				+ " id=\"" + SMOrderHeader.ParamiTaxClass + "\""
-				+ "\">";
+				+ "\">\n";
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderHeader.Paramstaxtype + "\" VALUE=\"" 
 					+ entry.getstaxtype() + "\""
 					+ " id=\"" + SMOrderHeader.Paramstaxtype + "\""
-					+ "\">";
+					+ "\">\n";
 		}
 		*/
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		//PO Number
 		s += "<TR>";
@@ -918,8 +918,8 @@ public class SMEditOrderEdit  extends HttpServlet {
 		if (customer.getM_sRequiresPO().compareToIgnoreCase("1") == 0){
 			sPORequired = "<B><I><FONT COLOR=RED>&nbsp;REQUIRED!</FONT></I></B>";
 		}
-		s += "<TD class=\" fieldlabel \">PO number" + sPORequired + ":&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nPO number" + sPORequired + ":&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsPONumber + "\""
 			+ " VALUE=\"" + entry.getM_sPONumber().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsPONumber + "\""
@@ -931,19 +931,19 @@ public class SMEditOrderEdit  extends HttpServlet {
 		
 		//Sales person:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Salesperson:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nSalesperson:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamsSalesperson + "\""
 			+ " id = \"" + SMOrderHeader.ParamsSalesperson + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " style=\"width:100%;\""
 			 + " >"
-			+ "<OPTION VALUE=\"" + NO_SALESPERSON_SELECTED_VALUE + "\"> ** SELECT A SALESPERSON **</OPTION>"
+			+ "<OPTION VALUE=\"" + NO_SALESPERSON_SELECTED_VALUE + "\">\n ** SELECT A SALESPERSON **</OPTION>"
 			+ "<OPTION";
 		if (entry.getM_sSalesperson().compareToIgnoreCase("") == 0){
 			s += " selected=YES ";
 		}
-		s += " VALUE=\"" + "" + "" + "\"> Not assigned (N/A) </OPTION>";
+		s += " VALUE=\"" + "" + "" + "\">\n Not assigned (N/A) </OPTION>";
 		
 		//First, we check to see if the salesperson on this order is still in the salespersons' list:
 		String sDeletedSalesperson = "";
@@ -1005,7 +1005,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sSalesCode.compareToIgnoreCase(entry.getM_sSalesperson()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sSalesCode + "\">" ;
+				s += " VALUE=\"" + sSalesCode + "\">\n" ;
 				if(sSalesPersonName.equals(" "))
 					s += "(BLANK) - ";
 				else
@@ -1018,18 +1018,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//Doing Business As Addresses:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Doing business as:<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nDoing business as:<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.Paramidoingbusinessasaddress + "\"" 
 			+ " id = \"" + SMOrderHeader.Paramidoingbusinessasaddress + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " style=\"width:100%;\""
 			+ ">"
-			+ "<OPTION VALUE=\"" + "" + "\"> ** SELECT A BUSINESS ADDRESS **</OPTION>";
+			+ "<OPTION VALUE=\"" + "" + "\">\n ** SELECT A BUSINESS ADDRESS **</OPTION>";
 		SQL = "SELECT"
 			+ " " + SMTabledoingbusinessasaddresses.lid
 			+ ", " + SMTabledoingbusinessasaddresses.sDescription
@@ -1055,7 +1055,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sBDAID.compareToIgnoreCase(entry.getM_idoingbusinessasaddressid()) == 0 || icounter == 1){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sBDAID + "\">" 
+				s += " VALUE=\"" + sBDAID + "\">\n" 
 				+ rsDBA.getString(SMTabledoingbusinessasaddresses.sDescription).trim()
 				+ "</OPTION>";
 			}
@@ -1065,18 +1065,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		//Sales Group:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Sales group<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nSales group<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamiSalesGroup + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamiSalesGroup + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " style=\"width:100%;\""
 			+ ">"
-			+ "<OPTION VALUE=\"" + "0" + "\"> ** SELECT A SALES GROUP **</OPTION>";
+			+ "<OPTION VALUE=\"" + "0" + "\">\n ** SELECT A SALES GROUP **</OPTION>";
 		SQL = "SELECT"
 			+ " " + SMTablesalesgroups.iSalesGroupId
 			+ ", " + SMTablesalesgroups.sSalesGroupCode
@@ -1097,7 +1097,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sSalesGroupID.compareToIgnoreCase(entry.getM_iSalesGroup()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sSalesGroupID + "\">" 
+				s += " VALUE=\"" + sSalesGroupID + "\">\n" 
 				+ rsSalesgroups.getString(SMTablesalesgroups.sSalesGroupCode).trim()
 				+ " " + rsSalesgroups.getString(SMTablesalesgroups.sSalesGroupDesc).trim()
 				+ "</OPTION>";
@@ -1108,19 +1108,19 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//Service type:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Service type<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nService type<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT ID= \"" + SMOrderHeader.ParamsServiceTypeCode + "\""
 			+ " onchange=\"setDefaultItemCategory(this);\""
 			+ " NAME=\"" + SMOrderHeader.ParamsServiceTypeCode + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamsServiceTypeCode + "\""
 			+ " style=\"width:100%;\""
 			+ ">"
-			+ "<OPTION VALUE=\"" + "" + "\"> ** SELECT A SERVICE TYPE **</OPTION>";
+			+ "<OPTION VALUE=\"" + "" + "\">\n ** SELECT A SERVICE TYPE **</OPTION>";
 		SQL = "SELECT"
 			+ " " + SMTableservicetypes.sCode
 			+ ", " + SMTableservicetypes.sName
@@ -1140,7 +1140,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sServiceTypeCode.compareToIgnoreCase(entry.getM_sServiceTypeCode()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sServiceTypeCode + "\">" 
+				s += " VALUE=\"" + sServiceTypeCode + "\">\n" 
 				+ rsServiceTypes.getString(SMTableservicetypes.sName).trim()
 				+ "</OPTION>";
 			}
@@ -1150,17 +1150,17 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		//Default location:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Default item<BR>location<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
-			+ "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\nDefault item<BR>location<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
+			+ "<TD class=\" fieldcontrol \">\n"
 			+ "<SELECT ID= \"" + SMOrderHeader.ParamsLocation + "\""
 			+ " onchange=\"setDefaultItemCategory(this);\""
 			+ " NAME=\"" + SMOrderHeader.ParamsLocation + "\"" 
 			+ ">"
-			+ "<OPTION VALUE=\"" + "" + "\">* SELECT LOCATION *</OPTION>";
+			+ "<OPTION VALUE=\"" + "" + "\">\n* SELECT LOCATION *</OPTION>";
 		SQL = "SELECT"
 			+ " " + SMTablelocations.sLocation
 			+ ", " + SMTablelocations.sLocationDescription
@@ -1180,7 +1180,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sDefaultItemLocation.compareToIgnoreCase(entry.getM_sLocation()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sDefaultItemLocation + "\">" 
+				s += " VALUE=\"" + sDefaultItemLocation + "\">\n" 
 				+ sDefaultItemLocation + " - " 
 				+ rsDefaultItemLocation.getString(SMTablelocations.sLocationDescription)
 				+ "</OPTION>";
@@ -1203,14 +1203,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ SMUtilities.getDatePickerString(SMOrderHeader.ParamdatOrderDate, getServletContext())
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		//Default item category:
 		s += "<TR>";
-		s += "<TD style=\"font-weight: bold; text-align: right; \"><B>Default item <br>category:</B>&nbsp;</TD>";
-		//s += "<TD style=\"font-weight: bold; text-align: right; \" ><B>Default</B>&nbsp;</TD>";
-		//s += "<TD style=\"font-weight: bold; text-align: left; \" ><B> item category:</B></TD>";
-	//	s += "</TR>";
+		s += "<TD style=\"font-weight: bold; text-align: right; \">\n<B>Default item <br>category:</B>&nbsp;</TD>\n";
+		//s += "<TD style=\"font-weight: bold; text-align: right; \" ><B>Default</B>&nbsp;</TD>\n";
+		//s += "<TD style=\"font-weight: bold; text-align: left; \" ><B> item category:</B></TD>\n";
+	//	s += "</TR>\n";
 	//	s += "<TR>";
 		s += "<TD style = \" text-align: left; \" COLSPAN = 2>"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamsDefaultItemCategory + "\"" 
@@ -1222,7 +1222,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		if (entry.getM_sDefaultItemCategory().compareToIgnoreCase("") == 0){
 			s += " selected=YES ";
 		}
-		s += " VALUE=\"" + "" + "\">" 
+		s += " VALUE=\"" + "" + "\">\n" 
 		+ BLANK_DEFAULT_ITEM_CATEGORY_DESC
 		+ "</OPTION>";
 		
@@ -1245,7 +1245,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				if (sItemCategory.compareToIgnoreCase(entry.getM_sDefaultItemCategory()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sItemCategory + "\">" 
+				s += " VALUE=\"" + sItemCategory + "\">\n" 
 				+ sItemCategory 
 				+ " - " + rsCategories.getString(SMTableiccategories.sDescription)
 				+ "</OPTION>";
@@ -1257,12 +1257,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 
 		s += "</SELECT>";
 		
-		s += "</TD>";	
-		s += "</TR>";
+		s += "</TD>\n";	
+		s += "</TR>\n";
 		
 		//Expected ship date
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Expected ship:&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\nExpected ship:&nbsp;</TD>\n";
 		s += "<TD ><INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamdatExpectedShipDate + "\""
 			+ " VALUE=\"" + entry.getM_datExpectedShipDate().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamdatExpectedShipDate + "\""
@@ -1282,7 +1282,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		+ " onchange=\"checkConversionFromQuote();\""
 		//+ " style=\"width:99%;\""
 		+ ">";
-		//s += "<OPTION VALUE = \"" + "" + "\">SELECT</OPTION>";
+		//s += "<OPTION VALUE = \"" + "" + "\">\nSELECT</OPTION>";
 		//If we are creating an order, then the list depends on whether it's an order or a quote:
 		if (entry.getM_siID().compareTo("-1") == 0){
 			//Then if it's a quote, don't give the options to set it to active or standing:
@@ -1292,7 +1292,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 					s += " selected=YES ";
 				}
 				s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) 
-				+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) 
+				+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) 
 				+ "</OPTION>";
 			}else{
 				//But if it's NOT a quote, don't give the option to choose 'quote':
@@ -1301,14 +1301,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 					s += " selected=YES ";
 				}
 				s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) 
-					+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) 
+					+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) 
 					+ "</OPTION>";
 				s += "<OPTION";
 				if (entry.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING)) == 0){
 					s += " selected=YES ";
 				}
 				s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) 
-					+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) 
+					+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) 
 					+ "</OPTION>";			
 			}
 		}else{
@@ -1317,14 +1317,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 				s += " selected=YES ";
 			}
 			s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_ACTIVE) 
-				+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) 
+				+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_ACTIVE) 
 				+ "</OPTION>";
 			s += "<OPTION";
 			if (entry.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING)) == 0){
 				s += " selected=YES ";
 			}
 			s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_STANDING) 
-				+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) 
+				+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_STANDING) 
 				+ "</OPTION>";
 			if (entry.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE)) == 0){
 				s += "<OPTION";
@@ -1332,25 +1332,25 @@ public class SMEditOrderEdit  extends HttpServlet {
 					s += " selected=YES ";
 				}
 				s += " VALUE = \"" + Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE) 
-				+ "\">" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) 
+				+ "\">\n" +  SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE) 
 				+ "</OPTION>";
 			}
 		}
 		
 		s += "</SELECT>";
-		s += "</TD>";
-		s += "</TR>";
+		s += "</TD>\n";
+		s += "</TR>\n";
 		
 		//Order sources
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Marketing sources<FONT COLOR=RED>*</FONT>:&nbsp;</TD>"
+		s += "<TD class=\" fieldlabel \">\nMarketing sources<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \"" + ">"
 			+ "<SELECT NAME=\"" + SMOrderHeader.ParamiOrderSourceID + "\"" 
 			+ " id = \"" + SMOrderHeader.ParamiOrderSourceID + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " style=\"width:100%;\""
 			+ ">"
-			+ "<OPTION VALUE = \"" + "" + "\"> ** SELECT A MARKETING SOURCE **</OPTION>";
+			+ "<OPTION VALUE = \"" + "" + "\">\n ** SELECT A MARKETING SOURCE **</OPTION>";
 			SQL = "SELECT"
 				+ " " + SMTableordersources.iSourceID
 				+ ", " + SMTableordersources.sSourceDesc
@@ -1370,7 +1370,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 					if (sOrderSourceID.compareToIgnoreCase(entry.getM_iOrderSourceID()) == 0){
 						s += " selected=YES ";
 					}
-					s += " VALUE=\"" + sOrderSourceID + "\">" 
+					s += " VALUE=\"" + sOrderSourceID + "\">\n" 
 					+ rsOrderSources.getString(SMTableordersources.sSourceDesc)
 					+ "</OPTION>";
 				}
@@ -1380,11 +1380,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 			}
 
 		s += "</SELECT>";
-		s += "</TD></TR>";								
+		s += "</TD>\n</TR>\n";								
 				
 		s += "<TR>";
 		//Close the table:
-		s += "</TABLE style = \" title:ENDCustomerSettings; \">\n";
+		s += "</TABLE style = \" title:ENDCustomerSettings; \">\n\n";
 		return s;
 	}
 	private String createCustomerBillToTable(
@@ -1393,11 +1393,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 4;
 		//Create the table:
-		s += "<TABLE class = \" innermost \" style=\" title:CustomerBillTo; \">\n";
+		s += "<TABLE class = \" innermost \" style=\" title:CustomerBillTo; \">\n\n";
 		
 		//The bill-to address:
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \"><B>Bill to<FONT COLOR=RED>*</FONT>:</B></TD>"
+			+ "<TD class=\" fieldlabel \">\n<B>Bill to<FONT COLOR=RED>*</FONT>:</B></TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToName + "\""
@@ -1408,10 +1408,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToNameLength)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToAddressLine1 + "\""
@@ -1423,10 +1423,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToAddressLine1Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToAddressLine2 + "\""
@@ -1437,10 +1437,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToAddressLine2Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToAddressLine3 + "\""
@@ -1451,10 +1451,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToAddressLine3Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToAddressLine4 + "\""
@@ -1465,82 +1465,82 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToAddressLine4Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>City<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>City<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToCity + "\""
 			+ " VALUE=\"" + entry.getM_sBillToCity().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToCity + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToCityLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
-		s += "<TD class=\" fieldlabel \">&emsp;&emsp;&emsp;<B>State<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n&emsp;&emsp;&emsp;<B>State<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToState + "\""
 			+ " VALUE=\"" + entry.getM_sBillToState().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToState + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToStateLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 
 		s += "<TR>";
 		
-		s += "<TD class=\" fieldlabel \"><B>Zip<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>Zip<FONT COLOR=RED>*</FONT>:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToZip + "\""
 			+ " VALUE=\"" + entry.getM_sBillToZip().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToZip + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToZipLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 
-		s += "<TD class=\" fieldlabel \"><B>Fax:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>Fax:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToFax + "\""
 			+ " VALUE=\"" + entry.getM_sBillToFax().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToFax + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToFaxLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
-		s += "<TD class=\" fieldlabel \"><B>Country:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>Country:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToCountry + "\""
 			+ " VALUE=\"" + entry.getM_sBillToCountry().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToCountry + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToCountryLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
-		s += "<TD class=\" fieldlabel \"><B>Phone:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToPhone + "\""
 			+ " VALUE=\"" + entry.getM_sBilltoPhone().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsBillToPhone + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToPhoneLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>2nd phone:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>2nd phone:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondarybilltophone + "\""
 			+ " VALUE=\"" + entry.getM_ssecondarybilltophone().replace("\"", "&quot;") + "\""
@@ -1549,12 +1549,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondarybilltophoneLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Authorized by:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Authorized by:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToContact + "\""
@@ -1564,12 +1564,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToContactLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Email:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Email:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsEmailAddress + "\""
@@ -1579,12 +1579,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sEmailAddressLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Invoicing contact:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Invoicing contact:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsInvoicingContact + "\""
@@ -1594,12 +1594,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sInvoicingContactLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Invoicing email:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Invoicing email:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsInvoicingEmailAddress + "\""
@@ -1609,16 +1609,16 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sInvoicingEmailLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 
 		//Blank field:
-		//s += "<TD>&nbsp;</TD<TD>&nbsp</TD>";
-		//s += "</TR>";
+		//s += "<TD>\n&nbsp;</TD<TD>\n&nbsp</TD>\n";
+		//s += "</TR>\n";
 
 		//Close the table:
-		s += "</TABLE style=\" title:ENDCustomerBillTo; \">\n";
+		s += "</TABLE style=\" title:ENDCustomerBillTo; \">\n\n";
 		return s;
 	}
 	private String createCustomerShipToTable(
@@ -1627,7 +1627,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String s = "";
 		int iNumberOfColumns = 4;
 		//Create the table:
-		s += "<TABLE class = \" innermost \" style=\" title:CustomerShipTo; \">\n";
+		s += "<TABLE class = \" innermost \" style=\" title:CustomerShipTo; \">\n\n";
 		
 		//Get any ship-to's for this customer:
 		String SQL = "SELECT"
@@ -1661,7 +1661,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 
 		//The ship-to address:
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \"><B>Ship to:</B></TD>";
+			+ "<TD class=\" fieldlabel \">\n<B>Ship to:</B></TD>\n";
 		
 		String sFirstOption = "** SELECT A SHIP TO **";
 		//If there are NO ship to addresses for this customer:
@@ -1675,7 +1675,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ "<SELECT ID= \"" + SMOrderHeader.ParamsShipToCode + "\""
 			+ " onchange=\"shiptoChange(this);\""
 			+ " NAME=\"" + SMOrderHeader.ParamsShipToCode + "\"" + ">";
-		s += "<OPTION VALUE=\"" + "" + "\">" + sFirstOption + "</OPTION>";
+		s += "<OPTION VALUE=\"" + "" + "\">\n" + sFirstOption + "</OPTION>";
 		for (int i = 0; i < arrShipTos.size(); i++){
 			s += "<OPTION";
 			String sCurrentShipTo = arrShipTos.get(i);
@@ -1684,23 +1684,23 @@ public class SMEditOrderEdit  extends HttpServlet {
 					s += " selected=YES ";
 				}
 			}
-			s += " VALUE=\"" + arrShipTos.get(i).trim() + "\">" + arrShipToDescriptions.get(i).trim() + "</OPTION>";
+			s += " VALUE=\"" + arrShipTos.get(i).trim() + "\">\n" + arrShipToDescriptions.get(i).trim() + "</OPTION>";
 		}
 		s += "</SELECT>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
-		s += "<TR><TD>"
-				+ "</TD><TD class=\" fieldcontrol \">";
+		s += "<TR><TD>\n"
+				+ "</TD>\n<TD class=\" fieldcontrol \">\n";
 				s += "<input type=button value=\"Use bill-to\"\n" 
 						+ "    onClick=\"if(confirm('Copy bill-to address over the ship-to?'))\n"
 						//+ "    alert('Bill to copied');\n"
 						+ "    copyBillTo();\n"
-						+ "     \">\n"
+						+ "     \">\n\n"
 					;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		//The ship-to name:		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">Name<FONT COLOR=RED>*</FONT>:</TD>"
+			+ "<TD class=\" fieldlabel \">\nName<FONT COLOR=RED>*</FONT>:</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToName + "\""
@@ -1711,18 +1711,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToNameLength)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//The ship-to address:
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">";
+			+ "<TD class=\" fieldlabel \">\n";
 	//	s += "<input type=button value=\"Use bill-to\"\n" 
 	//		+ "    onClick=\"if(confirm('Copy bill-to address over the ship-to?'))\n"
 	//		//+ "    alert('Bill to copied');\n"
 	//		+ "    copyBillTo();\n"
-	//		+ "     \">\n"
+	//		+ "     \">\n\n"
 		;
-		s += "</TD>";
+		s += "</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToAddress1 + "\""
@@ -1733,10 +1733,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToAddress1Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToAddress2 + "\""
@@ -1747,10 +1747,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToAddress2Length)
 			+ ">"
 		;
-		s += "</TD></TR>";		
+		s += "</TD>\n</TR>\n";		
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">&nbsp;</TD>"
+			+ "<TD class=\" fieldlabel \">\n&nbsp;</TD>\n"
 			+ "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToAddress3 + "\""
@@ -1761,15 +1761,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToAddress3Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 		s += "<TR>"
-			+ "<TD class=\" fieldlabel \">";
+			+ "<TD class=\" fieldlabel \">\n";
 //		s += "<input type=button value=\"Test map link\"\n" 
 //			+ " onClick=\"testMapLink();\"\n"
 //			+ ">\n"
 		;
-		s += "</TD>";
+		s += "</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN=" 
 			+ Integer.toString(iNumberOfColumns -1) + ">";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToAddress4 + "\""
@@ -1780,72 +1780,72 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToAddress4Length)
 			+ ">"
 		;
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		
 	
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>City:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>City:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToCity + "\""
 			+ " VALUE=\"" + entry.getM_sShipToCity().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsShipToCity + "\""
 			+ " onchange=\"flagShipToDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToCityLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
-		s += "<TD class=\" fieldlabel \"><B>State:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>State:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToState + "\""
 			+ " VALUE=\"" + entry.getM_sShipToState().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsShipToState + "\""
 			+ " onchange=\"flagShipToDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToStateLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Zip<FONT COLOR=RED>**</FONT>:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "<TD class=\" fieldlabel \">\n<B>Zip<FONT COLOR=RED>**</FONT>:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToZip + "\""
 			+ " VALUE=\"" + entry.getM_sShipToZip().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsShipToZip + "\""
 			+ " onchange=\"flagShipToDirty();\""
 			+ " SIZE=" + "11"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToZipLength)
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 
-		s += "<TD class=\" fieldlabel \"></TD>";
-		s += "<TD class=\" fieldcontrol \">"
-			+ "</TD>"
+		s += "<TD class=\" fieldlabel \">\n</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
+			+ "</TD>\n"
 		;
 
 		s += "<TR>";
-		s += "<TD></TD>";
-		s += "<TD class=\" fieldcontrol \">";
+		s += "<TD>\n</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n";
 		s += "<input type=button value=\"Test map link\"\n" 
 		+ " onClick=\"testMapLink();\"\n"
 		+ ">\n"
 	    ;
-		s += "</TD>";
-		s += "<TD class=\" fieldlabel \"><B>Fax:</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldcontrol \">"
+		s += "</TD>\n";
+		s += "<TD class=\" fieldlabel \">\n<B>Fax:</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldcontrol \">\n"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToFax + "\""
 			+ " VALUE=\"" + entry.getM_sShipToFax().replace("\"", "&quot;") + "\""
 			+ " id = \"" + SMOrderHeader.ParamsShipToFax + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToFaxLength)	
-			+ "</TD>";
-		s += "</TR>";
+			+ "</TD>\n";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Phone:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToPhone + "\""
 			+ " VALUE=\"" + entry.getM_sShiptoPhone().replace("\"", "&quot;") + "\""
@@ -1854,9 +1854,9 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToPhoneLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "<TD class=\" fieldlabel \">&nbsp;&nbsp;<B>2nd phone:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n&nbsp;&nbsp;<B>2nd phone:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
 			+ " VALUE=\"" + entry.getM_ssecondaryshiptophone().replace("\"", "&quot;") + "\""
@@ -1865,15 +1865,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondaryshiptophoneLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		
 
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Contact:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Contact:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToContact + "\""
@@ -1883,12 +1883,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToContactLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Email:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Email:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " 
 			+ Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramsshiptoemail + "\""
@@ -1898,12 +1898,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " SIZE=" + "35"
 			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sshiptoemailLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Close the table:
-		s += "</TABLE style=\" title:ENDCustomerShipTo; \">\n";
+		s += "</TABLE style=\" title:ENDCustomerShipTo; \">\n\n";
 		return s;
 	}
 	private String createOrderSettings2Table(
@@ -1922,11 +1922,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 		}
 		
 		//Create the table:
-		s += "<TABLE class = \" innermost \" style=\" title:OrderSettings; \">\n";
+		s += "<TABLE class = \" innermost \" style=\" title:OrderSettings; \">\n\n";
 		
 		//Wage scale check box
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Wage scale?</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Wage scale?</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=CHECKBOX ";
 		if (entry.getM_sSpecialWageRate().compareToIgnoreCase("T") == 0){
@@ -1936,14 +1936,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " id = \"" + SMOrderHeader.ParamsSpecialWageRate + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " width=0.25>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "<TD>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD>\n&nbsp;</TD>\n";
+		s += "</TR>\n";
 		
 		//Carpenter rate
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Carpenter rate:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Carpenter rate:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramscarpenterrate + "\""
 			+ " VALUE=\"" + entry.getM_scarpenterrate().replace("\"", "&quot;") + "\""
@@ -1952,14 +1952,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= " + Integer.toString(SMTableorderheaders.scarpenterrateLength)
 			+ ">"
-			+ "</TD>";
+			+ "</TD>\n";
 		
-		s += "<TD>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD>\n&nbsp;</TD>\n";
+		s += "</TR>\n";
 		
 		//Laborer rate
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Laborer rate:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Laborer rate:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramslaborerrate + "\""
 			+ " VALUE=\"" + entry.getM_slaborerrate().replace("\"", "&quot;") + "\""
@@ -1968,14 +1968,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= " + Integer.toString(SMTableorderheaders.slaborerrateLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "<TD>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD>\n&nbsp;</TD>\n";
+		s += "</TR>\n";
 
 		//Electrician rate
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Electrician rate:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Electrician rate:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramselectricianrate + "\""
 			+ " VALUE=\"" + entry.getM_selectricianrate().replace("\"", "&quot;") + "\""
@@ -1984,14 +1984,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= " + Integer.toString(SMTableorderheaders.selectricianrateLength)
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
-		s += "<TD>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD>\n&nbsp;</TD>\n";
+		s += "</TR>\n";
 		//Wage scale notes:
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \" ><B>Wage scale notes:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \" ><B>Wage scale notes:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN = " + Integer.toString(iNumberOfColumns - 1) + ">"
 			+ "<TEXTAREA NAME=\"" + SMOrderHeader.Paramswagescalenotes + "\""
 			+ " rows=\"" + Integer.toString(iTextAreaRows) + "\""
@@ -2001,12 +2001,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getM_swagescalenotes().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "<BR></TD>"
+			+ "<BR></TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Close the table:
-		s += "</TABLE style=\" title:ENDOrderSettings; \">\n";
+		s += "</TABLE style=\" title:ENDOrderSettings; \">\n\n";
 		return s;
 	}
 	private String createProjectFieldsTable(
@@ -2015,16 +2015,16 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String s = "";
 
 		//Create the table:
-		s += "<TABLE class = \" innermost \" style=\" title:ProjectFields; \">\n";
+		s += "<TABLE class = \" innermost \" style=\" title:ProjectFields; \">\n\n";
 		
 		s += "<TR>"
-				+ "<TD><BR></TD><TD></TD>"
-				+ "<TD></TD><TD></TD>"
-		+ "</TR>";
+				+ "<TD>\n<BR></TD>\n<TD>\n</TD>\n"
+				+ "<TD>\n</TD>\n<TD>\n</TD>\n"
+		+ "</TR>\n";
 		
 		//Total contract amount
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Base contract:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Base contract:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Parambdtotalcontractamount + "\""
 			+ " VALUE=\"" + entry.getM_bdtotalcontractamount().replace("\"", "&quot;") + "\""
@@ -2033,11 +2033,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= 14"
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
 		//Total MU
-		s += "<TD class=\" fieldlabel \"><B>Total MU:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Total MU:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Parambdtotalmarkup + "\""
 			+ " VALUE=\"" + entry.getM_bdtotalmarkup().replace("\"", "&quot;") + "\""
@@ -2046,13 +2046,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= 14"
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Truck days
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Truck days:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Truck days:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Parambdtruckdays + "\""
 			+ " VALUE=\"" + entry.getM_bdtruckdays().replace("\"", "&quot;") + "\""
@@ -2061,12 +2061,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= 14"
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 
 		
 		//Warranty expiration
-		s += "<TD class=\" fieldlabel \"><B> Warranty expiration:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B> Warranty expiration:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >" 
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramdatwarrantyexpiration + "\""
 			+ " VALUE=\"" + entry.getM_datwarrantyexpiration().replace("\"", "&quot;") + "\""
@@ -2077,13 +2077,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".45" + " in; height: 0.25in\""
 			+ ">"
 			+ SMUtilities.getDatePickerString(SMOrderHeader.Paramdatwarrantyexpiration, getServletContext())
-			+ "</TD>"
+			+ "</TD>\n"
 			;
-		s += "</TR>";	
+		s += "</TR>\n";	
 		
 		//Estimated hrs.
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">Estimated hrs:&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\nEstimated hrs:&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >";
 		s += "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamdEstimatedHour + "\""
 			+ " VALUE=\"" + entry.getM_dEstimatedHour().replace("\"", "&quot;") + "\""
@@ -2092,11 +2092,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".90" + " in; height: 0.25in\""
 			+ " MAXLENGTH= 10"
 			+ ">"
-			+ "</TD>";
+			+ "</TD>\n";
 		;
 		
 		//Sales Lead ID
-		s += "<TD class=\" fieldlabel \"><B>" + SMBidEntry.ParamObjectName + " ID:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>" + SMBidEntry.ParamObjectName + " ID:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramlbidid + "\""
 			+ " VALUE=\"" + entry.getsBidID().replace("\"", "&quot;") + "\""
@@ -2105,13 +2105,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".45" + " in; height: 0.25in\""
 			+ " MAXLENGTH= " + "9"
 			+ ">"
-			+ "</TD>"
+			+ "</TD>\n"
 			;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Quote description
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \"><B>Quote description:</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \">\n<B>Quote description:</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" COLSPAN=3>"
 			+ "<TEXTAREA NAME=\"" + SMOrderHeader.Paramsquotedescription + "\""
 			+ " id = \"" + SMOrderHeader.Paramsquotedescription + "\""
@@ -2120,16 +2120,16 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + "90%;\""
 			+ " MAXLENGTH= " + SMTableorderheaders.squotedescriptionLength
 			+ ">" + entry.getsQuoteDescription().replace("\"", "&quot;") + "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>"
-				+ "<TD><BR></TD><TD></TD>"
-				+ "<TD></TD><TD></TD>"
-		+ "</TR>";
+				+ "<TD>\n<BR></TD>\n<TD>\n</TD>\n"
+				+ "<TD>\n</TD>\n<TD>\n</TD>\n"
+		+ "</TR>\n";
 		//Close the table:
-		s += "</TABLE style=\" title:ENDOProjectFields; \">\n";
+		s += "</TABLE style=\" title:ENDOProjectFields; \">\n\n";
 		return s;
 	}
 
@@ -2180,14 +2180,14 @@ public class SMEditOrderEdit  extends HttpServlet {
 				+ " SIZE=" + "100"
 				+ " MAXLENGTH=" + "254"
 				+ ">"
-				+ "</TD>"
+				+ "</TD>\n"
 			;
 		
 		//Internal notes
 		s += "<TR>";
-		s += "<TD class=\" fieldheading \" ><B>Internal notes</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldheading \" ><B>Work order notes</B>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD class=\" fieldheading \" ><B>Internal notes</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldheading \" ><B>Work order notes</B>&nbsp;</TD>\n";
+		s += "</TR>\n";
 		
 		s += "<TR>";
 		s += "<TD class=\" fieldcontrol \" >"
@@ -2199,7 +2199,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getM_mInternalComments().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
 		//Work order notes
@@ -2212,15 +2212,15 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getM_sTicketComments().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Invoice notes
 		s += "<TR>";
-		s += "<TD class=\" fieldheading \" ><B>Invoice notes (appears on invoice)</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldheading \" ><B>Directions</B>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD class=\" fieldheading \" ><B>Invoice notes (appears on invoice)</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldheading \" ><B>Directions</B>&nbsp;</TD>\n";
+		s += "</TR>\n";
 		
 		s += "<TR>";
 		s += "<TD class=\" fieldcontrol \" >"
@@ -2232,7 +2232,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getM_mInvoiceComments().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		
 		//Directions
@@ -2244,13 +2244,13 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getM_sDirections().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldheading \"><B>Invoicing instructions</B>&nbsp;</TD>";
-		s += "</TR>";
+		s += "<TD class=\" fieldheading \">\n<B>Invoicing instructions</B>&nbsp;</TD>\n";
+		s += "</TR>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<TEXTAREA NAME=\"" + SMOrderHeader.ParamsInvoicingNotes + "\""
 			+ " rows = \"" + Integer.toString(iRows) + "\""
@@ -2260,19 +2260,19 @@ public class SMEditOrderEdit  extends HttpServlet {
 		
 			+ ">" + entry.getM_sInvoicingNotes().replace("\"", "&quot;") 
 			+ "</TEXTAREA>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Convenience phrases:
 		s += "<TR><TD COLSPAN = " + Integer.toString(iNumberOfColumns) + ">";
 		
 		s +=
 			"\n<form name=cpform>\n"
-			+ "<input type=\"checkbox\" id=\"cbChoices\" onclick=\"exposeConveniencePhraseList()\">"
+			+ "<input type=\"checkbox\" id=\"cbChoices\" onclick=\"exposeConveniencePhraseList()\">\n"
 			+ "<B>Show convenience phrases<B>&nbsp;\n"
 		
-			+ "<div id= \"CPINSERTLABEL\" style=\"display:none;\"><B><I>Insert selected phrases into:"
+			+ "<div id= \"CPINSERTLABEL\" style=\"display:none;\">\n<B><I>Insert selected phrases into:"
 			+ "</I></B>&nbsp;"
 
 			+ "<input type=radio"
@@ -2305,10 +2305,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 		;
 			
 		s += "<div id=\"ScrollCB\" style=\"height:350;width:100%;background-color:" 
-				+ CONVENIENCEPHRASES_BG_COLOR + ";overflow:auto;border:1px solid blue;display:none\">\n"
+				+ CONVENIENCEPHRASES_BG_COLOR + ";overflow:auto;border:1px solid blue;display:none\">\n\n"
 		;
 		
-//		s += "<div style = \"width:100%;\">";
+//		s += "<div style = \"width:100%;\">\n";
 //		s += "<SELECT NAME=\"" + CONVENIENCEPHRASE_SELECT_NAME + "\"" + " SIZE=15>";
 		
 		String SQL = "SELECT * FROM " + SMTableconveniencephrases.TableName
@@ -2330,7 +2330,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 				+ Long.toString(rscps.getLong(SMTableconveniencephrases.lPhraseID)) + "\""
 				
 				+ " value=\"" + sCPText 
-				+ "\">" 
+				+ "\">\n" 
 				+ "<label name=\"" + CONVENIENCEPHRASECONTROL_MARKER 
 				+ Long.toString(rscps.getLong(SMTableconveniencephrases.lPhraseID)) + "\" for=\"" + CONVENIENCEPHRASECONTROL_MARKER 
 				+ Long.toString(rscps.getLong(SMTableconveniencephrases.lPhraseID)) + "\""
@@ -2345,11 +2345,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 		rscps.close();
 		//s += "</SELECT>";
 		s += "</div>";
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 
 		//Close the table:
 			
-		s += "</TABLE style=\" title:ENDOrderMemos; \">\n";
+		s += "</TABLE style=\" title:ENDOrderMemos; \">\n\n";
 		return s;
 	}
 	
@@ -2357,7 +2357,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		return "<button type=\"button\""
 			+ " value=\"" + RENAME_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + RENAME_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"renamefolder();\">"
+			+ " onClick=\"renamefolder();\">\n"
 			+ RENAME_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;
@@ -2372,7 +2372,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		return "<button type=\"button\""
 			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"" + sOnClickFunction + "\">"
+			+ " onClick=\"" + sOnClickFunction + "\">\n"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;
@@ -2389,7 +2389,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			){
 		String s = "";
 		
-		s += "<TR><TD>";
+		s += "<TR><TD>\n";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:OrderCommands; background-color: "
 			+ ORDERCOMMANDS_BG_COLOR + "; \" width=100% >\n";
@@ -2403,17 +2403,17 @@ public class SMEditOrderEdit  extends HttpServlet {
 							SMTableorderheaders.ORDERTYPE_QUOTE)) == 0){
 						s += " value=\"" + QUOTECREATE_BUTTON_LABEL + "\""
 						+ " name=\"" + QUOTECREATE_BUTTON_LABEL + "\""
-						+ " onClick=\"saveOrder();\">"
+						+ " onClick=\"saveOrder();\">\n"
 						+ QUOTECREATE_BUTTON_LABEL
 						+ "</button>\n";
 					}else{
 						s += " value=\"" + ORDERCREATE_BUTTON_LABEL + "\""
 						+ " name=\"" + ORDERCREATE_BUTTON_LABEL + "\""
-						+ " onClick=\"saveOrder();\">"
+						+ " onClick=\"saveOrder();\">\n"
 						+ ORDERCREATE_BUTTON_LABEL
 						+ "</button>\n";
 					}
-					s += "</TD></TR>";
+					s += "</TD>\n</TR>\n";
 				}else{
 					s += "<TR><TD style = \"text-align: left; \" >"
 						+ "<B><I>Go to:</I></B>"
@@ -2421,18 +2421,18 @@ public class SMEditOrderEdit  extends HttpServlet {
 						+ "<button type=\"button\""
 						+ " value=\"" + DETAILS_BUTTON_LABEL + "\""
 						+ " name=\"" + DETAILS_BUTTON_LABEL + "\""
-						+ " onClick=\"gotoDetails();\">"
+						+ " onClick=\"gotoDetails();\">\n"
 						+ DETAILS_BUTTON_LABEL
 						+ "</button>\n"
 						
 						+ "<button type=\"button\""
 						+ " value=\"" + TOTALS_BUTTON_LABEL + "\""
 						+ " name=\"" + TOTALS_BUTTON_LABEL + "\""
-						+ " onClick=\"gotoTotals();\">"
+						+ " onClick=\"gotoTotals();\">\n"
 						+ TOTALS_BUTTON_LABEL
 						+ "</button>\n"
 						
-						+ "</TD></TR>"
+						+ "</TD>\n</TR>\n"
 					;
 						
 					s += "<TR><TD style = \"text-align: left; \" >"
@@ -2441,7 +2441,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 						+ "<button type=\"button\""
 						+ " value=\"" + ORDERUPDATE_BUTTON_LABEL + "\""
 						+ " name=\"" + ORDERUPDATE_BUTTON_LABEL + "\""
-						+ " onClick=\"saveOrder();\">"
+						+ " onClick=\"saveOrder();\">\n"
 						+ ORDERUPDATE_BUTTON_LABEL
 						+ "</button>\n"
 						;
@@ -2453,7 +2453,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 							s += "<button type=\"button\""
 							+ " value=\"" + ORDERSERVICEWO_BUTTON_LABEL + "\""
 							+ " name=\"" + ORDERSERVICEWO_BUTTON_LABEL + "\""
-							+ " onClick=\"printServiceWorkOrder();\">"
+							+ " onClick=\"printServiceWorkOrder();\">\n"
 							+ ORDERSERVICEWO_BUTTON_LABEL
 							+ "</button>\n";
 							
@@ -2482,7 +2482,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 							s += "<button type=\"button\""
 							+ " value=\"" + ORDERITEMIZEDWO_BUTTON_LABEL + "\""
 							+ " name=\"" + ORDERITEMIZEDWO_BUTTON_LABEL + "\""
-							+ " onClick=\"printItemizedWorkOrder();\">"
+							+ " onClick=\"printItemizedWorkOrder();\">\n"
 							+ ORDERITEMIZEDWO_BUTTON_LABEL
 							+ "</button>\n"
 							;
@@ -2518,7 +2518,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 							s += "<button type=\"button\""
 							+ " value=\"" + ORDERINVOICE_BUTTON_LABEL + "\""
 							+ " name=\"" + ORDERINVOICE_BUTTON_LABEL + "\""
-							+ " onClick=\"createInvoice();\">"
+							+ " onClick=\"createInvoice();\">\n"
 							+ ORDERINVOICE_BUTTON_LABEL
 							+ "</button>\n"
 							;
@@ -2537,7 +2537,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 						s += "<button type=\"button\""
 							+ " value=\"" + PROPOSAL_BUTTON_LABEL + "\""
 							+ " name=\"" + PROPOSAL_BUTTON_LABEL + "\""
-							+ " onClick=\"proposal();return false;\">"
+							+ " onClick=\"proposal();return false;\">\n"
 							+ PROPOSAL_BUTTON_LABEL
 							+ "</button>\n";
 						;
@@ -2554,7 +2554,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 						s += "<button type=\"button\""
 							+ " value=\"" + ORDERCLONE_BUTTON_LABEL + "\""
 							+ " name=\"" + ORDERCLONE_BUTTON_LABEL + "\""
-							+ " onClick=\"cloneOrder();\">"
+							+ " onClick=\"cloneOrder();\">\n"
 							+ ORDERCLONE_BUTTON_LABEL
 							+ "</button>\n"
 							+ " <INPUT TYPE=CHECKBOX NAME='" + CLONEDETAILS_CHECKBOX + "'>Clone details"
@@ -2578,16 +2578,16 @@ public class SMEditOrderEdit  extends HttpServlet {
 						s += "<button type=\"button\""
 							+ " value=\"" + CHANGECUSTOMER_BUTTON_LABEL + "\""
 							+ " name=\"" + CHANGECUSTOMER_BUTTON_LABEL + "\""
-							+ " onClick=\"changeCustomer();\">"
+							+ " onClick=\"changeCustomer();\">\n"
 							+ CHANGECUSTOMER_BUTTON_LABEL
 							+ "</button>\n"
 						;
 					}
 				}
-		s += "</TD></TR>";
+		s += "</TD>\n</TR>\n";
 		//Close the table:
-		s += "</TABLE style=\" title:ENDOrderCommands; \">\n";
-		s += "</TD></TR>";
+		s += "</TABLE style=\" title:ENDOrderCommands; \">\n\n";
+		s += "</TD>\n</TR>\n";
 		return s;
 	}
 	private String sCommandScripts(SMOrderHeader order, SMMasterEditEntry smmaster) throws SQLException{
@@ -3352,12 +3352,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 				sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToCity).trim();
 				sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToState).trim();
 				sMapAddress	= sMapAddress.trim() + " " + rsOrder.getString(SMTableorderheaders.sShipToCountry).trim();
-				pwOut.println("<TD><FONT SIZE=2><B>Map: </B><A HREF=\"" 
+				pwOut.println("<TD>\n<FONT SIZE=2><B>Map: </B><A HREF=\"" 
 						+ SMUtilities.createGoogleMapLink(sMapAddress)
-						+ "\">"
+						+ "\">\n"
 						+ sMapAddress
 						+ "</A>" 
-						+ "</FONT></TD>");
+						+ "</FONT></TD>\n");
 		 */
 		s += "function testMapLink(){\n"
 			+ "    var sLinkAddress = '';\n"
@@ -3520,7 +3520,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String s = "";
 		String sBorderSize = "0";
 		String sRowHeight = "22px";
-		s += "<style type=\"text/css\">\n";
+		s += "<style type=\"text/css\">\n\n";
 		
 		//TJR - 5/13/2011 - I left all these comments in to use as samples here or elsewhere:
 		//Set hyperlink style:

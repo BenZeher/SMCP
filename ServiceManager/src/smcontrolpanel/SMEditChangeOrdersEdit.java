@@ -248,7 +248,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 			//if (arrChangeOrders.get(i).getM_iID().compareToIgnoreCase("-1") == 0){
 			//	bUnsavedLineExists = true;
 			//}
-			s += "<tr>";
+			s += "<TR>";
 
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamiID
 			+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -258,7 +258,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 			+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
 			+ "\" VALUE=\"" + arrChangeOrders.get(i).getM_sJobNumber().trim() + "\">";
 
-			s += "<td class=\"r\">";
+			s += "<TD class=\"r\">";
 			if (arrChangeOrders.get(i).getM_iID().trim().compareToIgnoreCase("-1") == 0){
 				s += "<INPUT TYPE=TEXT NAME=\"" 
 					+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdChangeOrderNumber 
@@ -276,9 +276,9 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ "\" VALUE=\"" + arrChangeOrders.get(i).getM_dChangeOrderNumber().trim() + "\">";
 				s += arrChangeOrders.get(i).getM_dChangeOrderNumber().trim();
 			}
-			s += "</td>";
+			s += "</TD>\n";
 
-			s += "<td class=\"l\">" 
+			s += "<TD class=\"l\">" 
 				+ "<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdatChangeOrderDate 
 				+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -290,10 +290,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ ">"
 				+ SMUtilities.getDatePickerString(CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdatChangeOrderDate 
 						+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6), getServletContext())
-						+ "</td>"
+						+ "</TD>\n"
 						;
 
-			s += "<td class=\"l\">" 
+			s += "<TD class=\"l\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamsDesc 
 				+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -303,10 +303,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + Integer.toString(SMTablechangeorders.sDescriptionLength)
 				+ " STYLE=\"width: " + "3.5" + " in; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdAmount 
 				+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -316,10 +316,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".8" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdTotalMarkUp
 				+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -329,10 +329,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".8" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdTruckDays
 				+ clsStringFunctions.PadLeft(Integer.toString(i + 1), "0", 6)
@@ -342,17 +342,17 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".7" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;				
 
 			//Put a 'delete' button here if it's a saved line:
 			if (arrChangeOrders.get(i).getM_iID().trim().compareToIgnoreCase("-1") != 0){
-				s += "<td class=\"l\">"
+				s += "<TD class=\"l\">"
 					+ "<INPUT TYPE=SUBMIT NAME='" 
 					+ DELETE_BUTTON_NAME_PREFIX + arrChangeOrders.get(i).getM_iID()
 					+ "' VALUE='" + DELETE_BUTTON_LABEL
 					+ "' >"
-					//+ "</td>"
+					//+ "</TD>\n"
 					//;
 					+ "&nbsp;<INPUT TYPE=CHECKBOX NAME=\"" + DELETE_CONFIRM_CHECKBOX_NAME 
 					+ arrChangeOrders.get(i).getM_iID()
@@ -366,7 +366,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 		if (!bUnsavedLineExists){
 			iNumberOfLines++;
 			//Add a line for an additional change order:
-			s += "<tr>";
+			s += "<TR>";
 			//We flag this unsaved line with a -1 ID:
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamiID
 			+ SMUtilities.PadLeft("", "0", 6)
@@ -376,7 +376,7 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 			+ SMUtilities.PadLeft("", "0", 6)
 			+ "\" VALUE=\"" + sOrderNum + "\">";
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdChangeOrderNumber 
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -386,10 +386,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "5"
 				+ " STYLE=\"width: " + ".4" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"l\">" 
+			s += "<TD class=\"l\">" 
 				+ "<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdatChangeOrderDate 
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -401,10 +401,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ ">"
 				+ SMUtilities.getDatePickerString(CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdatChangeOrderDate 
 						+ SMUtilities.PadLeft("", "0", 6), getServletContext())
-						+ "</td>"
+						+ "</TD>\n"
 						;
 
-			s += "<td class=\"l\">" 
+			s += "<TD class=\"l\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamsDesc 
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -414,10 +414,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + Integer.toString(SMTablechangeorders.sDescriptionLength)
 				+ " STYLE=\"width: " + "3.5" + " in; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdAmount 
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -427,10 +427,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".8" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdTotalMarkUp
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -440,10 +440,10 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".8" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;
 
-			s += "<td class=\"r\">" 
+			s += "<TD class=\"r\">" 
 				+"<INPUT TYPE=TEXT NAME=\"" 
 				+ CO_LINE_PARAM_PREFIX + SMChangeOrder.ParamdTruckDays
 				+ SMUtilities.PadLeft("", "0", 6)
@@ -453,11 +453,11 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 				+ " MAXLENGTH=" + "13"
 				+ " STYLE=\"width: " + ".7" + " in; text-align:right; height: 0.25in\""
 				+ ">"
-				+ "</td>"
+				+ "</TD>\n"
 				;				
 
-			s += "<td class=\"l\">&nbsp;</td>";
-			s += "</tr>";
+			s += "<TD class=\"l\">&nbsp;</TD>\n";
+			s += "</TR>\n";
 		}
 		*/
 		//Record the number of lines:
@@ -469,15 +469,15 @@ public class SMEditChangeOrdersEdit  extends HttpServlet {
 	}
 	private String printHeader(){
 		return
-		"<tr>"
-		+ "<td class=\"r\">CO #</TD>"
-		+ "<td class=\"l\">Date</TD>"
-		+ "<td class=\"l\">Description</TD>"
-		+ "<td class=\"r\">Amt.</TD>"
-		+ "<td class=\"r\">Total MU</TD>"
-		+ "<td class=\"r\">Truck days</TD>"
-		+ "<td class=\"l\">&nbsp;</TD>"
-		+ "</tr>"
+		"<TR>"
+		+ "<TD class=\"r\">CO #</TD>\n"
+		+ "<TD class=\"l\">Date</TD>\n"
+		+ "<TD class=\"l\">Description</TD>\n"
+		+ "<TD class=\"r\">Amt.</TD>\n"
+		+ "<TD class=\"r\">Total MU</TD>\n"
+		+ "<TD class=\"r\">Truck days</TD>\n"
+		+ "<TD class=\"l\">&nbsp;</TD>\n"
+		+ "</TR>\n"
 		;
 
 	}

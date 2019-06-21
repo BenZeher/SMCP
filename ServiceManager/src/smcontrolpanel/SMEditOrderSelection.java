@@ -186,7 +186,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				+ "&" + FinderResults.RESULT_FIELD_ALIAS + "7=CANCELEDDATE"
 				+ "&ResultHeading7=Canceled"
 				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\"> Find order</A>"
+				+ "\"> Find order</A>\n"
 
 				//Add EXTENDED order find:
 				+ "&nbsp;&nbsp;"
@@ -258,7 +258,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				+ "&ResultListField17="  + SMTableorderheaders.sOrderCreatedByFullName
 				+ "&ResultHeading17=Created%20By"
 				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\"> Find order (extended search)</A>"
+				+ "\"> Find order (extended search)</A>\n"
 				//Add order DETAIL find:
 				+ "&nbsp;&nbsp;"
 				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
@@ -324,7 +324,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				//+ "&ResultListField4="  + SMTablearcustomer.sPhoneNumber
 				//+ "&ResultHeading4=Phone"
 				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\"> Find quote</A>"
+				+ "\"> Find quote</A>\n"
 		
 				//Proposal finder:
 				+ "&nbsp;&nbsp;"
@@ -392,7 +392,7 @@ public class SMEditOrderSelection extends HttpServlet {
 					+ "&" + FinderResults.RESULT_FIELD_ALIAS + "16=CANCELEDDATE"
 				+ "&ResultHeading16=Canceled"
 				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\"> Find proposal</A>"
+				+ "\"> Find proposal</A>\n"
 				+ "</TD>");
 
 		out.println("</TR></TABLE>");

@@ -111,13 +111,13 @@ public class SMPrintJobFolderLabelGenerate extends HttpServlet {
 	    	}else{
 		    	//print folder label now
 		    	out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    	out.println("<TR>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Bill To</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=25%><U>" + rs.getString(SMTableorderheaders.sBillToName) + "</U></TD>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Order #</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><U>" + rs.getString(SMTableorderheaders.sOrderNumber) + "</U></TD>" + 
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Ship To</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=25%><U>" + rs.getString(SMTableorderheaders.sShipToName) + "</U></TD>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=10%><B>Salesman</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><U>" + rs.getString(SMTableorderheaders.sSalesperson) + "</U></TD>" + 
-		    					"<TD ALIGN=RIGHT VALIGN=TOP WIDTH=15%><B>Final Req.</B> <img src=\"./images/checkbox.jpg\"><BR><B>Wage Scale</B> <img src=\"./images/checkbox.jpg\"></TD>" +
-		    				"</TR>");
+		    	out.println("<TR>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Bill To</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=25%><U>" + rs.getString(SMTableorderheaders.sBillToName) + "</U></TD>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Order #</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><U>" + rs.getString(SMTableorderheaders.sOrderNumber) + "</U></TD>\n" + 
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><B>Ship To</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=25%><U>" + rs.getString(SMTableorderheaders.sShipToName) + "</U></TD>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=10%><B>Salesman</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=5%><U>" + rs.getString(SMTableorderheaders.sSalesperson) + "</U></TD>\n" + 
+		    					"<TD ALIGN=RIGHT VALIGN=TOP WIDTH=15%><B>Final Req.</B> <img src=\"./images/checkbox.jpg\"><BR><B>Wage Scale</B> <img src=\"./images/checkbox.jpg\"></TD>\n" +
+		    				"</TR>\n");
 		    	String sBTAddress;
 		    	String sSTAddress;
 		    	String sTaxTypeDesc;
@@ -243,37 +243,37 @@ public class SMPrintJobFolderLabelGenerate extends HttpServlet {
 	            }
 	            rsDetails.close();	
 	            	
-		    	out.println("<TR>" +
-						"<TD ALIGN=LEFT VALIGN=TOP><B>Bill To Address</B></TD><TD ALIGN=LEFT VALIGN=TOP>" + sBTAddress + "</TD>" +
-						"<TD ALIGN=LEFT VALIGN=TOP><B>Customer</B></TD><TD ALIGN=LEFT VALIGN=TOP><U>" + rs.getString(SMTableorderheaders.sCustomerCode) + "</U></TD>" + 
-						"<TD ALIGN=LEFT VALIGN=TOP><B>Ship To Address</B></TD><TD ALIGN=LEFT VALIGN=TOP>" + sSTAddress + "</TD>" +
-						"<TD ALIGN=LEFT VALIGN=TOP><B>Tax Class</B></TD><TD  ALIGN=LEFT VALIGN=TOP COLSPAN=2><U>" + sTaxTypeDesc + "</U></TD>" + 
-					"</TR>");
+		    	out.println("<TR>\n" +
+						"<TD ALIGN=LEFT VALIGN=TOP><B>Bill To Address</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP>" + sBTAddress + "</TD>\n" +
+						"<TD ALIGN=LEFT VALIGN=TOP><B>Customer</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP><U>" + rs.getString(SMTableorderheaders.sCustomerCode) + "</U></TD>\n" + 
+						"<TD ALIGN=LEFT VALIGN=TOP><B>Ship To Address</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP>" + sSTAddress + "</TD>\n" +
+						"<TD ALIGN=LEFT VALIGN=TOP><B>Tax Class</B></TD>\n<TD  ALIGN=LEFT VALIGN=TOP COLSPAN=2><U>" + sTaxTypeDesc + "</U></TD>\n" + 
+					"</TR>\n");
 		    	out.println("</TABLE><BR><BR>");
 		    	
 		    	out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    	out.println("<TR>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Bill To Contact</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=13%><U>" + rs.getString(SMTableorderheaders.sBillToContact) + "</U></TD>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=15%><B>Bill To Phone</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sBillToPhone) + "</U></TD>" + 
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Ship To Contact</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sShipToContact) + "</U></TD>" +
-		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Ship To Phone</B></TD><TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sShipToPhone) + "</U></TD>" + 
-		    				"</TR>");
-		    	out.println("<TR>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Bill To Fax</B></TD><TD><U>" + rs.getString(SMTableorderheaders.sBillToFax) + "</U></TD>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Ship To Fax</B></TD><TD><U>" + rs.getString(SMTableorderheaders.sShipToFax) + "</U></TD>" + 
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Email</B></TD><TD COLSPAN=3><U>" + rs.getString(SMTableorderheaders.sEmailAddress) + "</U></TD>" + 
-							"</TR>");
-		    	out.println("<TR>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Order Creation Date</B></TD><TD><U>" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.datOrderCreationDate)) + "</U></TD>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Order Created By</B></TD><TD><U>" + rs.getString(SMTableorderheaders.sOrderCreatedByFullName) + "</U></TD>" + 
-							"</TR>");
-		    	out.println("<TR><TD COLSPAN=8>&nbsp;</TD></TR>");
-		    	out.println("<TR>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Terms</B></TD><TD><U>" + rs.getString(SMTableorderheaders.sTerms) + "</U></TD>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Contract Amount</B></TD><TD><U>" + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdContractAmount) + "</U></TD>" + 
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Adv. Deposit</B></TD><TD><U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</U></TD>" +
-								"<TD ALIGN=LEFT VALIGN=TOP><B>Amout Due</B></TD><TD><U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</U></TD>" + 
-							"</TR>");
+		    	out.println("<TR>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Bill To Contact</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=13%><U>" + rs.getString(SMTableorderheaders.sBillToContact) + "</U></TD>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=15%><B>Bill To Phone</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sBillToPhone) + "</U></TD>\n" + 
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Ship To Contact</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sShipToContact) + "</U></TD>\n" +
+		    					"<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><B>Ship To Phone</B></TD>\n<TD ALIGN=LEFT VALIGN=TOP WIDTH=12%><U>" + rs.getString(SMTableorderheaders.sShipToPhone) + "</U></TD>\n" + 
+		    				"</TR>\n");
+		    	out.println("<TR>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Bill To Fax</B></TD>\n<TD>\n<U>" + rs.getString(SMTableorderheaders.sBillToFax) + "</U></TD>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Ship To Fax</B></TD>\n<TD>\n<U>" + rs.getString(SMTableorderheaders.sShipToFax) + "</U></TD>\n" + 
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Email</B></TD>\n<TD COLSPAN=3><U>" + rs.getString(SMTableorderheaders.sEmailAddress) + "</U></TD>\n" + 
+							"</TR>\n");
+		    	out.println("<TR>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Order Creation Date</B></TD>\n<TD>\n<U>" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.datOrderCreationDate)) + "</U></TD>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Order Created By</B></TD>\n<TD>\n<U>" + rs.getString(SMTableorderheaders.sOrderCreatedByFullName) + "</U></TD>\n" + 
+							"</TR>\n");
+		    	out.println("<TR>\n<TD COLSPAN=8>&nbsp;</TD>\n</TR>\n");
+		    	out.println("<TR>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Terms</B></TD>\n<TD>\n<U>" + rs.getString(SMTableorderheaders.sTerms) + "</U></TD>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Contract Amount</B></TD>\n<TD>\n<U>" + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdContractAmount) + "</U></TD>\n" + 
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Adv. Deposit</B></TD>\n<TD>\n<U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</U></TD>\n" +
+								"<TD ALIGN=LEFT VALIGN=TOP><B>Amout Due</B></TD>\n<TD>\n<U>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</U></TD>\n" + 
+							"</TR>\n");
 		    	out.println("</TABLE><BR>");
 		    	
 		    	printChangeOrderTable(out);
@@ -302,23 +302,23 @@ public class SMPrintJobFolderLabelGenerate extends HttpServlet {
 
 		out.println("<table class = \"parts\" width=100%>");
 		
-//		out.println("<tr><td COLSPAN=6 ALIGN=CENTER>"
-//			+ "Parts used / Additional Work Performed Items</td></tr>");
-		out.println("<tr><td  class = \"col1\"><U>C.O.#</U></td>");
-		out.println("<td  class = \"col2\"><U>C.O.Date</U></td>");
-		out.println("<td  class = \"col2\"><U>C.O.Amt.</U></td>");
-		out.println("<td  class = \"col2\"><U>Accmulated Total</U></td>");
-		out.println("<td  class = \"col2\"><U>Inv. Date</U></td>");
-		out.println("<td  class = \"col2\"><U>Inv.#</U></td>");
-		out.println("<td  class = \"col2\"><U>Amt. Invoiced</U></td>");
-		out.println("<td  class = \"col2\"><U>Total Billed</U></td></tr>");
+//		out.println("<TR>\n<TD COLSPAN=6 ALIGN=CENTER>"
+//			+ "Parts used / Additional Work Performed Items</TD>\n</TR>\n");
+		out.println("<TR>\n<TD  class = \"col1\"><U>C.O.#</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>C.O.Date</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>C.O.Amt.</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>Accmulated Total</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>Inv. Date</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>Inv.#</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>Amt. Invoiced</U></TD>\n");
+		out.println("<TD  class = \"col2\"><U>Total Billed</U></TD>\n</TR>\n");
 
 		for (int i = 0; i < 15; i++){
-			out.println("<tr>");
+			out.println("<TR>\n");
 			for (int j = 0; j < 8; j++){
-				out.println("<td class = \"blankcol\" >&nbsp;</td>");
+				out.println("<TD class = \"blankcol\" >&nbsp;</TD>\n");
 			}
-			out.println("</tr>");
+			out.println("</TR>\n");
 		}
 		
 		out.println("</table>");

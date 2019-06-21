@@ -38,7 +38,7 @@ public class ICPOUnpostedInvoiceReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "PO Invoice #" + sHeadingPadding + "</TD>\n"
 
@@ -98,7 +98,7 @@ public class ICPOUnpostedInvoiceReport {
 				sInvoiceID = Long.toString(
 						rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 				String sInvoiceIDLink = getLink(sInvoiceID, context, sDBID, sCallingClass);
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW + " \" >\n";
 				s += "    <TD class = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 

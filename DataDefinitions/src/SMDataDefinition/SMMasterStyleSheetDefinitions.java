@@ -51,4 +51,15 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "rightjustifiedcellnoborderbold";
 	public static final String TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "centerjustifiedcellnoborderbold";
 	
+	//Table Row Condensed
+	public static final String TABLE_HEADING = TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE;
+	public static final String TABLE_SUB_HEADING = TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY;
+	public static final String TABLE_TOTALS_HEADING = TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE;
+	public static final String TABLE_BREAK = TABLE_ROW_BACKGROUNDCOLOR_BLACK;
+	public static final String TABLE_ROW = TABLE_ROW_BACKGROUNDCOLOR_WHITE;
+	public static final String TABLE_ROW_ODD = TABLE_ROW_BACKGROUNDCOLOR_WHITE;
+	public static final String TABLE_ROW_EVEN = TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE;
+	public static final String TABLE_TOTAL = TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN;
+	
+	
 }

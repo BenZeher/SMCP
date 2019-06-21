@@ -37,7 +37,7 @@ public class ICPOUnpostedReceiptsReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Receipt #" + sHeadingPadding
 			+ "</TD>\n"
@@ -102,7 +102,7 @@ public class ICPOUnpostedReceiptsReport {
 						rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
 				String sPOIDLink = getLinkPO(sPOID, context, sDBID, sCallingClass);
 				String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW
 						+ " \" >\n";
 				s += "    <TD class = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"

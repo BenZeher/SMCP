@@ -516,21 +516,21 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 		       + " onLoad=\"window.location='#LastEdit'\""
 		       + ">"
 		       + "<TABLE BORDER=0 WIDTH=100%>"
-		       + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>"
+		       + "<TR>\n<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>"
 		       + "<FONT COLOR=RED><B>" + clsDateAndTimeConversions.nowStdFormatWithSeconds() + "</B></FONT>" 
 		       + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMViewTruckScheduleGenerate") 
-		       + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
-		       + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
-		       + "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>"
-		       + "<TR><TD COLSPAN=2><FONT SIZE=2>" + sLegend + "</FONT></TD></TR>");
+		       + "</FONT></TD>\n<TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD>\n</TR>\n"
+		       + "<TR>\n<TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD>\n</TR>\n"
+		       + "<TR>\n<TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD>\n</TR>\n"
+		       + "<TR>\n<TD COLSPAN=2><FONT SIZE=2>" + sLegend + "</FONT></TD>\n</TR>\n");
 					   
-	    	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	    	out.println("<TD>\n<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
 		    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMViewTruckSchedules) 
 		    		+ "\">Summary</A><BR>");
 
-		    out.println("</TD></TR></TABLE>");
+		    out.println("</TD>\n</TR>\n</TABLE>");
 		    		    
 			if (sReturnWarning.compareToIgnoreCase("") != 0){
 				out.println("<B><FONT COLOR=\"RED\">WARNING: " + sReturnWarning + "</FONT></B><BR>");

@@ -20,6 +20,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMInvoicePrinter;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableorderheaders;
@@ -144,7 +145,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				}	
 			}
 		}
-
+		out.println(SMUtilities.getMasterStyleSheetLink());
 		//Check to see if we are printing or e-mailing the invoices
 		//If we are going to print the invoices	 
 		if(clsManageRequestParameters.get_Request_Parameter(sParamPrintButtonName, request)
@@ -611,9 +612,9 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				}
 
 				if(bIsRowOdd){
-					sRowColor = " bgcolor=\"#DCDCDC\" ";
+					sRowColor = " class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" ";
 				}else{
-					sRowColor = "";
+					sRowColor = " class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" ";
 				}
 				
 				String sChecked = "";

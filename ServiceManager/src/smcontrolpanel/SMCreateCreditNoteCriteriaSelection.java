@@ -66,8 +66,8 @@ public class SMCreateCreditNoteCriteriaSelection extends HttpServlet {
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='smcontrolpanel.SMCreateCreditNoteCriteriaSelection'>");
     	out.println("<TABLE CELLPADDING=10 BORDER=1>");
     	
-    	out.println("<TR><TD ALIGN=CENTER><H3>Invoice Number </H3></TD>");
-    	out.println("<TD>" + clsCreateHTMLFormFields.TDTextBox(
+    	out.println("<TR>\n<TD ALIGN=CENTER><H3>Invoice Number </H3></TD>");
+    	out.println("<TD>\n" + clsCreateHTMLFormFields.TDTextBox(
 							"INVOICENUMBER", 
 							clsManageRequestParameters.get_Request_Parameter("INVOICENUMBER", request), 
 							10, 
@@ -99,8 +99,8 @@ public class SMCreateCreditNoteCriteriaSelection extends HttpServlet {
 	    				//+ "&ResultListField4="  + SMTablearcustomer.sPhoneNumber
 	    				//+ "&ResultHeading4=Phone"
 	    				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    				+ "\"> Find invoice</A>" +
-    	"</TD></TR>");
+	    				+ "\">\nFind invoice</A>" +
+    	"</TD>\n</TR>");
     	    	
     	out.println("</TABLE>");
     	

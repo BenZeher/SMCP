@@ -11,7 +11,7 @@ public class clsCreateHTMLFormFields {
 
 	public static String TDTextBox(String sName, String sValue, int iSize, int iMaxLength, String sDesc){
 	
-		String s = "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc;
+		String s = "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc + "\n";
 		//System.out.println(s);
 		return s;
 	}

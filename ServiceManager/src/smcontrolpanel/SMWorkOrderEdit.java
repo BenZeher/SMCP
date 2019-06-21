@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ConnectionPool.WebContextParameters;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
@@ -268,7 +269,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			throw new Exception(e.getMessage());
 		}
 		pwOut.println("</FORM>");
-		pwOut.println(" <script src=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js\" integrity=\"sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM\" crossorigin=\"anonymous\"></script>\n");
+		pwOut.println("");
 	}
 	
 	private String getEditHTML(SMMasterEditEntry sm, SMWorkOrderHeader wo_entry, String sObjectName, boolean bUseGoogleDrivePicker) throws Exception{
@@ -2841,24 +2842,24 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 
 		s += "<div class=\"row flex-md-nowrap\">";
-		s += "<div style=\"white-space: nowrap;\" class=\"col p-1 d-none d-md-block\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "</div>";
-		s +=  "<div class=\"col p-1\"><b>Scheduled:</b>&nbsp;" + "" + workorder.getsscheduleddate() + "</div>"
+		s += "<div style=\"white-space: nowrap;\" class=\"col-md p-1 d-none d-md-block\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "</div>";
+		s +=  "<div class=\"col-md p-1\"><b>Scheduled:</b>&nbsp;" + "" + workorder.getsscheduleddate() + "</div>"
 			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramscheduleddate+ "\" value=\"" + workorder.getsscheduleddate() + "\">"
 				
-			+ "<div class=\"col p-1\"><b>Posted?:</b>&nbsp;" + sPosted + "</div>"
+			+ "<div class=\"col-md p-1\"><b>Posted?:</b>&nbsp;" + sPosted + "</div>"
 				
-			+ "<div class=\"col p-1\"><b>Imported?:</b>&nbsp;" + sImported + "</div>"
+			+ "<div class=\"col-md p-1\"><b>Imported?:</b>&nbsp;" + sImported + "</div>"
 
-			+ "<div class=\"col p-1\"><b>Order&nbsp;#:</b>&nbsp;" + sOrderNumber + "</div>"
-			+ "<div class=\"col p-1\"><b>Terms:</b>&nbsp;" + orderheader.getM_sTerms() + "</div>"
-			+ "<div style= \"white-space: nowrap;\" class=\"col p-1\"><b>Sales&nbsp;#:</b>&nbsp;" + orderheader.getM_sSalesperson() + "-" + sSalespersonName + "</div>"
-			+ "<div class=\"col p-1\"><b>wage&nbsp;rate:</b>&nbsp;" + orderheader.getM_sSpecialWageRate() + "</div>";
+			+ "<div class=\"col-md p-1\"><b>Order&nbsp;#:</b>&nbsp;" + sOrderNumber + "</div>"
+			+ "<div class=\"col-md p-1\"><b>Terms:</b>&nbsp;" + orderheader.getM_sTerms() + "</div>"
+			+ "<div style= \"white-space: nowrap;\" class=\"col-md p-1\"><b>Sales&nbsp;#:</b>&nbsp;" + orderheader.getM_sSalesperson() + "-" + sSalespersonName + "</div>"
+			+ "<div class=\"col-md p-1\"><b>wage&nbsp;rate:</b>&nbsp;" + orderheader.getM_sSpecialWageRate() + "</div>";
 		//Starting time:
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Starting time:</b>&nbsp;" + workorder.getsstartingtime() + "</div>"
+		s += "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Starting time:</b>&nbsp;" + workorder.getsstartingtime() + "</div>"
 		+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsstartingtime+ "\" value=\"" + workorder.getsstartingtime() + "\">";
 
 		//Assistant:
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Assistant:</b>&nbsp;" + workorder.getsassistant() + "</div>"
+		s += "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Assistant:</b>&nbsp;" + workorder.getsassistant() + "</div>"
 			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramsassistant+ "\" value=\"" + workorder.getsassistant() + "\">";
 
 		
@@ -2866,22 +2867,22 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 		
 		s += "<div class=\"row flex-md-nowrap\">";
-		s += "<div style= \"white-space:nowrap;\" class=\"col p-1\"><b>Bill&nbsp;to:&nbsp;</b>" + orderheader.getM_sBillToName() + "</div>";
+		s += "<div style= \"white-space:nowrap;\" class=\"col-md p-1\"><b>Bill&nbsp;to:&nbsp;</b>" + orderheader.getM_sBillToName() + "</div>";
 		
 
 		
-		s += "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() + "</div><div style=\"white-space:nowrap;\" class=\"col\">"
+		s += "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() 
 			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress.replace("<br>", "")) + "\">" + sMapAddress.replace("<br>", "") + "</A>"
 			+ "</div>"
 			
 			//Ship to contact:
-			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Contact:</b>&nbsp;" + orderheader.getM_sShiptoContact() + "</div>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Contact:</b>&nbsp;" + orderheader.getM_sShiptoContact() + "</div>"
 
 			//Ship to phone:
-			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>Phone:</b>&nbsp;" + orderheader.getM_sShiptoPhone() + "</div>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Phone:</b>&nbsp;" + orderheader.getM_sShiptoPhone() + "</div>"
 		
 			//Second phone:
-			+ "<div style=\"white-space:nowrap;\" class=\"col p-1\"><b>2nd Phone:</b>&nbsp;" + orderheader.getM_ssecondaryshiptophone() + "</div>"
+			+ "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>2nd Phone:</b>&nbsp;" + orderheader.getM_ssecondaryshiptophone() + "</div>"
 			;
 		//Close the table:
 		s += "</div>\n";
@@ -2902,10 +2903,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		+ SMUtilities.faviconLink()
 		//This line should keep the font widths 'screen' wide:
 		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0 maximum-scale=1\" />"
+		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
 		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
 		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
-		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
 		+ "</HEAD>\n" 
 		+ "<BODY"
 		+ " style=\"font-family: " + sfontfamily + " !important; background-color:" +sbackgroundcolor + " !important; \""
@@ -2939,6 +2940,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "</NOSCRIPT>\n"
 		;
 
+ 
 		s += "<script type='text/javascript'>\n";
 
 		s += "function initShortcuts() {\n";
@@ -3546,7 +3548,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 	private String sStyleScripts(){
 		String s = "";
 		String sBorderSize = "0";
-		String sRowHeight = "22px";
+		String sRowHeight = "22px";				
 		s += "<style type=\"text/css\">\n";
 		
 		//Layout table:
@@ -3770,7 +3772,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//The value of sValue should look something like this: "12/1/2010 03:59 PM"
 		String sDatePortion = sValue.substring(0, sValue.indexOf(" ")).trim();
 		String sTimePortion = sValue.substring(sValue.indexOf(" "), sValue.length()).trim();
-	
+
 		String s = "<INPUT TYPE=TEXT NAME=\"" + sDateFieldName + "\"";
 		s += " VALUE=\"" + sDatePortion + "\"";
 		s += " onchange=\"flagDirty();\"";

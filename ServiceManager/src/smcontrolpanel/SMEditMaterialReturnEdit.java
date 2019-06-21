@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMMaterialReturn;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablematerialreturns;
 import ServletUtilities.clsServletUtilities;
 import smap.APVendor;
@@ -70,7 +71,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 	    }
 	    
 	    smedit.printHeaderTable();
-	    
+	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    //smedit.getPWOut().println(getJavascript());
 	    
 	    //Add a link to return to the original URL:
@@ -106,18 +107,18 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		//If it's not a new entry:
 		if(entry.getslid().compareToIgnoreCase("-1")!=0){
-			s += "<TR><TD ALIGN=RIGHT><B>Material Return ID</B>:</TD><TD><B>" 
+			s += "<TR>\n<TD ALIGN=RIGHT><B>Material Return ID</B>:</TD>\n<TD>\n<B>" 
 					+ sID 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramlid + "\" VALUE=\"" 
 					+ sID + "\">"
-					+ "</B></TD></TR>";
+					+ "</B></TD>\n</TR>\n";
 		//but if it IS a new entry:
 		}else{
-		s += "<TR><TD ALIGN=RIGHT><B>Material Return ID</B>:</TD><TD><B>" 
+		s += "<TR>\n<TD ALIGN=RIGHT><B>Material Return ID</B>:</TD>\n<TD>\n<B>" 
 			+ "(NEW)" 
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramlid + "\" VALUE=\"" 
 			+ entry.getslid() + "\">"
-			+ "</B></TD></TR>";
+			+ "</B></TD>\n</TR>\n";
 		}
 		
 		//Initiated by:
@@ -129,50 +130,50 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		if (entry.getsinitiatedbyfullname().trim().compareToIgnoreCase("") == 0){
 			entry.setsinitiatedbyfullname(sm.getFullUserName());
 		}
-		s += "<TR><TD ALIGN=RIGHT><B>Initiated by<B>:</TD>"
-			+ "<TD>" 
+		s += "<TR>\n<TD ALIGN=RIGHT><B>Initiated by<B>:</TD>\n"
+			+ "<TD>\n" 
 			+ sInitiatedByString 
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramdatinitiated + "\" VALUE=\"" + entry.getsdatinitiated() + "\">"
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramlinitiatedbyid + "\" VALUE=\"" + entry.getlinitiatedbyid() + "\">"
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramsinitiatedbyfullname + "\" VALUE=\"" + entry.getsinitiatedbyfullname() + "\">"
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "</TR>\n"
 		;
 		
 		//Work order ID:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Work order ID:"  + " </B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Work order ID:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiworkorderid + "\""
 			+ " VALUE=\"" + entry.getsworkorderid().replace("\"", "&quot;") + "\""
 			+ "SIZE=" + "13"
 			+ "MAXLENGTH=" + Integer.toString(13)
-			+ "></TD>"
-			+ "</TR>"
+			+ "></TD>\n"
+			+ "</TR>\n"
 		;
 
 		//Trimmed order number:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Order number:"  + " </B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Order number:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramstrimmedordernumber + "\""
 			+ " VALUE=\"" + entry.getstrimmedordernumber().replace("\"", "&quot;") + "\""
 			+ "SIZE=" + "13"
 			+ "MAXLENGTH=" + Integer.toString(SMTablematerialreturns.strimmedordernumberlength)
-			+ "></TD>"
-			+ "</TR>"
+			+ "></TD>\n"
+			+ "</TR>\n"
 		;
 
 		//Description:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Description: <FONT COLOR=RED>*Required*</FONT></B>"  + " </B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Description: <FONT COLOR=RED>*Required*</FONT></B>"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><TEXTAREA NAME=\"" + SMMaterialReturn.Paramsdescription + "\""
 			+"rows=\"" + "2" + "\""
 			+ " style = \" width: 100%; \""
 			+ ">" + entry.getsdescription().replace("\"", "&quot;") 
 			+ "</TEXTAREA>"
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "</TR>\n"
 		;
 
 		//Comments:
-		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Comments</B>:</TD>";
-		s += "<TD>"
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Comments</B>:</TD>\n";
+		s += "<TD>\n"
 			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammcomments + "\""
 			+ " rows=\"" + "3" + "\""
 			//+ " cols=\"" + Integer.toString(iCols) + "\""
@@ -180,8 +181,8 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ ">"
 			+ entry.getscomments().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "</TR>\n"
 		;
         
 		//Resolved?
@@ -197,27 +198,27 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		if (entry.getsresolved().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Resolved?" + "</B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Resolved?" + "</B></TD>\n";
 		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
-			+ " NAME=\"" + SMMaterialReturn.Paramiresolved + "\" width=0.25>&nbsp;" + sResolvedBy + "</TD>"
+			+ " NAME=\"" + SMMaterialReturn.Paramiresolved + "\" width=0.25>&nbsp;" + sResolvedBy + "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		//Resolution Comments:
-		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Resolution Comments</B>:</TD>";
-		s += "<TD>"
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Resolution Comments</B>:</TD>\n";
+		s += "<TD>\n"
 			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammresolutioncomments + "\""
 			+ " rows=\"" + "3" + "\""
 			+ " style = \" width: 100%; \""
 			+ ">"
 			+ entry.getsresolutioncomments().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "</TR>\n"
 		;
 		//Status Options
-		s += "<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>";
-		s += "<TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>\n";
+		s += "<TD>\n";
 		String sChecked = "";
 		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITNOTEXPECTED)) == 0){
 			sChecked = " checked ";
@@ -238,25 +239,25 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
 		
-		    s+= "</TD>"
-		    	+ "</TR>"
+		    s+= "</TD>\n"
+		    	+ "</TR>\n"
 		    ;
 		    		
 		//'Returned' section:
-		s += "<TR style = \" background-color: lightblue; \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD></TR>";
+		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
 		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sCheckBoxChecked = "";
 		}
-		s += "<TR><TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>\n";
 		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
-			+ " NAME=\"" + SMMaterialReturn.Paramitobereturned + "\" width=0.25></TD>"
-			+ "</TR>"
+			+ " NAME=\"" + SMMaterialReturn.Paramitobereturned + "\" width=0.25></TD>\n"
+			+ "</TR>\n"
 		;
 		
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramsvendoracct + "\""
 			+ " VALUE=\"" + entry.getsvendoracct().replace("\"", "&quot;") + "\""
 			+ "SIZE=" + "13"
@@ -274,18 +275,18 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			)
 			+ "\"> Find vendor</A>"
 			
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "</TR>\n"
 		;
 		
 		//Purchase order number:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
 			+ " VALUE=\"" + entry.getsponumber().replace("\"", "&quot;") + "\""
 			+ "SIZE=" + "13"
 			+ "MAXLENGTH= 10"
-			+ "></TD>"
-			+ "</TR>"
+			+ "></TD>\n"
+			+ "</TR>\n"
 		;
 		
 		s += "</TABLE>";

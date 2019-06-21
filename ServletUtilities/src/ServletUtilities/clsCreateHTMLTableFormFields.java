@@ -16,8 +16,8 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>/n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -30,10 +30,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=28";
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		sRow += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sRow += "></TD>";
+		sRow += "></TD>/n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>/n";
+		sRow += "</TR>/n";
 		return sRow;
 	
 	}
@@ -48,8 +48,8 @@ public class clsCreateHTMLTableFormFields {
 			String Javascript
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>/n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -62,10 +62,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=28";
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		sRow += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sRow += "></TD>";
+		sRow += "></TD>/n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>/n";
+		sRow += "</TR>/n";
 		return sRow;
 	
 	}
@@ -75,12 +75,12 @@ public class clsCreateHTMLTableFormFields {
 			String sLabel
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>/n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE= FILE NAME=\"" + sFieldName + "\">";
-		sRow += "</TD>";
-		sRow += "</TR>";
+		sRow += "</TD>/n";
+		sRow += "</TR>/n";
 		return sRow;
 	
 	}
@@ -96,8 +96,8 @@ public class clsCreateHTMLTableFormFields {
 			String sTextBoxWidth
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -110,10 +110,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=" + sTextBoxWidth;
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		//sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
-		sRow += "></TD>";
+		sRow += "></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -126,8 +126,8 @@ public class clsCreateHTMLTableFormFields {
 			String sTextBoxWidth
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -140,10 +140,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=" + sTextBoxWidth;
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		//sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
-		sRow += " disabled = true></TD>";
+		sRow += " disabled = true></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -158,8 +158,8 @@ public class clsCreateHTMLTableFormFields {
 			String sOnChange
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -173,10 +173,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		sRow += " ONCHANGE=\"" + sOnChange + "\"";
 		//sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
-		sRow += "></TD>";
+		sRow += "></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -190,8 +190,8 @@ public class clsCreateHTMLTableFormFields {
 			ServletContext context
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -208,10 +208,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += ">";
 		sRow += clsServletUtilities.getDatePickerString(sFieldName, context);
 	
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -226,8 +226,8 @@ public class clsCreateHTMLTableFormFields {
 			String sDefaultButtonValue
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 	
@@ -237,10 +237,10 @@ public class clsCreateHTMLTableFormFields {
 				sButtonValues, 
 				sDefaultButtonValue);
 	
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 
@@ -311,7 +311,7 @@ public class clsCreateHTMLTableFormFields {
 				+ "</TD>\n"
 			;
 			
-			s += "  </TR>\n";
+			s += "  </TR>\n\n";
 		}
 		s += "</TABLE>\n\n";
 		return s;
@@ -401,18 +401,18 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX";
 	
 		if (iValue == 1){
 			sRow += clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}
-		sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>";
+		sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 
@@ -424,8 +424,8 @@ public class clsCreateHTMLTableFormFields {
 			String sOnChange
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX ";
 	
@@ -433,10 +433,10 @@ public class clsCreateHTMLTableFormFields {
 			sRow += clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}
 		sRow += " NAME=\"" + sFieldName + "\" width=0.25"
-				+ " ONCHANGE=\"" + sOnChange + "\"></TD>";
+				+ " ONCHANGE=\"" + sOnChange + "\"></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 
@@ -449,8 +449,8 @@ public class clsCreateHTMLTableFormFields {
 			int iCols
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<TEXTAREA NAME=\"" + sFieldName + "\"";
@@ -462,10 +462,10 @@ public class clsCreateHTMLTableFormFields {
 		else{
 			sRow += "></TEXTAREA>";
 		}
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -480,8 +480,8 @@ public class clsCreateHTMLTableFormFields {
 			String onchange
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<TEXTAREA NAME=\"" + sFieldName + "\"";
@@ -494,10 +494,10 @@ public class clsCreateHTMLTableFormFields {
 		else{
 			sRow += "></TEXTAREA>";
 		}
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	
 	}
@@ -512,8 +512,8 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 		sRow += "<TD ALIGN=LEFT>&nbsp;<SELECT NAME = \"" + sFieldName + "\">";
 		for (int i = 0; i < sValues.size(); i++){
 			sRow += "<OPTION";
@@ -522,10 +522,10 @@ public class clsCreateHTMLTableFormFields {
 			}
 			sRow += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
 		}
-		sRow += "</SELECT></TD>";
+		sRow += "</SELECT></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 	
@@ -552,8 +552,8 @@ public class clsCreateHTMLTableFormFields {
 			int Width
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT WIDTH = \""+Width+"\"><B>" + sLabel + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT WIDTH = \""+Width+"\"><B>" + sLabel + " </B></TD>\n";
 		sRow += "<TD ALIGN=LEFT>&nbsp;<SELECT NAME = \"" + sFieldName + "\""
 				+ " ID = \"" + sFieldName + "\""
 				+ " ONCHANGE=\"" + sOnChange + "\">";
@@ -564,10 +564,10 @@ public class clsCreateHTMLTableFormFields {
 			}
 			sRow += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
 		}
-		sRow += "</SELECT></TD>";
+		sRow += "</SELECT></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 
@@ -596,9 +596,8 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark,
 			String sOnChange
 	){
-	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 		sRow += "<TD ALIGN=LEFT>&nbsp;<SELECT NAME = \"" + sFieldName + "\""
 				+ " ID = \"" + sFieldName + "\""
 				+ " ONCHANGE=\"" + sOnChange + "\">";
@@ -609,10 +608,10 @@ public class clsCreateHTMLTableFormFields {
 			}
 			sRow += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
 		}
-		sRow += "</SELECT></TD>";
+		sRow += "</SELECT></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
 		return sRow;
 	}
 

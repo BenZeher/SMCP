@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsServletUtilities;
@@ -63,23 +64,24 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    out.println(SMUtilities.getJQueryIncludeString());
 	    out.println(getJavascript());
+		out.println(SMUtilities.getMasterStyleSheetLink());
 	    
 		//If there is a warning from trying to input previously, print it here:
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
-			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
+			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>\n");
 		}
 		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 	    if (! sStatus.equalsIgnoreCase("")){
-			out.println("<B>STATUS: " + sStatus + "</B><BR>");
+			out.println("<B>STATUS: " + sStatus + "</B><BR>\n");
 		}
 	    
 	    //Print a link to the first page after login:
-	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	    out.println("<BR>\n<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to user login</A><BR>");
+				+ "\">Return to user login</A><BR>\n");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMSalesTaxReport) 
-	    		+ "\">Summary</A><BR><BR>");
+	    		+ "\">Summary</A><BR>\n<BR>\n");
 	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel." + sCalledClassName + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    try{
@@ -115,13 +117,13 @@ public class SMSalesTaxReportSelection extends HttpServlet {
         
 	    //First the starting and ending dates:
 	    pwOut.println("<TR"
-	    	+ " style=\"background-color:grey; color:white; \">"
-	    	+ "<TD>"
+	    	+ " class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+	    	+ "<TD>\n"
 			+ "<B>&nbsp;DATE RANGE</B>"
-			+ "</TD>"
-			+ "</TR>");
-	    pwOut.println("<TR>"
-	    	+ "<TD>"
+			+ "</TD>\n"
+			+ "</TR>\n");
+	    pwOut.println("<TR>\n"
+	    	+ "<TD>\n"
 	    	+ "Starting with date:&nbsp;"
 	    	+ clsCreateHTMLFormFields.TDTextBox(
 	    		STARTING_DATE_FIELD, 
@@ -141,17 +143,17 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 	    		""
 	    	)
 	    	+ SMUtilities.getDatePickerString(ENDING_DATE_FIELD, getServletContext())
-	    	+ "</TD>"
-	    	+ "</TR>"
+	    	+ "</TD>\n"
+	    	+ "</TR>\n"
 	    );
 	    
 	    //Next OPTIONALLY list the jurisdictions that can be selected as checkboxes:
 	    pwOut.println("<TR"
-		    	+ " style=\"background-color:grey; color:white; \">"
-		    	+ "<TD>"
+		    	+ " class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+		    	+ "<TD>\n"
 				+ "<B>&nbsp;TAX JURISDICTIONS</B>"
-				+ "</TD>"
-				+ "</TR>");
+				+ "</TD>\n"
+				+ "</TR>\n");
 	    ArrayList<String>arrTaxJurisdictionCheckboxes = new ArrayList<String>(0);
 	    
 	    String SQL = "SELECT"
@@ -194,22 +196,22 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 			rsTaxJurisdictions.close();
 		} catch (Exception e1) {
 			pwOut.println(
-				"<BR><B><FONT COLOR=RED>Error [1454965679] reading tax jurisdictions with SQL: '" 
-				+ SQL + "' - " + e1.getMessage() + "</FONT></B><BR>");
+				"<BR>\n<B><FONT COLOR=RED>Error [1454965679] reading tax jurisdictions with SQL: '" 
+				+ SQL + "' - " + e1.getMessage() + "</FONT></B><BR>\n");
 		}
-	    pwOut.println("<TR><TD>");
+	    pwOut.println("<TR>\n<TD>\n");
 	    pwOut.println(SMUtilities.Build_HTML_Table(2, arrTaxJurisdictionCheckboxes, 100, 1, true ,true));
-	    pwOut.println("</TD></TR>");
+	    pwOut.println("</TD>\n</TR>\n");
 	    
 	    //Next OPTIONALLY list the cost centers to be selected:
 	    pwOut.println("<TR"
-		    	+ " style=\"background-color:grey; color:white; \">"
-		    	+ "<TD>"
+		    	+ " class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+		    	+ "<TD>\n"
 				+ "<B>&nbsp;COST CENTERS</B>"
-				+ "</TD>"
-				+ "</TR>");
+				+ "</TD>\n"
+				+ "</TR>\n");
 	    
-	    pwOut.println("<TR><TD>");
+	    pwOut.println("<TR>\n<TD>\n");
 	    String sUseCostCenterIsChecked = "";
 	    String sDontUseCostCenterIsChecked = "";
 	    if (clsManageRequestParameters.get_Request_Parameter(USE_COST_CENTERS, req).compareToIgnoreCase(USE_COST_CENTERS_TRUE) == 0){
@@ -226,7 +228,7 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 	    	+ "Do NOT group by cost center (IGNORE cost centers and just include them all)"
 			+ "</LABEL>"
 	    );
-	    pwOut.println("</TD></TR>");
+	    pwOut.println("</TD>\n</TR>\n");
 	    
 	    ArrayList<String>arrCostCenterCheckboxes = new ArrayList<String>(0);
 	    
@@ -268,8 +270,8 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 			rsCostCenters.close();
 		} catch (Exception e1) {
 			pwOut.println(
-					"<BR><B><FONT COLOR=RED>Error [1454965680] reading cost centers with SQL: '" 
-					+ SQL + "' - " + e1.getMessage() + "</FONT></B><BR>");
+					"<BR>\n<B><FONT COLOR=RED>Error [1454965680] reading cost centers with SQL: '" 
+					+ SQL + "' - " + e1.getMessage() + "</FONT></B><BR>\n");
 		}
 		arrCostCenterCheckboxes.add(
 				(String) "<LABEL NAME='USECOSTCENTER(Unassigned)'>"
@@ -279,25 +281,25 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 				+ "\n"
 			);
 		
-	    pwOut.println("<TR><TD>");
+	    pwOut.println("<TR>\n<TD>\n");
 	    pwOut.println("&nbsp;"
 	    		+ "<LABEL NAME='LABELUSECOSTCENTERS'>"
 		    	+ "<input type=\"radio\" name=\"" + USE_COST_CENTERS + "\" value=\"" 
 				+ USE_COST_CENTERS_TRUE + "\"" + sUseCostCenterIsChecked + ">" 
 		    	+ "Include and group report by the selected cost centers below:"
 				+ "</LABEL>"
-		    	+ "<BR>"
+		    	+ "<BR>\n"
 		    );
 	    
 	    pwOut.println(SMUtilities.Build_HTML_Table(4, arrCostCenterCheckboxes, 100, 0, true ,true));
-	    pwOut.println("</TD></TR>");
+	    pwOut.println("</TD>\n</TR>\n");
 	    
 	    pwOut.println("<TR"
-		    	+ " style=\"background-color:grey; color:white; \">"
-		    	+ "<TD>"
+		    	+ " class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+		    	+ "<TD>\n"
 				+ "<B>&nbsp;DETAIL OPTIONS</B>"
-				+ "</TD>"
-				+ "</TR>");
+				+ "</TD>\n"
+				+ "</TR>\n");
 	    
         //Include individual invoice totals?
 	    String sDetailInvoiceLineIsChecked = " CHECKED ";
@@ -312,35 +314,35 @@ public class SMSalesTaxReportSelection extends HttpServlet {
 	    	sDetailSummaryOnlyIsChecked = " CHECKED ";
 	    }
 	    
-	    pwOut.println("<TR><TD>");
+	    pwOut.println("<TR>\n<TD>\n");
 	    pwOut.println("&nbsp;"
 	    	+ "<LABEL NAME='LABELSHOWINVOICELINES'>"
 	    	+ "<input ONCHANGE = \"visible();\" type=\"radio\" id = \"invoicechecked\" name=\"" + DETAIL_OPTIONS + "\" value=\"" 
 			+ DETAIL_OPTIONS_SHOW_INVOICE_LINES + "\"" + sDetailInvoiceLineIsChecked + ">" 
 	    	+ "List each invoice LINE"
 			+ "</LABEL>\n"
-	    	+ " <BR>\n"
+	    	+ " <BR>\n\n"
 	    	+ "<div  id = \"itemId\" >\n"
 	    	+ "&nbsp;&nbsp&nbsp;Enter the item number in the textbox if you want to view a particular item or leave it blank to view ALL items:"
 	    	+ "&nbsp;<input type = \"text\" name = \""+ENTER_ITEM_NUMBER_TEXTBOX+"\" id = \"textBoxId\" value = \"\">\n"
-	    	+ "<BR>"
+	    	+ "<BR>\n"
 	    	+ "&nbsp;&nbsp&nbsp;Enter the order number in the textbox if you want to view a particular order or leave it blank to view ALL orders:"
 	    	+ "&nbsp;<input type = \"text\" name = \""+ENTER_ORDER_NUMBER_TEXTBOX+"\" id = \"textBoxId\" value = \"\">\n"
-	    	+ "</div><BR>"
+	    	+ "</div><BR>\n"
 	    	+ "&nbsp;"
 	    	+ "<LABEL NAME = 'LABELSHOWTOTALSONLY'>"
 	    	+ "<input ONCHANGE = \"invisible();\" type=\"radio\" name=\"" + DETAIL_OPTIONS + "\" value=\"" 
 			+ DETAIL_OPTIONS_SHOW_TOTALS_ONLY + "\"" + sDetailSummaryOnlyIsChecked + ">" 
 	    	+ "Show summary only"
 			+ "</LABEL>"
-	    	+ "<BR>"
+	    	+ "<BR>\n"
 		    );
 	    	
-	    pwOut.println("</TD></TR>");
+	    pwOut.println("</TD>\n</TR>\n");
 	    
         pwOut.println("</TABLE>");
         
-        //pwOut.println("<BR>");
+        //pwOut.println("<BR>\n");
         pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitPrint' VALUE='Print' STYLE='height: 0.24in'></P>");
   
 	}

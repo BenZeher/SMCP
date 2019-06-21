@@ -16,8 +16,8 @@ public class clsCreateHTMLTableFormFields {
 			String sRemark
 	){
 	
-		String sRow = "<TR>/n";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -30,10 +30,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=28";
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		sRow += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sRow += "></TD>/n";
+		sRow += "></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>/n";
-		sRow += "</TR>/n";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n";
 		return sRow;
 	
 	}
@@ -48,8 +48,8 @@ public class clsCreateHTMLTableFormFields {
 			String Javascript
 	){
 	
-		String sRow = "<TR>/n";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -62,10 +62,10 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "SIZE=28";
 		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 		sRow += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sRow += "></TD>/n";
+		sRow += "></TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>/n";
-		sRow += "</TR>/n";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n";
 		return sRow;
 	
 	}
@@ -75,12 +75,12 @@ public class clsCreateHTMLTableFormFields {
 			String sLabel
 	){
 	
-		String sRow = "<TR>/n";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>/n";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += "<INPUT TYPE= FILE NAME=\"" + sFieldName + "\">";
-		sRow += "</TD>/n";
-		sRow += "</TR>/n";
+		sRow += "</TD>\n";
+		sRow += "</TR>\n";
 		return sRow;
 	
 	}

@@ -307,7 +307,7 @@ public class clsServletUtilities {
 			iFullColumns = iNumberOfColumns;
 		}
 
-		String sTable = "<TABLE BORDER = " + iBorderWidth + ">\n<TR>";
+		String sTable = "<TABLE BORDER = " + iBorderWidth + ">\n<TR>\n";
 		int iArrayCounter = 0;
 		try {
 			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
@@ -323,16 +323,16 @@ public class clsServletUtilities {
 				}
 				sTable = sTable + ">\n<TABLE BORDER=0 WIDTH=100%>";
 				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
-					sTable = sTable + "<TR><TD> " + sTableValues.get(iArrayCounter) + " </TD></TR>\n";
+					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n\n";
 					iArrayCounter++;
 				}
-				sTable = sTable + "</TABLE>\n</TD>";
+				sTable = sTable + "</TABLE>\n</TD>\n";
 			}
 		} catch (Exception e) {
 			sTable += "Error [1419007396] - " + e.getMessage();
 		}
 
-		sTable = sTable + "</TR>\n</TABLE>\n";
+		sTable = sTable + "</TR>\n\n</TABLE>\n";
 		return sTable;
 	} 
 
@@ -361,7 +361,7 @@ public class clsServletUtilities {
 			}
 
 			int iArrayCounter = 0;
-			sTable = sTable + "<TR>";
+			sTable = sTable + "<TR>\n";
 			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
 				int iLessRow;
 				if (iCol < iFullColumns){
@@ -375,32 +375,32 @@ public class clsServletUtilities {
 				}
 				sTable = sTable + "><TABLE BORDER=0 WIDTH=100%>";
 				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
-					sTable = sTable + "<TR><TD> " + sTableValues.get(iArrayCounter) + " </TD></TR>";
+					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
 					iArrayCounter++;
 				}
-				sTable = sTable + "</TABLE></TD>";
+				sTable = sTable + "</TABLE></TD>\n";
 			}
 
-			sTable = sTable + "</TR>";
+			sTable = sTable + "</TR>\n";
 		}else{
 			//find out total rows, including empty space:
 			int iArrayCounter = 0;
 			while (iArrayCounter < sTableValues.size()){
-				sTable = sTable + "<TR>";
+				sTable = sTable + "<TR>\n";
 				for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
 					sTable = sTable + "<TD VALIGN=TOP";
 					if (bEqualWidth){
 						sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
 					}
 					if (iArrayCounter < sTableValues.size()){
-						sTable = sTable + ">" + sTableValues.get(iArrayCounter) + " </TD>";
+						sTable = sTable + ">" + sTableValues.get(iArrayCounter) + " </TD>\n";
 					}else{
-						sTable = sTable + ">&nbsp;</TD>";
+						sTable = sTable + ">&nbsp;</TD>\n";
 					}
 					iArrayCounter++;
 					//System.out.println("iArrayCounter = " + iArrayCounter);
 				}
-				sTable = sTable + "</TR>";
+				sTable = sTable + "</TR>\n";
 			}
 		}
 		sTable = sTable + "</TABLE>";

@@ -18,14 +18,14 @@ public class clsCreateHTMLFormFields {
 
 	public static String TDTextBox(String sName, String sAlign, String sValue, int iSize, int iMaxLength, String sDesc){
 	
-		String s = "<INPUT TYPE=TEXT STYLE=\"TEXT-ALIGN: " + sAlign + "\" NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc;
+		String s = "<INPUT TYPE=TEXT STYLE=\"TEXT-ALIGN: " + sAlign + "\" NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc + "\n";
 		//System.out.println(s);
 		return s;
 	}
 	
 	public static String TDTextBox(String sName, String sValue, int iSize, int iMaxLength, String sDesc, String onFocus){
 		
-		String s = "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + " ONFOCUS=\"" + onFocus + "\">" + sDesc;
+		String s = "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + sValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + " ONFOCUS=\"" + onFocus + "\">" + sDesc + "\n";
 		//System.out.println(s);
 		return s;
 	}
@@ -43,7 +43,7 @@ public class clsCreateHTMLFormFields {
 				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
-		s = s + "</SELECT>";
+		s = s + "</SELECT>" + "\n";
 	
 		s = s + "Day <SELECT NAME=\"" + sName + "SelectedDay\">";
 		for (int i=1; i<=31;i++){
@@ -62,7 +62,7 @@ public class clsCreateHTMLFormFields {
 				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
-		s = s + "</SELECT>" + sDesc;	
+		s = s + "</SELECT>" + sDesc + "\n";	
 		//System.out.println(s);
 		return s;
 	}
@@ -85,7 +85,7 @@ public class clsCreateHTMLFormFields {
 				s = s + "\n<OPTION VALUE = " + i + ">" + i;
 			}
 		}
-		s = s + "</SELECT>";
+		s = s + "</SELECT>" + "\n";
 		s = s + "Minute <SELECT NAME=\"" + sName + "SelectedMinute\">";
 		for (int i=0; i<=59;i++){
 			if (i == iMinute){
@@ -112,14 +112,14 @@ public class clsCreateHTMLFormFields {
 			}
 		}
 	
-		s = s + "</SELECT>" + sDesc;	
+		s = s + "</SELECT>" + sDesc + "\n";	
 		//System.out.println(s);
 		return s;
 	}
 
 	public static String TDDoubleBox(String sName, double dValue, int iSize, int iMaxLength, String sDesc){
 	
-		String s =  "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + dValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc;
+		String s =  "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"" + dValue + "\" SIZE = " + iSize + " MAXLENGTH = " + iMaxLength + ">" + sDesc + "\n";
 		//System.out.println(s);
 		return s;
 	}
@@ -128,11 +128,11 @@ public class clsCreateHTMLFormFields {
 	
 		String s;
 		if (iValue == 1){
-			s = "<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=1 CHECKED>Yes<BR>" + 
-			"<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=0>No<BR>";
+			s = "<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=1 CHECKED>Yes<BR>" + "\n"  +
+			"<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=0>No<BR>" + "\n";
 		}else{
-			s = "<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=1>Yes<BR>" + 
-			"<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=0 CHECKED>No<BR>";;
+			s = "<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=1>Yes<BR>"  + "\n" + 
+			"<INPUT TYPE=\"RADIO\" NAME=\"" + sName + "\" VALUE=0 CHECKED>No<BR>" + "\n";;
 		}
 	
 		//System.out.println(s);
@@ -144,9 +144,9 @@ public class clsCreateHTMLFormFields {
 		String s = "";
 		s += "<LABEL NAME=CHKBOX>";
 		if (bChecked){
-			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1 CHECKED>" + sDesc + "<BR>";
+			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1 CHECKED>" + sDesc + "<BR>" + "\n";
 		}else{
-			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1>" + sDesc + "<BR>"; 
+			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1>" + sDesc + "<BR>" + "\n"; 
 		}
 		s += "<LABEL NAME=CHKBOX>";
 		//System.out.println(s);
@@ -162,7 +162,7 @@ public class clsCreateHTMLFormFields {
 		}else{
 			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1>" + sDesc; 
 		}
-		s += "</LABEL>\n";
+		s += "</LABEL>\n" + "\n";
 		//System.out.println(s);
 		return s;
 	}
@@ -176,13 +176,13 @@ public class clsCreateHTMLFormFields {
 			for (int i=0;i<alValues.size();i++){
 				s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
 			}
-			s = s + "</SELECT>";
+			s = s + "</SELECT>" + "\n";
 			//System.out.println(s);
 			return s;
 	
 		}else{
 			//arraylist sizes don't match, return a blank text box with the same name.
-			return "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"\">";
+			return "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"\">" + "\n";
 		}
 	}
 
@@ -199,7 +199,7 @@ public class clsCreateHTMLFormFields {
 				}
 				s = s  + "> " + (String)alTexts.get(i);
 			}
-			s = s + "</SELECT>";
+			s = s + "</SELECT>" + "\n";
 			//System.out.println(s);
 			return s;
 	
@@ -227,13 +227,13 @@ public class clsCreateHTMLFormFields {
 					s = s + "\n<OPTION VALUE=\"" + (String)alValues.get(i) + "\"> " + (String)alTexts.get(i);
 				}
 			}
-			s = s + "</SELECT>";
+			s = s + "</SELECT>" + "\n";
 			//System.out.println(s);
 			return s;
 	
 		}else{
 			//arraylist sizes don't match, return a blank text box with the same name.
-			return "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"\" SIZE = " + iSize + ">";
+			return "<INPUT TYPE=TEXT NAME=\"" + sName + "\" VALUE=\"\" SIZE = " + iSize + ">" + "\n";
 		}
 	}
 
@@ -241,7 +241,7 @@ public class clsCreateHTMLFormFields {
 	
 		String s = "<TEXTAREA NAME=\"" + sName + "\" ROWS=\"" + iRows + "\" COLS=\"" + iCols + "\">" + 
 		mNote + "</TEXTAREA>" + 
-		sDesc;
+		sDesc + "\n";
 		//System.out.println(s);
 		return s;
 	}
@@ -264,7 +264,7 @@ public class clsCreateHTMLFormFields {
 		s += " MAXLENGTH=10";
 		s += " STYLE=\"width: " + ".75" + " in; height: 0.25in\"";
 		s += ">";
-		s += clsServletUtilities.getDatePickerString(sFieldName, context);
+		s += clsServletUtilities.getDatePickerString(sFieldName, context) + "\n";
 		return s;
 	}
 
@@ -283,7 +283,7 @@ public class clsCreateHTMLFormFields {
 			}
 			sField += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString() + "\n";
 		}
-		sField += "</SELECT>";
+		sField += "</SELECT>" + "\n";
 	
 		return sField;
 	}
@@ -306,7 +306,7 @@ public class clsCreateHTMLFormFields {
 		}
 		//sField += "SIZE=28";
 		sField += " MAXLENGTH=" + Integer.toString(iFieldLength);
-		sField += ">";
+		sField += ">" + "\n";
 		//sField += " STYLE=\"width: 2.41in; height: 0.25in\"";
 		return sField;
 	

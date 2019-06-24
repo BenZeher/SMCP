@@ -28,7 +28,7 @@ public class APVendorTransactionsReport {
 		String sEndingVendor,
 		String sStartingVendorGroup,
 		String sEndingVendorGroup,
-		String sStartingDocNumber, 
+		String sStartingDocNumber,
 		boolean bIncludeCreditNotes,
 		boolean bIncludeDebitNotes,
 		boolean bIncludeInvoices,

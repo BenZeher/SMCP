@@ -178,8 +178,8 @@ public class APVendorTransactionsReport {
 				//Vendor range:
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " >= '" + sStartingVendor + "')"
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " <= '" + sEndingVendor + "')"
-				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " >= " + sStartingVendorGroup + "')"
-				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " <= " + sEndingVendorGroup + "')"
+				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " >= '" + sStartingVendorGroup + "')"
+				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " <= '" + sEndingVendorGroup + "')"
 				;
 		
 				//Starting document number:

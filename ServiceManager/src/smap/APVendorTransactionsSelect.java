@@ -228,12 +228,10 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		
 		out.println("  </TR>\n");
 		
-		ArrayList<String> sVendorGroupStarting = new ArrayList<String>(0);
-		ArrayList<String> sVendorGroupStartingNumber = new ArrayList<String>(0);
-		ArrayList<String> sVendorGroupEnding = new ArrayList<String>(0);
-		ArrayList<String> sVendorGroupEndingNumber = new ArrayList<String>(0);
+		ArrayList<String> sVendorGroups = new ArrayList<String>(0);
+		ArrayList<String> sVendorGroupNumbers = new ArrayList<String>(0);
 		
-		if (sStartingVendorGroup.compareToIgnoreCase("") == 0){
+		if ((sStartingVendorGroup.compareToIgnoreCase("") == 0) || (sEndingVendorGroup.compareToIgnoreCase("") == 0 )){
 			sSQL = "SELECT DISTINCT " 
 				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
 				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid
@@ -253,8 +251,8 @@ public class APVendorTransactionsSelect extends HttpServlet {
 					+ sUserFullName
 						);
 				while (rsVendors.next()){
-					sVendorGroupStarting.add(rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription));
-					sVendorGroupStartingNumber.add(rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid));
+					sVendorGroups.add(rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription));
+					sVendorGroupNumbers.add(rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid));
 				}
 				rsVendors.close();
 			} catch (SQLException e) {
@@ -262,44 +260,18 @@ public class APVendorTransactionsSelect extends HttpServlet {
 			}
 		}
 		
-		if (sEndingVendorGroup.compareToIgnoreCase("") == 0){
-			sSQL = "SELECT DISTINCT " 
-				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
-				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid
-				+ " FROM " + SMTableicvendors.TableName
-				+ " LEFT JOIN " +SMTableapvendorgroups.TableName + " ON " 
-				+  SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " = " 
-				+  SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid				
-				+ " ORDER BY " + SMTableapvendorgroups.lid + " DESC ";
-			try {
-				rsVendors = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".doPost (2) - User: " + sUserID
-					+ " - "
-					+ sUserFullName
-						);
-				while (rsVendors.next()){
-					sVendorGroupEnding.add(rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription));
-					sVendorGroupEndingNumber.add(rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid));
-				}
-				rsVendors.close();
-			} catch (SQLException e) {
-				out.println("Error [1561378776] loading ending vendor - " + e.getMessage());
-			}
-		}
 		
+		String sStartingGroupSelected = sVendorGroups.get(0);
+		String sEndingGroupSelected = sVendorGroupNumbers.get(sVendorGroupNumbers.size()-1);
 		
 		out.println("<TR>\n");
 		out.println("<TD ALIGN=RIGHT>" + "<B>Starting with Vendor Group:</B>&nbsp;</TD>\n"
 				+ "<TD ALIGN=LEFT>");
 		out.println(clsCreateHTMLFormFields.TDDropDownBox(
 				PARAM_STARTING_GROUP, 
-        		sVendorGroupStartingNumber,
-        		sVendorGroupStarting,
-        		"")
+				sVendorGroupNumbers,
+				sVendorGroups,
+        		sStartingGroupSelected)
         );
 		out.println("</TD></TR>\n");
 		out.println("<TR>\n");
@@ -307,9 +279,9 @@ public class APVendorTransactionsSelect extends HttpServlet {
 				+ "<TD ALIGN=LEFT>");
 		out.println(clsCreateHTMLFormFields.TDDropDownBox(
 				PARAM_ENDING_GROUP, 
-        		sVendorGroupEndingNumber,
-        		sVendorGroupEnding,
-        		"")
+				sVendorGroupNumbers,
+        		sVendorGroups,
+        		sEndingGroupSelected)
         );
 		out.println("</TD></TR>\n");
 		

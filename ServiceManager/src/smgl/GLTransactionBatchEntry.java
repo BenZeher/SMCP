@@ -597,6 +597,11 @@ public class GLTransactionBatchEntry {
 			GLTransactionBatchLine line = m_arrBatchEntryLines.get(i);
 			line.setsentrynumber(getsentrynumber());
 			line.setslinenumber(Integer.toString(i + 1));
+			
+			//IF there's no line description, use the Entry description:
+			if (line.getsdescription().compareToIgnoreCase("") == 0){
+				line.setsdescription(getsentrydescription());
+			}
 			try {
 				line.validate_fields(conn, bBatchIsBeingPosted);
 			} catch (Exception e) {

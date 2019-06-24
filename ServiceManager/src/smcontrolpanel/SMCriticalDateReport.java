@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
@@ -255,24 +256,19 @@ public class SMCriticalDateReport extends java.lang.Object{
 */	
 	private void printMultipleTypes(PrintWriter out, String sSQL, Connection conn, ServletContext context, String sDBID) throws Exception {
 		//printout column header
-				out.println("<TABLE WIDTH=100% cellspacing=0 cellpadding=1 style=\"border-collapse: collapse;\">");
-				out.println("<TR>");
+				out.println("<TABLE CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >\n");
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">\n ");
 				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>ID</B></FONT></TD>");
-				out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=3%><FONT SIZE=2><B>Type</B></FONT></TD>");
-				out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=3%><FONT SIZE=2><B>Responsible</B></FONT></TD>");
-				out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=3%><FONT SIZE=2><B>Assigned</B></FONT></TD>");
-				out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=2%><FONT SIZE=2><B>ID</B></FONT></TD>");
-				out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=3%><FONT SIZE=2><B>Date</B></FONT></TD>");
-				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=3%><FONT SIZE=2><B>Type</B></FONT></TD>");
-				out.println("<TD ALIGN=LEFT bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=29%><FONT SIZE=2><B>Comment</B></FONT></TD>");
-				
-				out.println("<TD ALIGN=LEFT bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=10%><FONT SIZE=2><B>Other Information</B></FONT></TD>");
-				//out.println("<TD ALIGN=LEFT bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=14%><FONT SIZE=2><B>Bill to Name</B></FONT></TD>");
-				//out.println("<TD ALIGN=LEFT bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=10%><FONT SIZE=2><B>Project Manager</B></FONT></TD>");
-				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=9%><FONT SIZE=2><B>Phone Number</B></FONT></TD>");
-				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=7%><FONT SIZE=2><B>Sales Lead </B></FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Type</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Responsible</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + "\"><B>Assigned</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + "\"><B>ID</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + "\"><B>Date</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Comment</B></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Other Information</B></TD>");
 				out.println("</TR>");
-				boolean bHasDetail = false;    //2
+				boolean bHasDetail = false;//2
+				out.println(SMUtilities.getMasterStyleSheetLink());
 				 int iCritCount = 0;
 				try{
 
@@ -280,22 +276,29 @@ public class SMCriticalDateReport extends java.lang.Object{
 					while(rs.next()){
 						bHasDetail = true;
 						iCritCount++;
-						out.println("<TR style=\"border-bottom: 1px solid black;\">");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>"  + SMTablecriticaldates.getTypeDescriptions(rs.getInt(SMTablecriticaldates.itype)) + "</FONT></TD>");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP nowrap><FONT SIZE=2>" + rs.getString((SMTablecriticaldates.sresponsibleuserfullname).replace("`", "")) + "</FONT></TD>");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP nowrap><FONT SIZE=2>" + rs.getString((SMTablecriticaldates.sassignedbyuserfullname).replace("`", "")) + "</FONT></TD>");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP nowrap><FONT SIZE=2>" + "<A HREF=\"" 
+						if(iCritCount%2 == 0) {
+							out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+						}else {
+							out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+						}
+
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"> "  + SMTablecriticaldates.getTypeDescriptions(rs.getInt(SMTablecriticaldates.itype)) + "</TD>");
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"> " + rs.getString((SMTablecriticaldates.sresponsibleuserfullname).replace("`", "")) + "</TD>");
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"> " + rs.getString((SMTablecriticaldates.sassignedbyuserfullname).replace("`", "")) + "</TD>");
+
+
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"><A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMCriticalDateEdit?" + SMTablecriticaldates.sId + "=" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "#CriticalDatesFooter\">" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
-							+ "</A>" + "</FONT></TD>");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</FONT></TD>");
-						out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments).replace("`", "")) + "</FONT></TD>");
+							+ "</A>" + "</TD>");
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + rs.getString((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments).replace("`", "")) + "</TD>");
 						
-						out.println("<TD ALIGN=LEFT VALIGN=TOP nowrap><FONT SIZE=2>");
+						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
 							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim() + "");
@@ -372,7 +375,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ "</A>");	
 						}
 						
-						out.println("</FONT></TD></TR>");
+						out.println("</TD></TR>");
 					}
 					rs.close();
 
@@ -383,7 +386,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					out.println("<TR><TD ALIGN=CENTER COLSPAN=9>&nbsp;</TD></TR>");
 					out.println("<TR><TD ALIGN=CENTER COLSPAN=9><FONT SIZE=3><B>No Critical Date Information to Display</B></FONT></TD></TR>");
 				}
-				  out.println("<TR><TD ALIGN=RIGHT COLSPAN=9)><FONT SIZE=4><B>Total  " + SMCriticalDateEntry.ParamObjectName + "s: " + iCritCount + "</B></FONT></TD></TR>");
+				  out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" ><TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +"\" COLSPAN=7 ><B>Total  " + SMCriticalDateEntry.ParamObjectName + "s: " + iCritCount + "</B></TD></TR>");
 				out.println("</TABLE>\n");
 
 	}

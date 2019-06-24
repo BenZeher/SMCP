@@ -51,8 +51,10 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 		String sEndingDocumentDate = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_DOCUMENT_DATE);
 		String sStartingVendor = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_VENDOR);
 		String sEndingVendor = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_VENDOR);
-		String sStartingVendorGroup = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_GROUP);
+		String sStartingVendorGroup = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_GROUP);
 		String sEndingVendorGroup = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_GROUP);
+		String sStartingVendorGroupDescription = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_DESCRIP);
+		String sEndingVendorGroupDescription = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_DESCRIP);
 		String sStartingDocNumber = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_DOCUMENT_NUMBER);
 		String sOriginatingFromViewVendorInfoScreen = clsManageRequestParameters.get_Request_Parameter(APDisplayVendorInformation.PARAM_ORIGINATING_FROM_VENDOR_INFO_SCREEN, request);
 		boolean bPrintVendorsWithAZeroBalance = clsManageRequestParameters.get_Request_Parameter(APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE, request).compareToIgnoreCase("") !=0;
@@ -272,7 +274,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 				+ "Starting with vendor group number:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sStartingVendorGroup + "</B>"
+				+ "<B>" + sStartingVendorGroupDescription + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
@@ -282,7 +284,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 				+ "Ending with vendor group number:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sEndingVendorGroup + "</B>"
+				+ "<B>" + sEndingVendorGroupDescription + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;

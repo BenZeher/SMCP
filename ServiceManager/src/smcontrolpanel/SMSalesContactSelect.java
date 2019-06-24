@@ -61,9 +61,9 @@ public class SMSalesContactSelect extends HttpServlet {
 	    //Input box for looking up existing sales leads.
 	    out.println("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactEdit\">" +
 		    			"<TABLE BORDER=2 CELLPADDING=10>" +
-		    			"<TR>" +
-			    			"<TD ALIGN=CENTER><B>Retrieve existing sales contact by id:</B></TD>" +
-			    			"<TD>" + clsCreateHTMLFormFields.TDTextBox("id", clsManageRequestParameters.get_Request_Parameter("SalesContactID", request), 20, 20, "") + "&nbsp;" + 
+		    			"<TR>\n" +
+			    			"<TD ALIGN=CENTER><B>Retrieve existing sales contact by id:</B></TD>\n" +
+			    			"<TD>" + clsCreateHTMLFormFields.TDTextBox("id", clsManageRequestParameters.get_Request_Parameter("SalesContactID", request), 20, 20, "") + "&nbsp;\n" + 
 	    					//Link to finder:
 	    				    "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder" +
 		    				"?ObjectName=SalesContact" +
@@ -84,7 +84,7 @@ public class SMSalesContactSelect extends HttpServlet {
 		    				"&ResultListField4="  + SMTablesalescontacts.sphonenumber +
 		    				"&ResultHeading4=Phone%20Number" +
 		    				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
-		    				"\"> Find sales contact</A>" +
+		    				"\"> Find sales contact</A>\n" +
 			    			"</TD>" +
 		    			"</TR>" +
 		    			"</TABLE>" +

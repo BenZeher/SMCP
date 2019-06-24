@@ -37,6 +37,8 @@ public class APVendorTransactionsSelect extends HttpServlet {
 	public static String PARAM_ENDING_VENDOR = "EndingVendor";
 	public static String PARAM_STARTING_GROUP = "StartingVendorGroup";
 	public static String PARAM_ENDING_GROUP = "EndingVendorGroup";
+	public static String PARAM_STARTING_DESCRIP = "StartingVendorGroupDescription";
+	public static String PARAM_ENDING_DESCRIP = "EndingVendorGroupDescription";
 	public static String PARAM_STARTING_DOCUMENT_NUMBER = "StartingDocumentNumber";
 	public static String PARAM_STARTING_DOCUMENT_DATE = "StartingDocumentDate";
 	public static String PARAM_ENDING_DOCUMENT_DATE = "EndingDocumentDate";
@@ -251,9 +253,11 @@ public class APVendorTransactionsSelect extends HttpServlet {
 					+ sUserFullName
 						);
 				while (rsVendors.next()){
-					sVendorGroups.add(rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription));
-					sVendorGroupNumbers.add(rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid));
-				}
+					String sId = rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid);
+					String sDescription = rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription);
+					sVendorGroupNumbers.add(sId);
+					sVendorGroups.add(sId + " - " + sDescription);
+							}
 				rsVendors.close();
 			} catch (SQLException e) {
 				out.println("Error [1561378774] loading ending vendor - " + e.getMessage());
@@ -261,7 +265,7 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		}
 		
 		
-		String sStartingGroupSelected = sVendorGroups.get(0);
+		String sStartingGroupSelected = sVendorGroupNumbers.get(0);
 		String sEndingGroupSelected = sVendorGroupNumbers.get(sVendorGroupNumbers.size()-1);
 		
 		out.println("<TR>\n");
@@ -285,6 +289,8 @@ public class APVendorTransactionsSelect extends HttpServlet {
         );
 		out.println("</TD></TR>\n");
 		
+		out.println("<INPUT TYPE= \"hidden\" NAME = \"" + PARAM_STARTING_DESCRIP + "\" VALUE = \"" + sVendorGroups.get(0) + "\">\n" );
+		out.println("<INPUT TYPE= \"hidden\" NAME = \"" + PARAM_ENDING_DESCRIP + "\" VALUE = \"" + sVendorGroups.get(sVendorGroups.size()-1) + "\">\n" );
 		
 		out.println("<TR>\n");
 		out.println("</TR>\n");

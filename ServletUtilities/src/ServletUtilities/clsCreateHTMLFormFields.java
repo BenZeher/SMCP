@@ -162,7 +162,7 @@ public class clsCreateHTMLFormFields {
 		}else{
 			s += "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + sName + "\" VALUE=1>" + sDesc; 
 		}
-		s += "</LABEL>";
+		s += "</LABEL>\n";
 		//System.out.println(s);
 		return s;
 	}

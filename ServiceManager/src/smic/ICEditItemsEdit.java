@@ -790,6 +790,25 @@ public class ICEditItemsEdit extends HttpServlet {
         		+ "</TR>"
         		);
         
+        //Report Group 5:
+        pwOut.println(
+        		"<TR>"
+    	        + "<TD ALIGN=RIGHT><B>" + "Common Part Number:"  + " </B></TD>"
+    	        + "<TD ALIGN=LEFT>"
+        		+ "<INPUT TYPE=TEXT NAME=\"" + ICItem.ParamCommonPartNumber + "\""
+        		+ " VALUE=\"" + item.getCommonPartNumber().replace("\"", "&quot;") + "\""
+        		+ " SIZE=76"
+        		+ " MAXLENGTH=" + Integer.toString(SMTableicitems.sCommonPartNumberLength)
+        		+ " STYLE=\"height: 0.25in\""
+        		+ "></TD>"
+        		+ "<TD ALIGN=LEFT>" 
+        		+ "Up to " + SMTableicitems.sCommonPartNumberLength + " characters." 
+        		+ "</TD>"
+        		+ "</TR>"
+        		);
+        
+        
+        
         //Work order item comment:
         pwOut.println(
         		"<TR>"

@@ -552,6 +552,10 @@ public class ICDisplayItemInformation extends HttpServlet {
 				pwOut.println("</FONT></TD>");
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");
+				pwOut.println("<TD COLSPAN=2><FONT SIZE=2><B>Common Part Number: </B>" 
+						+ rsItem.getString(SMTableicitems.sCommonPartNumber) + "</FONT></TD>");
+				pwOut.println("</TR>");
+				pwOut.println("<TR>");
 				pwOut.println("<TD COLSPAN=2><FONT SIZE=2><B>Comment 1: </B>" 
 						+ rsItem.getString(SMTableicitems.sComment1) + "</FONT></TD>");
 				pwOut.println("</TR>");

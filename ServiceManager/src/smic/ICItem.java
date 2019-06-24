@@ -44,6 +44,7 @@ public class ICItem extends Object{
 	public static final String ParamReportGroup3 = "ReportGroup3";
 	public static final String ParamReportGroup4 = "ReportGroup4";
 	public static final String ParamReportGroup5 = "ReportGroup5";
+	public static final String ParamCommonPartNumber = "CommonPartNumber";
 	public static final String ParamMostRecentCost = "MostRecentCost";
 	public static final String ParamLaborItem = "LaborItem";
 	public static final String ParamNonStockItem = "NonStockItem";
@@ -78,6 +79,7 @@ public class ICItem extends Object{
 	private String m_sReportGroup3;
 	private String m_sReportGroup4;
 	private String m_sReportGroup5;
+	private String m_sCommonPartNumber;
 	private String m_sMostRecentCost;
 	private String m_sLaborItem;
 	private String m_sNonStockItem;
@@ -91,6 +93,7 @@ public class ICItem extends Object{
 	private boolean bDebugMode = false;
 
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
+
 
 	public ICItem(
 			String sItemNumber
@@ -117,6 +120,7 @@ public class ICItem extends Object{
 		m_sReportGroup3 = "";
 		m_sReportGroup4 = "";
 		m_sReportGroup5 = "";
+		m_sCommonPartNumber = "";
 		m_sMostRecentCost = "0.0000";
 		m_sLaborItem = "0";
 		m_icannotbepurchased = "0";
@@ -159,7 +163,8 @@ public class ICItem extends Object{
 		m_sReportGroup2 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup2, req).trim().replace("&quot;", "\"");
 		m_sReportGroup3 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup3, req).trim().replace("&quot;", "\"");
 		m_sReportGroup4 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup4, req).trim().replace("&quot;", "\"");
-		m_sReportGroup5 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup5, req).trim().replace("&quot;", "\"");
+		m_sReportGroup5 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup5, req).trim().replace("&quot;", "\"");		
+		m_sCommonPartNumber = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamCommonPartNumber, req).trim().replace("&quot;", "\"");
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamAddingNewRecord, req).trim().replace("&quot;", "\"");
 		m_sMostRecentCost = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamMostRecentCost, req).trim().replace("&quot;", "\"");
 		m_sLastEditUserFullName = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamLastEditUserFullName, req).trim().replace("&quot;", "\"");
@@ -287,6 +292,7 @@ public class ICItem extends Object{
 				m_sReportGroup3 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup3));
 				m_sReportGroup4 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup4));
 				m_sReportGroup5 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup5));
+				m_sCommonPartNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCommonPartNumber));
 				m_sTaxable = Integer.toString(rs.getInt(SMTableicitems.iTaxable));
 				m_sMostRecentCost = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdmostrecentcost));
@@ -442,6 +448,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.sreportgroup3 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup3) + "'"
 				+ ", " + SMTableicitems.sreportgroup4 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup4) + "'"
 				+ ", " + SMTableicitems.sreportgroup5 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup5) + "'"
+				+ ", " + SMTableicitems.sCommonPartNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCommonPartNumber) + "'"
 				+ ", " + SMTableicitems.sworkordercomment + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sworkordercomment) + "'"
 				+ ", " + SMTableicitems.bdmostrecentcost + " = " + m_sMostRecentCost.replace(",", "")
 
@@ -512,6 +519,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.sreportgroup3
 				+ ", " + SMTableicitems.sreportgroup4
 				+ ", " + SMTableicitems.sreportgroup5
+				+ ", " + SMTableicitems.sCommonPartNumber
 				+ ", " + SMTableicitems.sworkordercomment
 				+ ", " + SMTableicitems.bdmostrecentcost
 
@@ -545,6 +553,7 @@ public class ICItem extends Object{
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup3) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup4) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup5) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCommonPartNumber) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sworkordercomment) + "'"
 				+ ", " + m_sMostRecentCost.replace(",", "")
 				+ ")"
@@ -969,6 +978,11 @@ public class ICItem extends Object{
 					+ SMTableicitems.sreportgroup5Length + " characters.");
 			bEntriesAreValid = false;
 		}
+		if (m_sCommonPartNumber.length() > SMTableicitems.sCommonPartNumberLength){
+			m_sErrorMessageArray.add("common part number cannot be longer than " 
+					+ SMTableicitems.sCommonPartNumberLength + " characters.");
+			bEntriesAreValid = false;
+		}
 		if (m_sworkordercomment.length() > SMTableicitems.sworkordercommentLength){
 			m_sErrorMessageArray.add("work order comment cannot be longer than " 
 					+ SMTableicitems.sworkordercommentLength + " characters.");
@@ -1060,6 +1074,7 @@ public class ICItem extends Object{
 		sQueryString += "&" + ParamReportGroup3 + "=" + clsServletUtilities.URLEncode(m_sReportGroup3);
 		sQueryString += "&" + ParamReportGroup4 + "=" + clsServletUtilities.URLEncode(m_sReportGroup4);
 		sQueryString += "&" + ParamReportGroup5 + "=" + clsServletUtilities.URLEncode(m_sReportGroup5);
+		sQueryString += "&" + ParamCommonPartNumber + "=" + clsServletUtilities.URLEncode(m_sCommonPartNumber);
 		sQueryString += "&" + Paramsworkordercomment + "=" + clsServletUtilities.URLEncode(m_sworkordercomment);
 		sQueryString += "&" + ParamMostRecentCost + "=" + clsServletUtilities.URLEncode(m_sMostRecentCost);
 		sQueryString += "&" + ParamNumberOfLabels + "=" + clsServletUtilities.URLEncode(m_sNumberOfLabels);
@@ -1688,6 +1703,12 @@ public class ICItem extends Object{
 	}
 	public String getReportGroup5() {
 		return m_sReportGroup5;
+	}
+	public String getCommonPartNumber() {
+		return m_sCommonPartNumber;
+	}
+	public void setCommonPartNumber(String sCommonPartNumber) {
+		m_sCommonPartNumber = sCommonPartNumber.trim();
 	}
 	public void setReportGroup5(String sReportGroup5) {
 		m_sReportGroup5 = sReportGroup5.trim();

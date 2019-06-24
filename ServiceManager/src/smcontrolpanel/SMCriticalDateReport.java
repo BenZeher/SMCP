@@ -298,7 +298,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
 						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + rs.getString((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments).replace("`", "")) + "</TD>");
 						
-						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
+						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
 							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim() + "");

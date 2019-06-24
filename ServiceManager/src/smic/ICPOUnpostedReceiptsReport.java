@@ -91,21 +91,28 @@ public class ICPOUnpostedReceiptsReport {
 				+ ", "+SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid
 				;
 
-		String sPOID = "";
-		String sReceiptID = "";
-		try {
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
-			while (rs.next()) {
-				sPOID = Long.toString(
-						rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid));
-				sReceiptID = Long.toString(
-						rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
-				String sPOIDLink = getLinkPO(sPOID, context, sDBID, sCallingClass);
-				String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW
-						+ " \" >\n";
-				s += "    <TD class = \""
-						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+				String sPOID = "";
+				String sReceiptID = "";
+				int alt = 1;
+				try {
+					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
+					while (rs.next()) {
+						sPOID = Long.toString(
+								rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid));
+						sReceiptID = Long.toString(
+								rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
+						String sPOIDLink = getLinkPO(sPOID, context, sDBID, sCallingClass);
+						String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
+
+						if(alt%2 == 1) {
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+							alt++;
+						}else {
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+							alt++;
+						}
+						s += "    <TD class = \""
+								+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 
 						+ sIndent
 						// Receipt Link
@@ -132,16 +139,16 @@ public class ICPOUnpostedReceiptsReport {
 								+ SMTableicporeceiptheaders.screatedbyfullname)
 						+ "</I>" + "</TD>\n";
 
-				s += "&nbsp;" + "</TD>\n"
+						s += "&nbsp;" + "</TD>\n"
 
 						+ "  </TR>\n";
-			}
-			rs.close();
-		} catch (Exception e) {
-			throw new Exception(
-					"Error [1560448136] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
-		}
-		return s;
+					}
+					rs.close();
+				} catch (Exception e) {
+					throw new Exception(
+							"Error [1560448136] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
+				}
+				return s;
 	}
 
 	private String getLinkReceipt(String sReceiptID, 

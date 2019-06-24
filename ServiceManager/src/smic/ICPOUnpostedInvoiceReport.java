@@ -56,6 +56,12 @@ public class ICPOUnpostedInvoiceReport {
 
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Invoice Date" + sHeadingPadding + "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "Discount Date" + sHeadingPadding + "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "Due Date" + sHeadingPadding + "</TD>\n"
 
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ " Invoice Total" + sHeadingPadding + "</TD>\n"
@@ -82,6 +88,8 @@ public class ICPOUnpostedInvoiceReport {
 				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.sinvoicenumber + " , "
 				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.datentered + " , "
 				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.datinvoice + " , "
+				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.datdue + " , "
+				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.datdiscount + " , "
 				+ SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.bdinvoicetotal + " FROM "
 				+ SMTableicpoinvoiceheaders.TableName;
 
@@ -90,7 +98,7 @@ public class ICPOUnpostedInvoiceReport {
 
 		SQL += " ORDER BY" + " " + SMTableicpoinvoiceheaders.TableName + "."
 				+ SMTableicpoinvoiceheaders.lexportsequencenumber;
-
+		int alt = 1;
 		String sInvoiceID = "";
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
@@ -98,9 +106,15 @@ public class ICPOUnpostedInvoiceReport {
 				sInvoiceID = Long.toString(
 						rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 				String sInvoiceIDLink = getLink(sInvoiceID, context, sDBID, sCallingClass);
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW + " \" >\n";
+				if(alt%2 == 1) {
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+					alt++;
+				}else {
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+					alt++;
+				}
 				s += "    <TD class = \""
-						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 
 						+ sIndent
 						// PO ID Link
@@ -115,7 +129,7 @@ public class ICPOUnpostedInvoiceReport {
 
 						// Vendor Name
 						+ "    <TD class = \""
-						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ rs.getString(
 								SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.svendorname)
@@ -123,7 +137,7 @@ public class ICPOUnpostedInvoiceReport {
 
 						// Vendor Invoice Number
 						+ "    <TD class = \""
-						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ rs.getString(
 								SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.sinvoicenumber)
@@ -148,10 +162,30 @@ public class ICPOUnpostedInvoiceReport {
 										+ SMTableicpoinvoiceheaders.datinvoice),
 								SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE)
 						+ "</I>" + "</TD>\n"
+								
+						//Discount Date
+						+ "    <TD class = \""
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ "<I>"
+						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+								rs.getString(SMTableicpoinvoiceheaders.TableName + "."
+										+ SMTableicpoinvoiceheaders.datdiscount),
+								SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE)
+						+ "</I>" + "</TD>\n"
+								
+						//Due Date
+						+ "    <TD class = \""
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ "<I>"
+						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+								rs.getString(SMTableicpoinvoiceheaders.TableName + "."
+										+ SMTableicpoinvoiceheaders.datdue),
+								SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE)
+						+ "</I>" + "</TD>\n"
 
 						// Invoice Total
 						+ "    <TD class = \""
-						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(
 								SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.bdinvoicetotal))

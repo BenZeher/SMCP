@@ -21,7 +21,7 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
 	private static final long serialVersionUID = 1L;
 	private static final String sCallingClass = "smic.ICEditBatches?";
-	private static final String sReportTitle = "I/C Unposted PO Receipts";
+	private static final String sReportTitle = "I/C Unposted PO Invoices";
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

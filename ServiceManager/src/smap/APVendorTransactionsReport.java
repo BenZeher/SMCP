@@ -26,7 +26,9 @@ public class APVendorTransactionsReport {
 		String sEndingDate,
 		String sStartingVendor,
 		String sEndingVendor,
-		String sStartingDocNumber,
+		String sStartingVendorGroup,
+		String sEndingVendorGroup,
+		String sStartingDocNumber, 
 		boolean bIncludeCreditNotes,
 		boolean bIncludeDebitNotes,
 		boolean bIncludeInvoices,
@@ -57,6 +59,8 @@ public class APVendorTransactionsReport {
 			sStartingVendor,
 			sEndingVendor,
 			sStartingDocNumber,
+			sStartingVendorGroup, 
+			sEndingVendorGroup, 
 			bIncludeCreditNotes,
 			bIncludeDebitNotes,
 			bIncludeInvoices,
@@ -93,6 +97,8 @@ public class APVendorTransactionsReport {
 		String sEndingDate,
 		String sStartingVendor,
 		String sEndingVendor,
+		String sStartingVendorGroup,
+		String sEndingVendorGroup,
 		String sStartingDocNumber,
 		
 		boolean bIncludeCreditNotes,
@@ -172,6 +178,8 @@ public class APVendorTransactionsReport {
 				//Vendor range:
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " >= '" + sStartingVendor + "')"
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " <= '" + sEndingVendor + "')"
+				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " >= " + sStartingVendorGroup + "')"
+				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " <= " + sEndingVendorGroup + "')"
 				;
 		
 				//Starting document number:
@@ -924,4 +932,5 @@ public class APVendorTransactionsReport {
 			return "NA";
 		}
 	}
+
 }

@@ -1082,7 +1082,23 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+  "<B>" + sDescription + "</B>"
 			+ "</TD>"
 
-			+ "    <TD COLSPAN=5 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "&nbsp;" + "</B>"
+			+ "</TD>"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "&nbsp;" + "</B>"
+			+ "</TD>"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "&nbsp;" + "</B>"
+			+ "</TD>"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "<B>" + "&nbsp;" + "</B>"
+			+ "</TD>"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance) + "</B>"
 			+ "</TD>\n"
 		;	

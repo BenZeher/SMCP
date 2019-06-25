@@ -215,15 +215,15 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
-	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
-		   "<BODY BGCOLOR=\"#FFFFFF\">" +
+	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>\n" + 
+		   "<BODY BGCOLOR=\"#FFFFFF\">\n" +
 		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
-		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>\n" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + sUserFirstName + " " + sUserLastName
-		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
-		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4 ><B>" + sReportTitle + "</B></FONT></TD></TR>" +
+		   + "</FONT></TD>\n<TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>\n" +
+		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4 ><B>" + sReportTitle + "</B></FONT></TD></TR>\n" +
 		   
-		   "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>");
+		   "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>\n");
 				   
 	   out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

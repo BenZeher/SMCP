@@ -270,29 +270,30 @@ public class ICItem extends Object{
 		
 		try{
 			if (rs.next()){
-				m_sItemNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sItemNumber));
-				m_sItemDescription = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sItemDescription));
-				String sDate = rs.getString(SMTableicitems.datLastMaintained);
+				
+				m_sItemNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTableicitems.sItemNumber));
+				m_sItemDescription = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sItemDescription);
+				String sDate = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.datLastMaintained);
 				m_sLastMaintainedDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);
 				m_sActive = Integer.toString(rs.getInt(SMTableicitems.iActive));
-				m_sCategoryCode = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCategoryCode));
-				m_sCostUnitOfMeasure = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCostUnitOfMeasure));
-				m_sDefaultPriceListCode = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sDefaultPriceListCode));
-				m_sPickingSequence = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sPickingSequence));
+				m_sCategoryCode = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCategoryCode);
+				m_sCostUnitOfMeasure = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCostUnitOfMeasure);
+				m_sDefaultPriceListCode = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sDefaultPriceListCode);
+				m_sPickingSequence = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sPickingSequence);
 				sDate = rs.getString(SMTableicitems.datInactive);
 				m_sInactiveDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);
-				m_sComment1 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment1));
-				m_sComment2 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment2));
-				m_sComment3 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment3));
-				m_sComment4 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment4));
-				m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sLastEditUserFullName));
-				m_sDedicatedToOrderNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sDedicatedToOrderNumber));
-				m_sReportGroup1 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup1));
-				m_sReportGroup2 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup2));
-				m_sReportGroup3 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup3));
-				m_sReportGroup4 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup4));
-				m_sReportGroup5 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup5));
-				m_sCommonPartNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCommonPartNumber));
+				m_sComment1 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment1);
+				m_sComment2 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment2);
+				m_sComment3 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment3);
+				m_sComment4 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment4);
+				m_sLastEditUserFullName = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sLastEditUserFullName);
+				m_sDedicatedToOrderNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sDedicatedToOrderNumber);
+				m_sReportGroup1 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup1);
+				m_sReportGroup2 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup2);
+				m_sReportGroup3 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup3);
+				m_sReportGroup4 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup4);
+				m_sReportGroup5 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup5);
+				m_sCommonPartNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCommonPartNumber);
 				m_sTaxable = Integer.toString(rs.getInt(SMTableicitems.iTaxable));
 				m_sMostRecentCost = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdmostrecentcost));
@@ -305,7 +306,7 @@ public class ICItem extends Object{
 				m_sNewRecord = "0";
 				m_sSuppressItemQtyLookup = Integer.toString(rs.getInt(SMTableicitems.isuppressitemqtylookup));
 				m_sHideOnInvoiceDefault = Integer.toString(rs.getInt(SMTableicitems.ihideoninvoicedefault));
-				m_sworkordercomment = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sworkordercomment));
+				m_sworkordercomment = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sworkordercomment);
 				rs.close();
 				return true;
 			}

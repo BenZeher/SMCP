@@ -301,7 +301,10 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
-							out.println("<b>Salesperson Name: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() + " " +rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim() + "");
+							String sSalespersonName = clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", ""));
+							sSalespersonName += "";
+							sSalespersonName += clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", ""));
+							out.println("<b>Salesperson Name: </b>" + sSalespersonName + "");
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Contact: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + ""); 

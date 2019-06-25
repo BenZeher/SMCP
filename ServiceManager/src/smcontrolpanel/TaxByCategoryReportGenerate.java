@@ -48,6 +48,7 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 	    String sWarning = "";
     	String sStartingDate = request.getParameter("StartingDate");
     	String sEndingDate = request.getParameter("EndingDate");
+    	String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	boolean bShowInvoiceLines = false;
     	if (request.getParameter("ShowInvoiceLines") != null){
     		bShowInvoiceLines = true;
@@ -64,7 +65,7 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
 		   "<TR>\n<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + "</FONT></TD>\n<TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD>\n</TR>\n" +

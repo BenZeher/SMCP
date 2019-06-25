@@ -302,7 +302,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
 							String sSalespersonName = clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", ""));
-							sSalespersonName += "";
+							sSalespersonName += " ";
 							sSalespersonName += clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", ""));
 							out.println("<b>Salesperson Name: </b>" + sSalespersonName + "");
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");

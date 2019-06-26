@@ -233,6 +233,8 @@ public class APDisplayVendorInformation extends HttpServlet {
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sphonenumber).trim() + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Fax:</B> " 
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sfaxnumber).trim() + "<BR>");
+				pwOut.println("<FONT SIZE=2><B>Contact Email:</B> " 
+						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoremail).trim() + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Web address:</B> " 
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.swebaddress).trim() + "<BR>");
 				String sVendorGroupString = "<FONT SIZE=2><B>Vendor group:</B> ";

@@ -594,9 +594,11 @@ public class ICEditPOEdit  extends HttpServlet {
 		//Get the additional vendor information:
 		String sCompanyAccountCode = "";
 		String sWebAddress = "";
+		String sVendorEmail = "";
 		String SQL = "SELECT"
 			+ " " + SMTableicvendors.scompanyacctcode
 			+ ", " + SMTableicvendors.swebaddress
+			+ ", " + SMTableicvendors.svendoremail
 			+ " FROM " + SMTableicvendors.TableName
 			+ " WHERE ("
 				+ "(" + SMTableicvendors.svendoracct + " = '" + entry.getsvendor() + "')"
@@ -607,6 +609,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			if (rs.next()){
 				sCompanyAccountCode = rs.getString(SMTableicvendors.scompanyacctcode);
 				sWebAddress = rs.getString(SMTableicvendors.swebaddress);
+				sVendorEmail = rs.getString(SMTableicvendors.svendoremail);
 			}
 			rs.close();
 		} catch (SQLException e) {
@@ -621,6 +624,20 @@ public class ICEditPOEdit  extends HttpServlet {
 
 		//Vendor's web address:
 		String sLink = "&nbsp;";
+		if (sVendorEmail.compareToIgnoreCase("") != 0){
+			sLink =  "<A HREF=\"" 
+				+ "mailto: "
+				+ sVendorEmail.replace("\"", "&quot;") + "\">" 
+			+ sVendorEmail.replace("\"", "&quot;") + "</A>";
+		}
+		s += "<TD style=\" text-align:right; font-weight:bold; \">Send Email to :</TD>"
+			+ "<TD>"
+			+ sLink 
+			+ "</TD>"
+			;
+		
+		s += "</TR>";
+		
 		if (sWebAddress.compareToIgnoreCase("") != 0){
 			sLink =  "<A HREF=\"" 
 				+ "http://"

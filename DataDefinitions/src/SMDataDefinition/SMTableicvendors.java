@@ -38,6 +38,7 @@ public class SMTableicvendors {
 	public static final String itaxidnumbertype = "itaxidnumbertype";
 	public static final String igenerateseparatepaymentsforeachinvoice = "igenerateseparatepaymentsforeachinvoice";
 	public static final String ivendorgroupid = "ivendorgroupid";
+	public static final String svendoremail = "svendoremail";
 	
 	
 	//Used ONLY to convert the ACCPAC AP data - when that's all done, this field can be removed:
@@ -67,6 +68,7 @@ public class SMTableicvendors {
 	public static final int staxidentifyingnumberlength = 32;
 	public static final int sdefaultdistributioncodelength = 32;
 	public static final int sdefaultinvoicelinedesclength = 96;
+	public static final int svendoremailLength = 128;
 	
 	//Tax reporting types:
 	public static final int NUMBER_OF_TAX_REPORTING_TYPES = 3;

@@ -233,10 +233,31 @@ public class APDisplayVendorInformation extends HttpServlet {
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sphonenumber).trim() + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Fax:</B> " 
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sfaxnumber).trim() + "<BR>");
-				pwOut.println("<FONT SIZE=2><B>Contact Email:</B> " 
-						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoremail).trim() + "<BR>");
-				pwOut.println("<FONT SIZE=2><B>Web address:</B> " 
-						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.swebaddress).trim() + "<BR>");
+				
+				//Vendor's web address:
+				
+				String sWebLink = "&nbsp;";
+				String sEmailLink = "&nbsp;";
+				String sVendorEmail = rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.svendoremail).trim();
+				String sWebAddress = rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.swebaddress).trim();
+				if (sVendorEmail.compareToIgnoreCase("") != 0){
+					sEmailLink =  "<A HREF=\"" 
+						+ "mailto: "
+						+ sVendorEmail.replace("\"", "&quot;") + "\">" 
+					+ sVendorEmail.replace("\"", "&quot;") + "</A>";
+				}
+
+				
+				
+				if (sWebAddress.compareToIgnoreCase("") != 0){
+					sWebLink =  "<A HREF=\"" 
+						+ "http://"
+						+ sWebAddress.replace("\"", "&quot;").replace("http://", "") + "\">" 
+					+ sWebAddress.replace("\"", "&quot;") + "</A>";
+				}
+
+				pwOut.println("<FONT SIZE=2><B>Email address:</B> " + sEmailLink +  "<BR>");
+				pwOut.println("<FONT SIZE=2><B>Web address:</B> " + sWebLink +  "<BR>");
 				String sVendorGroupString = "<FONT SIZE=2><B>Vendor group:</B> ";
 				if (rsVendor.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid) != null){
 					sVendorGroupString += rsVendor.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid).trim() 

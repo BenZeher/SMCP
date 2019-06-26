@@ -2285,6 +2285,7 @@ public class APACCPACConversion  extends java.lang.Object{
 					+ ", " + SMTableicvendors.sterms
 					+ ", " + SMTableicvendors.svendoracct
 					+ ", " + SMTableicvendors.swebaddress
+					+ ", " + SMTableicvendors.svendoremail
 					+ ", " + SMTableicvendors.sprimaryremittocode
 					+ ", " + SMTableicvendors.itaxreportingtype
 					+ ", " + SMTableicvendors.staxidentifyingnumber
@@ -2478,6 +2479,7 @@ public class APACCPACConversion  extends java.lang.Object{
 			+ ", " + SMTableicvendors.sstate
 			+ ", " + SMTableicvendors.sterms
 			+ ", " + SMTableicvendors.svendoracct
+			+ ", " + SMTableicvendors.svendoremail
 			+ ", " + SMTableicvendors.swebaddress
 			+ ", " + SMTableicvendors.itaxreportingtype
 			+ ", " + SMTableicvendors.staxidentifyingnumber
@@ -2509,6 +2511,7 @@ public class APACCPACConversion  extends java.lang.Object{
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.sstate
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.sterms
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.svendoracct
+			+ ", " + sTempVendorsTable + "." + SMTableicvendors.svendoremail
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.swebaddress
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.itaxreportingtype
 			+ ", " + sTempVendorsTable + "." + SMTableicvendors.staxidentifyingnumber
@@ -2607,6 +2610,7 @@ public class APACCPACConversion  extends java.lang.Object{
 					//+ ", " + SMTableicvendors.sterms
 					//+ ", " + SMTableicvendors.svendoracct
 					+ ", " + SMTableicvendors.swebaddress + " = '" + FormatSQLStatement(rsACCPACVendors.getString("WEBSITE").trim()) + "'" //SMTableicvendors.swebaddress
+					+ ", " + SMTableicvendors.svendoremail + " = '" + FormatSQLStatement(rsACCPACVendors.getString("EMAIL").trim()) + "'" //SMTableicvendors.svendoremail
 					+ ", " + SMTableicvendors.sprimaryremittocode + " = '" + FormatSQLStatement(rsACCPACVendors.getString("PRIMRMIT").trim()) + "'" //SMTableicvendors.sprimaryremittocode
 					//+ ", " + SMTableicvendors.itaxreportingtype
 					//+ ", " + SMTableicvendors.staxidentifyingnumber

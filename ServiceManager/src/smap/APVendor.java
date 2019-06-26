@@ -51,6 +51,7 @@ public class APVendor extends clsMasterEntry{
 	public static final String Paramsfaxnumber = "sfaxnumber";
 	public static final String Paramsterms = "sterms";
 	public static final String Paramscompanyaccountcode = "scompanyaccountcode";
+	public static final String Paramsvendoremail = "svendoremail";
 	public static final String Paramswebaddress = "swebaddress";
 	public static final String Paramdatlastmaintained = "datlastmaintained";
 	public static final String Paramslasteditedby = "slasteditedby";
@@ -87,6 +88,7 @@ public class APVendor extends clsMasterEntry{
 	private String m_sfaxnumber;
 	private String m_sterms;
 	private String m_scompanyaccountcode;
+	private String m_svendoremail;
 	private String m_swebaddress;
 	private String m_sdatlastmaintained;
 	private String m_slasteditedby;
@@ -130,6 +132,7 @@ public class APVendor extends clsMasterEntry{
 		m_sterms = clsManageRequestParameters.get_Request_Parameter(Paramsterms, req).trim();
 		m_scompanyaccountcode = clsManageRequestParameters.get_Request_Parameter(Paramscompanyaccountcode, req).trim();
 		m_swebaddress = clsManageRequestParameters.get_Request_Parameter(Paramswebaddress, req).trim();
+		m_svendoremail = clsManageRequestParameters.get_Request_Parameter(Paramsvendoremail, req).trim();
 		if(clsManageRequestParameters.get_Request_Parameter(
 				Paramdatlastmaintained, req).trim().compareToIgnoreCase("") != 0){
 			m_sdatlastmaintained = clsManageRequestParameters.get_Request_Parameter(Paramdatlastmaintained, req).trim();
@@ -245,6 +248,7 @@ public class APVendor extends clsMasterEntry{
 				m_sterms = rs.getString(SMTableicvendors.sterms);
 				m_scompanyaccountcode = rs.getString(SMTableicvendors.scompanyacctcode);
 				m_swebaddress = rs.getString(SMTableicvendors.swebaddress);
+				m_svendoremail = rs.getString(SMTableicvendors.svendoremail);
 				m_sdatlastmaintained = clsDateAndTimeConversions.resultsetDateTimeStringToString(
 						rs.getString(SMTableicvendors.datlastmaintained));
 				m_slasteditedby = rs.getString(SMTableicvendors.slasteditedbyfullname);
@@ -356,6 +360,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + SMTableicvendors.svendoracct
 			+ ", " + SMTableicvendors.sterms
 			+ ", " + SMTableicvendors.scompanyacctcode
+			+ ", " + SMTableicvendors.svendoremail
 			+ ", " + SMTableicvendors.swebaddress
 			+ ", " + SMTableicvendors.datlastmaintained
 			+ ", " + SMTableicvendors.slasteditedbyfullname
@@ -393,6 +398,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sterms.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_scompanyaccountcode.trim()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_swebaddress.trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_svendoremail.trim()) + "'"
 			+ ", NOW()"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
 			+ ", " + sUserID
@@ -441,6 +447,8 @@ public class APVendor extends clsMasterEntry{
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sterms.trim()) + "'"
 			+ ", " + SMTableicvendors.scompanyacctcode
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_scompanyaccountcode.trim()) + "'"
+			+ ", " + SMTableicvendors.svendoremail
+				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_svendoremail.trim()) + "'"
 			+ ", " + SMTableicvendors.swebaddress
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_swebaddress.trim()) + "'"
 			+ ", " + SMTableicvendors.datlastmaintained
@@ -638,6 +646,7 @@ public class APVendor extends clsMasterEntry{
 			+ "PHONE: " + getsphonenumber() + "\n"
 			+ "TERMS: " + getsterms() + "\n"
 			+ "COMPANY ACCOUNT CODE: " + getscompanyaccountcode() + "\n"
+			+ "WEB ADDRESS: " + getsvendoremail() + "\n"
 			+ "WEB ADDRESS: " + getswebaddress() + "\n"
 			+ "ACTIVE: " + sActive + "\n"
 			+ "CONFIRMATION REQUIRED?: " + sRequireConfirmation + "\n"
@@ -983,6 +992,13 @@ public class APVendor extends clsMasterEntry{
         	return bEntriesAreValid;
         }
 
+        m_svendoremail = m_svendoremail.trim();
+        if (m_svendoremail.length() > SMTableicvendors.svendoremailLength){
+        	super.addErrorMessage("Email address is too long.");
+        	bEntriesAreValid = false;
+        	return bEntriesAreValid;
+        }
+        
         //Web address:
         m_swebaddress = m_swebaddress.trim();
         if (m_swebaddress.length() > SMTableicvendors.swebaddressLength){
@@ -1088,6 +1104,7 @@ public class APVendor extends clsMasterEntry{
     	sResult += "\nState: " + this.m_sstate;
     	sResult += "\nTerms: " + this.m_sterms;
     	sResult += "\nComoany account code: " + this.m_scompanyaccountcode;
+    	sResult += "\nEmail address: " + this.m_svendoremail;
     	sResult += "\nWeb address: " + this.m_swebaddress;
     	sResult += "\nDate last maintained: " + getsdatelastmaintained();
     	sResult += "\nLast edited by: " + getslasteditedby();
@@ -1132,6 +1149,8 @@ public class APVendor extends clsMasterEntry{
 			+ clsServletUtilities.URLEncode(getsterms());
 		sQueryString += "&" + Paramscompanyaccountcode + "=" 
 			+ clsServletUtilities.URLEncode(getscompanyaccountcode());
+		sQueryString += "&" + Paramsvendoremail + "=" 
+				+ clsServletUtilities.URLEncode(getsvendoremail());
 		sQueryString += "&" + Paramswebaddress + "=" 
 			+ clsServletUtilities.URLEncode(getswebaddress());
 		sQueryString += "&" + Paramdatlastmaintained + "=" 
@@ -1203,6 +1222,13 @@ public class APVendor extends clsMasterEntry{
 	public void setscompanyaccountcode(String scompanyaccountcode) {
 		this.m_scompanyaccountcode = scompanyaccountcode;
 	}
+	public String getsvendoremail() {
+		return m_svendoremail;
+	}
+	public void setsvendoremail(String svendoremail) {
+		this.m_svendoremail = svendoremail;
+	}
+
 	public String getswebaddress() {
 		return m_swebaddress;
 	}

@@ -439,6 +439,17 @@ public class APEditVendorsEdit  extends HttpServlet {
 				"flagDirty();"
 		);
 		
+		//Email address
+		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
+				APVendor.Paramsvendoremail,
+				entry.getsvendoremail().replace("\"", "&quot;"), 
+				SMTableicvendors.svendoremailLength, 
+				"<B>Email Address:</B>",
+				"Example: someone@somewhere.com",
+				"40",
+				"flagDirty();"
+				);
+		
 		//Web address
 		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				APVendor.Paramswebaddress,

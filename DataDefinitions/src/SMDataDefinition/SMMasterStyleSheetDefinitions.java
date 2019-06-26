@@ -51,6 +51,7 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "rightjustifiedcellnoborderbold";
 	public static final String TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD = "centerjustifiedcellnoborderbold";
 	
+	
 	//Table Row Condensed
 	public static final String TABLE_HEADING = TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE;
 	public static final String TABLE_SUB_HEADING = TABLE_ROW_BACKGROUNDCOLOR_WHITE;

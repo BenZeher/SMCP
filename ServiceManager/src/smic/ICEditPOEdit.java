@@ -623,30 +623,31 @@ public class ICEditPOEdit  extends HttpServlet {
 			;
 
 		//Vendor's web address:
-		String sLink = "&nbsp;";
+		String sWebLink = "&nbsp;";
+		String sEmailLink = "&nbsp;";
 		if (sVendorEmail.compareToIgnoreCase("") != 0){
-			sLink =  "<A HREF=\"" 
+			sEmailLink =  "<A HREF=\"" 
 				+ "mailto: "
 				+ sVendorEmail.replace("\"", "&quot;") + "\">" 
 			+ sVendorEmail.replace("\"", "&quot;") + "</A>";
 		}
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Send Email to :</TD>"
 			+ "<TD>"
-			+ sLink 
+			+ sEmailLink 
 			+ "</TD>"
 			;
 		
 		s += "</TR>";
 		
 		if (sWebAddress.compareToIgnoreCase("") != 0){
-			sLink =  "<A HREF=\"" 
+			sWebLink =  "<A HREF=\"" 
 				+ "http://"
 				+ sWebAddress.replace("\"", "&quot;").replace("http://", "") + "\">" 
 			+ sWebAddress.replace("\"", "&quot;") + "</A>";
 		}
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Web address:</TD>"
 			+ "<TD>"
-			+ sLink 
+			+ sWebLink 
 			+ "</TD>"
 			;
 		

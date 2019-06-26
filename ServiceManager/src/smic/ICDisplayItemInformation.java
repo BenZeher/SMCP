@@ -243,7 +243,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 		String sSisterCompanyName2 = "";
 		String sSisterCompanyDb1 = "";
 		String sSisterCompanyDb2 = "";
-		String sReportGroup5 = "";
+		String sCommonPartNumber = "";
 		String sCorrespondingItem = "";
 		String sSisterCompany1Link = "";
 		String sSisterCompany2Link = "";
@@ -262,7 +262,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 		}
 		if (sSisterCompanyName1.compareToIgnoreCase("") !=0){
 			SQL = "SELECT "
-				+ SMTableicitems.sreportgroup5
+				+ SMTableicitems.sCommonPartNumber
 				+ " FROM " + SMTableicitems.TableName
 				+ " WHERE ("
 					+ SMTableicitems.sItemNumber + " = '" + sItem + "'"
@@ -271,21 +271,21 @@ public class ICDisplayItemInformation extends HttpServlet {
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
 				if (rs.next()){
-					sReportGroup5 = rs.getString(SMTableicitems.sreportgroup5);
+					sCommonPartNumber = rs.getString(SMTableicitems.sCommonPartNumber);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				pwOut.println("<BR><B>Error getting report group 5 - " + e.getMessage() + ".</B><BR>");
+				pwOut.println("<BR><B>Error getting common part number - " + e.getMessage() + ".</B><BR>");
 			}
 			
-			if (sReportGroup5.compareToIgnoreCase("") != 0){
+			if (sCommonPartNumber.compareToIgnoreCase("") != 0){
 				//See if this part has a corresponding item in the sister company:
 				SQL = "SELECT " 
 					+ SMTableicitems.sItemNumber
 					+ " FROM " + sSisterCompanyDb1 + "." + SMTableicitems.TableName
 					+ " WHERE ("
-						+ "(" + SMTableicitems.sreportgroup5
-							+ " = '" + sReportGroup5 + "')"
+						+ "(" + SMTableicitems.sCommonPartNumber
+							+ " = '" + sCommonPartNumber + "')"
 					+ ")"
 					;
 				//System.out.println("In " + this.toString() + " corresponding item SQL = " + SQL);
@@ -318,7 +318,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 		//Check the second company:
 		if (sSisterCompanyName2.compareToIgnoreCase("") !=0){
 			SQL = "SELECT "
-				+ SMTableicitems.sreportgroup5
+				+ SMTableicitems.sCommonPartNumber
 				+ " FROM " + SMTableicitems.TableName
 				+ " WHERE ("
 					+ SMTableicitems.sItemNumber + " = '" + sItem + "'"
@@ -327,21 +327,21 @@ public class ICDisplayItemInformation extends HttpServlet {
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
 				if (rs.next()){
-					sReportGroup5 = rs.getString(SMTableicitems.sreportgroup5);
+					sCommonPartNumber = rs.getString(SMTableicitems.sCommonPartNumber);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				pwOut.println("<BR><B>Error getting report group 5 - " + e.getMessage() + ".</B><BR>");
+				pwOut.println("<BR><B>Error getting common part number - " + e.getMessage() + ".</B><BR>");
 			}
 			
-			if (sReportGroup5.compareToIgnoreCase("") != 0){
+			if (sCommonPartNumber.compareToIgnoreCase("") != 0){
 				//See if this part has a corresponding item in the sister company:
 				SQL = "SELECT " 
 					+ SMTableicitems.sItemNumber
 					+ " FROM " + sSisterCompanyDb2 + "." + SMTableicitems.TableName
 					+ " WHERE ("
-						+ "(" + SMTableicitems.sreportgroup5
-							+ " = '" + sReportGroup5 + "')"
+						+ "(" + SMTableicitems.sCommonPartNumber
+							+ " = '" + sCommonPartNumber + "')"
 					+ ")"
 					;
 				//System.out.println("In " + this.toString() + " corresponding item SQL = " + SQL);

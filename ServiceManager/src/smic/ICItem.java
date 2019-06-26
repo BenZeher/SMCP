@@ -19,7 +19,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
-import smar.*;
 
 public class ICItem extends Object{
 	public static final String ParamAddingNewRecord = "bAddingNewRecord";

@@ -416,6 +416,8 @@ public class APDisplayVendorInformation extends HttpServlet {
 					
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_STARTING_VENDOR + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_ENDING_VENDOR + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
+					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_STARTING_GROUP + "\"" + " VALUE=\"1\" >" + "\n"
+					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_ENDING_GROUP + "\"" + " VALUE=\"999999999999\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_VENDOR_NUMBER + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE + "\"" + " VALUE=\"" + "Y" + "\" >" + "\n"
 					
@@ -568,7 +570,6 @@ public class APDisplayVendorInformation extends HttpServlet {
 							+ SMTableapvendorstatistics.lmonth + " DESC"
 						;
 					ResultSet rsVendorStatistics = clsDatabaseFunctions.openResultSet(SQL, conn);
-					
 					pwOut.println("<BR><a name=\"Statistics\"><TABLE WIDTH=100% BORDER=0><TR>"
 							+ "<TD ALIGN=LEFT><B><U>Statistics</U></B></TD></TR></TABLE>");
 					

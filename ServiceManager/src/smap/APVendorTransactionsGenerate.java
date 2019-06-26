@@ -268,10 +268,10 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 			+ "    </TD>\n"
 			+ "  </TR>\n"
 		;
-		
+		if((sStartingVendorGroupDescription != null)||(sEndingVendorGroupDescription != null)) {
 		s += "  <TR>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Starting with vendor group number:&nbsp;"
+				+ "Starting with vendor group:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 				+ "<B>" + sStartingVendorGroupDescription + "</B>"
@@ -281,14 +281,34 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 				
 			s += "  <TR>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "Ending with vendor group number:&nbsp;"
+				+ "Ending with vendor group:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 				+ "<B>" + sEndingVendorGroupDescription + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
-		
+		}else {
+			s += "  <TR>\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+					+ "Starting with vendor group number:&nbsp;"
+					+ "    </TD>\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+					+ "<B>" + sStartingVendorGroup + "</B>"
+					+ "    </TD>\n"
+					+ "  </TR>\n"
+				;
+					
+				s += "  <TR>\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+					+ "Ending with vendor group number:&nbsp;"
+					+ "    </TD>\n"
+					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+					+ "<B>" + sEndingVendorGroup + "</B>"
+					+ "    </TD>\n"
+					+ "  </TR>\n"
+				;
+		}
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 			+ "Starting with document number:&nbsp;"

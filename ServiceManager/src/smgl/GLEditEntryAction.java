@@ -34,7 +34,7 @@ public class GLEditEntryAction extends HttpServlet{
 	    String sCommandValue = clsManageRequestParameters.get_Request_Parameter(GLEditEntryEdit.COMMAND_FLAG, request);
 	    
 	    //Set the calling class back to the 'edit' class here:
-	    String sCallingClass = "smgl.GLEditEntryEdit";
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    
     	if (sCommandValue.compareToIgnoreCase(GLEditEntryEdit.COMMAND_VALUE_DELETE) == 0){
 		    GLTransactionBatch batch = new GLTransactionBatch(sBatchNumber);
@@ -68,13 +68,12 @@ public class GLEditEntryAction extends HttpServlet{
 			}else{
 				entry = new GLTransactionBatchEntry();
 				entry.setsbatchnumber(sBatchNumber);
-				smaction.setCallingClass("smgl.GLEditEntriesEdit");
+				smaction.setCallingClass("smgl.GLEditBatchesEdit");
 				smaction.redirectAction(
 					"", 
 					GLTransactionBatchEntry.OBJECT_NAME + ": " + sEntryNumber + " was successfully deleted.", 
 					SMTablegltransactionbatches.lbatchnumber + "=" + sBatchNumber
-    	    		+ "&" + GLEditEntryEdit.RECORDWASCHANGED_FLAG + "=" 
-	    			+ clsManageRequestParameters.get_Request_Parameter(GLEditEntryEdit.RECORDWASCHANGED_FLAG, request)
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				);
 			}
 			return;

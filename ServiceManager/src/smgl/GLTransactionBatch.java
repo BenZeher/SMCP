@@ -1227,29 +1227,12 @@ public class GLTransactionBatch {
         	}
         	
         	String sTransactionAmt = "0.00";
-        	//System.out.println("[1556038816] getsdebitamt() = '" + line.getsdebitamt() + "'");
-        	//System.out.println("[1556038817] getscreditamt() = '" + line.getscreditamt() + "'");
         	
         	//This is the normal logic for determining the debits and credits:
-			if (Integer.parseInt(acct.getsinormalbalancetype()) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
-				//System.out.println("[1556038830] account is normally a DEBIT balance");
-				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
-					sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
-				}
-				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
-					sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
-				}
-				//System.out.println("[1556038832] sTransactionAmt = '" + sTransactionAmt + "'.");
-			// But if the account is normally a credit balance:
+			if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
+				sTransactionAmt = "-" + line.getscreditamt().replaceAll(",", "");
 			}else{
-				//System.out.println("[1556038831] account is normally a CREDIT balance");
-				if (line.getsdebitamt().compareToIgnoreCase("0.00") != 0){
-					sTransactionAmt = "-" +line.getsdebitamt().replaceAll(",", "");
-				}
-				if (line.getscreditamt().compareToIgnoreCase("0.00") != 0){
-					sTransactionAmt = line.getscreditamt().replaceAll(",", "");
-				}
-				//System.out.println("[1556038833] sTransactionAmt = '" + sTransactionAmt + "'.");
+				sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
 			}
 			
 			//But now - because this is a REVERSAL of the original entry, we are going to reverse the sign

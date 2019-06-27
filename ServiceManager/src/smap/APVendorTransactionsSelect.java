@@ -236,12 +236,12 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		if ((sStartingVendorGroup.compareToIgnoreCase("") == 0) || (sEndingVendorGroup.compareToIgnoreCase("") == 0 )){
 			sSQL = "SELECT DISTINCT " 
 				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
-				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid
+				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid
 				+ " FROM " + SMTableicvendors.TableName
 				+ " LEFT JOIN " +SMTableapvendorgroups.TableName + " ON " 
 				+  SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " = " 
 				+  SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid				
-				+ " ORDER BY " + SMTableapvendorgroups.lid + " ASC ";
+				+ " ORDER BY " + SMTableapvendorgroups.sgroupid + " ASC ";
 			try {
 				rsVendors = clsDatabaseFunctions.openResultSet(
 					sSQL, 
@@ -253,7 +253,7 @@ public class APVendorTransactionsSelect extends HttpServlet {
 					+ sUserFullName
 						);
 				while (rsVendors.next()){
-					String sId = rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid);
+					String sId = rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid);
 					String sDescription = rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription);
 					sVendorGroupNumbers.add(sId);
 					sVendorGroups.add(sId + " - " + sDescription);

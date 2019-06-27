@@ -86,7 +86,7 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_STARTING_VENDOR + "=" + sStartingVendor;
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_ENDING_VENDOR + "=" + sEndingVendor;
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_STARTING_GROUP + "=" + sStartingVendorGroup;
-		sParamString += "*" + APVendorTransactionsSelect.PARAM_ENDING_GROUP + "=" + sStartingVendorGroup;
+		sParamString += "*" + APVendorTransactionsSelect.PARAM_ENDING_GROUP + "=" + sEndingVendorGroup;
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_STARTING_DOCUMENT_NUMBER + "=" + sStartingDocNumber;
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS + "=" + clsManageRequestParameters.get_Request_Parameter(APVendorTransactionsSelect.PARAM_INCLUDE_FULLY_PAID_TRANSACTIONS, request);
 		sParamString += "*" + APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE + "=" + clsManageRequestParameters.get_Request_Parameter(APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE, request);
@@ -288,26 +288,6 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 				+ "    </TD>\n"
 				+ "  </TR>\n"
 			;
-		}else {
-			s += "  <TR>\n"
-					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-					+ "Starting with vendor group number:&nbsp;"
-					+ "    </TD>\n"
-					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-					+ "<B>" + sStartingVendorGroup + "</B>"
-					+ "    </TD>\n"
-					+ "  </TR>\n"
-				;
-					
-				s += "  <TR>\n"
-					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-					+ "Ending with vendor group number:&nbsp;"
-					+ "    </TD>\n"
-					+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-					+ "<B>" + sEndingVendorGroup + "</B>"
-					+ "    </TD>\n"
-					+ "  </TR>\n"
-				;
 		}
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"

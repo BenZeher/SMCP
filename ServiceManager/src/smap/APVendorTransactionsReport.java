@@ -9,6 +9,7 @@ import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapmatchinglines;
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableapvendorgroups;
 import SMDataDefinition.SMTableicvendors;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -58,9 +59,9 @@ public class APVendorTransactionsReport {
 			sEndingDate,
 			sStartingVendor,
 			sEndingVendor,
-			sStartingDocNumber,
 			sStartingVendorGroup, 
 			sEndingVendorGroup, 
+			sStartingDocNumber,
 			bIncludeCreditNotes,
 			bIncludeDebitNotes,
 			bIncludeInvoices,
@@ -168,6 +169,8 @@ public class APVendorTransactionsReport {
 			+ " ON " 
 			+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalbatchnumber + " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lbatchnumber + ")"
 			+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalentrynumber + " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lentrynumber + ")"
+			+ " LEFT JOIN " + SMTableapvendorgroups.TableName 
+			+ " ON (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " = " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid + ") "
 		;
 		
 		SQL	+= " WHERE ("
@@ -178,8 +181,8 @@ public class APVendorTransactionsReport {
 				//Vendor range:
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " >= '" + sStartingVendor + "')"
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " <= '" + sEndingVendor + "')"
-				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " >= '" + sStartingVendorGroup + "')"
-				+ " AND (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " <= '" + sEndingVendorGroup + "')"
+				+ " AND (" + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid + " >= '" + sStartingVendorGroup + "')"
+				+ " AND (" + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid + " <= '" + sEndingVendorGroup + "')"
 				;
 		
 				//Starting document number:

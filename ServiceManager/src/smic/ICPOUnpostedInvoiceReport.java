@@ -106,7 +106,7 @@ public class ICPOUnpostedInvoiceReport {
 				sInvoiceID = Long.toString(
 						rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 				String sInvoiceIDLink = getLink(sInvoiceID, context, sDBID, sCallingClass);
-				if(alt%2 == 1) {
+				if(alt%2 != 0) {
 					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
 					alt++;
 				}else {

@@ -440,7 +440,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_STARTING_VENDOR + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_ENDING_VENDOR + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_STARTING_GROUP + "\"" + " VALUE=\"1\" >" + "\n"
-					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_ENDING_GROUP + "\"" + " VALUE=\"999999999999\" >" + "\n"
+					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_ENDING_GROUP + "\"" + " VALUE=\"1000000000\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_VENDOR_NUMBER + "\"" + " VALUE=\"" + sVendorNum + "\" >" + "\n"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE + "\"" + " VALUE=\"" + "Y" + "\" >" + "\n"
 					

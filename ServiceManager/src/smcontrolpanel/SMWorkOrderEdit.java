@@ -386,17 +386,19 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += createInstructionsTable(wo_entry, orderheader);
 
 		//Create the order commands line at the top:
-		s += "<TR><TD>" + createCommandsTable(
-				wo_entry, 
-				sm.getUserID(), 
-				sm.getsDBID(),
-				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
-				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				bCommandsHaveAlreadyBeenDisplayed,
-				bUseGoogleDrivePicker) + "</TD></TR>";
+		s += "<TR><TD>";
 
-		bCommandsHaveAlreadyBeenDisplayed = true;
-		
+		s += "<div class=\" d-none d-md-block\">"+ 
+				createCommandsTable(
+						wo_entry, 
+						sm.getUserID(), 
+						sm.getsDBID(),
+						clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
+						(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+						bCommandsHaveAlreadyBeenDisplayed,
+						bUseGoogleDrivePicker) + "</TD></TR>";
+		s += "</div>";
+				
 		s += "<TR><TD>" + SMWorkOrderEdit.createJobEntryTimesTable(
 			sm, 
 			getServletContext(), 
@@ -459,14 +461,28 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TR><TD>" + SMWorkOrderHeader.createDetailSheetsTable(sm, wo_entry, getServletContext()) + "</TD></TR>";
 
 		//Create the order commands line at the bottom:
-		s += "<TR><TD>" + createCommandsTable(
+		s += "<TR><TD>" ;
+		s += "<nav style=\"background-color:" + SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + ";\" class=\"navbar fixed-bottom d-block d-md-none\">"
+		+ createCommandsTable(
 				wo_entry, 
 				sm.getUserID(), 
 				sm.getsDBID(),
 				clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
 				bCommandsHaveAlreadyBeenDisplayed,
-				bUseGoogleDrivePicker) + "</TD></TR>";
+				bUseGoogleDrivePicker); 
+		s += "</nav>";
+		
+		s += "<div class=\" d-none d-md-block\">"+ 
+				createCommandsTable(wo_entry, 
+						sm.getUserID(), 
+						sm.getsDBID(),
+						clsManageRequestParameters.get_Request_Parameter(VIEW_PRICING_FLAG, sm.getRequest()),
+						(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
+						bCommandsHaveAlreadyBeenDisplayed,
+						bUseGoogleDrivePicker); 
+		s += "</div>";
+		s += "</TD></TR>";
 		
 		bCommandsHaveAlreadyBeenDisplayed = true;
 		
@@ -547,7 +563,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ SMWorkOrderHeader.ORDERCOMMANDS_TABLE_BG_COLOR + "; \" width=100% >\n";
 		//Place the 'update' button here:
 		s += "<TR><TD style = \"text-align: left; \" >";
-
+        
 		//ACCEPT SIGNATURE BUTTON:
 		//If it's NOT posted show the 'Accept Signature' button:
 		if (!wo_order.isWorkOrderPosted()){
@@ -621,9 +637,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				sLicenseModuleLevel)){
 			//If the commands have NOT already been displayed (we can't have the material returns description box appear twice):
 			if (!bCommandsHaveAlreadyBeenDisplayed){
-				s += "<BR>" + createMaterialReturnButton();
+				s += "" + createMaterialReturnButton();
 			}
 		}
+		
 		
 		if (SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMCreateGDriveWorkOrderFolders, 
@@ -631,7 +648,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				getServletContext(), 
 				sDBID,
 				sLicenseModuleLevel)){
-			s += "&nbsp;" + createAndUploadFolderButton(bUseGoogleDrivePicker);
+			s += "<div class=\"d-none d-md-block\">&nbsp;" + createAndUploadFolderButton(bUseGoogleDrivePicker) + "</div>";
 		}
 		
 		if (SMSystemFunctions.isFunctionPermitted(
@@ -751,15 +768,16 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ " onClick=\"email();\">"
 			+ EMAIL_RECEIPT_BUTTON_LABEL
 			+ "</button>\n"
-			+ "&nbsp;To:&nbsp;"
+		/*	+ "&nbsp;To:&nbsp;"
 			
-			+ "<INPUT TYPE=TEXT"
+			+ "<div class=\"d-none d-md-block\"><INPUT TYPE=TEXT"
 			+ " NAME=\"" + EMAIL_TO_FIELD + "\""
 			+ " id = \"" + EMAIL_TO_FIELD + "\""
 			//+ " VALUE=\"" + "" + "\""
 			+ " SIZE=" + "18"
 			+ " MAXLENGTH=75"
-			+ ">"
+			+ "><div>"
+		*/
 		;
 	}
 	private String createMaterialReturnButton(){
@@ -769,15 +787,16 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ " onClick=\"createMaterialReturn();\">"
 			+ MATERIAL_RETURN_BUTTON_LABEL
 			+ "</button>\n"
-			+ "&nbsp;Desc.:&nbsp;"
+		/*	+ "&nbsp;Desc.:&nbsp;"
 			
-			+ "<INPUT TYPE=TEXT"
+			+ "<div class=\"d-none d-md-block\"><INPUT TYPE=TEXT"
 			+ " NAME=\"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			+ " id = \"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			//+ " VALUE=\"" + "" + "\""
 			+ " SIZE=" + "30"
 			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.sdescriptionlength)
-			+ ">"
+			+ "><div>"
+		*/
 		;
 	}
 	
@@ -2497,24 +2516,53 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			SMWorkOrderHeader wo,
 			SMOrderHeader order) throws Exception{
 		String s = "";
+		s += "<TR style=\"background-color:" + SMWorkOrderHeader.INSTRUCTIONS_TABLE_BG_COLOR + ";\"><TD>";
 
-		s += "<TR><TD>";
+		
+		
 		s += "<TABLE class = \" innermost \" style=\" title:InstructionsTable; background-color: "
 			+ SMWorkOrderHeader.INSTRUCTIONS_TABLE_BG_COLOR + "; \" width=100% >\n";
 		
 		//Ticket notes:
-		s += "<TR><TD><U><B>Work order notes:&nbsp;</B></U>";
-		s += order.getM_sTicketComments().replace("\n", "<BR>");
+		s += "<TR><TD>";
+		s += "<div class=\"d-block d-md-none\">";
+		s += "<div class=\"d-flex justify-content-between text-secondary\"> "
+		   + "<div style=\" font-size:large; padding: 7px;\">"
+		   + "<b>" + "Work Order Notes&nbsp;" + "</b>"
+		   	+ "</div>";
+		s += "</div>";
+		s += "</div>";
+	    s += "<div class=\"d-none d-md-block\"><U><B>Work order notes:&nbsp;</B></U></div>";
+		s += "" + order.getM_sTicketComments().replace("\n", "<BR>") + "";
+		
 		s += "</TD></TR>";
 
 		//Directions:
 		if (order.getM_sDirections().compareToIgnoreCase("") != 0){
-			s += "<TR><TD><U><B>Directions:&nbsp;</B></U>";
+			s += "<TR><TD>";
+			s += "<div class=\"d-block d-md-none\">";
+			s += "<div class=\"d-flex justify-content-between text-secondary\"> "
+			   + "<div style=\" font-size:large; padding: 7px;\">"
+			   + "<b>" + "Directions&nbsp;" + "</b>"
+			   	+ "</div>";
+			s += "</div>";
+			s += "</div>";
+			s += "<div class=\"d-none d-md-block\"><U><B>Directions:&nbsp;</B></U></div>";
 			s += order.getM_sDirections().replace("\n", "<BR>");
+			s += "<div class=\"d-block d-md-none\"><B></B></div>";
 			s += "</TD></TR>";
 		}
-		s += "<TR style= \" background-color: white; \"><TD><U><B><FONT COLOR=RED>Instructions:&nbsp;</FONT></B></U>";
+		s += "<TR style= \" \"><TD>";
+		s += "<div class=\"d-block d-md-none\">";
+		s += "<div class=\"d-flex justify-content-between\"> "
+		   + "<div style=\" color:#ff3333; font-size:large; padding: 7px;\">"
+		   + "<b>" + "Instructions&nbsp;" + "</b>"
+		   	+ "</div>";
+		s += "</div>";
+		s += "</div>";
+		s += "<div style=\" color:red;\" class=\"d-none d-md-block\"><U><B>Instructions:&nbsp;</B></U></div>";
 		s += wo.getminstructions().replace("\n", "<BR>");
+		s += "<div class=\"d-block d-md-none\"><B></B></div>";
 		s += "</TD></TR>";		
 		s += " <INPUT TYPE=HIDDEN NAME=\"" 
 		+ SMWorkOrderHeader.Paramminstructions 
@@ -2784,7 +2832,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		}
 		//Make the toolbar for small screens 
 		s += "<div class=\"d-block d-md-none\">";
-		s += "<div class=\"d-flex justify-content-between\"> <div style=\"font-size:large; padding: 7px;\"><b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font></div>";
+		s += "<div class=\"d-flex justify-content-between\"> "
+		   + "<div style=\"font-size:large; padding: 7px;\">"
+		   + "<b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font>"
+		   	+ "</div>";
 		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"
 		+ "</div><BR>";
 		s += "<div class=\"row \">";
@@ -2809,10 +2860,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<a id=\"myLink\" href=\"#\" onclick=\"loadPicker();return false;\">"
 					+ "<div class=\"text-center\">"
 					+ "<i class=\"material-icons\" style=\"font-size:35px;color:black\">folder" + "</i>"
-					+ "<br>" + "Documents" + "</div></a>"
+					+ "<br>" + "Drive Folder" + "</div></a>"
 			+ "</div>";
 		}
-		
 		s+= "</div>";
 		s += "<hr/>";
 		s += "</div>";
@@ -2871,12 +2921,12 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 
 		
-		s += "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() 
+		s += "<div class=\"col-md p-1 text-md-nowrap\"><b>Ship&nbsp;to:</b>&nbsp;" + orderheader.getM_sShipToName() 
 			+ "&nbsp;" + "<A HREF=\"" + clsServletUtilities.createGoogleMapLink(sMapAddress.replace("<br>", "")) + "\">" + sMapAddress.replace("<br>", "") + "</A>"
 			+ "</div>"
 			
 			//Ship to contact:
-			+ "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Contact:</b>&nbsp;" + orderheader.getM_sShiptoContact() + "</div>"
+			+ "<div class=\"col-md p-1 text-md-nowrap\"><b>Contact:</b>&nbsp;" + orderheader.getM_sShiptoContact() + "</div>"
 
 			//Ship to phone:
 			+ "<div style=\"white-space:nowrap;\" class=\"col-md p-1\"><b>Phone:</b>&nbsp;" + orderheader.getM_sShiptoPhone() + "</div>"
@@ -3735,13 +3785,12 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			ServletContext context
 	){
 
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
-
-		sRow += "<TD ALIGN=LEFT>";
+		String sRow = "<div class=\"row\">";
+		sRow += "<div class=\"col-sm text-md-right\"><B>" + sLabel  + " </B></div>";
+		sRow += "<div class=\"col-sm\" ALIGN=LEFT>";
 		String sDisabled = "";
 		if(!bDisabled) {sDisabled="disabled";}
-		sRow +=" <div class=\"custom-control custom-switch\">\n" +
+		sRow +=" <div style=\"white-space:nowrap;\" class=\"custom-control custom-switch\">\n" +
 				"  <input name=\"" + sFieldName + "\""
 						+ " type=\"checkbox\""
 						+ " class=\"custom-control-input\""
@@ -3749,17 +3798,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						+ " value=\"1\" "
 						+ sDefaultValue + " "
 						+ sDisabled
-						+ " data-size=\"large\""
+						+ " data-size=\"lg\""
 						+ " onchange=\"" + sOnChange + "\">"
 						+ "\n" + 
 			"  <label class=\"custom-control-label\" for=\"" + sFieldName + "\">" + "" + "</label>\n" +
 			 Create_Edit_Form_DateTime_Input_Field(sDateFieldName, sPresetDate, context) +
 				"</div>\n";
 
-		sRow += "</TD>";
+		sRow += "</div>";
 
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<div class=\"col-sm\" ALIGN=LEFT>" + sRemark + "</div>";
+		sRow += "</div>";
 		return sRow;
 	}
 
@@ -3777,7 +3826,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += " VALUE=\"" + sDatePortion + "\"";
 		s += " onchange=\"flagDirty();\"";
 		s += " ID=\"" + sDateFieldName + "\"";
-		s += "SIZE=7";
+		s += "SIZE=8";
 		s += " MAXLENGTH=10";
 		s += " STYLE=\"width: " + ".75" + " in; height: 0.25in\"";
 		s += ">";
@@ -3796,16 +3845,16 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		if (iHour == 0 && iAMPM == 1){
 			iHour = 12;
 		}
-		s += "Hour <SELECT NAME=\"" + sDateFieldName + "SelectedHour\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedHour\">";
+		s += "Time: <SELECT NAME=\"" + sDateFieldName + "SelectedHour\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedHour\">";
 		for (int i=1; i<=12;i++){
 			if (i == iHour){
-				s += "<OPTION SELECTED VALUE = " + i + ">" + i  + " &nbsp;&nbsp;&nbsp;";
+				s += "<OPTION SELECTED VALUE = " + i + ">" + i  + " &nbsp;&nbsp;";
 			}else{
 				s += "<OPTION VALUE = " + i + ">" + i;
 			}
 		}
 		s += "</SELECT>";
-		s += "Minute <SELECT NAME=\"" + sDateFieldName + "SelectedMinute\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedMinute\">";
+		s += " : <SELECT NAME=\"" + sDateFieldName + "SelectedMinute\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedMinute\">";
 		for (int i=0; i<=59;i++){
 			String sMinute = clsStringFunctions.PadLeft(Integer.toString(i), "0", 2);
 			if (i == iMinute){
@@ -3816,7 +3865,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			}
 		}
 		s += "</SELECT>";	
-		s += "AM/PM<SELECT NAME=\"" + sDateFieldName + "SelectedAMPM\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedAMPM\">";
+		s += " <SELECT NAME=\"" + sDateFieldName + "SelectedAMPM\" onchange=\"flagDirty();\" ID =\"" + sDateFieldName + "SelectedAMPM\">";
 		for (int i=Calendar.AM; i<=Calendar.PM;i++){
 			if (i == iAMPM){
 				if (i == Calendar.AM){
@@ -3842,10 +3891,15 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		SMWorkOrderHeader workorder, 
 		String sClassName) throws Exception{
 		String s = "";
-		
-		s += "<TABLE class = \"  innermost \" style=\" title:JobEntryTimesTable; background-color: "
-			+ SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \" width=100% >\n";
-		s += "<TR>";
+		s += "<div style=\" background-color:" + SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \">";
+		s += "<div class=\"row d-block d-md-none\" style=\" background-color:" + SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \">";
+		s += "<div class=\"col d-flex justify-content-between text-secondary\"> "
+		   + "<div  style=\"font-size:large; padding: 7px;\">"
+		   + "<b>" + "Job Times" + "</b>"
+		   	+ "</div>";
+		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#calculatedTimesTable').toggleClass('d-none'); calculateTimes();\">" + "Details" + " </button>"
+		  + "</div>";
+		s += "</div>";
 		//Record the four permissions for editing time:
 		boolean bAllowEditingLeftPreviousSiteTime = SMSystemFunctions.isFunctionPermitted(
 			SMSystemFunctions.SMEditLeftPreviousSiteTime, 
@@ -3987,9 +4041,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				bAllowArrivedAtNextSiteTime,
 				context
 				);
-		
-		s += "<TR>";
-		s += "<TD>";
+
 //		s += "<SUP>1</SUP>&nbsp;Date/time fields are left blank until a specified date or time is selected.";
 		//To have any calculations appear, we need at least TWO times to appear:
 		int iTimePermissionsCounter = 0;
@@ -3997,8 +4049,14 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		if (bAllowEditingArrivedAtCurrentSiteTime) iTimePermissionsCounter++;
 		if (bAllowEditingLeftCurrentSiteTime) iTimePermissionsCounter++;
 		if (bAllowArrivedAtNextSiteTime) iTimePermissionsCounter++;
-		
+
+
 		if (iTimePermissionsCounter >= 2){
+			
+			s += "<div class=\"container-fluid  d-none d-md-block\" id=\"calculatedTimesTable\">";
+			s += "<div class=\"row\">";
+			s += "<div class=\"col\">";
+			
 			//Calculate button:
 			s += "<BR><button type=\"button\""
 			+ " value=\"" + SMWorkOrderHeader.CALCULATE_TIMES_LABEL + "\""
@@ -4007,8 +4065,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ SMWorkOrderHeader.CALCULATE_TIMES_LABEL
 			+ "</button>\n"
 			;
-			s += "</TD>";
-			s += " </TR>";
+			s += "</div>";
+			s += " </div>";
 			/*
 			Possible elapsed times combinations:
 			1) From leaving the previous job until arriving at the current one (travel time TO the job)
@@ -4018,48 +4076,48 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			5) From arriving at the current job until arriving at the next one (time at the job plus travel FROM the job)
 			*/
 			if (bAllowEditingLeftPreviousSiteTime && bAllowEditingArrivedAtCurrentSiteTime){
-				s += "<TR><TD ALIGN=RIGHT>Travel time TO the job:</TD><TD>"
+				s += "<div class=\"row\"><div class=\"col-sm text-md-right\">Travel time TO the job:</div><div class=\"col-sm\">"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""	
 					+ " SIZE=" + "25"
-					+ "></TD></TR>"		
+					+ "></div></div>"		
 				;
 			}
 			if (bAllowEditingLeftPreviousSiteTime && bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime){
-				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel time TO the job:</TD><TD>"
+				s += "<div class=\"row\"><div class=\"col-sm text-md-right\">Time at the job PLUS travel time TO the job:</div><div class=\"col-sm\">"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""	
 					+ " SIZE=" + "25"
-					+ "></TD></TR>"			
+					+ "></div></div>"			
 				;
 			}
 			if (bAllowEditingLeftPreviousSiteTime && bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime
 					&& bAllowArrivedAtNextSiteTime){
-				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel time TO AND FROM the job:</TD><TD>"
+				s += "<div class=\"row\"><div class=\"col-sm text-md-right\">Time at the job PLUS travel time TO AND FROM the job:</div><div class=\"col-sm\">"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""	
 					+ " SIZE=" + "25"
-					+ "></TD></TR>"			
+					+ "></div></div>"			
 				;
 			}
 			if (bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime){
-				s += "<TR><TD ALIGN=RIGHT>Time at the job ONLY:</TD><TD>"
+				s += "<div class=\"row\"><div class=\"col-sm text-md-right\">Time at the job ONLY:</div><div class=\"col-sm\">"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""	
 					+ " SIZE=" + "25"
-					+ "></TD></TR>"			
+					+ "></div></div>"			
 				;
 			}
 			if (bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime && bAllowArrivedAtNextSiteTime){
-				s += "<TR><TD ALIGN=RIGHT>Time at the job PLUS travel FROM the job:</TD><TD>"
+				s += "<div class=\"row\"><div class=\"col-sm text-md-right\">Time at the job PLUS travel FROM the job:</div><div class=\"col-sm\">"
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""	
 					+ " SIZE=" + "25"
-					+ "></TD></TR>"			
+					+ "></div></div>"			
 				;
 			}
 		}
-	s += "</TABLE title:JobEntryTimesTable; \">\n";
+	s += "</div></div>\n";
 	return s;
 	}
 }

@@ -1,9 +1,9 @@
 package smar;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
+
+import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -97,7 +97,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		//*****************************************************
+		/*****************************************************
 		// TEST MS SQL Connection:
 		Connection cnAP = null;
 		String sAPDatabaseURL = "madg01.com";
@@ -135,7 +135,17 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get MS SQL connection");
 			return;
 		}
+		*/
 		
+		//Test GL Transaction Batch posting:
+		GLTransactionBatch glbatch = new GLTransactionBatch("54");
+		try {
+			glbatch.post_with_connection(conn, "1", "airo");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("DONE");
 		
 		//Test GL conversion function:
 		/*

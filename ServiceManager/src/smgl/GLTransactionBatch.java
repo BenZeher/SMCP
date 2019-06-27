@@ -906,6 +906,8 @@ public class GLTransactionBatch {
     			 + "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + getsbatchnumber() + ")"
     		+ ")"
     		+ " GROUP BY " + SMTablegltransactionlines.sacctid
+    		+ ", " + SMTablegltransactionlines.ifiscalyear
+    		+ ", " + SMTablegltransactionlines.ifiscalperiod
     	;
     	try {
 			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);

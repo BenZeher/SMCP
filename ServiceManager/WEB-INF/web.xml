@@ -4016,6 +4016,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLResetPostingFlagAction</servlet-name>
+        <servlet-class>smgl.GLResetPostingFlagAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLResetPostingFlagSelect</servlet-name>
+        <servlet-class>smgl.GLResetPostingFlagSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLTransactionListingAction</servlet-name>
         <servlet-class>smgl.GLTransactionListingAction</servlet-class>
     </servlet>
@@ -7937,6 +7947,16 @@
     <servlet-mapping>
         <servlet-name>GLImportBatchesSelect</servlet-name>
         <url-pattern>/smgl.GLImportBatchesSelect</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLResetPostingFlagAction</servlet-name>
+        <url-pattern>/smgl.GLResetPostingFlagAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GLResetPostingFlagSelect</servlet-name>
+        <url-pattern>/smgl.GLResetPostingFlagSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

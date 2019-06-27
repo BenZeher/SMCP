@@ -53,8 +53,6 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 		String sEndingVendor = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_VENDOR);
 		String sStartingVendorGroup = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_GROUP);
 		String sEndingVendorGroup = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_GROUP);
-		String sStartingVendorGroupDescription = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_DESCRIP);
-		String sEndingVendorGroupDescription = request.getParameter(APVendorTransactionsSelect.PARAM_ENDING_DESCRIP);
 		String sStartingDocNumber = request.getParameter(APVendorTransactionsSelect.PARAM_STARTING_DOCUMENT_NUMBER);
 		String sOriginatingFromViewVendorInfoScreen = clsManageRequestParameters.get_Request_Parameter(APDisplayVendorInformation.PARAM_ORIGINATING_FROM_VENDOR_INFO_SCREEN, request);
 		boolean bPrintVendorsWithAZeroBalance = clsManageRequestParameters.get_Request_Parameter(APVendorTransactionsSelect.PARAM_PRINT_VENDORS_WITH_A_ZERO_BALANCE, request).compareToIgnoreCase("") !=0;
@@ -260,35 +258,35 @@ public class APVendorTransactionsGenerate extends HttpServlet {
 		;
 			
 		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Ending with vendor:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sEndingVendor + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-		if((sStartingVendorGroupDescription != null)||(sEndingVendorGroupDescription != null)) {
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "Ending with vendor:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sEndingVendor + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n"
+				;
+
 		s += "  <TR>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 				+ "Starting with vendor group:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sStartingVendorGroupDescription + "</B>"
+				+ "<B>" + sStartingVendorGroup + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
-			;
-				
-			s += "  <TR>\n"
+				;
+
+		s += "  <TR>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 				+ "Ending with vendor group:&nbsp;"
 				+ "    </TD>\n"
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-				+ "<B>" + sEndingVendorGroupDescription + "</B>"
+				+ "<B>" + sEndingVendorGroup + "</B>"
 				+ "    </TD>\n"
 				+ "  </TR>\n"
-			;
-		}
+				;
+
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 			+ "Starting with document number:&nbsp;"

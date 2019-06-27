@@ -234,13 +234,10 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		ArrayList<String> sVendorGroupNumbers = new ArrayList<String>(0);
 		
 		if ((sStartingVendorGroup.compareToIgnoreCase("") == 0) || (sEndingVendorGroup.compareToIgnoreCase("") == 0 )){
-			sSQL = "SELECT DISTINCT " 
+			sSQL = "SELECT " 
 				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
 				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid
-				+ " FROM " + SMTableicvendors.TableName
-				+ " LEFT JOIN " +SMTableapvendorgroups.TableName + " ON " 
-				+  SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " = " 
-				+  SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid				
+				+ " FROM " + SMTableapvendorgroups.TableName	
 				+ " ORDER BY " + SMTableapvendorgroups.sgroupid + " ASC ";
 			try {
 				rsVendors = clsDatabaseFunctions.openResultSet(

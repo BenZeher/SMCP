@@ -14449,10 +14449,10 @@ public class SMUpdateData extends java.lang.Object{
 			
 			case 1394:
 				//Added by BJA 6/26/2019
-				SQL = "UPDATE `icitems` "
+				/*SQL = "UPDATE `icitems` "
 						+ " SET sReportGroup5 = ''"
 						;
-				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}*/
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

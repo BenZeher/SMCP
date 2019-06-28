@@ -61,15 +61,13 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    	+ "#" + Long.toString(SMSystemFunctions.GLPullExternalDataIntoConsolidation) 
 	    	+ "\">Summary</A><BR>");
 	    
-	    out.println("<BR>This function will pull GL trnsactions for the selected fiscal year and period"
+	    out.println("<BR>This function will pull GL transactions for the selected fiscal year and period"
 	    		+ " into this company's data.  If any transactions have already been pulled, they won't be "
 	    		+ " duplicated.  If you check the 'Add new GL accounts' checkbox, then the process will also"
 	    		+ " add any GL accounts that it finds in the transactions to the current company.  If the "
 	    		+ " process does not complete, the it will be rolled back and none of the transactions will"
 	    		+ " be pulled in.<BR><BR>"
 	    );
-	    
-	    
 	    
     	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationSelect\">");
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");

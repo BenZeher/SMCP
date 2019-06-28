@@ -2649,7 +2649,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			
 			arrFunctions.add("GL Pull External Companies Into Consolidation"); 
 			arrFunctionIDs.add(GLPullExternalDataIntoConsolidation); 
-			arrFunctionLinks.add("smgl.GLPullConsolidationSelect"); 
+			arrFunctionLinks.add("smgl.GLPullIntoConsolidationSelect"); 
 			arrFunctionDescriptions.add("Pulls GL transactions from a designated external comoany (database)");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			

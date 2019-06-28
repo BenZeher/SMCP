@@ -1141,8 +1141,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			) throws Exception{
 		String s = "";
 		//Headings:
+		s += "<div style=\" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \">";
+		s += "<div class=\"row d-block d-md-none\" style=\" background-color:" + SMWorkOrderHeader.ITEMS_TABLE_BG_COLOR + "; \">";
+		s += "<div class=\"col d-flex justify-content-between text-secondary\"> "
+		   + "<div  style=\"font-size:large; padding: 7px;\">"
+		   + "<b>" + "Items/Labor Used" + "</b>"
+		   	+ "</div>";
+		//s += "<button class=\"btn\" type=\"button\" onclick=\"$('#calculatedTimesTable').toggleClass('d-none'); calculateTimes();\">" + "Details" + " </button>"
+		s += "</div>";
+		s += "</div>";
 		
-		s += "<TR><TD ><B><U>ITEMS/LABOR USED:</U></B></TD></TR>";
+		s += "<TR><TD><div class=\"d-none d-md-block\"><B><U>ITEMS/LABOR USED:</U></B></div></TD></TR>";
 		s += "<TR>";
 		s += "<TD class=\" fieldrightheading \">Qty used&nbsp;</TD>";
 		s += "<TD class=\" fieldrightheading \">Qty assigned&nbsp;</TD>";
@@ -2552,10 +2561,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			s += "<div class=\"d-block d-md-none\"><B></B></div>";
 			s += "</TD></TR>";
 		}
-		s += "<TR style= \" \"><TD>";
+		s += "<TR style= \"background-color:white;\"><TD>";
 		s += "<div class=\"d-block d-md-none\">";
 		s += "<div class=\"d-flex justify-content-between\"> "
-		   + "<div style=\" color:#ff3333; font-size:large; padding: 7px;\">"
+		   + "<div style=\" color:red; font-size:large; padding: 7px;\">"
 		   + "<b>" + "Instructions&nbsp;" + "</b>"
 		   	+ "</div>";
 		s += "</div>";

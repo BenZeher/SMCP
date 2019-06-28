@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1396;
+	private static final int m_CurrentDatabaseVersion = 1397;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "6/26/2019";
+	private static final String m_sLastRevisionDate = "6/28/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14462,6 +14462,22 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE `icvendors` "
 						+ " add svendoremail varchar(128) NOT NULL DEFAULT ''"
 						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			case 1396:
+				//Added by TJR 6/28/2019
+				SQL = "CREATE TABLE `glexternalcompanies` ("
+						+ "lid int(11) NOT NULL auto_increment"
+						+ ", sdbname varchar(64) NOT NULL DEFAULT ''"
+						+ ", scompanyname varchar(128) NOT NULL DEFAULT ''"
+						+ ", PRIMARY KEY  (`lid`)"
+						+ ", UNIQUE KEY `dbname_key` (`sdbname`)"
+						+ ", UNIQUE KEY `companyname_key` (`scompanyname`)"
+						+ " ) ENGINE=InnoDB"
+					;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

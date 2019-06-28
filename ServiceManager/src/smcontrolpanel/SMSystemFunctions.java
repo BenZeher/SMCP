@@ -330,6 +330,8 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long FAEditOptions = 1238L;
 	public static long GLImportBatches = 1239L;
 	public static long GLResetPostingInProcessFlag = 1240;
+	public static long GLPullExternalDataIntoConsolidation = 1241;
+	public static long GLManageExternalCompanies = 1242;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2644,6 +2646,18 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smgl.GLResetPostingFlagSelect"); 
 			arrFunctionDescriptions.add("Required to reset the General Ledger posting flag - if a posting process fails in GL, the system records the user and the process and will not"
 					+ " allow any subsequent postings until this flag is cleared.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Pull External Companies Into Consolidation"); 
+			arrFunctionIDs.add(GLPullExternalDataIntoConsolidation); 
+			arrFunctionLinks.add("smgl.GLPullIntoConsolidationSelect"); 
+			arrFunctionDescriptions.add("Pulls GL transactions from a designated external comoany (database)");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Manage External Companies"); 
+			arrFunctionIDs.add(GLManageExternalCompanies); 
+			arrFunctionLinks.add("smgl.GLEditExternalCompaniesEdit"); 
+			arrFunctionDescriptions.add("Used to manage external companies so that they can be 'pulled' into a consolidated company.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

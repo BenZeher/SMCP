@@ -142,12 +142,20 @@ public class clsTextEditorFunctions {
 			+ "});\n"
 			
 			//Only paste into the frame as plain text.
-			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"			
-			+  	"e.preventDefault();" + "\n"
-			+ "  var text = (e.originalEvent || e).clipboardData.getData('text/plain');" + "\n"		
-			+ "  doc" + sFieldName + ".execCommand(\"insertHTML\", false, text);" + "\n"		
+			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"
+			+ "e.preventDefault();\n" 
+			+ "    var text = '';\n" 
+			+ "    if (e.clipboardData || e.originalEvent.clipboardData) {\n" 
+			+ "      text = (e.originalEvent || e).clipboardData.getData('text/plain');\n" 
+			+ "    } else if (window.clipboardData) {\n" 
+			+ "      text = window.clipboardData.getData('Text');\n" 
+			+ "    }\n"  
+			+ "    if (document.queryCommandSupported('insertText')) {\n"  
+			+ "       doc" + sFieldName + ".execCommand('insertText', false, text);\n"  
+			+ "    } else {\n"  
+			+ "      doc" + sFieldName + ".execCommand('paste', false, text);\n" 
+			+ "    }"
 			+ "});\n"
-			
 			+ "</script>\n";
 		return s;
 	

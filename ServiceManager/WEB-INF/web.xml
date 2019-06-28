@@ -3986,6 +3986,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>GLEditExternalCompaniesAction</servlet-name>
+        <servlet-class>smgl.GLEditExternalCompaniesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditExternalCompaniesEdit</servlet-name>
+        <servlet-class>smgl.GLEditExternalCompaniesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
         <servlet-class>smgl.GLEditFiscalPeriodsAction</servlet-class>
     </servlet>
@@ -7927,6 +7937,16 @@
     <servlet-mapping>
         <servlet-name>GLEditEntryEdit</servlet-name>
         <url-pattern>/smgl.GLEditEntryEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLEditExternalCompaniesAction</servlet-name>
+        <url-pattern>/smgl.GLEditExternalCompaniesAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLEditExternalCompaniesEdit</servlet-name>
+        <url-pattern>/smgl.GLEditExternalCompaniesEdit</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

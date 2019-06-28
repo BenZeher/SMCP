@@ -14475,7 +14475,6 @@ public class SMUpdateData extends java.lang.Object{
 						+ ", scompanyname varchar(128) NOT NULL DEFAULT ''"
 						+ ", PRIMARY KEY  (`lid`)"
 						+ ", UNIQUE KEY `dbname_key` (`sdbname`)"
-						+ ", UNIQUE KEY `companyname_key` (`scompanyname`)"
 						+ " ) ENGINE=InnoDB"
 					;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}

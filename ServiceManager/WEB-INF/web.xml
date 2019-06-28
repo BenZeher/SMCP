@@ -4016,6 +4016,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLPullIntoConsolidationAction</servlet-name>
+        <servlet-class>smgl.GLPullIntoConsolidationAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLPullIntoConsolidationSelect</servlet-name>
+        <servlet-class>smgl.GLPullIntoConsolidationSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLResetPostingFlagAction</servlet-name>
         <servlet-class>smgl.GLResetPostingFlagAction</servlet-class>
     </servlet>
@@ -7949,6 +7959,16 @@
         <url-pattern>/smgl.GLImportBatchesSelect</url-pattern>
     </servlet-mapping>
     
+    <servlet-mapping>
+        <servlet-name>GLPullIntoConsolidationAction</servlet-name>
+        <url-pattern>/smgl.GLPullIntoConsolidationAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLPullIntoConsolidationSelect</servlet-name>
+        <url-pattern>/smgl.GLPullIntoConsolidationSelect</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>GLResetPostingFlagAction</servlet-name>
         <url-pattern>/smgl.GLResetPostingFlagAction</url-pattern>

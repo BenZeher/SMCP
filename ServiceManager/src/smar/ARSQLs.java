@@ -21,7 +21,6 @@ public class ARSQLs extends SMClasses.MySQLs {
 	public static final String dcurrentamt = "dcurrentamt";
 	public static final String sdesc = "sdesc";
 	public static final String ldaysover = "ldaysover";
-	//public static final String scustomer = "scustomer";
 	private static String SQL = "";
 	
 	//Account sets:

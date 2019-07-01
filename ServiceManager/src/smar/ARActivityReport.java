@@ -134,14 +134,14 @@ public class ARActivityReport extends java.lang.Object{
     			out.println("</TR>");
     			
     			//Set the totals:
-    			dCustomerTransactionTotal = dCustomerTransactionTotal.add(rs.getBigDecimal("doriginalamt"));
-    			dCustomerBalanceTotal = dCustomerBalanceTotal.add(rs.getBigDecimal("dcurrentamt"));
+    			dCustomerTransactionTotal = dCustomerTransactionTotal.add(rs.getBigDecimal(ARSQLs.doriginalamt));
+    			dCustomerBalanceTotal = dCustomerBalanceTotal.add(rs.getBigDecimal(ARSQLs.dcurrentamt));
     	    	
     	    	//Accumulate the grand totals:
-    	    	dGrandTotalTransactionAmount = dGrandTotalTransactionAmount.add(rs.getBigDecimal("doriginalamt"));
-    	    	dGrandTotalBalance = dGrandTotalBalance.add(rs.getBigDecimal("dcurrentamt"));
+    	    	dGrandTotalTransactionAmount = dGrandTotalTransactionAmount.add(rs.getBigDecimal(ARSQLs.doriginalamt));
+    	    	dGrandTotalBalance = dGrandTotalBalance.add(rs.getBigDecimal(ARSQLs.dcurrentamt));
     			//Reset:
-    			sCurrentCustomer = rs.getString("scustomer");
+    			sCurrentCustomer = rs.getString(ARSQLs.scustomer);
     			iLinesPrinted++;
 			}
 			rs.close();

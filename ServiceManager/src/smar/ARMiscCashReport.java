@@ -50,7 +50,7 @@ public class ARMiscCashReport extends java.lang.Object{
 			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Batch-Entry</B></TD>" +
 			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Amt</B></TD>" +
 			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Balance</B></TD>" +
-			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Description</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> <B>Description</B></TD>" +
 			"</TR>" );
     	}
     	String SQL = "SELECT * FROM armisccashlines ORDER BY sdocappliedto, ssource, datdocdate";
@@ -72,7 +72,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				+ "-" + Long.toString(rs.getLong(ARSQLs.loriginalentrynumber)) + "</TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.doriginalamt)) + "</TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.dcurrentamt)) + "</TD>");
-	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdesc) + "</TD>");
+	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdesc) + "</TD>");
     			out.println("</TR>");
     			iPrintTransactionsIn++;
     			//Set the totals:

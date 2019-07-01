@@ -157,7 +157,6 @@ table.basic {
   font-size: small;
   font-family : Arial;
   color: black !important;
-  margin: 25px;
  }
  
  /* basic table definition without border */
@@ -170,14 +169,12 @@ table.basicwithoutborder {
   font-size: small;
   font-family : Arial;
   color: black !important;
-  margin: 25px;
  }
 
 /*collapse border */
 table.collapseborder{
  border-collapse: collapse !important;
  border:1px solid black !important;
- margin: 25px;
 }
 
 /* table data with a collapse border */

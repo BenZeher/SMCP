@@ -295,7 +295,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"> " + rs.getString((SMTablecriticaldates.sassignedbyuserfullname).replace("`", "")) + "</TD>");
 
 
-						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"><A HREF=\"" 
+						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"><A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMCriticalDateEdit?" + SMTablecriticaldates.sId + "=" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
@@ -303,7 +303,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ "#CriticalDatesFooter\">" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
 							+ "</A>" + "</TD>");
-						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
+						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
 						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + rs.getString((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments).replace("`", "")) + "</TD>");
 						
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");

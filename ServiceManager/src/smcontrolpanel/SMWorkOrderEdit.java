@@ -768,16 +768,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ " onClick=\"email();\">"
 			+ EMAIL_RECEIPT_BUTTON_LABEL
 			+ "</button>\n"
-		/*	+ "&nbsp;To:&nbsp;"
 			
-			+ "<div class=\"d-none d-md-block\"><INPUT TYPE=TEXT"
+			//+ "<div class=\"d-none d-md-block\">"
+			+ "<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + EMAIL_TO_FIELD + "\""
 			+ " id = \"" + EMAIL_TO_FIELD + "\""
 			//+ " VALUE=\"" + "" + "\""
 			+ " SIZE=" + "18"
-			+ " MAXLENGTH=75"
-			+ "><div>"
-		*/
+			+ " MAXLENGTH=75>"
+			//+ "<div>"
+			+ ""
+		
 		;
 	}
 	private String createMaterialReturnButton(){
@@ -787,16 +788,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ " onClick=\"createMaterialReturn();\">"
 			+ MATERIAL_RETURN_BUTTON_LABEL
 			+ "</button>\n"
-		/*	+ "&nbsp;Desc.:&nbsp;"
+
 			
-			+ "<div class=\"d-none d-md-block\"><INPUT TYPE=TEXT"
+			//+ "<div class=\"d-none d-md-block\">"
+			+ "<INPUT TYPE=HIDDEN"
 			+ " NAME=\"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			+ " id = \"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\""
 			//+ " VALUE=\"" + "" + "\""
 			+ " SIZE=" + "30"
-			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.sdescriptionlength)
-			+ "><div>"
-		*/
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.sdescriptionlength) + ">"
+		//	+ "<div>"
+		
 		;
 	}
 	
@@ -2006,7 +2008,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				+ "(N/A)" + "</TD>" + "\n";
 			
 			//Item
-			s += "<TD class=\" fieldcontrol \" >"
+			s += "<TD class=\" fieldcontrol \" style=\"vertical-align: text-bottom;\" >"
 				+ "<INPUT TYPE=TEXT NAME=\""
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
@@ -2259,6 +2261,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TABLE class = \" innermost \" style=\" title:WorkPerformedTable; background-color: "
 				+ SMWorkOrderHeader.WORKPERFORMED_TABLE_BG_COLOR + "; width=100%; \" >\n";	
 		s += "<TR><TD><U><B>Work performed codes:</B></U></TD></TR>";
+	
 		
 		//If this is editable:
 		if (!workorder.isWorkOrderPosted()){
@@ -2542,7 +2545,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "</div>";
 		s += "</div>";
 	    s += "<div class=\"d-none d-md-block\"><U><B>Work order notes:&nbsp;</B></U></div>";
-		s += "" + order.getM_sTicketComments().replace("\n", "<BR>") + "";
+		s += "<div class=\"d-flex pl-3 pl-md-0\">" + order.getM_sTicketComments().replace("\n", "<BR>") + "</div>";
 		
 		s += "</TD></TR>";
 
@@ -2557,7 +2560,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			s += "</div>";
 			s += "</div>";
 			s += "<div class=\"d-none d-md-block\"><U><B>Directions:&nbsp;</B></U></div>";
-			s += order.getM_sDirections().replace("\n", "<BR>");
+			s += "<div class=\"d-flex pl-3 pl-md-0\">" + order.getM_sDirections().replace("\n", "<BR>") + "</div>";
 			s += "<div class=\"d-block d-md-none\"><B></B></div>";
 			s += "</TD></TR>";
 		}
@@ -2570,7 +2573,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "</div>";
 		s += "</div>";
 		s += "<div style=\" color:red;\" class=\"d-none d-md-block\"><U><B>Instructions:&nbsp;</B></U></div>";
-		s += wo.getminstructions().replace("\n", "<BR>");
+		s += "<div class=\"d-flex pl-3 pl-md-0\">" + wo.getminstructions().replace("\n", "<BR>") + "</div>";
 		s += "<div class=\"d-block d-md-none\"><B></B></div>";
 		s += "</TD></TR>";		
 		s += " <INPUT TYPE=HIDDEN NAME=\"" 
@@ -2963,6 +2966,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//This line should keep the font widths 'screen' wide:
 		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"
 		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
+		+ "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js\" integrity=\"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl\" crossorigin=\"anonymous\"></script>"
 		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
 		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
@@ -3236,6 +3240,11 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "    if (!bScreenIsFullyDisplayed()){\n"
 			+ "        return;\n"
 			+ "    }\n"
+			+ "  var receipient = prompt(\"Recipient:\", \"\");\n" 
+			+ "  if (receipient == null) {\n" 
+			+ "    return;\n" 
+			+ "  } "
+			+ "    document.getElementById(\"" + EMAIL_TO_FIELD + "\").value = receipient;\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 					 + EMAILRECEIPTCOMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"" + SMWorkOrderHeader.FORM_NAME + "\"].submit();\n"
@@ -3286,6 +3295,12 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			+ "    if (!bScreenIsFullyDisplayed()){\n"
 			+ "        return;\n"
 			+ "    }\n"
+			+ ""
+			+ "  var materialdescription = prompt(\"Material description:\", \"\");\n" 
+			+ "  if (materialdescription == null) {\n" 
+			+ "    return;\n" 
+			+ "  } "
+			+ "    document.getElementById(\"" + MATERIAL_RETURN_DESCRIPTION_FIELD + "\").value = materialdescription;\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 				 + MATERIALRETURNCOMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"" + SMWorkOrderHeader.FORM_NAME + "\"].submit();\n"
@@ -3794,9 +3809,9 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			ServletContext context
 	){
 
-		String sRow = "<div class=\"row\">";
-		sRow += "<div class=\"col-sm text-md-right\"><B>" + sLabel  + " </B></div>";
-		sRow += "<div class=\"col-sm\" ALIGN=LEFT>";
+		String sRow = "<div class=\"row d-flex pl-3\">";
+		sRow += "<div class=\"col-sm text-md-right \"><B>" + sLabel  + " </B></div>";
+		sRow += "<div class=\"col-sm \">";
 		String sDisabled = "";
 		if(!bDisabled) {sDisabled="disabled";}
 		sRow +=" <div style=\"white-space:nowrap;\" class=\"custom-control custom-switch\">\n" +

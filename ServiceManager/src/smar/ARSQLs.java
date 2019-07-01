@@ -15,6 +15,12 @@ public class ARSQLs extends SMClasses.MySQLs {
 	public static final String datduedate = "datduedate";
 	public static final String sordernumber = "sordernumber";
 	public static final String dcreditlimit = "dcreditlimit";
+	public static final String loriginalbatchnumber = "loriginalbatchnumber";
+	public static final String loriginalentrynumber = "loriginalentrynumber";
+	public static final String  doriginalamt = "doriginalamt";
+	public static final String dcurrentamt = "dcurrentamt";
+	public static final String sdesc = "sdesc";
+	public static final String ldaysover = "ldaysover";
 	//public static final String scustomer = "scustomer";
 	private static String SQL = "";
 	

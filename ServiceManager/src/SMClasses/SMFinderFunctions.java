@@ -17,6 +17,8 @@ public class SMFinderFunctions {
 			+ "&SearchFieldAlias4=Comment%202"
 			+ "&SearchField5=" + SMTableicitems.sreportgroup1
 			+ "&SearchFieldAlias5=Report%20Group%201"
+			+ "&SearchField6=" + SMTableicitems.TableName + "." + SMTableicitems.sCommonPartNumber
+			+ "&SearchFieldAlias6=Common%20Part%20Number"
 			+ "&ResultListField1="  + SMTableicitems.sItemNumber
 			+ "&ResultHeading1=Item%20No."
 			+ "&ResultListField2="  + SMTableicitems.sItemDescription
@@ -33,6 +35,8 @@ public class SMFinderFunctions {
 			+ "&ResultHeading7=Comment%201"
 			+ "&ResultListField8="  + SMTableicitems.sComment2
 			+ "&ResultHeading8=Comment%202"
+			+ "&ResultListField9=" + SMTableicitems.TableName + "." + SMTableicitems.sCommonPartNumber
+			+ "&ResultHeading9=Common%20Part%20Number"
 		;
 	}
 	
@@ -48,6 +52,8 @@ public class SMFinderFunctions {
 			+ "&SearchFieldAlias4=Comment%202"
 			+ "&SearchField5=" + SMTableicitems.TableName + "." + SMTableicitems.sreportgroup1
 			+ "&SearchFieldAlias5=Report%20Group%201"
+			+ "&SearchField6=" + SMTableicitems.TableName + "." + SMTableicitems.sCommonPartNumber
+			+ "&SearchFieldAlias6=Common%20Part%20Number"
 			+ "&ResultListField1="  + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
 			+ "&ResultHeading1=Item%20No."
 			+ "&ResultListField2="  + SMTableicitems.TableName + "." + SMTableicitems.sItemDescription
@@ -66,6 +72,8 @@ public class SMFinderFunctions {
 			+ "&ResultHeading8=Comment%201"
 			+ "&ResultListField9="  + SMTableicitems.TableName + "." + SMTableicitems.sComment2
 			+ "&ResultHeading9=Comment%202"
+			+ "&ResultListField10=" + SMTableicitems.TableName + "." + SMTableicitems.sCommonPartNumber
+			+ "&ResultHeading10=Common%20Part%20Number"
 		;
 	}
 }

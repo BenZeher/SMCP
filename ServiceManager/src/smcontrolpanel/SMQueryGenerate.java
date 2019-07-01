@@ -502,7 +502,7 @@ public class SMQueryGenerate extends HttpServlet {
 			//System.out.println("[1553031178] - sDropDownChoiceParam = '" + sDropDownChoiceParam + "'");
 			if (req.getParameter(sDropDownChoiceParam) != null){
 				sUserChoice = clsManageRequestParameters.get_Request_Parameter(sDropDownChoiceParam, req);
-				System.out.println("[1553031179] - sUserChoice = '" + sUserChoice + "'");
+				//System.out.println("[1553031179] - sUserChoice = '" + sUserChoice + "'");
 			}
 			
 			sCriteria += clsManageRequestParameters.get_Request_Parameter(

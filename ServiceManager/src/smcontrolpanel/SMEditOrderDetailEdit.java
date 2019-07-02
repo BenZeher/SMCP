@@ -741,7 +741,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				}
 				s += " VALUE=\"" + sItemCategory + "\">" 
 				+ sItemCategory + " - " + rsCategories.getString(SMTableiccategories.sDescription)
-				+ "</OPTION>";
+				+ "</OPTION>\n";
 			}
 			rsCategories.close();
 		} catch (SQLException e) {
@@ -777,7 +777,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				}
 				s += " VALUE=\"" + sMechanicInitials + "\">" 
 				+ sMechanicInitials + " - " + rsMechanics.getString(SMTablemechanics.sMechFullName)
-				+ "</OPTION>";
+				+ "</OPTION>\n";
 			}
 			rsMechanics.close();
 		} catch (SQLException e) {
@@ -843,7 +843,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				if (iCounter == 0){
 					s += "<OPTION VALUE=\"" + "" + "\">" 
 					+ "** SELECT A LABEL **"
-					+ "</OPTION>";
+					+ "</OPTION>\n";
 				}
 				String sLabel = rsSiteLocations.getString(SMTablesitelocations.sLabel);
 				s += "<OPTION";
@@ -852,13 +852,13 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				}
 				s += " VALUE=\"" + sLabel + "\">" 
 				+ rsSiteLocations.getString(SMTablesitelocations.sLabel)
-				+ "</OPTION>";
+				+ "</OPTION>\n";
 				iCounter++;
 			}
 			if (iCounter == 0){
 				s += "<OPTION VALUE=\"" + "" + "\">" 
 				+ "** NONE AVAILABLE **"
-				+ "</OPTION>";
+				+ "</OPTION>\n";
 			}
 			rsSiteLocations.close();
 		} catch (SQLException e) {
@@ -868,36 +868,36 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		s += "</SELECT></TD>";
 		//line booked date
 		if (header.getM_iOrderType().compareToIgnoreCase(Integer.toString(SMTableorderheaders.ORDERTYPE_QUOTE)) != 0){
-			s += "<TD class=\" fieldlabel \">Line booked date:&nbsp;</TD>";
+			s += "<TD class=\" fieldlabel \">Line booked date:&nbsp;</TD>\n";
 			s += "<TD class=\" fieldcontrol \" >"
 				+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderDetail.ParamdatLineBookedDate + "\""
 				+ " VALUE=\"" + detail.getM_datLineBookedDate().replace("\"", "&quot;") + "\""
-				+ " id = \"" + SMOrderDetail.ParamdatLineBookedDate + "\""
-				+ " onchange=\"flagDirty();\""
+				+ " ID = \"" + SMOrderDetail.ParamdatLineBookedDate + "\""
+				+ " onClick=\"flagDirty();\""
 				+ " SIZE=" + "28"
 				+ " MAXLENGTH=" + "10"
 				+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 				+ ">"
-				+ SMUtilities.getDatePickerString(SMOrderDetail.ParamdatLineBookedDate, getServletContext())
+				+ SMUtilities.getDatePickerString(SMOrderDetail.ParamdatLineBookedDate, getServletContext()) + "\n"
 				
 				//TODO LTO 20140418
 				//use order date as LBD button:
-				+ "<button type=\"button\""
-				+ " value=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
-				+ " name=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
-				+ " id=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
+				+ "<BUTTON type=\"button\""
+				+ " VALUE=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
+				+ " NAME=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
+				+ " ID=\"" + USE_ORDER_DATE_AS_LBD_LABEL + "\""
 				+ " onClick=\"useOrderDateAsLBD();\">"
 				+ USE_ORDER_DATE_AS_LBD_LABEL
-				+ "</button>\n"
+				+ "</BUTTON>"
 				
-				+ "</TD>";
+				+ "</TD>\n";
 		}else{
 			s += "<TD>&nbsp;</TD><TD>&nbsp;</TD>"
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMOrderDetail.ParamdatLineBookedDate + "\""
 				+ " VALUE=\"" + detail.getM_datLineBookedDate() + "\"" + ">";
 				;
 		}
-		s += "</TR>";
+		s += "</TR>\n";
 		s += "<TR>";
 		//expected ship date
 		s += "<TD class=\" fieldlabel \">Expected ship date:&nbsp;</TD>";
@@ -911,10 +911,10 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			+ " STYLE=\"width: " + ".75" + " in; height: 0.25in\""
 			+ ">"
 			+ SMUtilities.getDatePickerString(SMOrderDetail.ParamdatDetailExpectedShipDate, getServletContext())
-			+ "</TD>";
+			+ "</TD>\n";
 		
 		//Hide detail on invoice
-		s += "<TD class=\" fieldlabel \"><B>Hide on invoice?</B>&nbsp;</TD>";
+		s += "<TD class=\" fieldlabel \"><B>Hide on invoice?</B>&nbsp;</TD>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<INPUT TYPE=CHECKBOX ";
 		if (detail.getM_isuppressdetailoninvoice().compareToIgnoreCase("1") == 0){
@@ -924,7 +924,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			+ " id = \"" + SMOrderDetail.Paramisuppressdetailoninvoice + "\""
 			+ " onchange=\"flagDirty();\""
 			+ " width=0.25>"
-			+ "</TD>"
+			+ "</TD>\n"
 		;
 		s += "</TR>";
 		
@@ -1056,7 +1056,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 				+ " - "
 				+ clsStringFunctions.filter(rswpf.getString(SMTableworkperformedcodes.sWorkPerformedPhrase)) 
 				+ "</label>"
-				+ "<br>\n"
+				+ "<br>\n\n"
 				;
 			}
 			rswpf.close();

@@ -105,14 +105,14 @@ public class SMEditWorkPerformedCodes extends HttpServlet {
 		}
 		//Display text boxes for the new password and a confirmation:
 		
-		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='height: 0.24in'>";
-		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='height: 0.24in'></P>";
+		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "' STYLE='height: 0.24in'></P>\n";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sObjectName + "' STYLE='height: 0.24in'>\n";
+		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">\n";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sObjectName + "' STYLE='height: 0.24in'></P>\n";
 		sOutPut = sOutPut + 
 			" New " + sObjectName + " To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
 			SMTableworkperformedcodes.sWorkPerformedCodeLength + 
-			" STYLE=\"width: 2.41in; height: 0.25in\"></P>";
+			" STYLE=\"width: 2.41in; height: 0.25in\"></P>\n";
 		
 		//Build a list of Service Types:
 		sOutPut += "<P>Service Type For New " + sObjectName + ": ";
@@ -134,7 +134,7 @@ public class SMEditWorkPerformedCodes extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			//return false;
 		}
-		sOutPut += "</P>";
+		sOutPut += "</P>\n";
 		
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);

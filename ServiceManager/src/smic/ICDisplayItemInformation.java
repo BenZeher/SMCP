@@ -88,7 +88,7 @@ public class ICDisplayItemInformation extends HttpServlet {
     	
     	boolean bIncludeItemOnAPInvoiceInformation = 
        		request.getParameter("IncludeItemOnAPInvoiceInformation") != null;
-    	
+    	boolean bTriedLink = request.getParameter("NoSisters") != null;
     	
     	//boolean bIncludeItemOnSalesOrdersInformation = 
     	//	request.getParameter("IncludeItemOnSalesOrdersInformation") != null;
@@ -110,6 +110,8 @@ public class ICDisplayItemInformation extends HttpServlet {
     	
     	if (sSisterCompany.compareToIgnoreCase("") != 0){
     		out.println("<B>NOTE: SHOWING CORRESPONDING ITEM INFORMATION FOR " + sSisterCompany + "</B><BR>");
+    	}else if(bTriedLink) {
+    		out.println("<B>NOTE: NO COMMON PART NUMBER IN COMPANY </B><BR>");
     	}
     	
     	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -241,7 +243,7 @@ public class ICDisplayItemInformation extends HttpServlet {
 		String sSisterCompanyName2 = "";
 		String sSisterCompanyDb1 = "";
 		String sSisterCompanyDb2 = "";
-		String sReportGroup5 = "";
+		String sCommonPartNumber = "";
 		String sCorrespondingItem = "";
 		String sSisterCompany1Link = "";
 		String sSisterCompany2Link = "";
@@ -258,10 +260,9 @@ public class ICDisplayItemInformation extends HttpServlet {
 		} catch (SQLException e) {
 			pwOut.println("<BR><B>Error reading icoptions - " + e.getMessage() + ".</B><BR>");
 		}
-		
 		if (sSisterCompanyName1.compareToIgnoreCase("") !=0){
 			SQL = "SELECT "
-				+ SMTableicitems.sreportgroup5
+				+ SMTableicitems.sCommonPartNumber
 				+ " FROM " + SMTableicitems.TableName
 				+ " WHERE ("
 					+ SMTableicitems.sItemNumber + " = '" + sItem + "'"
@@ -270,21 +271,21 @@ public class ICDisplayItemInformation extends HttpServlet {
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
 				if (rs.next()){
-					sReportGroup5 = rs.getString(SMTableicitems.sreportgroup5);
+					sCommonPartNumber = rs.getString(SMTableicitems.sCommonPartNumber);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				pwOut.println("<BR><B>Error getting report group 5 - " + e.getMessage() + ".</B><BR>");
+				pwOut.println("<BR><B>Error getting common part number - " + e.getMessage() + ".</B><BR>");
 			}
 			
-			if (sReportGroup5.compareToIgnoreCase("") != 0){
+			if (sCommonPartNumber.compareToIgnoreCase("") != 0){
 				//See if this part has a corresponding item in the sister company:
 				SQL = "SELECT " 
 					+ SMTableicitems.sItemNumber
 					+ " FROM " + sSisterCompanyDb1 + "." + SMTableicitems.TableName
 					+ " WHERE ("
-						+ "(" + SMTableicitems.sreportgroup5
-							+ " = '" + sReportGroup5 + "')"
+						+ "(" + SMTableicitems.sCommonPartNumber
+							+ " = '" + sCommonPartNumber + "')"
 					+ ")"
 					;
 				//System.out.println("In " + this.toString() + " corresponding item SQL = " + SQL);
@@ -298,7 +299,6 @@ public class ICDisplayItemInformation extends HttpServlet {
 					pwOut.println("<BR><B>Error reading sister database 1 - " + e.getMessage() + ".</B><BR>");
 				}
 			}
-			
 			//Finally, if there's a corresponding item, display a link to it:
 			if (sCorrespondingItem.compareToIgnoreCase("") != 0){
 				sSisterCompany1Link = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICDisplayItemInformation?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
@@ -307,13 +307,18 @@ public class ICDisplayItemInformation extends HttpServlet {
 			    		+ "&SisterCompany=" + sSisterCompanyName1
 			    		+ "&SisterCompanyDb=" + sSisterCompanyDb1
 			    		+ "\">Show corresponding item in " + sSisterCompanyName1 + "</A>&nbsp;&nbsp;";
+			}else {
+				sSisterCompany1Link = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICDisplayItemInformation?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
+						+ sDBID 
+			    		+ "&ItemNumber=" + sItem
+			    		+ "&NoSisters=" + true
+			    		+ "\">Show corresponding item in " + sSisterCompanyName1 + "</A>&nbsp;&nbsp;";
 			}
 		}
-		
 		//Check the second company:
 		if (sSisterCompanyName2.compareToIgnoreCase("") !=0){
 			SQL = "SELECT "
-				+ SMTableicitems.sreportgroup5
+				+ SMTableicitems.sCommonPartNumber
 				+ " FROM " + SMTableicitems.TableName
 				+ " WHERE ("
 					+ SMTableicitems.sItemNumber + " = '" + sItem + "'"
@@ -322,21 +327,21 @@ public class ICDisplayItemInformation extends HttpServlet {
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
 				if (rs.next()){
-					sReportGroup5 = rs.getString(SMTableicitems.sreportgroup5);
+					sCommonPartNumber = rs.getString(SMTableicitems.sCommonPartNumber);
 				}
 				rs.close();
 			} catch (SQLException e) {
-				pwOut.println("<BR><B>Error getting report group 5 - " + e.getMessage() + ".</B><BR>");
+				pwOut.println("<BR><B>Error getting common part number - " + e.getMessage() + ".</B><BR>");
 			}
 			
-			if (sReportGroup5.compareToIgnoreCase("") != 0){
+			if (sCommonPartNumber.compareToIgnoreCase("") != 0){
 				//See if this part has a corresponding item in the sister company:
 				SQL = "SELECT " 
 					+ SMTableicitems.sItemNumber
 					+ " FROM " + sSisterCompanyDb2 + "." + SMTableicitems.TableName
 					+ " WHERE ("
-						+ "(" + SMTableicitems.sreportgroup5
-							+ " = '" + sReportGroup5 + "')"
+						+ "(" + SMTableicitems.sCommonPartNumber
+							+ " = '" + sCommonPartNumber + "')"
 					+ ")"
 					;
 				//System.out.println("In " + this.toString() + " corresponding item SQL = " + SQL);
@@ -350,7 +355,6 @@ public class ICDisplayItemInformation extends HttpServlet {
 					pwOut.println("<BR><B>Error reading sister database 2 - " + e.getMessage() + ".</B><BR>");
 				}
 			}
-			
 			//Finally, if there's a corresponding item, display a link to it:
 			if (sCorrespondingItem.compareToIgnoreCase("") != 0){
 				sSisterCompany2Link = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICDisplayItemInformation?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
@@ -359,11 +363,16 @@ public class ICDisplayItemInformation extends HttpServlet {
 			    		+ "&SisterCompany=" + sSisterCompanyName2
 			    		+ "&SisterCompanyDb=" + sSisterCompanyDb2
 			    		+ "\">Show corresponding item in " + sSisterCompanyName2 + "</A>&nbsp;&nbsp;";
+			}else {
+				sSisterCompany2Link = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICDisplayItemInformation?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
+						+ sDBID 
+			    		+ "&ItemNumber=" + sItem
+			    		+ "&NoSisters=" + true
+			    		+ "\">Show corresponding item in " + sSisterCompanyName2 + "</A>&nbsp;&nbsp;";
 			}
 		}
 		
 		String sCombinedLinks = sSisterCompany1Link + sSisterCompany2Link;
-		
 		if (sCombinedLinks.trim().compareToIgnoreCase("") !=0){
 			pwOut.println(sCombinedLinks + "<BR>");
 		}
@@ -541,6 +550,10 @@ public class ICDisplayItemInformation extends HttpServlet {
 				String sCanBeSold = rsItem.getInt(SMTableicitems.icannotbesold) == 0 ? "YES" : "NO";
 				pwOut.println(" "+sCanBeSold);
 				pwOut.println("</FONT></TD>");
+				pwOut.println("</TR>");
+				pwOut.println("<TR>");
+				pwOut.println("<TD COLSPAN=2><FONT SIZE=2><B>Common Part Number: </B>" 
+						+ rsItem.getString(SMTableicitems.sCommonPartNumber) + "</FONT></TD>");
 				pwOut.println("</TR>");
 				pwOut.println("<TR>");
 				pwOut.println("<TD COLSPAN=2><FONT SIZE=2><B>Comment 1: </B>" 

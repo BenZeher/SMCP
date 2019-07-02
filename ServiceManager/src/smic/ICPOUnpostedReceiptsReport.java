@@ -1,6 +1,5 @@
 package smic;
 
-import java.sql.Connection;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletContext;
@@ -14,7 +13,7 @@ import smcontrolpanel.SMUtilities;
 
 public class ICPOUnpostedReceiptsReport {
 	
-	public String processReport(Connection conn,
+	public String processReport(
 			ServletContext context,
 			String sDBID,
 			String sCallingClass)
@@ -23,7 +22,7 @@ public class ICPOUnpostedReceiptsReport {
 		String s = "";
 		s += printTableHeading();
 		s += printColumnHeadings();
-		s += printReport(conn, context, sDBID,sCallingClass);
+		s += printReport(context, sDBID,sCallingClass);
 		s += printTableFooting();
 		return s;
 	}
@@ -38,7 +37,7 @@ public class ICPOUnpostedReceiptsReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Receipt #" + sHeadingPadding
 			+ "</TD>\n"
@@ -54,10 +53,6 @@ public class ICPOUnpostedReceiptsReport {
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Created by" + sHeadingPadding
 			+ "</TD>\n"
-			
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Status" + sHeadingPadding
-			+ "</TD>\n"
 
 		;
 		s += "  </TR>\n";
@@ -71,7 +66,7 @@ public class ICPOUnpostedReceiptsReport {
 		return s;
 	}
 	
-	private String printReport(Connection conn,
+	private String printReport(
 			ServletContext context,
 			String sDBID,
 			String sCallingClass) 
@@ -83,95 +78,98 @@ public class ICPOUnpostedReceiptsReport {
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid 
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datreceived
 				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname
-				+ " , "+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lstatus
 				+ " FROM "
 				+SMTableicporeceiptheaders.TableName;
 				
 				SQL+= " WHERE ("
-				+ SMTableicporeceiptheaders.TableName +"."+SMTableicporeceiptheaders.lpostedtoic + " <= 0 )"
-				+ "AND ("+SMTableicporeceiptheaders.TableName + "."+ SMTableicporeceiptheaders.datdeleted + " = 0)"
+				+ SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpostedtoic + " <= 0 )"
+				+ "AND (" + SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datdeleted + " = 0)"
 				;
 				
 				SQL+=" ORDER BY"
-				+ " " +SMTableicporeceiptheaders.TableName +"."+SMTableicporeceiptheaders.datreceived 
-				+ ", "+SMTableicporeceiptheaders.TableName + "."+SMTableicporeceiptheaders.lid
+				+ " " +SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datreceived 
+				+ ", "+SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid
 				;
-				
+
 				String sPOID = "";
 				String sReceiptID = "";
+				int alt = 1;
 				try {
-					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-					while (rs.next()){
-						sPOID =Long.toString(rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid));
-						sReceiptID = Long.toString(rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
-						String sPOIDLink = getLinkPO(sPOID,context, sDBID,sCallingClass);
-						String sReceiptIDLink = getLinkReceipt(sReceiptID,sPOID,context, sDBID,sCallingClass);
-						s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN + " \" >\n";
-						s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-							
-							+  sIndent
-							//Receipt Link
-							+ "<I>" + sReceiptIDLink + "</I>"
-							+ "</TD>\n"
-							//PO Link
-							+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-							+ "<I>" + sPOIDLink + "</I>"
-							+ "</TD>\n"
-							
-							//Date Received
-							+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-							+ "<I>" + clsDateAndTimeConversions.resultsetDateStringToFormattedString(
-								rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datreceived), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE) + "</I>"
-							+ "</TD>\n"
-							
-							//Created By
-							+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-							+ "<I>" + rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname) + "</I>"
-							+ "</TD>\n";
-							
-						if(rs.getLong(SMTableicporeceiptheaders.lstatus)!=0) {
-								s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-									+ "<I>"+ "Deleted"+  "</I>"
-									+ "</TD>\n";
+					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", sCallingClass);
+					while (rs.next()) {
+						sPOID = Long.toString(
+								rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpoheaderid));
+						sReceiptID = Long.toString(
+								rs.getLong(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lid));
+						String sPOIDLink = getLinkPO(sPOID, context, sDBID, sCallingClass);
+						String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
+
+						if(alt%2 == 1) {
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+							alt++;
 						}else {
-							s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-									+ "<I>"+ "Entered"+  "</I>"
-									+ "</TD>\n";
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+							alt++;
 						}
-							
-							s+=  "&nbsp;"
-							+ "</TD>\n"
-							
-							+ "  </TR>\n"
-						;
+						s += "    <TD class = \""
+								+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+
+						+ sIndent
+						// Receipt Link
+						+ "<I>" + sReceiptIDLink + "</I>" + "</TD>\n"
+						// PO Link
+						+ "    <TD class = \""
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ "<I>" + sPOIDLink + "</I>" + "</TD>\n"
+
+						// Date Received
+						+ "    <TD class = \""
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ "<I>"
+						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+								rs.getString(SMTableicporeceiptheaders.TableName + "."
+										+ SMTableicporeceiptheaders.datreceived),
+								SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE)
+						+ "</I>" + "</TD>\n"
+
+						// Created By
+						+ "    <TD class = \""
+						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+						+ "<I>" + rs.getString(SMTableicporeceiptheaders.TableName + "."
+								+ SMTableicporeceiptheaders.screatedbyfullname)
+						+ "</I>" + "</TD>\n";
+
+						s += "&nbsp;" + "</TD>\n"
+
+						+ "  </TR>\n";
 					}
-				}catch (Exception e) {
-					throw new Exception("Error [1560448136] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
+					rs.close();
+				} catch (Exception e) {
+					throw new Exception(
+							"Error [1560448136] - reading query results with SQL: '" + SQL + "' - " + e.getMessage());
 				}
-		return s;
+				return s;
 	}
-	private String getLinkReceipt(String sReceiptID,
+
+	private String getLinkReceipt(String sReceiptID, 
 			String sPOID, 
 			ServletContext context, 
 			String sDBID,
 			String sCallingClass) {
-		String sReceiptIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditReceiptEdit?"
-				+ SMTableicpoinvoiceheaders.lpoheaderid + "=" + sPOID+ "&"
-	    		+ SMTableicpoinvoiceheaders.lid + "=" + sReceiptID
-	    		+ "&Callingclass=" + sCallingClass
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\">" + sReceiptID + "</A>";
+			String sReceiptIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditReceiptEdit?"
+				+ SMTableicpoinvoiceheaders.lpoheaderid + "=" + sPOID + "&" + SMTableicpoinvoiceheaders.lid + "="
+				+ sReceiptID + "&Callingclass=" + sCallingClass + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "="
+				+ sDBID + "\">" + sReceiptID + "</A>";
 		return sReceiptIDLink;
 	}
-	private String getLinkPO(String sPOID,
+
+	private String getLinkPO(String sPOID, 
 			ServletContext context, 
 			String sDBID, 
 			String sCallingClass) {
-		String sPOIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditPOEdit?"
-	    		+ SMTableicpoinvoiceheaders.lid + "=" + sPOID
-	    		+ "&Callingclass=" + sCallingClass
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\">" + sPOID + "</A>";
+			String sPOIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditPOEdit?"
+				+ SMTableicpoinvoiceheaders.lid + "=" + sPOID + "&Callingclass=" + sCallingClass + "&"
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sPOID + "</A>";
 		return sPOIDLink;
 	}
 }

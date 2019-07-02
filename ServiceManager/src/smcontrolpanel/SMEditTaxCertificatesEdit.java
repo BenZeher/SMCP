@@ -98,73 +98,73 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 		}
 		//If it's not a new entry:
 		if(entry.getslid().compareToIgnoreCase("-1")!=0){
-				s += "<TR><TD ALIGN=RIGHT><B>Tax Certificate ID</B>:</TD><TD><B>" 
+				s += "<TR>\n<TD ALIGN=RIGHT><B>Tax Certificate ID</B>:</TD>\n<TD>\n<B>" 
 					+ sID 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramlid + "\" VALUE=\"" 
 					+ sID + "\">"
-					+ "</B></TD></TR>";
+					+ "</B></TD>\n</TR>\n";
 		//but if it IS a new entry:
 		}else{
-				s += "<TR><TD ALIGN=RIGHT><B>Tax Certificate ID</B>:</TD><TD><B>" 
+				s += "<TR>\n<TD ALIGN=RIGHT><B>Tax Certificate ID</B>:</TD>\n<TD>\n<B>" 
 					+ "(NEW)" 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramlid + "\" VALUE=\"" 
 					+ entry.getslid() + "\">"
-					+ "</B></TD></TR>";
+					+ "</B></TD>\n</TR>\n";
 				}
 		
 		//Created by:
-				s += "<TR><TD ALIGN=RIGHT><B>Created by<B>:</TD>"
-					+ "<TD>" 
+				s += "<TR>\n<TD ALIGN=RIGHT><B>Created by<B>:</TD>\n"
+					+ "<TD>\n" 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramdatcreated + "\" VALUE=\"" + entry.getdatcreated() + "\">"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramlcreatedbyuserid + "\" VALUE=\"" + entry.getlcreatedbyuserid() + "\">"
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramscreatedbyfullname + "\" VALUE=\"" + entry.getscreatedbyfullname() + "\">"
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 				;	
 
 		//Customer Number:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Customer Number<FONT COLOR=RED>*</FONT>:"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Customer Number<FONT COLOR=RED>*</FONT>:"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramscustomernumber + "\""
 					+ " VALUE=\"" + entry.getscustomernumber().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "13"
 					+ " MAXLENGTH=" + Integer.toString(SMTabletaxcertificates.scustomernumberlength) + ">"				
-					+ "</TD>"					
-					+ "</TR>"
+					+ "</TD>\n"					
+					+ "</TR>\n"
 				;
 		//Customer Name (from customer record)
 				ARCustomer customer = new ARCustomer(entry.getscustomernumber().replace("\"", "&quot;"));
 				if(!customer.load(getServletContext(), sm.getsDBID())){
-					s += "<TR><TD ALIGN=RIGHT><B>" + "Customer Name:"  + " </B></TD>";
+					s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Customer Name:"  + " </B></TD>\n";
 					s += "<TD ALIGN=LEFT>" + "<FONT COLOR=RED>*<I>Invalid customer number<I></FONT>"
-						+ "</TD>"
-						+ "</TR>"
+						+ "</TD>\n"
+						+ "</TR>\n"
 					;
 				}else{
-					s += "<TR><TD ALIGN=RIGHT><B>" + "Customer Name:"  + " </B></TD>";
+					s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Customer Name:"  + " </B></TD>\n";
 					s += "<TD ALIGN=LEFT>" + customer.getM_sCustomerName().replace("\"", "&quot;")
-						+ "</TD>"
-						+ "</TR>"
+						+ "</TD>\n"
+						+ "</TR>\n"
 				;
 				}
 		//Entered Customer Name (Customer name entered manually)
 		//TODO Remove this field after all tax certificate records have been saved with a valid customer number
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Entered Customer Name:"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Entered Customer Name:"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramscustomername + "\""
 						+ "VALUE=\"" + entry.getscustomername().replace("\"", "&quot;") + "\""
 						+ " SIZE=" + "60"		
 						//+ " readonly>"
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 				;
 
 		//Job Number:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Job Number:</B>"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Job Number:</B>"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramsjobnumber + "\""
 					+ " VALUE=\"" + entry.getsjobnumber().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "13"
 					+ " MAXLENGTH=" + Integer.toString(SMTabletaxcertificates.sjobnumberlength)
-					+ "></TD>"
-					+ "</TR>"
+					+ "></TD>\n"
+					+ "</TR>\n"
 		;	
 		//Ship to Name
 				SMOrderHeader order = new SMOrderHeader();
@@ -174,15 +174,15 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 					sShiptToName = order.getM_sShipToName().replace("\"", "&quot;");
 					
 				}
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Ship To Name:"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Ship To Name:"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT>" + sShiptToName
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 				;
 	
 		//Project(s) Location:
-				s += "<TR><TD ALIGN=RIGHT><B>Project(s) Location</B>:</TD>";
-				s += "<TD>"
+				s += "<TR>\n<TD ALIGN=RIGHT><B>Project(s) Location</B>:</TD>\n";
+				s += "<TD>\n"
 					+ "<TEXTAREA NAME=\"" + SMTaxCertificate.Paramsprojectlocation + "\""
 					+ " rows=\"" + "2" + "\""
 					+ " style = \" width: 100%; \""
@@ -190,21 +190,21 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 					+ ">"
 					+ entry.getsprojectlocation().replace("\"", "&quot;")
 					+ "</TEXTAREA>"
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 				;		
 		//Exempt Number:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Exempt Number: </B>"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Exempt Number: </B>"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramsexemptnumber + "\""
 					+ " VALUE=\"" + entry.getsexemptnumber().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "40"
 					+ " MAXLENGTH=" + Integer.toString(SMTabletaxcertificates.sexemptnumberlength)
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 				;		
 //		//Date Received:
 
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Date Received:"  + " </B></TD>"
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Date Received:"  + " </B></TD>\n"
 	    	        + "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramdatreceived + "\""
 	        		+ " VALUE=\"" + entry.getdatreceived().replace("\"", "&quot;") + "\""
 	        		+ " SIZE=10"
@@ -213,12 +213,12 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 	        		+ ">"
 	        		+ SMUtilities.getDatePickerString(SMTaxCertificate.Paramdatreceived, getServletContext())
 	        		+ "<i> Must be in M/D/YYYY Format. (ex: 3/1/2015)</i>"
-	        		+ "</TD>"
-	        		+ "</TR>"
+	        		+ "</TD>\n"
+	        		+ "</TR>\n"
 	        		;
 //		//Date Issued:
 
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Date Issued:"  + " </B></TD>"
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Date Issued:"  + " </B></TD>\n"
 		 			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramdatissued+ "\""
 	        		+ " VALUE=\"" + entry.getdatissued().replace("\"", "&quot;") + "\""
 	        		+ " SIZE=10"
@@ -227,11 +227,11 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 	        		+ ">"
 	        		+ SMUtilities.getDatePickerString(SMTaxCertificate.Paramdatissued, getServletContext())
 	        		+ "<i> Must be in M/D/YYYY Format. (ex: 3/1/2015)</i>"
-	        		+ "</TD>"
-	        		+ "</TR>"
+	        		+ "</TD>\n"
+	        		+ "</TR>\n"
 	        		;
 //		//Date Expired:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "Date Expired:"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Date Expired:"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramdatexpired+ "\""
 	        		+ " VALUE=\"" + entry.getdatexpired().replace("\"", "&quot;") + "\""
 	        		+ " SIZE=10"
@@ -240,53 +240,53 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 	        		+ ">"
 	        		+ SMUtilities.getDatePickerString(SMTaxCertificate.Paramdatexpired, getServletContext())
 	        		+ "<i> Must be in M/D/YYYY Format. (ex: 3/1/2015)</i>"
-	        		+ "</TD>"
-	        		+ "</TR>"
+	        		+ "</TD>\n"
+	        		+ "</TR>\n"
 	        		;
 		
 		//Tax Jurisdiction:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Tax Jurisdiction:</B>"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Tax Jurisdiction:</B>"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramstaxjurisdiction + "\""
 					+ " VALUE=\"" + entry.getstaxjurisdiction().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "5"
 					+ " MAXLENGTH=" + Integer.toString(SMTabletaxcertificates.staxjurisdictionlength)
-					+ "></TD>"
-					+ "</TR>"
+					+ "></TD>\n"
+					+ "</TR>\n"
 		;
 
 		//Comments:
-				s += "<TR><TD ALIGN=RIGHT><B>Comments</B>:</TD>";
-				s += "<TD>"
+				s += "<TR>\n<TD ALIGN=RIGHT><B>Comments</B>:</TD>\n";
+				s += "<TD>\n"
 					+ "<TEXTAREA NAME=\"" + SMTaxCertificate.ParammNotes + "\""
 					+ " rows=\"" + "3" + "\""
 					+ " style = \" width: 100%; \""
 					+ ">"
 					+ entry.getmnotes().replace("\"", "&quot;")
 					+ "</TEXTAREA>"
-					+ "</TD>"
-					+ "</TR>"
+					+ "</TD>\n"
+					+ "</TR>\n"
 		;
 		
 		//GDocLink:
-				s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Document file link:</B>"  + " </B></TD>";
+				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Document file link:</B>"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramsgdoclink + "\""
 					+ " VALUE=\"" + entry.getsgdoclink().replace("\"", "&quot;") + "\""
 					+ " SIZE=" + "60"
 					+ " MAXLENGTH=" + Integer.toString(SMTabletaxcertificates.sgdoclinklength)
-					+ "></TD>"
-					+ "</TR>"
+					+ "></TD>\n"
+					+ "</TR>\n"
 		;
 
 //		//GDocLink:
 //		
-//			s += "<TR><TD ALIGN=RIGHT><B><FONT SIZE=2>Document file link:</FONT></B></TD>&nbsp;"
+//			s += "<TR>\n<TD ALIGN=RIGHT><B><FONT SIZE=2>Document file link:</FONT></B></TD>\n&nbsp;"
 //				+ "<INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramsgdoclink + "\""
 //				+ " VALUE=\"" + entry.getsgdoclink().replace("\"", "&quot;") + "\""
 //				+ "SIZE=" + "90"
 //				+ " MAXLENGTH=" + Integer.toString(254)
 //				+ "<BR>"
-//				+ "</TD>"
-//			+ "</TR>"
+//				+ "</TD>\n"
+//			+ "</TR>\n"
 //			;
 //			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramsgdoclink + "\" VALUE=\"" + entry.getsgdoclink() + "\">";
 //	
@@ -303,27 +303,27 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 //		if (entry.getsresolved().compareToIgnoreCase("1") == 0){
 //			sCheckBoxChecked = SMUtilities.CHECKBOX_CHECKED_STRING;
 //		}
-//		s += "<TR><TD ALIGN=RIGHT><B>" + "Resolved?" + "</B></TD>";
+//		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Resolved?" + "</B></TD>\n";
 //		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
-//			+ " NAME=\"" + SMTaxCertificate.Paramiresolved + "\" width=0.25>&nbsp;" + sResolvedBy + "</TD>"
+//			+ " NAME=\"" + SMTaxCertificate.Paramiresolved + "\" width=0.25>&nbsp;" + sResolvedBy + "</TD>\n"
 //		;
-//		s += "</TR>";
+//		s += "</TR>\n";
 		
 		//Resolution Comments:
-//		s += "<TR><TD ALIGN=RIGHT><B>Resolution Comments</B>:</TD>";
-//		s += "<TD>"
+//		s += "<TR>\n<TD ALIGN=RIGHT><B>Resolution Comments</B>:</TD>\n";
+//		s += "<TD>\n"
 //			+ "<TEXTAREA NAME=\"" + SMTaxCertificate.Parammresolutioncomments + "\""
 //			+ " rows=\"" + "3" + "\""
 //			+ " style = \" width: 100%; \""
 //			+ ">"
 //			+ entry.getsresolutioncomments().replace("\"", "&quot;")
 //			+ "</TEXTAREA>"
-//			+ "</TD>"
-//			+ "</TR>"
+//			+ "</TD>\n"
+//			+ "</TR>\n"
 //		;
 //		//Status Options
-//		s += "<TR><TD ALIGN=RIGHT><B>Credit Status:</B>:</TD>";
-//		s += "<TD>";
+//		s += "<TR>\n<TD ALIGN=RIGHT><B>Credit Status:</B>:</TD>\n";
+//		s += "<TD>\n";
 //		String sChecked = "";
 //		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTabletaxcertificates.STATUS_CREDITNOTEXPECTED)) == 0){
 //			sChecked = " checked ";
@@ -345,8 +345,8 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 //		s += "<INPUT TYPE='RADIO' NAME='" + SMTaxCertificate.Paramicreditstatus + "' VALUE= "+ SMTabletaxcertificates.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
 //		
 //		
-//		    s+= "</TD>"
-//			+ "</TR>"
+//		    s+= "</TD>\n"
+//			+ "</TR>\n"
 		;
 		s += "</TABLE>";
 		return s;

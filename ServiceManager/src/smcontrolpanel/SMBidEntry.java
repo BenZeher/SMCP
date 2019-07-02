@@ -11,7 +11,6 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import SMDataDefinition.SMTableappointments;
 import SMDataDefinition.SMTablebidproductamounts;
 import SMDataDefinition.SMTablebidproducttypes;
 import SMDataDefinition.SMTablebids;
@@ -801,95 +800,6 @@ public class SMBidEntry extends clsMasterEntry{
 		return true;
 	}
 
-	public boolean delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName){
-
-		Connection conn = clsDatabaseFunctions.getConnection(
-				context, 
-				sDBIB, 
-				"MySQL", 
-				this.toString() + " - user: " + sUserID + " - " + sUserFullName
-		);
-
-		if (conn == null){
-			super.addErrorMessage("Error opening data connection.");
-			return false;
-		}
-
-		boolean bResult = delete (conn);
-		clsDatabaseFunctions.freeConnection(context, conn, "[1547080410]");
-		return bResult;
-
-	}
-	public boolean delete (Connection conn){
-		//Do not delete sales lead if any future or past appointments are linked to it.
-		String SQL = "SELECT " + SMTableappointments.lid
-				+ " FROM " + SMTableappointments.TableName
-				+ " WHERE (" + SMTableappointments.ibidid + "=" + m_sid + ")"
-				;	
-		try {
-			ResultSet rsAppointments = clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rsAppointments.next()){
-				super.addErrorMessage("Appointments have been scheduled for this sales lead" + ".");
-				return false;
-			}
-			rsAppointments.close();
-		} catch (SQLException e1) {
-			super.addErrorMessage("Could not read appointments associated with this sales lead " + SMBidEntry.ParamObjectName + " - " + e1.getMessage() + ".");
-			return false;		
-		}
-				
-		SQL = "DELETE FROM " + SMTablebids.TableName
-		+ " WHERE ("
-		+ SMTablebids.lid + " = " + m_sid
-		+ ")"
-		;
-
-		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			super.addErrorMessage("Error starting data transaction to delete " + SMBidEntry.ParamObjectName + ".");
-			return false;
-		}
-
-		try {
-			if (!clsDatabaseFunctions.executeSQL(SQL, conn)) {
-				super.addErrorMessage("Could not delete " + ParamObjectName + " with ID '"
-						+ m_sid + "'.");
-				return false;
-			}
-		} catch (SQLException e) {
-			super.addErrorMessage("Could not delete " + ParamObjectName + " with ID '"
-					+ m_sid + "' - " + e.getMessage());
-			return false;
-		}
-
-		//Now delete the product amounts, too:
-		SQL = "DELETE FROM " + SMTablebidproductamounts.TableName
-		+ " WHERE ("
-		+ "(" + SMTablebidproductamounts.lBidID + " = " + m_sid + ")"
-		+ ")"
-		;
-		try {
-			if (!clsDatabaseFunctions.executeSQL(SQL, conn)) {
-				super.addErrorMessage("Could not delete " + SMBidEntry.ParamObjectName + " product amounts" + " with ID '"
-						+ m_sid + "'.");
-				return false;
-			}
-		} catch (SQLException e) {
-			super.addErrorMessage("Could not delete " + SMBidEntry.ParamObjectName + " product amounts" + " with ID '"
-					+ m_sid + "' - " + e.getMessage());
-			return false;
-		}
-
-		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			super.addErrorMessage("Could not commit transaction to commit " + SMBidEntry.ParamObjectName + " product amounts" + " with ID '"
-					+ m_sid + "'.");
-			clsDatabaseFunctions.rollback_data_transaction(conn);
-			return false;
-		}
-
-		//Empty the values:
-		initBidVariables();
-		return true;
-	}
 
 	public String slid (){
 		return m_sid;

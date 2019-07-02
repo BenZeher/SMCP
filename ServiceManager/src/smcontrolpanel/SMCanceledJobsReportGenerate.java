@@ -161,22 +161,22 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 		    //print out column headers
 		    out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    out.println("<TR><TD COLSPAN=5 ALIGN=CENTER><HR></TD></TR>" +
-		    			"<TR BGCOLOR=\"#EEEEEE\"><TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>Order#</B></TD>" +
-		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=23%><B>Bill To Name</B></TD>" +
-		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>USER</B></TD>" +
-		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=13%><B>Canceled Date</B></TD>" +
-		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=50%><B>Reason For Cancellation</B></TD>" +
-	    				"</TR>");
+		    out.println("<TR>\n<TD COLSPAN=5 ALIGN=CENTER><HR></TD>\n</TR>\n" +
+		    			"<TR BGCOLOR=\"#EEEEEE\"><TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>Order#</B></TD>\n" +
+		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=23%><B>Bill To Name</B></TD>\n" +
+		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>USER</B></TD>\n" +
+		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=13%><B>Canceled Date</B></TD>\n" +
+		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=50%><B>Reason For Cancellation</B></TD>\n" +
+	    				"</TR>\n");
 		    boolean bFlipper = false;
 		    String sbgColor = "";
 		    String sCurrentCategory = null;
 		    while (rs.next()){
 		    	
 		    	if (sCurrentCategory == null || rs.getString(SMTableorderheaders.sDefaultItemCategory).compareTo(sCurrentCategory) != 0){
-		    		out.println("<TR><TD COLSPAN=5 ALIGN=CENTER><HR></TD></TR>");
-		    		out.println("<TR><TD COLSPAN=2 ALIGN=LEFT><B>Default Category:&nbsp;&nbsp;&nbsp;&nbsp;" + rs.getString(SMTableorderheaders.sDefaultItemCategory) + "</B></TD></TR>");
-		    		out.println("<TR><TD COLSPAN=2 ALIGN=CENTER><HR></TD></TR>");
+		    		out.println("<TR>\n<TD COLSPAN=5 ALIGN=CENTER><HR></TD>\n</TR>\n");
+		    		out.println("<TR>\n<TD COLSPAN=2 ALIGN=LEFT><B>Default Category:&nbsp;&nbsp;&nbsp;&nbsp;" + rs.getString(SMTableorderheaders.sDefaultItemCategory) + "</B></TD>\n</TR>\n");
+		    		out.println("<TR>\n<TD COLSPAN=2 ALIGN=CENTER><HR></TD>\n</TR>\n");
 		    		sCurrentCategory = rs.getString(SMTableorderheaders.sDefaultItemCategory);
 		    	}
 		    	bFlipper = !bFlipper;
@@ -186,19 +186,19 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 		    		sbgColor = "\"#DDDDDD\"";
 		    	}
     			out.println("<TR BGCOLOR=" + sbgColor + ">");
-	    		//out.println("<TD ALIGN=CENTER>" + rs.getInt(SMTablecustomercalllog.id) + "</TD>");
+	    		//out.println("<TD ALIGN=CENTER>" + rs.getInt(SMTablecustomercalllog.id) + "</TD>\n");
     			out.println("<TD ALIGN=CENTER><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
     				+ "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.sOrderNumber) 
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
-    				+ rs.getString(SMTableorderheaders.sOrderNumber).trim() + "</A></TD>");
-	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.sBillToName)) + "</TD>");
-	    		out.println("<TD ALIGN=CENTER>" + rs.getString(SMTableorderheaders.LASTEDITUSERFULLNAME) + "</TD>");
-	    		out.println("<TD ALIGN=CENTER>" + USDateOnlyformatter.format(rs.getTimestamp(SMTableorderheaders.datOrderCanceledDate)) + "</TD>");
-	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.mInternalComments)) + "</TD>");
-	    		out.println("</TR>");
+    				+ rs.getString(SMTableorderheaders.sOrderNumber).trim() + "</A></TD>\n");
+	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.sBillToName)) + "</TD>\n");
+	    		out.println("<TD ALIGN=CENTER>" + rs.getString(SMTableorderheaders.LASTEDITUSERFULLNAME) + "</TD>\n");
+	    		out.println("<TD ALIGN=CENTER>" + USDateOnlyformatter.format(rs.getTimestamp(SMTableorderheaders.datOrderCanceledDate)) + "</TD>\n");
+	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.mInternalComments)) + "</TD>\n");
+	    		out.println("</TR>\n");
 		    }
 		    rs.close();
-		    out.println("<TR><TD ALIGN=RIGHT VALIGN=TOP COLSPAN=5><HR></TD></TR>");
+		    out.println("<TR>\n<TD ALIGN=RIGHT VALIGN=TOP COLSPAN=5><HR></TD>\n</TR>\n");
 		    out.println("</TABLE>");
 	    }catch (SQLException ex){
 	    	System.out.println("Error in SMCanceledJobsReportGenerate");

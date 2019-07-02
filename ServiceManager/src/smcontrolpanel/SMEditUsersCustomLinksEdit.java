@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecustomlinks;
 import SMDataDefinition.SMTableusers;
 import SMDataDefinition.SMTableuserscustomlinks;
@@ -59,7 +60,7 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 	    //Output Edit page HTML
 	    smedit.printHeaderTable();  
 		smedit.getPWOut().println("<BR>");
-		
+		smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    try {
 	    smedit.getPWOut().println(clsServletUtilities.getJQueryIncludeString());
 	    smedit.getPWOut().println(getStyles());
@@ -118,7 +119,7 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 		
 		//***********Add new link*************************
 		s += "<TABLE BORDER=1 WIDTH=" + TABLE_WIDTH + ">"; 
-		s += "\n\n<TR style=\"background-color:grey; color:white; \">"
+		s += "\n\n<TR class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">"
 			+ "<TD COLSPAN=3>"
 			+ "<B>&nbsp;ADD LINK</B>"
 			+ "</TD>"
@@ -174,7 +175,7 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 		     
 			//******Delete existing link *******************
 			s += "<TABLE BORDER=1 WIDTH=" + TABLE_WIDTH + ">"; 
-			s += "<TR style=\"background-color:grey; color:white; \"><TD COLSPAN=3>"
+			s += "<TR class=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \"><TD COLSPAN=3>"
 				+ "<B>&nbsp;REMOVE LINK</B>"
 				+ "</TD></TR>"
 			;

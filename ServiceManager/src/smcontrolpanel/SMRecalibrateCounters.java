@@ -43,7 +43,9 @@ public class SMRecalibrateCounters extends HttpServlet {
 	    	sCompanyName));
 		
 	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-		if (! sWarning.equalsIgnoreCase("")){
+		if (sWarning.contentEquals("Recalibration was successful.") ){
+			out.println("<B><FONT COLOR=\"Black\">" + sWarning + "</FONT></B><BR>");
+		}else if (!sWarning.equalsIgnoreCase("")) {
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    

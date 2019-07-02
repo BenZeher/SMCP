@@ -19,7 +19,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
-import smar.*;
 
 public class ICItem extends Object{
 	public static final String ParamAddingNewRecord = "bAddingNewRecord";
@@ -44,6 +43,7 @@ public class ICItem extends Object{
 	public static final String ParamReportGroup3 = "ReportGroup3";
 	public static final String ParamReportGroup4 = "ReportGroup4";
 	public static final String ParamReportGroup5 = "ReportGroup5";
+	public static final String ParamCommonPartNumber = "CommonPartNumber";
 	public static final String ParamMostRecentCost = "MostRecentCost";
 	public static final String ParamLaborItem = "LaborItem";
 	public static final String ParamNonStockItem = "NonStockItem";
@@ -78,6 +78,7 @@ public class ICItem extends Object{
 	private String m_sReportGroup3;
 	private String m_sReportGroup4;
 	private String m_sReportGroup5;
+	private String m_sCommonPartNumber;
 	private String m_sMostRecentCost;
 	private String m_sLaborItem;
 	private String m_sNonStockItem;
@@ -91,6 +92,7 @@ public class ICItem extends Object{
 	private boolean bDebugMode = false;
 
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
+
 
 	public ICItem(
 			String sItemNumber
@@ -117,6 +119,7 @@ public class ICItem extends Object{
 		m_sReportGroup3 = "";
 		m_sReportGroup4 = "";
 		m_sReportGroup5 = "";
+		m_sCommonPartNumber = "";
 		m_sMostRecentCost = "0.0000";
 		m_sLaborItem = "0";
 		m_icannotbepurchased = "0";
@@ -159,7 +162,8 @@ public class ICItem extends Object{
 		m_sReportGroup2 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup2, req).trim().replace("&quot;", "\"");
 		m_sReportGroup3 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup3, req).trim().replace("&quot;", "\"");
 		m_sReportGroup4 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup4, req).trim().replace("&quot;", "\"");
-		m_sReportGroup5 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup5, req).trim().replace("&quot;", "\"");
+		m_sReportGroup5 = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamReportGroup5, req).trim().replace("&quot;", "\"");		
+		m_sCommonPartNumber = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamCommonPartNumber, req).trim().replace("&quot;", "\"");
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamAddingNewRecord, req).trim().replace("&quot;", "\"");
 		m_sMostRecentCost = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamMostRecentCost, req).trim().replace("&quot;", "\"");
 		m_sLastEditUserFullName = clsManageRequestParameters.get_Request_Parameter(ICItem.ParamLastEditUserFullName, req).trim().replace("&quot;", "\"");
@@ -265,28 +269,30 @@ public class ICItem extends Object{
 		
 		try{
 			if (rs.next()){
-				m_sItemNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sItemNumber));
-				m_sItemDescription = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sItemDescription));
-				String sDate = rs.getString(SMTableicitems.datLastMaintained);
+				
+				m_sItemNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTableicitems.sItemNumber));
+				m_sItemDescription = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sItemDescription);
+				String sDate = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.datLastMaintained);
 				m_sLastMaintainedDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);
 				m_sActive = Integer.toString(rs.getInt(SMTableicitems.iActive));
-				m_sCategoryCode = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCategoryCode));
-				m_sCostUnitOfMeasure = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sCostUnitOfMeasure));
-				m_sDefaultPriceListCode = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sDefaultPriceListCode));
-				m_sPickingSequence = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sPickingSequence));
+				m_sCategoryCode = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCategoryCode);
+				m_sCostUnitOfMeasure = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCostUnitOfMeasure);
+				m_sDefaultPriceListCode = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sDefaultPriceListCode);
+				m_sPickingSequence = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sPickingSequence);
 				sDate = rs.getString(SMTableicitems.datInactive);
 				m_sInactiveDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);
-				m_sComment1 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment1));
-				m_sComment2 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment2));
-				m_sComment3 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment3));
-				m_sComment4 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sComment4));
-				m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sLastEditUserFullName));
-				m_sDedicatedToOrderNumber = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sDedicatedToOrderNumber));
-				m_sReportGroup1 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup1));
-				m_sReportGroup2 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup2));
-				m_sReportGroup3 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup3));
-				m_sReportGroup4 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup4));
-				m_sReportGroup5 = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sreportgroup5));
+				m_sComment1 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment1);
+				m_sComment2 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment2);
+				m_sComment3 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment3);
+				m_sComment4 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sComment4);
+				m_sLastEditUserFullName = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sLastEditUserFullName);
+				m_sDedicatedToOrderNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sDedicatedToOrderNumber);
+				m_sReportGroup1 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup1);
+				m_sReportGroup2 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup2);
+				m_sReportGroup3 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup3);
+				m_sReportGroup4 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup4);
+				m_sReportGroup5 = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sreportgroup5);
+				m_sCommonPartNumber = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sCommonPartNumber);
 				m_sTaxable = Integer.toString(rs.getInt(SMTableicitems.iTaxable));
 				m_sMostRecentCost = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
 						rs.getBigDecimal(SMTableicitems.bdmostrecentcost));
@@ -299,7 +305,7 @@ public class ICItem extends Object{
 				m_sNewRecord = "0";
 				m_sSuppressItemQtyLookup = Integer.toString(rs.getInt(SMTableicitems.isuppressitemqtylookup));
 				m_sHideOnInvoiceDefault = Integer.toString(rs.getInt(SMTableicitems.ihideoninvoicedefault));
-				m_sworkordercomment = ARUtilities.checkStringForNull(rs.getString(SMTableicitems.sworkordercomment));
+				m_sworkordercomment = clsDatabaseFunctions.getRecordsetStringValue(rs,SMTableicitems.sworkordercomment);
 				rs.close();
 				return true;
 			}
@@ -442,6 +448,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.sreportgroup3 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup3) + "'"
 				+ ", " + SMTableicitems.sreportgroup4 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup4) + "'"
 				+ ", " + SMTableicitems.sreportgroup5 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup5) + "'"
+				+ ", " + SMTableicitems.sCommonPartNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCommonPartNumber) + "'"
 				+ ", " + SMTableicitems.sworkordercomment + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sworkordercomment) + "'"
 				+ ", " + SMTableicitems.bdmostrecentcost + " = " + m_sMostRecentCost.replace(",", "")
 
@@ -512,6 +519,7 @@ public class ICItem extends Object{
 				+ ", " + SMTableicitems.sreportgroup3
 				+ ", " + SMTableicitems.sreportgroup4
 				+ ", " + SMTableicitems.sreportgroup5
+				+ ", " + SMTableicitems.sCommonPartNumber
 				+ ", " + SMTableicitems.sworkordercomment
 				+ ", " + SMTableicitems.bdmostrecentcost
 
@@ -545,6 +553,7 @@ public class ICItem extends Object{
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup3) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup4) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sReportGroup5) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCommonPartNumber) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sworkordercomment) + "'"
 				+ ", " + m_sMostRecentCost.replace(",", "")
 				+ ")"
@@ -969,6 +978,11 @@ public class ICItem extends Object{
 					+ SMTableicitems.sreportgroup5Length + " characters.");
 			bEntriesAreValid = false;
 		}
+		if (m_sCommonPartNumber.length() > SMTableicitems.sCommonPartNumberLength){
+			m_sErrorMessageArray.add("common part number cannot be longer than " 
+					+ SMTableicitems.sCommonPartNumberLength + " characters.");
+			bEntriesAreValid = false;
+		}
 		if (m_sworkordercomment.length() > SMTableicitems.sworkordercommentLength){
 			m_sErrorMessageArray.add("work order comment cannot be longer than " 
 					+ SMTableicitems.sworkordercommentLength + " characters.");
@@ -1060,6 +1074,7 @@ public class ICItem extends Object{
 		sQueryString += "&" + ParamReportGroup3 + "=" + clsServletUtilities.URLEncode(m_sReportGroup3);
 		sQueryString += "&" + ParamReportGroup4 + "=" + clsServletUtilities.URLEncode(m_sReportGroup4);
 		sQueryString += "&" + ParamReportGroup5 + "=" + clsServletUtilities.URLEncode(m_sReportGroup5);
+		sQueryString += "&" + ParamCommonPartNumber + "=" + clsServletUtilities.URLEncode(m_sCommonPartNumber);
 		sQueryString += "&" + Paramsworkordercomment + "=" + clsServletUtilities.URLEncode(m_sworkordercomment);
 		sQueryString += "&" + ParamMostRecentCost + "=" + clsServletUtilities.URLEncode(m_sMostRecentCost);
 		sQueryString += "&" + ParamNumberOfLabels + "=" + clsServletUtilities.URLEncode(m_sNumberOfLabels);
@@ -1688,6 +1703,12 @@ public class ICItem extends Object{
 	}
 	public String getReportGroup5() {
 		return m_sReportGroup5;
+	}
+	public String getCommonPartNumber() {
+		return m_sCommonPartNumber;
+	}
+	public void setCommonPartNumber(String sCommonPartNumber) {
+		m_sCommonPartNumber = sCommonPartNumber.trim();
 	}
 	public void setReportGroup5(String sReportGroup5) {
 		m_sReportGroup5 = sReportGroup5.trim();

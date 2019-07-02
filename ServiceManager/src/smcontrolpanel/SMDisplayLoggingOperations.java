@@ -20,9 +20,6 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final String FIELD_DELIMITER = " - ";
-	private static final String ODD_ROW_BACKGROUND_COLOR = "#C2E0FF";
-	private static final String EVEN_ROW_BACKGROUND_COLOR = "#C2E0FF";
-
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 	throws ServletException, IOException {
@@ -71,21 +68,19 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 				+ ">\n";
 		
 		//Headings:
-		s += "  <TR>\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >\n";
 		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
-				+ " style = \" font-weight:bold; color: white; background-color: black; \" >"
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >"
 				+ "LABEL"
 				+ "</TD>\n"
 			;
 		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\""
-				+ " style = \" font-weight: bold; color: white; background-color: black; \" >"
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >"
 				+ "DESCRIPTION"
 				+ "</TD>\n"
 			;
 	
-		s += "  </TR>";
+		s += "  </TR>\n\n";
 		
 		ArrayList<String>arrOperationsList = SMLogEntry.getOperationDescriptions(FIELD_DELIMITER);
 		boolean bOddRow = true;
@@ -93,11 +88,11 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 			
 			String[] sLine  = arrOperationsList.get(i).split(FIELD_DELIMITER);
 			
-			String sBackgroundColor = ODD_ROW_BACKGROUND_COLOR;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 			if (bOddRow){
-				sBackgroundColor = EVEN_ROW_BACKGROUND_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 			}
-			s += "  <TR style = \" background-color: " + sBackgroundColor + "; \" >\n";
+			s += "  <TR class = \"" + sBackgroundColor + "\" > \n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED_WITH_BORDER + "\""
 					+ " style = \" font-weight:bold; color: black; \" >"
 		    		+ sLine[0]
@@ -108,7 +103,7 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		    		+ sLine[1]
 					+ "</TD>\n"
 				;
-			s += "  </TR>";
+			s += "  </TR> \n\n";
 			
 			bOddRow = !bOddRow;
 		}

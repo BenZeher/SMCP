@@ -186,45 +186,45 @@ public class SMDetailSheetEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + DETAIL_SHEET_ID
 				+ "\" VALUE=\"" + Integer.toString(iID) + "\">");
 		//ID:
-		pwOut.println("<TR><TD ALIGN=RIGHT><B>ID:</B></TD>"
-				+ "<TD>");
+		pwOut.println("<TR>\n<TD ALIGN=RIGHT><B>ID:</B></TD>\n"
+				+ "<TD>\n");
 		if (iID < 0){
 			pwOut.println("New");
 		}else{
 			pwOut.println(iID);
 		}
-		pwOut.println("</TD>"
-				+ "<TD>&nbsp;</TD></TR>"
+		pwOut.println("</TD>\n"
+				+ "<TD>\n&nbsp;</TD>\n</TR>\n"
 		);
 
 		//Name:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
 			+ clsStringFunctions.filter(sDetailSheetName) + "<INPUT TYPE=HIDDEN NAME=\"" + SMTableworkorderdetailsheets.sname
 			+ "\" VALUE=\"" + sDetailSheetName + "\">"
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT>Short detail sheet name</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "<TD ALIGN=LEFT>Short detail sheet name</TD>\n"
+			+ "</TR>\n"
 		);
 
 		//Description:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Description:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT><B>Description:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
 			+ "<INPUT NAME=\"" + SMTableworkorderdetailsheets.sdescription
 			+ "\" VALUE=\"" + sDescription + "\""
 			+ " SIZE= 120"
 			+ " MAXLENGTH = " + Integer.toString(SMTableworkorderdetailsheets.sdescriptionlength)
 			+ ">" 
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT>Longer description of this detail sheet</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "<TD ALIGN=LEFT>Longer description of this detail sheet</TD>\n"
+			+ "</TR>\n"
 		);
 
 		//Type of detail sheet:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Simple text or " + SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + ":</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT><B>Simple text or " + SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + ":</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>"
 		);
 		if (sType.compareToIgnoreCase(Integer.toString(SMTableworkorderdetailsheets.DETAIL_SHEET_TYPE_HTML)) == 0){
@@ -249,15 +249,15 @@ public class SMDetailSheetEdit extends HttpServlet {
 					+ SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL
 			);
 		}
-		pwOut.println("</TD>"
+		pwOut.println("</TD>\n"
 				+ "<TD ALIGN=LEFT>Simple text will just appear on the work order; "
-				+ SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + " will create a new form each time for the mechanic to enter detail sheet information.</TD>"
-				+ "</TR>"
+				+ SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + " will create a new form each time for the mechanic to enter detail sheet information.</TD>\n"
+				+ "</TR>\n"
 			);
 
 		//Text:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT VALIGN=TOP><B>Text:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT VALIGN=TOP><B>Text:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>"
 				+ "<TEXTAREA NAME=\"" + SMTableworkorderdetailsheets.mtext + "\""
 				+ " rows=20"
@@ -266,19 +266,19 @@ public class SMDetailSheetEdit extends HttpServlet {
 				+ filterTextareaText(sText)
 				//+ SMUtilities.filter(sText)
 				+ "</TEXTAREA>"
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT VALIGN=TOP>Full text of detail sheet</TD>"
-		+"</TR>");
+			+ "</TD>\n"
+			+ "<TD ALIGN=LEFT VALIGN=TOP>Full text of detail sheet</TD>\n"
+		+"</TR>\n");
 		
 		pwOut.println("</TABLE><BR><P>");
 		pwOut.println("<INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName 
 			+ "' STYLE='height: 0.24in'>");
 		if (iID != -1){
-			pwOut.println("<BR><BR><INPUT TYPE=SUBMIT NAME='" + TEST_HTML_BUTTON_NAME + "'"
+			pwOut.println("<BR><BR>\n<INPUT TYPE=SUBMIT NAME='" + TEST_HTML_BUTTON_NAME + "'"
 				+ " VALUE='" + TEST_HTML_BUTTON_LABEL + "'" 
 				+ " STYLE='height: 0.24in'>"
-				+ "&nbsp;Use this to see the HTML form as it will appear for the user.  "
-				+ "NOTE: Save any changes before testing - the 'test' function uses the <B><I>last saved version</I</B> of the detail sheet.  "
+				+ "&nbsp;\nUse this to see the HTML form as it will appear for the user.  \n"
+				+ "NOTE: Save any changes before testing - the 'test' function uses the <B><I>last saved version</I</B> of the detail sheet.  \n"
 				+ "<BR><FONT COLOR=RED><B><I>This only works for 'HTML entry forms', not plain text detail sheets.</I></B></FONT>"
 			);
 		}

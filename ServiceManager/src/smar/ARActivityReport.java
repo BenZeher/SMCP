@@ -9,6 +9,7 @@ import java.sql.Statement;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -58,68 +59,78 @@ public class ARActivityReport extends java.lang.Object{
     	String sCurrentCustomer = "";
     	int iCustomersPrinted = 0;
     	String SQL = ARSQLs.Get_Activity_Report();
-    	int iLinesPrinted = 0;
-    	printTableHeader(out);
+    	int iLinesPrinted = 1;
+    	out.println(SMUtilities.getMasterStyleSheetLink());
+    	out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
-				if (iLinesPrinted == 50){
+				/*if (iLinesPrinted == 50){
 					out.println("</TABLE>");
 					printTableHeader(out);
 					iLinesPrinted = 0;
-				}
+				}*/
 	    		//Print the header for any new customer:
-	    		if (rs.getString("scustomer").compareToIgnoreCase(sCurrentCustomer) != 0){
+
+	    		if (rs.getString(ARSQLs.scustomer).compareToIgnoreCase(sCurrentCustomer) != 0){
 	    			//Print the footer, if the record is for a new customer:
 		    		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-		    			out.println("<TR>");
-		    			out.println("<TD ALIGN=RIGHT colspan=\"9\"><B><FONT SIZE=2>Customer total:</FONT></B></TD>");
-		    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
-			    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
+		    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
+			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
+		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
 		    			out.println("</TR>");
 		    			
 		    			//Reset the customer totals:
 		    			dCustomerTransactionTotal = BigDecimal.ZERO;
 		    			dCustomerBalanceTotal = BigDecimal.ZERO;
+		    			iLinesPrinted = 1;
 		    	    	iCustomersPrinted++;
 		    		}
 
 	    			//Print the customer header:
-		    		String sCustomerNumber = rs.getString("scustomer");
+		    		String sCustomerNumber = rs.getString(ARSQLs.scustomer);
 		    		ARCustomer cust = new ARCustomer(sCustomerNumber);
 		    		String sTerms = "N/A";
 		    		if (cust.load(conn)){
 		    			sTerms = cust.getM_sTerms();
 		    		}
-	    			out.println("<TR>");
-	    			out.println("<TD><B><FONT SIZE=2>" + sCustomerNumber + "</FONT></B></TD>");
-	    			out.println("<TD ALIGN=LEFT colspan=\"11\"><B><FONT SIZE=2>" 
-	    					+ rs.getString("scustomername")+ " </B>,"
-	    					+ " Current Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCurrentStoredBalance(conn)) + "</B>,"
-	    					+ " Retainage Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(conn)) + "</B>,"
-	    					+ " CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("dcreditlimit")) + "</B>,"
-	    					+ " Terms: <B>" + sTerms + "</B>"
-	    					+ "</FONT></TD>");
+
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"><B>" + sCustomerNumber + "</B></TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Current Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCurrentStoredBalance(conn)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Retainage Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(conn)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.dcreditlimit)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Terms: <B>" + sTerms + "</B></TD>"
+	    					+ "</TR>");
+		    		printTableHeader(out);
 	    		}
-    			out.println("<TR>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>&nbsp;&nbsp;" + rs.getString("sdocappliedto") + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + getDocumentTypeLabel(rs.getInt("idoctype")) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("sdocnumber") + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + Long.toString(rs.getLong("ldocid")) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("datdocdate"),"MM/dd/yyy") + "</FONT></TD>");
-	    		out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("datduedate"),"MM/dd/yyy") + "</FONT></TD>");
+	    		if( iLinesPrinted%2 == 0) {
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+	    		}else {
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+	    		}
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(ARSQLs.sdocappliedto) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(ARSQLs.idoctype)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdocnumber) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(ARSQLs.ldocid)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datdocdate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datduedate),"MM/dd/yyy") + "</FONT></TD>");
 	    		
-	    		String sOrderNumber = rs.getString("sordernumber").trim();
-	    		out.println("<TD ALIGN=LEFT><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
+	    		String sOrderNumber = rs.getString(ARSQLs.sordernumber).trim();
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\"><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 	    		+ sOrderNumber 
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 	    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></FONT></TD>");
 	    		
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + Long.toString(rs.getLong("loriginalbatchnumber")) 
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong("loriginalbatchnumber")) 
 	    				+ "-" + Long.toString(rs.getLong("loriginalentrynumber")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + Long.toString(rs.getLong("ldaysover")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("doriginalamt")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("dcurrentamt")) + "</FONT></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong("ldaysover")) + "</FONT></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("doriginalamt")) + "</FONT></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("dcurrentamt")) + "</FONT></TD>");
     			out.println("</TR>");
     			
     			//Set the totals:
@@ -137,28 +148,33 @@ public class ARActivityReport extends java.lang.Object{
 			
 			//Print the last customer's totals, if at least one customer was listed:
     		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-    			out.println("<TR>");
-    			out.println("<TD ALIGN=RIGHT colspan=\"9\"><B><FONT SIZE=2>Customer total:</FONT></B></TD>");
-    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
+    			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+    			out.println("</TR>");
+    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
+    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
     			out.println("</TR>");
     	    	iCustomersPrinted++;
     		}
 
 		    //Print the grand totals:
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
 		    out.println("<TD colspan=\"11\">&nbsp;</TD>");
-			out.println("<TR>");
-			out.println("<TD ALIGN=RIGHT colspan=\"9\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTransactionAmount) + "</B></FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalBalance) + "</B></FONT></TD>");
+		    out.println("</TR>"); 
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN=\"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Report totals:</B></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTransactionAmount) + "</B></FONT></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalBalance) + "</B></FONT></TD>");
 			out.println("</TR>");
 		    out.println("</TABLE>");
 		    
 		    //Print the legends:
-		    out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    out.println("<TR>");
+		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		    out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
 		    for (int i = 0;i <= 8; i++){
-		    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></FONT></TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></TD>");
 		    }
 		    out.println("</TR>");
 		    out.println("</TABLE>");
@@ -204,21 +220,20 @@ public class ARActivityReport extends java.lang.Object{
 		}
 	}
 	private void printTableHeader(PrintWriter out){
-		out.println("<TABLE BORDER=0 WIDTH=100%>");
-		out.println("<TR>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Applied to</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=3%><B><FONT SIZE=2>Type</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Doc #</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Doc ID</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Doc. Date</FONT></B></TD>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Due Date</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Order #</FONT></B></TD>" +
-		    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Batch-Entry</FONT></B></TD>" +
-		    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Days<BR>Over</FONT></B></TD>" +
-		    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Amt</FONT></B></TD>" +
-		    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=9%><B><FONT SIZE=2>Balance</FONT></B></TD>" +
-		"</TR>" + 
-   		"<TR><TD COLSPAN=11><HR></TD><TR>");
+		/*out.println("<TABLE BORDER=0 WIDTH=100%>");*/
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">" + 
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Applied to</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Type</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Doc #</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Doc ID</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Doc. Date</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Due Date</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Order #</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Batch-Entry</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Days Over</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>AMT</B></U></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Balance</B></U></TD>" +
+		"</TR>");
 	}
 	private boolean createTemporaryTables(
 			Connection conn,

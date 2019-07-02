@@ -27,6 +27,7 @@ public class SMTableicitems {
 	public static final String sreportgroup3 = "sreportgroup3";
 	public static final String sreportgroup4 = "sreportgroup4";
 	public static final String sreportgroup5 = "sreportgroup5";
+	public static final String sCommonPartNumber = "sCommonPartNumber";
 	public static final String bdmostrecentcost = "bdmostrecentcost";
 	public static final String ilaboritem = "ilaboritem";
 	public static final String inonstockitem = "inonstockitem";
@@ -55,6 +56,7 @@ public class SMTableicitems {
 	public static final int sreportgroup3Length = 75;
 	public static final int sreportgroup4Length = 75;
 	public static final int sreportgroup5Length = 75;
+	public static final int sCommonPartNumberLength = 12;
 	public static final int sworkordercommentLength = 254;
 	public static final int slastedituserfullnameLength = 128;
 	

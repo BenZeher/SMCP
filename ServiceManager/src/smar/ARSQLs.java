@@ -6,7 +6,16 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 
 public class ARSQLs extends SMClasses.MySQLs {
-
+	public static final String scustomer = "scustomer";
+	public static final String sdocappliedto = "sdocappliedto";
+	public static final String idoctype = "idoctype";
+	public static final String sdocnumber = "sdocnumber";
+	public static final String ldocid = "ldocid";
+	public static final String datdocdate = "datdocdate";
+	public static final String datduedate = "datduedate";
+	public static final String sordernumber = "sordernumber";
+	public static final String dcreditlimit = "dcreditlimit";
+	//public static final String scustomer = "scustomer";
 	private static String SQL = "";
 	
 	//Account sets:

@@ -81,18 +81,18 @@ public class SMEditProposalTermsSelect extends HttpServlet {
 		}
 		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "'" 
 			//+ " STYLE='width: 2.00in; height: 0.24in'" +
-			+ "></P>";
+			+ "></P>\n";
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " 
-			+ sObjectName + "'>";
-		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
+			+ sObjectName + "'>\n";
+		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">\n";
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " 
-			+ sObjectName + "'></P>";
+			+ sObjectName + "'></P>\n";
 		sOutPut = sOutPut + 
 			" New Proposal Terms To Be Added: <INPUT TYPE=TEXT NAME=\"New" + sObjectName + "\" SIZE=28 MAXLENGTH=" + 
 			Integer.toString(SMTableproposalterms.sProposalTermCodeLength) + 
 			" STYLE=\"width: 2.41in; height: 0.25in\"> Proposal terms name maximum length is " + 
-			Integer.toString(SMTableproposalterms.sProposalTermCodeLength) + ".</P>";
-		sOutPut = sOutPut + "</FORM>";
+			Integer.toString(SMTableproposalterms.sProposalTermCodeLength) + ".</P>\n";
+		sOutPut = sOutPut + "</FORM>\n";
 		out.println(sOutPut);
 		
 		out.println("</BODY></HTML>");

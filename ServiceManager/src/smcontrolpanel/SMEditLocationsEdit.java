@@ -405,7 +405,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 	        arrValues.clear();
 	        arrDescriptions.clear();
 	        arrValues.add("");
-	        arrDescriptions.add("-- Select a GL Account --");
+	        arrDescriptions.add("-- Select a GL Account --\n");
 	        try{
 				//Get the record to edit:
 		        sSQL = SMClasses.MySQLs.Get_GL_Account_List_SQL(true);
@@ -537,7 +537,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		//********************
 		pwOut.println("</TABLE>");
 		pwOut.println("<BR>");
-		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>");
+		pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName + "' STYLE='height: 0.24in'></P>/n");
 		pwOut.println("</FORM>");
 		
 	}
@@ -569,7 +569,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 			
 			while(rs.next()) {
 				pwOut.println ("Order '"+ rs.getString(SMTableorderdetails.strimmedordernumber) 
-				+ "' contains item(s) with location code '" + sCode + "' that have not been shipped.<BR>");
+				+ "' contains item(s) with location code '" + sCode + "' that have not been shipped.<BR>\n");
 				bError = true;
 			}
 		if(bError) {

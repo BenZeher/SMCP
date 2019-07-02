@@ -110,6 +110,7 @@ public class SMMasterEditAction extends java.lang.Object{
 	    }
 	    
 	    m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", m_request);
+
 	    m_sOriginalURL = clsServletUtilities.URLDecode(
 		    	clsManageRequestParameters.get_Request_Parameter("OriginalURL", m_request)).replace("&", "*");
 
@@ -218,7 +219,6 @@ public class SMMasterEditAction extends java.lang.Object{
 	    }
 	}
 	public void redirectAction(String sWarning, String sStatus, String sOtherParameters){
-		
 		String sRedirectString = 
 			"" + SMUtilities.getURLLinkBase(m_context) + "" + m_sCallingClass
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + m_sDBID

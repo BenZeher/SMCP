@@ -9,6 +9,7 @@ import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapmatchinglines;
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableapvendorgroups;
 import SMDataDefinition.SMTableicvendors;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -26,6 +27,8 @@ public class APVendorTransactionsReport {
 		String sEndingDate,
 		String sStartingVendor,
 		String sEndingVendor,
+		String sStartingVendorGroup,
+		String sEndingVendorGroup,
 		String sStartingDocNumber,
 		boolean bIncludeCreditNotes,
 		boolean bIncludeDebitNotes,
@@ -56,6 +59,8 @@ public class APVendorTransactionsReport {
 			sEndingDate,
 			sStartingVendor,
 			sEndingVendor,
+			sStartingVendorGroup, 
+			sEndingVendorGroup, 
 			sStartingDocNumber,
 			bIncludeCreditNotes,
 			bIncludeDebitNotes,
@@ -93,6 +98,8 @@ public class APVendorTransactionsReport {
 		String sEndingDate,
 		String sStartingVendor,
 		String sEndingVendor,
+		String sStartingVendorGroup,
+		String sEndingVendorGroup,
 		String sStartingDocNumber,
 		
 		boolean bIncludeCreditNotes,
@@ -162,6 +169,8 @@ public class APVendorTransactionsReport {
 			+ " ON " 
 			+ "(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalbatchnumber + " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lbatchnumber + ")"
 			+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalentrynumber + " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lentrynumber + ")"
+			+ " LEFT JOIN " + SMTableapvendorgroups.TableName 
+			+ " ON (" + SMTableicvendors.TableName + "." + SMTableicvendors.ivendorgroupid + " = " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.lid + ") "
 		;
 		
 		SQL	+= " WHERE ("
@@ -172,6 +181,8 @@ public class APVendorTransactionsReport {
 				//Vendor range:
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " >= '" + sStartingVendor + "')"
 				+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " <= '" + sEndingVendor + "')"
+				+ " AND (" + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid + " >= '" + sStartingVendorGroup + "')"
+				+ " AND (" + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid + " <= '" + sEndingVendorGroup + "')"
 				;
 		
 				//Starting document number:
@@ -924,4 +935,5 @@ public class APVendorTransactionsReport {
 			return "NA";
 		}
 	}
+
 }

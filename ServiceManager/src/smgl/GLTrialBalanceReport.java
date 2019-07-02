@@ -17,6 +17,8 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class GLTrialBalanceReport  extends java.lang.Object{
 
+	private static final String COLUMN_SPACER = "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;";
+	
 	public GLTrialBalanceReport(){
 		
 	}
@@ -1479,6 +1481,9 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitAmt)
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  COLUMN_SPACER
+			+ "</TD>\n"
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditAmt)
 			+ "  </TR>\n"
 		;
@@ -1511,12 +1516,24 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+  sAccountDescription
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceDebitAmt)
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceCreditAmt)
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChangeAmt)
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdEndingBalanceDebitAmt)
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdEndingBalanceCreditAmt)
 			+ "  </TR>\n"
@@ -1540,6 +1557,10 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitTotal) + "</B>"
 			+ "</TD>\n"
 			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  COLUMN_SPACER
+			+ "</TD>\n"
+			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
 			+ " >"
@@ -1557,6 +1578,10 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "&nbsp;"
+			+ "</TD>\n"
+
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  COLUMN_SPACER
 			+ "</TD>\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
@@ -1592,11 +1617,19 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceDebitTotal) + "</B>"
 			+ "</TD>\n"
 			
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
+			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
 			+ " >"
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOpeningBalanceCreditTotal) + "</B>"
 			+ "</TD>\n"
+			
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
@@ -1604,11 +1637,19 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChanges) + "</B>"
 			+ "</TD>\n"
 			
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
+			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
 			+ " >"
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdClosingBalanceDebitTotal) + "</B>"
 			+ "</TD>\n"
+			
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
@@ -1628,18 +1669,34 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "&nbsp;"
 			+ "</TD>\n"
+
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
+			
+			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
+			+  "&nbsp;"
+			+ "</TD>\n"
+
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "&nbsp;"
 			+ "</TD>\n"
 			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  "&nbsp;"
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  "&nbsp;"
-			+ "</TD>\n"
+			+"    <TD>"
+			+  COLUMN_SPACER
+			+ "</TD>"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\""
 			+ " style = \" border-top: 2px solid black; \""
@@ -1666,15 +1723,23 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				+  "&nbsp;"
 				+ "</TD>"
 				
-				+"    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
+				+"    <TD COLSPAN=3 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
 				+  "-------Opening Balance-------"
 				+ "</TD>"
 
 				+"    <TD>"
 				+  "&nbsp;"
 				+ "</TD>"
+				
+				+"    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
+				
+				+"    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
 
-				+"    <TD COLSPAN=2 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
+				+"    <TD COLSPAN=3 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
 				+  "-------Ending Balance-------"
 				+ "</TD>"
 			;	
@@ -1694,19 +1759,35 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Debits"
 				+ "</TD>"
+				
+				+"    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
 
 				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Credits"
 				+ "</TD>"
 				
+				+"    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
+				
 				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Net Changes"
+				+ "</TD>"
+				
+				+"    <TD>"
+				+  COLUMN_SPACER
 				+ "</TD>"
 
 				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Debits"
 				+ "</TD>"
 
+				+"    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
+				
 				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Credits"
 				+ "</TD>"
@@ -1725,11 +1806,15 @@ public class GLTrialBalanceReport  extends java.lang.Object{
 				+  "Description"
 				+ "</TD>"
 				
-				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Debits"
 				+ "</TD>"
 
-				+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+				+ "    <TD>"
+				+  COLUMN_SPACER
+				+ "</TD>"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+  "Credits"
 				+ "</TD>"
 			;	

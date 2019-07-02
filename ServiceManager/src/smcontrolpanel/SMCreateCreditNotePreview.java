@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoice;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -58,6 +59,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 	    	String sCreditNoteInfo = clsManageRequestParameters.get_Request_Parameter("CREDITNOTEINFO", request);
 	    	String sCreditNoteDate = clsManageRequestParameters.get_Request_Parameter("CREDITNOTEDATE", request);
 	    	//Customized title
+			out.println(SMUtilities.getMasterStyleSheetLink());
 	    	String sReportTitle = "Create credit note";
 	    	out.println("<HTML>" +
 				        "<HEAD><TITLE>" + sReportTitle + "</TITLE></HEAD>\n<BR>" + 
@@ -260,12 +262,12 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 			String sDetailRowBackgroupColor;
 			for (int i=0;i<cInvoice.getM_iNumberOfLinesOnInvoice();i++){
 				if (cInvoice.getDetailByIndex(i).getM_iLineNumber() % 2 == 0){
-					sDetailRowBackgroupColor = DARK_BG_COLOR;
+					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 				}else{
-					sDetailRowBackgroupColor = "#FFFFFF";			
+					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;			
 				}
 				
-				pwOut.println("<TR bgcolor =" + sDetailRowBackgroupColor + ">");
+				pwOut.println("<TR class =" + sDetailRowBackgroupColor + ">");
 				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_iLineNumber() + "</FONT></TD>");
 				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sItemNumber() + "</FONT></TD>");
 				pwOut.println("<TD ALIGN=LEFT style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sDesc() + "</FONT></TD>");

@@ -176,7 +176,7 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 			sID =  entry.getslid();
 		}
 		//ID
-		s += "<TR><TD ALIGN=RIGHT><B>ID</B>:</TD>"
+		s += "<TR>\n<TD ALIGN=RIGHT><B>ID</B>:</TD>\n\n"
 				+ "<TD>" 
 				+ "<B>" + sID + "</B>" 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMDoingbusinessasaddress.Paramlid + "\" VALUE=\"";
@@ -187,9 +187,9 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 			s += entry.getslid();
 		}
 				s += "\">"
-				+ "</TD>"
-				+ "<TD>&nbsp;</TD>"
-				+ "</TR>"
+				+ "</TD>\n\n"
+				+ "<TD>&nbsp;</TD>\n\n"
+				+ "</TR>\n"
 				;
 		
 		//Description
@@ -258,37 +258,37 @@ public class SMEditDoingBusinessAsAddressEdit  extends HttpServlet {
 	private String createInputFile(SMDoingbusinessasaddress entry) {
 		String s = "";
 		 s += "<TR id = \"ilogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Invoice Logo File<font color=\"red\">*</font>:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Invoice Logo File<font color=\"red\">*</font>:</B></TD>\n\n"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiInvoicelogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiInvoicelogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsInvoiceLogo()+"\">"
-			  + "</TD>"
-			  + "<TD>Image logo used for the Invoice. Example: <b>invoicelogo.png</b> </TD>"
-			  + "</TR>"
+			  + "</TD>\n\n"
+			  + "<TD>Image logo used for the Invoice. Example: <b>invoicelogo.png</b> </TD>\n\n"
+			  + "</TR>\n"
 			  + "<TR id = \"plogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Proposal Logo File<font color=\"red\">*</font>:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Proposal Logo File<font color=\"red\">*</font>:</B></TD>\n\n"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiProposallogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiProposallogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsProposalLogo()+"\">"
-			  + "</TD>"
-			  + "<TD>Image logo used for the proposal. Example: <b>proposallogo.png</b> </TD>"
-			  + "</TR>"
+			  + "</TD>\n\n"
+			  + "<TD>Image logo used for the proposal. Example: <b>proposallogo.png</b> </TD>\n\n"
+			  + "</TR>\n"
 			  + "<TR id = \"dlogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Delivery Ticket Logo File<font color=\"red\">*</font>:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Delivery Ticket Logo File<font color=\"red\">*</font>:</B></TD>\n\n"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiDeliveryTicketReceiptLogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiDeliveryTicketReceiptLogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsDeliveryTicketReceiptLogo()+"\">"
-			  + "</TD>"
-			  + "<TD>Image logo used for the delivery ticket receipt.  Example: <b>deliveryticketlogo.png</b> </TD>"
-			  + "</TR>"
+			  + "</TD>\n"
+			  + "<TD>Image logo used for the delivery ticket receipt.  Example: <b>deliveryticketlogo.png</b> </TD>\n"
+			  + "</TR>\n"
 			  + "<TR id = \"wlogofiles\">"
-			  + "<TD ALIGN=RIGHT><B>Work Order Receipt Logo File<font color=\"red\">*</font>:</B></TD>"
+			  + "<TD ALIGN=RIGHT><B>Work Order Receipt Logo File<font color=\"red\">*</font>:</B></TD>\n"
 			  + "<TD ALIGN=LEFT>"
 			  + " <INPUT TYPE= TEXT NAME=\"" + SMDoingbusinessasaddress.ParamiWorkOrderReceiptLogo + "\" ID=\"" + SMDoingbusinessasaddress.ParamiWorkOrderReceiptLogo + "\""
 			  		+ " SIZE = 40  VALUE = \""+entry.getsWorkOrderReceiptLogo()+"\">"
-			  + "</TD>"
-			  + "<TD>Image logo used for the work order receipt. Example: <b>workorderlogo.png</b></TD>"
-			  + "</TR>"
+			  + "</TD>\n"
+			  + "<TD>Image logo used for the work order receipt. Example: <b>workorderlogo.png</b></TD>\n"
+			  + "</TR>\n"
 		 	  + "</div>";
 		return s;
 	}

@@ -82,7 +82,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    String sError = "";
 	    
 		//Create hash map object of member variables. 
-		//A hash map must be past to functions of this class instead of updating global variables for thread safety. 
+		//A hash map must be passed to functions of this class instead of updating global variables for thread safety. 
 		HashMap<String,String> mv = new HashMap<String,String>();
 		mv.put(sBKEntryImportActionCallingClass, "");
 		mv.put(sBKEntryImportActionError, "");

@@ -96,7 +96,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
         	//check boxes for locations
     		out.println("<TR><TD VALIGN=TOP ><TABLE BORDER=0 WIDTH=100%>");
     		out.println("<TR><TD><B>Include locations:<B></TD></TR>");
-    		out.println("<TR><TD>");
+    		out.println("<TR><TD>\n");
 
     		String SQL = "SELECT * FROM " + SMTablelocations.TableName + " ORDER BY " + SMTablelocations.sLocation ;
 				
@@ -117,7 +117,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     				  if (request.getParameter("LOCATION" + rs.getString(SMTablelocations.sLocation)) != null){
     					  out.println(" CHECKED");
     				  }
-    				  out.println(" width=0.25>" + rs.getString(SMTablelocations.sLocationDescription) + "</LABEL><BR>");
+    				  out.println(" width=0.25>" + rs.getString(SMTablelocations.sLocationDescription) + "</LABEL><BR>\n");
     			}
     			rs.close();
     		}catch (SQLException e){
@@ -129,7 +129,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     		
     		//check boxes for order types:
     		out.println("<TR><TD><B>Include order types:<B></TD></TR>");
-    		out.println("<TR><TD>");
+    		out.println("<TR><TD>\n");
 
     		SQL = "SELECT " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode 
     				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
@@ -156,7 +156,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     					if (request.getParameter("SERVICETYPE" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode)) != null){
     					  out.println(" CHECKED");
     					}
-    					out.println(" width=0.25>" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "</LABEL><BR>");
+    					out.println(" width=0.25>" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "</LABEL><BR>\n");
     				}
     			}
     			rs.close();

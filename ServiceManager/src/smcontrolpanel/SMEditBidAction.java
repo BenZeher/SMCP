@@ -96,27 +96,7 @@ public class SMEditBidAction extends HttpServlet{
 			return;
        	}
 		
-		//Delete
-    	if (clsManageRequestParameters.get_Request_Parameter(
-    			"COMMANDFLAG", request).compareToIgnoreCase(SMEditBidEntry.DELETE_COMMAND_VALUE) == 0){
-			    //Save this now so it's not lost after the delete:
-			    String sID = entry.slid();
-			    if (!entry.delete(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName())){
-			    	smaction.redirectAction("Could not delete: " + entry.getErrorMessages(), "", "");
-					return;
-			    }else{
-			    	//If the delete succeeded, the entry will be initialized:
-			    	//Re-set the job number in the new, blank entry:
-					if (smaction.getOriginalURL().trim().compareToIgnoreCase("") != 0){
-						smaction.returnToOriginalURL();
-					}else{
-						smaction.getCurrentSession().setAttribute("BidEntry", entry);
-						smaction.redirectAction("", "Entry ID: " + sID + " was successfully deleted.", "");
-					}
-					return;
-			    }
 
-	    }
 		
 		//Find customer
     	if (clsManageRequestParameters.get_Request_Parameter(

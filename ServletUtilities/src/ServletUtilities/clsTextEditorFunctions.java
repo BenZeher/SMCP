@@ -16,8 +16,8 @@ public class clsTextEditorFunctions {
 			String sStyle
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += Create_Editable_Form_MultilineText_Input_Field(
@@ -29,10 +29,10 @@ public class clsTextEditorFunctions {
 				bIncludeToolBar,
 				bAutoWrapText
 				);
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT "+sStyle+">" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT "+sStyle+">" + sRemark + "</TD>\n";
+		sRow += "</TR>\n";
 		return sRow;
 	
 	}
@@ -53,8 +53,8 @@ public class clsTextEditorFunctions {
 			boolean bAutoWrapText
 	){
 	
-		String sRow = "<TR>";
-		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	
 		sRow += "<TD ALIGN=LEFT>";
 		sRow += Create_Editable_Form_MultilineText_Input_Field(
@@ -66,10 +66,10 @@ public class clsTextEditorFunctions {
 				bIncludeToolBar,
 				bAutoWrapText
 				);
-		sRow += "</TD>";
+		sRow += "</TD>\n";
 	
-		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-		sRow += "</TR>";
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n";
 		return sRow;
 	
 	}
@@ -87,11 +87,11 @@ public class clsTextEditorFunctions {
 		String s = "";
 
 		s += "<TABLE>";
-		s += "<TR><TD>";
+		s += "<TR>\n<TD>\n";
 		s += clsTextEditorFunctions.createTextEditToolBar(sFieldName, bIncludeShowHTMLOption);
-		s+= "</TD></TR>";
+		s+= "</TD>\n</TR>\n";
 		
-		s+=	 "<TR><TD>";
+		s+=	 "<TR>\n<TD>\n";
 		//Create normal TEXTAREA, but do not display it
 		s += "<textarea name=\"" + sFieldName + "\" id=\"" + sFieldName + "\""				
 			+ "style=\"display:none; "
@@ -114,7 +114,7 @@ public class clsTextEditorFunctions {
 			+ " min-height:" + iHeight_px+ "px;\""
 			+ ">"
 			+ "</iframe>\n";		
-		s+= "</TD></TR>";
+		s+= "</TD>\n</TR>\n";
 		s+= "</TABLE>";
 				
 		//Create script to turn design mode on the iFrame and copy what's load the iFrame with data. 
@@ -142,12 +142,20 @@ public class clsTextEditorFunctions {
 			+ "});\n"
 			
 			//Only paste into the frame as plain text.
-			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"			
-			+  	"e.preventDefault();" + "\n"
-			+ "  var text = (e.originalEvent || e).clipboardData.getData('text/plain');" + "\n"		
-			+ "  doc" + sFieldName + ".execCommand(\"insertHTML\", false, text);" + "\n"		
+			+ "doc" + sFieldName + ".body.addEventListener('paste',function(e) {\n"
+			+ "e.preventDefault();\n" 
+			+ "    var text = '';\n" 
+			+ "    if (e.clipboardData || e.originalEvent.clipboardData) {\n" 
+			+ "      text = (e.originalEvent || e).clipboardData.getData('text/plain');\n" 
+			+ "    } else if (window.clipboardData) {\n" 
+			+ "      text = window.clipboardData.getData('Text');\n" 
+			+ "    }\n"  
+			+ "    if (document.queryCommandSupported('insertText')) {\n"  
+			+ "       doc" + sFieldName + ".execCommand('insertText', false, text);\n"  
+			+ "    } else {\n"  
+			+ "      doc" + sFieldName + ".execCommand('paste', false, text);\n" 
+			+ "    }"
 			+ "});\n"
-			
 			+ "</script>\n";
 		return s;
 	
@@ -155,15 +163,15 @@ public class clsTextEditorFunctions {
 	
 	public static String createTextEditToolBar(String sFieldName, boolean bShowHTMLOption) {
 		String s =  createUndoButtonIcon(sFieldName) 
-				+ "&nbsp;" + createRemoveFromattingButtonIcon(sFieldName) 
-				+ "&nbsp;" + createBoldButtonIcon(sFieldName) 
-				+ "&nbsp;" + createItalicButtonIcon(sFieldName)
-				+ "&nbsp;" + createUnderlineButtonIcon(sFieldName) 
-				+ "&nbsp;" + createFontSizeSelection(sFieldName) 
-				+ "&nbsp;" + createFontColorSelection(sFieldName) 
-				+ "&nbsp;" + createLinkButtonIcon(sFieldName) ;				
+				+ "&nbsp;\n" + createRemoveFromattingButtonIcon(sFieldName) 
+				+ "&nbsp;\n" + createBoldButtonIcon(sFieldName) 
+				+ "&nbsp;\n" + createItalicButtonIcon(sFieldName)
+				+ "&nbsp;\n" + createUnderlineButtonIcon(sFieldName) 
+				+ "&nbsp;\n" + createFontSizeSelection(sFieldName) 
+				+ "&nbsp;\n" + createFontColorSelection(sFieldName) 
+				+ "&nbsp;\n" + createLinkButtonIcon(sFieldName) ;				
 				if(bShowHTMLOption) {
-					s += "&nbsp;" + createToggleHTMLButtonIcon(sFieldName);
+					s += "&nbsp;\n" + createToggleHTMLButtonIcon(sFieldName);
 				}	
 				s += "<BR/>";
 		return s;	

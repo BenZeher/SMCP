@@ -166,26 +166,26 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableproposalphrases.sid
 				+ "\" VALUE=\"" + Integer.toString(iID) + "\">");
 		//ID:
-		pwOut.println("<TR><TD ALIGN=RIGHT><B>ID:</B></TD>"
-				+ "<TD>");
+		pwOut.println("<TR>\n<TD ALIGN=RIGHT><B>ID:</B></TD>\n"
+				+ "<TD>\n");
 		if (iID < 0){
 			pwOut.println("New");
 		}else{
 			pwOut.println(iID);
 		}
-		pwOut.println("</TD>"
-				+ "<TD>&nbsp;</TD></TR>"
+		pwOut.println("</TD>\n"
+				+ "<TD>\n&nbsp;</TD>\n</TR>\n"
 		);
 
 		//Phrase name:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT><B>Name:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
 			+ clsStringFunctions.filter(sProposalPhraseName) + "<INPUT TYPE=HIDDEN NAME=\"" + SMTableproposalphrases.sproposalphrasename
 			+ "\" VALUE=\"" + sProposalPhraseName + "\">" 
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT>Proposal phrase name</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "<TD ALIGN=LEFT>Proposal phrase name</TD>\n"
+			+ "</TR>\n"
 		);
 
 		//Proposal phrase:
@@ -202,8 +202,8 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		));
 		
 		//Proposal phrase group:
-		pwOut.println("<TR>"
-				+ "<TD ALIGN=RIGHT><B>Phrase group:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+				+ "<TD ALIGN=RIGHT><B>Phrase group:</B>&nbsp;</TD>\n"
 				+ "<TD ALIGN=LEFT>");
 		try{
 	        String sSQL = "SELECT * FROM " 
@@ -217,9 +217,9 @@ public class SMProposalPhrasesEdit extends HttpServlet {
         		if (iProposalPhraseGroupID == rs.getInt(SMTableproposalphrasegroups.sid)){
         			sSelected = " SELECTED ";
         		}
-        		pwOut.println ("<OPTION " + sSelected + " VALUE=\"" + rs.getString(SMTableproposalphrasegroups.sid) + "\">"
+        		pwOut.println ("<OPTION " + sSelected + " VALUE=\"" + rs.getString(SMTableproposalphrasegroups.sid) + "\">\n"
         			+ Integer.toString(rs.getInt(SMTableproposalphrasegroups.sid)) + " - "
-        			+ rs.getString(SMTableproposalphrasegroups.sgroupname)
+        			+ rs.getString(SMTableproposalphrasegroups.sgroupname) + "\n"
         		); 
         	}
         	rs.close();
@@ -228,19 +228,19 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error getting list of proposal phrase groups - " + ex.getMessage());
 		}
-		pwOut.println("</TD>");
-		pwOut.println("<TD>Choose a group in which to include this phrase.</TD>");
-		pwOut.println("</TR>");
+		pwOut.println("</TD>\n");
+		pwOut.println("<TD>\nChoose a group in which to include this phrase.</TD>\n");
+		pwOut.println("</TR>\n");
 		
 		//Sort order:
-		pwOut.println("<TR>"
-			+ "<TD ALIGN=RIGHT><B>Sort order:</B>&nbsp;</TD>"
+		pwOut.println("<TR>\n"
+			+ "<TD ALIGN=RIGHT><B>Sort order:</B>&nbsp;</TD>\n"
 			+ "<TD ALIGN=LEFT>" 
 			+ "<INPUT NAME=\"" + SMTableproposalphrases.isortorder
 			+ "\" VALUE=\"" + Integer.toString(iSortOrder) + "\">" 
-			+ "</TD>"
-			+ "<TD ALIGN=LEFT>'Sorting' number which will determine where this phrase appears in the list.</TD>"
-			+ "</TR>"
+			+ "</TD>\n"
+			+ "<TD ALIGN=LEFT>'Sorting' number which will determine where this phrase appears in the list.</TD>\n"
+			+ "</TR>\n"
 		);
 		
 		pwOut.println("</TABLE><BR><P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sObjectName 

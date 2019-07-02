@@ -302,62 +302,62 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				//Build the long string of links for all the functions here:
 				//Link to order header:
-				sLinks = "<FONT SIZE=2><a href=\"#OrderHeader\">Order&nbsp;header</a>&nbsp;&nbsp;";
+				sLinks = "<FONT SIZE=2><a href=\"#OrderHeader\">Order&nbsp;header</a>&nbsp;&nbsp;\n";
 				
 				//Link to order details:
-				sLinks += "<FONT SIZE=2><a href=\"#OrderDetails\">Order&nbsp;details</a>&nbsp;&nbsp;</FONT>";
+				sLinks += "<FONT SIZE=2><a href=\"#OrderDetails\">Order&nbsp;details</a>&nbsp;&nbsp;</FONT>\n";
 
 				//Link to change orders:
 				if(bAllowProjectView  && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
-					sLinks = sLinks + "<FONT SIZE=2><a href=\"#ChangeOrders\">Change&nbsp;orders</a>&nbsp;&nbsp;</FONT>";
+					sLinks = sLinks + "<FONT SIZE=2><a href=\"#ChangeOrders\">Change&nbsp;orders</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				
 				//Link to billing summary:
 				if (bAllowProjectView && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
-					sLinks = sLinks + "<FONT SIZE=2><a href=\"#BILLINGSUMMARY\">Billing&nbsp;summary</a>&nbsp;&nbsp;</FONT>"; 
+					sLinks = sLinks + "<FONT SIZE=2><a href=\"#BILLINGSUMMARY\">Billing&nbsp;summary</a>&nbsp;&nbsp;</FONT>\n"; 
 				}
 				
 				//Link to critical dates:
 				if(bAllowProjectView  && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
-					sLinks = sLinks + "<FONT SIZE=2><a href=\"#CriticalDates\">Critical&nbsp;dates</a>&nbsp;&nbsp;</FONT>"; 
+					sLinks = sLinks + "<FONT SIZE=2><a href=\"#CriticalDates\">Critical&nbsp;dates</a>&nbsp;&nbsp;</FONT>\n"; 
 				}
 				
 				//Link to work orders:
 				if (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE){
-					sLinks += "<FONT SIZE=2><a href=\"#WorkOrders\">Work&nbsp;orders</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#WorkOrders\">Work&nbsp;orders</a>&nbsp;&nbsp;</FONT>\n";
 				}
 
 				//Link to appointments
 				if (bAllowViewAppointments && iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE){
-					sLinks += "<FONT SIZE=2><a href=\"#Appointments\">Appointments</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#Appointments\">Appointments</a>&nbsp;&nbsp;</FONT>\n";
 				}
 
 				//Link to delivery tickets:
 				if(bAllowManageDeliveryTickets && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
-					sLinks += "<FONT SIZE=2><a href=\"#DeliveryTickets\">Delivery&nbsp;Tickets</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#DeliveryTickets\">Delivery&nbsp;Tickets</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				//Link to material returns:
-				sLinks += "<FONT SIZE=2><a href=\"#MaterialReturns\">Material Returns</a>&nbsp;&nbsp;</FONT>";
+				sLinks += "<FONT SIZE=2><a href=\"#MaterialReturns\">Material Returns</a>&nbsp;&nbsp;</FONT>\n";
 				
 				//Link to labor backcharges:
 				if(bAllowEditLaborBackCharge && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
-					sLinks += "<FONT SIZE=2><a href=\"#LaborBackcharges\">Labor&nbsp;Backcharges</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#LaborBackcharges\">Labor&nbsp;Backcharges</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				//Link to proposal:
 				if (bAllowProposalViewing){
-					sLinks += "<FONT SIZE=2><a href=\"#Proposal\">Proposal</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#Proposal\">Proposal</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				
 				//Link to Items Left On Order
-				sLinks += "<FONT SIZE=2><a href=\"#ItemsLeftOnOrder\">Item(s) Left On Order</a>&nbsp;&nbsp;</FONT>";
+				sLinks += "<FONT SIZE=2><a href=\"#ItemsLeftOnOrder\">Item(s) Left On Order</a>&nbsp;&nbsp;</FONT>\n";
 				
 				//Link to tax calculation
 				if (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE){
-					sLinks += "<FONT SIZE=2><a href=\"#TaxCalculation\">Sales&nbsp;Tax&nbsp;calculation</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#TaxCalculation\">Sales&nbsp;Tax&nbsp;calculation</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				//Link Follow Up Sales Leads:
 				if (bAllowBidEditing){
-					sLinks += "<FONT SIZE=2><a href=\"#FollowUpSalesLead\">Follow up sales leads</a>&nbsp;&nbsp;</FONT>";
+					sLinks += "<FONT SIZE=2><a href=\"#FollowUpSalesLead\">Follow up sales leads</a>&nbsp;&nbsp;</FONT>\n";
 				}
 				//Link to job cost data:
 				if(bAllowJobCostView && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
@@ -379,9 +379,9 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						if (bJobCostExists){
 							sLinks = sLinks 
 							+ "<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayJobCostInformation?OrderNumber=" 
-							+ sOrderNum + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Job&nbsp;cost</A>&nbsp;&nbsp;</FONT>"; 
+							+ sOrderNum + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Job&nbsp;cost</A>&nbsp;&nbsp;</FONT>\n"; 
 						}else{
-							sLinks = sLinks + "<FONT SIZE=2>Job&nbsp;cost: N/A&nbsp;&nbsp;</FONT>"; 
+							sLinks = sLinks + "<FONT SIZE=2>Job&nbsp;cost: N/A&nbsp;&nbsp;</FONT>\n"; 
 						}
 					} catch (SQLException e) {
 						//sWarning = "Could not check for Job Cost data - " + e.getMessage();
@@ -399,7 +399,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "&CallingClass=smcontrolpanel.SMDisplayOrderInformation"
 						+ "&ReturnToTruckSchedule=N"
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-						+ "\">Schedule&nbsp;this&nbsp;order</A>&nbsp;&nbsp;</FONT>";
+						+ "\">Schedule&nbsp;this&nbsp;order</A>&nbsp;&nbsp;</FONT>\n";
 					;
 				}
 
@@ -411,7 +411,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "&GEOCODE=" + sGeoCode 
 						+ "&CallingClass=smcontrolpanel.SMDisplayOrderInformation"
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-						+ "\">List&nbsp;nearby&nbsp;orders</A>&nbsp;&nbsp;</FONT>";
+						+ "\">List&nbsp;nearby&nbsp;orders</A>&nbsp;&nbsp;</FONT>\n";
 					;
 				}
 				
@@ -433,7 +433,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "&" + ARPrintCallSheetsSelection.STARTING_LAST_CONTACT_DATE_FIELD + "=1/1/1990"
 					+ "&" + ARPrintCallSheetsSelection.STARTING_NEXT_CONTACT_DATE_FIELD + "=1/1/1990"
 					+ "&" + ARPrintCallSheetsSelection.PRINT_BUTTON_NAME + "Y"
-					+ "\">List&nbsp;call&nbsp;sheets</A>&nbsp;&nbsp;</FONT>";
+					+ "\">List&nbsp;call&nbsp;sheets</A>&nbsp;&nbsp;</FONT>\n";
 				}
 				
 				
@@ -442,7 +442,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				if (bAllowDocumentView){
 					if (smopt.getOrderDocsFTPUrl().compareToIgnoreCase("") != 0){
 						sLinks = sLinks +  "<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMListOrderDocuments?OrderNumber=" 
-						+ sOrderNum.trim() + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Order&nbsp;documents</A>&nbsp;&nbsp;</FONT>";
+						+ sOrderNum.trim() + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">Order&nbsp;documents</A>&nbsp;&nbsp;</FONT>\n";
 					}
 					//Try to build a link to the Google Docs folder:
 					String sGDocLink = rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sgdoclink);
@@ -451,7 +451,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					}
 					if (sGDocLink.compareToIgnoreCase("") != 0){
 						sLinks = sLinks +  "<FONT SIZE=2><A HREF=\"" + sGDocLink 
-						+ "\">Google&nbsp;Drive&nbsp;folder</A>&nbsp;&nbsp;</FONT>";
+						+ "\">Google&nbsp;Drive&nbsp;folder</A>&nbsp;&nbsp;</FONT>\n";
 					}
 				}
 				
@@ -459,7 +459,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				if (bAllowCreateGDriveOrderFolders){
 					
 					if(bUseGoogleDrivePicker) {
-						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";	
+						sLinks += "<FONT SIZE=2><a onclick=\"loadPicker()\" href=\"#\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>\n";	
 					}else {
 					String sCreateUploadFileLink = "";
 					String sFolderName =  smopt.getgdriveorderfolderprefix() 
@@ -484,7 +484,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						pwOut.println("Error [1542748927] " + e.getMessage());
 						return false;
 					}
-						sLinks += "<FONT SIZE=2><a href=\"" + sCreateUploadFileLink + "\" target=\"_blank\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>";
+						sLinks += "<FONT SIZE=2><a href=\"" + sCreateUploadFileLink + "\" target=\"_blank\">Create folder/Upload File(s)</a>&nbsp;&nbsp;</FONT>\n";
 					}
 					
 				}
@@ -498,7 +498,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "&StartingOrderNumber=" + sOrderNum
 					+ "&EndingOrderNumber=" + sOrderNum
 					+ "&" + SMEditOrderSelection.NUMBEROFINSTALLATIONWORKORDERCOPIES + "=1"
-					+ "\">Print&nbsp;'installation&nbsp;style'&nbsp;work&nbsp;order</A>&nbsp;&nbsp;</FONT>";
+					+ "\">Print&nbsp;'installation&nbsp;style'&nbsp;work&nbsp;order</A>&nbsp;&nbsp;</FONT>\n";
 				}
 				if (bAllowServiceTicketPrinting && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
 					sLinks = sLinks
@@ -508,7 +508,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "&StartingOrderNumber=" + sOrderNum
 					+ "&EndingOrderNumber=" + sOrderNum
 					+ "&" + SMEditOrderSelection.NUMBEROFSERVICEWORKORDERCOPIES + "=1"
-					+ "\">Print&nbsp;'service&nbsp;style'&nbsp;work&nbsp;order</A>&nbsp;&nbsp;</FONT>";
+					+ "\">Print&nbsp;'service&nbsp;style'&nbsp;work&nbsp;order</A>&nbsp;&nbsp;</FONT>\n";
 				}
 
 				//Add link to create delivery ticket
@@ -517,7 +517,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "smcontrolpanel.SMEditDeliveryTicketEdit?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 						+ "&" + SMTabledeliverytickets.strimmedordernumber + "=" + sOrderNum
 						+ "&" + SMTabledeliverytickets.lid + "=-1"
-						+ "\">Add&nbsp;interactive&nbsp;delivery&nbsp;ticket</A>&nbsp;</FONT>";
+						+ "\">Add&nbsp;interactive&nbsp;delivery&nbsp;ticket</A>&nbsp;</FONT>\n";
 				}
 				//Add link to create labor back charge
 				if(bAllowEditLaborBackCharge && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
@@ -525,7 +525,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "smcontrolpanel.SMLaborBackChargeEdit?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 						+ "&" + SMTablelaborbackcharges.strimmedordernumber + "=" + sOrderNum
 						+ "&" + SMTablelaborbackcharges.lid + "=-1" 
-						+ "\">Add&nbsp;labor&nbsp;back&nbsp;charge</A>&nbsp;</FONT>";
+						+ "\">Add&nbsp;labor&nbsp;back&nbsp;charge</A>&nbsp;</FONT>\n";
 				}
 				//Add link to create appointment
 				if(bAllowEditAppointments && (iOrderType != SMTableorderheaders.ORDERTYPE_QUOTE)){
@@ -546,7 +546,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "&" + SMAppointment.Paramsphone + "=" + clsServletUtilities.URLEncode(rsOrder.getString(SMTableorderheaders.sShipToPhone))
 						+ "&" + SMAppointment.Paramsemail + "=" + clsServletUtilities.URLEncode(rsOrder.getString(SMTableorderheaders.sshiptoemail))
 						+ "&" + SMAppointment.Paramdatentrydate + "=" +SMUtilities.EMPTY_DATE_VALUE
-						+ "\">Create&nbsp;appointment</A>&nbsp;</FONT>";
+						+ "\">Create&nbsp;appointment</A>&nbsp;</FONT>\n";
 				}
 				if(bAllowBidEditing){
 					sLinks += "&nbsp<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
@@ -571,7 +571,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "&" + SMBidEntry.Paramsshiptozip + "=" + clsServletUtilities.URLEncode(rsOrder.getString(SMTableorderheaders.sShipToZip))
 						+ "&CallingClass=smcontrolpanel.SMEditBidEntry"
 						+ "&OriginalCallingClass=smcontrolpanel.SMEditBidSelect"
-						+ "\">Create&nbsp;follow&nbsp;up&nbsp;sales&nbsp;lead</A>&nbsp;</FONT>";
+						+ "\">Create&nbsp;follow&nbsp;up&nbsp;sales&nbsp;lead</A>&nbsp;</FONT>\n";
 				}
 
 				pwOut.println(sLinks + "<BR>");

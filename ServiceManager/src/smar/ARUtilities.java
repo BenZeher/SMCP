@@ -42,8 +42,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 			
-	        String sRow = "<TR>";
-	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+	        String sRow = "<TR>\n";
+	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	        
 	        sRow += "<TD ALIGN=LEFT>";
 	        sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -56,10 +56,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 	        sRow += "SIZE=28";
 	        sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 	        sRow += " STYLE=\"width: 2.41in; height: 0.25in\"";
-	        sRow += "></TD>";
+	        sRow += "></TD>\n";
 	  		
-	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	        sRow += "</TR>";
+	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	        sRow += "</TR>\n\n";
 	  		return sRow;
 	  		
 		  }
@@ -122,8 +122,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sTextBoxWidth
 		  ){
 			
-	        String sRow = "<TR>";
-	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+	        String sRow = "<TR>\n";
+	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	        
 	        sRow += "<TD ALIGN=LEFT>";
 	        sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -136,10 +136,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 	        sRow += "SIZE=28";
 	        sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
 	        sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
-	        sRow += "></TD>";
+	        sRow += "></TD>\n";
 	  		
-	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	        sRow += "</TR>";
+	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	        sRow += "</TR>\n\n";
 	  		return sRow;
 	  		
 		  }
@@ -155,8 +155,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  ServletContext context
 		  ){
 			
-	        String sRow = "<TR>";
-	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+	        String sRow = "<TR>\n";
+	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	        
 	        sRow += "<TD ALIGN=LEFT>";
 	        sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
@@ -171,10 +171,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 	        sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
 	        sRow += ">";
 	        sRow += SMUtilities.getDatePickerString(sFieldName, context);
-	        sRow += "</TD>";
+	        sRow += "</TD>\n";
 	  		
-	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	        sRow += "</TR>";
+	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	        sRow += "</TR>\n\n";
 	  		return sRow;
 	  		
 		  }
@@ -189,8 +189,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 
-	  String sRow = "<TR>";
-	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+	  String sRow = "<TR>\n";
+	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 	  sRow += "<TD ALIGN=LEFT>";
 	  
 	  //Month
@@ -230,10 +230,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
       }
 	  sRow += "</SELECT>";
 	  
-	  sRow += "</TD>";
+	  sRow += "</TD>\n";
 	  
-	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	  sRow += "</TR>";
+	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	  sRow += "</TR>\n\n";
 	  return sRow;
   }
 
@@ -296,17 +296,17 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 
-	  String sRow = "<TR>";
-	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+	  String sRow = "<TR>\n";
+	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
     
 	  sRow += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX";
 	  if (iValue == 1){
 		  sRow += " CHECKED ";
 	  }
-	  sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>";
+	  sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>\n";
     
-	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	  sRow += "</TR>";
+	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	  sRow += "</TR>\n\n";
 	  return sRow;
   }
   public static String Create_Edit_Form_Checkbox_Row (
@@ -316,17 +316,17 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 
-	  String sRow = "<TR>";
-	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+	  String sRow = "<TR>\n";
+	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
     
 	  sRow += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX";
 	  if (sValueAsTrueOrFalse.compareToIgnoreCase("true") == 0){
 		  sRow += " CHECKED ";
 	  }
-	  sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>";
+	  sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>\n";
     
-	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	  sRow += "</TR>";
+	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	  sRow += "</TR>\n\n";
 	  return sRow;
   }
 
@@ -337,8 +337,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 	
-	        String sRow = "<TR>";
-	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+	        String sRow = "<TR>\n";
+	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	        
 	        sRow += "<TD ALIGN=LEFT>";
 	        sRow += "<TEXTAREA NAME=\"" + sFieldName + "\"";
@@ -350,10 +350,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 	        else{
 	        	sRow += "></TEXTAREA>";
 	        }
-	        sRow += "</TD>";
+	        sRow += "</TD>\n";
 	  		
-	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	        sRow += "</TR>";
+	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	        sRow += "</TR>\n\n";
 	  		return sRow;
 	  		
 		  }
@@ -367,8 +367,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  int iCols
 		  ){
 	
-	        String sRow = "<TR>";
-	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>";
+	        String sRow = "<TR>\n";
+	        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
 	        
 	        sRow += "<TD ALIGN=LEFT>";
 	        sRow += "<TEXTAREA NAME=\"" + sFieldName + "\"";
@@ -380,10 +380,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 	        else{
 	        	sRow += "></TEXTAREA>";
 	        }
-	        sRow += "</TD>";
+	        sRow += "</TD>\n";
 	  		
-	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	        sRow += "</TR>";
+	        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	        sRow += "</TR>\n\n";
 	  		return sRow;
 	  		
 		  }
@@ -432,8 +432,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 
-	  String sRow = "<TR>";
-	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+	  String sRow = "<TR>\n";
+	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 	  sRow += "<TD ALIGN=LEFT> <SELECT NAME = \"" + sFieldName + "\">";
 	  for (int i = 0; i < sValues.size(); i++){
     	  sRow += "<OPTION";
@@ -442,10 +442,10 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
     	  }
     	  sRow += " VALUE=\"" + sValues.get(i).toString() + "\">" + sDescriptions.get(i).toString();
       }
-	  sRow += "</SELECT></TD>";
+	  sRow += "</SELECT></TD>\n";
 	  
-	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	  sRow += "</TR>";
+	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	  sRow += "</TR>\n\n";
 	  return sRow;
   }
 
@@ -478,8 +478,8 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
 		  String sRemark
 		  ){
 
-	  String sRow = "<TR>";
-	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>";
+	  String sRow = "<TR>\n";
+	  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
 	  
 	  sRow += "<TD ALIGN=LEFT>"; 
 	  for (int i = 0; i < sValues.size(); i++){
@@ -488,12 +488,12 @@ public class ARUtilities extends ServletUtilities.clsServletUtilities{
     	  if (sValues.get(i).toString().compareTo(sDefaultValue) == 0){
     		  sRow += " CHECKED ";
     	  }
-    	  sRow += ">" + sDescriptions.get(i).toString() + "</LABEL><BR>";
+    	  sRow += ">" + sDescriptions.get(i).toString() + "</LABEL>\n<BR>";
       }
-	  sRow += "</SELECT></TD>";
+	  sRow += "</SELECT></TD>\n";
 	  
-	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>";
-	  sRow += "</TR>";
+	  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+	  sRow += "</TR>\n\n";
 	  return sRow;
   }
   

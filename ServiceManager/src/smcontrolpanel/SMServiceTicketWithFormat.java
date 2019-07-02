@@ -302,46 +302,46 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 					+ " padding:0px;"
 					+ "\" >";
 		
-		s += "<tr>";
+		s += "<TR>\n";
 		s += "<TD style = \"vertical-align:center; height:15pt; padding:0px; align-text:center; font-size:10pt ;\""
 				+ " ALIGN=CENTER >"
-				+ "<B>Work Performed Codes</B></TD>";
+				+ "<B>Work Performed Codes</B></TD>\n";
 		s += "<TD style = \"vertical-align:center; height:15pt; padding:0px; align-text:center; font-size:10pt ;\""
 				+ " ALIGN=CENTER COLSPAN=2>"
-				+ "<B>General Service Checklist</B></TD>";
-		s += "</tr>";
+				+ "<B>General Service Checklist</B></TD>\n";
+		s += "</TR>\n";
 		
 		int iCol = 1;
 		for (int i = 0; i <= 26; i++){
 			if (iCol == 1){
-				s += "<tr>";
+				s += "<TR>\n";
 			}
-			s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+			s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 					+ "alt=\"checkbox\" / width=7pt height=7pt style = \" vertical-align:bottom; \">" 
-					+ arrWPCs.get(i) + "</td>";
+					+ arrWPCs.get(i) + "</TD>\n";
 			if (iCol == 3){
-				s += "</tr>";
+				s += "</TR>\n";
 				iCol = 1;
 			}else{
 				iCol++;
 			}
 		}
 
-		s += "<tr>";
-		s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+		s += "<TR>\n";
+		s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 			+ "alt=\"checkbox\" / width=7pt height=7pt style = \" vertical-align:bottom; \">" 
-			+ "<b>" + arrWPCs.get(27) + "</b></td>";
-		s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+			+ "<b>" + arrWPCs.get(27) + "</b></TD>\n";
+		s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 				+ "alt=\"checkbox\" / width=7pt height=7pt style = \" vertical-align:bottom; \">" 
-				+ arrWPCs.get(28) + "</td>";
-		s += "</tr>";
+				+ arrWPCs.get(28) + "</TD>\n";
+		s += "</TR>\n";
 		
-		s += "<tr>";
-		s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+		s += "<TR>\n";
+		s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 			+ "alt=\"checkbox\" / width=7pt height=7pt style = \" vertical-align:bottom; \">" 
-			+ arrWPCs.get(29) + "</td>";
+			+ arrWPCs.get(29) + "</TD>\n";
 
-		s += "<td style = \" padding:0px; font-size:7pt; \" COLSPAN=2 ROWSPAN=9>";
+		s += "<TD style = \" padding:0px; font-size:7pt; \" COLSPAN=2 ROWSPAN=9>";
 		
 				//+ "<BR>Additional comments _____________________________________________________________<BR><BR>"
 				//+ "______________________________________________________________________________<BR><BR>"
@@ -349,8 +349,8 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				//+ "______________________________________________________________________________<BR><BR>"
 				//+ "______________________________________________________________________________<BR><BR>"
 		
-		//+ "</td>");
-		//out.println("</tr>");
+		//+ "</TD>\n");
+		//out.println("</TR>\n");
 		
 		//Here we print a table of 'underlines':
 		s += "<table "
@@ -361,7 +361,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " vertical-align:top;"
 				//+ " padding:0px;"
 				+ "\" >";
-		s += "<TR>"
+		s += "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:7pt;"
 				+ " padding:0px;"
@@ -371,11 +371,11 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-style:none none solid none;"
 				+ "\">"
 				+ "Additional comments:"
-				+ "</TD>"
-				+ "</TR>";
+				+ "</TD>\n"
+				+ "</TR>\n";
 
 		for (int i = 0; i < 3; i++){
-			  s += "<TR>"
+			  s += "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:9pt;"
 				+ " padding:0px;"
@@ -384,24 +384,24 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-color: black;"
 				+ " border-style:none none solid none;"
 				+ "\">"
-				+ "</TD>"
-				+ "</TR>";
+				+ "</TD>\n"
+				+ "</TR>\n";
 		}
 		
 		s += "</table>";
 		
 		for (int i = 30; i < arrWPCs.size(); i++){
-			s += "<tr>";
-			s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+			s += "<TR>\n";
+			s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 				+ "alt=\"checkbox\" / width=7pt height=7pt style = \" vertical-align:bottom; \">" 
-				+ arrWPCs.get(i) + "</td>";
-			s += "</tr>";
+				+ arrWPCs.get(i) + "</TD>\n";
+			s += "</TR>\n";
 		}
 		
 		//Finally, we need three more lines in the left column to fill out space for the lines to the right:
-		//s += "<tr><td style = \" height:8pt; padding:0px; \">" + "&nbsp;" + "</td></tr";
-		//out.println("<tr><td style = \" height:15px; padding:0px; \">" + "&nbsp;" + "</td></tr");
-		//out.println("<tr><td style = \" height:15px; padding:0px; \">" + "&nbsp;" + "</td></tr");
+		//s += "<TR>\n<TD style = \" height:8pt; padding:0px; \">" + "&nbsp;" + "</TD>\n</tr";
+		//out.println("<TR>\n<TD style = \" height:15px; padding:0px; \">" + "&nbsp;" + "</TD>\n</tr");
+		//out.println("<TR>\n<TD style = \" height:15px; padding:0px; \">" + "&nbsp;" + "</TD>\n</tr");
 		
 		//Close the whole table
 		s += "</table>";
@@ -424,20 +424,20 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 		*/
 
 		String sTable = "<table class = \"parts\" width=100%>" +
-				"<tr><td COLSPAN=6 ALIGN=CENTER><B>Parts used / Additional Work Performed Items</B></td></tr>" +
-				"<tr><td  class = \"col1\"><U>QTY.</U></td>" +
-				"<td  class = \"col2\"><U>PART NO.</U></td>" +
-				"<td  class = \"col3\"><U>DESCRIPTION</U></td>" +
-				"<td  class = \"col1\"><U>QTY.</U></td>" +
-				"<td  class = \"col2\"><U>PART NO.</U></td>" +
-				"<td  class = \"col3\"><U>DESCRIPTION</U></td></tr>";
+				"<TR>\n<TD COLSPAN=6 ALIGN=CENTER><B>Parts used / Additional Work Performed Items</B></TD>\n</TR>\n" +
+				"<TR>\n<TD  class = \"col1\"><U>QTY.</U></TD>\n" +
+				"<TD  class = \"col2\"><U>PART NO.</U></TD>\n" +
+				"<TD  class = \"col3\"><U>DESCRIPTION</U></TD>\n" +
+				"<TD  class = \"col1\"><U>QTY.</U></TD>\n" +
+				"<TD  class = \"col2\"><U>PART NO.</U></TD>\n" +
+				"<TD  class = \"col3\"><U>DESCRIPTION</U></TD>\n</TR>\n";
 
 		for (int i = 0; i < 8; i++){
-			sTable += "<tr>";
+			sTable += "<TR>\n";
 			for (int j = 0; j < 6; j++){
-				sTable += "<td class = \"blankcol\" height:12pt;></td>";
+				sTable += "<TD class = \"blankcol\" height:12pt;></TD>\n";
 			}
-			sTable += "</tr>";
+			sTable += "</TR>\n";
 		}
 		
 		sTable += "</table>";
@@ -479,7 +479,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " font-family: Arial;"
 				+ " font-size:10px;"
 				+ "\" >"
-				+ "<TR>"
+				+ "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:18pt;"
 				+ " padding:0px;"
@@ -489,7 +489,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-style:none none solid none;"
 				+ "\">"
 				+ "&nbsp;"
-				+ "</TD></TR></TABLE>";
+				+ "</TD>\n</TR>\n</TABLE>";
 		out.println("<div style=\"position: absolute; " +
 								 "left:0pt; " +
 								 "top:" + (iCopyNumber*m_iPrintAreaHeight+580) + "pt; " +
@@ -568,7 +568,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " font-family: Arial;"
 				+ " font-size:9pt;"
 				+ "\">"
-				+ "<TR>"
+				+ "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:18pt;"
 				+ " padding:0px;"
@@ -578,11 +578,11 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-style:none none solid none;"
 				+ "\">"
 				+ "WORK INCOMPLETE - ADDITIONAL WORK REQUIRED:"
-				+ "</TD>"
-				+ "</TR>";
+				+ "</TD>\n"
+				+ "</TR>\n";
 
 		for (int i = 0; i < 3; i++){
-			s += "<TR>"
+			s += "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:16pt;"
 				+ " padding:0px;"
@@ -591,8 +591,8 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-color: black;"
 				+ " border-style:none none solid none;"
 				+ "\">"
-				+ "</TD>"
-				+ "</TR>"
+				+ "</TD>\n"
+				+ "</TR>\n"
 			;
 		}
 		
@@ -615,7 +615,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-style:none;"
 				+ " font-family: Arial;"
 				+ " font-size:9pt;"
-				+ "\"><TR>"
+				+ "\"><TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:18pt;"
 				+ " padding:0px;"
@@ -625,8 +625,8 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-style:none none solid none;"
 				+ "\">"
 				+ "CUSTOMER AUTHORIZATION<BR>FOR ADDITIONAL WORK:&nbsp;&nbsp;&nbsp;&nbsp;<B>X</B>"
-				+ "</TD>"
-				+ "</TR></TABLE>"
+				+ "</TD>\n"
+				+ "</TR>\n</TABLE>"
 			;
 		
 		out.println("<div style=\"position: absolute; " +
@@ -729,29 +729,29 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " padding:0px;"
 				+ "\">";
 		
-		s += "<tr>";
+		s += "<TR>\n";
 		s += "<TD style = \"vertical-align:center; height:15pt; padding:0px; align-text:center; font-size:10pt ;\""
 				+ " ALIGN=CENTER COLSPAN=3>"
-				+ "<B>Work Performed Codes</B></TD>";
-		s += "</tr>";
+				+ "<B>Work Performed Codes</B></TD>\n";
+		s += "</TR>\n";
 
 		int iCol = 1;
 		for (int i = 0; i < arrWPCs.size(); i++){
 			if (iCol == 1){
-				s += "<tr>";
+				s += "<TR>\n";
 			}
-			s += "<td style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
+			s += "<TD style = \"font-family: Arial; height:7pt; padding:0px; \"><img src=\"./images/checkbox.jpg\""
 					+ "alt=\"checkbox\" / width=7pt height=7pt style = \"vertical-align:bottom;\">" 
-					+ "" + arrWPCs.get(i) + "</td>";
+					+ "" + arrWPCs.get(i) + "</TD>\n";
 			if (iCol == 3){
-				s += "</tr>";
+				s += "</TR>\n";
 				iCol = 1;
 			}else{
 				iCol++;
 			}
 		}
 		if (iCol != 3){
-			s += "</tr>";
+			s += "</TR>\n";
 		}
 		
 		//Close the whole table
@@ -767,7 +767,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 			+ "\" >";
 		
 		for (int i = 0; i < 3; i++){
-			s += "<TR>"
+			s += "<TR>\n"
 				+ "<TD style = \"vertical-align:center;"
 				+ " height:11pt;"
 				+ " padding:0px;"
@@ -776,8 +776,8 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " border-color: black;"
 				+ " border-style:none none solid none;"
 				+ "\">"
-				+ "</TD>"
-				+ "</TR>"
+				+ "</TD>\n"
+				+ "</TR>\n"
 				;
 		}
 		s += "</table>";
@@ -842,7 +842,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 
 		//First, we need a table to enclose the three inner tables:
 		String s = "<table style = \"width:100%; border-style:none;\">";
-		s += "<tr>";
+		s += "<TR>\n";
 
 		//*********************************************
 		//Leftmost cell (company address cell):
@@ -857,15 +857,15 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 		s += "<table style=\"width:100%; border-style:none; font-family: Arial; padding:0px; font-size:10pt;\">";
 		s += "<tbody>";
 		//Now print the lines in the leftmost table:
-		s += "<tr><td align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\"><b>" + sCompanyName + "</b></td></tr>";
-		s += "<tr><td align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\">" + sAddressLine1 + "</td></tr>";
-		s += "<tr><td align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\">" + sAddressLine2 + "&nbsp;&nbsp;&nbsp;&nbsp;" + sCompanyPhone + "</td></tr>";
-		s += "<tr><td align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\"><b>" + sBranchOffice + "</b>" + "&nbsp;" + sBranchPhone + "</td></tr>";
+		s += "<TR>\n<TD align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\"><b>" + sCompanyName + "</b></TD>\n</TR>\n";
+		s += "<TR>\n<TD align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\">" + sAddressLine1 + "</TD>\n</TR>\n";
+		s += "<TR>\n<TD align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\">" + sAddressLine2 + "&nbsp;&nbsp;&nbsp;&nbsp;" + sCompanyPhone + "</TD>\n</TR>\n";
+		s += "<TR>\n<TD align=\"LEFT\" style=\" height: 7pt; font-size: 7pt\"><b>" + sBranchOffice + "</b>" + "&nbsp;" + sBranchPhone + "</TD>\n</TR>\n";
 
 		//Close the table in the leftmost cell:
 		s += "</table>";
 		//End the leftmost cell:
-		s += "</td>";
+		s += "</TD>\n";
 		//******************************************
 
 		//*********************************************
@@ -884,14 +884,14 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 			sServiceTypeCode.compareToIgnoreCase("SH0002") == 0){
 			sServiceType = "Residential";
 		}
-		s += "<tr><td><H2 class = \"western\" align=center font-size:9pt;>" + sServiceType + "</H2>" 
+		s += "<TR>\n<TD>\n<H2 class = \"western\" align=center font-size:9pt;>" + sServiceType + "</H2>" 
 				+ "<H2 class = \"western\" align=center font-size:9pt;>" + "Work Order" + "</H2>"
-				+ "</td></tr>";
+				+ "</TD>\n</TR>\n";
 
 		//Close the table in the center cell:
 		s += "</table>";
 		//End the center cell:
-		s += "</td>";
+		s += "</TD>\n";
 		//******************************************
 
 		//*********************************************
@@ -920,11 +920,11 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 		//Close the table in the rightmost cell:
 		//out.println("</table>");
 		//End the leftmost cell:
-		s += "</td>";
+		s += "</TD>\n";
 		//******************************************
 
 		//End the one row in the largest table
-		s += "</tr>";
+		s += "</TR>\n";
 		
 		//Close the whole table
 		s += "</table>";
@@ -982,25 +982,25 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " font-align:center;"
 				+ "\">";
 
-		s += "<TR>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Created By</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>PO Number</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Customer</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Salesperson</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Wage Scale</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Ship Date</B></TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Terms</B></TD>";
-		s += "</TR>";
+		s += "<TR>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Created By</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>PO Number</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Customer</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Salesperson</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Wage Scale</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Ship Date</B></TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\"><B>Terms</B></TD>\n";
+		s += "</TR>\n";
 
-		s += "<TR>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sOrderCreatedByFullName + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sPONumber + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sCustomerCode + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sSalesperson + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sWageScale + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sExpectedShipDate + "</TD>";
-		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sTerms + "</TD>";
-		s += "</TR>";
+		s += "<TR>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sOrderCreatedByFullName + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sPONumber + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sCustomerCode + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sSalesperson + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sWageScale + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sExpectedShipDate + "</TD>\n";
+		s += "<TD ALIGN=CENTER style=\"font-family: Arial; font-align:center; font-size:8pt; height:8pt; padding:0px;\">" + sTerms + "</TD>\n";
+		s += "</TR>\n";
 
 		s += "</TABLE>";
 
@@ -1059,7 +1059,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 				+ " padding:0pt;"
 				+ "\">";
 
-		s += "<TR>";
+		s += "<TR>\n";
 		//Print the left box, containing the BILL TO name and address:
 		//******************************************
 		s +="<TD style=\""
@@ -1072,64 +1072,64 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 
 		//This is the inner left table, with the bill-to information:
 		s +="<table style=\"width:100%; border-collapse:collapse; border-style:none; font-family: Arial; padding:0px; font-size:8pt;\">";
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Bill to:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToName + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Bill to:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToName + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd1.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd1.trim() + "</TD>\n";
+		s +="</TR>\n";
 
 		//if (sBillToAdd2.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd2.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd2.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
 		
 		//if (sBillToAdd3.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd3.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd3.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
 		
 		//if (sBillToAdd4.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd4.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sBillToAdd4.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
 		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + (sCity.trim() + " " + sState.trim() 
-				+ " " + sPostalCode).trim()  + "</TD>";
-		s +="</TR>";
+				+ " " + sPostalCode).trim()  + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Email Address:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sEmail.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Email Address:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sEmail.trim() + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Authorized:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sProjectManager.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Authorized:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sProjectManager.trim() + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Phone:</B>&nbsp;" + "</TD>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Phone:</B>&nbsp;" + "</TD>\n";
 		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sProjectManagerPhone.trim()
 				+ "&nbsp;<B>2nd phone:</B>&nbsp;" + sBillTo2ndPhone.trim()
 				+ "&nbsp;<B>Fax:</B>&nbsp;" + sBillToFax.trim()
-				+ "</TD>";
+				+ "</TD>\n";
 
-		s +="</TR>";
+		s +="</TR>\n";
 
 		s +="</table>";
-		s +="</TD>";
+		s +="</TD>\n";
 
 
 		//Print the box to the right, with the date, id, etc.
@@ -1144,66 +1144,66 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 
 		//This is the inner left table, with the bill-to information:
 		s +="<table style=\"width:100%; border-collapse:collapse; border-style:none; font-family: Arial; padding:0px; font-size:8pt;\">";
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Ship to:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToName + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Ship to:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToName + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd1.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd1.trim() + "</TD>\n";
+		s +="</TR>\n";
 
 		//if (sShipToAdd2.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd2.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd2.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
 		
 		//if (sShipToAdd3.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd3.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd3.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
 
 		//if (sShipToAdd4.trim().compareToIgnoreCase("") != 0){
-			s +="<TR>";
-			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
-			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd4.trim() + "</TD>";
-			s +="</TR>";
+			s +="<TR>\n";
+			s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
+			s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sShipToAdd4.trim() + "</TD>\n";
+			s +="</TR>\n";
 		//}
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "&nbsp;" + "</TD>\n";
 		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + (sShipCity.trim() + " " + sShipState.trim() 
-				+ " " + sShipPostalCode).trim()  + "</TD>";
-		s +="</TR>";
+				+ " " + sShipPostalCode).trim()  + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Map:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sMap.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Map:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sMap.trim() + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Job Contact:</B>&nbsp;" + "</TD>";
-		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sSuperintendent.trim() + "</TD>";
-		s +="</TR>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Job Contact:</B>&nbsp;" + "</TD>\n";
+		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sSuperintendent.trim() + "</TD>\n";
+		s +="</TR>\n";
 
-		s +="<TR>";
-		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Job Phone:</B>&nbsp;" + "</TD>";
+		s +="<TR>\n";
+		s +="<TD ALIGN=RIGHT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + "<B>Job Phone:</B>&nbsp;" + "</TD>\n";
 		s +="<TD ALIGN=LEFT style=\" height: " + sRowHeight + "; font-size: 8pt\">" + sSuperintendentPhone.trim()
 				+ "&nbsp;<B>2nd phone:</B>&nbsp;" + sShipTo2ndPhone.trim()
 				+ "&nbsp;&nbsp;<B>Fax:</B>&nbsp;" + sShipToFax.trim()
 
-				+ "</TD>";
-		s +="</TR>";
+				+ "</TD>\n";
+		s +="</TR>\n";
 
 		s +="</table>";
 		//End the right box:
-		s +="</TD>";
+		s +="</TD>\n";
 
-		s +="</TR></TABLE>";
+		s +="</TR>\n</TABLE>";
 		
 		pwOut.println("<div style=\"position: absolute; " +
 								 "left:0pt; " +

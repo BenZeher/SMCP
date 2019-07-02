@@ -72,7 +72,7 @@ public class SMEditMaterialReturnSelect extends HttpServlet {
 			+ " VALUE = \"" + sEditCode + "\""
 			//+ " SIZE=32"
 			+ " MAXLENGTH=" + "8"
-			+ " STYLE=\"width: .75in; height: 0.25in\">&nbsp;";
+			+ " STYLE=\"width: .75in; height: 0.25in\">&nbsp;\n";
 		
 		//Link to finder:
 		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder" +

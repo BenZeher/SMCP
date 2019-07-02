@@ -777,8 +777,8 @@ public class GLEditEntryEdit  extends HttpServlet {
      	
         //Description:
     	s += "  <TR>\n";
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Description:&nbsp;</TD>\n"
- 		    ;
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD 
+     		+ "\" >Entry&nbsp;description:&nbsp;</TD>\n";
      	if (bEditable){
      		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.sentrydescription + "\""
  	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsentrydescription()) + "\""
@@ -855,7 +855,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Acct</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Description</TD>\n";
+					+ "Acct.&nbsp;description</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Debit</TD>\n";
@@ -870,13 +870,13 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "<a href=\"#SourceTypes\"><strong>Source<BR>Type</strong></a> </TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Description</TD>\n";
+					+ "Line&nbsp;description</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Reference</TD>\n";
+					+ "Line&nbsp;reference</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Comment</TD>\n";
+					+ "Line&nbsp;comment</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Remove?</TD>\n";
@@ -890,7 +890,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Acct</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Description</TD>\n";
+					+ "Acct.&nbsp;description</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "Debit</TD>\n";
@@ -905,13 +905,13 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ "Source<BR>Type</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Description</TD>\n";
+					+ "Line&nbsp;description</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Reference</TD>\n";
+					+ "Line&nbsp;reference</TD>\n";
 
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-					+ "Comment</TD>\n";
+					+ "Line&nbsp;comment</TD>\n";
 			
 		}
 	
@@ -1024,7 +1024,27 @@ public class GLEditEntryEdit  extends HttpServlet {
 					//	+ SMTablegltransactionbatchlines.sacctid)
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getsacctid());
+				//sLineText += clsStringFunctions.filter(line.getsacctid());
+				sLineText += "<INPUT TYPE=TEXT"
+					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
+					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+					+ SMTablegltransactionbatchlines.sacctid + "\""
+					+ " VALUE=\"" + clsStringFunctions.filter(line.getsacctid()) + "\""
+				    + " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatchlines.sacctidLength)
+				    + " SIZE = " + "14"
+				    + " onchange=\"verifyGL(this, "
+				    	+ "'" 
+				    	+ ACCT_DESC_LABEL_BASE 
+						+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
+				    + "');\""
+				    + " readonly "
+				    + " style = \" border:0; background-color: " + sBackgroundColor + " ; \" "
+			    	+ ">"
+				;
+
 			}
 			sLineText += "</TD>\n";
 			

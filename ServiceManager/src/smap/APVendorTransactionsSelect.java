@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -14,6 +15,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableapvendorgroups;
 import SMDataDefinition.SMTableicvendors;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -33,6 +35,10 @@ public class APVendorTransactionsSelect extends HttpServlet {
 	public static String PARAM_DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	public static String PARAM_STARTING_VENDOR = "StartingVendor";
 	public static String PARAM_ENDING_VENDOR = "EndingVendor";
+	public static String PARAM_STARTING_GROUP = "StartingVendorGroup";
+	public static String PARAM_ENDING_GROUP = "EndingVendorGroup";
+	public static String PARAM_STARTING_DESCRIP = "StartingVendorGroupDescription";
+	public static String PARAM_ENDING_DESCRIP = "EndingVendorGroupDescription";
 	public static String PARAM_STARTING_DOCUMENT_NUMBER = "StartingDocumentNumber";
 	public static String PARAM_STARTING_DOCUMENT_DATE = "StartingDocumentDate";
 	public static String PARAM_ENDING_DOCUMENT_DATE = "EndingDocumentDate";
@@ -132,6 +138,8 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		String sSQL = "";
 		String sStartingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_VENDOR, request);
 		String sEndingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_ENDING_VENDOR, request);
+		String sStartingVendorGroup = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_GROUP, request);
+		String sEndingVendorGroup = clsManageRequestParameters.get_Request_Parameter(PARAM_ENDING_GROUP, request);
 		ResultSet rsVendors = null;
 		if (sStartingVendorNumber.compareToIgnoreCase("") == 0){
 			sSQL = "SELECT " 
@@ -221,6 +229,69 @@ public class APVendorTransactionsSelect extends HttpServlet {
 			+ "</TD>\n");
 		
 		out.println("  </TR>\n");
+		
+		ArrayList<String> sVendorGroups = new ArrayList<String>(0);
+		ArrayList<String> sVendorGroupNumbers = new ArrayList<String>(0);
+		
+		if ((sStartingVendorGroup.compareToIgnoreCase("") == 0) || (sEndingVendorGroup.compareToIgnoreCase("") == 0 )){
+			sSQL = "SELECT " 
+				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
+				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid
+				+ " FROM " + SMTableapvendorgroups.TableName	
+				+ " ORDER BY " + SMTableapvendorgroups.sgroupid + " ASC ";
+			try {
+				rsVendors = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".doPost (2) - User: " + sUserID
+					+ " - "
+					+ sUserFullName
+						);
+				while (rsVendors.next()){
+					String sId = rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid);
+					String sDescription = rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription);
+					sVendorGroupNumbers.add(sId);
+					sVendorGroups.add(sId + " - " + sDescription);
+							}
+				rsVendors.close();
+			} catch (SQLException e) {
+				out.println("Error [1561378774] loading ending vendor - " + e.getMessage());
+			}
+		}
+		
+		
+		String sStartingGroupSelected = sVendorGroupNumbers.get(0);
+		String sEndingGroupSelected = sVendorGroupNumbers.get(sVendorGroupNumbers.size()-1);
+		
+		out.println("<TR>\n");
+		out.println("<TD ALIGN=RIGHT>" + "<B>Starting with Vendor Group:</B>&nbsp;</TD>\n"
+				+ "<TD ALIGN=LEFT>");
+		out.println(clsCreateHTMLFormFields.TDDropDownBox(
+				PARAM_STARTING_GROUP, 
+				sVendorGroupNumbers,
+				sVendorGroups,
+        		sStartingGroupSelected)
+        );
+		out.println("</TD></TR>\n");
+		out.println("<TR>\n");
+		out.println("<TD ALIGN=RIGHT>" + "<B>Ending with Vendor Group:</B>&nbsp;</TD>\n"
+				+ "<TD ALIGN=LEFT>");
+		out.println(clsCreateHTMLFormFields.TDDropDownBox(
+				PARAM_ENDING_GROUP, 
+				sVendorGroupNumbers,
+        		sVendorGroups,
+        		sEndingGroupSelected)
+        );
+		out.println("</TD></TR>\n");
+		
+		out.println("<INPUT TYPE= \"hidden\" NAME = \"" + PARAM_STARTING_DESCRIP + "\" VALUE = \"" + sVendorGroups.get(0) + "\">\n" );
+		out.println("<INPUT TYPE= \"hidden\" NAME = \"" + PARAM_ENDING_DESCRIP + "\" VALUE = \"" + sVendorGroups.get(sVendorGroups.size()-1) + "\">\n" );
+		
+		out.println("<TR>\n");
+		out.println("</TR>\n");
+		
 		
 		//Starting document number
 		String sStartingDocumentNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_DOCUMENT_NUMBER, request);

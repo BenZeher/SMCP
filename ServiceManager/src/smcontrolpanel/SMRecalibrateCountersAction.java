@@ -93,14 +93,16 @@ public class SMRecalibrateCountersAction extends HttpServlet {
     	//Get the Invoice Number
     	String m_sInvoiceNumber = "";
     	try{
-    		String sInvoiceNumberColumn = "sInvoiceNumberColumn";
-    		SQL =  "SELECT"
-        			+ " "+sInvoiceNumberColumn+" FROM ("+Select_Replace_String(SMTableinvoiceheaders.sInvoiceNumber)+""+Alphabet_String()+""+From_Statement_String(sInvoiceNumberColumn,SMTableinvoiceheaders.TableName)+") as b"
-        			+ " ORDER BY CAST("+sInvoiceNumberColumn+" as signed) DESC"
-        			+ " LIMIT 1";
+    		
+    		SQL =  "SELECT " + 
+    				SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + 
+    				" FROM  " + SMTableinvoiceheaders.TableName + 
+    				" WHERE ( NOT "+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber +" REGEXP '[a-z]')" + 
+    				" ORDER BY CAST(" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " as signed) DESC" + 
+    				" LIMIT 1";
     		ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
     		if(rs.next()){
-    			m_sInvoiceNumber = rs.getString(sInvoiceNumberColumn);
+    			m_sInvoiceNumber = rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber);
     			m_sInvoiceNumber =  m_sInvoiceNumber.replaceAll("[^0-9.]", "");
     			int addOneInvoiceNumber = Integer.parseInt(m_sInvoiceNumber) + 1;
     			m_sInvoiceNumber = String.valueOf(addOneInvoiceNumber);

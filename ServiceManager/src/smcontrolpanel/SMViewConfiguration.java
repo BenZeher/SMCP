@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMModuleListing;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -26,9 +27,6 @@ import ConnectionPool.WebContextParameters;
 
 public class SMViewConfiguration  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
-	private static final String HEADER_BG_COLOR = "#C2E0FF";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {
@@ -90,25 +88,25 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-
-		out.println("\n" + sStyleScripts() + "\n");		
+		out.println(SMUtilities.getMasterStyleSheetLink());
+		//out.println("\n" + sStyleScripts() + "\n");		
 		
 		//Print a link to the first page after login:
 		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
 
-		out.println("<TABLE class = \"basic\" >");
-		out.println("<TR style = \" background-color: " + HEADER_BG_COLOR +  "; \">" 
-			+ "<TD class = \"centerjustifiedheading \">"
+		out.println("<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >");
+		out.println("<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING +  " \">\n" 
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>Setting</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>Value</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>Remark</B>"
-			+ "</TD>"
+			+ "</TD>\n"
 		);
 		boolean bOddRow = true;
 		
@@ -235,26 +233,26 @@ public class SMViewConfiguration  extends HttpServlet {
 
 		//Now show all of the databases and information in the smcpcontrols database:
 		out.println("<BR><U><B>SMCP Controls Listing of Company Databases<B></U>");
-		out.println("<TABLE class = \"basic\" >");
-		out.println("<TR style = \" background-color: " + HEADER_BG_COLOR +  "; \">" 
-			+ "<TD class = \"centerjustifiedheading \">"
+		out.println("<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\" >");
+		out.println("<TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING +  " \">\n" 
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>DB ID</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>DB Name</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>URL</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>Port</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>User</B>"
-			+ "</TD>"
-			+ "<TD class = \"centerjustifiedheading \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ "<B>Comment</B>"
-			+ "</TD>"
+			+ "</TD>\n"
 		);
 		
 		//Read the company data credentials database:
@@ -327,22 +325,22 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredRemark.compareToIgnoreCase("") == 0){
 			sFilteredRemark = "&nbsp;";
 		}
-		String sBackgroundColor = DARK_ROW_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		}
-		String s = "<TR style = \" background-color: " + sBackgroundColor +  "; \">";
-		s += "<TD class = \"rightjustifiedheading \" >"
+		String s = "<TR class = \" " + sBackgroundColor +  " \">";
+		s +=  "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sLabel
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \" >"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sValue
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sFilteredRemark
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		return s;
 	}
@@ -359,35 +357,34 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredComment.compareToIgnoreCase("") == 0){
 			sFilteredComment = "&nbsp;";
 		}
-		String sBackgroundColor = DARK_ROW_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		}
-		String s = "<TR style = \" background-color: " + sBackgroundColor +  "; \">";
-		s += "<TD class = \"leftjustifiedcell \" >"
+		String s = "<TR class = \"  " + sBackgroundColor +  " \">";
+		s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sDBID
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \" >"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sDBName
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sURL
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \">"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sPort
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sUser
-			+ "</TD>"
-			+ "<TD class = \"leftjustifiedcell \">"
+			+ "</TD>\n"
+			+ "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sComment
-			+ "</TD>"
+			+ "</TD>\n"
 		;
-		s += "</TR>";
+		s += "</TR>\n";
 		
 		return s;
 	}
-	private String sStyleScripts(){
+	/*private String sStyleScripts(){
 		String s = "";
 		//String sRowHeight = "22px";
 		s += "<style type=\"text/css\">\n";
@@ -461,7 +458,7 @@ public class SMViewConfiguration  extends HttpServlet {
 			;
 
 		return s;
-	}
+	}*/
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 					throws ServletException, IOException {

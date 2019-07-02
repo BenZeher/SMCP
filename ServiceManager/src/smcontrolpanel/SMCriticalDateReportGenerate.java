@@ -65,7 +65,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     	//Get Start and end Dates
     	String sStartingDate = request.getParameter("StartingDate");
 	    String sEndingDate = request.getParameter("EndingDate");
-	    
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 	 	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCRITICALDATEREPORT, "REPORT", "Ran Critical Date report for"+sStartingDate+" - "+sEndingDate, "[1535653241]");
@@ -217,11 +217,11 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + sUserFirstName + " " + sUserLastName
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
-		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4><B>" + sReportTitle + "</B></FONT></TD></TR>" +
+		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4 ><B>" + sReportTitle + "</B></FONT></TD></TR>" +
 		   
 		   "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>");
 				   

@@ -49,13 +49,13 @@ public class ICPostPhysicalInventory extends HttpServlet{
 		}else{
 			
 			
-			System.out.println("[1543507221]"
+			/*System.out.println("[1543507221]"
 				+ " sRedirectString = '"
 				+ SMUtilities.getURLLinkBase(getServletContext()) + "" 
 				+ smaction.getCallingClass()
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "'"
-			);
+			);*/
 				
 	    	smaction.redirectAction(
 	    		"",

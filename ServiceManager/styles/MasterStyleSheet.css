@@ -1,67 +1,68 @@
 /* row background color WHITE */
-tr.evennumberedtablerow{
-  background-color: #FFFFFF;
+tr.evennumberedtablerow:{
+  background-color: #FFFFFF !important;
 }
 
 /* row background color GREY */
 tr.oddnumberedtablerow{
-  background-color: #DCDCDC;
+  background-color: #DCDCDC !important;
 }
 
 /* row background color LIGHT BLUE */
 tr.lightbluetablerow{
-  background-color: #C2E0FF;
+  background-color: #C2E0FF !important;
 }
 
 /* row background color BLACK */
 tr.blacktablerow{
-  background-color: #000000;
+  background-color: #000000 !important;
 }
 
 /* row background color MAROON */
 tr.maroontablerow{
- background-color: #F38282;
+ background-color: #F38282 !important;
 }
 
 /* row background color PURPLE */
 tr.purpletablerow{
- background-color: #9370DB;
+ background-color: #9370DB !important;
 }
 
 /* row background color GREEN */
 tr.greentablerow{
- background-color: #9ACD32;
+ background-color: #9ACD32 !important;
 }
 
 /* row background color YELLOW */
 tr.yellowtablerow{
- background-color: #FFFF5C;
+ background-color: #FFFF5C !important;
 }
 
 /* row background color ORANGE */
 tr.orangetablerow{
- background-color: #FFCC99;
+ background-color: #FFCC99 !important;
 }
 
 /* row background color LIGHT PINK */
 tr.lightpinktablerow{
- background-color: #FFCCFF;
+ background-color: #FFCCFF !important;
 }
 
 /* row background color LIGHT GREEN */
 tr.lightgreentablerow{
- background-color: #CCFF99;
+ background-color: #CCFF99 !important;
 }
 
 /* row background color YELLOW */
 tr.yellowtablerow{
- background-color: #E1D276;
+ background-color: #E1D276 !important;
 }
 
 /* row background color GREY */
 tr.greytablerow{
- background-color: #bdbdbd;
+ background-color: #bdbdbd !important;
 }
+
 
 
 /* simple table cell left justified heading */
@@ -113,10 +114,10 @@ td.fieldcontrolcenter{
 td.fieldcontrolleftwithborder{
   height: 22px;
   text-align: left;
-  border-width: 1px;
+  border-width: 1px !important;
   border-spacing: 2px;
-  border-style: solid;
-  border-color: black;
+  border-style: solid !important;
+  border-color: black !important;
   border-collapse: separate;
   padding: 2px;
 }
@@ -127,8 +128,8 @@ td.fieldcontrolrightwithborder{
   text-align: right;
   border-width: 1px;
   border-spacing: 0px;
-  border-style: solid;
-  border-color: black;
+  border-style: solid !important;
+  border-color: black !important;
   border-collapse: separate;
   padding: 2px;
 }
@@ -137,10 +138,10 @@ td.fieldcontrolrightwithborder{
 td.fieldcontrolcenterwithborder{
   height: 22px;
   text-align: center;
-  border-width: 1px;
-  border-spacing: 0px;
-  border-style: solid;
-  border-color: black;
+  border-width: 1px !important;
+  border-spacing: 0px !important;
+  border-style: solid !important;
+  border-color: black !important;
   border-collapse: separate;  
   padding: 2px;
 }
@@ -150,42 +151,45 @@ td.fieldcontrolcenterwithborder{
 table.basic {
   border-width: 1px;
   border-spacing: 0px;
-  border-style: solid;
-  border-color: black;
-  border-collapse: separate;
+  border-style: solid !important;
+  border-color: black !important;
+  border-collapse: separate !important;
   font-size: small;
   font-family : Arial;
-  color: black;
+  color: black !important;
+  margin: 25px;
  }
  
  /* basic table definition without border */
 table.basicwithoutborder {
   border-width: 1px;
   border-spacing: 0px;
-  border-style: solid;
-  border-color: black;
-  border-collapse: separate;
+  border-style: solid !important;
+  border-color: black !important;
+  border-collapse: separate !important;
   font-size: small;
   font-family : Arial;
-  color: black;
+  color: black !important;
+  margin: 25px;
  }
 
 /*collapse border */
 table.collapseborder{
- border-collapse: collapse;
- border:1px solid black;
+ border-collapse: collapse !important;
+ border:1px solid black !important;
+ margin: 25px;
 }
 
 /* table data with a collapse border */
 td.collapsebordertabledata{
- border-collapse: collapse;
- border:1px solid black;
+ border-collapse: collapse !important;
+ border:1px solid black !important;
 }
 
 
 /* table cell left justified, border, small Arial font */
 td.leftjustifiedcell {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -197,7 +201,7 @@ td.leftjustifiedcell {
 
 /* table cell right justified, border, small Arial font */
 td.rightjustifiedcell {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -209,7 +213,7 @@ td.rightjustifiedcell {
 
 /* table cell center justified, border, small Arial font */
 td.centerjustifiedcell {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -221,7 +225,7 @@ td.centerjustifiedcell {
 
 /* table cell left justified, NO border, small Arial font */
 td.leftjustifiedcellnoborder {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -233,7 +237,7 @@ td.leftjustifiedcellnoborder {
 
 /* table cell right justified, NO border, small Arial font */
 td.rightjustifiedcellnoborder {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -245,7 +249,7 @@ td.rightjustifiedcellnoborder {
 
 /* table cell center justified, NO border, small Arial font */
 td.centerjustifiedcellnoborder {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -257,7 +261,7 @@ td.centerjustifiedcellnoborder {
 
 /* table cell left justified, NO border, small Arial font, vertically aligned to top */
 td.leftjustifiedcellnoborderaligntop {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -269,7 +273,7 @@ td.leftjustifiedcellnoborderaligntop {
 
 /* table cell right justified, NO border, small Arial font, vertically aligned to top */
 td.rightjustifiedcellnoborderaligntop {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -281,7 +285,7 @@ td.rightjustifiedcellnoborderaligntop {
 
 /* table cell center justified, NO border, small Arial font, vertically aligned to top */
 td.centerjustifiedcellnoborderaligntop {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -293,7 +297,7 @@ td.centerjustifiedcellnoborderaligntop {
 
 /* table cell left justified, NO border, small Arial font BOLD */
 td.leftjustifiedcellnoborderbold {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -305,7 +309,7 @@ td.leftjustifiedcellnoborderbold {
 
 /* table cell right justified, NO border, small Arial font BOLD */
 td.rightjustifiedcellnoborderbold {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -317,7 +321,7 @@ td.rightjustifiedcellnoborderbold {
 
 /* table cell center justified, NO border, small Arial font BOLD */
 td.centerjustifiedcellnoborderbold {
-  border: 0px solid;
+  border: 0px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;
@@ -329,7 +333,7 @@ td.centerjustifiedcellnoborderbold {
 
 /* table cell left justified heading, border, small, bold Arial font */
 td.leftjustifiedheading {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial; 
@@ -341,7 +345,7 @@ td.leftjustifiedheading {
 
 /* table cell right justified heading, border, small, bold Arial font */
 td.rightjustifiedheading {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial; 
@@ -353,7 +357,7 @@ td.rightjustifiedheading {
 
 /* table cell center justified heading, border, small, bold Arial font */
 td.centerjustifiedheading {
-  border: 1px solid;
+  border: 1px solid !important;
   bordercolor: 000;
   padding: 2px;
   font-family : Arial;

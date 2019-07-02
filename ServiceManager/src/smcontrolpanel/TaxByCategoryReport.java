@@ -6,6 +6,8 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.ParseException;
+
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -54,11 +56,11 @@ public class TaxByCategoryReport extends java.lang.Object{
     	BigDecimal dGrandTotalCost = new BigDecimal(0);
     	BigDecimal dGrandTotalPrice = new BigDecimal(0);
     	BigDecimal dGrandTotalTax = new BigDecimal(0);
-    	
+		out.println(SMUtilities.getMasterStyleSheetLink());
     	//print out the column headers.
-    	out.println("<TABLE BORDER=0 WIDTH=100%>");
+    	out.println("<TABLE BORDER=0 WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
     	if (bShowInvoiceLines){
-    		out.println("<TR>" + 
+    		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">" + 
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>Item Category</FONT></B></TD>" +
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>Tax Jurisdiction</FONT></B></TD>" +
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=2%><B><FONT SIZE=2>Tax Type</FONT></B></TD>" +
@@ -75,7 +77,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 			"</TR>" + 
 	   		"<TR><TD COLSPAN=13><HR></TD><TR>");
     	}else{
-    		out.println("<TR>" + 
+    		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">" + 
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=2%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
@@ -146,8 +148,10 @@ public class TaxByCategoryReport extends java.lang.Object{
     	try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			out.println("</TABLE>");
-			out.println("<TABLE BORDER=0 WIDTH=100%>");
+			out.println("<TABLE BORDER=0 WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
+			int alt = 0;
 			while(rs.next()){
+				
 	    		if(lLinesInTable == 100){
 	    			lLinesInTable = 0;
 	    		}
@@ -220,7 +224,11 @@ public class TaxByCategoryReport extends java.lang.Object{
 	    		bdPrice = new BigDecimal(Double.toString(rs.getDouble(SMTableinvoicedetails.dExtendedPriceAfterDiscount)));
 	    		bdTax = rs.getBigDecimal(SMTableinvoicedetails.bdlinesalestaxamount);
 		    	if (bShowInvoiceLines){
-	    			out.println("<TR>");
+		    		if( alt%2 ==0) {
+		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \">");
+		    		}else {
+		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \">");
+		    		}
 					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.sItemCategory) + "</FONT></TD>");
 	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoiceheaders.staxjurisdiction) + "</FONT></TD>");
 	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoiceheaders.staxtype) + "</FONT></TD>");
@@ -241,6 +249,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 	    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice) + "</FONT></TD>");
 	    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTax) + "</FONT></TD>");
 	    			out.println("</TR>");
+	    			alt++;
 		    	}
     			
     			//Set the totals:
@@ -269,7 +278,7 @@ public class TaxByCategoryReport extends java.lang.Object{
     			lLinesInTable++;
 			}
 			rs.close();
-
+			
 			//Print the last tax class totals, if at least one tax class was listed:
 			if (sCurrentTaxType.compareToIgnoreCase("") != 0){
     			printTaxClassFooter(
@@ -308,8 +317,8 @@ public class TaxByCategoryReport extends java.lang.Object{
     		
 		    //Print the grand totals:
 		    out.println("<TD colspan=\"11\">&nbsp;</TD>");
-			out.println("<TR>");
-			out.println("<TD ALIGN=RIGHT colspan=\"8\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
+        	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \">");
+			out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
 			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalCost) + "</FONT></TD>");
 			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalPrice) + "</FONT></TD>");
 			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTax) + "</FONT></TD>");
@@ -332,8 +341,8 @@ public class TaxByCategoryReport extends java.lang.Object{
 			BigDecimal dTaxClassTax,
 			PrintWriter out
 			){
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT colspan=\"8\"><B><FONT SIZE=2>Total for category " + sCurrentCategory 
+    	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
+		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for category " + sCurrentCategory 
 				+ ", Tax group " + sCurrentTaxGroup
 				+ ", Tax class " + sCurrentTaxClass
 				+ ":</FONT></B></TD>");
@@ -352,8 +361,8 @@ public class TaxByCategoryReport extends java.lang.Object{
 			BigDecimal dTaxGroupTax,
 			PrintWriter out
 			){
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT colspan=\"8\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ":</FONT></B></TD>");
+    	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
+		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ":</FONT></B></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupCost) + "</FONT></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupPrice) + "</FONT></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupTax) + "</FONT></TD>");
@@ -367,8 +376,8 @@ public class TaxByCategoryReport extends java.lang.Object{
 			BigDecimal dCategoryTax,
 			PrintWriter out
 			){
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT colspan=\"8\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ", category " + sCurrentCategory + ":</FONT></B></TD>");
+    	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
+		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ", category " + sCurrentCategory + ":</FONT></B></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryCost) + "</FONT></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryPrice) + "</FONT></TD>");
 		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryTax) + "</FONT></TD>");

@@ -112,15 +112,15 @@ public class SMEditTaxSelection extends HttpServlet {
 		}
 		
 		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_EDIT_BUTTON_NAME 
-				+ "' VALUE='" + SUBMIT_EDIT_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>";
+				+ "' VALUE='" + SUBMIT_EDIT_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>\n";
 		
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_DELETE_BUTTON_NAME 
-				+ "' VALUE='" + SUBMIT_DELETE_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'>";
+				+ "' VALUE='" + SUBMIT_DELETE_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'>\n";
 		
-		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_DELETE_CHECKBOX_NAME + "\">";
+		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_DELETE_CHECKBOX_NAME + "\">\n";
 		
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_ADD_BUTTON_NAME 
-				+ "' VALUE='" + SUBMIT_ADD_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>";
+				+ "' VALUE='" + SUBMIT_ADD_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>\n";
 		
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);

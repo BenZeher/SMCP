@@ -1,18 +1,16 @@
 package smar;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
-import smap.APBatch;
-import smgl.GLACCPACConversion;
+import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	public static void main(String[] args){
 		
+		@SuppressWarnings("unused")
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:
@@ -99,7 +97,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		//*****************************************************
+		/*****************************************************
 		// TEST MS SQL Connection:
 		Connection cnAP = null;
 		String sAPDatabaseURL = "madg01.com";
@@ -137,14 +135,26 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get MS SQL connection");
 			return;
 		}
+		*/
 		
+		//Test GL Transaction Batch posting:
+		GLTransactionBatch glbatch = new GLTransactionBatch("54");
+		try {
+			glbatch.post_with_connection(conn, "1", "airo");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("DONE");
 		
 		//Test GL conversion function:
+		/*
 		try {
 			GLACCPACConversion conv = new GLACCPACConversion();
 			String s = conv.processGLAccountStructureTables(
 					conn, 
 					cnAP, 
+					"comp3",
 					0, 
 					"airo");
 		} catch (Exception e) {
@@ -152,6 +162,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
+		*/
 		
 		/*
 				APBatch batch = new APBatch("514");

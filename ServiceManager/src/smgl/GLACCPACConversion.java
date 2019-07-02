@@ -33,7 +33,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String s = "Rolling back critical changes to SMCP data...<BR>";
 		//We only remove CRITICAL data changes, i.e., those that might affect processing:
 
-		System.out.println("[1552318880] - starting reverseDataChanges.");
+		//System.out.println("[1552318880] - starting reverseDataChanges.");
 		
 		//Remove any segments that we added from ACCPAC:
 		String SQL = "TRUNCATE " + SMTableglaccountsegments.TableName
@@ -46,7 +46,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Segments that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318881] - removed segments.");
+		//System.out.println("[1552318881] - removed segments.");
 		
 		//Remove any segment values that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglacctsegmentvalues.TableName
@@ -59,7 +59,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Segment Values that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318882] - removed segment values.");
+		//System.out.println("[1552318882] - removed segment values.");
 		
 		//Remove any account structures that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountstructures.TableName
@@ -72,7 +72,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Structures that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318883] - removed account structures.");
+		//System.out.println("[1552318883] - removed account structures.");
 		
 		//Remove any GL accounts that were added in a previous conversion:
 		SQL = "DELETE FROM " + SMTableglaccounts.TableName
@@ -88,7 +88,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Accounts that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318884] - removed accounts created from ACCPAC.");
+		//System.out.println("[1552318884] - removed accounts created from ACCPAC.");
 		
 		//Remove any GL financial statement data that was added in a previous conversion:
 		SQL = "TRUNCATE " + SMTableglfiscalsets.TableName
@@ -111,9 +111,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		s+= "GL financial statement data that was added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318885] - removed fiscal sets.");
+		//System.out.println("[1552318885] - removed fiscal sets.");
 		
-		//Remove any accpunt groups that we added from ACCPAC:
+		//Remove any account groups that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglaccountgroups.TableName
 		;
 		try {
@@ -124,7 +124,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Account Groups that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318886] - removed account groups.");
+		//System.out.println("[1552318886] - removed account groups.");
 		
 		//Remove any fiscal calendars that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTableglfiscalperiods.TableName
@@ -137,7 +137,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL Fiscal Periods that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1552318887] - removed fiscal periods.");
+		//System.out.println("[1552318887] - removed fiscal periods.");
 		
 		//Remove any GL transactions that we added from ACCPAC:
 		SQL = "TRUNCATE " + SMTablegltransactionlines.TableName
@@ -150,7 +150,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL transactions that were added from ACCPAC have been removed.<BR>";
 		
-		System.out.println("[1553200509] - removed GL transactions.");
+		//System.out.println("[1553200509] - removed GL transactions.");
 		
 		//Remove any GL transaction batches that we might have been testing:
 		SQL = "TRUNCATE " + SMTablegltransactionbatches.TableName
@@ -182,7 +182,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		s+= "GL transaction batches have been removed.<BR>";
 		
-		System.out.println("[1558378443] - removed GL transaction batches.");
+		//System.out.println("[1558378443] - removed GL transaction batches.");
 		
 		return s;
 	}
@@ -300,6 +300,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 	public String processGLAccountStructureTables(
 			Connection cnSMCP, 
 			Connection cnACCPAC, 
+			String sDatabaseName,
 			int iAPDatabaseType, 
 			String sUser) throws Exception{
 		
@@ -345,20 +346,20 @@ public class GLACCPACConversion  extends java.lang.Object{
 			 + ", ISNULL(SEGMENT9.ABLKDESC, '') AS 'SEGMENT9DESC'"
 			 + ", ISNULL(SEGMENT10.ABLKDESC, '') AS 'SEGMENT10DESC'"
 			 
-			 + " FROM [comp1].[dbo].[GLABRX]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT1\" ON [GLABRX].[ABRKID1]=SEGMENT1.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT2\" ON [GLABRX].[ABRKID2]=SEGMENT2.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT3\" ON [GLABRX].[ABRKID3]=SEGMENT3.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT4\" ON [GLABRX].[ABRKID4]=SEGMENT4.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT5\" ON [GLABRX].[ABRKID5]=SEGMENT5.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT6\" ON [GLABRX].[ABRKID6]=SEGMENT6.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT7\" ON [GLABRX].[ABRKID7]=SEGMENT7.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT8\" ON [GLABRX].[ABRKID8]=SEGMENT8.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT9\" ON [GLABRX].[ABRKID9]=SEGMENT9.[ACCTBLKID]"
-			 + " LEFT JOIN [comp1].[dbo].[GLABK] AS \"SEGMENT10\" ON [GLABRX].[ABRKID10]=SEGMENT10.[ACCTBLKID]"
+			 + " FROM [" + sDatabaseName + "].[dbo].[GLABRX]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT1\" ON [GLABRX].[ABRKID1]=SEGMENT1.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT2\" ON [GLABRX].[ABRKID2]=SEGMENT2.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT3\" ON [GLABRX].[ABRKID3]=SEGMENT3.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT4\" ON [GLABRX].[ABRKID4]=SEGMENT4.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT5\" ON [GLABRX].[ABRKID5]=SEGMENT5.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT6\" ON [GLABRX].[ABRKID6]=SEGMENT6.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT7\" ON [GLABRX].[ABRKID7]=SEGMENT7.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT8\" ON [GLABRX].[ABRKID8]=SEGMENT8.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT9\" ON [GLABRX].[ABRKID9]=SEGMENT9.[ACCTBLKID]"
+			 + " LEFT JOIN [" + sDatabaseName + "].[dbo].[GLABK] AS \"SEGMENT10\" ON [GLABRX].[ABRKID10]=SEGMENT10.[ACCTBLKID]"
 			 + " ORDER BY [GLABRX].[ACCTBRKID]"
 		;
-		System.out.println("[1560445567] ACCPAC SQL = '" + SQL + "'.");
+		//System.out.println("[1560445567] ACCPAC SQL = '" + SQL + "'.");
 		Statement stmtACCPAC = cnACCPAC.createStatement();
 		ResultSet rs = stmtACCPAC.executeQuery(SQL);
 		int iCounter = 0;
@@ -432,7 +433,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ")"
 			;
 
-			System.out.println("[1524253546] - SQL = " + SQLInsert);
+			//System.out.println("[1524253546] - SQL = " + SQLInsert);
 			try {
 				Statement stmtInsert = cnSMCP.createStatement();
 				stmtInsert.execute(SQLInsert);

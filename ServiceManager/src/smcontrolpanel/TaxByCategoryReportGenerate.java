@@ -48,6 +48,7 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 	    String sWarning = "";
     	String sStartingDate = request.getParameter("StartingDate");
     	String sEndingDate = request.getParameter("EndingDate");
+    	String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	boolean bShowInvoiceLines = false;
     	if (request.getParameter("ShowInvoiceLines") != null){
     		bShowInvoiceLines = true;
@@ -64,11 +65,11 @@ public class TaxByCategoryReportGenerate extends HttpServlet {
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
-		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
+		   "<TR>\n<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
-		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
-		   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>" +
+		   + "</FONT></TD>\n<TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD>\n</TR>\n" +
+		   "<TR>\n<TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT>\n</TD>\n</TR>" +
 		   
 		   "<TR><TD COLSPAN=2><FONT SIZE=2>" + sCriteria + "</FONT></TD></TR>");
 				   

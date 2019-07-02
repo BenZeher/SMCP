@@ -96,7 +96,7 @@ public class SMAuthenticate{
         if((!bAllQuickLinkParametersExist && sDatabaseID.compareToIgnoreCase("") == 0) ) {
         	
         	// MISSING DB
-        	SMUtilities.sysprint(
+        	/*SMUtilities.sysprint(
         		"[1541794978]", 
         		sUserFullName, 
         		"Missing db parameter in request class: req.getRequestURI = '" 
@@ -105,7 +105,7 @@ public class SMAuthenticate{
                 	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(req.getSession()) + "', "
                 	+ " function ID = '" + Long.toString(lFunctionID) + "'"
                 	+ "."
-        	);
+        	);*/
         	
         	//System.out.println("[1541794978] - Missing db parameter in request class: req.getRequestURI = '" + req.getRequestURI() + "',"
             //		+ " req.getQueryString()  = '" + req.getQueryString() + "'."

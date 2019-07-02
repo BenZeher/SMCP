@@ -331,7 +331,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 										(lCurrentMechanic != (rs.getLong(TEMPTABLE_FIELD_MECHID)))
 						)
 				){
-					out.println("</td>");
+					out.println("</TD>");
 					//Clear the flag indicating we have printed an 'Insert' link:
 					bInitialInsertLinkHasBeenPrinted = false;
 					//Reset the 'entry for the day' counter:
@@ -344,7 +344,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 						&& 
 						(lCurrentMechanic != rs.getLong(TEMPTABLE_FIELD_MECHID))
 				){
-					out.println("</tr>");
+					out.println("</TR>");
 					//Toggle the 'shader':
 					bShadeRow = !bShadeRow;
 				}
@@ -367,10 +367,10 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 						sMechanicCellClass = "\"mechanicshaded\"";
 					}
 					out.println(
-							"<tr>"
-							+ "<td class=" + sMechanicCellClass + ">"
+							"<TR>"
+							+ "<TD class=" + sMechanicCellClass + ">"
 							+ sMechanicName
-							+ "</td>"
+							+ "</TD>"
 					);
 				}
 
@@ -429,7 +429,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 						|| (sCurrentDate.compareToIgnoreCase(clsDateAndTimeConversions.resultsetDateStringToString(
 								rs.getString(TEMPTABLE_FIELD_SCHEDULEDATE))) != 0)
 				){
-					out.println("<td class = " + sEntryCellClass + ">");
+					out.println("<TD class = " + sEntryCellClass + ">");
 				}
 
 				if (bDebugMode){
@@ -737,9 +737,9 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("Error [1427129335] reading schedule with SQL - " + SQL + " - " + e.getMessage());
 		}
 		//Put the last cell ending in:
-		out.println("</td>");
+		out.println("</TD>");
 		//Put the last line ending in:
-		out.println("</tr>");
+		out.println("</TR>");
 		
 		out.println("</table>");
 
@@ -1416,7 +1416,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		String sPreviousEndingDate = clsDateAndTimeConversions.CalendarToString(calPreviousEndDate, "MM/dd/yyyy");
 		String sNextStartingDate = clsDateAndTimeConversions.CalendarToString(calNextStartDate, "MM/dd/yyyy");
 		String sNextEndingDate = clsDateAndTimeConversions.CalendarToString(calNextEndDate, "MM/dd/yyyy");
-		out.println("<tr>");
+		out.println("<TR>");
 		//Print the first cell with navigation links in it:
 		sLinkToPreviousWeek = "<A HREF=\"" 
 			+ sRedirectString
@@ -1431,13 +1431,13 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			+ "&" + SMViewTruckScheduleSelection.MECHANIC_PARAMETER + "=" + sMechanic
 			+ "\">" + "Next<BR>" + sInterval + "</A>";
 
-		out.println("<th>"
-				+ "<table width=100%><tr><td ALIGN=CENTER>"
+		out.println("<TH>"
+				+ "<TABLE width=100%><TR><TD ALIGN=CENTER>"
 				+ "<FONT SIZE=2>" + sLinkToPreviousWeek + "</FONT>"
-				+ "</td><td ALIGN=CENTER>"
+				+ "</TD><TD ALIGN=CENTER>"
 				+ "<FONT SIZE=2>" + sLinkToNextWeek + "</FONT>"
-				+ "</td></tr></table>"
-				+ "</th>"
+				+ "</TD></TR></TABLE>"
+				+ "</TH>"
 		);
 		Calendar calStart = Calendar.getInstance();
 		try {
@@ -1455,7 +1455,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		}
 
 		while (calStart.compareTo(calEnd) <= 0){
-			out.println("<th>"
+			out.println("<TH>"
 					+ clsDateAndTimeConversions.CalendarToString(calStart, "E")
 					+ "&nbsp;"
 					+ "<A HREF=\"" 
@@ -1465,12 +1465,12 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 					
 					+ "<BR>"
 					+ clsDateAndTimeConversions.CalendarToString(calStart, "MM/dd/yyyy")
-					+ "</th>"
+					+ "</TH>"
 					
 			);
 			calStart.add(Calendar.DATE, 1);
 		}
-		out.println("</tr>");
+		out.println("</TR>");
 		return true;
 	}
 

@@ -94,7 +94,11 @@ public class ARCustomerShipTo extends Object{
 		m_sErrorMessageArray.clear();
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_CustomerShipTo_By_Code(sCustomerNumber, sShipToCode);
+			String sSQL = "SELECT * FROM " + SMTablearcustomershiptos.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + sCustomerNumber + "')" +
+					" AND (" + SMTablearcustomershiptos.sShipToCode + " = '" + sShipToCode + "')" + 
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	context, 
@@ -161,7 +165,11 @@ public class ARCustomerShipTo extends Object{
 	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL = ARSQLs.Get_CustomerShipTo_By_Code(m_sCustomerNumber, m_sShipToCode);
+		String SQL = "SELECT * FROM " + SMTablearcustomershiptos.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + m_sCustomerNumber + "')" +
+				" AND (" + SMTablearcustomershiptos.sShipToCode + " = '" + m_sShipToCode + "')" + 
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 		        	SQL, 
@@ -184,22 +192,26 @@ public class ARCustomerShipTo extends Object{
 				}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_CustomerShipTo_SQL(
-					clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sShipToCode), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sDescription), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sCity), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sContactName), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sCountry), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode), 
-					clsDatabaseFunctions.FormatSQLStatement(m_sState) 
-					);
+				SQL = "UPDATE " + SMTablearcustomershiptos.TableName
+						+ " SET " 
+						+ SMTablearcustomershiptos.sAddressLine1 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1) + "', "
+						+ SMTablearcustomershiptos.sAddressLine2 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2) + "', "
+						+ SMTablearcustomershiptos.sAddressLine3 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3) + "', "
+						+ SMTablearcustomershiptos.sAddressLine4 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4) + "', "
+						+ SMTablearcustomershiptos.sCity + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCity) + "', "
+						+ SMTablearcustomershiptos.sContactName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sContactName) + "', "
+						+ SMTablearcustomershiptos.sCountry + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCountry) + "', "
+						+ SMTablearcustomershiptos.sDescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "', "
+						+ SMTablearcustomershiptos.sFaxNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber) + "', "
+						+ SMTablearcustomershiptos.sPhoneNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber) + "', "
+						+ SMTablearcustomershiptos.sPostalCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode) + "', "
+						+ SMTablearcustomershiptos.sState + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sState) + "' "
+						
+						+ " WHERE (" 
+							+ "(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "')"
+							+ " AND (" + SMTablearcustomershiptos.sShipToCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sShipToCode) + "')"
+						+ ")"; 
+				
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
@@ -221,22 +233,41 @@ public class ARCustomerShipTo extends Object{
 				if (!validateNewCode()){
 					return false;
 				}
-				SQL = ARSQLs.Insert_CustomerShipTo_SQL(
-				clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sShipToCode), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sDescription), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sCity), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sState), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sCountry), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sContactName), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber), 
-				clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber)
-				);
+				SQL =  "INSERT into " + SMTablearcustomershiptos.TableName
+						+ " ("
+						+ SMTablearcustomershiptos.sCustomerNumber
+						+ ", " + SMTablearcustomershiptos.sShipToCode 
+						+ ", " + SMTablearcustomershiptos.sDescription
+						+ ", " + SMTablearcustomershiptos.sAddressLine1
+						+ ", " + SMTablearcustomershiptos.sAddressLine2
+						+ ", " + SMTablearcustomershiptos.sAddressLine3
+						+ ", " + SMTablearcustomershiptos.sAddressLine4
+						+ ", " + SMTablearcustomershiptos.sCity
+						+ ", " + SMTablearcustomershiptos.sState
+						+ ", " + SMTablearcustomershiptos.sCountry
+						+ ", " + SMTablearcustomershiptos.sPostalCode
+						+ ", " + SMTablearcustomershiptos.sContactName
+						+ ", " + SMTablearcustomershiptos.sPhoneNumber
+						+ ", " + SMTablearcustomershiptos.sFaxNumber
+					+ ")"
+					+ " VALUES ("
+						+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "'" 
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sShipToCode) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCity) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sState) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCountry) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sContactName) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber) + "'"
+					+ ")"
+					;
+				
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
@@ -371,7 +402,11 @@ public class ARCustomerShipTo extends Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the customer exists:
-		String SQL = ARSQLs.Get_CustomerShipTo_By_Code(sCustomerCode, sShipToCode);
+		String SQL ="SELECT * FROM " + SMTablearcustomershiptos.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + sCustomerCode + "')" +
+				" AND (" + SMTablearcustomershiptos.sShipToCode + " = '" + sShipToCode + "')" + 
+			")";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -395,14 +430,26 @@ public class ARCustomerShipTo extends Object{
 		}
 		
 		try{
-			SQL = ARSQLs.Delete_CustomerShipTo_SQL(sCustomerCode, sShipToCode);
+			SQL = "DELETE FROM " +
+					SMTablearcustomershiptos.TableName +
+					" WHERE (" + 
+						"(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + sCustomerCode + "')" +
+						" AND (" + SMTablearcustomershiptos.sShipToCode + " = '" + sShipToCode + "')" + 
+					")";
+			
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting customer ship-to");
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				return false;
 			}
 
-			SQL = ARSQLs.Delete_SiteLocations_For_ShipTo_SQL(sCustomerCode, sShipToCode);
+			SQL =  "DELETE FROM " +
+					SMTablesitelocations.TableName +
+					" WHERE (" + 
+						"(" + SMTablesitelocations.sAcct + " = '" + sCustomerCode + "')" +
+						" AND (" + SMTablesitelocations.sShipToCode + " = '" + sShipToCode + "')" + 
+					")";
+			
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting customer ship-to site locations");
 				clsDatabaseFunctions.rollback_data_transaction(conn);

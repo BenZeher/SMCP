@@ -141,7 +141,12 @@ public class ARDisplayStatistics extends HttpServlet {
 		pwOut.println("</TABLE>");
 
 		try{
-			String SQL = ARSQLs.Get_Monthly_Statistics_For_Customer(sCustomerCode);
+			String SQL =  "SELECT * FROM " + SMTablearmonthlystatistics.TableName 
+					+ " WHERE (" 
+					+ "(" + SMTablearmonthlystatistics.sCustomerNumber + " = '" + sCustomerCode + "')"
+				+ ")"
+				+ " ORDER BY " + SMTablearmonthlystatistics.sYear + " DESC" 
+					+ ", " + SMTablearmonthlystatistics.sMonth + " DESC";
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(),

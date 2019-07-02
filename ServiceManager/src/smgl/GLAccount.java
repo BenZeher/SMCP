@@ -10,14 +10,20 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMEntryBatch;
+import SMClasses.SMModuleTypes;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapdistributioncodes;
 import SMDataDefinition.SMTableaptransactionlines;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableapvendorgroups;
+import SMDataDefinition.SMTablearacctset;
+import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablebkaccountentries;
 import SMDataDefinition.SMTablebkbanks;
+import SMDataDefinition.SMTableentries;
+import SMDataDefinition.SMTableentrylines;
 import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
@@ -33,6 +39,8 @@ import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
 import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicvendors;
+import SMDataDefinition.SMTableinvoicedetails;
+import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
@@ -654,7 +662,15 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//Account sets
-		SQL = ARSQLs.Get_AcctSet_By_GLAcct(sGLAcct);
+		SQL =  "SELECT * FROM " + SMTablearacctset.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearacctset.sAcctsReceivableControlAcct + " = '" + sGLAcct + "')" +
+				" OR (" + SMTablearacctset.sCashAcct + " = '" + sGLAcct + "')" +
+				" OR (" + SMTablearacctset.sPrepaymentLiabilityAcct + " = '" + sGLAcct + "')" +
+				" OR (" + SMTablearacctset.sReceiptDiscountsAcct + " = '" + sGLAcct + "')" +
+				" OR (" + SMTablearacctset.sRetainageAcct + " = '" + sGLAcct + "')" +
+				" OR (" + SMTablearacctset.sWriteOffAcct + " = '" + sGLAcct + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -674,7 +690,15 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//aropenstransactions - scontrolacct
-		SQL = ARSQLs.Get_Open_Transactions_By_GLAcctSQL(sGLAcct);
+		SQL = "SELECT " 
+				+ SMTableartransactions.lid
+				+ " FROM " + SMTableartransactions.TableName
+				+ " WHERE ("
+					+ "(" + SMTableartransactions.scontrolacct + " = '" + sGLAcct + "')"
+					+ " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)"
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -694,7 +718,29 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//invoice details
-		SQL = ARSQLs.Get_Unexported_InvoiceDetails_For_GLAcct_SQL(sGLAcct);
+		SQL = "SELECT " 
+				+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
+				+ " FROM " + SMTableinvoiceheaders.TableName + ", " + SMTableinvoicedetails.TableName
+				+ " WHERE ("
+					+ "("
+						+ "(" + SMTableinvoicedetails.sExpenseGLAcct + " = '" + sGLAcct + "')"
+						+ " OR (" + SMTableinvoicedetails.sInventoryGLAcct + " = '" + sGLAcct + "')"
+						+ " OR (" + SMTableinvoicedetails.sRevenueGLAcct + " = '" + sGLAcct + "')"
+					+ ")"
+					
+					+ " AND ("
+					
+					+ " (" + SMTableinvoiceheaders.iExportedToAR + " != 1) OR (" + SMTableinvoiceheaders.iExportedToIC + " != 1)"
+					
+					+ ")"
+					
+					+ " AND (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
+						+ " = " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
+						+ ")"
+					
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -740,7 +786,17 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//transactionentries - scontrolacct
-		SQL = ARSQLs.Get_Unposted_AR_Entries_For_GLAcct(sGLAcct);
+		SQL =  "SELECT " + SMTableentries.lid 
+				+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
+				+ " WHERE ("
+					+ "(" + SMTableentries.scontrolacct + " = '" + sGLAcct + "')"
+					+ " AND (" + SMTableentries.TableName + "." + SMTableentries.ibatchnumber + " = " 
+						+ SMEntryBatch.TableName + "." + SMEntryBatch.ibatchnumber + ")"
+					+ " AND (" + SMEntryBatch.smoduletype + " = '" + SMModuleTypes.AR + "')"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -760,7 +816,22 @@ public class GLAccount extends java.lang.Object{
 		}
 		
 		//transactionlines - sglacct
-		SQL = ARSQLs.Get_Unposted_AR_Entry_Lines_For_GLAcct(sGLAcct);
+		SQL = "SELECT " + SMTableentries.TableName + "." + SMTableentries.lid 
+				+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
+				 + ", " + SMTableentrylines.TableName
+				+ " WHERE ("
+					+ "(" + SMTableentrylines.sglacct + " = '" + sGLAcct + "')"
+					+ " AND (" + SMTableentries.TableName + "." + SMTableentries.ibatchnumber + " = " 
+						+ SMEntryBatch.TableName + "." + SMEntryBatch.ibatchnumber + ")"
+					+ " AND (" + SMTableentrylines.TableName + "." + SMTableentrylines.ibatchnumber + " = " 
+						+ SMEntryBatch.TableName + "." + SMEntryBatch.ibatchnumber + ")"
+					+ " AND (" + SMTableentries.TableName + "." + SMTableentries.ientrynumber + " = " 
+						+ SMTableentrylines.TableName + "." + SMTableentrylines.ientrynumber + ")"
+					+ " AND (" + SMEntryBatch.smoduletype + " = '" + SMModuleTypes.AR + "')"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -1230,7 +1301,9 @@ public class GLAccount extends java.lang.Object{
 		
 		//finally, delete the GL:
 		try{
-			SQL = ARSQLs.Delete_GL_Account_SQL(sGLAcct);
+			SQL =  "DELETE FROM " + SMTableglaccounts.TableName
+					+ " WHERE " + SMTableglaccounts.sAcctID + " = '" + sGLAcct + "'"
+					;
 			if(!clsDatabaseFunctions.executeSQL(
 					SQL, 
 					context,

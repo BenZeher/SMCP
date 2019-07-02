@@ -188,24 +188,27 @@ public class ARTransaction extends java.lang.Object{
 
     	//Now save the transaction:
         String SQL = "";
-        SQL = ARSQLs.Update_OpenTransactions_SQL(
-        		sTransactionID, 
-        		getsOriginalBatchNumber(),
-        		getsOriginalEntryNumber(),
-        		clsDatabaseFunctions.FormatSQLStatement(getCustomerNumber()), 
-        		clsDatabaseFunctions.FormatSQLStatement(getDocNumber()),
-        		getsDocType(),
-        		getTerms(),
-        		getSQLDocDate(),
-        		getSQLDueDate(),
-        		getOriginalAmountSQLFormat(),
-        		getCurrentAmountSQLFormat(),
-        		clsDatabaseFunctions.FormatSQLStatement(getDocDescription()),
-        		clsDatabaseFunctions.FormatSQLStatement(getOrderNumber()),
-            	Long.toString(m_lretainage),
-            	clsDatabaseFunctions.FormatSQLStatement(getPONumber())
-        		);
-    	try{
+        SQL =  "UPDATE " + SMTableartransactions.TableName + " SET "
+        		
+        		+ SMTableartransactions.datdocdate + " = '" + getSQLDocDate() + "'"
+        		+ ", " + SMTableartransactions.datduedate + " = '" + getSQLDueDate() + "'"
+        		+ ", " + SMTableartransactions.dcurrentamt + " = " + getCurrentAmountSQLFormat()
+        		+ ", " + SMTableartransactions.doriginalamt + " = " + getOriginalAmountSQLFormat()
+        		+ ", " + SMTableartransactions.idoctype + " = " + getsDocType()
+        		+ ", " + SMTableartransactions.loriginalbatchnumber + " = " + getsOriginalBatchNumber()
+        		+ ", " + SMTableartransactions.loriginalentrynumber + " = " + getsOriginalEntryNumber()
+        		+ ", " + SMTableartransactions.sdocdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(getDocDescription()) + "'"
+        		+ ", " + SMTableartransactions.sdocnumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(getDocNumber()) + "'"
+        		+ ", " + SMTableartransactions.sordernumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(getOrderNumber()) + "'"
+        		+ ", " + SMTableartransactions.spayeepayor + " = '" + clsDatabaseFunctions.FormatSQLStatement(getCustomerNumber()) + "'"
+        		+ ", " + SMTableartransactions.sterms + " = '" + getTerms() + "'"
+        		+ ", " + SMTableartransactions.iretainage + " = " + Long.toString(m_lretainage)
+        		+ ", " + SMTableartransactions.sponumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(getPONumber()) + "'"
+
+        		+ " WHERE (" 
+        			+ "(" + SMTableartransactions.lid + " = " + sTransactionID + ")"
+        			+ ")";
+        try {
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
 	    		throw new Exception("Could not complete update transaction - transaction was not updated.");
 	    	}
@@ -227,7 +230,11 @@ public class ARTransaction extends java.lang.Object{
     	ServletContext context, 
 		String sDBID
     ){
-    	    String SQL = ARSQLs.Get_OpenTransactions_By_ID_SQL(sTransactionID);
+    	    String SQL = "SELECT *" 
+    	    		+ " FROM " + SMTableartransactions.TableName
+    	    		+ " WHERE ("
+    	    			+ "(" + SMTableartransactions.lid + " = " + sTransactionID + ")";
+    	    		SQL += ")";
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     					SQL, 
@@ -266,7 +273,11 @@ public class ARTransaction extends java.lang.Object{
         	String sTransactionID,
         	Connection conn
         )throws Exception{
-        	    String SQL = ARSQLs.Get_OpenTransactions_By_ID_SQL(sTransactionID);
+        	    String SQL = "SELECT *" 
+        	    		+ " FROM " + SMTableartransactions.TableName
+        	    		+ " WHERE ("
+        	    			+ "(" + SMTableartransactions.lid + " = " + sTransactionID + ")";
+        	    		SQL += ")";
         		try {
         			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
         			rs.next();
@@ -331,7 +342,12 @@ public class ARTransaction extends java.lang.Object{
     		String sDocNumber,
         	Connection conn
         ){
-        	    String SQL = ARSQLs.Get_OpenTransactions_By_Customer_And_Doc_SQL(sCustomer, sDocNumber);
+        	    String SQL = "SELECT *" 
+        	    		+ " FROM " + SMTableartransactions.TableName
+        	    		+ " WHERE ("
+        	    			+ "(" + SMTableartransactions.spayeepayor + " = '" + sCustomer+ "')"
+        	    			+ " AND (" + SMTableartransactions.sdocnumber + " = '" + sDocNumber + "')"
+        	    			+ ")";
         		try {
         			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
         			if(!rs.next()){
@@ -710,23 +726,42 @@ public class ARTransaction extends java.lang.Object{
 		}
 
 		//Add a new entry:
-		String SQL = ARSQLs.Add_New_OpenTransaction_SQL(
-				getsOriginalBatchNumber(),
-				getsOriginalEntryNumber(),
-				clsDatabaseFunctions.FormatSQLStatement(getCustomerNumber()),
-				clsDatabaseFunctions.FormatSQLStatement(getDocNumber()),
-				getsDocType(),
-				clsDatabaseFunctions.FormatSQLStatement(getTerms()),
-				getSQLDocDate(),
-				getSQLDueDate(),
-				getOriginalAmountSQLFormat(),
-				getCurrentAmountSQLFormat(),
-				clsDatabaseFunctions.FormatSQLStatement(getDocDescription()),
-				clsDatabaseFunctions.FormatSQLStatement(getOrderNumber()),
-				getControlAcct(),
-				Long.toString(m_lretainage),
-				clsDatabaseFunctions.FormatSQLStatement(getPONumber())
-				);
+		String SQL = "INSERT INTO " + SMTableartransactions.TableName + " ("
+				
+				+ SMTableartransactions.datdocdate
+				+ ", " + SMTableartransactions.datduedate
+				+ ", " + SMTableartransactions.dcurrentamt
+				+ ", " + SMTableartransactions.doriginalamt
+				+ ", " + SMTableartransactions.idoctype
+				+ ", " + SMTableartransactions.loriginalbatchnumber
+				+ ", " + SMTableartransactions.loriginalentrynumber
+				+ ", " + SMTableartransactions.sdocdescription
+				+ ", " + SMTableartransactions.sdocnumber
+				+ ", " + SMTableartransactions.sordernumber
+				+ ", " + SMTableartransactions.spayeepayor
+				+ ", " + SMTableartransactions.sterms
+				+ ", " + SMTableartransactions.scontrolacct
+				+ ", " + SMTableartransactions.iretainage
+				+ ", " + SMTableartransactions.sponumber
+
+				+ ") VALUES ("
+				+ "'" + getSQLDocDate() + "'"
+				+ ", '" + getSQLDueDate() + "'"
+				+ ", " + getCurrentAmountSQLFormat()
+				+ ", " + getOriginalAmountSQLFormat()
+				+ ", " + getsDocType()
+				+ ", " + getsOriginalBatchNumber()
+				+ ", " + getsOriginalEntryNumber()
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getDocDescription()) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getDocNumber()) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getOrderNumber()) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getCustomerNumber()) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getTerms()) + "'"
+				+ ", '" + getControlAcct() + "'"
+				+ ", " + Long.toString(m_lretainage)
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getPONumber()) + "'" 
+				+ ")";
+
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
 	    		throw new Exception("Could not complete add new transaction. " + SQL);
@@ -737,7 +772,12 @@ public class ARTransaction extends java.lang.Object{
     	}
     	
     	//Update the transaction ID in this transaction, now that we've added it:
-    	SQL = ARSQLs.Get_OpenTransactions_By_Customer_And_Doc_SQL(m_spayeepayor, m_sdocnumber);
+    	SQL ="SELECT *" 
+    			+ " FROM " + SMTableartransactions.TableName
+    			+ " WHERE ("
+    				+ "(" + SMTableartransactions.spayeepayor + " = '" + m_spayeepayor + "')"
+    				+ " AND (" + SMTableartransactions.sdocnumber + " = '" + m_sdocnumber + "')"
+    				+ ")"; 
     	try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
 			if(!rs.next()){

@@ -63,7 +63,10 @@ public class ARCustomerStatistics extends Object{
 		
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_CustomerStatistics_By_Code(m_sCustomerNumber);
+			String sSQL = "SELECT * FROM " + SMTablearcustomerstatistics.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomerstatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 
 	        if (rs.next()){
@@ -105,7 +108,10 @@ public class ARCustomerStatistics extends Object{
 		
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_CustomerStatistics_By_Code(m_sCustomerNumber);
+			String sSQL = "SELECT * FROM " + SMTablearcustomerstatistics.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomerstatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	context,
@@ -153,47 +159,70 @@ public class ARCustomerStatistics extends Object{
     	//If there is no record already, insert a new one:
 		try{
 			//Get the record:
-			SQL = ARSQLs.Get_CustomerStatistics_By_Code(m_sCustomerNumber);
+			SQL = "SELECT * FROM " + SMTablearcustomerstatistics.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomerstatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 
 	        if (rs.next()){
 	        	//Update:
-	            SQL = ARSQLs.Update_CustomerStatistics_By_Code(
-	            		clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber),
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcurrentbalance),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoice),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoicelastyear),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastcredit),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastinvoice),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastpayment),
-	        			m_datlastcredit,
-	        			m_datlastinvoice,
-	        			m_datlastpayment,
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalance),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalancelastyear),
-	        			Long.toString(m_lnumberofopeninvoices),
-	        			Long.toString(m_ltotalnumberofpaidinvoices),
-	        			Long.toString(m_ltotalnumberofdaystopay)
-	            );
+	            SQL =  "UPDATE " + SMTablearcustomerstatistics.TableName 
+	        			+ " SET"
+	        			+ " " + SMTablearcustomerstatistics.sCurrentBalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcurrentbalance)
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfHighestInvoice + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoice)
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfHighestInvoiceLastYear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoicelastyear)
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastCredit + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastcredit)
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastInvoice + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastinvoice)
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastPayment + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastpayment)
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastCredit + " = '" + m_datlastcredit + "'"
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastInvoice + " = '" + m_datlastinvoice + "'"
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastPayment + " = '" + m_datlastpayment + "'"
+	        			+ ", " + SMTablearcustomerstatistics.sHighestBalance + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalance)
+	        			+ ", " + SMTablearcustomerstatistics.sHighestBalanceLastYear + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalancelastyear)
+	        			+ ", " + SMTablearcustomerstatistics.sNumberOfOpenInvoices + " = " + Long.toString(m_lnumberofopeninvoices)
+	        			+ ", " + SMTablearcustomerstatistics.sTotalNumberOfPaidInvoices + " = " + Long.toString(m_ltotalnumberofpaidinvoices)
+	        			+ ", " + SMTablearcustomerstatistics.sTotalDaysToPay + " = " + Long.toString(m_ltotalnumberofdaystopay)
+	        		
+	        		+ " WHERE (" 
+	        			+ "(" + SMTablearcustomerstatistics.sCustomerNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "')"
+	        		+ ")";
 	        }else{
 	        	//Insert:
-	            SQL = ARSQLs.Insert_CustomerStatistics_By_Code(
-	            		clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber),
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcurrentbalance),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoice),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoicelastyear),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastcredit),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastinvoice),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastpayment),
-	        			m_datlastcredit,
-	        			m_datlastinvoice,
-	        			m_datlastpayment,
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalance),
-	        			clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalancelastyear),
-	        			Long.toString(m_lnumberofopeninvoices),
-	        			Long.toString(m_ltotalnumberofpaidinvoices),
-	        			Long.toString(m_ltotalnumberofdaystopay)
-	            );
+	        	SQL = "INSERT INTO " + SMTablearcustomerstatistics.TableName 
+	        			+ " ("
+	        			+ SMTablearcustomerstatistics.sCurrentBalance
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfHighestInvoice
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfHighestInvoiceLastYear
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastCredit
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastInvoice
+	        			+ ", " + SMTablearcustomerstatistics.sAmountOfLastPayment
+	        			+ ", " + SMTablearcustomerstatistics.sCustomerNumber
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastCredit
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastInvoice
+	        			+ ", " + SMTablearcustomerstatistics.sDateOfLastPayment
+	        			+ ", " + SMTablearcustomerstatistics.sHighestBalance
+	        			+ ", " + SMTablearcustomerstatistics.sHighestBalanceLastYear
+	        			+ ", " + SMTablearcustomerstatistics.sNumberOfOpenInvoices
+	        			+ ", " + SMTablearcustomerstatistics.sTotalNumberOfPaidInvoices
+	        			+ ", " + SMTablearcustomerstatistics.sTotalDaysToPay
+	        			+ ") VALUES ("
+	        			+ clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcurrentbalance)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoice)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestinvoicelastyear)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastcredit)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastinvoice)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountoflastpayment)
+	        			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "'"
+	        			+ ", '" + m_datlastcredit + "'"
+	        			+ ", '" + m_datlastinvoice + "'"
+	        			+ ", '" + m_datlastpayment + "'"
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalance)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdamountofhighestbalancelastyear)
+	        			+ ", " + Long.toString(m_lnumberofopeninvoices)
+	        			+ ", " + Long.toString(m_ltotalnumberofpaidinvoices)
+	        			+ ", " + Long.toString(m_ltotalnumberofdaystopay)
+	        			+ ")";
 	        }
 	        rs.close();
 	        
@@ -237,7 +266,12 @@ public class ARCustomerStatistics extends Object{
 			m_bdamountofhighestinvoice = m_bdamountoflastinvoice;
 		}
 		
-		String SQL = ARSQLs.Get_Open_Invoice_Count(m_sCustomerNumber);
+		String SQL =  "SELECT COUNT(*) FROM " + SMTableartransactions.TableName 
+				+ " WHERE (" 
+				+ "(" + SMTableartransactions.spayeepayor + " = '" + m_sCustomerNumber + "')"
+				+ " AND (" + SMTableartransactions.idoctype + " = " + ARDocumentTypes.INVOICE_STRING + ")"
+				+ " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)"
+				+ ")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
@@ -246,7 +280,13 @@ public class ARCustomerStatistics extends Object{
 				m_lnumberofopeninvoices = 0;
 			}
 			rs.close();
-			SQL = ARSQLs.Get_Current_Balance(m_sCustomerNumber);
+			SQL ="SELECT SUM(" + SMTableartransactions.dcurrentamt + ") FROM " + SMTableartransactions.TableName 
+					+ " WHERE (" 
+					+ "(" + SMTableartransactions.spayeepayor + " = '" + m_sCustomerNumber + "')"
+					
+					//Don't pick up retainage here:
+					+ " AND (" + SMTableartransactions.iretainage + " = 0)"
+				+ ")"; 
 			rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				m_bdcurrentbalance = rs.getBigDecimal(1);

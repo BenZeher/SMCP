@@ -74,7 +74,11 @@ public class AREditTerms extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_Terms_List_SQL();
+	        String sSQL = "SELECT " 
+	        		+ SMTablearterms.sTermsCode + ", "
+	        		+ SMTablearterms.sDescription
+	        		+ " FROM " + SMTablearterms.TableName
+	        		+ " ORDER BY " + SMTablearterms.sTermsCode;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 

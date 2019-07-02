@@ -10,6 +10,9 @@ import java.sql.Statement;
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import SMDataDefinition.SMTablearcustomer;
+import SMDataDefinition.SMTablearmatchingline;
+import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -58,7 +61,8 @@ public class ARActivityReport extends java.lang.Object{
 
     	String sCurrentCustomer = "";
     	int iCustomersPrinted = 0;
-    	String SQL = ARSQLs.Get_Activity_Report();
+    	String SQL =  "SELECT * FROM aractivitylines"
+    			+ " ORDER BY scustomer, sdocappliedto, ssource, datdocdate";
     	int iLinesPrinted = 1;
     	out.println(SMUtilities.getMasterStyleSheetLink());
     	out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
@@ -243,7 +247,7 @@ public class ARActivityReport extends java.lang.Object{
 			java.sql.Date datEndingDate,
 			boolean bIncludeFullyPaidTransactions
 	){
-		String SQL = ARSQLs.Drop_Temporary_Activity_Table();
+		String SQL = "DROP TEMPORARY TABLE aractivitylines";
 		try {
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error dropping temporary aging table");
@@ -253,7 +257,32 @@ public class ARActivityReport extends java.lang.Object{
 		} catch (SQLException e) {
 			// Don't choke over this
 		}
-		SQL = ARSQLs.Create_Temporary_Activity_Table(true);
+		SQL =	"CREATE  TEMPORARY TABLE aractivitylines ("
+			+ "scustomer varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
+			+ "scustomername varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
+			+ "ldocid int(11) NOT NULL default '0',"
+			+ "idoctype int(11) NOT NULL default '0',"
+			+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+			+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
+			+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
+			+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
+			+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
+			+ "sordernumber varchar(22) NOT NULL default '',"
+			+ "ssource varchar(7) NOT NULL default '',"
+			+ "lappliedto int(11) NOT NULL default '0',"
+			+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+			+ "loriginalbatchnumber int(11) NOT NULL default '0',"
+			+ "loriginalentrynumber int(11) NOT NULL default '0',"
+			+ "ldaysover int(11) NOT NULL default '0',"
+			+ "dcreditlimit decimal(17,2) NOT NULL default '0.00',"
+			+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
+			+ "lparenttransactionid int(11) NOT NULL default '0',"
+			+ "KEY customerkey (scustomer),"
+			+ "KEY appliedtokey (lappliedto),"
+			+ "KEY docnumberkey (sdocnumber),"
+			+ "KEY parenttransactionkey (lparenttransactionid)"
+		+ ") "
+		;
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -262,13 +291,63 @@ public class ARActivityReport extends java.lang.Object{
 			return false;
 		}
 		
-		SQL = ARSQLs.Insert_Transactions_Into_Activity_Table(
-				sStartingCustomer, 
-				sEndingCustomer, 
-				datStartingDate,
-				datEndingDate,
-				bIncludeFullyPaidTransactions
-				);
+		SQL = "INSERT INTO aractivitylines ("
+				+ "scustomer,"
+				+ " ldocid,"
+				+ " idoctype,"
+				+ " sdocnumber,"
+				+ " datdocdate,"
+				+ " datduedate,"
+				+ " doriginalamt,"
+				+ " dcurrentamt,"
+				+ " sordernumber,"
+				+ " ssource,"
+				+ " lappliedto,"
+				+ " sdocappliedto,"
+				+ " loriginalbatchnumber,"
+				+ " loriginalentrynumber,"
+				+ " ldaysover,"
+				+ " dapplytodoccurrentamt,"
+				+ " lparenttransactionid,"
+				+ " scustomername,"
+				+ " dcreditlimit"
+				
+				+ ") SELECT"
+				+ " " + SMTableartransactions.spayeepayor
+				+ ", " + SMTableartransactions.lid
+				+ ", " + SMTableartransactions.idoctype
+				+ ", " + SMTableartransactions.sdocnumber
+				+ ", " + SMTableartransactions.datdocdate
+				+ ", " + SMTableartransactions.datduedate
+				+ ", " + SMTableartransactions.doriginalamt
+				+ ", " + SMTableartransactions.dcurrentamt
+				+ ", " + SMTableartransactions.sordernumber
+				+ ", 'CONTROL'"
+				+ ", " + SMTableartransactions.lid
+				+ ", " + SMTableartransactions.sdocnumber
+				+ ", " + SMTableartransactions.loriginalbatchnumber
+				+ ", " + SMTableartransactions.loriginalentrynumber
+				+ ", 0"
+				+ ", " + SMTableartransactions.dcurrentamt + " AS dapplytocurramt"
+				+ ", " + SMTableartransactions.lid
+				+ ", IF(" + SMTablearcustomer.sCustomerName + " IS NULL, '(NOT FOUND)', " 
+					+ SMTablearcustomer.sCustomerName + ") AS scustomername"
+				+ ", IF(" + SMTablearcustomer.dCreditLimit + " IS NULL, 0.00, " 
+					+ SMTablearcustomer.dCreditLimit + ") AS dcreditlimit"
+			+ " FROM " + SMTableartransactions.TableName + " LEFT JOIN " + SMTablearcustomer.TableName
+			+ " ON " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + " = "
+			+ SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber
+			+ " WHERE ("
+				+ "(" + SMTableartransactions.spayeepayor + ">='" + sStartingCustomer + "')"
+				+ " AND (" + SMTableartransactions.spayeepayor + "<='" + sEndingCustomer + "')"
+				+ " AND (" + SMTableartransactions.datdocdate + ">='" + clsDateAndTimeConversions.utilDateToString(datStartingDate, "yyyy-MM-dd") + "')"
+				+ " AND (" + SMTableartransactions.datdocdate + "<='" + clsDateAndTimeConversions.utilDateToString(datEndingDate, "yyyy-MM-dd") + "')";
+				if(!bIncludeFullyPaidTransactions){
+					SQL = SQL + " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)";
+				}
+			SQL = SQL + ")"
+			;
+			
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -277,13 +356,61 @@ public class ARActivityReport extends java.lang.Object{
 			return false;
 		}
 
-		SQL = ARSQLs.Insert_Lines_Into_Activity_Table(
-				sStartingCustomer, 
-				sEndingCustomer, 
-				datStartingDate,
-				datEndingDate,
-				bIncludeFullyPaidTransactions
-				);
+		SQL = "INSERT INTO aractivitylines ("
+				+ "scustomer,"
+				+ " ldocid,"
+				+ " sdocnumber,"
+				+ " datdocdate,"
+				+ " datduedate,"
+				+ " doriginalamt,"
+				+ " dcurrentamt,"
+				+ " sordernumber,"
+				+ " ssource,"
+				+ " lappliedto,"
+				+ " sdocappliedto,"
+				+ " dapplytodoccurrentamt,"
+				+ " lparenttransactionid,"
+				+ " scustomername,"
+				+ " dcreditlimit,"
+				+ " loriginalbatchnumber,"
+				+ " loriginalentrynumber"
+				
+			+ ") SELECT"
+				+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lid
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sdocnumber
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.dattransactiondate
+				+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.datduedate
+				//Applied amounts have the same sign as the apply-to amount, and so they must be negated:
+				+ ", -1 * " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount
+				+ ", -1 * " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount
+				+ ", ''"
+				+ ", 'DIST'"
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sapplytodoc
+				+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.dcurrentamt
+				+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid
+				+ ", IF(" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName + " IS NULL, '(NOT FOUND)', " 
+					+ SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName + ") AS scustomername"
+				+ ", IF(" + SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit + " IS NULL, 0.00, " 
+					+ SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit + ") AS dcreditlimit"
+				+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.loriginalbatchnumber
+				+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.loriginalentrynumber
+			+ " FROM " + SMTablearmatchingline.TableName + " LEFT JOIN " + SMTableartransactions.TableName
+			+ " ON " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid + " = "
+			+  SMTableartransactions.TableName + "." + SMTableartransactions.lid
+			+ " LEFT JOIN " + SMTablearcustomer.TableName + " ON " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor 
+			+ "=" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber
+			+ " WHERE"
+				+ " " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + ">='" 
+					+ sStartingCustomer + "'"
+				+ " AND " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + "<='" 
+					+ sEndingCustomer + "'"
+				+ " AND " + SMTableartransactions.TableName + "." + SMTableartransactions.datdocdate + ">='" 
+					+ clsDateAndTimeConversions.utilDateToString(datStartingDate, "yyyy-MM-dd") + "'"
+				+ " AND " + SMTableartransactions.TableName + "." + SMTableartransactions.datdocdate + "<='" 
+					+ clsDateAndTimeConversions.utilDateToString(datEndingDate, "yyyy-MM-dd") + "'"
+			;
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -294,7 +421,11 @@ public class ARActivityReport extends java.lang.Object{
 		
 		if(!bIncludeFullyPaidTransactions){
 			//Remove any lines which are applied to fully paid transactions:
-			SQL = ARSQLs.Remove_Fully_Paid_TransactionLines_From_Activity_Table();
+			SQL ="DELETE FROM aractivitylines" 
+					+ " WHERE ("
+					+ "(dcurrentamt = 0.00)"
+				+ ")"
+				;
 			try {
 				Statement stmt = conn.createStatement();
 				stmt.execute(SQL);
@@ -305,7 +436,13 @@ public class ARActivityReport extends java.lang.Object{
 		}
 		//Update the 'days over' on all transactions, based on their 'due' dates: 
 		//applied-to documents:
-		SQL = ARSQLs.Update_DaysOver_In_Activity_Table();
+		SQL = "UPDATE aractivitylines SET" 
+				+ " ldaysover = IF((TO_DAYS(NOW()) - TO_DAYS(datduedate))>0,(TO_DAYS(NOW()) - TO_DAYS(datduedate)),0)"
+				+ " WHERE ("
+					+ "(ssource = 'CONTROL')"
+					+ " AND (dcurrentamt != 0.00)"
+				+ ")"
+				;
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);

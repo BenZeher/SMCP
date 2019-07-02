@@ -72,7 +72,9 @@ public class AREditAccountSets extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_AcctSets_List_SQL();
+	        String sSQL 	= "SELECT *" 
+	        		+ " FROM " + SMTablearacctset.TableName
+	        		+ " ORDER BY " + SMTablearacctset.sAcctSetCode;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 

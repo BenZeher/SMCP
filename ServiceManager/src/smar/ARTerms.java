@@ -9,7 +9,16 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMBatchStatuses;
+import SMClasses.SMEntryBatch;
+import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearterms;
+import SMDataDefinition.SMTableartransactions;
+import SMDataDefinition.SMTableentries;
+import SMDataDefinition.SMTableinvoiceheaders;
+import SMDataDefinition.SMTableorderdetails;
+import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -88,7 +97,10 @@ public class ARTerms extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_Terms_By_Code(sTermsCode);
+			String sSQL =  "SELECT * FROM " + SMTablearterms.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearterms.sTermsCode + " = '" + sTermsCode + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		context, 
@@ -116,7 +128,10 @@ public class ARTerms extends java.lang.Object{
 		Connection conn
 	) throws Exception{
 		//Get the record to edit:
-		String sSQL = ARSQLs.Get_Terms_By_Code(sTermsCode);
+		String sSQL =  "SELECT * FROM " + SMTablearterms.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearterms.sTermsCode + " = '" + sTermsCode + "')" +
+			")";
         ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn); 
         try {
 			if (loadFromResultSet(rs)){
@@ -175,7 +190,10 @@ public class ARTerms extends java.lang.Object{
 	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL = ARSQLs.Get_Terms_By_Code(m_sTermsCode);
+		String SQL =  "SELECT * FROM " + SMTablearterms.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearterms.sTermsCode + " = '" + m_sTermsCode + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
@@ -198,16 +216,20 @@ public class ARTerms extends java.lang.Object{
 				}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_Terms_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sTermsCode),
-						m_iActive, 
-						m_dDiscountPercent.replace(",", ""), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription),
-						m_iDiscountDayOfTheMonth, 
-						m_iDiscountNumberOfDays, 
-						m_iDueDayOfTheMonth, 
-						m_iDueNumberOfDays
-						);
+				SQL =  "UPDATE " + SMTablearterms.TableName
+						+ " SET " 
+						+ SMTablearterms.datLastMaintained + " = NOW(), "
+						+ SMTablearterms.iActive + " = " + m_iActive + ", "
+						+ SMTablearterms.sDescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "', "
+						+ SMTablearterms.dDiscountPercent + " = " + m_dDiscountPercent.replace(",", "") + ", "
+						+ SMTablearterms.iDiscountDayOfTheMonth + " = " + m_iDiscountDayOfTheMonth + ", "
+						+ SMTablearterms.iDiscountNumberOfDays + " = " + m_iDiscountNumberOfDays + ", "
+						+ SMTablearterms.iDueDayOfTheMonth + " = " + m_iDueDayOfTheMonth + ", "
+						+ SMTablearterms.iDueNumberOfDays + " = " + m_iDueNumberOfDays
+						+ " WHERE (" 
+							+ "(" + SMTablearterms.sTermsCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sTermsCode) + "')"
+							+ ")";
+
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
@@ -229,16 +251,30 @@ public class ARTerms extends java.lang.Object{
 				if (!validateNewCode()){
 					return false;
 				}
-				SQL = ARSQLs.Insert_Terms_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sTermsCode),
-						m_iActive, 
-						m_dDiscountPercent.replace(",", ""), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription),
-						m_iDiscountDayOfTheMonth, 
-						m_iDiscountNumberOfDays, 
-						m_iDueDayOfTheMonth, 
-						m_iDueNumberOfDays
-					);
+				SQL =  "INSERT INTO " + SMTablearterms.TableName
+						+ " (" 
+						+ SMTablearterms.sTermsCode
+						+ ", " + SMTablearterms.iActive
+						+ ", " + SMTablearterms.dDiscountPercent
+						+ ", " + SMTablearterms.sDescription
+						+ ", " + SMTablearterms.iDiscountDayOfTheMonth
+						+ ", " + SMTablearterms.iDiscountNumberOfDays
+						+ ", " + SMTablearterms.iDueDayOfTheMonth
+						+ ", " + SMTablearterms.iDueNumberOfDays
+						+ ", " + SMTablearterms.datLastMaintained
+						
+						+ ") VALUES (" 
+							+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_sTermsCode) + "'"
+							+ ", " + m_iActive
+							+ ", " + m_dDiscountPercent.replace(",", "")
+							+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+							+ ", " + m_iDiscountDayOfTheMonth
+							+ ", " + m_iDiscountNumberOfDays
+							+ ", " + m_iDueDayOfTheMonth
+							+ ", " + m_iDueNumberOfDays
+							+ ", NOW()"
+						+ ")"
+						;
 
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
@@ -349,7 +385,10 @@ public class ARTerms extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the terms exist:
-		String SQL = ARSQLs.Get_Terms_By_Code(sTermsCode);
+		String SQL =  "SELECT * FROM " + SMTablearterms.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearterms.sTermsCode + " = '" + sTermsCode + "')" +
+			")";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -372,7 +411,10 @@ public class ARTerms extends java.lang.Object{
 		}
 		
 		//Customers
-		SQL = ARSQLs.Get_Customers_By_Terms(sTermsCode);
+		SQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomer.sTerms + " = '" + sTermsCode + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
@@ -394,7 +436,24 @@ public class ARTerms extends java.lang.Object{
 		}
 		
 		//Open Order headers
-		SQL = ARSQLs.Get_Open_Orders_For_Terms_SQL(sTermsCode);
+		SQL =  "SELECT " 
+				+ SMTableorderheaders.sOrderNumber
+				+ " FROM " + SMTableorderheaders.TableName + ", " + SMTableorderdetails.TableName
+				+ " WHERE ("
+					+ "(" + SMTableorderdetails.TableName + ".dUniqueOrderID = " 
+						+ SMTableorderheaders.TableName + "." + SMTableorderheaders.dOrderUniqueifier + ")"
+					
+					+ " AND (" + SMTableorderheaders.sTerms + " = '" + sTermsCode + "')"
+					
+					+ " AND (" + SMTableorderdetails.TableName + ".dQtyOrdered != 0.00)"
+					
+					+ " AND ("
+						+ "(" + SMTableorderheaders.datOrderCanceledDate + " IS NULL)"
+						+ " OR (" + SMTableorderheaders.datOrderCanceledDate + " < '1900-01-01')"
+					+ ")"
+					
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -415,7 +474,16 @@ public class ARTerms extends java.lang.Object{
 			return false;
 		}
 		//Unexported Invoices
-		SQL = ARSQLs.Get_Unexported_Invoices_For_Terms_SQL(sTermsCode);
+		SQL = "SELECT " 
+				+ SMTableinvoiceheaders.sInvoiceNumber
+				+ " FROM " + SMTableinvoiceheaders.TableName
+				+ " WHERE ("
+					+ "(" + SMTableinvoiceheaders.sTerms + " = '" + sTermsCode + "')"
+					+ " AND (" + SMTableinvoiceheaders.iExportedToAR + " != 1)"
+					
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -437,7 +505,17 @@ public class ARTerms extends java.lang.Object{
 		}
 		
 		//transactionentries
-		SQL = ARSQLs.Get_Unposted_Entries_For_Terms(sTermsCode);
+		SQL =  "SELECT " + SMTableentries.lid 
+				+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
+				+ " WHERE ("
+					+ "(" + SMTableentries.stermscode + " = '" + sTermsCode + "')"
+					+ " AND (" + SMTableentries.TableName + "." + SMTableentries.ibatchnumber + " = " 
+						+ SMEntryBatch.TableName + "." + SMEntryBatch.ibatchnumber + ")"
+					+ " AND (" + SMEntryBatch.smoduletype + " = '" + SMModuleTypes.AR + "')"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -459,7 +537,15 @@ public class ARTerms extends java.lang.Object{
 		}
 		
 		//aropentransactions
-		SQL = ARSQLs.Get_Open_Transactions_By_Terms(sTermsCode);
+		SQL =  "SELECT " 
+				+ SMTableartransactions.lid
+				+ " FROM " + SMTableartransactions.TableName
+				+ " WHERE ("
+					+ "(" + SMTableartransactions.sterms + " = '" + sTermsCode + "')"
+					+ " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)"
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -481,7 +567,11 @@ public class ARTerms extends java.lang.Object{
 		}
 		
 		try{
-			SQL = ARSQLs.Delete_Terms_SQL(sTermsCode);
+			SQL = "DELETE FROM " +
+					SMTablearterms.TableName+
+					" WHERE (" + 
+						"(" + SMTablearterms.sTermsCode + " = '" + sTermsCode + "')" +
+					")";
 			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting terms");
 				return false;

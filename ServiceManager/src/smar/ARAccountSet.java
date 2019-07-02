@@ -8,7 +8,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTablearacctset;
+import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearterms;
+import SMDataDefinition.SMTableinvoiceheaders;
+import SMDataDefinition.SMTableorderdetails;
+import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsStringFunctions;
@@ -88,7 +92,10 @@ public class ARAccountSet extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_AcctSet_By_Code(sAcctSet);
+			String sSQL =  "SELECT * FROM " + SMTablearacctset.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearacctset.sAcctSetCode + " = '" + sAcctSet + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, context, sDBID, "MySQL",this.toString() + ".load");
 	        if (loadFromResultSet(rs)){
 	        	rs.close();
@@ -150,7 +157,10 @@ public class ARAccountSet extends java.lang.Object{
 	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL = ARSQLs.Get_AcctSet_By_Code(m_sAcctSetCode);
+		String SQL =  "SELECT * FROM " + SMTablearacctset.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearacctset.sAcctSetCode + " = '" + m_sAcctSetCode + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
@@ -173,17 +183,22 @@ public class ARAccountSet extends java.lang.Object{
 				}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_AcctSet_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sAcctSetCode),
-						m_iActive, 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAcctsReceivableControlAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPrepaymentLiabilityAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sReceiptDiscountsAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sRetainageAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sWriteOffAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct)
-						);
+				SQL = "UPDATE " + SMTablearacctset.TableName
+						+ " SET " 
+						+ SMTablearacctset.datLastMaintained + " = NOW(), "
+						+ SMTablearacctset.iActive + " = " + m_iActive + ", "
+						+ SMTablearacctset.sAcctsReceivableControlAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAcctsReceivableControlAcct) + "', "
+						+ SMTablearacctset.sDescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "', "
+						+ SMTablearacctset.sPrepaymentLiabilityAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPrepaymentLiabilityAcct) + "', "
+						+ SMTablearacctset.sReceiptDiscountsAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sReceiptDiscountsAcct) + "', "
+						+ SMTablearacctset.sRetainageAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sRetainageAcct) + "', "
+						+ SMTablearacctset.sWriteOffAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sWriteOffAcct) + "', "
+						+ SMTablearacctset.sCashAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct) + "'"
+						
+						+ " WHERE (" 
+							+ "(" + SMTablearacctset.sAcctSetCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAcctSetCode) + "')"
+							+ ")";
+				
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
@@ -205,17 +220,32 @@ public class ARAccountSet extends java.lang.Object{
 				if (!validateNewCode()){
 					return false;
 				}
-				SQL = ARSQLs.Insert_AcctSet_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sAcctSetCode),
-						m_iActive, 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAcctsReceivableControlAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPrepaymentLiabilityAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sReceiptDiscountsAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sRetainageAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sWriteOffAcct), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct)
-					);
+				SQL ="INSERT into " + SMTablearacctset.TableName
+						+ " (" 
+						+ SMTablearacctset.sAcctSetCode
+						+ ", " + SMTablearacctset.datLastMaintained
+						+ ", " + SMTablearacctset.iActive
+						+ ", " + SMTablearacctset.sAcctsReceivableControlAcct
+						+ ", " + SMTablearacctset.sDescription
+						+ ", " + SMTablearacctset.sPrepaymentLiabilityAcct
+						+ ", " + SMTablearacctset.sReceiptDiscountsAcct
+						+ ", " + SMTablearacctset.sRetainageAcct
+						+ ", " + SMTablearacctset.sWriteOffAcct
+						+ ", " + SMTablearacctset.sCashAcct
+						+ ")"
+						+ " VALUES ("
+						+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_sAcctSetCode) + "'"
+						+ ", NOW()"
+						+ ", " + m_iActive
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAcctsReceivableControlAcct) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPrepaymentLiabilityAcct) + "'"
+						+ ", '" + 	clsDatabaseFunctions.FormatSQLStatement(m_sReceiptDiscountsAcct) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sRetainageAcct) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sWriteOffAcct) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCashAcct) + "'"
+						+ ")"
+						;
 
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
@@ -342,7 +372,10 @@ public class ARAccountSet extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the terms exist:
-		String SQL = ARSQLs.Get_AcctSet_By_Code(sAcctSetCode);
+		String SQL =  "SELECT * FROM " + SMTablearacctset.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearacctset.sAcctSetCode + " = '" + sAcctSetCode + "')" +
+			")";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -365,7 +398,13 @@ public class ARAccountSet extends java.lang.Object{
 		}
 		
 		//Customers
-		SQL = ARSQLs.Get_Customers_By_AccountSet(sAcctSetCode);
+		SQL =  "SELECT"
+				+ " " + SMTablearcustomer.sCustomerNumber
+				+ " FROM " + SMTablearcustomer.TableName 
+				+ " WHERE (" 
+					+ "(" + SMTablearcustomer.sAccountSet + " = '" + sAcctSetCode + "')"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -387,7 +426,15 @@ public class ARAccountSet extends java.lang.Object{
 		}
 		
 		//Unexported invoice headers:
-		SQL = ARSQLs.Get_Unexported_Invoices_For_AcctSet_SQL(sAcctSetCode);
+		SQL =  "SELECT " 
+				+ SMTableinvoiceheaders.sInvoiceNumber
+				+ " FROM " + SMTableinvoiceheaders.TableName
+				+ " WHERE ("
+					+ "(" + SMTableinvoiceheaders.sCustomerControlAcctSet + " = '" + sAcctSetCode + "')"
+					+ " AND (" + SMTableinvoiceheaders.iExportedToAR + " != 1)"
+					
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -409,7 +456,25 @@ public class ARAccountSet extends java.lang.Object{
 		}
 		
 		//Order headers:
-		SQL = ARSQLs.Get_Open_Orders_For_AcctSet_SQL(sAcctSetCode);
+		SQL =  "SELECT " 
+				+ SMTableorderheaders.sOrderNumber
+				+ " FROM " + SMTableorderheaders.TableName + ", " + SMTableorderdetails.TableName
+				+ " WHERE ("
+					+ "(" + SMTableorderdetails.TableName + ".dUniqueOrderID = " 
+						+ SMTableorderheaders.TableName + "." + SMTableorderheaders.dOrderUniqueifier + ")"
+					
+					+ " AND (" + SMTableorderheaders.sCustomerControlAcctSet + " = '" + sAcctSetCode + "')"
+					
+					+ " AND (" + SMTableorderdetails.TableName + ".dQtyOrdered != 0.00)"
+					
+					+ " AND ("
+						+ "(" + SMTableorderheaders.datOrderCanceledDate + " IS NULL)"
+						+ " OR (" + SMTableorderheaders.datOrderCanceledDate + " < '1900-01-01')"
+					+ ")"
+					
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -431,7 +496,11 @@ public class ARAccountSet extends java.lang.Object{
 		}
 		
 		try{
-			SQL = ARSQLs.Delete_AcctSet_SQL(sAcctSetCode);
+			SQL = "DELETE FROM " +
+					SMTablearacctset.TableName +
+					" WHERE (" + 
+						"(" + SMTablearacctset.sAcctSetCode + " = '" + sAcctSetCode + "')" +
+					")";
 			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting account set");
 				return false;

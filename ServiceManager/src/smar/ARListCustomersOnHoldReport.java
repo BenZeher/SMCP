@@ -2,8 +2,10 @@ package smar;
 
 import java.io.PrintWriter;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsDatabaseFunctions;
+import smcontrolpanel.SMUtilities;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -40,18 +42,23 @@ public class ARListCustomersOnHoldReport extends java.lang.Object{
     		;
     		
     	int iLinesPrinted = 0;
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	printTableHeader(out);
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
-				if (iLinesPrinted == 50){
+				/*if (iLinesPrinted == 50){
 					out.println("</TABLE><BR>");
 					printTableHeader(out);
 					iLinesPrinted = 0;
+				}*/
+				if(iLinesPrinted%2 == 0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD  + "\">");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN  + "\">");
 				}
-    			out.println("<TR>");
-				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablearcustomer.sCustomerNumber) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablearcustomer.sCustomerName) + "</FONT></TD>");
+			   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">" + rs.getString(SMTablearcustomer.sCustomerNumber) +  "</TD>");
+			   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">" + rs.getString(SMTablearcustomer.sCustomerName) +  "</TD>");
     			if (bShowComments){
     				String sCustomerComments = rs.getString(SMTablearcustomer.mCustomerComments);
     				if (sCustomerComments == null){
@@ -59,17 +66,26 @@ public class ARListCustomersOnHoldReport extends java.lang.Object{
     				}else{
     					sCustomerComments = sCustomerComments.trim();
     				}
-    				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" 
+    				   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">"
     					+ sCustomerComments
-    					+ "</FONT></TD>");
+    					+ "</TD>");
     			}
     			out.println("</TR>");
     			iLinesPrinted++;
     			iCustomersPrinted++;
 			}
 			rs.close();
+			if(bShowComments) {
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL  + "\">");
+				out.println( "<TD COLSPAN = \"3\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"> " + iCustomersPrinted +  " Customers on Hold Printed</TD>");
+				out.println("</TR>");
+			}else {
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL  + "\">");
+				out.println( "<TD COLSPAN = \"2\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"> " + iCustomersPrinted +  " Customers on Hold Printed</TD>");
+				out.println("</TR>");
+			}
+
 			out.println("</TABLE>");
-		    out.println("<BR><B>" + iCustomersPrinted + " customers on hold printed</B>");
 
 		}catch(SQLException e){
 			System.out.println("Error in " + this.toString() + ":processReport - " + e.getMessage());
@@ -82,21 +98,21 @@ public class ARListCustomersOnHoldReport extends java.lang.Object{
 		return m_sErrorMessage;
 	}
 	private void printTableHeader(PrintWriter out){
-		out.println("<TABLE BORDER=0 WIDTH=100%>");
-		
 		if (!bShowComments){
-			out.println("<TR>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Acct #</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=80%><B><FONT SIZE=2>Name</FONT></B></TD>" +
-			    "</TR>"
-			    );
-		}else{
-			out.println("<TR>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Acct #</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Name</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Comments</FONT></B></TD>" +
-			    "</TR>"
-		    );
+			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE  + "\">");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING  + "\">" + 
+					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Acct #</B></TD>" +
+					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Name</B></TD>" +
+					"</TR>"
+					);
+		}else {
+			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER  + "\">");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING  + "\">" + 
+					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Acct #</B></TD>" +
+					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Name</B></TD>" +
+					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Comments</B></TD>" +
+					"</TR>"
+					);
 		}
 	}
 }

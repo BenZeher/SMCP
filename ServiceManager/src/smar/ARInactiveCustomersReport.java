@@ -1,9 +1,12 @@
 package smar;
 
 import java.io.PrintWriter;
+
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import smcontrolpanel.SMUtilities;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -35,26 +38,33 @@ public class ARInactiveCustomersReport extends java.lang.Object{
     		;
     		
     	int iLinesPrinted = 0;
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	printTableHeader(out);
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
-				if (iLinesPrinted == 50){
+				/*if (iLinesPrinted == 50){
 					out.println("</TABLE><BR>");
 					printTableHeader(out);
 					iLinesPrinted = 0;
+				}*/
+				if(iLinesPrinted%2 == 0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD  + "\">");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN  + "\">");
 				}
-    			out.println("<TR>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTablearcustomer.sCustomerNumber) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearcustomer.datStartDate),"MM/dd/yyyy") + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTablearcustomer.sCustomerName) + "</FONT></TD>");
+			   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">" + rs.getString(SMTablearcustomer.sCustomerNumber) +  "</TD>");
+			   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearcustomer.datStartDate),"MM/dd/yyyy") +  "</TD>");
+			   out.println( "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">" + rs.getString(SMTablearcustomer.sCustomerName) +  "</TD>");
     			out.println("</TR>");
     			iLinesPrinted++;
     			iCustomersPrinted++;
 			}
 			rs.close();
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL  + "\">");
+			out.println( "<TD COLSPAN = \"3\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"> " + iCustomersPrinted +  " Inactive Customers Printed</TD>");
+			out.println("</TR>");
 			out.println("</TABLE>");
-		    out.println("<BR><B>" + iCustomersPrinted + " inactive customers printed</B>");
 
 		}catch(SQLException e){
 			System.out.println("Error in " + this.toString() + ":processReport - " + e.getMessage());
@@ -67,11 +77,11 @@ public class ARInactiveCustomersReport extends java.lang.Object{
 		return m_sErrorMessage;
 	}
 	private void printTableHeader(PrintWriter out){
-		out.println("<TABLE BORDER=0 WIDTH=100%>");
-		out.println("<TR>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Customer #</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Start date</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=80%><B><FONT SIZE=2>Name</FONT></B></TD>" +
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER  + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING  + "\">" + 
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Customer #</B></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Start Date #</B></TD>" +
+		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Name</B></TD>" +
 		    "</TR>"
 		    );
 	}

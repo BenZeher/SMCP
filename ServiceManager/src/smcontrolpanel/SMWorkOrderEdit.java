@@ -112,7 +112,6 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				"Go back to user login",
 				SMSystemFunctions.SMEditWorkOrders
 		);
-
 		if (!smedit.processSession(getServletContext(), SMSystemFunctions.SMEditWorkOrders, request)){
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
@@ -209,19 +208,27 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			
 	    //If there is a warning from trying to input previously, print it here:
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", smedit.getRequest());
-		smedit.getPWOut().println("<B><FONT COLOR=\"RED\"><div id=\"Warning\">");
+
+		smedit.getPWOut().println("<B><div id=\"Warning\" class=\"alert alert-danger collapse\" style=\"width:100%; margin-top:10px; \" role=\"alert\" >");
 		if (sWarning.compareToIgnoreCase("") != 0){
-			smedit.getPWOut().println("WARNING:" + sWarning);
+			smedit.getPWOut().println("" + sWarning);
 		}
-		smedit.getPWOut().println("</div></FONT></B>");
+		smedit.getPWOut().println("<a href=\"#\" class=\"close\" data-dismiss=\"alert\" aria-label=\"close\">&times;</a>");
+		smedit.getPWOut().println("</div></B>");
+		if(sWarning.compareToIgnoreCase("") != 0) {
+			smedit.getPWOut().println("<script> $(\"#Warning\").show();</script>");
+		}
 		
 		//If there is a status from trying to input previously, print it here:
 		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", smedit.getRequest());
-		smedit.getPWOut().println("<B><div id=\"Status\">");
+		smedit.getPWOut().println("<B><div id=\"Status\" class=\"container alert alert-success collapse\" style=\"margin-top:10px; position:fixed; opacity:1 !important;\" role=\"alert\">");
 		if (sStatus.compareToIgnoreCase("") != 0){
 			smedit.getPWOut().println("" + sStatus + "");
 		}		
 		smedit.getPWOut().println("</div></B>");
+		if(sStatus.compareToIgnoreCase("") != 0) {
+			smedit.getPWOut().println("<script> $(\"#Status\").show(); $(\"#Status\").delay(2000).fadeOut(1000); </script>");
+		}
 		
 	    //Print a link to the first page after login:
 		smedit.getPWOut().println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -369,7 +376,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "<TR>";
 		
 		//Start the outer table here:
-		s += "<TABLE style=\" title:ParentTable; border-style:solid; border-color:black; font-size:small; font-family:Arial; width:100%\">\n";		
+		s += "<TABLE class=\"\" style=\" title:ParentTable; border-style:solid; border-color:black; font-size:small; font-family:Arial; width:100%; \" >\n";		
 
 		//Header information:
 		s += "<TR><TD>" 
@@ -1373,7 +1380,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			iColumnCount++;
 		}else{
 			
-			s += "<TD class=\"readonlyleftfield\">" + wodetail.getsitemdesc()
+			s += "<TD class=\"readonlyleftfield\">" + wodetail.getsitemdesc().replace("&nbsp;", " ").replace("\u00a0", " " )
 				+ " <INPUT TYPE=HIDDEN NAME=\"" 
 				+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
 				+ clsStringFunctions.PadLeft(Integer.toString(iLineNumber), "0", SMWorkOrderHeader.OVERALL_LENGTH_OF_PADDED_LINE_NUMBER) 
@@ -2972,8 +2979,8 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
 		+ "</HEAD>\n" 
 		+ "<BODY"
-		+ " style=\"font-family: " + sfontfamily + " !important; background-color:" +sbackgroundcolor + " !important; \""
-		+ " class=\"override\">"
+		+ " style=\"font-family: " + sfontfamily + " !important; background-color:" +sbackgroundcolor + " !important;\""
+		+ " class=\"m-md-3 override\">"
 		;
 		s += "<TABLE BORDER=0 style=\"font-size: medium;\">"
 		+"<TR><TD VALIGN=BOTTOM><B>" + scompanyname + ": " + title + "</B></TD>"
@@ -3589,18 +3596,23 @@ public class SMWorkOrderEdit  extends HttpServlet {
                 		//If the response is ready then display it in the status
                 + "    if (this.readyState == 4 && this.status == 200){\n"
                 			//If there is a warning is the response
-                + "   		if (this.responseText.includes(\"Warning\")){\n"
-                + "        		 document.getElementById(\"Warning\").innerHTML = this.responseText; \n"
-                + "        		 document.getElementById(\"Status\").innerHTML = \"\"; \n"
+                + "   		if (this.responseText.includes('Warning')){\n"
+                + "        		 $(\"#Warning\").html(this.responseText); \n"
+                + "         	$(\"#Status\").html(''); \n"
+                + "             $(\"#Warning\").show(); \n"
+                + ""
                 			//Otherwise display response as status message
                 + "    		}else{\n"
-                + "         	document.getElementById(\"Status\").innerHTML = this.responseText; \n"
-                + "         	document.getElementById(\"Warning\").innerHTML = \"\"; \n"
+                + "         	$(\"#Status\").html(this.responseText); \n"
+                + "         	$(\"#Warning\").html(''); \n"
+                + "             $(\"#Status\").show(); \n"
+                + "				$(\"#Status\").delay(2000).fadeOut(1000);\n"
                 + "			}\n" 
                 + "    }"
                 		//The request completely failed.  
                 + "     if (this.readyState == 4 && this.status != 200){\n"
-                + "         document.getElementById(\"Warning\").innerHTML = 'WARNING:' + 'Request to update Left previous job time failed.'; \n"
+                + "         $(\"#Warning\").html('WARNING:' + 'Request to update Left previous job time failed.'); \n"
+                + "             $(\"#Warning\").show(); "
                 + "	   }\n" 
                 +"};\n\n"
                 //Send the request
@@ -3916,7 +3928,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		String sClassName) throws Exception{
 		String s = "";
 		s += "<div style=\" background-color:" + SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \">";
-		s += "<div class=\"row d-block d-md-none\" style=\" background-color:" + SMWorkOrderHeader.JOBTIMES_TABLE_BG_COLOR + "; \">";
+		s += "<div class=\"row d-block d-md-none\" >";
 		s += "<div class=\"col d-flex justify-content-between text-secondary\"> "
 		   + "<div  style=\"font-size:large; padding: 7px;\">"
 		   + "<b>" + "Job Times" + "</b>"
@@ -4059,7 +4071,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				SMWorkOrderHeader.Paramdattimearrivedatnext,
 				sPresetDate,
 				sDefaultValue,
-				"<B>Arrived at next job::</B>", 
+				"<B>Arrived at next job:</B>", 
 				"", 
 				"asyncUpdate('" + SMTableworkorders.dattimearrivedatnext + "');",
 				bAllowArrivedAtNextSiteTime,
@@ -4104,7 +4116,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME1 + "\""	
 					+ " SIZE=" + "25"
-					+ "></div></div>"		
+					+ "></div><div class=\"col\"></div></div>"		
 				;
 			}
 			if (bAllowEditingLeftPreviousSiteTime && bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime){
@@ -4112,7 +4124,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME2 + "\""	
 					+ " SIZE=" + "25"
-					+ "></div></div>"			
+					+ "></div><div class=\"col\"></div></div>"			
 				;
 			}
 			if (bAllowEditingLeftPreviousSiteTime && bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime
@@ -4121,7 +4133,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME3 + "\""	
 					+ " SIZE=" + "25"
-					+ "></div></div>"			
+					+ "></div><div class=\"col\"></div></div>"			
 				;
 			}
 			if (bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime){
@@ -4129,7 +4141,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME4 + "\""	
 					+ " SIZE=" + "25"
-					+ "></div></div>"			
+					+ "></div><div class=\"col\"></div></div>"			
 				;
 			}
 			if (bAllowEditingArrivedAtCurrentSiteTime && bAllowEditingLeftCurrentSiteTime && bAllowArrivedAtNextSiteTime){
@@ -4137,7 +4149,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 					+ "<INPUT TYPE=TEXT readonly=\"readonly\" NAME = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""
 					+ " ID = \"" + SMWorkOrderHeader.ELAPSEDTIME5 + "\""	
 					+ " SIZE=" + "25"
-					+ "></div></div>"			
+					+ "></div><div class=\"col\"></div></div>"			
 				;
 			}
 		}

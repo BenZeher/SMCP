@@ -19,7 +19,7 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN = "lightgreentablerow";
 	public static final String TABLE_ROW_BACKGROUNDCOLOR_YELLOW = "yellowtablerow";
 	public static final String TABLE_ROW_BACKGROUNDCOLOR_GREY = "greytablerow";
-	
+	public static final String TABLE_ROW_BREAK = "blackspace";
 	
 	//Table cell defs
 	public static final String TABLE_CELL_COLLAPSE_BORDER = "collapsebordertabledata";
@@ -62,6 +62,6 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_ROW_EVEN = TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY;
 	public static final String TABLE_TOTAL = TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN;
 	public static final String TABLE_ROW_HIGHLIGHT = TABLE_ROW_BACKGROUNDCOLOR_YELLOW;
-	
+	public static final String TABLE_NOTES = TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK;
 	
 }

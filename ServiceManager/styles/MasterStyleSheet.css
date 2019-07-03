@@ -363,3 +363,8 @@ td.centerjustifiedheading {
   text-align: center;
   vertical-align:bottom; 
 }
+
+td.blackspace {
+ font-family : Arial;
+ font-size: 50%;
+}

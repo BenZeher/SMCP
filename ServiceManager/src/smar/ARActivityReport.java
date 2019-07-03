@@ -104,7 +104,7 @@ public class ARActivityReport extends java.lang.Object{
 			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
 		    			out.println("</TR>");
 		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
-		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
+		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
 		    			out.println("</TR>");
 		    			
 		    			//Reset the customer totals:
@@ -177,7 +177,7 @@ public class ARActivityReport extends java.lang.Object{
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
     			out.println("</TR>");
     			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
-    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
+    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
     			out.println("</TR>");
     	    	iCustomersPrinted++;
     		}

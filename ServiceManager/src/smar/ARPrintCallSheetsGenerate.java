@@ -369,6 +369,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 			+ sUserFullName
 				);
 		
+		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 		if (conn == null){
 			sRedirectString += "&Warning=" + "Could not get data connection";
 			response.sendRedirect(sRedirectString);
@@ -387,7 +388,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 			   + "<BODY BGCOLOR=\"#FFFFFF\""
 			   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
 			   + ">"
-			   + "<TABLE BORDER=0 WIDTH=100%>"
+			   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = " + sColor +  " >"
 			   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 			   + clsDateAndTimeConversions.nowStdFormat() + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, conn) 
 			   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"

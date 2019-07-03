@@ -16,22 +16,22 @@ import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMUtilities;
 
 public class ARMiscCashReport extends java.lang.Object{
-	public static final String ARMiscCashLines = "armisccashlines";
-	public static final String iDocType = "idoctype";
-	public static final String sDocAppliedTo = "sdocappliedto";
-	public static final String sDocNumber = "sdocnumber";
-	public static final String lDocId = "ldocid";
-	public static final String datDocDate = "datdocdate";
-	public static final String datDueDate = "datduedate";
-	public static final String lOriginalBatchNumber = "loriginalbatchnumber";
-	public static final String lOriginalEntryNumber = "loriginalentrynumber";
-	public static final String  dOriginalAmmount = "doriginalamt";
-	public static final String dCurrentAmmount = "dcurrentamt";
-	public static final String sDescription = "sdesc";
-	public static final String sSource = "ssource";
-	public static final String lAppliedTo = "lappliedto";
-	public static final String dApplyToDocCurrentAmt = "dapplytodoccurrentamt";
-	public static final String lParentTransactionId = "lparenttransactionid";
+	private static final String ARMiscCashLines = "armisccashlines";
+	private static final String iDocType = "idoctype";
+	private static final String sDocAppliedTo = "sdocappliedto";
+	private static final String sDocNumber = "sdocnumber";
+	private static final String lDocId = "ldocid";
+	private static final String datDocDate = "datdocdate";
+	private static final String datDueDate = "datduedate";
+	private static final String lOriginalBatchNumber = "loriginalbatchnumber";
+	private static final String lOriginalEntryNumber = "loriginalentrynumber";
+	private static final String  dOriginalAmmount = "doriginalamt";
+	private static final String dCurrentAmmount = "dcurrentamt";
+	private static final String sDescription = "sdesc";
+	private static final String sSource = "ssource";
+	private static final String lAppliedTo = "lappliedto";
+	private static final String dApplyToDocCurrentAmt = "dapplytodoccurrentamt";
+	private static final String lParentTransactionId = "lparenttransactionid";
 	
 	private String m_sErrorMessage;
 	

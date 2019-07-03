@@ -21,22 +21,24 @@ import smcontrolpanel.SMUtilities;
 public class ARActivityReport extends java.lang.Object{
     private static final String ARActivityLines = "aractivitylines";
     private static final String sCustomer = "scustomer";
+    private static final String sCustomerName = "scustomername";
     private static final String sDocAppliedTo = "sdocappliedto";
     private static final String sSource = "ssource";
     private static final String datDocDate = "datdocdate";
-	public static final String iDocType = "idoctype";
-	public static final String sDocNumber = "sdocnumber";
-	public static final String lDocId = "ldocid";
-	public static final String datDueDate = "datduedate";
-	public static final String sOrderNum = "sordernumber";
-	public static final String dCreditLimit = "dcreditlimit";
-	public static final String lOriginalBatchNumber = "loriginalbatchnumber";
-	public static final String lOriginalEntryNumber = "loriginalentrynumber";
-	public static final String  dOriginalAmmount = "doriginalamt";
-	public static final String dCurrentAmmount = "dcurrentamt";
-	public static final String lDaysOver = "ldaysover";
-	
-    
+    private static final String iDocType = "idoctype";
+    private static final String sDocNumber = "sdocnumber";
+    private static final String lDocId = "ldocid";
+    private static final String datDueDate = "datduedate";
+    private static final String sOrderNum = "sordernumber";
+    private static final String dCreditLimit = "dcreditlimit";
+    private static final String lOriginalBatchNumber = "loriginalbatchnumber";
+    private static final String lOriginalEntryNumber = "loriginalentrynumber";
+    private static final String  dOriginalAmmount = "doriginalamt";
+    private static final String dCurrentAmmount = "dcurrentamt";
+    private static final String lDaysOver = "ldaysover";
+    private static final String lAppliedTo = "lappliedto";
+    private static final String dApplyToDocCurrentamt = "dapplytodoccurrentamt";
+    private static final String lParentTransactionId = "lparenttransactionid";
 	private String m_sErrorMessage;
 	
 	ARActivityReport(
@@ -264,7 +266,7 @@ public class ARActivityReport extends java.lang.Object{
 			java.sql.Date datEndingDate,
 			boolean bIncludeFullyPaidTransactions
 	){
-		String SQL = "DROP TEMPORARY TABLE aractivitylines";
+		String SQL = "DROP TEMPORARY TABLE " + ARActivityLines;
 		try {
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error dropping temporary aging table");
@@ -274,32 +276,33 @@ public class ARActivityReport extends java.lang.Object{
 		} catch (SQLException e) {
 			// Don't choke over this
 		}
-		SQL =	"CREATE  TEMPORARY TABLE aractivitylines ("
-			+ "scustomer varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
-			+ "scustomername varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
-			+ "ldocid int(11) NOT NULL default '0',"
-			+ "idoctype int(11) NOT NULL default '0',"
-			+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-			+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
-			+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
-			+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
-			+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
-			+ "sordernumber varchar(22) NOT NULL default '',"
-			+ "ssource varchar(7) NOT NULL default '',"
-			+ "lappliedto int(11) NOT NULL default '0',"
-			+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-			+ "loriginalbatchnumber int(11) NOT NULL default '0',"
-			+ "loriginalentrynumber int(11) NOT NULL default '0',"
-			+ "ldaysover int(11) NOT NULL default '0',"
-			+ "dcreditlimit decimal(17,2) NOT NULL default '0.00',"
-			+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
-			+ "lparenttransactionid int(11) NOT NULL default '0',"
-			+ "KEY customerkey (scustomer),"
-			+ "KEY appliedtokey (lappliedto),"
-			+ "KEY docnumberkey (sdocnumber),"
-			+ "KEY parenttransactionkey (lparenttransactionid)"
-		+ ") "
-		;
+		
+		SQL = "CREATE TEMPORARY TABLE " + ARActivityLines +" ("
+				+ sCustomer + " varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
+				+ sCustomerName +" varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
+				+ lDocId + " int(11) NOT NULL default '0',"
+				+ iDocType + " int(11) NOT NULL default '0',"
+				+ sDocNumber + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ datDocDate +" datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ datDueDate+ " datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ dOriginalAmmount + " decimal(17,2) NOT NULL default '0.00',"
+				+ dCurrentAmmount +  " decimal(17,2) NOT NULL default '0.00',"
+				+ sOrderNum + " varchar(22) NOT NULL default '',"
+				+ sSource + " varchar(7) NOT NULL default '',"
+				+ lAppliedTo + " int(11) NOT NULL default '0',"
+				+ sDocAppliedTo + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ lOriginalBatchNumber +" int(11) NOT NULL default '0',"
+				+ lOriginalEntryNumber + " int(11) NOT NULL default '0',"
+				+ lDaysOver +"  int(11) NOT NULL default '0',"
+				+ dCreditLimit + " decimal(17,2) NOT NULL default '0.00',"
+				+ dApplyToDocCurrentamt + " decimal(17,2) NOT NULL default '0.00',"
+				+ lParentTransactionId + " int(11) NOT NULL default '0',"
+				+ "KEY customerkey (" + sCustomer + "),"
+				+ "KEY appliedtokey (" + lAppliedTo + "),"
+				+ "KEY docnumberkey (" + sDocNumber + "),"
+				+ "KEY parenttransactionkey ("  + lParentTransactionId + ")"
+				+ ")";
+
 		try {
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
@@ -307,27 +310,28 @@ public class ARActivityReport extends java.lang.Object{
 			m_sErrorMessage = "Error creating temporary activity table with SQL: " + SQL + " - " + e.getMessage();
 			return false;
 		}
+
 		
-		SQL = "INSERT INTO aractivitylines ("
-				+ "scustomer,"
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " sordernumber,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber,"
-				+ " ldaysover,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " scustomername,"
-				+ " dcreditlimit"
+		SQL = "INSERT INTO " +  ARActivityLines +" ("
+				+ sCustomer + " ,"
+				+ lDocId + " ,"
+				+ iDocType + " ,"
+				+ sDocNumber + " ,"
+				+ datDocDate +" ,"
+				+ datDueDate+ " ,"
+				+ dOriginalAmmount + " ,"
+				+ dCurrentAmmount +  " ,"
+				+ sOrderNum + " ,"
+				+ sSource + " ,"
+				+ lAppliedTo + " ,"
+				+ sDocAppliedTo + " ,"
+				+ lOriginalBatchNumber +" ,"
+				+ lOriginalEntryNumber + " ,"
+				+ lDaysOver +" ,"
+				+ dApplyToDocCurrentamt + " ,"
+				+ lParentTransactionId + " ,"
+				+ sCustomerName +" ,"
+				+ dCreditLimit
 				
 				+ ") SELECT"
 				+ " " + SMTableartransactions.spayeepayor
@@ -373,24 +377,24 @@ public class ARActivityReport extends java.lang.Object{
 			return false;
 		}
 
-		SQL = "INSERT INTO aractivitylines ("
-				+ "scustomer,"
-				+ " ldocid,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " sordernumber,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " scustomername,"
-				+ " dcreditlimit,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber"
+		SQL ="INSERT INTO " +  ARActivityLines +" ("
+				+ sCustomer + " ,"
+				+ lDocId + " ,"
+				+ sDocNumber + " ,"
+				+ datDocDate +" ,"
+				+ datDueDate+ " ,"
+				+ dOriginalAmmount + " ,"
+				+ dCurrentAmmount +  " ,"
+				+ sOrderNum + " ,"
+				+ sSource + " ,"
+				+ lAppliedTo + " ,"
+				+ sDocAppliedTo + " ,"
+				+ dApplyToDocCurrentamt + " ,"
+				+ lParentTransactionId + " ,"
+				+ sCustomerName +" ,"
+				+ dCreditLimit + " ,"
+				+ lOriginalBatchNumber +" ,"
+				+ lOriginalEntryNumber 
 				
 			+ ") SELECT"
 				+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
@@ -438,9 +442,9 @@ public class ARActivityReport extends java.lang.Object{
 		
 		if(!bIncludeFullyPaidTransactions){
 			//Remove any lines which are applied to fully paid transactions:
-			SQL ="DELETE FROM aractivitylines" 
+			SQL ="DELETE FROM " + ARActivityLines
 					+ " WHERE ("
-					+ "(dcurrentamt = 0.00)"
+					+ "(" + dCurrentAmmount +  " = 0.00)"
 				+ ")"
 				;
 			try {
@@ -453,11 +457,11 @@ public class ARActivityReport extends java.lang.Object{
 		}
 		//Update the 'days over' on all transactions, based on their 'due' dates: 
 		//applied-to documents:
-		SQL = "UPDATE aractivitylines SET" 
-				+ " ldaysover = IF((TO_DAYS(NOW()) - TO_DAYS(datduedate))>0,(TO_DAYS(NOW()) - TO_DAYS(datduedate)),0)"
+		SQL = "UPDATE " + ARActivityLines + " SET " 
+				+ lDaysOver + "  = IF((TO_DAYS(NOW()) - TO_DAYS(" + datDueDate + "))>0,(TO_DAYS(NOW()) - TO_DAYS(" + datDueDate + ")),0)"
 				+ " WHERE ("
-					+ "(ssource = 'CONTROL')"
-					+ " AND (dcurrentamt != 0.00)"
+					+ "(" + sSource + " = 'CONTROL')"
+					+ " AND (" + dCurrentAmmount + " != 0.00)"
 				+ ")"
 				;
 		try {

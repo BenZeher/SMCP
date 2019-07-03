@@ -220,7 +220,7 @@ public class BKAddEntryAction extends HttpServlet{
 			+ ", -1"
 			+ ", 0"
 			+ ", " + sEntryType
-			+ ", " + SMTablebkaccountentries.INITIAL_STATEMENT_ID_VALUE
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(sStatementID) + ""
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDocNumber) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sGLAccount) + "'"

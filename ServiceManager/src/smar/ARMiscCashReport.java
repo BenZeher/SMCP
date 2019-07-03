@@ -16,6 +16,7 @@ import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMUtilities;
 
 public class ARMiscCashReport extends java.lang.Object{
+	public static final String ARMiscCashLines = "armisccashlines";
 	public static final String iDocType = "idoctype";
 	public static final String sDocAppliedTo = "sdocappliedto";
 	public static final String sDocNumber = "sdocnumber";
@@ -157,7 +158,7 @@ public class ARMiscCashReport extends java.lang.Object{
 		String SQL;
 		
 		try{
-			SQL = "DROP TEMPORARY TABLE armisccashlines";
+			SQL = "DROP TEMPORARY TABLE " + ARMiscCashLines;
 			try {
 				if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 					//System.out.println("Error dropping temporary aging table");
@@ -168,7 +169,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				// Don't choke over this
 			}
 		
-			SQL = "CREATE TEMPORARY TABLE armisccashlines ("
+			SQL = "CREATE TEMPORARY TABLE " + ARMiscCashLines +" ("
 				+ "ldocid int(11) NOT NULL default '0',"
 				+ "idoctype int(11) NOT NULL default '0',"
 				+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
@@ -194,7 +195,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				m_sErrorMessage = "Error creating temporary misc cash lines table";
 				return false;
 			}
-			SQL = "INSERT INTO armisccashlines ("
+			SQL = "INSERT INTO " + ARMiscCashLines + " ("
 				+ " ldocid,"
 				+ " idoctype,"
 				+ " sdocnumber,"
@@ -237,7 +238,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				m_sErrorMessage = "Error inserting transactions into misc cash lines table";
 				return false;
 			}
-			SQL = "INSERT INTO armisccashlines ("
+			SQL = "INSERT INTO " + ARMiscCashLines + " ("
 				+ " ldocid,"
 				+ " idoctype,"
 				+ " sdocnumber,"

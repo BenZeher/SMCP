@@ -27,7 +27,11 @@ public class ARMiscCashReport extends java.lang.Object{
 	public static final String lOriginalEntryNumber = "loriginalentrynumber";
 	public static final String  dOriginalAmmount = "doriginalamt";
 	public static final String dCurrentAmmount = "dcurrentamt";
-	public static final String dDescription = "sdesc";
+	public static final String sDescription = "sdesc";
+	public static final String sSource = "ssource";
+	public static final String lAppliedTo = "lappliedto";
+	public static final String dApplyToDocCurrentAmt = "dapplytodoccurrentamt";
+	public static final String lParentTransactionId = "lparenttransactionid";
 	
 	private String m_sErrorMessage;
 	
@@ -84,7 +88,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				+ "-" + Long.toString(rs.getLong(lOriginalEntryNumber)) + "</TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dOriginalAmmount)) + "</TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCurrentAmmount)) + "</TD>");
-	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(dDescription) + "</TD>");
+	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(sDescription) + "</TD>");
     			out.println("</TR>");
     			iPrintTransactionsIn++;
     			//Set the totals:
@@ -170,24 +174,24 @@ public class ARMiscCashReport extends java.lang.Object{
 			}
 		
 			SQL = "CREATE TEMPORARY TABLE " + ARMiscCashLines +" ("
-				+ "ldocid int(11) NOT NULL default '0',"
-				+ "idoctype int(11) NOT NULL default '0',"
-				+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
-				+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "ssource varchar(7) NOT NULL default '',"
-				+ "lappliedto int(11) NOT NULL default '0',"
-				+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "loriginalbatchnumber int(11) NOT NULL default '0',"
-				+ "loriginalentrynumber int(11) NOT NULL default '0',"
-				+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "lparenttransactionid int(11) NOT NULL default '0',"
-				+ "sdesc varchar(" + SMTableartransactions.sdocdescriptionlength + ") NOT NULL default '',"
-				+ "KEY appliedtokey (lappliedto),"
-				+ "KEY docnumberkey (sdocnumber),"
-				+ "KEY parenttransactionkey (lparenttransactionid)"
+				+ lDocId + " int(11) NOT NULL default '0',"
+				+ iDocType + " int(11) NOT NULL default '0',"
+				+ sDocNumber + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ datDocDate +" datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ datDueDate+ " datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ dOriginalAmmount + " decimal(17,2) NOT NULL default '0.00',"
+				+ dCurrentAmmount +  " decimal(17,2) NOT NULL default '0.00',"
+				+ sSource + " varchar(7) NOT NULL default '',"
+				+ lAppliedTo + " int(11) NOT NULL default '0',"
+				+ sDocAppliedTo + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ lOriginalBatchNumber +" int(11) NOT NULL default '0',"
+				+ lOriginalEntryNumber + " int(11) NOT NULL default '0',"
+				+ dApplyToDocCurrentAmt + " decimal(17,2) NOT NULL default '0.00',"
+				+ lParentTransactionId + " int(11) NOT NULL default '0',"
+				+ sDescription + " varchar(" + SMTableartransactions.sdocdescriptionlength + ") NOT NULL default '',"
+				+ "KEY appliedtokey (" + lAppliedTo + "),"
+				+ "KEY docnumberkey (" + sDocNumber + "),"
+				+ "KEY parenttransactionkey ("  + lParentTransactionId + ")"
 				+ ") ENGINE = InnoDb"
 				;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
@@ -196,21 +200,21 @@ public class ARMiscCashReport extends java.lang.Object{
 				return false;
 			}
 			SQL = "INSERT INTO " + ARMiscCashLines + " ("
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " sdesc"
+					+ " " + lDocId +" ,"
+					+ " " + iDocType +" ,"
+					+ " " + sDocNumber +" ,"
+					+ " " + datDocDate +" ,"
+					+ " " + datDueDate +" ,"
+	    			+ " " + dOriginalAmmount +" ,"
+	    			+ " " + dCurrentAmmount +" ,"
+	    			+ " " + sSource +" ,"
+	    			+ " " + lAppliedTo +" ,"
+	    			+ " " + sDocAppliedTo +" ,"
+	    			+ " " + lOriginalBatchNumber +" ,"
+	    			+ " " + lOriginalEntryNumber +" ,"
+	    			+ " " + dApplyToDocCurrentAmt +" ,"
+	    			+ " " + lParentTransactionId +" ,"
+		    		+ " " + sDescription
 				
 				+ ") SELECT"
 				+ " " + SMTableartransactions.lid
@@ -239,22 +243,22 @@ public class ARMiscCashReport extends java.lang.Object{
 				return false;
 			}
 			SQL = "INSERT INTO " + ARMiscCashLines + " ("
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber,"
-				+ " sdesc"
-				
+				+ " " + lDocId +" ,"
+				+ " " + iDocType +" ,"
+				+ " " + sDocNumber +" ,"
+				+ " " + datDocDate +" ,"
+				+ " " + datDueDate +" ,"
+    			+ " " + dOriginalAmmount +" ,"
+    			+ " " + dCurrentAmmount +" ,"
+    			+ " " + sSource +" ,"
+    			+ " " + lAppliedTo +" ,"
+    			+ " " + sDocAppliedTo +" ,"
+    			+ " " + dApplyToDocCurrentAmt +" ,"
+    			+ " " + lParentTransactionId +" ,"
+    			+ " " + lOriginalBatchNumber +" ,"
+    			+ " " + lOriginalEntryNumber +" ,"
+	    		+ " " + sDescription
+	    			
 			+ ") SELECT"
 				+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lid
 				+ ", " + "APPLYFROM." + SMTableartransactions.idoctype

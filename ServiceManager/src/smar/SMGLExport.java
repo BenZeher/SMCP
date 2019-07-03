@@ -899,6 +899,7 @@ public class SMGLExport extends java.lang.Object{
 			glentry.setsautoreverse("0");
 			glentry.setsbatchnumber(Long.toString(m_HeaderRecordArray.get(i).getBatchNumber()));
 			glentry.setsdatdocdate(m_HeaderRecordArray.get(i).getDocDate());
+			//TJR - 7/3/2019 - this 'entry date' is actually the BATCH date because AR entries do not actually have an entry date:
 			glentry.setsdatentrydate(m_HeaderRecordArray.get(i).getEntryDate());
 			glentry.setsentrydescription(m_HeaderRecordArray.get(i).getEntryDescription());
 			glentry.setsentrynumber(Long.toString(m_HeaderRecordArray.get(i).getBatchEntry()));

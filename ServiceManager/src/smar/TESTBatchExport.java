@@ -137,6 +137,21 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		
+		
+		//Test GL Transaction Batch for AR:
+		ARBatch arbatch = new ARBatch("28260");
+		
+		try {
+			arbatch.post_without_data_transaction(conn, "1", "Tom R");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("DONE");
+		
+		
+		/*
 		//Test GL Transaction Batch posting:
 		GLTransactionBatch glbatch = new GLTransactionBatch("54");
 		try {
@@ -146,6 +161,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
+		*/
 		
 		//Test GL conversion function:
 		/*

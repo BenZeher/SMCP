@@ -105,7 +105,7 @@ public class GLEditExternalCompaniesAction extends HttpServlet{
     			//System.out.println("[1490711588] sLineParam = '" + sLineParam +"'");
     			sLid = sLineParam.substring(
     				GLEditExternalCompaniesEdit.PARAM_DB_PREFIX.length(),
-    				GLEditExternalCompaniesEdit.PARAM_DB_PREFIX.length() + GLEditExternalCompaniesEdit.LID_PADDING_LENGTH);
+    				GLEditExternalCompaniesEdit.PARAM_DB_PREFIX.length() + GLEditExternalCompaniesEdit.LID_PADDING_LENGTH).trim();
     			lLid = Integer.parseInt(sLid);
     			
     			//If the lid is zero, this is a new company being added:
@@ -135,18 +135,28 @@ public class GLEditExternalCompaniesAction extends HttpServlet{
     			}
     			
     			//Try to update/insert the record:
-    			String SQL = "INSERT INTO " + SMTableglexternalcompanies.TableName
-    				+ " ("
-    				+ SMTableglexternalcompanies.sdbname
-    				+ ", " + SMTableglexternalcompanies.scompanyname
-    				+ ") VALUES ("
-    				+ "'" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDBName) + "'"
-    				+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sCompanyName) + "'"
+    			String SQL = "";
+    			if (lLid == 0L){
+	    			SQL = "INSERT INTO " + SMTableglexternalcompanies.TableName
+	    				+ " ("
+	    				+ SMTableglexternalcompanies.sdbname
+	    				+ ", " + SMTableglexternalcompanies.scompanyname
+	    				+ ") VALUES ("
+	    				+ "'" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDBName) + "'"
+	    				+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sCompanyName) + "'"
+	    				+ ")"
+	    			;
+    			}else{
+    				SQL = "UPDATE " + SMTableglexternalcompanies.TableName
+    				+ " SET " + SMTableglexternalcompanies.scompanyname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sCompanyName) + "'"
+    				+ ", " + SMTableglexternalcompanies.sdbname + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDBName) + "'"
+    				+ " WHERE ("
+    					+ "(" + SMTableglexternalcompanies.lid + " = " + sLid + ")"
     				+ ")"
-    				+ " ON DUPLICATE KEY UPDATE"
-    				+ " " + SMTableglexternalcompanies.scompanyname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sCompanyName) + "'"
     			;
-    			System.out.println("[20191791648519] " + "SQL = '" + SQL + "'");
+    			}
+
+    			//System.out.println("[20191791648519] " + "SQL = '" + SQL + "'");
     			try {
     				Statement stmt = conn.createStatement();
     				stmt.execute(SQL);

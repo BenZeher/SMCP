@@ -95,7 +95,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
     	
     	//Customized title
     	String sReportTitle = "AR Chronological Log";
-
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	String sCriteria = "For customer <B>" + sCustomer + "</B>"
     		+ ", starting with document number <B>" + sStartingDocumentNumber + "</B>"
     		+ ", ending with document number <B>" + sEndingDocumentNumber + "</B>";
@@ -112,7 +112,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = " + sColor + ">"  +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD></TR>" +
@@ -126,7 +126,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 					   "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARMainMenu?" 
 							+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 							+ "\">Return to Accounts Receivable Main Menu</A></TD></TR></TABLE>");
-    	
+	   out.println(SMUtilities.getMasterStyleSheetLink());
     	//Retrieve information
 	   try {
 		processReport(
@@ -232,9 +232,9 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			;
 		}
 		//System.out.println("In " + this.toString() + ".processReport SQL = " + SQL);
-		pwOut.println("<TABLE BORDER=0 WIDTH=100%>");
+		pwOut.println("<TABLE WIDTH = 100% CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 		printHeading(pwOut);
-		pwOut.println("<TR><TDCOLSPAN=3><HR></TD><TR>");
+		int count = 0;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -247,11 +247,16 @@ public class ARViewChronLogGenerate extends HttpServlet {
 					);
 			
 			while (rs.next()){
-				pwOut.println("<TR>");
-				pwOut.println("<TD VALIGN=\"TOP\"><FONT SIZE=2>" + rs.getString(SMTablearchronlog.datlogdate).replace(" ", "&nbsp;") + "</FONT></TD>");
-				pwOut.println("<TD VALIGN=\"TOP\"><FONT SIZE=2>" + rs.getString(SMTablearchronlog.suserfullname).trim() + "</FONT></TD>");
-				pwOut.println("<TD VALIGN=\"TOP\"><FONT SIZE=2>" + rs.getString(SMTablearchronlog.sdescription) + "</FONT></TD>");
+				if(count%2 == 0 ) {
+					pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}else {
+					pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}
+				pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">" + rs.getString(SMTablearchronlog.datlogdate).replace(" ", "&nbsp;") +"</TD>");
+				pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">" + rs.getString(SMTablearchronlog.suserfullname).trim() +"</TD>");
+				pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTablearchronlog.sdescription) +"</TD>");
 				pwOut.println("</TR>");
+				count++;
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -263,10 +268,10 @@ public class ARViewChronLogGenerate extends HttpServlet {
 	}
 	private void printHeading(PrintWriter pwOut){
 		
-		pwOut.println("<TR>");
-		pwOut.println("<TR><TD><FONT SIZE=2><B><I>Event date/time</I></B></FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B><I>Name</I></B></FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B><I>Description</I></B></FONT></TD>");
+		pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Event date/time</TD>");
+		pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Name</TD>");
+		pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Description</TD>");
 		pwOut.println("</TR>");
 		
 	}

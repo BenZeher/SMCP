@@ -16,7 +16,18 @@ import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMUtilities;
 
 public class ARMiscCashReport extends java.lang.Object{
-
+	public static final String iDocType = "idoctype";
+	public static final String sDocAppliedTo = "sdocappliedto";
+	public static final String sDocNumber = "sdocnumber";
+	public static final String lDocId = "ldocid";
+	public static final String datDocDate = "datdocdate";
+	public static final String datDueDate = "datduedate";
+	public static final String lOriginalBatchNumber = "loriginalbatchnumber";
+	public static final String lOriginalEntryNumber = "loriginalentrynumber";
+	public static final String  dOriginalAmmount = "doriginalamt";
+	public static final String dCurrentAmmount = "dcurrentamt";
+	public static final String dDescription = "sdesc";
+	
 	private String m_sErrorMessage;
 	
 	ARMiscCashReport(
@@ -62,17 +73,17 @@ public class ARMiscCashReport extends java.lang.Object{
 				}else {
 		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" );
 				}
-				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(ARSQLs.sdocappliedto) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(ARSQLs.idoctype)) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdocnumber) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(ARSQLs.ldocid)) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datdocdate),"MM/dd/yyy") + "</TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datduedate),"MM/dd/yyy") + "</TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong(ARSQLs.loriginalbatchnumber)) 
-				+ "-" + Long.toString(rs.getLong(ARSQLs.loriginalentrynumber)) + "</TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.doriginalamt)) + "</TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.dcurrentamt)) + "</TD>");
-	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdesc) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(sDocAppliedTo) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(iDocType)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(sDocNumber) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(lDocId)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDocDate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDueDate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong(lOriginalBatchNumber)) 
+				+ "-" + Long.toString(rs.getLong(lOriginalEntryNumber)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dOriginalAmmount)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCurrentAmmount)) + "</TD>");
+	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(dDescription) + "</TD>");
     			out.println("</TR>");
     			iPrintTransactionsIn++;
     			//Set the totals:

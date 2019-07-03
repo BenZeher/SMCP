@@ -19,7 +19,24 @@ import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMUtilities;
 
 public class ARActivityReport extends java.lang.Object{
-
+    private static final String ARActivityLines = "aractivitylines";
+    private static final String sCustomer = "scustomer";
+    private static final String sDocAppliedTo = "sdocappliedto";
+    private static final String sSource = "ssource";
+    private static final String datDocDate = "datdocdate";
+	public static final String iDocType = "idoctype";
+	public static final String sDocNumber = "sdocnumber";
+	public static final String lDocId = "ldocid";
+	public static final String datDueDate = "datduedate";
+	public static final String sOrderNum = "sordernumber";
+	public static final String dCreditLimit = "dcreditlimit";
+	public static final String lOriginalBatchNumber = "loriginalbatchnumber";
+	public static final String lOriginalEntryNumber = "loriginalentrynumber";
+	public static final String  dOriginalAmmount = "doriginalamt";
+	public static final String dCurrentAmmount = "dcurrentamt";
+	public static final String lDaysOver = "ldaysover";
+	
+    
 	private String m_sErrorMessage;
 	
 	ARActivityReport(
@@ -61,8 +78,8 @@ public class ARActivityReport extends java.lang.Object{
 
     	String sCurrentCustomer = "";
     	int iCustomersPrinted = 0;
-    	String SQL =  "SELECT * FROM aractivitylines"
-    			+ " ORDER BY scustomer, sdocappliedto, ssource, datdocdate";
+    	String SQL =  "SELECT * FROM "+ ARActivityLines + ""
+    			+ " ORDER BY " + sCustomer +", "+ sDocAppliedTo + ", " + sSource + ",  " + datDocDate + "";
     	int iLinesPrinted = 1;
     	out.println(SMUtilities.getMasterStyleSheetLink());
     	out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
@@ -76,13 +93,13 @@ public class ARActivityReport extends java.lang.Object{
 				}*/
 	    		//Print the header for any new customer:
 
-	    		if (rs.getString(ARSQLs.scustomer).compareToIgnoreCase(sCurrentCustomer) != 0){
+	    		if (rs.getString(sCustomer).compareToIgnoreCase(sCurrentCustomer) != 0){
 	    			//Print the footer, if the record is for a new customer:
 		    		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
 		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
 		    			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
-		    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
-			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+		    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
+			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
 		    			out.println("</TR>");
 		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
 		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
@@ -96,7 +113,7 @@ public class ARActivityReport extends java.lang.Object{
 		    		}
 
 	    			//Print the customer header:
-		    		String sCustomerNumber = rs.getString(ARSQLs.scustomer);
+		    		String sCustomerNumber = rs.getString(sCustomer);
 		    		ARCustomer cust = new ARCustomer(sCustomerNumber);
 		    		String sTerms = "N/A";
 		    		if (cust.load(conn)){
@@ -107,7 +124,7 @@ public class ARActivityReport extends java.lang.Object{
 	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"><B>" + sCustomerNumber + "</B></TD>");
 	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Current Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCurrentStoredBalance(conn)) + "</B></TD>"
 	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Retainage Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(conn)) + "</B></TD>"
-	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.dcreditlimit)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCreditLimit)) + "</B></TD>"
 	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Terms: <B>" + sTerms + "</B></TD>"
 	    					+ "</TR>");
 		    		printTableHeader(out);
@@ -117,35 +134,35 @@ public class ARActivityReport extends java.lang.Object{
 	    		}else {
 		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 	    		}
-				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(ARSQLs.sdocappliedto) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(ARSQLs.idoctype)) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(ARSQLs.sdocnumber) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(ARSQLs.ldocid)) + "</TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datdocdate),"MM/dd/yyy") + "</TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(ARSQLs.datduedate),"MM/dd/yyy") + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(sDocAppliedTo) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(iDocType)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(sDocNumber) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(lDocId)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDocDate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDueDate),"MM/dd/yyy") + "</TD>");
 	    		
-	    		String sOrderNumber = rs.getString(ARSQLs.sordernumber).trim();
+	    		String sOrderNumber = rs.getString(sOrderNum).trim();
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\"><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 	    		+ sOrderNumber 
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-	    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></FONT></TD>");
+	    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></TD>");
 	    		
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong(ARSQLs.loriginalbatchnumber)) 
-	    				+ "-" + Long.toString(rs.getLong(ARSQLs.loriginalentrynumber)) + "</FONT></TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(ARSQLs.ldaysover)) + "</FONT></TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.doriginalamt)) + "</FONT></TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(ARSQLs.dcurrentamt)) + "</FONT></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong(lOriginalBatchNumber)) 
+	    				+ "-" + Long.toString(rs.getLong(lOriginalEntryNumber)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(lDaysOver)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dOriginalAmmount)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCurrentAmmount)) + "</TD>");
     			out.println("</TR>");
     			
     			//Set the totals:
-    			dCustomerTransactionTotal = dCustomerTransactionTotal.add(rs.getBigDecimal(ARSQLs.doriginalamt));
-    			dCustomerBalanceTotal = dCustomerBalanceTotal.add(rs.getBigDecimal(ARSQLs.dcurrentamt));
+    			dCustomerTransactionTotal = dCustomerTransactionTotal.add(rs.getBigDecimal(dOriginalAmmount));
+    			dCustomerBalanceTotal = dCustomerBalanceTotal.add(rs.getBigDecimal(dCurrentAmmount));
     	    	
     	    	//Accumulate the grand totals:
-    	    	dGrandTotalTransactionAmount = dGrandTotalTransactionAmount.add(rs.getBigDecimal(ARSQLs.doriginalamt));
-    	    	dGrandTotalBalance = dGrandTotalBalance.add(rs.getBigDecimal(ARSQLs.dcurrentamt));
+    	    	dGrandTotalTransactionAmount = dGrandTotalTransactionAmount.add(rs.getBigDecimal(dOriginalAmmount));
+    	    	dGrandTotalBalance = dGrandTotalBalance.add(rs.getBigDecimal(dCurrentAmmount));
     			//Reset:
-    			sCurrentCustomer = rs.getString(ARSQLs.scustomer);
+    			sCurrentCustomer = rs.getString(sCustomer);
     			iLinesPrinted++;
 			}
 			rs.close();
@@ -154,8 +171,8 @@ public class ARActivityReport extends java.lang.Object{
     		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
     			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
     			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
-    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></FONT></TD>");
-	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></FONT></TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
     			out.println("</TR>");
     			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
     			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp</TD>");
@@ -169,8 +186,8 @@ public class ARActivityReport extends java.lang.Object{
 		    out.println("</TR>"); 
 			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
 			out.println("<TD COLSPAN=\"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Report totals:</B></TD>");
-			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTransactionAmount) + "</B></FONT></TD>");
-			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalBalance) + "</B></FONT></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTransactionAmount) + "</B></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalBalance) + "</B></TD>");
 			out.println("</TR>");
 		    out.println("</TABLE>");
 		    

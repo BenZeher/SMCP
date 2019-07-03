@@ -47,8 +47,8 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
-import smar.ARSQLs;
 import smar.ARUtilities;
+import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMUtilities;
 import smic.ICEntryBatch;
 
@@ -137,7 +137,7 @@ public class GLAccount extends java.lang.Object{
     	Connection conn
     	){
     
-	    String SQL = ARSQLs.Get_GL_Account_SQL(sAccountID);
+	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
 			rs.next();
@@ -175,7 +175,7 @@ public class GLAccount extends java.lang.Object{
         	String sDBIB
         	){
         
-    	    String SQL = ARSQLs.Get_GL_Account_SQL(sAccountID);
+    	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     					SQL, 
@@ -206,7 +206,7 @@ public class GLAccount extends java.lang.Object{
         	return true;
         }
     public boolean save(ServletContext context, String sDBIB, String sUserFullName){
-    	String SQL = ARSQLs.Get_GL_Account_SQL(m_sacctid);
+    	String SQL = SMMySQLs.Get_GL_Account_SQL(m_sacctid);
     	
 		m_sErrorMessageArray.clear();
 		if(!validateEntries(sDBIB, context, sUserFullName)){
@@ -230,7 +230,7 @@ public class GLAccount extends java.lang.Object{
 				rs.close();
 				
 				//Update the record:
-				SQL = ARSQLs.Update_GL_Account_SQL(
+				SQL = SMMySQLs.Update_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -260,7 +260,7 @@ public class GLAccount extends java.lang.Object{
 				}
 				rs.close();
 				//Insert the record:
-				SQL = ARSQLs.Insert_GL_Account_SQL(
+				SQL = SMMySQLs.Insert_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -640,7 +640,7 @@ public class GLAccount extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the acct exists:
-		String SQL = ARSQLs.Get_GL_Account_SQL(sGLAcct);
+		String SQL = SMMySQLs.Get_GL_Account_SQL(sGLAcct);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(

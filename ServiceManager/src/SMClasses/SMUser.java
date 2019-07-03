@@ -103,6 +103,7 @@ public class SMUser extends clsMasterEntry{
 		if( (req.getParameter(SMEditUsersSelection.ADD_NEW_USER_BUTTON_NAME) != null || m_lid.compareToIgnoreCase("-1") == 0)
 				&& req.getParameter(SMEditUsersSelection.DELETE_USER_BUTTON_NAME) == null){
 			m_sNewRecord = SMUser.ParamNewRecordValue;
+			m_lid = "-1";
 		}
     }
     
@@ -246,8 +247,6 @@ public class SMUser extends clsMasterEntry{
 		}
     	//Check if this username is already in use.
     	String SQL = ""; 	
-		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
-			
 			String sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
 			try{
 				//System.out.println(sSQL);
@@ -261,7 +260,7 @@ public class SMUser extends clsMasterEntry{
 			}catch(SQLException ex){
 				throw new Exception ("[1421996275]" + ex.getMessage());
 				}
-			}
+
 
 		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){			
 			 SQL = "INSERT INTO " + SMTableusers.TableName + " ("
@@ -307,6 +306,7 @@ public class SMUser extends clsMasterEntry{
 		;
 
 		}
+		System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		}
@@ -317,7 +317,7 @@ public class SMUser extends clsMasterEntry{
 			throw new Exception ("Error [142199627] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		//Update the ID if it's an insert:
-		if (getsNewRecord().compareToIgnoreCase(ParamNewRecordValue) == 0){
+		if (getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
 			SQL = "SELECT last_insert_id()";
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

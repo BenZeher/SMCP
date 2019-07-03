@@ -306,7 +306,6 @@ public class SMUser extends clsMasterEntry{
 		;
 
 		}
-		System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		}

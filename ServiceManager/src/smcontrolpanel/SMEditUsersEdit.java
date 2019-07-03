@@ -77,7 +77,6 @@ public class SMEditUsersEdit extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	     
 	    //Get the user ID passed in and see if this is a new record
-	    String sEditUserID = (String) clsStringFunctions.filter(request.getParameter(SMUser.Paramlid));
 	    SMUser userentry = new SMUser(request, getServletContext(), sDBID);
 	    //Load from the object if it exists
 	    if (CurrentSession.getAttribute(SMUser.ParamObjectName) != null){
@@ -86,7 +85,6 @@ public class SMEditUsersEdit extends HttpServlet {
 		}else{
 			if(!userentry.bIsNewRecord()){
 				try {
-					System.out.println("Im here with user ID : " + userentry.getlid());
 					userentry.load(getServletContext(), sDBID, sCurrentUser, sUserID, sUserFullName);
 				} catch (Exception e1) {
 		    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"

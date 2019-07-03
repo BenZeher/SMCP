@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
@@ -807,7 +808,7 @@ public class AREditCustomersEdit extends HttpServlet {
         
         //Create a list for the default sales group salesperson:
         //Salesperson
-        sSQL = ARSQLs.Get_Salesperson_List_SQL();
+        sSQL = SMMySQLs.Get_Salesperson_List_SQL();
         try {
 			ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
 				sSQL, 

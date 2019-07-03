@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARSQLs;
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
@@ -71,7 +71,7 @@ public class GLEditAccounts extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_GL_Account_List_SQL(true);
+	        String sSQL = SMMySQLs.Get_GL_Account_List_SQL(true);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		getServletContext(), 

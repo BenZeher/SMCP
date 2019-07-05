@@ -2235,8 +2235,8 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			throw new Exception("Error [1387574921] formatting entrynumber '" + sEntryNumber + "' - " + e.getMessage() 
 				+ " - Could not insert chron log entry for first apply-to armatchingline - ");
 		} catch (Exception e) {
-			throw new Exception("Error [1387574922]  - " + e.getMessage() 
-				+ " - Could not insert chron log entry for first apply-to armatchingline - ");
+			throw new Exception("Error [1387574922]"
+				+ " Could not insert chron log entry for first apply-to armatchingline  - " + e.getMessage() );
 		}
 
 		/*

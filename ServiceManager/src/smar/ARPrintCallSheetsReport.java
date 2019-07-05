@@ -389,7 +389,7 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					}
 
 					//Print the first line heading:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >ID#</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Collector</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Alert from</TD>");
@@ -401,7 +401,7 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("</TR>");
 
 					//Print the first line:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + sIDLink +"</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sCollector) + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsStringFunctions.checkStringForNull( rs.getString(SMTablecallsheets.sAlertInits)) + "</TD>");

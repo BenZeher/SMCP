@@ -497,10 +497,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			String sDocAppliedTo = "";
 			String sCurrentDocAppliedTo = "";
 			int iLinesPrinted = 0;
-			
-			//Set the table style:
-			out.println(setTableStyleString());
-			
+						
 			//Set the special headings to be used on summary view only:
 			String sSummaryCurrentHeading = "";
 			String sSummary1stHeading = "";
@@ -1278,110 +1275,5 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		default: return "IN";
 		}
 	}
-	private static String setTableStyleString(){
-		String s = "";
-		String sBorderSize = "0";
-		String sFontSize = "small";
-		s += "<style type=\"text/css\">\n";
-		
-		//TJR - 5/13/2011 - I left all these comments in to use as samples here or elsewhere:
-		//Set hyperlink style:
-		//s += "a {font-family : Arial; Font-size : 12px; text-decoration : none}\n";
-		
-		//s += "amenu {font-family : Arial; text-decoration : none; font-weight: 900}\n";
-		//s += "amenu:link {color : white}\n";
-		//s += "amenu:visited {color : #99FFFF}\n";
-		//s += "amenu:active {color : #99FFFF}\n";
-		//s += "amenu:hover {color : white}\n";
-		
-		//s += "a {font-family : Arial; text-decoration : none; font-weight: 900}\n";
-		//s += "a:link {color : #99FFFF}\n";
-		//s += "a:visited {color : #99FFFF}\n";
-		//s += "a:active {color : #99FFFF}\n";
-		//s += "a:hover {color : white}\n";
-		
-		//Layout table:
-		s +=
-			"table.main {"
-			+ "border-width: " + sBorderSize + "px; "
-			+ "border-spacing: 2px; "
-			//+ "border-style: outset; "
-			+ "border-style: none; "
-			+ "border-color: white; "
-			+ "border-collapse: separate; "
-			+ "width: 100%; "
-			+ "font-size: " + sFontSize + "; "
-			//+ "font-family : Arial; "
-			+ "color: black; "
-			//+ "background-color: white; "
-			+ "}"
-			+ "\n"
-			;
 
-		//s +=
-		//	"table.main th {"
-		//	+ "border-width: " + sBorderSize + "px; "
-		//	+ "padding: 2px; "
-		//	//+ "border-style: inset; "
-		//	+ "border-style: none; "
-		//	+ "border-color: white; "
-		//	+ "background-color: white; "
-		//	+ "color: black; "
-		//	+ "font-family : Arial; "
-		//	+ "vertical-align: text-middle; "
-		//	//+ "height: 50px; "
-		//	+ "}"
-		//	+ "\n"
-		//	;
-
-		//s +=
-		//	"tr.d0 td {"
-		//	+ "background-color: #FFFFFF; "
-		//	+"}"
-		//	;
-		//s +=
-		//	"tr.d1 td {"
-		//	+ "background-color: #EEEEEE; "
-		//	+ "}"
-		//	+ "\n"
-		//	;
-
-		//This is the def for a left-aligned TD:
-		s +=
-			"td.l {"
-			//+ "border-width: " + sBorderSize + "px; "
-			//+ "padding: 2px; "
-			//+ "border-style: none; "
-			//+ "border-color: white; "
-			//+ "vertical-align: text-middle;"
-			//+ "background-color: black; "
-			+ "text-align: left; "
-			//+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-
-		//This is the default TD def - it is right aligned
-		s +=
-			"td.r {"
-			//+ "border-width: " + sBorderSize + "px; "
-			//+ "padding: 2px; "
-			//+ "border-style: none; "
-			//+ "border-color: white; "
-			//+ "vertical-align: text-middle;"
-			//+ "background-color: black; "
-			+ "text-align: right; "
-			//+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		
-		s += "</style>"
-			+ "\n"
-			;
-
-		return s;
-	}
 }

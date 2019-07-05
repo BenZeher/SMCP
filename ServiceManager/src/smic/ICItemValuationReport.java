@@ -13,6 +13,7 @@ import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccosts;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
@@ -50,7 +51,7 @@ public class ICItemValuationReport extends java.lang.Object{
 		
 		boolean bCostIncluded = false;
 		boolean bQuantitiesIncluded = false;
-	
+		
 		String SQL = "SELECT"
 			+ " " + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sItemNumber
 			+ ", " + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation
@@ -280,7 +281,6 @@ public class ICItemValuationReport extends java.lang.Object{
 					
 					iLineNumberForLocation = 0;
 				}
-				
 				//Print the cost info:
 				if (bShowIndividualBuckets){
 					if (rs.getBigDecimal(SMTableiccosts.TableName + "." + SMTableiccosts.bdQty) != null){
@@ -331,11 +331,13 @@ public class ICItemValuationReport extends java.lang.Object{
 				conn
 				);
 		
+		out.println("<BR>");
+		
 		//Print the SQL statement that created the list:
 		out.println("<TABLE style = \" table-layout:fixed; width:100%; \" >"
-			+ "<TR>"
+			+ "<TR STYLE = \"  background-color: #E1D276;\">"
 			+ "<TD style= \" word-wrap:break-word; \" >"
-			+ "SQL Statement: '<B>" + clsStringFunctions.filter(SQL) + "'</B>"
+			+ "<P STYLE = \"font-family:arial\"> SQL Statement: '<B>" + clsStringFunctions.filter(SQL) + "'</B></P>"
 			+ "</TD>"
 			+ "</TR>"
 			+ "</TABLE>"
@@ -353,16 +355,16 @@ public class ICItemValuationReport extends java.lang.Object{
 		String sUnitOfMeasure,
 		PrintWriter out
 	){
-		
-		out.println("<TABLE BORDER=0>");
+		out.println("<BR>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+		out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
 		out.println(
-			"<TD WIDTH=15%><FONT SIZE=2><B>Location:</B>&nbsp;" + sLocation + "</FONT></TD>"
-			+ "<TD WIDTH=20%><FONT SIZE=2><B>Qty on hand:</B>&nbsp;" 
-				+ clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQtyOH) + "</FONT></TD>"
-			+ "<TD WIDTH=15%><FONT SIZE=2><B>Total cost:&nbsp;</B>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCost) + "</FONT></TD>"
-			+ "<TD WIDTH=15%><FONT SIZE=2><B>Unit of measure:</B>&nbsp;" + sUnitOfMeasure + "</FONT></TD>"
+			"<TD WIDTH=15% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Location:</B>&nbsp;" + sLocation + "</TD>"
+			+"<TD WIDTH=15% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Qty on hand:</B>&nbsp;" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQtyOH) + "</TD>"
+			+"<TD WIDTH=15% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Total cost:&nbsp:</B>&nbsp;" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCost) + "</TD>"
+			+"<TD WIDTH=15% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Unit of measure:</B>&nbsp;" + sUnitOfMeasure + "</TD>"
 		);
+		out.println("</TR>");
 		out.println("</TABLE>");
 		
 	}
@@ -385,8 +387,12 @@ public class ICItemValuationReport extends java.lang.Object{
 		}
 		
 		out.println(
-				"<FONT SIZE=2><B>Item number:</B>&nbsp;" + sItemNumberLink 
-				+ "&nbsp;&nbsp;<B>Description:</B>&nbsp;" + sDesc + "</FONT><BR>"
+				"<TABLE WIDTH = 100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">"
+				+ "<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_HEADING +"\">"
+				+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"
+				+ "<B>Item number:</B>&nbsp;" + sItemNumberLink 
+				+ "&nbsp;&nbsp;<B>Description:</B>&nbsp;" + sDesc
+				+ "</TD></TR></TABLE>"
 				);
 	}
 	private void printCostLine(
@@ -411,39 +417,45 @@ public class ICItemValuationReport extends java.lang.Object{
 		
 		if (iLineNumberForLocation == 0){
 			//Print header:
-			out.println(
-					"<U><FONT SIZE=2>Cost buckets for&nbsp;item&nbsp;<B>" 
-						+ sItemNumber + "</B>, location&nbsp;<B>" 
-						+ sLocation + "</B>:</FONT></U><BR>"
-					+ "<TABLE BORDER=1 WIDTH=100%>"
-					+ "<TR>"
-					+ "<TD><FONT SIZE=2><B>Type</B></FONT></TD>"
-					+ "<TD><FONT SIZE=2><B>Remark</B></FONT></TD>"
-					+ "<TD ALIGN><FONT SIZE=2><B>UOM</B></FONT></TD>"
-					+ "<TD ALIGN><FONT SIZE=2><B>Date</B></FONT></TD>"
-					+ "<TD ALIGN=RIGHT><FONT SIZE=2><B>Qty shipped</B></FONT></TD>"
-					+ "<TD ALIGN=RIGHT><FONT SIZE=2><B>Cost shipped</B></FONT></TD>"
-					+ "<TD ALIGN=RIGHT><FONT SIZE=2><B>Qty left</B></FONT></TD>"
-					+ "<TD ALIGN=RIGHT><FONT SIZE=2><B>Cost left</B></FONT></TD>"
+			out.println("<BR>");
+			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  +" \">");
+			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TD COLSPAN = \"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><U>Cost buckets for&nbsp;item&nbsp<B>" 
+					+ sItemNumber + "</B>, location&nbsp;<B>" 
+					+ sLocation + "</B>:</U></TD>");
+			out.println("</TR>");
+			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Type</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Remark</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>UOM</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Date</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B>Qty shipped</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B>Cost shipped</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B>Qty left</B></TD>"
+					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B>Cost left</B></TD>"
 					+ "</TR>"
 			);
 		}
 		
-		out.println(
-				"<TR>"
-				+ "<TD><FONT SIZE=2>" + SMTableiccosts.getCostSourceLabel(iSource) + "</TD>" 
-				+ "<TD><FONT SIZE=2>" + sRemark + "</FONT></TD>"
-				+ "<TD><FONT SIZE=2>" + sUnitOfMeasure + "</TD>"
-				+ "<TD><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(datCreationDate, "MM/dd/yyyy") + "</FONT><BR>"
-				+ "<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQtyShipped) + "</FONT><BR>"
-				+ "<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostShipped) + "</FONT><BR>"
-				+ "<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQty) + "</FONT><BR>"
-				+ "<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCost) + "</FONT><BR>"
+
+				if(iLineNumberForLocation%2 == 0) {
+					out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}else {
+					out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}
+				out.println(
+				 "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + SMTableiccosts.getCostSourceLabel(iSource) + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + sRemark + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + sUnitOfMeasure + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + clsDateAndTimeConversions.utilDateToString(datCreationDate, "MM/dd/yyyy") + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQtyShipped) + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostShipped) + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdQty) + "</TD>"
+				+  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCost) + "</TD>"
 				+ "</TR>"
 		);
 
 		bCostTableIsOpen = true;
-
 	}
 	private void printReportFooter(
 			long lNumberOfItems,
@@ -454,7 +466,7 @@ public class ICItemValuationReport extends java.lang.Object{
 			Connection conn
 			){
 		out.println("<BR>");
-		out.println("<TABLE BORDER=0 WIDTH = 100%>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			
 		String sLocationDescription = "";
 
@@ -473,22 +485,20 @@ public class ICItemValuationReport extends java.lang.Object{
 			}
 			
 			out.println(
-				"<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2><B>Total cost on hand for location&nbsp;<B>"
-					+ sLocations.get(i) + "</B> - " + sLocationDescription + ":</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-						bdLocationTotals.get(i)) + "</B></FONT></TD>"
+				"<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">"
+				+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Total cost on hand for location&nbsp;<B>"
+					+ sLocations.get(i) + "</B> - " + sLocationDescription + ":</TD>"
+				+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						bdLocationTotals.get(i)) + "</B></TD>"
 				+ "</TR>"		
 			);
 		}
 		
 		out.println(
-				 "<TR><HR></TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2><B>Number Of Items:&nbsp;" 
-					+ Long.toString(lNumberOfItems) + ", Total Cost On Hand:</B></FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalItemsAmount) + "</B></FONT></TD>"
-				+ "</TR>"
+				"<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">"
+						+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Number Of Items:&nbsp" + Long.toString(lNumberOfItems) + ", Total Cost On Hand:</B></TD>"
+						+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalItemsAmount) + "</B></TD>"
+						+ "</TR>"
 		);
 		
 		out.println("</TABLE>");

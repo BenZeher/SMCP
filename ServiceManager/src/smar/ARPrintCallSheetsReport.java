@@ -412,6 +412,9 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("<TD COLSPAN = \"3\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sCallSheetName) + "</TD>");
 					out.println("</TR>");
 
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+					out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\"  >&nbsp;</TD>");
+					out.println("</TR>");
 					
 					//Print the second line:
 					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW + "\" >");

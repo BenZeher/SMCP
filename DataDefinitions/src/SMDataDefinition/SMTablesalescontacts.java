@@ -22,7 +22,7 @@ public class SMTablesalescontacts {
 		KEY `customer_key` (`scustomernumber`)
 		) ENGINE=InnoDB 
 	 */
-	
+	public static String OBJECT_NAME = "SalesContact";
 	public static String TableName = "salescontacts";
 	
 	//Field names:

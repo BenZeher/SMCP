@@ -222,8 +222,8 @@ public class SMSalesContactEdit extends HttpServlet {
 		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD>"); 
 	    			while (rsSalesperson.next()){
 		    			out.print(rsSalesperson.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName) + ", " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName));
+							      rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
+							      rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName));
 	    			}
 	    			rsSalesperson.close();
 	    			out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedSalesperson\" VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\">");

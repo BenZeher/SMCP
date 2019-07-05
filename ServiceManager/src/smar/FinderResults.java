@@ -294,6 +294,16 @@ public class FinderResults extends HttpServlet {
 			);
 			bUsedSpecialSQL = true;
 		}
+		
+		if (sObjectName.equalsIgnoreCase(SMTablesalescontacts.OBJECT_NAME)){
+			sSQL = buildSalesContactWithSalesPersonSQLStatement(
+					sResultListFields,
+					sSearchType,
+					sSearchField,
+					sSearchText
+			);
+			bUsedSpecialSQL = true;
+		}
 
 		if (sObjectName.equalsIgnoreCase(SMTableaptransactions.OBJECT_NAME)){
 			sSQL = buildAPTransactionsSQLStatement(
@@ -498,6 +508,55 @@ public class FinderResults extends HttpServlet {
 		return sSQL;
 	}
 
+	private String buildSalesContactWithSalesPersonSQLStatement(
+			ArrayList<String> sResultListFields, 
+			String sSearchType,
+			String sSearchField, 
+			String sSearchText
+			) {
+		String sSQL = "";
+		
+		//Construct the SQL statement to be used for the search:
+		sSQL = " SELECT ";
+		//We assume there is always at least one field:
+		sSQL += sResultListFields.get(0);
+		for (int i = 1; i < sResultListFields.size(); i++){
+			if (sResultListFields.get(i).compareToIgnoreCase(SMTablesalescontacts.binactive) == 0){
+				sSQL += ", " 
+					+ " IF (" + SMTablesalescontacts.binactive + " = 0, 'Yes', 'No')"
+					+ " AS " + SMTablesalescontacts.binactive;
+				continue;
+			}
+			//If there are no special fields in the result fields, then just add the field:
+			sSQL += ", " + sResultListFields.get(i);
+		}
+		
+		sSQL += " FROM " + SMTablesalescontacts.TableName 
+				+ " LEFT JOIN " + SMTablesalesperson.TableName 
+				+ " ON " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode
+				+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode;
+
+		sSQL += " WHERE (";
+
+		if (sSearchType.compareToIgnoreCase("Beginning with") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Containing") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'%" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Exactly matching") == 0){
+			sSQL += "(" + sSearchField + " = " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "')";
+		}
+		sSQL += ")";
+		
+		sSQL += " ORDER BY " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id;
+		return sSQL;
+	}
+
+	
 	private String buildAPTransactionsSQLStatement(
 			ArrayList<String> sResultListFields,
 			String sSearchType,
@@ -1579,10 +1638,7 @@ public class FinderResults extends HttpServlet {
 		if (sObject.equalsIgnoreCase("Asset")){
 			sTable = SMTablefamaster.TableName;
 		}
-		
-		if (sObject.equalsIgnoreCase("SalesContact")){
-			sTable = SMTablesalescontacts.TableName;
-		}
+	
 		if (sObject.equalsIgnoreCase(SMMaterialReturn.ParamObjectName)){
 			sTable = SMTablematerialreturns.TableName;
 		}

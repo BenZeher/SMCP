@@ -1,3 +1,5 @@
+@media all{
+
 /* row background color WHITE */
 tr.evennumberedtablerow:{
   background-color: #FFFFFF !important;
@@ -367,4 +369,5 @@ td.centerjustifiedheading {
 td.blackspace {
  font-family : Arial;
  font-size: 50%;
+}
 }

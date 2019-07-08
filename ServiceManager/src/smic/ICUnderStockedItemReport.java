@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableicpoheaders;
@@ -262,15 +263,13 @@ public class ICUnderStockedItemReport extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			lEndingTime = System.currentTimeMillis();
 			boolean bFlipper = false;
-			String sBackgroundColor = "";
 			while(rs.next()){
 				if (!bFlipper){
-					sBackgroundColor = "\"#DCDCDC\"";
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 				}else{
-					sBackgroundColor = "\"#FFFFFF\"";
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
 				}
 				//Print the line:
-				out.println("<TR bgcolor =" + sBackgroundColor + ">");
 				
 				//Item number
 				String sItemNumber = rs.getString("ITEMLOCQUERY" + "." + SMTableicitemlocations.sItemNumber);
@@ -283,55 +282,55 @@ public class ICUnderStockedItemReport extends java.lang.Object{
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
-				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sItemNumberLink + "</TD>");
 				
 				//Location:
-				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ rs.getString("ITEMLOCQUERY" + "." + SMTableicitemlocations.sLocation) +
-						"</FONT></TD>");
+						"</TD>");
 				
 				//Description:
-				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ rs.getString(
 								SMTableicitems.TableName + "." + SMTableicitems.sItemDescription) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Qty On-Hand
-				out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 								"###,###,##0.0000", rs.getBigDecimal(
 								"ITEMLOCQUERY" + "." + SMTableicitemlocations.sQtyOnHand)) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Min Qty On-Hand
-				out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 								"###,###,##0.0000", rs.getBigDecimal(
 								"ITEMLOCQUERY" + "." + SMTableicitemlocations.sMinQtyOnHand)) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Qty unreceived
-				out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 								"###,###,##0.0000", rs.getBigDecimal("POLINEQTYPENDING")) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				//Qty Received, not yet post
-				out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 								"###,###,##0.0000", rs.getBigDecimal("QTYRECNPOST")) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Qty on sales order
-				out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 								"###,###,##0.0000", rs.getBigDecimal("SOLINEQTYPENDING")) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//UOM
-				out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >&nbsp;" 
 						+ rs.getString(
 								SMTableicitems.TableName + "." + SMTableicitems.sCostUnitOfMeasure) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				out.println("</TR>");
 				
@@ -352,17 +351,17 @@ public class ICUnderStockedItemReport extends java.lang.Object{
 	
 	private void printRowHeader(PrintWriter out){
 		
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TD ALIGN=LEFT><B><FONT SIZE=3>Item&nbsp;#</FONT></B></TD>");
-		out.println("<TD ALIGN=LEFT><B><FONT SIZE=3>Location</FONT></B></TD>");
-		out.println("<TD ALIGN=LEFT><B><FONT SIZE=3>Description</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=3>Qty&nbsp;On-Hand</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=3>Min&nbsp;Qty&nbsp;On-Hand</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=3>Qty&nbsp;On&nbsp;PO</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=3>Qty&nbsp;Received&nbsp;<BR>Not&nbsp;Posted</FONT></B></TD>");  
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=3>Qty&nbsp;On<BR>Sales&nbsp;Order</FONT></B></TD>");
-		out.println("<TD ALIGN=LEFT><B><FONT SIZE=3>UOM</FONT></B></TD>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Loc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Description</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty. On-Hand</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >MIN Qty. On-Hand</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty. On PO</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty. Received Not Posted</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty. On Sales Order</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >UOM</TD>");
 		out.println("</TR>");
 		
 		/*

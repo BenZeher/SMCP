@@ -472,9 +472,17 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, rs.getBigDecimal(SMTablearcustomerstatistics.sCurrentBalance)) + "</TD>");
 					out.println("</TR>");
 					
-					
 					//Print the notes:
 					if (bPrintWithNotes){
+						
+						if(iCount%2 ==0) {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+						}else {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+						}
+						out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED +"\"  >&nbsp;</TD>");
+						out.println("</TR>");
+						
 						if(iCount%2 ==0) {
 							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 						}else {

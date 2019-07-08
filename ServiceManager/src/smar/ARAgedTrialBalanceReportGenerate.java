@@ -31,6 +31,24 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	private static final SimpleDateFormat USDateformatter = new SimpleDateFormat("MM-dd-yyyy hh:mm:ss a EEE");
+	private static final String sCustomer = "scustomer";
+	private static final String lDocId = "ldocid";
+	private static final String iDocType = "idoctype";
+	private static final String sDocNumber = "sdocnumber";
+	private static final String datDocDate = "datdocdate";
+	private static final String datDueDate = "datduedate";
+	private static final String datApplyToDate = "datapplytodate";
+	private static final String dOriginalAmt = "doriginalamt";
+	private static final String dCurrentAmt = "dcurrentamt";
+	private static final String sOrderNumber = "sordernumber";
+	private static final String sSource = "sSource";
+    private static final String lAppliedTo = "lappliedto";
+    private static final String sDocAppliedTo = "sdocappliedto";
+    private static final String dApplyToDocCurrentamt = "dapplytodoccurrentamt";
+    private static final String lParentTransactionId = "lparenttransactionid";
+    private static final String sCustomerName = "scustomername";
+    private static final String dCreditLimit = "dcreditlimit";
+	
 	private boolean bDebugMode = false;
 	private long lStartingTime = 0;
 	private long lTestTime = 0;
@@ -855,23 +873,23 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		//TODO
 		
 		SQL = "INSERT INTO " + sTempTableName + " ("
-			+ "scustomer,"
-			+ " ldocid,"
-			+ " idoctype,"
-			+ " sdocnumber,"
-			+ " datdocdate,"
-			+ " datduedate,"
-			+ " datapplytodate,"
-			+ " doriginalamt,"
-			+ " dcurrentamt,"
-			+ " sordernumber,"
-			+ " ssource,"
-			+ " lappliedto,"
-			+ " sdocappliedto,"
-			+ " dapplytodoccurrentamt,"
-			+ " lparenttransactionid,"
-			+ " scustomername,"
-			+ " dcreditlimit"
+			+ sCustomer +","
+			+ lDocId +" ,"
+			+ iDocType + " ,"
+			+ sDocNumber + " ,"
+			+ datDocDate + " ,"
+			+ datDueDate + " ,"
+			+ datApplyToDate + " ,"
+			+ dOriginalAmt + " ,"
+			+ dCurrentAmt + " ,"
+			+ sOrderNumber + " ,"
+			+ sSource + " ,"
+			+ lAppliedTo + " ,"
+			+ sDocAppliedTo + " ,"
+			+ dApplyToDocCurrentamt + " ,"
+			+ lParentTransactionId + " ,"
+			+ sCustomerName + " ,"
+			+ dCreditLimit + " "
 			+ ") SELECT"
 			+ " " + SMTableartransactions.spayeepayor
 			+ ", " + SMTableartransactions.lid
@@ -969,22 +987,22 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		*/
 		
 		SQL = "INSERT INTO " + sTempTableName + " ("
-			+ "scustomer"
-			+ ", ldocid"
-			+ ", sdocnumber"
-			+ ", datdocdate"
-			+ ", datduedate"
-			+ ", datapplytodate"
-			+ ", doriginalamt"
-			+ ", dcurrentamt"
-			+ ", sordernumber"
-			+ ", ssource"
-			+ ", lappliedto"
-			+ ", sdocappliedto"
-			+ ", dapplytodoccurrentamt"
-			+ ", lparenttransactionid"
-			+ ", scustomername"
-			+ ", dcreditlimit"
+				+ sCustomer +","
+				+ lDocId +" ,"
+				+ sDocNumber + " ,"
+				+ datDocDate + " ,"
+				+ datDueDate + " ,"
+				+ datApplyToDate + " ,"
+				+ dOriginalAmt + " ,"
+				+ dCurrentAmt + " ,"
+				+ sOrderNumber + " ,"
+				+ sSource + " ,"
+				+ lAppliedTo + " ,"
+				+ sDocAppliedTo + " ,"
+				+ dApplyToDocCurrentamt + " ,"
+				+ lParentTransactionId + " ,"
+				+ sCustomerName + " ,"
+				+ dCreditLimit + " "
 
 			+ ") SELECT"
 			+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
@@ -1097,12 +1115,12 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		//}
 		//Insert_Parent_Document_Type_Into_Aging_Table
 		SQL = "UPDATE " + sTempTableName + ", " + SMTableartransactions.TableName
-				+ " SET " + sTempTableName + ".idoctype = " 
+				+ " SET " + sTempTableName + "." + iDocType + " = " 
 				+ SMTableartransactions.TableName + "." + SMTableartransactions.idoctype
 				+ " WHERE ("
-					+ "(" + sTempTableName + ".ssource = 'DIST')"
+					+ "(" + sTempTableName + "." + sSource +" = 'DIST')"
 					//Link the tables:
-					+ " AND (" + sTempTableName + ".lparenttransactionid = "
+					+ " AND (" + sTempTableName + "." + lParentTransactionId + " = "
 						+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
 				+ ")";
 		//System.out.println("[1500489201] SQL 4 = " + SQL);
@@ -1134,11 +1152,11 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		//Update the aging columns on all lines, based on their 'due' dates: 
 		//applied-to documents:
 		SQL = "UPDATE " + sTempTableName + " SET" 
-				+ " dagingcolumncurrent = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sCurrentAgingColumn + ", doriginalamt, 0.00)"
-				+ ", dagingcolumnfirst = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sCurrentAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sFirstAgingColumn + "), doriginalamt, 0.00)"
-				+ ", dagingcolumnsecond = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sFirstAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sSecondAgingColumn + "), doriginalamt, 0.00)"
-				+ ", dagingcolumnthird = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sSecondAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sThirdAgingColumn + "), doriginalamt, 0.00)"
-				+ ", dagingcolumnover = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sThirdAgingColumn + ", doriginalamt, 0.00)"
+				+ " dagingcolumncurrent = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) <= " + sCurrentAgingColumn + ", doriginalamt, 0.00)"
+				+ ", dagingcolumnfirst = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) > " + sCurrentAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) <= " + sFirstAgingColumn + "), doriginalamt, 0.00)"
+				+ ", dagingcolumnsecond = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) > " + sFirstAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) <= " + sSecondAgingColumn + "), doriginalamt, 0.00)"
+				+ ", dagingcolumnthird = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) > " + sSecondAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) <= " + sThirdAgingColumn + "), doriginalamt, 0.00)"
+				+ ", dagingcolumnover = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS("+ datApplyToDate +")) > " + sThirdAgingColumn + ", doriginalamt, 0.00)"
 				;
 		//System.out.println("[1500489202] SQL 5 = " + SQL);
 		lTestTime = System.currentTimeMillis();
@@ -1212,12 +1230,12 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			*/
 				
 			"UPDATE " + sTempTableName + " INNER JOIN" 
-			+ " (SELECT SUM(dcurrentamt) AS retainagebalance"
-			+ ", artransactions.spayeepayor"
+			+ " (SELECT SUM(" + dCurrentAmt + ") AS retainagebalance"
+			+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor
 			+ " FROM " + SMTableartransactions.TableName
 			+ " WHERE iretainage = 1"
 			+ " GROUP BY " + SMTableartransactions.spayeepayor + ") as retainagequery" 
-			+ " ON " + sTempTableName + ".scustomer = retainagequery." + SMTableartransactions.spayeepayor
+			+ " ON " + sTempTableName + "." + sCustomer + " = retainagequery." + SMTableartransactions.spayeepayor
 			+ " SET " + sTempTableName + ".dretainagebalance = retainagequery.retainagebalance"
 			;
 		//System.out.println("In " + this.toString() + ".createTemporaryTables, retainage SQL = " + SQL);

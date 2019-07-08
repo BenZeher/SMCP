@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsServletUtilities;
@@ -160,9 +161,14 @@ public class ICQuantitiesOnHandReport extends java.lang.Object{
 					System.out.println("In " + this.toString() + " SQL: " + SQL);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+				int iCount = 0;
 				while(rs.next()){
 					//Print the line:
-					out.println("<TR>");
+					if(iCount%2 == 0) {
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 
 					//Item
 					String sItemNumber = rs.getString(SMTableicitemlocations.TableName + "." 
@@ -176,48 +182,49 @@ public class ICQuantitiesOnHandReport extends java.lang.Object{
 					}else{
 						sItemNumberLink = sItemNumber;
 					}
-					out.println("<TD><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" + sItemNumberLink + "</TD>");
 					
 					//Location:
-					out.println("<TD><FONT SIZE=2>" 
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" 
 							+ rs.getString(SMTableicitemlocations.TableName + "." 
-							+ SMTableicitemlocations.sLocation) + "</FONT></TD>");
+							+ SMTableicitemlocations.sLocation) + "</TD>");
 					
 					//Qty
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.0000", rs.getBigDecimal(
 							SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand)) 
-							+ "</FONT></TD>");
+							+ "&nbsp;</TD>");
 					
 					//Description:
-					out.println("<TD><FONT SIZE=2>" 
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" 
 						+ rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemDescription) 
-						+ "</FONT></TD>");
+						+ "</TD>");
 					
 					//Most recent cost
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.0000", rs.getBigDecimal(
 							SMTableicitems.TableName + "." + SMTableicitems.bdmostrecentcost)) 
-							+ "</FONT></TD>");
+							+ "&nbsp;</TD>");
 					
 					String sComment1 = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sComment1);
 					if (sComment1 == null){
 						sComment1 = "";
 					}
-					sComment1 = sComment1.trim().replace("\"", "\"\"");
+					sComment1 = sComment1.trim().replace("\"", "\"\"").replace("/", " ");
 					
-					out.println("<TD><FONT SIZE=2>" + sComment1 + "</FONT></TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" + sComment1 + "</TD>");
 					
 					String sComment2 = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sComment2);
 					if (sComment2 == null){
 						sComment2 = "";
 					}
-					sComment2 = sComment2.trim().replace("\"", "\"\"");
-					out.println("<TD><FONT SIZE=2>" + sComment2 + "</FONT></TD>");
+					sComment2 = sComment2.trim().replace("\"", "\"\"").replace("/", " ");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"  + sComment2 + "</TD>");
 					
 					out.println("</TR>");
+					iCount++;
 				}
 				rs.close();
 	    	}catch (SQLException e){
@@ -233,15 +240,15 @@ public class ICQuantitiesOnHandReport extends java.lang.Object{
 	private void printRowHeader(
 		PrintWriter out
 	){
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Item</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Loc</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Qty</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Description</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Recent cost</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Comment 1</FONT></B></TD>");
-		out.println("<TD VALIGN=BOTTOM><B><FONT SIZE=2>Comment 2</FONT></B></TD>");
+		out.println("<TABLE CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Loc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Description</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Recent Cost </TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Comment 1</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Comment 2</TD>");
 		out.println("</TR>");
 	}
 	public String getErrorMessage (){

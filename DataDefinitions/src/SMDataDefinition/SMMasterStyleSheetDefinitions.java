@@ -67,5 +67,6 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_TOTAL = TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREEN;
 	public static final String TABLE_ROW_HIGHLIGHT = TABLE_ROW_BACKGROUNDCOLOR_YELLOW;
 	public static final String TABLE_NOTES = TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK;
+	public static final String TABLE_SUB_BREAK = TABLE_ROW_BACKGROUNDCOLOR_GREY;
 	
 }

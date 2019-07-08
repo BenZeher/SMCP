@@ -292,6 +292,7 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 				if (bDebugMode){
 					System.out.println("In " + this.toString() + " SQL: " + SQL);
 				}
+				int iCount = 0;
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				out.println("<TABLE WIDTH= 100%  class=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\" >");
 				while(rs.next()){
@@ -387,9 +388,21 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sOrderNumber + "</A>"
 							;
 					}
+					
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
+					out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED +"\"  >&nbsp;</TD>");
+					out.println("</TR>");
 
 					//Print the first line heading:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >ID#</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Collector</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Alert from</TD>");
@@ -401,7 +414,11 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("</TR>");
 
 					//Print the first line:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + sIDLink +"</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sCollector) + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsStringFunctions.checkStringForNull( rs.getString(SMTablecallsheets.sAlertInits)) + "</TD>");
@@ -412,12 +429,20 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("<TD COLSPAN = \"3\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sCallSheetName) + "</TD>");
 					out.println("</TR>");
 
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 					out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\"  >&nbsp;</TD>");
 					out.println("</TR>");
 					
 					//Print the second line:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW + "\" >");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >View Activity:</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >View Activity:</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Order</TD>");
@@ -430,7 +455,11 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +"\"  >Balance due</TD>");
 					out.println("</TR>");
 
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW + "\" >");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
 					out.println("<TD NOWRAP CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + sActivityLink +"</TD>");
 					out.println("<TD NOWRAP CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + sActivityLinkAll +"</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + sOrderNumberLink +"</TD>");
@@ -446,16 +475,24 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					
 					//Print the notes:
 					if (bPrintWithNotes){
-						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_NOTES + "\" >");
+						if(iCount%2 ==0) {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+						}else {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+						}
 						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP +"\"  ><B>Notes:</B></TD>");
 						out.println("<TD COLSPAN = \"9\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" 	+ rs.getString(SMTablecallsheets.mNotes).replace("\n", "<BR>") + "</TD>");
 						out.println("</TR>");
 					}
 					//Finish out call sheet:
-					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >");
-					out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\"  >&nbsp;</TD>");
+					if(iCount%2 ==0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
+					out.println("<TD COLSPAN = \"10\"  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED +"\"  >&nbsp;</TD>");
 					out.println("</TR>");
-					
+					iCount++;
 				}
 				rs.close();
 			}catch (SQLException e){

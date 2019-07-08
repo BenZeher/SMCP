@@ -366,6 +366,42 @@ td.centerjustifiedheading {
   vertical-align:bottom; 
 }
 
+/* tabel cell left justified, border, small, Arial font*/
+td.leftjustifiedcellborderaligntop {
+  border: 1px solid !important;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: left; 
+  vertical-align:top;
+}
+
+/* tabel cell right justified, border, small, Arial font*/
+td.rightjustifiedcellborderaligntop {
+  border: 1px solid !important;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: right; 
+  vertical-align:top;
+}
+
+/* tabel cell center justified, border, small, Arial font*/
+td.centerjustifiedcellborderaligntop {
+  border: 1px solid !important;
+  bordercolor: 000;
+  padding: 2px;
+  font-family : Arial;
+  font-size: small;
+  font-weight: normal;
+  text-align: center; 
+  vertical-align:top;
+}
+
 td.blackspace {
  font-family : Arial;
  font-size: 50%;

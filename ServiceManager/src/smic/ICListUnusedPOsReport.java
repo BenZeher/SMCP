@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import ServletUtilities.clsServletUtilities;
@@ -74,10 +75,15 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + " SQL: " + SQL);
 			}
+			int iCount = 0;
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
 				//Print the line:
-				out.println("<TR>");
+				if(iCount%2 ==0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}
 				
 				//PO:
 				String sPONumber = Long.toString(rs.getLong(SMTableicpoheaders.TableName + "." 
@@ -92,7 +98,7 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 				}else{
 					sPONumberLink = sPONumber;
 				}
-				out.println("<TD><FONT SIZE=2>" + sPONumberLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sPONumberLink + "</TD>");
 				
 				//View
 				String sPOViewLink = "N/A";
@@ -103,37 +109,37 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 						+ "&" + "EndingPOID" + "="
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID+ "=" + sDBID + "\">" + "View" + "</A>";
 				}
-				out.println("<TD><FONT SIZE=2>" + sPOViewLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"  + sPOViewLink + "</TD>");
 				
 				//Status:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ SMTableicpoheaders.getStatusDescription(rs.getInt(
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus)) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Assigned date:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(
 							rs.getString(SMTableicpoheaders.TableName + "." 
-							+ SMTableicpoheaders.datassigned)) + "</FONT></TD>");
+							+ SMTableicpoheaders.datassigned)) + "</TD>");
 				
 				//Assigned to:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ rs.getString(
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sassignedtofullname) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 
 				//Reference:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ rs.getString(
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference).trim() 
-								+ "</FONT></TD>");
+								+ "</TD>");
 
 				//Comment:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
 						+ rs.getString(
 								SMTableicpoheaders.TableName + "." + SMTableicpoheaders.scomment).trim() 
-								+ "</FONT></TD>");
+								+ "</TD>");
 
 				/*
 				String sDeletedBy = "N/A";
@@ -151,6 +157,7 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 				out.println("<TD><FONT SIZE=2>" + sDeletedDate + "</FONT></TD>");
 				*/
 				out.println("</TR>");
+				iCount++;
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -165,28 +172,15 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 	private void printRowHeader(
 		PrintWriter out
 	){
-		out.println("<TABLE style=\" border-style:none; padding:1px 4px 1px 4px;\">");
-		out.println("<TR>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>PO&nbsp;#</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>View&nbsp;?</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Status</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Date&nbsp;assigned</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Assigned&nbsp;to</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Reference</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Comment</FONT></B></TD>");
-		/*
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Deleted by</FONT></B></TD>");
-		out.println("<TD style=\" padding-left:10px; padding-right:10px; \">"
-				+ "<B><FONT SIZE=2>Deleted on</FONT></B></TD>");
-		*/
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >PO #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >View ?</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Status</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Date Assigned</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Assigned to</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Reference</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Comment</TD>");
 		out.println("</TR>");
 	}
 	public String getErrorMessage (){

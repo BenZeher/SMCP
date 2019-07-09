@@ -105,6 +105,7 @@ public class SMUser extends clsMasterEntry{
 			m_sNewRecord = SMUser.ParamNewRecordValue;
 			m_lid = "-1";
 		}
+
     }
     
     public void load (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
@@ -246,7 +247,9 @@ public class SMUser extends clsMasterEntry{
 			throw new Exception (e1.getMessage());
 		}
     	//Check if this username is already in use.
-    	String SQL = ""; 	
+    	String SQL = ""; 
+    	//TODO validate if the user has been edited. 
+    	if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
 			String sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
 			try{
 				//System.out.println(sSQL);
@@ -260,9 +263,13 @@ public class SMUser extends clsMasterEntry{
 			}catch(SQLException ex){
 				throw new Exception ("[1421996275]" + ex.getMessage());
 				}
+    	}
+	
 
 
-		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){			
+
+		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){	
+
 			 SQL = "INSERT INTO " + SMTableusers.TableName + " ("
 				+ SMTableusers.sDefaultSalespersonCode
 				+ ", " + SMTableusers.sIdentifierInitials

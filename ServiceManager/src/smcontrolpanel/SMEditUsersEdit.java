@@ -204,7 +204,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "<TD ALIGN=LEFT>This is a generated unique ID for this user. </TD>";
 		sOutPut += "</TR>";	
 
-		//First name:
+		//Username:
 		sOutPut += "<TR>";
 		sOutPut += "<TD ALIGN=RIGHT><B>Username<FONT COLOR=\"RED\">*</FONT>: </B></TD>";
 		
@@ -215,7 +215,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "SIZE=28";
 		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserUserNameLength);
 		sOutPut += " STYLE=\"width: 1.2in; height: 0.25in\"";
-		sOutPut += "></TD>";
+		sOutPut += " readonly></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>Enter a <i>unique</i> username that will be used to log into SMCP.</TD>";
 		sOutPut += "</TR>";

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMTablecustomercalllog;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -141,14 +142,24 @@ public class CustomerCallLogSave extends HttpServlet {
 			return "<FONT COLOR=RED SIZE=4><B>You have to enter a customer phone number before saving the log.</B></FONT><BR><BR>" + 
 		       	   "Use the \"<B>BACK</B>\" button of your browser to go back and try to save again.";
 		}else{
-		    String sSQL = SMMySQLs.Get_Insert_Customer_Call_Log_SQL(sUserName, 
-		    														(new Timestamp(System.currentTimeMillis())).toString(), 
-		    														clsDatabaseFunctions.FormatSQLStatement(sCustomerName), 
-		    														clsDatabaseFunctions.FormatSQLStatement(sCustomerPhone), 
-		    														clsDatabaseFunctions.FormatSQLStatement(sCustomerCity), 
-		    														tsCallTime.toString(), 
-		    														iOrderSource,
-		    														clsDatabaseFunctions.FormatSQLStatement(sCallNote));
+		    String sSQL = "INSERT INTO " + SMTablecustomercalllog.TableName + " (" + 
+					" " + SMTablecustomercalllog.sUserName + "," + 
+					" " + SMTablecustomercalllog.datLogTime + "," +
+					" " + SMTablecustomercalllog.sCustomerName + "," +
+					" " + SMTablecustomercalllog.sPhoneNumber + "," +
+					" " + SMTablecustomercalllog.sCity + "," +
+					" " + SMTablecustomercalllog.datCallTime + "," +
+					" " + SMTablecustomercalllog.iOrderSourceID + "," +
+					" " + SMTablecustomercalllog.mNote + ")" +
+				" VALUES(" + 
+					" '" + sUserName + "'," +
+					" '" + (new Timestamp(System.currentTimeMillis())).toString() + "'," +
+					" '" + clsDatabaseFunctions.FormatSQLStatement(sCustomerName) + "'," +
+					" '" + clsDatabaseFunctions.FormatSQLStatement(sCustomerPhone) + "'," +
+					" '" + clsDatabaseFunctions.FormatSQLStatement(sCustomerCity) + "'," +
+					" '" + tsCallTime.toString() + "'," +
+					" " + iOrderSource + "," +
+					" '" + clsDatabaseFunctions.FormatSQLStatement(sCallNote) + "')"; 
 		    try{
 			    if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID)){
 			    	

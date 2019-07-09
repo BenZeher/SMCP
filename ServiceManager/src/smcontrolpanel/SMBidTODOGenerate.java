@@ -147,16 +147,47 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPENDINGBIDSREPORT, "REPORT", "SMPendingBidsReport", "[1376509310]");
 
     	out.println(SMUtilities.Build_HTML_Table(4, alCriteria, 100, 0, false, false));
-	    sSQL = SMMySQLs.Get_Bid_TO_DO_List_SQL(sSalespersonCode,
-											   iProjectType,
-											   iCheckBidDate,
-											   datBidDateStartDate,
-											   datBidDateEndDate,
-											   sSelectedSortOrder,
-											   iStatusPending,
-											   iStatusSuccessful,
-											   iStatusUnsuccessful,
-											   iStatusInactive);
+    	
+		sSQL = "SELECT * FROM " + SMTablebids.TableName + ", " + SMTablesalesperson.TableName + 
+				  " WHERE" + 
+				  	" " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode + " =" + 
+				  	" " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode + 
+				  	" AND" + 
+				  	" " + SMTablebids.dattimeactualbiddate + " = '0000-00-00 00:00:00'";
+			if (sSalespersonCode.compareTo("ALLSP") != 0){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode + " = '" + sSalespersonCode + "'";
+			}
+			if (iProjectType > 0){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.iprojecttype + " = " + iProjectType;
+			}
+				  
+			if (iCheckBidDate == 1){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.dattimebiddate + " >= '" + datBidDateStartDate.toString() + "'" + 
+				  			  " AND " + SMTablebids.TableName + "." + SMTablebids.dattimebiddate + " <= '" + datBidDateEndDate.toString() + "'";
+			}
+			
+			if (iStatusPending == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_PENDING + "'";
+			}
+			if (iStatusSuccessful == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_SUCCESSFUL + "'";
+			}
+			if (iStatusUnsuccessful == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_UNSUCCESSFUL + "'";
+			}
+			if (iStatusInactive == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_INACTIVE + "'";
+			}
+			
+			//default to sort by bidding date.
+			if (sSelectedSortOrder.compareTo("Salesperson") == 0){
+				sSQL = sSQL + " ORDER BY " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode + "," + 
+						" " + SMTablebids.TableName + "." + SMTablebids.dattimebiddate;
+			}else{
+				sSQL = sSQL + " ORDER BY " + SMTablebids.TableName + "." + SMTablebids.dattimebiddate + "," + 
+						" " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode;
+			}
+			
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){

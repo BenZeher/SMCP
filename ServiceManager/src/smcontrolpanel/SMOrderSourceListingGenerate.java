@@ -285,11 +285,126 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		    out.println("</TD></TR>" +
 						"<TR><TD><HR></TD></TR>");
 		    
-		    sSQL = SMMySQLs.Get_Order_Source_Listing_SQL(sStartingDate, 
-		    											 sEndingDate,
-		    											 sReportType,
-		    											 alServiceTypes,
-		    											 alLocations);
+		    sSQL = "";
+			if (sReportType.compareTo("Orders") == 0){
+				sSQL = "SELECT"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderSourceID + " AS iOrderSourceID,"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderSourceDesc + " AS sOrderSourceDesc,"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber + " AS sDocNumber,"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate + " AS datDocDate,"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName + " AS sCustomerName,"
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderCreatedByFullName + " AS sCreatedByFullName,"
+						+ " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dOrderUnitPrice  + " * "
+						+ "(" + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered  + " +"
+						+ " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyShippedToDate  + ")"
+						+ " " + "AS dAmount" + "," 
+						+ " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.datLineBookedDate + ""
+						+ " FROM "
+					  	+ " " + SMTableorderdetails.TableName
+					  	+ " INNER JOIN"
+					  	+ " " + SMTableorderheaders.TableName 
+					  	+ " ON" 
+					  	+ " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dUniqueOrderID + " = "
+					  	+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dOrderUniqueifier 
+					  	+ " "
+					  	+ " WHERE (" 
+					  	+ " (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate + " >= '" + sStartingDate + "')"
+					  	+ " AND"
+					  	+ " (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate + " <= '" + sEndingDate + "')"
+					  	+ " AND ("
+					  		+ "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " = '1899/12/31')" 
+					  		+ " OR " 
+					  		+ "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " = '0000-00-00 00:00:00')"
+					  		+ ")" 
+					  	//NO QUOTES!
+					  	+ " AND (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderType + " != "
+					  	+ SMTableorderheaders.ORDERTYPE_QUOTE + ")";
+		
+				sSQL += " AND ("; 
+				for (int i=0;i<alServiceTypes.size();i++){
+					sSQL += "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + " = '" + alServiceTypes.get(i).toString() + "')"
+				 		+ " OR";
+				}		
+				sSQL = sSQL.substring(0, sSQL.length() - 3) + ")";
+				
+				sSQL += " AND ("; 
+				for (int i=0;i<alLocations.size();i++){
+					sSQL += "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + " = '" 
+						 + alLocations.get(i).toString() + "')"
+				 		 + " OR";
+				}		
+				sSQL = sSQL.substring(0, sSQL.length() - 3) + ")";
+				
+				sSQL += ") ORDER BY"
+						 +" " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderSourceDesc + ","
+						 +" " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber;
+				
+
+			}else if (sReportType.compareTo("Invoices") == 0){
+				//LTO 20121023
+				//Edited by:SCO 20140807
+				sSQL = "SELECT"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.iOrderSourceID + " AS iOrderSourceID,"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sOrderSourceDesc + " AS sOrderSourceDesc,"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " AS sDocNumber,"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " AS datDocDate,"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sBillToName + " AS sCustomerName,"
+					+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sCreatedByFullName + " AS sCreatedByFullName,"
+					+ " " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedPriceAfterDiscount + " AS dAmount" + ""
+			  + " FROM"
+			  	+ "(" + SMTableinvoicedetails.TableName
+			  	+ " INNER JOIN"
+			  	+ " " + SMTableinvoiceheaders.TableName 
+			  	+ " ON"
+			  	+ " " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber + " = "
+			  	+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
+			  	+ ") "
+			  + " WHERE ("
+			  	+ "( " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" + sStartingDate + "')"
+			  	+ " AND"
+			  	+ " (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" + sEndingDate + "')";
+				sSQL += " AND ("; 
+				for (int i=0;i<alServiceTypes.size();i++){
+					sSQL += " (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = '" 
+						 + alServiceTypes.get(i).toString() + "')" +
+				 		" OR";
+				}		
+				sSQL = sSQL.substring(0, sSQL.length() - 3) + ")";
+				
+				sSQL += " AND ("; 
+				for (int i=0;i<alLocations.size();i++){
+					sSQL += " (" + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation + " = '" 
+						 + alLocations.get(i).toString() + "')"
+				 		+ " OR";
+				}		
+				sSQL = sSQL.substring(0, sSQL.length() - 3) + ")";
+				
+				sSQL += ") ORDER BY"
+				  	+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sOrderSourceDesc + ","
+				  	+ " " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber;
+			}else{
+				sSQL = "SELECT"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.iordersourceid + " AS iOrderSourceID,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.sordersourcedesc + " AS sOrderSourceDesc,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.lid + " AS sDocNumber,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.dattimeoriginationdate + " AS datDocDate,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.scustomername + " AS sCustomerName,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.screatedbyfullname + " AS sCreatedByFullName,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.lcreatedbyuserid + " AS sCreatedByID,"
+						+ " " + SMTablebids.TableName + "." + SMTablebids.dapproximateamount + " AS dAmount,"
+						+ " FROM"
+					  	+ " " + SMTablebids.TableName
+
+					  	+ " WHERE (" 
+					  	+ " " + SMTablebids.TableName + "." + SMTablebids.dattimeoriginationdate + " >= '" + sStartingDate + "'"
+					  	+ " AND"
+					  	+ " " + SMTablebids.TableName + "." + SMTablebids.dattimeoriginationdate + " <= '" + sEndingDate + "'"
+					  	+ ")"
+					  	+ " ORDER BY"
+					  	+ " " + SMTablebids.TableName + "." + SMTablebids.sordersourcedesc + ","
+					  	+ " " + SMTablebids.TableName + "." + SMTablebids.lid;
+			}
+			
 		    //out.println(sSQL);
 		    rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    

@@ -89,7 +89,16 @@ public class SMEditSiteLocations extends HttpServlet {
 					"  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
 		
 		try{
-	        String sSQL = SMMySQLs.Get_Customer_ShipTo_List_SQL();
+	        String sSQL = "SELECT" + 
+					" " + SMTablearcustomershiptos.TableName + "." + SMTablearcustomershiptos.sCustomerNumber + "," +
+					" " + SMTablearcustomershiptos.TableName + "." + SMTablearcustomershiptos.sShipToCode + "," +
+					" " + SMTablearcustomershiptos.TableName + "." + SMTablearcustomershiptos.sDescription +
+				  " FROM" +
+				  	" " + SMTablearcustomershiptos.TableName + 
+				  " ORDER BY" +
+				  	" " + SMTablearcustomershiptos.TableName + "." + SMTablearcustomershiptos.sCustomerNumber + "," +
+				  	" " + SMTablearcustomershiptos.TableName + "." + SMTablearcustomershiptos.sShipToCode;
+			  
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 	        out.println("<BR><BR>Add A Site Location:<BR>");

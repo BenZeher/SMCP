@@ -91,9 +91,24 @@ public class CustomerCallLogListGenerate extends HttpServlet {
 	    }
 	    
 	    try{
-		    String sSQL = SMMySQLs.Get_Customer_Call_Log_List_SQL(SelectedStartingDay,
-		    													  SelectedEndingDay,
-		    													  iOrderSource);
+	    	String sSQL = "";
+	    	sSQL = "SELECT * FROM " + SMTablecustomercalllog.TableName + ", " + SMTableordersources.TableName + 
+	    			" WHERE" +
+	    			" " + SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.iOrderSourceID + " = " + 
+	    			SMTableordersources.TableName + "." + SMTableordersources.iSourceID + 
+	    			" AND" +
+	    			" " + SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.datCallTime + " >= '" + SelectedStartingDay.toString() + " 00:00:00" + "'" +
+	    			" AND" +
+	    			" " + SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.datCallTime + " <= '" + SelectedEndingDay.toString() + " 23:59:59" + "'";
+	    	if (iOrderSource != 0){
+	    		sSQL = sSQL + " AND " + 
+	    				" " + SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.iOrderSourceID + " = '" + iOrderSource + "'";
+	    	}
+
+	    	sSQL = sSQL + " ORDER BY " +
+	    			SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.iOrderSourceID + "," + 
+	    			SMTablecustomercalllog.TableName + "." + SMTablecustomercalllog.datCallTime;
+			
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    //get total call number
 		    int iRowCount = 0;

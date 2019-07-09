@@ -149,16 +149,29 @@ public class SMSalesContactList extends HttpServlet {
 		    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMSALESCONTACTREPORT, "REPORT", "SMSalesContactList", "[1376509354]");
 	    	
-	    	String sSQL = SMMySQLs.Get_Sales_Contact_List_SQL(sSalesperson, 
-													   //sCustomer,
-													   iCheckLastContactDate,
-													   sStartingLastContactDate,
-													   sEndingLastContactDate,
-													   iCheckNextContactDate,
-													   sStartingNextContactDate,
-													   sEndingNextContactDate,
-													   iActiveOnly
-													   );
+	    	String sSQL = "";
+			sSQL = "SELECT * FROM" 
+					+ " " + SMTablesalescontacts.TableName + " LEFT JOIN " + SMTablesalesperson.TableName 
+					+ " ON " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode + " = "
+					+ SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+					+ " LEFT JOIN " + SMTablearcustomerstatistics.TableName + " ON "
+					+ SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber + " = "
+					+ SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber 
+					+ " WHERE (" 
+						+ "(1 = 1)" //Just put this here so we could add 'ANDS' below...
+					;
+				if (sSalesperson.compareToIgnoreCase("ALLSP") != 0){
+					sSQL += " AND ("  + SMTablesalescontacts.salespersoncode + " = '" + sSalesperson + "')";
+				}
+
+				if (iActiveOnly == 1){
+					sSQL += " AND (" + SMTablesalescontacts.binactive + " = 0)"; 
+				}
+				
+				sSQL += ") ORDER BY" + 
+						" " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode + "," + 
+						" " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sDateOfLastInvoice + " DESC";
+				
 	    	ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    	out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactEdit?id=-1&OriginalURL=" + sCurrentURL + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\"><B>Create New Sales Contact</B></A>&nbsp;&nbsp;&nbsp;&nbsp;" +
 	    				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactListCriteriaSelection?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\"><B>New Search</B></A><BR><BR>");

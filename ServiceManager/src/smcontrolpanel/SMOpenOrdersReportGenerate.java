@@ -59,7 +59,39 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 	    try{
 
 		    boolean bHasRecord = false;
-		    String sSQL = SMMySQLs.Get_Open_Orders_Report_SQL();
+			String sSQL = "SELECT DISTINCT" + "\n" +
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + ","  + "\n" +
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + "," + "\n" + 
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription + "," + "\n" +
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber + "," + "\n" +
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName + "," + "\n" +
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName + "," + "\n" + 
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate + "," + "\n" + 
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson + "\n" +
+			
+				  " FROM" + "\n" + 
+					  " " + SMTableorderheaders.TableName + "\n" + 
+			      " INNER JOIN" + 
+					  " " + SMTableorderdetails.TableName + "\n" + 
+				  " ON" + 
+					  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.dOrderUniqueifier + " = " + 
+					  " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dUniqueOrderID + "\n" + 
+				  " WHERE (" + "\n" + 
+				  	  " (" + "\n" +
+				  	  	"(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " < '1900-01-01')" + 
+				  	" OR" +
+				  	  " (" + SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderCanceledDate + " IS NULL))" + "\n" +
+				  	" AND (" +
+				  	  " " + SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered + " > 0)" + "\n" +
+				  	  
+				  	"/* NO QUOTES! */" + "\n" +
+				  	" AND (" + SMTableorderheaders.iOrderType + " != " + SMTableorderheaders.ORDERTYPE_QUOTE + ")" +
+				  	")" + "\n" +
+				  " ORDER BY" + 
+				  	  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation + "," +
+				  	  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode + "," +
+				  	  " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson + "\n";
+
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    
 		    out.println("<TABLE BORDER=0 WIDTH=100%>");

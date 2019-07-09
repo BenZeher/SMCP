@@ -8,7 +8,6 @@ import ServletUtilities.clsManageRequestParameters;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
@@ -59,7 +58,13 @@ public class SMSalesContactAction extends HttpServlet{
 		    //if user entered the customer code wrong (code for another customer), here won't catch it.
 
 		    try{
-		    	String sSQL = SMMySQLs.Get_Customer_Header_Info_SQL(request.getParameter("SelectedCustomer"));
+				String sSQL = "SELECT * FROM " + SMTablearcustomer.TableName;
+				if (request.getParameter("SelectedCustomer") != null){
+						sSQL = sSQL + " WHERE" + 
+							" " + SMTablearcustomer.sCustomerNumber + " = '" + request.getParameter("SelectedCustomer") + "'";
+
+				}
+				
 		    	ResultSet rsCustomerCheck = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMSalesContactAction");
 		    	if (rsCustomerCheck.next()){
 		    		//customer exists, proceed with saving
@@ -113,17 +118,38 @@ public class SMSalesContactAction extends HttpServlet{
 				    	}
 		    		}else{
 		    			//check to see if customer code is properly filled in.
-		    			sSQL = SMMySQLs.Get_Sales_Contact_List_SQL(request.getParameter("SelectedSalesperson"), 
-		    													   request.getParameter("SelectedCustomer"),
-		    													   request.getParameter("ContactName"),
-		    													   0, 
-		    													   new Timestamp(0), 
-		    													   new Timestamp(0), 
-		    													   0, 
-		    													   new Timestamp(0), 
-		    													   new Timestamp(0),
-		    													   0 //don't care about the activeness here
-		    													   );
+		    			sSQL = "SELECT * FROM" + 
+		    					" " + SMTablesalescontacts.TableName + "," + 
+		    					" " + SMTablesalesperson.TableName + "," +
+		    					" " + SMTablearcustomerstatistics.TableName + 
+		    				  " WHERE" + 
+		    				  	" " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode + " =" + 
+		    				  	" " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode + 
+		    				  	" AND" + 
+		    				  	" " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber + " =" + 
+		    				  	" " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber;
+		    				
+		    			if (request.getParameter("SelectedSalesperson").compareTo("ALLSP") != 0){
+		    				sSQL+= " AND "  + SMTablesalescontacts.salespersoncode + " = '" + request.getParameter("SelectedSalesperson") + "'";
+		    			}
+		    			
+		    			//System.out.println("Customer = '" + sCustomer + "'");
+		    			if (request.getParameter("SelectedCustomer") != null){
+		    				if (request.getParameter("SelectedCustomer").trim().compareTo("") != 0){
+		    					sSQL += " AND " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber + " = '" + request.getParameter("SelectedCustomer") + "'";
+		    				}
+		    			}
+		    			
+		    			if (request.getParameter("ContactName") != null){
+		    				if (request.getParameter("ContactName").trim().compareTo("") != 0){
+		    					sSQL = sSQL + " AND " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname + " = '" + request.getParameter("ContactName") + "'";
+		    				}
+		    			}
+		    			
+		    			sSQL += " ORDER BY" + 
+		    					" " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.salespersoncode + "," + 
+		    					" " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sDateOfLastInvoice;
+		    			
 		    			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    			if (rs.next()){
 		    				//there is an existing salesperson-customer-contact trio, redirect user to that record.
@@ -152,15 +178,27 @@ public class SMSalesContactAction extends HttpServlet{
 			    				out.println("<FONT COLOR=RED><B>Warning: contact name is not provided properly.</B></FONT><BR><BR>");
 			    				out.println("Please use your browser's back button to goto previous page and make sure contact name are properly filled in before proceed.<BR><BR>");
 		    				}else{
-				    			sSQL = SMMySQLs.Insert_Sales_Contact_SQL(request.getParameter("SelectedSalesperson"),
-																		 request.getParameter("SelectedCustomer"),
-				    													 Get_Customer_Name(request.getParameter("SelectedCustomer"), sDBID),
-																		 request.getParameter("ContactName"), 
-																		 request.getParameter("PhoneNumber"), 
-																		 request.getParameter("EmailAddress"), 
-																		 Integer.parseInt(request.getParameter("IsInActive")),
-																		 request.getParameter("Description"), 
-																		 request.getParameter("Note"));
+				    			sSQL = "INSERT INTO " + SMTablesalescontacts.TableName + "(" +
+				    					" " + SMTablesalescontacts.salespersoncode + "," + 
+				    					" " + SMTablesalescontacts.scustomernumber + "," +
+				    					" " + SMTablesalescontacts.scustomername + "," +
+				    					" " + SMTablesalescontacts.scontactname + "," +
+				    					" " + SMTablesalescontacts.sphonenumber + "," +
+				    					" " + SMTablesalescontacts.semailaddress + "," +
+				    					" " + SMTablesalescontacts.binactive + "," +
+				    					" " + SMTablesalescontacts.sdescription + "," +
+				    					" " + SMTablesalescontacts.mnotes + ")" +
+				    				" VALUES (" +
+				    					" '" + request.getParameter("SelectedSalesperson") + "'," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("SelectedCustomer")) + "'," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(Get_Customer_Name(request.getParameter("SelectedCustomer"), sDBID)) + "'," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement( request.getParameter("ContactName")) + "'," + 
+				    					" '" + request.getParameter("PhoneNumber") + "'," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("EmailAddress")) + "'," + 
+				    					" " + Integer.parseInt(request.getParameter("IsInActive")) + "," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("Description")) + "'," + 
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("Note")) + "')"; 
+				    				
 	
 						    	if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID) == false){
 						    		out.println("Failed to update sales contact record.<BR><BR><BR>" + 
@@ -210,7 +248,10 @@ public class SMSalesContactAction extends HttpServlet{
 	    }else if (request.getParameter("SUBMITREMOVE") != null){
 	    	//check for accidental removal
 
-		    	String sSQL = SMMySQLs.Delete_Sales_Contact_SQL(Integer.parseInt(request.getParameter("id")));
+		    	String sSQL = "";
+				sSQL = "DELETE FROM " + SMTablesalescontacts.TableName +
+						  " WHERE" + 
+						  	" " + SMTablesalescontacts.id + " = " + Integer.parseInt(request.getParameter("id"));
 			    try{
 			    	if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID) == false){
 			    		out.println("Failed to delete sales contact record.<BR><BR><BR>" + 

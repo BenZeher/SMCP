@@ -128,12 +128,78 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    /*************END of PARAMETER list***************/
 	    
 	    boolean bHasRecord = false;
-	    sSQL = SMMySQLs.Get_Productivity_Report_SQL(datStartingDate,
-	    											datEndingDate,
-	    											alLocations,
-	    											alServiceTypes,
-	    											alItemCategories
-	    											);
+	    sSQL = "SELECT * FROM " + SMTableinvoiceheaders.TableName + ", " + 
+	    		SMTableinvoicedetails.TableName + 
+	    		" WHERE" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " =" + 
+	    		" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber +
+	    		" AND" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" + datStartingDate.toString() + "'" +
+	    		" AND" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" + datEndingDate.toString() + "'";
+
+	    //if there is any location selected, attach them
+	    if (alLocations.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation + " = '-1'";
+	    }else{
+	    	if (alLocations.get(0).toString().compareTo("ALLLOC") != 0){
+	    		String sLocations = "";
+	    		sSQL = sSQL + " AND (";
+	    		for (int i=0;i<alLocations.size();i++){
+	    			sLocations = sLocations + " OR" + 
+	    					" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation + " = '" + alLocations.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sLocations = sLocations.substring(4);
+	    		sSQL = sSQL + sLocations + ")";
+	    	}
+	    }
+
+	    //if there is any service type selected, attach them
+	    if (alServiceTypes.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = 'SH9999'";
+	    }else{
+	    	if (alServiceTypes.get(0).toString().compareTo("ALLST") != 0){
+	    		sSQL = sSQL + " AND (";
+	    		String sServiceTypes = "";
+	    		for (int i=0;i<alServiceTypes.size();i++){
+	    			sServiceTypes = sServiceTypes + " OR" + 
+	    					" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = '" + alServiceTypes.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sServiceTypes = sServiceTypes.substring(4);
+	    		sSQL = sSQL + sServiceTypes + ")";
+	    	}
+	    }
+
+	    //if there is any category type selected, attach them
+	    if (alItemCategories.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = ''";
+	    }else{
+	    	if (alItemCategories.get(0).toString().compareTo("ALLIC") != 0){
+	    		sSQL = sSQL + " AND (";
+	    		String sItemCategories = "";
+	    		for (int i=0;i<alItemCategories.size();i++){
+	    			sItemCategories = sItemCategories + " OR" + 
+	    					" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemCategory + " = '" + alItemCategories.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sItemCategories = sItemCategories.substring(4);
+	    		sSQL = sSQL + sItemCategories + ")";
+	    	}
+	    }
+
+	    sSQL = sSQL + " ORDER BY" + 
+	    		" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sMechInitial + ", " + 
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber;
+
+
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){

@@ -98,12 +98,12 @@ public class ARActivityReport extends java.lang.Object{
 	    		if (rs.getString(sCustomer).compareToIgnoreCase(sCurrentCustomer) != 0){
 	    			//Print the footer, if the record is for a new customer:
 		    		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
+		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
 		    			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
 		    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
 			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
 		    			out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
 		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
 		    			out.println("</TR>");
 		    			
@@ -122,12 +122,12 @@ public class ARActivityReport extends java.lang.Object{
 		    			sTerms = cust.getM_sTerms();
 		    		}
 
-		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
-	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"><B>" + sCustomerNumber + "</B></TD>");
-	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Current Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCurrentStoredBalance(conn)) + "</B></TD>"
-	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Retainage Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(conn)) + "</B></TD>"
-	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCreditLimit)) + "</B></TD>"
-	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING +  "\"> Terms: <B>" + sTerms + "</B></TD>"
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +  "\"><B>" + sCustomerNumber + "</B></TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +  "\"> Current Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCurrentStoredBalance(conn)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +  "\"> Retainage Balance: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(conn)) + "</B></TD>"
+	    					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +  "\"> CR Limit: <B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCreditLimit)) + "</B></TD>"
+	    					+ "<TD COLSPAN = \"7\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD +  "\"> Terms: <B>" + sTerms + "</B></TD>"
 	    					+ "</TR>");
 		    		printTableHeader(out);
 	    		}
@@ -171,12 +171,12 @@ public class ARActivityReport extends java.lang.Object{
 			
 			//Print the last customer's totals, if at least one customer was listed:
     		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
+    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
     			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
     			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
     			out.println("</TR>");
-    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
+    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
     			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
     			out.println("</TR>");
     	    	iCustomersPrinted++;
@@ -244,7 +244,7 @@ public class ARActivityReport extends java.lang.Object{
 	}
 	private void printTableHeader(PrintWriter out){
 		/*out.println("<TABLE BORDER=0 WIDTH=100%>");*/
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">" + 
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">" + 
 		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Applied to</B></U></TD>" +
 		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Type</B></U></TD>" +
 		    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><U><B>Doc #</B></U></TD>" +

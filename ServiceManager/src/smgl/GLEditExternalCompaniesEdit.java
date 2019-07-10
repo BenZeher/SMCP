@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglexternalcompanies;
@@ -80,8 +79,6 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 		
 		//If this is a 'resubmit', meaning it's being called by the 'Action' class, then
 		//the session will have an entry object in it, and that's what we'll pick up.
-		HttpSession currentSession = smedit.getCurrentSession();
-		
 		//long lStartingtime = System.currentTimeMillis();
 		
 	    smedit.getPWOut().println(SMUtilities.getSMCPJSIncludeString(getServletContext()));

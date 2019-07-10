@@ -24,7 +24,7 @@ public class GLEditExternalCompaniesAction extends HttpServlet{
 			throws ServletException, IOException {
 	
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
-		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLEditBatches)){return;}
+		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLManageExternalCompanies)){return;}
 	    //Read the entry fields from the request object:
 	    
 	    //First get the command value that was passed in:
@@ -94,7 +94,7 @@ public class GLEditExternalCompaniesAction extends HttpServlet{
 				this.toString() + ".updateCompanies - user: " + sm.getFullUserName()
 			);
 		} catch (Exception e1) {
-			throw new Exception("Error [20191791712174] " + "Could not get datas connection - " + e1.getMessage());
+			throw new Exception("Error [20191791712174] " + "Could not get data connection - " + e1.getMessage());
 		}
     	
     	while (eParams.hasMoreElements()){

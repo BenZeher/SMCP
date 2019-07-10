@@ -32,6 +32,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
+	public static String PARAM_BATCH_DATE = "BATCHDATE";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -61,6 +62,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		
 	    out.println(SMUtilities.getMasterStyleSheetLink());
+	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
 	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
@@ -144,7 +146,6 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 		}
 		out.println("<BR>Pull transactions into this fiscal period:&nbsp;");
 		
-		out.println("    <TD COLSPAN=2>");
 		out.println("<SELECT NAME=\"" + PARAM_FISCAL_PERIOD_SELECTION + "\"" 
 			+ " ID = \"" + 	PARAM_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
@@ -157,6 +158,17 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 			}
 		}
 		out.println("</SELECT>");
+		
+		out.println(
+    		"<BR>Set&nbsp;batch&nbsp;date&nbsp;to:&nbsp;"
+    		+ "<INPUT TYPE=TEXT NAME=\"" + PARAM_BATCH_DATE + "\""
+    		+ " VALUE=\"" + ServletUtilities.clsDateAndTimeConversions.now(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY) + "\""
+    		+ " MAXLENGTH=" + "10"
+    		+ " SIZE = " + "8"
+    		+ ">"
+    		+ "\n"
+    	);
+		out.println(SMUtilities.getDatePickerString(PARAM_BATCH_DATE, getServletContext()) + "\n");
     	
     	out.println("<BR>Add any new GL accounts which are not already in the consolidated company?: <INPUT TYPE=CHECKBOX NAME=\"" + ADD_GL_ACCOUNTS + "\"><BR>");
     	

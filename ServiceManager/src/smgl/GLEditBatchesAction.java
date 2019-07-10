@@ -43,7 +43,7 @@ public class GLEditBatchesAction extends HttpServlet{
     String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
     String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " " 
     						+ CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
-    String  sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
     String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
     String title = "Updating " + sObjectName + "'" + sBatchNumber + "'";
     String subtitle = "";

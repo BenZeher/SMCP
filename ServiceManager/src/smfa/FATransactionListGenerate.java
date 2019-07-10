@@ -113,15 +113,16 @@ public class FATransactionListGenerate extends HttpServlet {
 				+ USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 				+ " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "FATransactionListGenerate")
 				+ "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
-				"<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4><B>" + sReportTitle + "</B></FONT></TD></TR></TABLE>");
+				"<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=4><B>" + sReportTitle + "</B></FONT></TD></TR>");
 
-		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-				+ "smcontrolpanel.SMUserLogin?" 
+		out.println("<TR><TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+		+ "smcontrolpanel.SMUserLogin?" 
+		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+		+ "\" >Return to user login</A></TD></TR>");
+		out.println("<TR><TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\" >Return to user login</A><BR>");
-		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to Fixed Assets Main Menu</A><BR>");
+				+ "\">Return to Fixed Assets Main Menu</A></TD></TR><BR>");
+		out.println("</TABLE>\n");
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "REPORT", "FATransactionList", "[1376509371]");

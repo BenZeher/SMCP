@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablefaclasses;
 import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTablefatransactions;
@@ -176,10 +177,11 @@ public class FAAssetList extends java.lang.Object{
 		//out.println("<BR>SQL = " + SQL);
 		
 		//print table header
-		out.println("<TABLE BORDER=0 cellspacing=0 cellpadding=2 WIDTH=100%  style= \"font-family: Arial;\" >\n");
+		 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			int iCount = 0;
 			if (bShowDetail){
 				Print_Column_Header(out);
 			}
@@ -204,7 +206,7 @@ public class FAAssetList extends java.lang.Object{
 							bdBookValueOfNonDisposedAssets,
 							sCurrentClass,
 							out);
-
+					iCount =0;
 					bdYTDPurch = BigDecimal.ZERO;
 					bdYTDDisp = BigDecimal.ZERO;
 					bdCost = BigDecimal.ZERO;
@@ -243,7 +245,8 @@ public class FAAssetList extends java.lang.Object{
 							bAllowAssetEditing,
 							context,
 							sDBID,
-							out);
+							out,
+							iCount);
 				}
 
 				bdCost = bdCost.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
@@ -268,6 +271,7 @@ public class FAAssetList extends java.lang.Object{
 					bdGrandAccumulatedDepreciationOfNonDisposedAssets = bdGrandAccumulatedDepreciationOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdAccumulatedDepreciation));
 					bdGrandBookValueOfNonDisposedAssets = bdGrandBookValueOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				}
+				iCount++;
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -321,7 +325,8 @@ public class FAAssetList extends java.lang.Object{
 			boolean bAllowAssetEditing,
 			ServletContext context,
 			String sDBID,
-			PrintWriter out){
+			PrintWriter out,
+			int iCount){
 
 		String sAssetLink = sAssetNumber;
 		
@@ -342,41 +347,46 @@ public class FAAssetList extends java.lang.Object{
 					"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sAssetNumber + "</A>"
 			;
 		}
-		out.println("  <TR>\n"
-			+ "    <TD ALIGN=LEFT>" + sLocation + "</TD>\n"	
-			+ "    <TD ALIGN=RIGHT>" + clsDateAndTimeConversions.resultsetDateStringToString(sAcquisitionDate) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + sAssetLink + "</TD>\n"
-			+ "    <TD ALIGN=LEFT>" + sDesc + "</TD>\n"
-			+ "    <TD ALIGN=LEFT>" + sSerialNumber + "</TD>\n"
-			+ "    <TD ALIGN=LEFT>" + sDepType + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdCurrentValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdCostOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdAccuDepOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdCurrentValueofNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "  </TR>\n");
+		if(iCount % 2 == 0) {
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+		}else {
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+		}
+
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sLocation + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsDateAndTimeConversions.resultsetDateStringToString(sAcquisitionDate) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sAssetLink + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDesc + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sSerialNumber + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDepType + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCurrentValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCostOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDepOfNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCurrentValueofNonDisposedAsset.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
 
 	}
 
 	private void Print_Column_Header(PrintWriter out){
 
-		out.println("  <TR style= \"background-color: black; color: white; \">\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Location</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Date Acquired</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Asset#</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Description</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Serial Number</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Dep. Type</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Cost</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> YTD Dep.</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Accu. Dep.</TD>\n" 
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Book Value</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Cost Of Non-Disposed Assets</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Accu. Dep. Of Non-Disposed Assets</TD>\n"
-			+ "    <TD style=\"border-style:solid; border-color:white; border-width:1px;\"> Book Value. Of Non-Disposed Assets</TD>\n"
-			+ "  </TR>\n");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Location</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Date Acquired</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Asset#</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Description</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Serial Number</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Dep. Type</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Cost</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Dep.</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Accu. Dep.</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Book Value</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Cost Of Non-Disposed Assets</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Accu. Dep. Of Non-Disposed Assets</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Book Value. Of Non-Disposed Assets</B></TD>");
+	    out.println("</TR>");
 	}
 
 	private void Print_Class_Totals(BigDecimal bdYTDPurch,
@@ -390,34 +400,39 @@ public class FAAssetList extends java.lang.Object{
 			BigDecimal bdBookValueOfNonDisposedAssets,
 			String sClass,
 			PrintWriter out){
-
-		out.println("  <TR>\n" 
-			+ "    <TD COLSPAN=13><HR></TD>\n" 
-			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD COLSPAN=4>&nbsp;</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>YTD Purchases</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>YTD Disposed</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Cost</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>YTD Depreciation</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Accu. Depreciation</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Book Value</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Cost Of Non-Disposed Assets</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Accu. Depreciation Of Non-Disposed Assets</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>Book Value Of Non-Disposed Assets</TD>\n" 
-			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD  ALIGN=RIGHT COLSPAN=4>Subtotal for class " + sClass + ": </TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdBookValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n"
-			+ "    <TD ALIGN=RIGHT>" + bdCostOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdAccuDepOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "    <TD ALIGN=RIGHT>" + bdBookValueOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>\n" 
-			+ "  </TR>\n" 
-			+ "  <TR>\n    <TD>&nbsp;</TD>\n  </TR>\n"
-		);
+		
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+		
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >&nbsp;</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Purchases</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Disposed</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Cost</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Depreciation</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Accu. Depreciation</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Book Value</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Cost Of Non-Disposed Assets</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Accu. Depreciation Of Non-Disposed Assets</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Book Value Of Non-Disposed Assets</B></TD>");
+	    out.println("</TR>");
+	    
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"4\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >" + sClass + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdBookValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCostOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDepOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdBookValueOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
 
 	}
 
@@ -432,31 +447,37 @@ public class FAAssetList extends java.lang.Object{
 			BigDecimal bdBookValueOfNonDisposedAssets,
 			PrintWriter out){
 
-		out.println("  <TR>\n" 
-			+ "    <TD COLSPAN=13>&nbsp;</TD>\n" 
-			+ "</TR>\n  <TR>\n" 
-			+ "    <TD COLSPAN=13><HR></TD>\n" 
-			+ "  </TR>\n  <TR>\n" 
-			+ "    <TD ALIGN=RIGHT COLSPAN=4><FONT SIZE=3><B>GRAND TOTALS:</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdBookValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n" 
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdCostOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n"
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdAccuDepOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n"
-			+ "    <TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdBookValueOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>\n"
-			+ "  </TR>\n");
+		
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"4\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> GRAND TOTALS </B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCost.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDep.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdBookValue.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdCostOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDepOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdBookValueOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+
 	}
 
 	private void Print_Class_Header(String sClass, 
 			String sClassDescription,
 			PrintWriter out){
-		out.println("  <TR>\n" 
-			+ "    <TD ALIGN=LEFT COLSPAN=11><B>Asset Class:&nbsp;&nbsp;&nbsp;&nbsp;" + sClass 
-			+ "&nbsp;&nbsp;" + sClassDescription + "</B></TD>\n" 
-			+ "  </TR>\n");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Asset Class:&nbsp;&nbsp;&nbsp;&nbsp;" + sClass + " &nbsp;&nbsp;"  + sClassDescription + " </B></TD>");
+		out.println("</TR>");
 	}
 
 	public String getErrorMessageString(){

@@ -98,12 +98,14 @@ public class FAAssetListGenerate extends HttpServlet {
 			redirectAfterError(response, sCallingClass, sDBID, sWarning);
 		}
 		String sReportTitle = "Asset List for " + sCompanyName;
+		String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+		out.println(SMUtilities.getMasterStyleSheetLink());
 		String sHeading = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
 				+ "Transitional//EN\">"
 				+ "<HTML>"
 				+ "<HEAD><TITLE>" + sReportTitle + "</TITLE></HEAD>\n<BR>" 
 				+ "<BODY BGCOLOR=\"#FFFFFF\">"
-				+ "<TABLE BORDER=0 WIDTH=100% style= \"font-family: Arial;\" >"
+				+ "<TABLE BORDER=0 WIDTH=100% style= \"font-family: Arial;\" BGCOLOR = \"" + sColor +"\" >"
 				+ "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 				+ dfUSDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 				+ " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "FAAssetListGenerate")
@@ -173,17 +175,17 @@ public class FAAssetListGenerate extends HttpServlet {
 				+ "</TD>" + "\n"
 				+ "  </TR>" + "\n";
 				
-		sHeading += "</TABLE>" + "\n";
 		
 		out.println(sHeading);
 		
-		out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+		out.println("<TR><TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 		+ "smcontrolpanel.SMUserLogin?" 
 		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-		+ "\" >Return to user login</A><BR>");
-		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
+		+ "\" >Return to user login</A></TD></TR>");
+		out.println("<TR><TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to Fixed Assets Main Menu</A><BR><BR>");
+				+ "\">Return to Fixed Assets Main Menu</A></TD></TR><BR>");
+		out.println("</TABLE>\n");
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "REPORT", "FAAssetList","[1376509370]");

@@ -207,15 +207,18 @@ public class ARPostingJournal extends java.lang.Object{
 			
 			return false;
 		}
+		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">" );
+		int iCount =1;
 		try{
 			while(m_rs.next()){
-				if (!processRecord(conn, out)){
+				iCount =processRecord(conn, out, iCount);
+				if (iCount == -1 ){
 					return false;
 				}
 			}
 			
 			//After the last record, have to print the entry detail and totals:
-			printEntryDetail(out);
+			printEntryDetail(out, iCount);
 			printDocumentTotals(out);
 			printReportTotal(out);
 			if (!printGLSummary(conn, out)){
@@ -227,8 +230,11 @@ public class ARPostingJournal extends java.lang.Object{
 		}
 		return true;
 	}
-	private boolean processRecord(Connection conn, PrintWriter out){
+	private int processRecord(Connection conn, 
+			PrintWriter out, 
+			int iCount){
 		
+		int iCounter = iCount;
 		String sBatchAndEntry;
 		try{
 			//First store this record's batch and entry number:
@@ -240,16 +246,18 @@ public class ARPostingJournal extends java.lang.Object{
 			if (
 					(!m_sCurrentBatchAndEntry.equalsIgnoreCase(sBatchAndEntry) && (!m_sCurrentBatchAndEntry.equalsIgnoreCase("")))
 				){
-
+				    iCounter++;
 					//Have to print this with values from the last record, so we load the record AFTER this . . .
-					printEntryDetail(out);
+					printEntryDetail(out, iCounter);
 					printDocumentTotals(out);
 					//Reset the totals:
 					m_bdDebitTotal = new BigDecimal(0);
 					m_bdCreditTotal = new BigDecimal(0);
-					
+					iCounter=0;
+			}else {
+				iCounter++;
 			}
-			
+
 			m_sCustomerNumber = m_rs.getString(SMTableentries.spayeepayor);
 			m_sDocumentNumber = m_rs.getString(SMTableentries.sdocnumber);
 			m_sCustomerName = m_rs.getString(SMTablearcustomer.sCustomerName);
@@ -265,7 +273,7 @@ public class ARPostingJournal extends java.lang.Object{
 			GLAccount glacct = new GLAccount(m_sControlAcct);
 			if (!glacct.load(conn)){
 				m_sErrorMessage = "Error reading GL description in ARPostingJournal.processRecord for control acct '" + m_sControlAcct + "' " + glacct.getErrorMessageString();
-				return false;
+				return -1;
 			}
 			m_sControlAcctDesc = glacct.getM_sdescription();
 			m_sLineApplyToDocNumber = m_rs.getString(SMTableentrylines.sdocappliedto);
@@ -476,42 +484,38 @@ public class ARPostingJournal extends java.lang.Object{
 				}
 			}
 			//Print the detail line on every loop:
-			printLineDetail(out);
-
+			printLineDetail(out, iCounter);
 			//Update the 'new entry indicator':
 			m_sCurrentBatchAndEntry = sBatchAndEntry;
-			return true;
+			return iCounter;
 		}catch (SQLException e){
 			System.out.println("In ARPostingJournal - SQL error in processRecord: " + e.getMessage());
 			m_sErrorMessage = "Error processing record: " + e.getMessage();
-			return false;
+			return -1;
 		}
 	}
 	private void printDocumentHeading(PrintWriter out){
-		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">" );
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer :</B>" + m_sCustomerNumber + "  " + m_sCustomerName + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Transaction type: </B>" + ARDocumentTypes.Get_Document_Type_Label(m_iTransactionType) + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Transaction date :</B>" + m_sTransactionDate + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Batch-Entry: </B>" + m_sBatchNumber + "-" + m_sEntryNumber + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Document no: </B>" + m_sDocumentNumber + "</TD>");
+		out.println("</TR>");
 		
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Posting Date: </B>" + m_sPostingDate + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Entry Ammount: </B>" + m_sEntryAmount + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Entry Description: </B>" + m_sEntryDesc + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP +"\"> &nbsp" + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP +"\"> &nbsp" + "</TD>");	
-		
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
-		out.println("<TD>&nbsp</TD>");
-		out.println("<TD>&nbsp</TD>");
-		out.println("<TD>&nbsp</TD>");
-		out.println("<TD>&nbsp</TD>");
-		out.println("<TD>&nbsp</TD>");
+		out.println("<TD COLSPAN = \"2\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP +"\"> &nbsp" + "</TD>");	
 		out.println("</TR>");
 		
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\"> &nbsp" + "</TD>");	
+		out.println("</TR>");
+		
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><U><B>Document Number</B></U></TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><U><B>GL Account</B></U></TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><U><B>Account Desc.</B></U></TD>");
@@ -521,28 +525,38 @@ public class ARPostingJournal extends java.lang.Object{
 		
 	}
 	private void printDocumentTotals(PrintWriter out){
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
 		out.println("<TD COLSPAN = \"2\"></TD>");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "<B>TOTAL:</B></TD>");
 		out.println("<TD CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_bdDebitTotal) + "</TD>");
 		out.println("<TD CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_bdCreditTotal) + "</TD>");
 		out.println("</TR>");
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
 		out.println("<TD COLSPAN = \"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		out.println("</TR>");
 	}
-	private void printLineDetail(PrintWriter out){
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-		out.println("<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineApplyToDocNumber) + "</TD>");
-		out.println("<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineDistributionAcct) + "</TD>");
-		out.println("<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sDistAcctDesc) + "</TD>");
-		out.println("<TD ALIGN=RIGHT>" + m_sLineDebitAmount + "</TD>");
-		out.println("<TD ALIGN=RIGHT>" + m_sLineCreditAmount + "</TD>");
+	private void printLineDetail(PrintWriter out, int iCount){
+		
+		if(iCount %2 ==0) {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineApplyToDocNumber) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineDistributionAcct) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sDistAcctDesc) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sLineDebitAmount + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sLineCreditAmount + "</TD>");
 		out.println("</TR>");
 	}
-	private void printEntryDetail(PrintWriter out){
+	private void printEntryDetail(PrintWriter out, int iCount){
+		
+		if(iCount %2 ==0) {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}
 
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sDocumentNumber + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcct) + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcctDesc) + "</TD>");
@@ -554,7 +568,7 @@ public class ARPostingJournal extends java.lang.Object{
 	private void printReportTotal(PrintWriter out){
 		//out.println("<BR><B><U>REPORT TOTALS:</U></B><BR>");
 
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
 		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><U><B>REPORT TOTALS: </B></U></TD>");
 		out.println("<TD>&nbsp</TD>");
 		out.println("<TD>&nbsp</TD>");

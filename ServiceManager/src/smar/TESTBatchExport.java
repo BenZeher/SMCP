@@ -3,14 +3,11 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLTransactionBatch;
-
 public class TESTBatchExport extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 	public static void main(String[] args){
 		
-		@SuppressWarnings("unused")
 		java.sql.Connection conn = null;
 		
 		//Localhost settings:

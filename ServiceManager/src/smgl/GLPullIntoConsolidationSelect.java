@@ -13,12 +13,10 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTablebkaccountentries;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;

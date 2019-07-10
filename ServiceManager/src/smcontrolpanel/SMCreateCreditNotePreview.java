@@ -23,10 +23,6 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
 
-	//formats
-//	private static final SimpleDateFormat InvoiceDateformatter = new SimpleDateFormat("MM/dd/yyyy");
-	private static final String DARK_BG_COLOR = "DCDCDC";
-	
 	private boolean bDebugMode = false;
 	private String sCallingClass = "";
 	

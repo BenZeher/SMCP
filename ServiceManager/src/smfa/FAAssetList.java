@@ -177,7 +177,7 @@ public class FAAssetList extends java.lang.Object{
 		//out.println("<BR>SQL = " + SQL);
 		
 		//print table header
-		 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+		 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

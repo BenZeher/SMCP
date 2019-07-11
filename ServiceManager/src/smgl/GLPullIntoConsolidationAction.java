@@ -10,12 +10,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import SMClasses.SMBatchStatuses;
+import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglexternalcompanypulls;
-import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
@@ -37,6 +36,15 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 	    String sFiscalYearAndPeriodPeriod = request.getParameter(GLPullIntoConsolidationSelect.PARAM_FISCAL_PERIOD_SELECTION);
 		String sFiscalYear = sFiscalYearAndPeriodPeriod.substring(0, sFiscalYearAndPeriodPeriod.indexOf(GLPullIntoConsolidationSelect.PARAM_VALUE_DELIMITER));
 		String sFiscalPeriod = sFiscalYearAndPeriodPeriod.replace(sFiscalYear + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER, "");
+		
+		if (request.getParameter(GLPullIntoConsolidationSelect.CONFIRM_PROCESS) == null){
+			smaction.redirectAction(
+					"You must check the 'Confirm' checkbox to continue.", 
+					"", 
+		    		""
+				);
+				return;
+		}
 		
     	Connection conn = null;
     	try {
@@ -119,6 +127,16 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			throw new Exception("Error [20191911553508] " + "reading external company information with SQL: '" + SQL + "' - " + e.getMessage());
 		}
     	
+    	//Start a data transaction:
+    	try {
+			ServletUtilities.clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [2019192162080] " + "Could not start data transaction - " + e1.getMessage() + ".");
+		}
+    	
+    	//If the user chose to add any new GL's, handle that now:
+    	addNewGLAccounts(conn, sDBName, sFiscalYear, sFiscalPeriod);
+    	
     	//Now create a new batch:
     	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
     	glbatch.setlcreatedby(sm.getUserID());
@@ -137,13 +155,6 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	glentry.setsfiscalyear(sFiscalYear);
     	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
 
-    	//Start a data transaction:
-    	try {
-			ServletUtilities.clsDatabaseFunctions.start_data_transaction_with_exception(conn);
-		} catch (Exception e1) {
-			throw new Exception("Error [2019192162080] " + "Could not start data transaction - " + e1.getMessage() + ".");
-		}
-    	
     	//Now load all the transactions into the entry:
     	SQL = "SELECT * FROM " + sDBName + "." + SMTablegltransactionlines.TableName
     		+ " WHERE ("
@@ -233,7 +244,34 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	
 		return;
 	}
-
+	private void addNewGLAccounts(Connection conn, String sDBName, String sFiscalYear, String sFiscalPeriod) throws Exception{
+		
+		String SQL = "SELECT DISTINCT " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.bdannualbudget
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iallowaspoexpense
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iCostCenterID
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
+			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sFormattedAcct
+			+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName + " LEFT JOIN " + sDBName + "." + SMTableglaccounts.TableName + " ON "
+			+ sDBName + "." + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " 
+			+ sDBName + "." + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+			+ " WHERE ("
+			    + "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
+    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+			+ ")"
+		;
+		
+		//TODO - go through the accounts and add them if needed:
+		
+		
+		return;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

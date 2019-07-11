@@ -88,7 +88,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    		+ " be pulled in.<BR><BR>"
 	    );
 	    
-    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationSelect\">");
+    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationAction\">");
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>\n");
     	

@@ -326,24 +326,22 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<b>Customer Account: </b>" + "<A HREF=\"" 
 									+ SMUtilities.getURLLinkBase(context) 
 									+ "smar.ARDisplayCustomerInformation?CustomerNumber=" 
-									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("&", "%26")).trim() 
+									+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber ).replace("&", "%26").trim() 
 									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 									+ "\">" 
-									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim()  
+									+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber ).replace("`", "").trim()  
 									+ "</A>");
-							out.println("<br><b>Customer Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Phone: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Last Invoice Date: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
+							out.println("<br><b>Customer Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs, SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "").trim() + ""); 
+							out.println("<br><b>Contact Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs , SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "").trim() + ""); 
+							out.println("<br><b>Phone: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber ).replace("`", "").trim() + ""); 
+							out.println("<br><b>Last Invoice Date: </b>" +  clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
 							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMSalesContactEdit?id=" 
-								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
-								+ SMTablebids.lid).replace("`", ""))) 
+								+ clsDatabaseFunctions.getRecordsetIntegerValue(rs, SMTablesalescontacts.TableName + "." + SMTablebids.lid).replace("`", "")
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" 
-								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
-								+ SMTablebids.lid).replace("`", "")))  
+								+ clsDatabaseFunctions.getRecordsetIntegerValue(rs, SMTablesalescontacts.TableName + "." + SMTablebids.lid).replace("`", "")
 								+ "</A>");	
 						}
 						

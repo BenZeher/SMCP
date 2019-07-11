@@ -8,6 +8,7 @@ import ServletUtilities.clsManageRequestParameters;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.sql.ResultSet;
 
 import javax.servlet.ServletException;
@@ -248,14 +249,24 @@ public class SMSalesContactAction extends HttpServlet{
 	    }else if (request.getParameter("SUBMITREMOVE") != null){
 	    	//check for accidental removal
 
-		    	String sSQL = "";
-				sSQL = "DELETE FROM " + SMTablesalescontacts.TableName +
+		    	ArrayList<String> SQLStatements = new ArrayList<String>();
+		    	SQLStatements.add("DELETE FROM " + SMTablesalescontacts.TableName +
 						  " WHERE" + 
-						  	" " + SMTablesalescontacts.id + " = " + Integer.parseInt(request.getParameter("id"));
+						  	" " + SMTablesalescontacts.id + " = " + Integer.parseInt(request.getParameter("id"))
+						  	);
+		    	SQLStatements.add("DELETE FROM " + SMTablecriticaldates.TableName +
+						  " WHERE(" + 
+						  	" (" + SMTablecriticaldates.sdocnumber + " = '" + Integer.parseInt(request.getParameter("id")) + "')"
+						  	+ " AND "
+						  	+ " (" +  SMTablecriticaldates.itype + " = " + Integer.toString(SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) + ")"
+						  	+ ")"
+						  	);
 			    try{
-			    	if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID) == false){
+			    	
+			    	
+			    	if (!clsDatabaseFunctions.executeSQLsInTransaction(SQLStatements, getServletContext(), sDBID)){
 			    		out.println("Failed to delete sales contact record.<BR><BR><BR>" + 
-			    					"<FONT SIZE=2><B>SQL statement:</B> " + sSQL);
+			    					"<FONT SIZE=2><B>SQL statement:</B> " + SQLStatements.toString());
 			    		
 			    	}else{
 			    		try {

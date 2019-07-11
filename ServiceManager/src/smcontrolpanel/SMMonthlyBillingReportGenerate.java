@@ -184,6 +184,8 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
     	}else{
     		sCriteria = sCriteria + ", listing in <B>Summary</B> only.<BR>";
     	}
+
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
@@ -193,7 +195,7 @@ public class SMMonthlyBillingReportGenerate extends HttpServlet {
 	       +    "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE>\n"
 	       +  "</HEAD>\n<BR>" 
 	       +  "<BODY BGCOLOR=\"#FFFFFF\">\n" 
-	       +    "<TABLE BORDER=0 WIDTH=100%>\n" 
+	       +    "<TABLE BORDER=0 WIDTH=100% BGCOLOR= \"" + sColor + "\">\n" 
 	       +      "<TR>\n"
 	       +        "<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 	       +          " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMMonthlyBillingReportGenerate") +"</FONT></TD>\n" 

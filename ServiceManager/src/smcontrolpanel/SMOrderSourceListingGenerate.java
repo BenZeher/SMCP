@@ -196,16 +196,18 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 	    out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">" +
 			        "<HTML>" +
 			        "<HEAD><TITLE>" + title + " - " + subtitle + "</TITLE></HEAD>\n<BR>" + 
-				    "<BODY BGCOLOR=\"" 
-			        + SMUtilities.getInitBackGroundColor(getServletContext(), sDBID) 
+				    "<BODY BGCOLOR=\""+ "#FFFFFF"
 			        + "\">"
 	    );
 	    
  	    //log usage of this this report
  	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
  	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMORDERSOURCELISTING, "REPORT", "SMOrderSourceListing", "[1376509333]");
-	    
-    	out.println("<TABLE BORDER=0 WIDTH=100%>");
+ 	   String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+ 	  out.println(SMUtilities.getMasterStyleSheetLink());
+ 	    
+ 	    
+    	out.println("<TABLE BORDER=0 WIDTH=100% BGCOLOR = \""+ sColor +"\">");
 	    out.println("<TR><TD ALIGN=LEFT><FONT SIZE=5><B>" 
 	    	+ title 
 	    	+ "</B></FONT> - <FONT SIZE=3>" 
@@ -282,8 +284,8 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		    	out.println(" <B>" + SMBidEntry.ParamObjectName.toUpperCase() 
 		    		+ "</B> with a " + SMBidEntry.ParamObjectName + " origination date" + sDateRangeString + ". <BR>The 'amount' is equal to the " + SMBidEntry.ParamObjectName + " approximate amount.</FONT><BR>");
 		    }
-		    out.println("</TD></TR>" +
-						"<TR><TD><HR></TD></TR>");
+		    out.println("</TD></TR>");
+		    out.println("</TABLE>");
 		    
 		    sSQL = "";
 			if (sReportType.compareTo("Orders") == 0){
@@ -421,19 +423,13 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		    BigDecimal bdOrderSourceTotal = BigDecimal.ZERO;
 		    BigDecimal bdOrderTotal = BigDecimal.ZERO;
 		    
-		    boolean bFlipper = false;
-		    String sbgcolor = "";
+
+		    int iCounter = 0;
+		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
   
 		    while (rs.next()){
 
-				bFlipper = !bFlipper;
-				
-		    	if (bFlipper){
-		    		sbgcolor = "\"#FFFFFF\"";
-		    	}else{
-		    		sbgcolor = "\"#EEEEEE\"";
-		    	}
-		    	
+
 		    	if (iCurrentOrderSourceID == -1){
 		    		//this is the start of the report
 		    		sCurrentDocNumber = rs.getString("sDocNumber");
@@ -465,12 +461,12 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 										 out,
 										 sCallingClass,
 										 sDBID,
-										 sbgcolor);
+										 iCounter);
 		    		}
 	    			Print_Order_Source_Footer(sCurrentOrderSourceDesc,
 				    						  bdOrderSourceTotal,
 				    						  out);
-
+	    			iCounter=0;
 	    			alSources.add(sCurrentOrderSourceDesc);
 	    			alAmounts.add(bdOrderSourceTotal);
 	    			sCurrentDocNumber = rs.getString("sDocNumber");
@@ -501,7 +497,8 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 										 out,
 										 sCallingClass,
 										 sDBID,
-										 sbgcolor);
+										 iCounter);
+					    iCounter++;
 		    		}
 	    			sCurrentDocDate = USDateOnlyformatter.format(rs.getDate("datDocDate"));
 	    			sCurrentDocNumber = rs.getString("sDocNumber");
@@ -527,7 +524,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 									 out,
 									 sCallingClass,
 									 sDBID,
-									 sbgcolor);
+									 iCounter);
 		    	}
 				Print_Order_Source_Footer(sCurrentOrderSourceDesc,
 			    						  bdOrderSourceTotal,
@@ -535,6 +532,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 
 				alSources.add(sCurrentOrderSourceDesc);
     			alAmounts.add(bdOrderSourceTotal);
+    			iCounter=0;
     			/*
 				Print_Service_Type_Footer(sCurrentServiceTypeCodeDesc,
 						   				  bdServiceTypeTotal,
@@ -551,7 +549,7 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		    	out.println("<TR><TD ALIGN=LEFT COLSPAN=5>");
 		    	Print_Pie_Chart(alSources,
 		    					alAmounts,
-		    					SMUtilities.getInitBackGroundColor(getServletContext(), sDBID).substring(1),
+		    					"FFFFFF",
 		    					out);
 		    	out.println("</TD></TR>");
 		    }
@@ -584,25 +582,29 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 								  PrintWriter out,
 								  String sCallingClass,
 								  String sDBID,
-								  String sBackgroundColor
+								  int iCount
 								  ){
 		
-		out.println("<TR BGCOLOR=" + sBackgroundColor + ">");
+		if(iCount % 2 == 0) {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}
 		if (sReportType.compareTo("Orders") == 0){
-			out.println("<TD ALIGN=CENTER><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + sDocNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + sDocNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
 		}else if (sReportType.compareTo("Invoices") == 0){
-			out.println("<TD ALIGN=CENTER><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintInvoice?InvoiceNumberFrom=" + sDocNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMPrintInvoice?InvoiceNumberFrom=" + sDocNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
 		}else{
-			out.println("<TD ALIGN=CENTER><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry" +
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry" +
 															"?lid=" + sDocNumber +
 															"&CallingClass=" + sCallingClass +
 															"&SubmitEdit=1" + 
 															"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sDocNumber.trim() + "</A></FONT></TD>");
 		}
-			out.println("<TD ALIGN=CENTER><FONT SIZE=2>" + sOrderDate + "</FONT></TD>" +
-						"<TD ALIGN=LEFT><FONT SIZE=2>" + sBillToName + "</FONT></TD>" +
-						"<TD ALIGN=LEFT><FONT SIZE=2>" + sCreatedBy + "</FONT></TD>" +
-						"<TD ALIGN=RIGHT><FONT SIZE=2>" + bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</FONT></TD>" + 
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">" + sOrderDate + "</FONT></TD>" +
+						"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">" + sBillToName + "</FONT></TD>" +
+						"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">" + sCreatedBy + "</FONT></TD>" +
+						"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">" + bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</FONT></TD>" + 
 					"</TR>");
 	}
 	/*
@@ -652,31 +654,31 @@ public class SMOrderSourceListingGenerate extends HttpServlet {
 		
 		if (!bShowSummaryOnly){
 			//printout order source header
-			out.println("<TR><TD ALIGN=LEFT><FONT SIZE=3><B>" + sOrderSourceDescription + "</B></FONT></TD></TR>");
-			out.println("<TR><TD><HR WIDTH=40% ALIGN=LEFT></TD></TR>");
-			//print out the column header for details
-		
-			out.println("<TR><TD><TABLE BORDER=0 WIDTH=100%>" +
-						"<TR>" +
-							"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>" + sIDHeader + "</B></FONT></TD>" +
-							"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>" + sDateHeader + "</B></FONT></TD>" +
-							"<TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2><B>Customer Name</B></FONT></TD>" +
-							"<TD ALIGN=CENTER WIDTH=20%><FONT SIZE=2><B>Created By</B></FONT></TD>" +
-							"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Amount</B></FONT></TD>" + 
-					   "</TR>" + 
-						"<TR><TD COLSPAN=5><HR></TD></TR>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			out.println("<TD COLSPAN=\"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + sOrderSourceDescription +"</TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + sIDHeader +"</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + sDateHeader +"</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Customer Name</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Created By</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Amount</TD>");
+			out.println("</TR>");
 		}
 	}
 	
 	private void Print_Order_Source_Footer(String sOrderSourceDescription,
 										   BigDecimal bdOrderSourceTotal,
 										   PrintWriter out){
-		
-		out.println("</TABLE>");
-		out.println("<TR><TD ALIGN=RIGHT><B>" + sOrderSourceDescription + "&nbsp;Total:&nbsp;&nbsp;&nbsp;</B>" + 
-							bdOrderSourceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + 
-					"</TD></TR><TR><TD><HR></TD></TR>"
-					);
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN=\"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + sOrderSourceDescription +"&nbsp;Total:&nbsp;&nbsp;&nbsp;"+ bdOrderSourceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		out.println("</TR>");
 	}
 	
 	private void Print_Pie_Chart(ArrayList<String> alOrderSourceList,

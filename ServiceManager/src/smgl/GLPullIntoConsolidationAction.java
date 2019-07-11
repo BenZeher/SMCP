@@ -176,7 +176,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	
     	if (sErrorString.compareToIgnoreCase("") != 0){
     		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562702052]");
-    		throw new Exception("Error [1562702051] saving companies - " + sErrorString);
+    		throw new Exception("Error [1562702051] pulling external company's transactions - " + sErrorString);
     	}
     	ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562702053]");
 		return;

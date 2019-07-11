@@ -26,7 +26,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMProductivityReportGenerate extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	@Override
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -45,8 +45,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
-	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
     	//Calculate time period
@@ -232,7 +230,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    String sCurrentInvoiceNumber = null;
 		    BigDecimal bdInvoiceTotal = BigDecimal.ZERO;
 		    BigDecimal bdMechanicTotal = BigDecimal.ZERO;
-		    //BigDecimal bdGrandTotal = BigDecimal.ZERO;
 		    
 		    int iCount = 0;
 		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
@@ -387,8 +384,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    }
 			    bdInvoiceTotal = bdInvoiceTotal.add(bdLine);
 			    bdMechanicTotal = bdMechanicTotal.add(bdLine);
-			    //bdGrandTotal = bdGrandTotal.add(bdLine);
-			    //System.out.println("   " + bdLine + " / " + bdInvoiceTotal + " / " + bdMechanicTotal + " / " + bdGrandTotal);
 			    
 		    }
 		    if (bHasRecord){
@@ -417,14 +412,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    	out.println("<TR><TD ALIGN=CENTER><B>No Record Found</B></TD></TR>");
 		    	
 		    }
-			/*
-			//print out grand total
-			out.println("<TR><TD></TD></TR>");
-			out.println("<TR><TD ALIGN=RIGHT COLSPAN=3><FONT SIZE=5><B>Grand Total :   " + 
-							bdGrandTotal.setScale(2, BigDecimal.ROUND_HALF_UP) + 
-							"</B></FONT></TD></TR>");
-			out.println("</TD></TR>");
-			*/
+
 		    out.println("</TABLE>");
 		    rs.close();
 		    

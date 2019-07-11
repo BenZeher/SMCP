@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableorderdetails;
@@ -26,12 +27,7 @@ import ServletUtilities.clsStringFunctions;
 public class SMUnbilledContractReport extends java.lang.Object{
 	public static final String NONE_SELECTED = "NONESELECTED";
 	private static final String INITIAL_VALUE = "**INITIALVALUE**";
-	private static final String CELL_BORDER_COLOR = "#808080";
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
-	private static final String ORDER_HEADER_BG_COLOR = "#C2FFE0";
-	private static final String ORDER_FOOTER_BG_COLOR = "#C2E0FF";
-	private static final String DETAIL_HEADER_BG_COLOR = "#E6FFE6";
+	private static final String CELL_BORDER_COLOR = "#000000";
 	private static final int NUMBER_OF_COLUMNS_IN_DETAIL = 11;
 	
 	public SMUnbilledContractReport(	){
@@ -251,6 +247,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 					//Print the totals from the previous order:
 					if(bShowIndividualOrders){
 						s += printOrderFooter(rs, bdOrderCostAccumulator, bdOrderPriceAccumulator, sLastOrderMarker, sLastOrderBillTo, sLastOrderShipTo);
+						bOddRow = true;
 					}
 					//If we are on to the next salesperson, then print the salesperson totals:
 					if (
@@ -259,6 +256,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 					){
 						if(bShowIndividualOrders){
 							s += printSalespersonFooter(sLastSalespersonMarker, bdSalespersonCostAccumulator, bdSalespersonPriceAccumulator, iSalespersonOrderCount);
+							bOddRow = true;
 						}
 						//Pick up the accumulators for this salesperson:
 						accumulateStatistic(
@@ -688,7 +686,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			Connection conn,
 			int iSalespersonOrderCount) throws Exception{
 		String s = "";
-		s += "<TABLE class = \"basic\" >";
+		 s += "<TABLE CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
 		String sOrderNumberLink = rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber);
 		if (bViewOrderInformationAllowed){
 			sOrderNumberLink = "<A href=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" +
@@ -734,7 +732,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		if (sWorkOrdersLink.compareToIgnoreCase("") != 0){
 			sWorkOrdersLink = sWorkOrdersLink.substring(0, sWorkOrdersLink.length() - ", ".length());
 		}
-		s += "<TR style = \" background-color: " + ORDER_HEADER_BG_COLOR + "; \" >";
+		s += "<TR CLASS  = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >";
 		s += "<TD COLSPAN = " + Integer.toString(NUMBER_OF_COLUMNS_IN_DETAIL) + " style = \" "
 			+ "border: 1px solid; "
 			+ "bordercolor: 000; "
@@ -784,20 +782,20 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		if (sLastOrderMarker.compareToIgnoreCase(INITIAL_VALUE) == 0){
 			return s;
 		}
-		s += "<TR style = \" background-color: " + ORDER_FOOTER_BG_COLOR + "; \" >";
-		s += "<TD COLSPAN = " + Integer.toString(NUMBER_OF_COLUMNS_IN_DETAIL - 2) + " class = \" rightjustifiedheading \" >"
+		s += "<TR CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >";
+		s += "<TD COLSPAN = " + Integer.toString(NUMBER_OF_COLUMNS_IN_DETAIL - 2) + " CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +" \" ><B>"
 				+ "TOTALS FOR ORDER #" + sLastOrderMarker
 				+ " " + sBillTo + " - " + sShipTo
 				+ ":"
-				+ "</TD>"
+				+ "</B></TD>"
 		;
-		s += "<TD class = \" rightjustifiedheading \" >"
+		s += "<TD CLASS = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOrderCostAccumulator)
-				+ "</TD>"
+				+ "</B></TD>"
 		;
-		s += "<TD class = \" rightjustifiedheading \" >"
+		s += "<TD CLASS = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOrderPriceAccumulator)
-				+ "</TD>"
+				+ "</B></TD>"
 		;
 		s += "</TR>";
 		
@@ -807,62 +805,62 @@ public class SMUnbilledContractReport extends java.lang.Object{
 	}
 	private String printOrderDetailHeader(){
 		String s = "";
-		s += "<TR style = \" background-color: " + DETAIL_HEADER_BG_COLOR + " \" >";
+		s += "<TR CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >";
 		
-		s += "<TD class = \"leftjustifiedheading \" >"
+		s += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" ><B>"
 				+ "Line"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 		
-		s += "<TD class = \"leftjustifiedheading \" >"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +  "  \" ><B>"
 			+ "Item"
-			+ "</TD>"
+			+ "</B></TD>"
 		;
 
-		s += "<TD class = \"leftjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 			+ "Description"
-			+ "</TD>"
+			+ "</B></TD>"
 		;
 
-		s += "<TD class = \"leftjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 			+ "Expected<BR>Ship&nbsp;Date"
-			+ "</TD>"
+			+ "</B></TD>"
 		;
 
-		s += "<TD class = \"leftjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Location"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 		
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 			+ "Qty&nbsp;On&nbsp;Hand<BR>At&nbsp;Location"
-			+ "</TD>"
+			+ "</B></TD>"
 		;
 
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Total&nbsp;Cost&nbsp;On<BR>Hand&nbsp;At&nbsp;Location"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Qty<BR>Ordered"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 		
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Recent<BR>Unit&nbsp;Cost"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 		
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Calculated<BR>Extended&nbsp;Cost"
 				+ "&nbsp;<A HREF=\"#COSTEXPL\">?</A>"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 		
-		s += "<TD class = \"rightjustifiedheading \" >"
+		s += "<TD CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" ><B>"
 				+ "Billing<BR>Value"
-				+ "</TD>"
+				+ "</B></TD>"
 			;
 
 		s += "</TR>";
@@ -876,11 +874,11 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			ServletContext context,
 			boolean bOddRow) throws Exception{
 		String s = "";
-		String sBackgroundColor = DARK_ROW_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN ;
 		if (bOddRow){
-			sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		}
-		s += "<TR style = \" background-color: " + sBackgroundColor +  "; \">";
+		s += "<TR CLASS = \"" + sBackgroundColor +  " \" >";
 		
 		//Line number
 		String sLineNumberLink = clsStringFunctions.PadLeft(Integer.toString(rsOrder.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber)), "0", 4);
@@ -897,7 +895,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 				+ "</A>"
 			;
 		}
-		s += "<TD class = \" leftjustifiedcell \" >"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
 			+ sLineNumberLink
 			+ "</TD>"
 		;
@@ -916,63 +914,63 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		if (bItemRecordIsMissing){
 			sItemNumberLink = "<FONT COLOR=RED>" + sItemNumberLink + "<A HREF=\"#ITEMNOEXPL\">?</A></B></FONT>";
 		}
-		s += "<TD class = \" leftjustifiedcell \" >"
-			+ sItemNumberLink
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ sItemNumberLink
+				+ "</TD>"
 		;
 
 		//Description:
-		s += "<TD class = \" leftjustifiedcell \" >"
-			+ rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.sItemDesc)
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.sItemDesc)
+				+ "</TD>"
 		;
 		
 		//Expected ship date:
-		s += "<TD class = \" leftjustifiedcell \" >"
-			+ clsDateAndTimeConversions.resultsetDateStringToString(rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.datDetailExpectedShipDate))
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsDateAndTimeConversions.resultsetDateStringToString(rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.datDetailExpectedShipDate))
+				+ "</TD>"
 		;
 		
 		//Location:
-		s += "<TD class = \" leftjustifiedcell \" >"
-			+ rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.sLocationCode)
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ rsOrder.getString(SMTableorderdetails.TableName + "." + SMTableorderdetails.sLocationCode)
+				+ "</TD>"
 		;
 			
 		//Qty on hand at location:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand), SMTableorderdetails.dQtyOrderedScale)
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sQtyOnHand), SMTableorderdetails.dQtyOrderedScale)
+				+ "</TD>"
 		;
 		
 		//Total cost on hand at location:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sTotalCost), 2)
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sTotalCost), 2)
+				+ "</TD>"
 		;
 		
 		//Qty ordered:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered), SMTableorderdetails.dQtyOrderedScale)
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.doubleToDecimalFormat(rsOrder.getDouble(SMTableorderdetails.TableName + "." + SMTableorderdetails.dQtyOrdered), SMTableorderdetails.dQtyOrderedScale)
+				+ "</TD>"
 		;
 		
 		//Recent cost:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsOrder.getDouble(SMTableicitems.TableName + "." + SMTableicitems.bdmostrecentcost))
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsOrder.getDouble(SMTableicitems.TableName + "." + SMTableicitems.bdmostrecentcost))
+				+ "</TD>"
 		;
 		
 		//Extended cost:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(getCalculatedCost(rsOrder))
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(getCalculatedCost(rsOrder))
+				+ "</TD>"
 		;
 		
 		//Billing value:
-		s += "<TD class = \" rightjustifiedcell \" >"
-			+ clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsOrder.getDouble("ExtPrice"))
-			+ "</TD>"
+		s += "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				+ clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsOrder.getDouble("ExtPrice"))
+				+ "</TD>"
 		;
 		
 		s += "</TR>";
@@ -1011,39 +1009,39 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		BigDecimal bdTotalPrice = new BigDecimal("0.00");
 		
 		//System.out.println("[1431351974] arrSalespersons.size() = " + arrSalespersons.size());
-		String s = "<TABLE class = \" basicwithborder \" >";
-		s += "<TR style = \" background-color: black; \">"
-			+ "<TD WIDTH=25% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:white; \" >"
+		String s = "<TABLE CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
+		s += "<TR CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_BREAK +"\">"
+			+ "<TD WIDTH=25% CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" style = \" font-weight:bold; color:white; \" >"
 			+ sTitle
 			+ "</TD>"
-			+ "<TD  WIDTH=25% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:white; \" >"
+			+ "<TD  WIDTH=25% CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +" \" style = \" font-weight:bold; color:white; \" >"
 			+ "NO. OF ORDERS"
 			+ "</TD>"
-			+ "<TD  WIDTH=25% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:white; \" >"
+			+ "<TD  WIDTH=25% CLASS = \" "+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +" \" style = \" font-weight:bold; color:white; \" >"
 			+ "TOTAL CALCULATED COST"
 			+ "</TD>"
-			+ "<TD  WIDTH=25% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:white; \" >"
+			+ "<TD  WIDTH=25% CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +  "  \" style = \" font-weight:bold; color:white; \" >"
 			+ "TOTAL BILLING VALUE"
 			+ "</TD>"
 			+ "<TR>"
 		;
 		boolean bOddRow = true;
 		for (int i = 0; i < arrGroupNames.size(); i++){
-			String sBackgroundColor = LIGHT_ROW_BG_COLOR;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 			if (bOddRow){
-				sBackgroundColor = DARK_ROW_BG_COLOR;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 			}
-			s += "<TR style = \" background-color:" + sBackgroundColor + " \" >"
-				+ "<TD class = \" rightjustifiedcell \" >"
+			s += "<TR CLASS = \"" + sBackgroundColor + "\" >"
+				+ "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +" \" >"
 				+ arrGroupNames.get(i)
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "  \" >"
 				+ Integer.toString(arrGroupOrderCount.get(i))
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "  \" >"
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(arrGroupCost.get(i))
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+  "  \" >"
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(arrGroupPrice.get(i))
 				+ "</TD>"
 				+ "</TR>"
@@ -1053,21 +1051,21 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			bdTotalPrice = bdTotalPrice.add(arrGroupPrice.get(i));
 			bOddRow = !bOddRow;
 		}
-		String sBackgroundColor = LIGHT_ROW_BG_COLOR;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		if (bOddRow){
-			sBackgroundColor = DARK_ROW_BG_COLOR;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		}
-		s += "<TR style = \" background-color:" + sBackgroundColor + " \" >"
-				+ "<TD class = \" rightjustifiedcell \" >"
+		s += "<TR CLASS = \"" + sBackgroundColor + " \" >"
+				+ "<TD CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+ " \" >"
 				+ "<B>TOTALS</B>"
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" >"
 				+ "<B>" + Integer.toString(iTotalOrderCount) + "</B>"
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" >"
 				+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalCost) + "</B>"
 				+ "</TD>"
-				+ "<TD class = \" rightjustifiedcell \" >"
+				+ "<TD CLASS = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+" \" >"
 				+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalPrice) + "</B>"
 				+ "</TD>"
 				+ "</TR>"

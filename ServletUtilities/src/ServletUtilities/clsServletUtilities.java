@@ -406,6 +406,79 @@ public class clsServletUtilities {
 		sTable = sTable + "</TABLE>";
 		return sTable;
 	} 
+	public static String Build_HTML_Table (int iNumberOfColumns,
+			ArrayList<String> sTableValues,
+			int iTotalWidthPercentage,
+			int iBorderWidth,
+			boolean bEqualWidth,
+			boolean bVertical,
+			String sColor
+			){
+
+		String sTable = "<TABLE BORDER=" + iBorderWidth;
+
+		if (iTotalWidthPercentage > 0){
+			sTable = sTable  + " WIDTH=" + iTotalWidthPercentage + "%";
+		}
+		sTable += " BGCOLOR = \"" + sColor + "\" ";
+		sTable = sTable + ">";
+
+		if (bVertical){
+			//find out total rows, including empty space:
+			int iTotalRows = (int)Math.ceil(sTableValues.size() / (double)iNumberOfColumns); 
+			//System.out.println("Total Row = " + iTotalRows);
+			//find out how many full columns
+			int iFullColumns = sTableValues.size() % iNumberOfColumns;
+			if (iFullColumns == 0){
+				iFullColumns = iNumberOfColumns;
+			}
+
+			int iArrayCounter = 0;
+			sTable = sTable + "<TR>\n";
+			for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
+				int iLessRow;
+				if (iCol < iFullColumns){
+					iLessRow = 0;
+				}else{
+					iLessRow = 1;
+				}
+				sTable = sTable + "<TD VALIGN=TOP";
+				if (bEqualWidth){
+					sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
+				}
+				sTable = sTable + "><TABLE BORDER=0 WIDTH=100%>";
+				for (int iRow=0; iRow < iTotalRows - iLessRow; iRow++){
+					sTable = sTable + "<TR>\n<TD>\n " + sTableValues.get(iArrayCounter) + " </TD>\n</TR>\n";
+					iArrayCounter++;
+				}
+				sTable = sTable + "</TABLE></TD>\n";
+			}
+
+			sTable = sTable + "</TR>\n";
+		}else{
+			//find out total rows, including empty space:
+			int iArrayCounter = 0;
+			while (iArrayCounter < sTableValues.size()){
+				sTable = sTable + "<TR>\n";
+				for (int iCol=0 ; iCol < iNumberOfColumns; iCol++){
+					sTable = sTable + "<TD VALIGN=TOP";
+					if (bEqualWidth){
+						sTable = sTable + " WIDTH = " + 100 / iNumberOfColumns + "%";
+					}
+					if (iArrayCounter < sTableValues.size()){
+						sTable = sTable + ">" + sTableValues.get(iArrayCounter) + " </TD>\n";
+					}else{
+						sTable = sTable + ">&nbsp;</TD>\n";
+					}
+					iArrayCounter++;
+					//System.out.println("iArrayCounter = " + iArrayCounter);
+				}
+				sTable = sTable + "</TR>\n";
+			}
+		}
+		sTable = sTable + "</TABLE>";
+		return sTable;
+	} 
 
 	public static boolean TypeCombinationCheck(int iCombination, int iID){
 

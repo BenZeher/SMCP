@@ -713,15 +713,15 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			){
 
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-		out.println("<TD COLSPAN=\"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"GREEN\" >ORDER TYPE TOTALS * * * </FONT>Orders for sales group " + sSalesGroup + ", "  + sSaleType +"</TD>");
+		out.println("<TD COLSPAN=\"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"GREEN\" >ORDER TYPE TOTALS * * * </FONT>Orders for sales group " + sSalesGroup + ", "  + sSaleType +":</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + Long.toString(lNumberOfOrdersForSaleType) +"</TD>");
 		out.println("</TR>");
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount</TD>");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSaleType) +"</TD>");
 		out.println("</TR>");
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for sales group " + sSalesGroup + ", " + sSaleType +"</TD>");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for sales group " + sSalesGroup + ", " + sSaleType +":</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSaleType) +"</TD>");
 		out.println("</TR>");
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
@@ -737,11 +737,11 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			PrintWriter out
 			){
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"BLUE\" >SALES GROUP TOTALS * * * </FONT>Orders for sales group " + sSalesGroup  +"</TD>");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"BLUE\" >SALES GROUP TOTALS * * * </FONT>Orders for sales group " + sSalesGroup  +":</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + Long.toString(lNumberOfOrdersForSalesGroup) +"</TD>");
 		out.println("</TR>");
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount</TD>");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSalesGroup) +"</TD>");
 		out.println("</TR>");
 		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
@@ -768,11 +768,11 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		for (int i = 0; i < arrOrderTypes.size(); i++){
 			BigDecimal bdAvgOrderAmt = arrOrderTypeTotals.get(i).divide(BigDecimal.valueOf(arrOrderTypeCounts.get(i)), 2, RoundingMode.HALF_UP);
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Orders for order type " + arrOrderTypes.get(i)  +"</TD>");
+			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Orders for order type " + arrOrderTypes.get(i)  +":</TD>");
 			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + Long.toString(arrOrderTypeCounts.get(i)) +"</TD>");
 			out.println("</TR>");
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
-			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount</TD>");
+			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
 			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgOrderAmt) +"</TD>");
 			out.println("</TR>");
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");

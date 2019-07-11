@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablechangeorders;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesperson;
@@ -75,27 +76,27 @@ public class SMAverageMUReport extends java.lang.Object{
 
 		//print out the column headers.
 		//Salesperson, date, job#, customer, amount, MU, truck days, avg MU/TD
-		out.println("<TABLE BORDER=0 WIDTH=100%>");
+		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
 		if(!bSummaryOnly){
-			out.println("<TR>" + 
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Salesperson</FONT></B></TD>" +
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Date</FONT></B></TD>" +
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Order #</FONT></B></TD>" +
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Bill to</FONT></B></TD>");
+
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Salesperson </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Date </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order # </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill to </TD>");
 		}else{
-			out.println("<TR>" + 
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-					"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>&nbsp;</FONT></B></TD>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp; </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp; </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp; </TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp; </TD>");
 		}
-		out.println(
-				"<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Amount</FONT></B></TD>" +
-				"<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Mark Up</FONT></B></TD>" +
-				"<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Truck Days</FONT></B></TD>" +
-				"<TD ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Avg MU/day</FONT></B></TD>" +
-				"</TR>" + 
-		"<TR><TD COLSPAN=8><HR></TD></TR>");
+
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Amount </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Mark Up </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Truck Days </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg MU/day </TD>");
+		out.println("</TR>");
 
 		String sCurrentServiceType = "";
 		String sCurrentSalesPerson = "";
@@ -129,6 +130,7 @@ public class SMAverageMUReport extends java.lang.Object{
 
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			int iCount = 0;
 			while(rs.next()){
 				//Print the header for any new source OR salesperson OR service type:
 				if (
@@ -153,6 +155,7 @@ public class SMAverageMUReport extends java.lang.Object{
 						dSourceAmount = BigDecimal.ZERO;
 						dSourceMU = BigDecimal.ZERO;
 						dSourceTruckDays = BigDecimal.ZERO;
+						iCount =0;
 					}
 				}
 				//Depending on the 'Group By' variable, these next two groupings can print in one
@@ -179,6 +182,7 @@ public class SMAverageMUReport extends java.lang.Object{
 							dServiceTypeAmount = BigDecimal.ZERO;
 							dServiceTypeMU = BigDecimal.ZERO;
 							dServiceTypeTruckDays = BigDecimal.ZERO;
+							iCount =0;
 						}
 					}
 					//Print the header for any new salesperson:
@@ -200,6 +204,7 @@ public class SMAverageMUReport extends java.lang.Object{
 							dSalespersonAmount = BigDecimal.ZERO;
 							dSalespersonMU = BigDecimal.ZERO;
 							dSalespersonTruckDays = BigDecimal.ZERO;
+							iCount =0;
 						}
 					}
 				}else{
@@ -225,6 +230,7 @@ public class SMAverageMUReport extends java.lang.Object{
 							dSalespersonAmount = BigDecimal.ZERO;
 							dSalespersonMU = BigDecimal.ZERO;
 							dSalespersonTruckDays = BigDecimal.ZERO;
+							iCount =0;
 						}
 
 					}
@@ -246,6 +252,7 @@ public class SMAverageMUReport extends java.lang.Object{
 							dServiceTypeAmount = BigDecimal.ZERO;
 							dServiceTypeMU = BigDecimal.ZERO;
 							dServiceTypeTruckDays = BigDecimal.ZERO;
+							iCount =0;
 						}
 					}
 				}
@@ -256,21 +263,26 @@ public class SMAverageMUReport extends java.lang.Object{
 				bdAvgMU = rs.getBigDecimal("AvgMU");
 
 				if(!bSummaryOnly){
-					out.println("<TR>");
-					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("Salesperson") + "</FONT></TD>");
-					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("DocDate"),"MM/dd/yyyy") + "</FONT></TD>");
-					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" 
-							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
+					if(iCount % 2 == 0) {
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+					}else {
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+					}
+
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + rs.getString("Salesperson") + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsDateAndTimeConversions.utilDateToString(rs.getDate("DocDate"),"MM/dd/yyyy") + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 							+ rs.getString("OrderNumber") 
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 							+ "\">" + rs.getString("OrderNumber") + "</A>"
-							+ "</FONT></TD>");
-					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("Customer") + "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount) + "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkUp) + "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTruckDays) + "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgMU) + "</FONT></TD>");
-					out.println("</TR>");
+							+ "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + rs.getString("Customer") + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAmount) + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMarkUp) + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTruckDays) + "</TD>");
+					out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgMU) + "</TD>");
+				    out.println("</TR>");
+				    
 				}
 				//Set the totals:
 				dSourceAmount = dSourceAmount.add(bdAmount);
@@ -294,6 +306,7 @@ public class SMAverageMUReport extends java.lang.Object{
 				sCurrentSalesPerson = rs.getString("Salesperson") + " - " + rs.getString("SalespersonName");
 				sCurrentServiceType = rs.getString("ServiceTypeDesc");
 				sCurrentSource = rs.getString("Source");
+				iCount++;
 			}
 			rs.close();
 
@@ -403,28 +416,23 @@ public class SMAverageMUReport extends java.lang.Object{
 			boolean bShowServiceTypeTotals,
 			PrintWriter out
 	){
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT colspan=\"4\"><B><FONT SIZE=2>Total for ");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ");
 		if (bShowServiceTypeTotals){
 			out.println(sCurrentServiceType + ", ");
 		}
 
 		out.println("Salesperson " + sCurrentSalesPerson
 				+ ", " + sCurrentSource
-				+ ":</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceAmount) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceMarkUp) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceTruckDays) + "</B></FONT></TD>");
-
+				+ ":</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceAmount) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceMarkUp) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceTruckDays) + "</TD>");
 		MathContext mc=new MathContext(5, RoundingMode.HALF_EVEN);
 		if(dSourceTruckDays.compareTo(BigDecimal.ZERO) != 0){
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceMarkUp.divide(dSourceTruckDays, mc)) + "</B></FONT></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSourceMarkUp.divide(dSourceTruckDays, mc)) + "</TD>");
 		}else{
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>0.00</B></FONT></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">0.00</TD>");
 		}
 
 		out.println("</TR>");
@@ -442,33 +450,34 @@ public class SMAverageMUReport extends java.lang.Object{
 	){
 
 		String sOutPut = "";
-		sOutPut = "<TR>";
-		sOutPut = sOutPut + "<TD ALIGN=RIGHT colspan=\"4\"><B><FONT SIZE=2>Total for ";
+
 
 		if (sGroupBy.compareTo("Salesperson") == 0){
+			sOutPut ="<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">";
+			sOutPut += "<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ";
 			sOutPut = sOutPut + "Salesperson " + sCurrentSalesperson;
 		}else{
+			sOutPut ="<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">";
+			sOutPut += "<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ";
 			if (bShowServiceTypeTotals){
 				sOutPut = sOutPut + sCurrentServiceType + ", ";
 			}
 			sOutPut = sOutPut + "Salesperson " + sCurrentSalesperson;
 		}
 
-		sOutPut = sOutPut +  ":</FONT></B></TD>";
-
+		sOutPut = sOutPut +  ":</TD>";
 		out.println(sOutPut);
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonAmount) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonMarkUp) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonTruckDays) + "</B></FONT></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonAmount) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonMarkUp) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonTruckDays) + "</TD>");
 
 		MathContext mc=new MathContext(5, RoundingMode.HALF_EVEN);
 		if(dSalespersonTruckDays.compareTo(BigDecimal.ZERO) != 0){
 			//out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
 			//	+ dSalespersonMarkUp.divide(dSalespersonTruckDays) + "</FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonMarkUp.divide(dSalespersonTruckDays, mc)) + "</B></FONT></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dSalespersonMarkUp.divide(dSalespersonTruckDays, mc)) + "</TD>");
 		}else{
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>0.00</B></FONT></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">0.00</TD>");
 		}
 		out.println("</TR>");
 		out.println("<TR></TR>");
@@ -486,24 +495,26 @@ public class SMAverageMUReport extends java.lang.Object{
 		if (!bShowServiceType){
 			return;
 		}
-		out.println("<TR>");
+
 
 		if (sGroupBy.compareTo("Salesperson") == 0){
-			out.println("<TD ALIGN=RIGHT colspan=\"4\"><B><FONT SIZE=2>Total for salesperson " 
-					+ sCurrentSalesperson + ", " + sCurrentServiceType + ":</FONT></B></TD>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for salesperson " 
+					+ sCurrentSalesperson + ", " + sCurrentServiceType + ":</TD>");
 		}else{
-			out.println("<TD ALIGN=RIGHT colspan=\"4\"><B><FONT SIZE=2>Total for " + sCurrentServiceType + ":</FONT></B></TD>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for " 
+					+ sCurrentServiceType + ":</TD>");
 		}
-
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeAmount) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeMarkUp) + "</B></FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeTruckDays) + "</B></FONT></TD>");
+		
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeAmount) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeMarkUp) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeTruckDays) + "</TD>");
 		MathContext mc=new MathContext(5, RoundingMode.HALF_EVEN);
 		if(dServiceTypeTruckDays.compareTo(BigDecimal.ZERO) != 0){
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" 
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeMarkUp.divide(dServiceTypeTruckDays, mc)) + "</B></FONT></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dServiceTypeMarkUp.divide(dServiceTypeTruckDays, mc)) + "</TD>");
 		}else{
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>0.00</B></FONT></TD>");
+				out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">0.00</TD>");
 		}
 		out.println("</TR>");
 		out.println("<TR></TR>");

@@ -227,13 +227,15 @@ public class SMMonthlySalesReportGenerate extends HttpServlet {
     	}else{
     		sCriteria = sCriteria + ", <B>NOT SHOWING </B> individual orders</>";
     	}
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+    	 out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\" >" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMMonthlySalesReportGenerate") 

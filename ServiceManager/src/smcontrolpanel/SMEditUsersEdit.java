@@ -214,8 +214,13 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsUserName()) + "\"";
 		sOutPut += "SIZE=28";
 		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserUserNameLength);
-		sOutPut += " STYLE=\"width: 1.2in; height: 0.25in\"";
-		sOutPut += " readonly></TD>";
+		sOutPut += " STYLE=\"width: 1.2in; height: 0.25in\" ";
+		if(userentry.bIsNewRecord()) {
+			sOutPut +=  "";
+		}else {
+			sOutPut +=  "readonly";
+		}
+		sOutPut += "></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>Enter a <i>unique</i> username that will be used to log into SMCP.</TD>";
 		sOutPut += "</TR>";

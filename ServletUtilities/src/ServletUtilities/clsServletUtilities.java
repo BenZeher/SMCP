@@ -730,7 +730,7 @@ public class clsServletUtilities {
 	
 	public static String getMasterStyleSheetLink(){
 		//Adding the '?v=1.1' SHOULD force the browser to refresh the file:
-		return "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles/MasterStyleSheet.css?v=1.2\" media=\"screen\" />\n";
+		return "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles/MasterStyleSheet.css?v=1.2\" media=\"all\" />\n";
 	}
 	
 

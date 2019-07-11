@@ -48,7 +48,12 @@ public class ARMonthlyStatistics extends Object{
 			){
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_Monthly_Statistics(m_sCustomerNumber, Long.toString(m_lyear), Long.toString(m_lmonth));
+			String sSQL ="SELECT * FROM " + SMTablearmonthlystatistics.TableName 
+					+ " WHERE (" 
+					+ "(" + SMTablearmonthlystatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+					+ " AND (" + SMTablearmonthlystatistics.sYear + " = " + Long.toString(m_lyear) + ")"
+					+ " AND (" + SMTablearmonthlystatistics.sMonth + " = " + Long.toString(m_lmonth) + ")"
+				+ ")"; 
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 
 	        if (rs.next()){
@@ -82,44 +87,66 @@ public class ARMonthlyStatistics extends Object{
     	String SQL;
     	try{
 			//Get the record:
-			SQL = ARSQLs.Get_Monthly_Statistics(
-					m_sCustomerNumber, 
-					Long.toString(m_lyear), 
-					Long.toString(m_lmonth));
-	        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			SQL = "SELECT * FROM " + SMTablearmonthlystatistics.TableName 
+					+ " WHERE (" 
+					+ "(" + SMTablearmonthlystatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+					+ " AND (" + SMTablearmonthlystatistics.sYear + " = " + Long.toString(m_lyear) + ")"
+					+ " AND (" + SMTablearmonthlystatistics.sMonth + " = " + Long.toString(m_lmonth) + ")"
+				+ ")"; 
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 
 	        if (rs.next()){
 	        	//Do an update
-	            SQL = ARSQLs.Update_Monthly_Statistics(
-	            		m_sCustomerNumber, 
-	            		Long.toString(m_lyear), 
-	            		Long.toString(m_lmonth), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdinvoicetotal), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcredittotal), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdpaymenttotal), 
-	            		Long.toString(m_lnumberofinvoices), 
-	            		Long.toString(m_lnumberofcredits), 
-	            		Long.toString(m_lnumberofpayments), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdaveragenumberofdaystopay),
-	            		Long.toString(m_ltotalnumberofpaidinvoices), 
-	            		Long.toString(m_ltotalnumberofdaystopay)
-	            );
+	            SQL =  "UPDATE " + SMTablearmonthlystatistics.TableName 
+	        			+ " SET"
+	        			+ " " + SMTablearmonthlystatistics.sAverageDaysToPay + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdaveragenumberofdaystopay)
+	        			+ ", " + SMTablearmonthlystatistics.sCreditTotal + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcredittotal)
+	        			+ ", " + SMTablearmonthlystatistics.sInvoiceTotal + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdinvoicetotal)
+	        			+ ", " + SMTablearmonthlystatistics.sMonth + " = " + Long.toString(m_lmonth)
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfCredits + " = " + Long.toString(m_lnumberofcredits)
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfInvoices + " = " + Long.toString(m_lnumberofinvoices)
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfPayments + " = " + Long.toString(m_lnumberofpayments)
+	        			+ ", " + SMTablearmonthlystatistics.sPaymentTotal + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdpaymenttotal)
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfPaidInvoices + " = " + Long.toString(m_ltotalnumberofpaidinvoices)
+	        			+ ", " + SMTablearmonthlystatistics.sTotalNumberOfDaysToPay + " = " + Long.toString(m_ltotalnumberofdaystopay)
+	        			+ " WHERE (" 
+	        				+ "(" + SMTablearmonthlystatistics.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+	        				+ " AND (" + SMTablearmonthlystatistics.sYear + " = " + Long.toString(m_lyear) + ")"
+	        				+ " AND (" + SMTablearmonthlystatistics.sMonth + " = " + Long.toString(m_lmonth) + ")"
+	        		+ ")";
 	        }else{
 	        	//Do an insert
-	            SQL = ARSQLs.Insert_Monthly_Statistics(
-	            		m_sCustomerNumber, 
-	            		Long.toString(m_lyear), 
-	            		Long.toString(m_lmonth), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdinvoicetotal), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcredittotal), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdpaymenttotal), 
-	            		Long.toString(m_lnumberofinvoices), 
-	            		Long.toString(m_lnumberofcredits), 
-	            		Long.toString(m_lnumberofpayments), 
-	            		clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdaveragenumberofdaystopay),
-	            		Long.toString(m_ltotalnumberofpaidinvoices), 
-	            		Long.toString(m_ltotalnumberofdaystopay)
-	            		);
+	            SQL =   "INSERT INTO " + SMTablearmonthlystatistics.TableName 
+	        			
+	        			+ " ("
+	        			+ SMTablearmonthlystatistics.sCustomerNumber
+	        			+ ", " + SMTablearmonthlystatistics.sYear
+	        			+ ", " + SMTablearmonthlystatistics.sCreditTotal
+	        			+ ", " + SMTablearmonthlystatistics.sInvoiceTotal
+	        			+ ", " + SMTablearmonthlystatistics.sMonth
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfCredits
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfInvoices
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfPayments
+	        			+ ", " + SMTablearmonthlystatistics.sPaymentTotal
+	        			+ ", " + SMTablearmonthlystatistics.sAverageDaysToPay
+	        			+ ", " + SMTablearmonthlystatistics.sNumberOfPaidInvoices
+	        			+ ", " + SMTablearmonthlystatistics.sTotalNumberOfDaysToPay
+	        			+ ") VALUES ("
+	        			
+	        			+ "'" + m_sCustomerNumber + "'"
+	        			+ ", " + Long.toString(m_lyear)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdcredittotal)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdinvoicetotal)
+	        			+ ", " + Long.toString(m_lmonth)
+	        			+ ", " + Long.toString(m_lnumberofcredits)
+	        			+ ", " + Long.toString(m_lnumberofinvoices)
+	        			+ ", " + Long.toString(m_lnumberofpayments)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdpaymenttotal)
+	        			+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(m_bdaveragenumberofdaystopay)
+	        			+ ", " + Long.toString(m_ltotalnumberofpaidinvoices)
+	        			+ ", " + Long.toString(m_ltotalnumberofdaystopay)
+
+	        		+ ")";
 	        }
     		
 	        rs.close();

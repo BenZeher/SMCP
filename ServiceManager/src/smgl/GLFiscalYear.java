@@ -1892,6 +1892,61 @@ public class GLFiscalYear extends java.lang.Object{
 		return sYearAndPeriod;
 	}
 	
+	public final boolean isPeriodLocked(String sFiscalYear, int iPeriod, Connection conn) throws Exception{
+		String sPeriodIsLocked = "1";
+		
+		
+		switch (iPeriod){
+		case 1:
+			sPeriodIsLocked = get_siperiod1locked();
+			break;
+		case 2:
+			sPeriodIsLocked = get_siperiod2locked();
+			break;
+		case 3:
+			sPeriodIsLocked = get_siperiod3locked();
+			break;
+		case 4:
+			sPeriodIsLocked = get_siperiod4locked();
+			break;
+		case 5:
+			sPeriodIsLocked = get_siperiod5locked();
+			break;
+		case 6:
+			sPeriodIsLocked = get_siperiod6locked();
+			break;
+		case 7:
+			sPeriodIsLocked = get_siperiod7locked();
+			break;
+		case 8:
+			sPeriodIsLocked = get_siperiod8locked();
+			break;
+		case 9:
+			sPeriodIsLocked = get_siperiod9locked();
+			break;
+		case 10:
+			sPeriodIsLocked = get_siperiod10locked();
+			break;
+		case 11:
+			sPeriodIsLocked = get_siperiod11locked();
+			break;
+		case 12:
+			sPeriodIsLocked = get_siperiod12locked();
+			break;
+		case 13:
+			sPeriodIsLocked = get_siperiod13locked();
+			break;
+		default:
+			throw new Exception("Error [2019190160302] " + "period '" + Integer.toString(iPeriod) + "' is not valid.");
+		}
+		
+		if (sPeriodIsLocked.compareToIgnoreCase("1") == 0){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
 	public void set_sdatbeginningdateperiod1(String sDate) {
 		m_sdatbeginningdateperiod1 = sDate;
 	}

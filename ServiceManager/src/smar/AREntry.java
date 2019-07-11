@@ -1722,7 +1722,12 @@ public class AREntry extends java.lang.Object{
     	
     	//Make sure there is no open transaction with this customer number and doc number already:
     	try {
-    		String SQL = ARSQLs.Get_OpenTransactions_By_Customer_And_Doc_SQL(m_sCustomerNumber, m_sDocNumber);
+    		String SQL = "SELECT *" 
+    				+ " FROM " + SMTableartransactions.TableName
+    				+ " WHERE ("
+    					+ "(" + SMTableartransactions.spayeepayor + " = '" + m_sCustomerNumber + "')"
+    					+ " AND (" + SMTableartransactions.sdocnumber + " = '" + m_sDocNumber + "')"
+    					+ ")";
     		ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
     		if (rs.next()){
     			rs.close();

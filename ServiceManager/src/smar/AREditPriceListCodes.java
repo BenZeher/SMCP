@@ -72,7 +72,9 @@ public class AREditPriceListCodes extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_PriceListCodes_List_SQL();
+	        String sSQL = "SELECT *" 
+	        		+ " FROM " + SMTablepricelistcodes.TableName
+	        		+ " ORDER BY " + SMTablepricelistcodes.spricelistcode;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 

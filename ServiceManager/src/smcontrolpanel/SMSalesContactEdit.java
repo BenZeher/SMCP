@@ -222,8 +222,8 @@ public class SMSalesContactEdit extends HttpServlet {
 		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD>"); 
 	    			while (rsSalesperson.next()){
 		    			out.print(rsSalesperson.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName) + ", " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName));
+							      rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
+							      rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName));
 	    			}
 	    			rsSalesperson.close();
 	    			out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedSalesperson\" VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\">");
@@ -546,22 +546,21 @@ public class SMSalesContactEdit extends HttpServlet {
 				
 				out.println("</TABLE>");
 				out.println("</TD></TR>");
+	    	    
+				//save and remove buttons
+				out.println("</TABLE>");
+				out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITSAVE\" VALUE=\" Save \">");
+				out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITREMOVE\" VALUE=\" Remove \" ONCLICK=\"return confirm('This Sales Contact will be deleted.')\">  ");
+				
 		    	}else{
-		    		out.println("<BR>No sales contact record found with this ID.<>");
+		    		out.println("<BR>No sales contact record found with this ID.");
 		    	}
-	
 		    	rs.close();
-		    	
 	    	}catch(SQLException ex){
 
 	    		out.println("<BR>Error [1396989523] reading sales contact record - " + ex.getMessage() + ".");
 	    	}    	
 	    }
-	    out.println("</TABLE>");
-	    	    
-	    //save and remove buttons
-		out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITSAVE\" VALUE=\" Save \">");
-		out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITREMOVE\" VALUE=\" Remove \" ONCLICK=\"return confirm('This Sales Contact will be deleted.')\">  ");
 		out.println("</BODY></HTML>");
 	}
 

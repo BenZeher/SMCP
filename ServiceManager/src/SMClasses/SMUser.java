@@ -103,7 +103,9 @@ public class SMUser extends clsMasterEntry{
 		if( (req.getParameter(SMEditUsersSelection.ADD_NEW_USER_BUTTON_NAME) != null || m_lid.compareToIgnoreCase("-1") == 0)
 				&& req.getParameter(SMEditUsersSelection.DELETE_USER_BUTTON_NAME) == null){
 			m_sNewRecord = SMUser.ParamNewRecordValue;
+			m_lid = "-1";
 		}
+
     }
     
     public void load (ServletContext context, String sDBIB, String sUser, String sUserID, String sUserFullName) throws Exception{
@@ -245,25 +247,35 @@ public class SMUser extends clsMasterEntry{
 			throw new Exception (e1.getMessage());
 		}
     	//Check if this username is already in use.
-    	String SQL = ""; 	
-		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
-			
-			String sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
+    	String SQL = "";
+			String sSQL = SMMySQLs.Get_User_By_UserID(getlid());
 			try{
 				//System.out.println(sSQL);
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (rs.next()){
-					//This user already exists, so we can't add it:
-					rs.close();
-					throw new Exception("The user '" + getsUserName() + "' already exists - it cannot be added.<BR>");
-				}
+					//This username has been changed or this is a new record check to see if the username is on another record.
+					if(rs.getString(SMTableusers.sUserName).compareToIgnoreCase(getsUserName()) != 0 || bIsNewRecord()) {	
+						sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
+						ResultSet rsCheck = clsDatabaseFunctions.openResultSet(sSQL, conn);
+						//This user already exists, so we can't add it:
+						if (rsCheck.next()){
+							rsCheck.close();
+							rs.close();
+							throw new Exception("The user '" + getsUserName() + "' already exists - it cannot be added.<BR>");
+						}
+						rsCheck.close();
+					}
+				}	
 				rs.close();
 			}catch(SQLException ex){
 				throw new Exception ("[1421996275]" + ex.getMessage());
 				}
-			}
+	
 
-		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){			
+
+
+		if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){	
+
 			 SQL = "INSERT INTO " + SMTableusers.TableName + " ("
 				+ SMTableusers.sDefaultSalespersonCode
 				+ ", " + SMTableusers.sIdentifierInitials
@@ -317,7 +329,7 @@ public class SMUser extends clsMasterEntry{
 			throw new Exception ("Error [142199627] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		//Update the ID if it's an insert:
-		if (getsNewRecord().compareToIgnoreCase(ParamNewRecordValue) == 0){
+		if (getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
 			SQL = "SELECT last_insert_id()";
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

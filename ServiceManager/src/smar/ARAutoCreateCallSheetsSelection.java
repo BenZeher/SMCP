@@ -136,7 +136,11 @@ public class ARAutoCreateCallSheetsSelection extends HttpServlet {
 		ResultSet rsCustomers = null;
 		//get customer list from database if it's not passed in:
 		if (sStartingCustomerNumber.compareToIgnoreCase("") == 0){
-			sSQL = ARSQLs.Get_Customer_List_SQL() + " ASC LIMIT 1";
+			sSQL =  "SELECT " 
+					+ SMTablearcustomer.sCustomerNumber + ", "
+					+ SMTablearcustomer.sCustomerName
+					+ " FROM " + SMTablearcustomer.TableName
+					+ " ORDER BY " + SMTablearcustomer.sCustomerNumber+ " ASC LIMIT 1";
 			try {
 				rsCustomers = clsDatabaseFunctions.openResultSet(
 						sSQL, 
@@ -157,7 +161,11 @@ public class ARAutoCreateCallSheetsSelection extends HttpServlet {
 			}
 		}
 		if (sEndingCustomerNumber.compareToIgnoreCase("") == 0){
-			sSQL = ARSQLs.Get_Customer_List_SQL() + " DESC LIMIT 1";
+			sSQL =  "SELECT " 
+					+ SMTablearcustomer.sCustomerNumber + ", "
+					+ SMTablearcustomer.sCustomerName
+					+ " FROM " + SMTablearcustomer.TableName
+					+ " ORDER BY " + SMTablearcustomer.sCustomerNumber + " DESC LIMIT 1";
 			try {
 				rsCustomers = clsDatabaseFunctions.openResultSet(
 						sSQL, 

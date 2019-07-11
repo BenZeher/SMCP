@@ -281,6 +281,19 @@ public class clsDatabaseFunctions {
 			return "";
 		}
 	}
+	
+	public static String getRecordsetIntegerValue (ResultSet rs, String sFieldName){
+		
+		try {
+			if (rs.getString(sFieldName) == null){
+				return "";
+			}else{
+				return Integer.toString(rs.getInt(sFieldName));
+			}
+		} catch (SQLException e) {
+			return "";
+		}
+	}
 	public static String updateFieldValueFromNullToEmptyString (String sFieldName, String sTableName) {
 		return "UPDATE `" + sTableName + "` SET `" + sFieldName + "` = '' WHERE (`" + sFieldName + "` IS NULL)";
 	}

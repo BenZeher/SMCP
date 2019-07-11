@@ -66,7 +66,7 @@ public class SMSalesContactSelect extends HttpServlet {
 			    			"<TD>" + clsCreateHTMLFormFields.TDTextBox("id", clsManageRequestParameters.get_Request_Parameter("SalesContactID", request), 20, 20, "") + "&nbsp;\n" + 
 	    					//Link to finder:
 	    				    "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder" +
-		    				"?ObjectName=SalesContact" +
+		    				"?ObjectName=" + SMTablesalescontacts.OBJECT_NAME +
 		    				"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
 		    				"&ResultClass=FinderResults" +
 		    				"&SearchingClass=" + "smcontrolpanel.SMSalesContactSelect" +
@@ -75,6 +75,8 @@ public class SMSalesContactSelect extends HttpServlet {
 		    				"&SearchFieldAlias1=Customer%20Name" +
 		    				"&SearchField2=" + SMTablesalescontacts.scontactname +
 		    				"&SearchFieldAlias2=Contact%20Name" +
+		    				"&SearchField3=CONCAT(" + SMTablesalesperson.sSalespersonFirstName + ", ' ', " + SMTablesalesperson.sSalespersonLastName + ")" +
+		    				"&SearchFieldAlias3=Salesperson%20Name" +
 		    				"&ResultListField1="  + SMTablesalescontacts.id +
 		    				"&ResultHeading1=ID" +
 		    				"&ResultListField2="  + SMTablesalescontacts.scustomername +
@@ -83,6 +85,10 @@ public class SMSalesContactSelect extends HttpServlet {
 		    				"&ResultHeading3=Contact%20Name" +
 		    				"&ResultListField4="  + SMTablesalescontacts.sphonenumber +
 		    				"&ResultHeading4=Phone%20Number" +
+		    				"&ResultListField5=CONCAT(" + SMTablesalesperson.sSalespersonFirstName + ", ' ', " + SMTablesalesperson.sSalespersonLastName + ")" +
+		    				"&ResultHeading5=Salesperson%20Name" +
+		    				"&ResultListField6="  + SMTablesalescontacts.binactive +
+		    				"&ResultHeading6=Active?" +
 		    				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
 		    				"\"> Find sales contact</A>\n" +
 			    			"</TD>" +

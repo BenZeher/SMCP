@@ -73,7 +73,11 @@ public class AREditCustomerGroups extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_CustomerGroup_List_SQL();
+	        String sSQL = "SELECT " 
+	        		+ SMTablearcustomergroups.sGroupCode + ", "
+	        		+ SMTablearcustomergroups.sDescription
+	        		+ " FROM " + SMTablearcustomergroups.TableName
+	        		+ " ORDER BY " + SMTablearcustomergroups.sGroupCode;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		getServletContext(), 

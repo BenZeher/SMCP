@@ -201,7 +201,10 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 
 	private boolean loadCashAccount(String sDBID, String sUserID, String sUserFullName, AREntryInput m_EntryInput, String sAccountSet){
 		try{
-			String SQL = ARSQLs.Get_AcctSet_By_Code(sAccountSet);
+			String SQL =  "SELECT * FROM " + SMTablearacctset.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearacctset.sAcctSetCode + " = '" + sAccountSet + "')" +
+				")";
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				getServletContext(), 

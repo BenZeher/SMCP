@@ -102,10 +102,8 @@ public class SMEditUsersSelection extends HttpServlet {
 		//Display text boxes for the new password and a confirmation:
 		
 		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='" + EDIT_USER_BUTTON_NAME + "' VALUE='" + EDIT_USER_BUTTON_VALUE + "' STYLE='width: 2.00in; height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='" + DELETE_USER_BUTTON_NAME + "' VALUE='" + DELETE_USER_BUTTON_VALUE + "' STYLE='width: 2.00in; height: 0.24in'>";
-		sOutPut = sOutPut + DELETE_USER_CONFIRM_CHECKBOX_LABEL + "  : <INPUT TYPE=CHECKBOX NAME=\"" + DELETE_USER_CONFIRM_CHECKBOX_NAME + "\">";
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='" + ADD_NEW_USER_BUTTON_NAME + "' VALUE='" + ADD_NEW_USER_BUTTON_VALUE + "' STYLE='width: 2.00in; height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P>" + NEW_USER_TEXT_LABEL + ": <INPUT TYPE=TEXT NAME=\"" + NEW_USER_TEXT_NAME + "\" SIZE=28 MAXLENGTH=50 STYLE=\"width: 2.41in; height: 0.25in\"></P>";
+		//sOutPut = sOutPut + "<P>" + NEW_USER_TEXT_LABEL + ": <INPUT TYPE=TEXT NAME=\"" + NEW_USER_TEXT_NAME + "\" SIZE=28 MAXLENGTH=50 STYLE=\"width: 2.41in; height: 0.25in\"></P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);
 		

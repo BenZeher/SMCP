@@ -49,6 +49,9 @@ public class SMEditUsersEdit extends HttpServlet {
 	public static final String UPDATE_USER_BUTTON_NAME = "SubmitEdit";
 	public static final String UPDATE_USER_BUTTON_VALUE = "Update User";
 	
+	public static final String DELETE_USER_BUTTON_NAME = "SubmitDelete";
+	public static final String DELETE_USER_BUTTON_VALUE = "Delete User";
+	
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -74,7 +77,6 @@ public class SMEditUsersEdit extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	     
 	    //Get the user ID passed in and see if this is a new record
-	    String sEditUserID = (String) clsStringFunctions.filter(request.getParameter(SMUser.Paramlid));
 	    SMUser userentry = new SMUser(request, getServletContext(), sDBID);
 	    //Load from the object if it exists
 	    if (CurrentSession.getAttribute(SMUser.ParamObjectName) != null){
@@ -83,7 +85,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		}else{
 			if(!userentry.bIsNewRecord()){
 				try {
-					userentry.load(getServletContext(), sDBID, sCurrentUser,sUserID, sUserFullName);
+					userentry.load(getServletContext(), sDBID, sCurrentUser, sUserID, sUserFullName);
 				} catch (Exception e1) {
 		    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
 			    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
@@ -104,7 +106,6 @@ public class SMEditUsersEdit extends HttpServlet {
 		//If it is a request to edit a user from the selection class
 	    if(request.getParameter(SMEditUsersSelection.EDIT_USER_BUTTON_NAME) != null){
 	    	if(userentry.getlid().compareToIgnoreCase("-1") != 0){
-	        	
 	    	    try {
 	    	    	Edit_User_HTML_Header(userentry, out, sWarning, sStatus, sCompanyName, sDBID);
 	    	    	Edit_User_HTML(userentry, out, sDBID);
@@ -123,67 +124,6 @@ public class SMEditUsersEdit extends HttpServlet {
 		    			);
 		    	return;
 	    	}
-	    }
-	    
-	    //If it is a request to delete the selected user from the selection class
-	    if(request.getParameter(SMEditUsersSelection.DELETE_USER_BUTTON_NAME) != null){
-		    if (request.getParameter(SMEditUsersSelection.DELETE_USER_CONFIRM_CHECKBOX_NAME) == null){
-		    	response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-		    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    			+ "&Warning=" + URLEncoder.encode("You must check the 'confirming' check box to delete a user.", "UTF-8")
-		    			);
-		    }else{
-		    	try{
-		    		userentry.delete(getServletContext(), sDBID, sUserID, sUserFullName);
-		    	}catch (Exception e){
-		    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-			    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    			+ "&Warning=" + URLEncoder.encode(e.getMessage(), "UTF-8")
-			    			);
-		    		return;
-		    	}
-	    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-		    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    			+ "&Status=" + URLEncoder.encode("Successfully deleted user with ID: " + sEditUserID  + " (" + userentry.getsUserName() + ")" , "UTF-8")
-		    			); 
-	    		return;
-		    }
-	    }
-	    
-	    //If it is a request to add a new user from the selection class
-	    if(request.getParameter(SMEditUsersSelection.ADD_NEW_USER_BUTTON_NAME) != null){
-	    	
-	    	userentry.setsUserName(clsStringFunctions.filter(request.getParameter(SMEditUsersSelection.NEW_USER_TEXT_NAME)));
-		    if (userentry.getsUserName().compareToIgnoreCase("") == 0){
-	    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-		    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    			+ "&Warning=" + URLEncoder.encode("You chose to add a new user, but you did not enter a new user name to add." , "UTF-8")
-		    			);
-	    		return;
-		    }else{
-		    	try {
-					userentry.setlid(userentry.getIDFromUsername(getServletContext(), sDBID, sCurrentUser));
-					userentry.save_without_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName);
-				} catch (Exception e) {
-		    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-			    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    			+ "&Warning=" + URLEncoder.encode("Adding new user " + e.getMessage() , "UTF-8")
-			    			);
-		    		return;
-				}
-		    	
-		    	try {
-		        	Edit_User_HTML_Header(userentry, out, sWarning, sStatus, sCompanyName, sDBID);
-		        	Edit_User_HTML(userentry, out, sDBID);
-					return;
-				} catch (Exception e) {
-		    		response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersSelection?"
-			    			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    			+ "&Warning=" + URLEncoder.encode("Loading edit users HTML:  " + e.getMessage() , "UTF-8")
-			    			);
-		    		return;
-				}
-		    }
 	    }
 	    
 	    //If this class is returning from it's action class.
@@ -234,6 +174,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	    //LTO 20120814 color picker for users.
 		out.println("<script type='text/javascript' src='/sm/scripts/jquery-1.8.0.min.js'></script>");
 		out.println("<script type='text/javascript' src='/sm/scripts/jquery.simple-color.js'></script>");
+		out.println(get_javascript_validation());
 		
 	    //Get license level to control content displayed
 	    long lLicenseModuleLevel = 0;
@@ -245,8 +186,8 @@ public class SMEditUsersEdit extends HttpServlet {
 		
 		out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersAction' ONSUBMIT=\" return checkInput()\" METHOD='POST'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
-		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUser.ParamsUserName + "\" VALUE=\"" + userentry.getsUserName() + "\">");
 		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUser.Paramlid + "\" VALUE=\"" + userentry.getlid() + "\">");
+		
 	    String sOutPut = "";
 	    String sSQL = "";
         sOutPut = "<TABLE BORDER=12 CELLSPACING=2>";
@@ -255,45 +196,35 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "<TR>";	
 		sOutPut += "<TD ALIGN=RIGHT><B>UserID: </B></TD>";  
 		sOutPut += "<TD ALIGN=LEFT>";
-		sOutPut +=  clsStringFunctions.filter(userentry.getlid());
+		if(userentry.bIsNewRecord()) {
+			sOutPut +=  "NEW";
+		}else {
+			sOutPut +=  clsStringFunctions.filter(userentry.getlid());
+		}
+		
 		sOutPut += "</TD>";
 		sOutPut += "<TD ALIGN=LEFT>This is a generated unique ID for this user. </TD>";
 		sOutPut += "</TR>";	
 
-		//Salesperson code
-		sOutPut += "<TR>";	
-		sOutPut += "<TD ALIGN=RIGHT><B>Default salesperson code: </B></TD>";
-		
-		sOutPut += "<TD ALIGN=LEFT>";
-		sOutPut += "<INPUT TYPE=TEXT NAME=\"" + SMUser.ParamsDefaultSalespersonCode + "\"";
-		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsDefaultSalespersonCode()) + "\"";
-		sOutPut += "SIZE=28";
-		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserDefaultSalespersonCodeLength);
-		sOutPut += " STYLE=\"width: 2.41in; height: 0.25in\"";
-		sOutPut += ">&nbsp;"
-				+ "<input type=\"button\" onclick=\"location.href=\'" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSalesperson " + "\';\" value=\"Edit Salespersons\" />";
-		
-		sOutPut += "<TD ALIGN=LEFT>Salesperson that appears when starting an order</TD>";
-		sOutPut += "</TR>";			
-
-		//Initials:
+		//Username:
 		sOutPut += "<TR>";
-		sOutPut += "<TD ALIGN=RIGHT><B>User initials: </B></TD>";
+		sOutPut += "<TD ALIGN=RIGHT><B>Username<FONT COLOR=\"RED\">*</FONT>: </B></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>";
-		sOutPut += "<INPUT TYPE=TEXT NAME=\"" + SMUser.ParamsIdentifierInitials + "\"";
-		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsIdentifierInitials()) + "\"";
+		sOutPut += "<INPUT TYPE=TEXT ID = \"" + SMTableusers.sUserName + "\" "
+				+ " NAME=\"" + SMUser.ParamsUserName + "\"";
+		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsUserName()) + "\"";
 		sOutPut += "SIZE=28";
-		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserIdentifierInitialsLength);
-		sOutPut += " STYLE=\"width: 2.41in; height: 0.25in\"";
+		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserUserNameLength);
+		sOutPut += " STYLE=\"width: 1.2in; height: 0.25in\" ";
 		sOutPut += "></TD>";
 		
-		sOutPut += "<TD ALIGN=LEFT>Default user initials</TD>";
-		sOutPut += "</TR>";       
+		sOutPut += "<TD ALIGN=LEFT>Enter a <i>unique</i> username that will be used to log into SMCP.</TD>";
+		sOutPut += "</TR>";
 
 		//First name:
 		sOutPut += "<TR>";
-		sOutPut += "<TD ALIGN=RIGHT><B>First name: </B></TD>";
+		sOutPut += "<TD ALIGN=RIGHT><B>First name<FONT COLOR=\"RED\">*</FONT>: </B></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>";
 		sOutPut += "<INPUT TYPE=TEXT ID = \"" + SMTableusers.sUserFirstName + "\" "
@@ -309,7 +240,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		
 		//Last name:
 		sOutPut += "<TR>";
-		sOutPut += "<TD ALIGN=RIGHT><B>Last name: </B></TD>";
+		sOutPut += "<TD ALIGN=RIGHT><B>Last name<FONT COLOR=\"RED\">*</FONT>: </B></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>";
 		sOutPut += "<INPUT TYPE=TEXT ID = \"" + SMTableusers.sUserLastName + "\" "
@@ -323,6 +254,37 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "<TD ALIGN=LEFT>Enter the user's last name</TD>";
 		sOutPut += "</TR>";
 
+		//Initials:
+		sOutPut += "<TR>";
+		sOutPut += "<TD ALIGN=RIGHT><B>User initials: </B></TD>";
+		
+		sOutPut += "<TD ALIGN=LEFT>";
+		sOutPut += "<INPUT TYPE=TEXT NAME=\"" + SMUser.ParamsIdentifierInitials + "\"";
+		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsIdentifierInitials()) + "\"";
+		sOutPut += "SIZE=28";
+		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserIdentifierInitialsLength);
+		sOutPut += " STYLE=\"width: 2.41in; height: 0.25in\"";
+		sOutPut += "></TD>";
+		
+		sOutPut += "<TD ALIGN=LEFT>Default user initials</TD>";
+		sOutPut += "</TR>";    
+		
+		//Salesperson code
+		sOutPut += "<TR>";	
+		sOutPut += "<TD ALIGN=RIGHT><B>Default salesperson code: </B></TD>";
+		
+		sOutPut += "<TD ALIGN=LEFT>";
+		sOutPut += "<INPUT TYPE=TEXT NAME=\"" + SMUser.ParamsDefaultSalespersonCode + "\"";
+		sOutPut += " VALUE=\"" + clsStringFunctions.filter(userentry.getsDefaultSalespersonCode()) + "\"";
+		sOutPut += "SIZE=28";
+		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserDefaultSalespersonCodeLength);
+		sOutPut += " STYLE=\"width: 2.41in; height: 0.25in\"";
+		sOutPut += ">&nbsp;"
+				+ "<input type=\"button\" onclick=\"location.href=\'" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditSalesperson " + "\';\" value=\"Edit Salespersons\" />";
+		
+		sOutPut += "<TD ALIGN=LEFT>Salesperson that appears when starting an order</TD>";
+		sOutPut += "</TR>";	
+		
 		//Email address:
 		sOutPut += "<TR>";
 		sOutPut += "<TD ALIGN=RIGHT><B>Email address: </B></TD>";
@@ -589,7 +551,9 @@ public class SMEditUsersEdit extends HttpServlet {
 		//********************
         sOutPut += "</TABLE>";
         sOutPut += "<BR>";
-		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='" + UPDATE_USER_BUTTON_NAME + "' VALUE='" + UPDATE_USER_BUTTON_VALUE + "' STYLE='height: 0.24in'></P>";
+		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='" + UPDATE_USER_BUTTON_NAME + "' VALUE='" + UPDATE_USER_BUTTON_VALUE + "' STYLE='height: 0.24in'>&nbsp;&nbsp;";
+		sOutPut += "<INPUT TYPE=SUBMIT NAME='" + DELETE_USER_BUTTON_NAME + "' VALUE='" + DELETE_USER_BUTTON_VALUE 
+				+ "' ONCLICK=\"return confirm('Are you sure you want to delete this user record?');\" STYLE='height: 0.24in'></P>";
 		sOutPut += "</FORM>";
 		out.println(sOutPut);
 		
@@ -789,30 +753,6 @@ public class SMEditUsersEdit extends HttpServlet {
 				+ (iCol * 18 + Math.abs(iRow - 6) * 9) + "px';\n";
 		s += "	document.getElementById('selectedColor').style.visibility='visible';\n";
 		
-		s += "  function checkInput (){ \n"
-				//Validate the users first name
-		  +  "    var errors = [];\n"
-		  +  "    var alertMessage = \"\";\n"
-		  +  "    if(document.getElementById('" + SMTableusers.sUserFirstName + "').value == '' && document.getElementById('" + SMTableusers.sUserLastName + "').value == ''){\n"
-		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
-		  +  "      errors.push('"+SMTableusers.sUserLastName+"');\n"
-		  +  "      alertMessage += \"Firstname and Lastname field is BLANK\";\n"		  
-		  +  "       }else if (document.getElementById('"+SMTableusers.sUserFirstName+"').value == ''){\n"
-		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
-		  +  "      alertMessage += \"Firstname  is BLANK\";\n"
-		  +  "       }else if (document.getElementById('"+SMTableusers.sUserLastName+"').value == ''){\n"
-		  +  "         errors.push('"+SMTableusers.sUserLastName+"');\n"
-		  +  "         alertMessage += \"Lastname  is BLANK\";\n"
-		  +  "      }\n"
-		  +  "       if(errors === undefined || errors.length == 0){\n"
-		  +  "            return true;\n"
-		  +  "       }\n"
-		  +  "         alert(alertMessage);\n"
-		  +  "         document.getElementById(errors[0]).scrollIntoView();\n"
-		  +  "         document.getElementById(errors[0]).focus();\n"
-		  +  "         return false;\n"
-		  +  "     }\n";
-		
 		s += "</script>\n";
 		s += "<div style='width:300px;padding-top:33px;padding-left:66px;margin-bottom:30px;'>"
 				+ "<div id='divpreview' style='float: left; height: 20px; width: 100px; border-width: 1px 1px medium; border-style: solid solid none; border-color: rgb(212, 212, 212) rgb(212, 212, 212) -moz-use-text-color; -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-image: none; background-color: #"
@@ -873,6 +813,44 @@ public class SMEditUsersEdit extends HttpServlet {
 		return s;
 }
 	
+	
+	private String get_javascript_validation() {
+		
+		String s = "<script>\n";
+		s += "  function checkInput (){ \n"
+				//Validate the users first name
+		  +  "    var errors = [];\n"
+		  +  "    var alertMessage = \"\";\n"
+		  + "     if(document.getElementById('" + SMTableusers.sUserName + "').value == '' ){"
+		  +  "      errors.push('"+SMTableusers.sUserName+"');\n"
+		  +  "      alertMessage += \"Username field is BLANK\";\n"		  
+		  + "     }"
+		  +  "    if(document.getElementById('" + SMTableusers.sUserFirstName + "').value == '' && document.getElementById('" + SMTableusers.sUserLastName + "').value == ''){\n"
+		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
+		  +  "      errors.push('"+SMTableusers.sUserLastName+"');\n"
+		  +  "      alertMessage += \"Firstname and Lastname field is BLANK\";\n"		  
+		  +  "       }else if (document.getElementById('"+SMTableusers.sUserFirstName+"').value == ''){\n"
+		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
+		  +  "      alertMessage += \"Firstname  is BLANK\";\n"
+		  +  "       }else if (document.getElementById('"+SMTableusers.sUserLastName+"').value == ''){\n"
+		  +  "         errors.push('"+SMTableusers.sUserLastName+"');\n"
+		  +  "         alertMessage += \"Lastname  is BLANK\";\n"
+		  +  "      }\n"
+		  + ""
+		  + ""
+		  +  "       if(errors === undefined || errors.length == 0){\n"
+		  +  "            return true;\n"
+		  +  "       }\n"
+		  +  "         alert(alertMessage);\n"
+		  +  "         document.getElementById(errors[0]).scrollIntoView();\n"
+		  +  "         document.getElementById(errors[0]).focus();\n"
+		  +  "         return false;\n"
+		  +  "     }\n\n"
+
+		  + "</script>\n";
+		
+		return s;
+	}
 private String print_area_list(){
 		
 		return 

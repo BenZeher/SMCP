@@ -12,6 +12,7 @@ import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableictransactions;
 import ServletUtilities.clsDatabaseFunctions;
@@ -175,10 +176,10 @@ public class ICTransactionHistory extends java.lang.Object{
 			int iCounter = 0;
 			while(rs.next()){
 				
-				if (iCounter == 100){
+				/*if (iCounter == 100){
 					out.println("</TABLE><TABLE BORDER=0>");
 					iCounter = 0;
-				}
+				}*/
 				String sLocation = rs.getString(SMTableictransactions.TableName 
 						+ "." + SMTableictransactions.slocation).trim();
 
@@ -198,12 +199,16 @@ public class ICTransactionHistory extends java.lang.Object{
 				}
 
 				//Print the line:
-				out.println("<TR>");
+				if(iCounter%2 == 0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}
 				//Transaction date:
-				out.println("<TD><FONT SIZE=2>" + 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + 
 						clsDateAndTimeConversions.sqlDateToString(
 								rs.getDate(SMTableictransactions.TableName + "." 
-										+ SMTableictransactions.datpostingdate), "M/d/yyyy") + "</FONT></TD>");
+										+ SMTableictransactions.datpostingdate), "M/d/yyyy") + "</TD>");
 
 				//Item number:
 				String sItemNumber = rs.getString(SMTableictransactions.TableName + "." 
@@ -218,11 +223,11 @@ public class ICTransactionHistory extends java.lang.Object{
 					sItemNumberLink = sItemNumber;
 				}
 
-				out.println("<TD><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sItemNumberLink + "</TD>");
 				//Item description:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  
 						+ rs.getString(SMTableicitems.TableName + "." 
-								+ SMTableicitems.sItemDescription) + "</FONT></TD>");
+								+ SMTableicitems.sItemDescription) + "</TD>");
 
 				//Type:
 				String sType = "";
@@ -263,47 +268,47 @@ public class ICTransactionHistory extends java.lang.Object{
 				String sReceiptNumber = rs.getString(SMTableictransactions.TableName + "." 
 						+ SMTableictransactions.sdocnumber);
 				if ((sType.compareToIgnoreCase("Receipt") == 0) && bViewReceiptPermitted){
-					out.println("<TD><FONT SIZE=2>"
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 							+ "smic.ICEditReceiptEdit?lid=" + sReceiptNumber 
 									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 									+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sReceiptNumber) + "</A>"
-							+ "</FONT></TD>"
+							+ "</TD>"
 					);
 				}else{
-					out.println("<TD><FONT SIZE=2>" + sReceiptNumber	+ "</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sReceiptNumber	+ "</TD>");
 				}
 				
-				out.println("<TD><FONT SIZE=2>" + sType + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sType + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ rs.getString(SMTableictransactions.TableName + "." 
-								+ SMTableictransactions.sentrydescription) + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" 
+								+ SMTableictransactions.sentrydescription) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ rs.getString(SMTableictransactions.TableName + "." 
-								+ SMTableictransactions.slinedescription) + "</FONT></TD>");
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+								+ SMTableictransactions.slinedescription) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." 
 								+ SMTableictransactions.loriginalbatchnumber)) 
-								+ "</FONT></TD>");
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+								+ "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." 
 								+ SMTableictransactions.loriginalentrynumber)) 
-								+ "</FONT></TD>");
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+								+ "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." 
 								+ SMTableictransactions.loriginallinenumber)) 
-								+ "</FONT></TD>");
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+								+ "</TD>");
+				out.println("<TD NOWRAP CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ rs.getString(SMTableictransactions.TableName + "." 
-								+ SMTableictransactions.spostedbyfullname) + "</FONT></TD>");
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+								+ SMTableictransactions.spostedbyfullname) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToFormattedString("###,###,##0.0000", bdQty) 
-						+ "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" 
+						+ "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ rs.getString(SMTableictransactions.TableName + "." 
-								+ SMTableictransactions.sunitofmeasure) + "</FONT></TD>");
+								+ SMTableictransactions.sunitofmeasure) + "</TD>");
 
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>"
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICTransactionDetailsDisplay"
 						+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
 						+ "&" + "ICTransactionID" + "=" + rs.getLong(
@@ -348,23 +353,26 @@ public class ICTransactionHistory extends java.lang.Object{
 			String sLocation,
 			PrintWriter out
 	){
-		out.println("<B><U>Location: " + sLocation + "</U></B><BR>");
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TD><B><FONT SIZE=2>Date</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Item</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Item Desc.</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Doc. #</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Type</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Entry desc.</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Line desc.</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Batch</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Entry</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Line</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Posted by</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Qty.</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Unit</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Cost</FONT></B></TD>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN=\"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" ><U>Location: " + sLocation + "</U></TD>");
+		out.println("</TR>");
+		
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Date</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item Desc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Doc. #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Type</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Entry desc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Line desc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Batch</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Entry</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Line</TD>");
+		out.println("<TD NOWRAP  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Posted by</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Unit</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Cost</TD>");
 		out.println("</TR>");
 	}
 	private void printLocationFooter(
@@ -373,14 +381,15 @@ public class ICTransactionHistory extends java.lang.Object{
 			PrintWriter out
 	){
 		out.println(
-				"<TR><TD ALIGN=RIGHT COLSPAN=13><FONT SIZE=2>"
-				+ "<B>Net cost change for location " + sLocation 
-				+ ":</B></FONT></TD>"
-				+ "<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				"<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >"
+				+"<TD COLSPAN=\"13\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Net cost change for location " + sLocation 
+				+ ":</TD>"
+				+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange)
-				+ "</FONT></TD>"
+				+ "</TD>"
 		);
-		out.println("</TR></TABLE>");
+		out.println("</TR></TABLE><BR>");
 	}
 	private void printReportFooter(
 			PrintWriter out

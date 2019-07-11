@@ -90,6 +90,7 @@ public class ICItemValuationReportGenerate extends HttpServlet {
 	    Collections.sort(sLocations);
 	    
     	String sReportTitle = "Item Valuation Report";
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 
     	String sCriteria = "Starting with item <B>" + sStartingItem + "</B>"
     		+ ", ending with item <B>" + sEndingItem + "</B>";
@@ -158,7 +159,7 @@ public class ICItemValuationReportGenerate extends HttpServlet {
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "ICItemValuationReportGenerate")
@@ -207,7 +208,9 @@ public class ICItemValuationReportGenerate extends HttpServlet {
     		);			
         	return;
     	}
-    	
+    	out.println(SMUtilities.getMasterStyleSheetLink());
+
+
     	ICItemValuationReport itemval = new ICItemValuationReport();
     	if (!itemval.processReport(
     			conn, 

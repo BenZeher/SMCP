@@ -739,7 +739,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		String SQL;
 
 		try{
-			SQL = ARSQLs.Drop_Temporary_Aging_Table(sTempTableName);
+			SQL ="DROP TEMPORARY TABLE " + sTempTableName;
 			try {
 				if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 					//System.out.println("Error dropping temporary aging table");
@@ -749,7 +749,44 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			} catch (SQLException e) {
 				// Don't choke over this
 			}
-			SQL = ARSQLs.Create_Temporary_Aging_Table(sTempTableName, true);
+			boolean createAsTemporary = true;
+			SQL = "CREATE";
+			if(createAsTemporary){
+				SQL = SQL + " TEMPORARY";
+			}
+			SQL = SQL + " TABLE " + sTempTableName + " ("
+				+ "scustomer varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
+				+ "scustomername varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
+				+ "ldocid int(11) NOT NULL default '0',"
+				+ "idoctype int(11) NOT NULL default '0',"
+				+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ "datapplytodate datetime NOT NULL default '0000-00-00 00:00:00'," //Date of the apply-to trans
+				+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
+				+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
+				+ "sordernumber varchar(22) NOT NULL default '',"
+				+ "ssource varchar(7) NOT NULL default '',"
+				+ "lappliedto int(11) NOT NULL default '0',"
+				+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ "dagingcolumncurrent decimal(17,2) NOT NULL default '0.00',"
+				+ "dagingcolumnfirst decimal(17,2) NOT NULL default '0.00',"
+				+ "dagingcolumnsecond decimal(17,2) NOT NULL default '0.00',"
+				+ "dagingcolumnthird decimal(17,2) NOT NULL default '0.00',"
+				+ "dagingcolumnover decimal(17,2) NOT NULL default '0.00',"
+				+ "dcreditlimit decimal(17,2) NOT NULL default '0.00',"
+				+ "dbalance decimal(17,2) NOT NULL default '0.00',"
+				+ "dretainagebalance decimal(17,2) NOT NULL default '0.00',"
+				+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
+				+ "lparenttransactionid int(11) NOT NULL default '0'"
+				//+ ", KEY customerkey (scustomer)"
+				//+ ", KEY appliedtokey (lappliedto)"
+				//+ ", KEY docnumberkey (sdocnumber)"
+				//+ ", KEY parenttransactionkey (lparenttransactionid)"
+			+ ") " //ENGINE = MyISAM"
+			;
+
+
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error creating temporary aging table");
 				throw new Exception("Error creating temporary aging table");
@@ -924,7 +961,15 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			}
 
 			//Insert_Parent_Document_Type_Into_Aging_Table
-			SQL = ARSQLs.Update_Parent_Document_Type_In_Aging_Table(sTempTableName);
+			SQL = "UPDATE " + sTempTableName + ", " + SMTableartransactions.TableName
+					+ " SET " + sTempTableName + ".idoctype = " 
+					+ SMTableartransactions.TableName + "." + SMTableartransactions.idoctype
+					+ " WHERE ("
+						+ "(" + sTempTableName + ".ssource = 'DIST')"
+						//Link the tables:
+						+ " AND (" + sTempTableName + ".lparenttransactionid = "
+							+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
+					+ ")";
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error updating parent document types into aging table");
 				throw new Exception("Error updating parent document types into aging table");
@@ -932,13 +977,13 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			//Update the aging columns on all lines, based on their 'due' dates: 
 			//applied-to documents:
-			SQL = ARSQLs.Update_AgingColumns_In_Aging_Table(
-					sTempTableName,
-					sAgedAsOfDate,
-					sCurrentAgingColumn,
-					sFirstAgingColumn, 
-					sSecondAgingColumn, 
-					sThirdAgingColumn);
+			SQL = "UPDATE " + sTempTableName + " SET" 
+					+ " dagingcolumncurrent = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sCurrentAgingColumn + ", doriginalamt, 0.00)"
+					+ ", dagingcolumnfirst = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sCurrentAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sFirstAgingColumn + "), doriginalamt, 0.00)"
+					+ ", dagingcolumnsecond = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sFirstAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sSecondAgingColumn + "), doriginalamt, 0.00)"
+					+ ", dagingcolumnthird = IF (((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sSecondAgingColumn + ") AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) <= " + sThirdAgingColumn + "), doriginalamt, 0.00)"
+					+ ", dagingcolumnover = IF ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(datapplytodate)) > " + sThirdAgingColumn + ", doriginalamt, 0.00)"
+					;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error updating aging columns aging table");
 				throw new Exception("Error updating aging columns aging table");

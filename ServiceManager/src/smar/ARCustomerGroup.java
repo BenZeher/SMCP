@@ -72,7 +72,10 @@ public class ARCustomerGroup extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_CustomerGroup_By_Code(sCustomerGroup);
+			String sSQL =  "SELECT * FROM " + SMTablearcustomergroups.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomergroups.sGroupCode + " = '" + sCustomerGroup + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	context, 
@@ -135,7 +138,10 @@ public class ARCustomerGroup extends java.lang.Object{
 	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL = ARSQLs.Get_CustomerGroup_By_Code(m_sGroupCode);
+		String SQL =  "SELECT * FROM " + SMTablearcustomergroups.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomergroups.sGroupCode + " = '" + m_sGroupCode + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
@@ -158,13 +164,17 @@ public class ARCustomerGroup extends java.lang.Object{
 				}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_CustomerGroup_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sGroupCode),
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription),
-						m_iActive, 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName),
-						clsDatabaseFunctions.FormatSQLStatement(m_lLastEditUserID)
-					);
+				SQL ="UPDATE " + SMTablearcustomergroups.TableName
+						+ " SET " 
+						+ SMTablearcustomergroups.datLastMaintained + " = NOW(), "
+						+ SMTablearcustomergroups.sDescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "', "
+						+ SMTablearcustomergroups.iActive + " = " + m_iActive + ", "
+						+ SMTablearcustomergroups.sLastEditUserFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName) + "'" + ","
+						+ SMTablearcustomergroups.lLastEditUserID + " = " + clsDatabaseFunctions.FormatSQLStatement(m_lLastEditUserID) 
+						
+						+ " WHERE (" 
+							+ "(" + SMTablearcustomergroups.sGroupCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sGroupCode) + "')"
+							+ ")";
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute UPDATE sql.");
 					return false;
@@ -186,13 +196,24 @@ public class ARCustomerGroup extends java.lang.Object{
 				if (!validateNewCode()){
 					return false;
 				}
-				SQL = ARSQLs.Insert_CustomerGroup_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sGroupCode),
-						m_iActive, 
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName),
-						clsDatabaseFunctions.FormatSQLStatement(m_lLastEditUserID)
-					);
+				SQL = "INSERT into " + SMTablearcustomergroups.TableName +
+						" (" 
+						+ SMTablearcustomergroups.sGroupCode
+						+ "," + SMTablearcustomergroups.datLastMaintained
+						+ "," + SMTablearcustomergroups.iActive
+						+ "," + SMTablearcustomergroups.sDescription
+						+ "," + SMTablearcustomergroups.sLastEditUserFullName
+						+ "," + SMTablearcustomergroups.lLastEditUserID
+					+ ")"
+					+ " VALUES ("
+						+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_sGroupCode) + "'"
+						+ ", NOW()"
+						+ ", '" + m_iActive + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName) + "'"
+						+ ", " + clsDatabaseFunctions.FormatSQLStatement(m_lLastEditUserID) + ""
+					+ ")"
+					; 
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
@@ -265,7 +286,10 @@ public class ARCustomerGroup extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the customer exists:
-		String SQL = ARSQLs.Get_CustomerGroup_By_Code(sCustomerGroup);
+		String SQL = "SELECT * FROM " + SMTablearcustomergroups.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomergroups.sGroupCode + " = '" + sCustomerGroup + "')" +
+			")";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -287,7 +311,10 @@ public class ARCustomerGroup extends java.lang.Object{
 			return false;
 		}
 		
-		SQL = ARSQLs.Get_Customers_By_CustomerGroup(sCustomerGroup);
+		SQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomer.sCustomerGroup + " = '" + sCustomerGroup + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -309,7 +336,11 @@ public class ARCustomerGroup extends java.lang.Object{
 		}
 		
 		try{
-			SQL = ARSQLs.Delete_CustomerGroup_SQL(sCustomerGroup);
+			SQL ="DELETE FROM " +
+					SMTablearcustomergroups.TableName +
+					" WHERE (" + 
+						"(" + SMTablearcustomergroups.sGroupCode + " = '" + sCustomerGroup + "')" +
+					")";
 			if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 				m_sErrorMessageArray.add("Error deleting customer");
 				return false;

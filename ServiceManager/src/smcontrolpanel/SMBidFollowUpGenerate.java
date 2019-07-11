@@ -202,20 +202,63 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 			    								 false,
 			    								 false)
 			    	);
-	    sSQL = SMMySQLs.Get_Bid_Follow_Up_List_SQL(sSalespersonCode,
-	    										   iProjectType,
-	    										   iCheckLastContactDate,
-	    										   datLastContactStartDate,
-	    										   datLastContactEndDate,
-	    										   iCheckNextContactDate,
-	    										   datNextContactStartDate,
-	    										   datNextContactEndDate,
-	    										   sSortBy1,
-	    										   sSortBy2,
-												   iStatusPending,
-												   iStatusSuccessful,
-												   iStatusUnsuccessful,
-												   iStatusInactive);
+   
+		sSQL = "SELECT * FROM " + SMTablebids.TableName + ", " + SMTablesalesperson.TableName + ", " + SMTableprojecttypes.TableName + 
+				  " WHERE" + 
+				  	" " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode + " =" + 
+				  	" " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode + 
+				  	" AND" + 
+				  	" " + SMTablebids.TableName + "." + SMTablebids.iprojecttype + " =" +
+				  	" " + SMTableprojecttypes.TableName + "." + SMTableprojecttypes.iTypeId;
+			if (sSalespersonCode.compareTo("ALLSP") != 0){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode + " = '" + sSalespersonCode + "'";
+			}
+			if (iProjectType > 0){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.iprojecttype + " = " + iProjectType;
+			}
+				  
+			if (iCheckLastContactDate == 1){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.datlastcontactdate + " >= '" + datLastContactStartDate.toString() + "'" + 
+				  			  " AND " + SMTablebids.TableName + "." + SMTablebids.datlastcontactdate + " <= '" + datLastContactEndDate.toString() + "'";
+			}
+			if (iCheckNextContactDate == 1){
+				  sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.datnextcontactdate + " >= '" + datNextContactStartDate.toString() + "'" + 
+				  			  " AND " + SMTablebids.TableName + "." + SMTablebids.datnextcontactdate + " <= '" + datNextContactEndDate.toString() + "'";
+			}
+			
+			if (iStatusPending == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_PENDING + "'";
+			}
+			if (iStatusSuccessful == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_SUCCESSFUL + "'";
+			}
+			if (iStatusUnsuccessful == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_UNSUCCESSFUL + "'";
+			}
+			if (iStatusInactive == 0){
+				sSQL = sSQL + " AND " + SMTablebids.TableName + "." + SMTablebids.sstatus + " <> '" + SMTablebids.STATUS_INACTIVE + "'";
+			}
+			
+			//default to sort by bidding date.
+			sSQL = sSQL + " ORDER BY ";
+			if (sSortBy1.compareTo("Salesperson") == 0 ){
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode;
+			}else if (sSortBy1.compareTo("Origination Date") == 0 ){
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.dattimeoriginationdate;
+			}else if (sSortBy1.compareTo("Customer Name") == 0 ){
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.scustomername;
+			}else{
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode;
+			}
+			sSQL = sSQL + ", ";
+			if (sSortBy2.compareTo("Last Contact Date") == 0 ){
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.datlastcontactdate;
+			}else if (sSortBy2.compareTo("Next Contact Date") == 0 ){
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.datnextcontactdate;
+			}else{
+				sSQL = sSQL + SMTablebids.TableName + "." + SMTablebids.dattimebiddate;
+			}
+			
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){

@@ -5,15 +5,34 @@ import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTableartransactionline;
 import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import smcontrolpanel.SMUtilities;
 
 public class ARMiscCashReport extends java.lang.Object{
-
+	private static final String ARMiscCashLines = "armisccashlines";
+	private static final String iDocType = "idoctype";
+	private static final String sDocAppliedTo = "sdocappliedto";
+	private static final String sDocNumber = "sdocnumber";
+	private static final String lDocId = "ldocid";
+	private static final String datDocDate = "datdocdate";
+	private static final String datDueDate = "datduedate";
+	private static final String lOriginalBatchNumber = "loriginalbatchnumber";
+	private static final String lOriginalEntryNumber = "loriginalentrynumber";
+	private static final String  dOriginalAmmount = "doriginalamt";
+	private static final String dCurrentAmmount = "dcurrentamt";
+	private static final String sDescription = "sdesc";
+	private static final String sSource = "ssource";
+	private static final String lAppliedTo = "lappliedto";
+	private static final String dApplyToDocCurrentAmt = "dapplytodoccurrentamt";
+	private static final String lParentTransactionId = "lparenttransactionid";
+	
 	private String m_sErrorMessage;
 	
 	ARMiscCashReport(
@@ -32,43 +51,46 @@ public class ARMiscCashReport extends java.lang.Object{
     	if(!createTemporaryTables(conn)){
     		return false;
     	}
-    	
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	//print out the column headers.
-    	out.println("<TABLE BORDER=0 WIDTH=100%>");
+    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">"); 
     	int iPrintTransactionsIn = 0;
     	if (iPrintTransactionsIn == 0){
-    		out.println("<TR>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=9%><B><FONT SIZE=2>Applied to</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=3%><B><FONT SIZE=2>Type</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=9%><B><FONT SIZE=2>Doc #</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Doc ID</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Doc. Date</FONT></B></TD>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Due Date</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Batch-Entry</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Amt</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=11%><B><FONT SIZE=2>Balance</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=31%><B><FONT SIZE=2>Description</FONT></B></TD>" +
-			"</TR>" + 
-	   		"<TR><TD COLSPAN=10><HR></TD><TR>");
+    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"  + 
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Applied to</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Type</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Doc #</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Doc ID</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Doc Date</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Due Date</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Batch-Entry</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Amt</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"> <B>Balance</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> <B>Description</B></TD>" +
+			"</TR>" );
     	}
     	String SQL = "SELECT * FROM armisccashlines ORDER BY sdocappliedto, ssource, datdocdate";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
-    			out.println("<TR>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>&nbsp;&nbsp;" + rs.getString("sdocappliedto") + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + getDocumentTypeLabel(rs.getInt("idoctype")) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("sdocnumber") + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + Long.toString(rs.getLong("ldocid")) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("datdocdate"),"MM/dd/yyy") + "</FONT></TD>");
-	    		out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("datduedate"),"MM/dd/yyy") + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + Long.toString(rs.getLong("loriginalbatchnumber")) 
-	    				+ "-" + Long.toString(rs.getLong("loriginalentrynumber")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("doriginalamt")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal("dcurrentamt")) + "</FONT></TD>");
-	    		out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("sdesc") + "</FONT></TD>");
+				if(iPrintTransactionsIn%2 ==0) {
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" );
+				}else {
+		    		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" );
+				}
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">&nbsp;&nbsp;" + rs.getString(sDocAppliedTo) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + getDocumentTypeLabel(rs.getInt(iDocType)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(sDocNumber) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + Long.toString(rs.getLong(lDocId)) + "</TD>");
+    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDocDate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate(datDueDate),"MM/dd/yyy") + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">"+ Long.toString(rs.getLong(lOriginalBatchNumber)) 
+				+ "-" + Long.toString(rs.getLong(lOriginalEntryNumber)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dOriginalAmmount)) + "</TD>");
+	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(dCurrentAmmount)) + "</TD>");
+	    		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">" + rs.getString(sDescription) + "</TD>");
     			out.println("</TR>");
-    			
+    			iPrintTransactionsIn++;
     			//Set the totals:
     			dMiscCashOriginalTotal = dMiscCashOriginalTotal.add(rs.getBigDecimal("doriginalamt"));
     			dMiscCashCurrentTotal = dMiscCashCurrentTotal.add(rs.getBigDecimal("dcurrentamt"));
@@ -76,24 +98,24 @@ public class ARMiscCashReport extends java.lang.Object{
 			}
 			rs.close();
 		    //Print the grand totals:
-		    out.println("<TD colspan=\"7\">&nbsp;</TD>");
-		    out.println("<TD COLSPAN=2><HR></TD>");
-			out.println("<TR>");
-			out.println("<TD ALIGN=RIGHT colspan=\"7\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dMiscCashOriginalTotal) + "</B></FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dMiscCashCurrentTotal) + "</B></FONT></TD>");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		    out.println("<TD colspan=\"10\">&nbsp;</TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN=\"7\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Report totals:</B></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dMiscCashOriginalTotal) + "</B></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dMiscCashCurrentTotal) + "</B></TD>");
+		    out.println("<TD colspan=\"1\">&nbsp;</TD>");
 			out.println("</TR>");
 		    out.println("</TABLE>");
 		    
 		    //Print the legends:
-		    out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    out.println("<TR>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(0) + " = " + getDocumentTypeLabel(0) + "</I></FONT></TD>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(1) + " = " + getDocumentTypeLabel(1) + "</I></FONT></TD>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(2) + " = " + getDocumentTypeLabel(2) + "</I></FONT></TD>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(3) + " = " + getDocumentTypeLabel(3) + "</I></FONT></TD>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(4) + " = " + getDocumentTypeLabel(4) + "</I></FONT></TD>");
-	    	out.println("<TD><FONT SIZE=2><I>" + ARDocumentTypes.Get_Document_Type_Label(6) + " = " + getDocumentTypeLabel(6) + "</I></FONT></TD>");
+		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		    out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
+		    for (int i = 0;i <= 4; i++){
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></TD>");
+		    }
+		    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(6) + " = " + getDocumentTypeLabel(6) + "</I></TD>");
 		    out.println("</TR>");
 		    out.println("</TABLE>");
 		    
@@ -140,7 +162,7 @@ public class ARMiscCashReport extends java.lang.Object{
 		String SQL;
 		
 		try{
-			SQL = "DROP TEMPORARY TABLE armisccashlines";
+			SQL = "DROP TEMPORARY TABLE " + ARMiscCashLines;
 			try {
 				if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 					//System.out.println("Error dropping temporary aging table");
@@ -151,25 +173,25 @@ public class ARMiscCashReport extends java.lang.Object{
 				// Don't choke over this
 			}
 		
-			SQL = "CREATE TEMPORARY TABLE armisccashlines ("
-				+ "ldocid int(11) NOT NULL default '0',"
-				+ "idoctype int(11) NOT NULL default '0',"
-				+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
-				+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "ssource varchar(7) NOT NULL default '',"
-				+ "lappliedto int(11) NOT NULL default '0',"
-				+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "loriginalbatchnumber int(11) NOT NULL default '0',"
-				+ "loriginalentrynumber int(11) NOT NULL default '0',"
-				+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "lparenttransactionid int(11) NOT NULL default '0',"
-				+ "sdesc varchar(" + SMTableartransactions.sdocdescriptionlength + ") NOT NULL default '',"
-				+ "KEY appliedtokey (lappliedto),"
-				+ "KEY docnumberkey (sdocnumber),"
-				+ "KEY parenttransactionkey (lparenttransactionid)"
+			SQL = "CREATE TEMPORARY TABLE " + ARMiscCashLines +" ("
+				+ lDocId + " int(11) NOT NULL default '0',"
+				+ iDocType + " int(11) NOT NULL default '0',"
+				+ sDocNumber + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ datDocDate +" datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ datDueDate+ " datetime NOT NULL default '0000-00-00 00:00:00',"
+				+ dOriginalAmmount + " decimal(17,2) NOT NULL default '0.00',"
+				+ dCurrentAmmount +  " decimal(17,2) NOT NULL default '0.00',"
+				+ sSource + " varchar(7) NOT NULL default '',"
+				+ lAppliedTo + " int(11) NOT NULL default '0',"
+				+ sDocAppliedTo + " varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+				+ lOriginalBatchNumber +" int(11) NOT NULL default '0',"
+				+ lOriginalEntryNumber + " int(11) NOT NULL default '0',"
+				+ dApplyToDocCurrentAmt + " decimal(17,2) NOT NULL default '0.00',"
+				+ lParentTransactionId + " int(11) NOT NULL default '0',"
+				+ sDescription + " varchar(" + SMTableartransactions.sdocdescriptionlength + ") NOT NULL default '',"
+				+ "KEY appliedtokey (" + lAppliedTo + "),"
+				+ "KEY docnumberkey (" + sDocNumber + "),"
+				+ "KEY parenttransactionkey ("  + lParentTransactionId + ")"
 				+ ") ENGINE = InnoDb"
 				;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
@@ -177,22 +199,22 @@ public class ARMiscCashReport extends java.lang.Object{
 				m_sErrorMessage = "Error creating temporary misc cash lines table";
 				return false;
 			}
-			SQL = "INSERT INTO armisccashlines ("
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " sdesc"
+			SQL = "INSERT INTO " + ARMiscCashLines + " ("
+					+ " " + lDocId +" ,"
+					+ " " + iDocType +" ,"
+					+ " " + sDocNumber +" ,"
+					+ " " + datDocDate +" ,"
+					+ " " + datDueDate +" ,"
+	    			+ " " + dOriginalAmmount +" ,"
+	    			+ " " + dCurrentAmmount +" ,"
+	    			+ " " + sSource +" ,"
+	    			+ " " + lAppliedTo +" ,"
+	    			+ " " + sDocAppliedTo +" ,"
+	    			+ " " + lOriginalBatchNumber +" ,"
+	    			+ " " + lOriginalEntryNumber +" ,"
+	    			+ " " + dApplyToDocCurrentAmt +" ,"
+	    			+ " " + lParentTransactionId +" ,"
+		    		+ " " + sDescription
 				
 				+ ") SELECT"
 				+ " " + SMTableartransactions.lid
@@ -220,23 +242,23 @@ public class ARMiscCashReport extends java.lang.Object{
 				m_sErrorMessage = "Error inserting transactions into misc cash lines table";
 				return false;
 			}
-			SQL = "INSERT INTO armisccashlines ("
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " loriginalbatchnumber,"
-				+ " loriginalentrynumber,"
-				+ " sdesc"
-				
+			SQL = "INSERT INTO " + ARMiscCashLines + " ("
+				+ " " + lDocId +" ,"
+				+ " " + iDocType +" ,"
+				+ " " + sDocNumber +" ,"
+				+ " " + datDocDate +" ,"
+				+ " " + datDueDate +" ,"
+    			+ " " + dOriginalAmmount +" ,"
+    			+ " " + dCurrentAmmount +" ,"
+    			+ " " + sSource +" ,"
+    			+ " " + lAppliedTo +" ,"
+    			+ " " + sDocAppliedTo +" ,"
+    			+ " " + dApplyToDocCurrentAmt +" ,"
+    			+ " " + lParentTransactionId +" ,"
+    			+ " " + lOriginalBatchNumber +" ,"
+    			+ " " + lOriginalEntryNumber +" ,"
+	    		+ " " + sDescription
+	    			
 			+ ") SELECT"
 				+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lid
 				+ ", " + "APPLYFROM." + SMTableartransactions.idoctype

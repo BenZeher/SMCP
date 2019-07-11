@@ -13,13 +13,22 @@ import javax.servlet.http.HttpServletRequest;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMClasses.SMBatchStatuses;
+import SMClasses.SMEntryBatch;
+import SMClasses.SMModuleTypes;
 import SMClasses.SMTax;
 import SMDataDefinition.SMTablearacctset;
 import SMDataDefinition.SMTablearcustomer;
+import SMDataDefinition.SMTablearcustomershiptos;
 import SMDataDefinition.SMTablearcustomerstatistics;
+import SMDataDefinition.SMTablearmonthlystatistics;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablecallsheets;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
+import SMDataDefinition.SMTableentries;
+import SMDataDefinition.SMTableinvoiceheaders;
+import SMDataDefinition.SMTableorderdetails;
+import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
@@ -286,7 +295,15 @@ public class ARCustomer extends Object{
     		String sDBID
     		){
         
-    	    String SQL = ARSQLs.Get_CustomerCashAcct_By_Code(m_sCustomerNumber);
+    	    String SQL = "SELECT "
+    	    		+ SMTablearacctset.sCashAcct
+    	    		+ " FROM " + SMTablearcustomer.TableName
+    	    		+ ", " + SMTablearacctset.TableName
+    	    		+ " WHERE (" 
+    	    			+ "(" + SMTablearcustomer.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+    	    			+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sAccountSet 
+    	    				+ " = " + SMTablearacctset.TableName + "." + SMTablearacctset.sAcctSetCode + ")"
+    	    		+ ")";
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     				SQL, 
@@ -356,7 +373,15 @@ public class ARCustomer extends Object{
     		String sDBID
     		){
         
-    	    String SQL = ARSQLs.Get_CustomerARControlAcct_By_Code(m_sCustomerNumber);
+    	    String SQL =  "SELECT "
+    	    		+ SMTablearacctset.sAcctsReceivableControlAcct
+    	    		+ " FROM " + SMTablearcustomer.TableName
+    	    		+ ", " + SMTablearacctset.TableName
+    	    		+ " WHERE (" 
+    	    			+ "(" + SMTablearcustomer.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+    	    			+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sAccountSet 
+    	    				+ " = " + SMTablearacctset.TableName + "." + SMTablearacctset.sAcctSetCode + ")"
+    	    		+ ")";
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
         				SQL, 
@@ -460,7 +485,15 @@ public class ARCustomer extends Object{
     		Connection conn
     		){
         
-    	    String SQL = ARSQLs.Get_CustomerARControlAcct_By_Code(m_sCustomerNumber);
+    	    String SQL =  "SELECT "
+    	    		+ SMTablearacctset.sAcctsReceivableControlAcct
+    	    		+ " FROM " + SMTablearcustomer.TableName
+    	    		+ ", " + SMTablearacctset.TableName
+    	    		+ " WHERE (" 
+    	    			+ "(" + SMTablearcustomer.sCustomerNumber + " = '" + m_sCustomerNumber + "')"
+    	    			+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sAccountSet 
+    	    				+ " = " + SMTablearacctset.TableName + "." + SMTablearacctset.sAcctSetCode + ")"
+    	    		+ ")";
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
     			String sARControlAcct;
@@ -702,7 +735,10 @@ public class ARCustomer extends Object{
 		String sSQL = "";
 		try{
 			//Get the record to edit:
-			sSQL = ARSQLs.Get_Customer_By_Code(sCustomerNumber);
+			sSQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerNumber + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
     				sSQL, 
     				context, 
@@ -736,7 +772,10 @@ public class ARCustomer extends Object{
 		String sSQL = "";
 		try{
 			//Get the record to edit:
-			sSQL = ARSQLs.Get_Customer_By_Code(sCustomerNumber);
+			sSQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+					" WHERE (" + 
+					"(" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerNumber + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        if (loadFromResultSet(rs)){
 	        	rs.close();
@@ -863,7 +902,10 @@ public class ARCustomer extends Object{
 	public boolean save (String sUserFullName, String sUserID, String sCompany, Connection conn){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL = ARSQLs.Get_Customer_By_Code(m_sCustomerNumber);
+		String SQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomer.sCustomerNumber + " = '" + m_sCustomerNumber + "')" +
+			")";
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
@@ -892,46 +934,48 @@ public class ARCustomer extends Object{
 					}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_Customer_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber), 
-						dStartDate, 
-						m_dCreditLimit.replace(",", ""), 
-						m_iActive, 
-						m_iOnHold,
-						clsDatabaseFunctions.FormatSQLStatement(m_mCustomerComments), 
-						clsDatabaseFunctions.FormatSQLStatement(m_mAccountingNotes), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAccountSet), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCity), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sContactName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCountry), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserID), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sState), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sTerms), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerGroup), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sEmailAddress), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sWebAddress),
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode),
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceLevel),
-						//ARUtilities.FormatSQLStatement(m_sTaxJurisdiction),
-						//ARUtilities.FormatSQLStatement(m_sTaxType),
-						m_sUsesElectronicDeposit,
-						m_sRequiresStatements,
-						m_sRequiresPO,
-						clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink),
-						m_itaxid,
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingcontact),
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingemail),
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingnotes)
-						);
+				SQL = "UPDATE " + SMTablearcustomer.TableName
+						+ " SET " 
+						+ SMTablearcustomer.datLastMaintained + " = NOW(), "
+						+ SMTablearcustomer.datStartDate + " = '" + dStartDate + "', "
+						+ SMTablearcustomer.dCreditLimit + " = " + m_dCreditLimit.replace(",", "") + ", "
+						+ SMTablearcustomer.iActive + " = " + m_iActive + ", "
+						+ SMTablearcustomer.iOnHold + " = " + m_iOnHold + ", "
+						+ SMTablearcustomer.mCustomerComments + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mCustomerComments) + "', "
+						+ SMTablearcustomer.mAccountingNotes + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mAccountingNotes) + "', "
+						+ SMTablearcustomer.sAccountSet + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAccountSet) + "', "
+						+ SMTablearcustomer.sAddressLine1 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1) + "', "
+						+ SMTablearcustomer.sAddressLine2 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2) + "', "
+						+ SMTablearcustomer.sAddressLine3 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3) + "', "
+						+ SMTablearcustomer.sAddressLine4 + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4) + "', "
+						+ SMTablearcustomer.sCity + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCity) + "', "
+						+ SMTablearcustomer.sContactName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sContactName) + "', "
+						+ SMTablearcustomer.sCountry + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCountry) + "', "
+						+ SMTablearcustomer.sCustomerName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerName) + "', "
+						+ SMTablearcustomer.sFaxNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber) + "', "
+						+ SMTablearcustomer.sLastEditUserFullName + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName) + "', "
+						+ SMTablearcustomer.lLastEditUserID + " = " + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserID) + ", "
+						+ SMTablearcustomer.sPhoneNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber) + "', "
+						+ SMTablearcustomer.sPostalCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode) + "', "
+						+ SMTablearcustomer.sState + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sState) + "', "
+						+ SMTablearcustomer.sTerms + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sTerms) + "', "
+						+ SMTablearcustomer.sCustomerGroup + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerGroup) + "', "
+						+ SMTablearcustomer.sEmailAddress + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sEmailAddress) + "', "
+						+ SMTablearcustomer.sWebAddress + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sWebAddress) + "', "
+						+ SMTablearcustomer.sPriceListCode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode) + "', "
+						+ SMTablearcustomer.ipricelevel + " = " + clsDatabaseFunctions.FormatSQLStatement(m_sPriceLevel) + ", "
+						+ SMTablearcustomer.iuseselectronicdeposit + " = " + m_sUsesElectronicDeposit + ", "
+						+ SMTablearcustomer.irequirespo + " = " + m_sRequiresPO + ", "
+						+ SMTablearcustomer.irequiresstatements + " = " + m_sRequiresStatements + ", "
+						+ SMTablearcustomer.sgdoclink + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink) + "',"
+						+ SMTablearcustomer.itaxid + " = " + m_itaxid + ","
+						+ SMTablearcustomer.sinvoicingcontact + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingcontact) + "',"
+						+ SMTablearcustomer.sinvoicingemail + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingemail) + "',"
+						+ SMTablearcustomer.sinvoicingnotes + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingnotes) + "'" 
+						+ " WHERE (" 
+							+ "(" + SMTablearcustomer.sCustomerNumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "')"
+							+ ")";
+					
 				try{
 					Statement stmt = conn.createStatement();
 					stmt.execute(SQL);
@@ -1007,46 +1051,89 @@ public class ARCustomer extends Object{
 					+ m_datStartDate + "' - " + e1.getMessage());
 				  return false;
 				}
-				SQL = ARSQLs.Insert_Customer_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber), 
-						dStartDate,
-						m_dCreditLimit.replace(",", ""), 
-						m_iActive, 
-						m_iOnHold,
-						clsDatabaseFunctions.FormatSQLStatement(m_mCustomerComments), 
-						clsDatabaseFunctions.FormatSQLStatement(m_mAccountingNotes), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAccountSet), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCity), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sContactName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCountry), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserID), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sState), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sTerms), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sCustomerGroup), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sEmailAddress), 
-						clsDatabaseFunctions.FormatSQLStatement(m_sWebAddress),
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode),
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceLevel),
-						//ARUtilities.FormatSQLStatement(m_sTaxJurisdiction),
-						//ARUtilities.FormatSQLStatement(m_sTaxType),
-						m_sUsesElectronicDeposit,
-						m_sRequiresStatements,
-						m_sRequiresPO,
-						clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink),
-						m_itaxid,
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingcontact),
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingemail),
-						clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingnotes)
-				);
+				SQL = "INSERT into " + SMTablearcustomer.TableName
+						+ " (" 
+						+ SMTablearcustomer.datLastMaintained
+						+ ", " + SMTablearcustomer.sCustomerNumber
+						+ ", " + SMTablearcustomer.datStartDate
+						+ ", " + SMTablearcustomer.dCreditLimit
+						+ ", " + SMTablearcustomer.iActive
+						+ ", " + SMTablearcustomer.iOnHold
+						+ ", " + SMTablearcustomer.mCustomerComments
+						+ ", " + SMTablearcustomer.mAccountingNotes
+						+ ", " + SMTablearcustomer.sAccountSet
+						+ ", " + SMTablearcustomer.sAddressLine1
+						+ ", " + SMTablearcustomer.sAddressLine2
+						+ ", " + SMTablearcustomer.sAddressLine3
+						+ ", " + SMTablearcustomer.sAddressLine4
+						+ ", " + SMTablearcustomer.sCity
+						+ ", " + SMTablearcustomer.sContactName
+						+ ", " + SMTablearcustomer.sCountry
+						+ ", " + SMTablearcustomer.sCustomerName
+						+ ", " + SMTablearcustomer.sFaxNumber
+						+ ", " + SMTablearcustomer.sLastEditUserFullName
+						+ ", " + SMTablearcustomer.lLastEditUserID
+						+ ", " + SMTablearcustomer.sPhoneNumber
+						+ ", " + SMTablearcustomer.sPostalCode
+						+ ", " + SMTablearcustomer.sState
+						+ ", " + SMTablearcustomer.sTerms
+						+ ", " + SMTablearcustomer.sCustomerGroup
+						+ ", " + SMTablearcustomer.sEmailAddress
+						+ ", " + SMTablearcustomer.sWebAddress
+						+ ", " + SMTablearcustomer.sPriceListCode
+						+ ", " + SMTablearcustomer.ipricelevel
+						+ ", " + SMTablearcustomer.iuseselectronicdeposit
+						+ ", " + SMTablearcustomer.irequirespo
+						+ ", " + SMTablearcustomer.irequiresstatements
+						+ ", " + SMTablearcustomer.sgdoclink
+						+ ", " + SMTablearcustomer.itaxid
+						+ ", " + SMTablearcustomer.sinvoicingcontact
+						+ ", " + SMTablearcustomer.sinvoicingemail
+						+ ", " + SMTablearcustomer.sinvoicingnotes
+					+")"
+					+ " VALUES (" 
+						+ "NOW()"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerNumber) + "'"
+						+ ", '" + dStartDate + "'"
+						+ ", " + m_dCreditLimit.replace(",", "")
+						+ ", " + m_iActive
+						+ ", " + m_iOnHold
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mCustomerComments) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mAccountingNotes) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAccountSet) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine1) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine2) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine3) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sAddressLine4) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCity) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sContactName) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCountry) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerName) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sFaxNumber) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserFullName) + "'"
+						+ ", " + clsDatabaseFunctions.FormatSQLStatement(m_sLastEditUserID) + ""
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPhoneNumber) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPostalCode) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sState) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sTerms) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sCustomerGroup) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sEmailAddress) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sWebAddress) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode) + "'"
+						+ ", " + clsDatabaseFunctions.FormatSQLStatement(m_sPriceLevel)
+						//+ ", '" + sTaxJurisdiction + "'"
+						//+ ", " + sTaxType
+						+ ", " + m_sUsesElectronicDeposit
+						+ ", " + m_sRequiresPO
+						+ ", " + m_sRequiresStatements
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink) + "'"
+						+ ", " + m_itaxid
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingcontact) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingemail) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sinvoicingnotes) + "'"
+					+ ")"
+					;
+
 				try{
 					Statement stmt = conn.createStatement();
 					stmt.execute(SQL);
@@ -1564,7 +1651,11 @@ public class ARCustomer extends Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the customer exists:
-		String SQL = ARSQLs.Get_Customer_By_Code(sCustomerCode);
+		String SQL = "SELECT * FROM " + SMTablearcustomer.TableName + 
+				" WHERE (" + 
+				"(" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerCode + "')" +
+			")";
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(!rs.next()){
@@ -1580,7 +1671,17 @@ public class ARCustomer extends Object{
 			return false;
 		}
 		
-		SQL = ARSQLs.Get_Unposted_Entries_For_Customer(sCustomerCode);
+		SQL = "SELECT " + SMTableentries.lid 
+				+ " FROM " + SMTableentries.TableName + ", " + SMEntryBatch.TableName
+				+ " WHERE ("
+					+ "(" + SMTableentries.spayeepayor + " = '" + sCustomerCode + "')"
+					+ " AND (" + SMTableentries.TableName + "." + SMTableentries.ibatchnumber + " = " 
+						+ SMEntryBatch.TableName + "." + SMEntryBatch.ibatchnumber + ")"
+					+ " AND (" + SMEntryBatch.smoduletype + " = '" + SMModuleTypes.AR + "')"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.DELETED + ")"
+					+ " AND (" + SMEntryBatch.ibatchstatus + " != " + SMBatchStatuses.POSTED + ")"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
@@ -1595,7 +1696,19 @@ public class ARCustomer extends Object{
 			return false;
 		}
 		
-		SQL = ARSQLs.Get_Customer_Transactions_SQL(sCustomerCode, true);
+		SQL = "SELECT *" 
+				+ " FROM " + SMTableartransactions.TableName
+				+ " WHERE ("
+					+ "(" + SMTableartransactions.spayeepayor + " = '" + sCustomerCode + "')";
+					
+					if (true){
+						SQL += " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)";
+					}
+				SQL += ")"
+				+ " ORDER BY " 
+				+ SMTableartransactions.datdocdate + ", "
+				+ SMTableartransactions.sdocnumber; 
+				
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
@@ -1611,7 +1724,25 @@ public class ARCustomer extends Object{
 		}
 		
 		//No open orders in SM
-		SQL = ARSQLs.Get_Open_Orders_For_Customer_SQL(sCustomerCode);
+		SQL = "SELECT " 
+				+ SMTableorderheaders.sOrderNumber
+				+ " FROM " + SMTableorderheaders.TableName + ", " + SMTableorderdetails.TableName
+				+ " WHERE ("
+					+ "(" + SMTableorderdetails.TableName + ".dUniqueOrderID = " 
+						+ SMTableorderheaders.TableName + "." + SMTableorderheaders.dOrderUniqueifier + ")"
+					
+					+ " AND (" + SMTableorderheaders.sCustomerCode + " = '" + sCustomerCode + "')"
+					
+					+ " AND (" + SMTableorderdetails.TableName + ".dQtyOrdered != 0.00)"
+					
+					+ " AND ("
+						+ "(" + SMTableorderheaders.datOrderCanceledDate + " IS NULL)"
+						+ " OR (" + SMTableorderheaders.datOrderCanceledDate + " < '1900-01-01')"
+					+ ")"
+					
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
@@ -1627,7 +1758,16 @@ public class ARCustomer extends Object{
 		}
 		
 		//No unexported invoices in SM
-		SQL = ARSQLs.Get_Unexported_Invoices_For_Customer_SQL(sCustomerCode);
+		SQL = "SELECT " 
+				+ SMTableinvoiceheaders.sInvoiceNumber
+				+ " FROM " + SMTableinvoiceheaders.TableName
+				+ " WHERE ("
+					+ "(" + SMTableinvoiceheaders.sCustomerCode + " = '" + sCustomerCode + "')"
+					+ " AND (" + SMTableinvoiceheaders.iExportedToAR + " != 1)"
+					
+				+ ")"
+				;
+		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(rs.next()){
@@ -1648,29 +1788,51 @@ public class ARCustomer extends Object{
 			return false;
 		}
 		
+		//Delete Customer
 		try{
-			SQL = ARSQLs.Delete_Customer_SQL(sCustomerCode);
+			SQL =  "DELETE FROM " +
+					SMTablearcustomer.TableName +
+					" WHERE (" + 
+						"(" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerCode + "')" +
+					")";
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting customer " + sCustomerCode);
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				return false;
 			}
-
-			SQL = ARSQLs.Delete_CustomerStatistics_SQL(sCustomerCode);
+			
+			//Delete Customer Statistics
+			SQL = "DELETE FROM "
+					+ SMTablearcustomerstatistics.TableName
+					+ " WHERE (" 
+						+ "(" + SMTablearcustomerstatistics.sCustomerNumber + " = '" + sCustomerCode + "')"
+					+ ")";
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting customer statistics for " + sCustomerCode);
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				return false;
 			}
 			
-			SQL = ARSQLs.Delete_CustomerMonthlyStatistics_SQL(sCustomerCode);
+			//Delete Monthly Statistics
+			SQL =  "DELETE FROM "
+					+ SMTablearmonthlystatistics.TableName
+					+ " WHERE (" 
+						+ "(" + SMTablearmonthlystatistics.sCustomerNumber + " = '" + sCustomerCode + "')"
+					+ ")"
+					;
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting monthly statistics for " + sCustomerCode);
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				return false;
 			}
 			
-			SQL = ARSQLs.Delete_CustomerShipTos_For_Customer_SQL(sCustomerCode);
+			//Delete Customer shipto's
+			SQL = "DELETE FROM "
+					+ SMTablearcustomershiptos.TableName
+					+ " WHERE (" 
+						+ "(" + SMTablearcustomershiptos.sCustomerNumber + " = '" + sCustomerCode + "')"
+					+ ")"
+					;
 			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessageArray.add("Error deleting customer ship-tos for " + sCustomerCode);
 				clsDatabaseFunctions.rollback_data_transaction(conn);

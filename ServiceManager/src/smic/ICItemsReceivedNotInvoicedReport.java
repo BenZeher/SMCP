@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -241,6 +242,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 				System.out.println("[1520280197] In " + this.toString() + " SQL: " + SQL);
 			}
 			//System.out.println("[1551108887] - SQL = '" + SQL + "'.");
+			int iCount = 0;
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
 				
@@ -263,6 +265,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 							out
 					);
 					bdPOTotal = BigDecimal.ZERO;
+					iCount = 0;
 				}
 
 				if (
@@ -276,10 +279,15 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 							out
 					);
 					bdAccountTotal = BigDecimal.ZERO;
+					iCount = 0;
 				}
 				
 				//Print the line:
-				out.println("<TR>");
+				if(iCount%2 == 0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}
 								
 				//PO:
 				String sPOID = Long.toString(lPOID);
@@ -290,7 +298,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 						+ "?" + ICPOHeader.Paramlid + "=" + sPOID
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sPOID + "</A>";
 				}
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + sPOLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sPOLink + "</TD>");
 				
 				//View?
 				String sPOViewLink = "N/A";
@@ -301,7 +309,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 						+ "&" + "EndingPOID" + "="
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + "View" + "</A>";
 				}
-				out.println("<TD><FONT SIZE=2>" + sPOViewLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sPOViewLink + "</TD>");
 				
 				//Receipt #:
 				String sEditReceiptLink = Long.toString(rs.getLong(
@@ -312,25 +320,25 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 						+ "?" + ICPOHeader.Paramlid + "=" + sEditReceiptLink
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sEditReceiptLink + "</A>";
 				}
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + sEditReceiptLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sEditReceiptLink + "</TD>");
 				
 				//Posted?:
 				String sPosted = "N";
 				if (rs.getInt(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lpostedtoic) != 0){
 					sPosted = "Y";
 				}
-				out.println("<TD><FONT SIZE=2>" + sPosted + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sPosted + "</TD>");
 				
 				//Created by:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 						+ rs.getString(
 								SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.screatedbyfullname) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 				
 				//Location:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 						+ rs.getString(SMTableicporeceiptlines.TableName + "." 
-							+ SMTableicporeceiptlines.slocation) + "</FONT></TD>");
+							+ SMTableicporeceiptlines.slocation) + "</TD>");
 
 				//Item
 				String sItemNumber = rs.getString(SMTableicporeceiptlines.TableName + "." 
@@ -345,13 +353,13 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
-				out.println("<TD><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"+ sItemNumberLink + "</TD>");
 
 				//Description:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 					+ rs.getString(
 					SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.sitemdescription) 
-					+ "</FONT></TD>");
+					+ "</TD>");
 				
 				//Item type: ITEMTYPE
 				String sColor = "RED";
@@ -362,40 +370,40 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 					sColor="PURPLE";
 				}
 				
-				out.println("<TD><FONT SIZE=2 COLOR=" + sColor + "><B>" 
+				out.println("<TD STYLE = \"font-family:arial;\"><FONT SIZE=2 COLOR=" + sColor + "><B>" 
 					+ rs.getString("ITEMTYPE") 
 					+ "</B></FONT></TD>");
 				
 				//Expense Acct:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ rs.getString(
 								SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.sglexpenseacct) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 
 				//Arrival date
-				out.println("<TD><FONT SIZE=2>" + 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"  +
 						clsDateAndTimeConversions.sqlDateToString(
 							rs.getDate(SMTableicporeceiptheaders.TableName + "." 
 								+ SMTableicporeceiptheaders.datreceived), "M/d/yyyy") + "</FONT></TD>");
 				
 				//Qty
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 								4, rs.getBigDecimal(SMTableicporeceiptlines.TableName + "." 
 								+ SMTableicporeceiptlines.bdqtyreceived)) 
-								+ "</FONT></TD>");
+								+ "</TD>");
 
 				//U/M:
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 					+ rs.getString(
 					SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.sunitofmeasure) 
-					+ "</FONT></TD>");
+					+ "</TD>");
 				
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 					2, rs.getBigDecimal(SMTableicporeceiptlines.TableName + "." 
 					+ SMTableicporeceiptlines.bdextendedcost)) 
-					+ "</FONT></TD>");
+					+ "</TD>");
 				
 				out.println("</TR>");
 				
@@ -410,7 +418,8 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 				
 				lLastPOID = lPOID;
 				sLastExpenseAcct = sExpenseAcct;
-				sLastVendorString = rs.getString(SMTableicpoheaders.svendor) + " - " + rs.getString(SMTableicpoheaders.svendorname);
+				sLastVendorString = rs.getString(SMTableicpoheaders.svendor) + " - " + rs.getString(SMTableicpoheaders.svendorname); 
+				iCount++;
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -444,23 +453,24 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 	private void printRowHeader(
 		PrintWriter out
 	){
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>PO&nbsp;#</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>View&nbsp;?</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Receipt&nbsp;#</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Posted?</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Received&nbsp;by</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Loc.</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Item&nbsp;#</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Description</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Item&nbsp;type</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Expense&nbsp;acct.</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Received</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Qty&nbsp;recv'd</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>U/M</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Recv'd cost</FONT></B></TD>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD   CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >PO #</TD>");
+		out.println("<TD NOWRAP  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >View ?</TD>");
+		out.println("<TD  NOWRAP CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Recipt #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Posted?</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Received By</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Loc.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item #</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Description</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item Type</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Expense acct.</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Received</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Qty. recv'd</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >U/M</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Recv'd cost</TD>");
 		out.println("</TR>");
+
 	}
 	private void printPOFooter(
 			Long sPOID,
@@ -469,14 +479,17 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 			PrintWriter out
 		){
 			out.println("<TR>");
-			out.println("<TD COLSPAN = 13 ALIGN=RIGHT>"
-				+ "<B><FONT SIZE=2>Total&nbsp;for&nbsp;PO&nbsp;#&nbsp;" 
-				+ Long.toString(sPOID) + " - (Vendor: " + sVendorNameAndAcct + ")</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT style=\" border-top-style:solid;"
+			out.println("<TD COLSPAN = \"13\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "Total&nbsp;for&nbsp;PO&nbsp;#&nbsp;" 
+				+ Long.toString(sPOID) + " - (Vendor: " + sVendorNameAndAcct + ")</TD>");
+			out.println("<TD ALIGN=RIGHT style=\"font-family:arial; border-top-style:solid;"
 				+ " border-top-color:black; border-top-width:thin;\"><B><FONT SIZE=2>" 
 				+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 					SMTableicporeceiptlines.bdextendedcostScale, bdPOTotal)
 				+ "</FONT></B></TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING+"\">");
+			out.println("<TD COLSPAN = \"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK +"\">&nbsp;</TD>");
 			out.println("</TR>");
 		}
 	private void printAccountFooter(
@@ -484,25 +497,27 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 			BigDecimal bdAccountTotal,
 			PrintWriter out
 		){
-			out.println("<TR>");
-			out.println("<TD COLSPAN = 13 ALIGN=RIGHT>"
-				+ "<B><FONT SIZE=2>Total&nbsp;for&nbsp;GL&nbsp;account&nbsp;" 
-				+ sGLAcct + ":</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT style=\" border-top-style:solid;"
-				+ " border-top-color:black; border-top-width:thin;\"><B><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
-					SMTableicporeceiptlines.bdextendedcostScale, bdAccountTotal)
-				+ "</FONT></B></TD>");
-			out.println("</TR>");
-			out.println("<TR><TD COLSPAN=11></TD></TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL +"\">");
+		out.println("<TD COLSPAN = \"13\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+			+ "Total&nbsp;for&nbsp;GL&nbsp;account&nbsp;" + sGLAcct + "</TD>");
+		out.println("<TD ALIGN=RIGHT style=\"font-family:arial; border-top-style:solid;"
+			+ " border-top-color:black; border-top-width:thin;\"><B><FONT SIZE=2>" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
+				SMTableicporeceiptlines.bdextendedcostScale, bdAccountTotal)
+			+ "</FONT></B></TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL +"\">");
+		out.println("<TD COLSPAN=\"14\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+		out.println("</TR>");
+
 		}
 	private void printReportFooter(
 			BigDecimal bdGrandTotal,
 			PrintWriter out
 		){
-			out.println("<TR>");
-			out.println("<TD COLSPAN = 13 ALIGN=RIGHT>"
-				+ "<B><FONT SIZE=2>Grand&nbsp;total:</FONT></B></TD>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL +"\">");
+		out.println("<TD COLSPAN = \"13\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >"
+				+ "<FONT SIZE=2>Grand&nbsp;total:</TD>");
 			out.println("<TD ALIGN=RIGHT style=\" border-top-style:solid;"
 				+ " border-top-color:black; border-top-width:medium;\"><B><FONT SIZE=2>" 
 				+ clsManageBigDecimals.BigDecimalToScaledFormattedString(

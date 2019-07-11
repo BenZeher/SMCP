@@ -215,7 +215,16 @@ public class ARImportSMInvoices extends java.lang.Object{
 	}
 	private boolean processRecords(Connection conn){
 		boolean bNoInvoicesFound = true;
-		String SQL = ARSQLs.Get_SM_Invoices_For_Import();
+		String SQL = "SELECT " + SMTableinvoiceheaders.sInvoiceNumber
+				
+				+ " FROM " + SMTableinvoiceheaders.TableName
+
+				+ " WHERE ("
+					+ "(" + SMTableinvoiceheaders.iExportedToAR + " = 0)"
+
+					+ ")"
+				+ " ORDER BY " 
+				+ SMTableinvoiceheaders.sInvoiceNumber;
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rs.next()){

@@ -195,7 +195,9 @@ public class ARAddEntry extends HttpServlet {
 	    if (sDocumentType.equalsIgnoreCase(Integer.toString(ARDocumentTypes.MISCRECEIPT))){
 	    	out.println ("Select the Accounts Receivable Account Set:<BR>" );
 	    	try{
-		        String sSQL = ARSQLs.Get_AcctSets_List_SQL();
+		        String sSQL  = "SELECT *" 
+		        		+ " FROM " + SMTablearacctset.TableName
+		        		+ " ORDER BY " + SMTablearacctset.sAcctSetCode;
 		        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		     	out.println ("<SELECT NAME=\"" + "AccountSet" + "\">" );
 	        	

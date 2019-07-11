@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
@@ -291,10 +292,14 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			conn,
 			sLicenseModuleLevel);
 		
+		int iCount = 0;
+		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
+		
     	try{
     		lStartingTime = System.currentTimeMillis();
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			lEndingTime = System.currentTimeMillis();
+
 			while(rs.next()){
 				boolean bIsNewOrder = false;
 				//If the current order total is NOT zero:
@@ -315,6 +320,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 						if (bShowIndividualOrders){
 							if (lNumberOfOrdersForSalesperson == 1){
 								printOrderHeader(out);
+								
 							}
 							printOrderFooter(
 								sCurrentSalesGroup,
@@ -329,8 +335,10 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 								bViewOrderPermitted,
 								sDBID,
 								out,
-								context
+								context,
+								iCount
 							);
+							iCount++;
 						}
 						bdCurrentOrderTotal = BigDecimal.ZERO;	
 					}
@@ -367,6 +375,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 					//Initialize the salesperson variables:
 					lNumberOfOrdersForSalesperson = 0L;
 					bdOrderAmountForSalesperson = BigDecimal.ZERO;
+					iCount = 0;
 				}
 
 				//Sale Type footer
@@ -394,6 +403,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 					//Initialize the sale type variables:
 					lNumberOfOrdersForSaleType = 0L; 
 					bdOrderAmountForSaleType = BigDecimal.ZERO;
+					iCount = 0;
 				}
 				
 				//Sales group footer:
@@ -418,6 +428,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 					//Initialize the salesgroup variables:
 					lNumberOfOrdersForSalesGroup = 0L; 
 					bdOrderAmountForSalesGroup = BigDecimal.ZERO;
+					iCount = 0;
 				}
 			
 				//Update the variables:
@@ -472,6 +483,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 				bdOrderAmountForSalesperson = bdOrderAmountForSalesperson.add(bdLineAmount);
 				bdOrderAmountForSaleType = bdOrderAmountForSaleType.add(bdLineAmount);
 				bdOrderAmountForSalesGroup = bdOrderAmountForSalesGroup.add(bdLineAmount);
+
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -505,7 +517,8 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 						bViewOrderPermitted,
 						sDBID,
 						out,
-						context
+						context,
+						iCount
 					);
 			}
 			bdCurrentOrderTotal = BigDecimal.ZERO;
@@ -599,7 +612,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 				out
 				);
 		
-		out.println("<BR>Query took " + (lEndingTime - lStartingTime)/1000L + " seconds (" + Long.toString(lEndingTime - lStartingTime) + "ms) on database server.");
+		out.println("<BR><P STYLE = \"font-family:arial;\">Query took " + (lEndingTime - lStartingTime)/1000L + " seconds (" + Long.toString(lEndingTime - lStartingTime) + "ms) on database server.</P>");
 		return true;
 	}
 	private void printOrderFooter(
@@ -615,7 +628,8 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		boolean bViewOrderPermitted,
 		String sDBID,
 		PrintWriter out,
-		ServletContext context
+		ServletContext context,
+		int iCount
 		){
 		
 		String sOrderNumberLink = "";
@@ -625,38 +639,36 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		}else{
 			sOrderNumberLink = sOrderNumber;
 		}
-		out.println(
-				"<TR>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sSalesGroup + "/" + sSalesperson + "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" 
-		    		+ clsDateAndTimeConversions.utilDateToString(datSale, "MM/dd/yyyy")+ "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sOrderNumberLink + "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sLocation + "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sWageScale + "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sBillToName + "</FONT></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM><FONT SIZE=2>" + sShipToName + "</FONT></TD>"
-				+ "<TD ALIGN=RIGHT VALIGN=BOTTOM><FONT SIZE=2>" 
-					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOrderTotal) + "</FONT></TD>"
-				+ "</TR>"
-				);	
+		if(iCount % 2 == 0) {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sSalesGroup + "/" + sSalesperson +"</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsDateAndTimeConversions.utilDateToString(datSale, "MM/dd/yyyy")+" </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sOrderNumberLink + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ sLocation +" </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ sWageScale +" </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sBillToName + " </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sShipToName +" </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOrderTotal) +" </TD>");
+		out.println("</TR>");
+
 	}
 	private void printOrderHeader(
 			PrintWriter out
 			){
-		
-		out.println(
-				"<TABLE BORDER=0 WIDTH = 100%>"
-				+ "<TR>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=5%><B><U><FONT SIZE=2>Grp/SP #</FONT></U></B></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><U><FONT SIZE=2>Date</FONT></U></B></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><U><FONT SIZE=2>Order #</FONT></U></B></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=5%><B><U><FONT SIZE=2>Loc.</FONT></U></B></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=5%><B><U><FONT SIZE=2>WS</FONT></U></B></TD>"
-			    + "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=33%><B><U><FONT SIZE=2>Bill to</FONT></U></B></TD>"
-				+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=33%><B><U><FONT SIZE=2>Ship to</FONT></U></B></TD>"
-				+ "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=11%><B><U><FONT SIZE=2>Amount</FONT></U></B></TD>"
-				+ "</TR>"
-				);
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Grp/SP #</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Date </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order #</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Loc. </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">WS </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill to </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ship to </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Amount </TD>");
+		out.println("</TR>");
+
 	}
 	private void printSalespersonFooter(
 			long lNumberOfOrdersForSalesperson, 
@@ -670,29 +682,26 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			boolean bShowIndividualOrders,
 			Connection conn
 			){
-
+		
 		//First, end the order header table:
 		if (bShowIndividualOrders){
-			out.println("</TABLE>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
 		}
+
 		//Suppress this if there are no orders:
 		if (lNumberOfOrdersForSalesperson == 0){
 			return;
 		}
-		
-		out.println("<TABLE BORDER=1 WIDTH = 100%>"
-			+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>"
-				+ "<B>SALES GROUP " + sSalesGroup + ", "
-				+ "<B>SALESPERSON&nbsp;" + sSalesperson + "</B>:&nbsp;" + sSalespersonName + ",&nbsp;"
+
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">SALES GROUP " + sSalesGroup + ", "
+				+ "SALESPERSON&nbsp;" + sSalesperson + ":&nbsp;" + sSalespersonName + ",&nbsp;"
 				+ sSaleType + " - "
 				+ Long.toString(lNumberOfOrdersForSalesperson) 
 				+ " order(s),&nbsp;avg.&nbsp;amt.&nbsp;" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSalesperson)
-				+ "&nbsp;&nbsp;<B>TOTAL:</B></FONT></TD>"
-			+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>"
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSalesperson) + "</B></FONT></TD>"
-			+ "</TR>"
-			+ "</TABLE><TR>"
-			);
+				+ "&nbsp;&nbsp;<B>TOTAL:</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSalesperson) + " </TD>");
+		out.println("</TR>");
+		
 	}
 	private void printSaleTypeFooter(
 			long lNumberOfOrdersForSaleType, 
@@ -702,21 +711,23 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			BigDecimal bdTotalAmountForSaleType,
 			PrintWriter out
 			){
-		out.println("<TABLE BORDER=0 WIDTH = 100%>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><B><FONT COLOR=GREEN>ORDER TYPE TOTALS * * * </FONT></B><FONT SIZE=2>Orders for sales group " + sSalesGroup + ", " + sSaleType + ": </FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + Long.toString(lNumberOfOrdersForSaleType) + "</FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Avg. order amount:</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSaleType) + "</FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Total for sales group " + sSalesGroup + ", " + sSaleType + ":</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSaleType) + "</FONT></TD>"
-				+ "</TR>"
-				+ "</TABLE><BR>"
-				);
+
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN=\"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"GREEN\" >ORDER TYPE TOTALS * * * </FONT>Orders for sales group " + sSalesGroup + ", "  + sSaleType +":</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + Long.toString(lNumberOfOrdersForSaleType) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSaleType) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for sales group " + sSalesGroup + ", " + sSaleType +":</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSaleType) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"8\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		out.println("</TR>");
+		
 	}
 	private void printSalesGroupFooter(
 			long lNumberOfOrdersForSalesGroup, 
@@ -725,22 +736,22 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			BigDecimal bdTotalAmountForSalesGroup,
 			PrintWriter out
 			){
-		out.println("<TABLE BORDER=0 WIDTH = 100%>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><B><FONT COLOR=BLUE>SALES GROUP TOTALS * * * </FONT></B><FONT SIZE=2>Orders for sales group " 
-					+ sSalesGroup + ": </FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + Long.toString(lNumberOfOrdersForSalesGroup) + "</FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Avg. order amount:</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSalesGroup) + "</FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Total for sales group " + sSalesGroup + ":</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSalesGroup) + "</FONT></TD>"
-				+ "</TR>"
-				+ "</TABLE><BR>"
-				);
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"BLUE\" >SALES GROUP TOTALS * * * </FONT>Orders for sales group " + sSalesGroup  +":</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + Long.toString(lNumberOfOrdersForSalesGroup) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAverageOrderAmountForSalesGroup) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for sales group " + sSalesGroup  +":</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmountForSalesGroup) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"8\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		out.println("</TR>");
+
 	}
 	private void printOrderTypeGrandTotals(
 		ArrayList<String> arrOrderTypes,
@@ -749,30 +760,29 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		PrintWriter out
 		) throws Exception{
 		
-		String s = "<TABLE BORDER=0 WIDTH = 100%>"
-			+ "<TR>"
-			+ "<TD ALIGN=RIGHT WIDTH=85%><B><FONT COLOR=PURPLE>ORDER TYPE GRAND TOTALS * * * </FONT></B>"
-		;
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR = \"PURPLE\" >ORDER TYPE GRAND TOTALS * * * </FONT></TD>");
+		out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp;</TD>");
+		out.println("</TR>");
+
 		for (int i = 0; i < arrOrderTypes.size(); i++){
 			BigDecimal bdAvgOrderAmt = arrOrderTypeTotals.get(i).divide(BigDecimal.valueOf(arrOrderTypeCounts.get(i)), 2, RoundingMode.HALF_UP);
-			if (1 > 0){
-				s += "<TR><TD ALIGN=RIGHT WIDTH=85%>";
-			}
-			s += "<FONT SIZE=2>Orders for order type <B>" + arrOrderTypes.get(i) + "</B>:</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>"+ "<B>" + Long.toString(arrOrderTypeCounts.get(i)) + "</B></FONT>"
-				+ "</TD></TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Avg. order amount:</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>"+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgOrderAmt) + "</B></FONT>"
-				+ "</TD></TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2>Total for <B>" + arrOrderTypes.get(i) + "</B>:</FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2>"+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(arrOrderTypeTotals.get(i)) + "</B></FONT>"
-				+ "</TD></TR>"
-			;
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Orders for order type " + arrOrderTypes.get(i)  +":</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + Long.toString(arrOrderTypeCounts.get(i)) +"</TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgOrderAmt) +"</TD>");
+			out.println("</TR>");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for sales group " + arrOrderTypes.get(i)  +":</TD>");
+			out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(arrOrderTypeTotals.get(i)) +"</TD>");
+			out.println("</TR>");
 		}
-		s += "</TABLE><BR>";
-		out.println(s);
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"8\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		out.println("</TR>");
 	}
 	private void printReportFooter(
 			long lTotalNumberOfOrders, 
@@ -780,21 +790,20 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			BigDecimal bdTotalAmount,
 			PrintWriter out
 			){
-		out.println("<TABLE BORDER=0 WIDTH = 100%>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><B><FONT COLOR=RED>GRAND TOTALS * * * </FONT></B><FONT SIZE=2><B>Total Orders:</B></FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>" + Long.toString(lTotalNumberOfOrders) + "</B></FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2><B>Avg. order amount:</B></FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAverageOrderAmount) + "</B></FONT></TD>"
-				+ "</TR>"
-				+ "<TR>"
-				+ "<TD ALIGN=RIGHT WIDTH=85%><FONT SIZE=2><B>Company Total:</B></FONT></TD>"
-				+ "<TD ALIGN=RIGHT WIDTH=15%><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmount) + "</B></FONT></TD>"
-				+ "</TR>"
-				+ "</TABLE>"
-				);
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><FONT COLOR=RED>GRAND TOTALS * * * </FONT>Total Orders: </TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + Long.toString(lTotalNumberOfOrders) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. order amount:</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAverageOrderAmount) +"</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		out.println("<TD COLSPAN = \"7\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Company Total :</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalAmount) +"</TD>");
+		out.println("</TR>");
+		out.println("</TABLE>");
+
 	}
 	public String getErrorMessage (){
 		return m_sErrorMessage;

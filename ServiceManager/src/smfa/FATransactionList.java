@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTablefatransactions;
 import ServletUtilities.clsDatabaseFunctions;
@@ -148,12 +149,12 @@ public class FATransactionList extends java.lang.Object{
         		conn,
         		sLicenseModuleLevel);
         //print table header
-        out.println("<TABLE BORDER=0 cellspacing=0 cellpadding=1 WIDTH=100%>");
+   	 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
         
         try{
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 	        Print_Column_Header(out);
-	        
+	        int iCount = 0;
 	        while(rs.next()){
 	        	iHasRecord = true;
 	        	if (iCurrentPeriod < 0){
@@ -211,6 +212,7 @@ public class FATransactionList extends java.lang.Object{
 		        		Print_Class_Header(sCurrentClass, 
 	 						   rs.getString(SMTablefamaster.sClass),
 	 						   out);
+		        		iCount = 0;
 		        	}
 	        	
 	        	if (bShowDetail){
@@ -227,13 +229,15 @@ public class FATransactionList extends java.lang.Object{
 			        			   		   bAllowAssetEditing,
 			        			   		   out,
 			        			   		   context,
-			        			   		   sDBID
+			        			   		   sDBID,
+			        			   		   iCount
 			        			   		   );
 	        	}
 
 	        	bdClassAmount = bdClassAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
 	        	bdFPAmount = bdFPAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
 	        	bdGrandAmount = bdGrandAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
+	        	iCount++;
 	        }
 			rs.close();
 	    	}catch (SQLException e){
@@ -258,19 +262,18 @@ public class FATransactionList extends java.lang.Object{
 	}
 	
 	private void Print_Column_Header(PrintWriter out){
-		
-		out.println("<TR>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Tran Date</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Location</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Asset#</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Description</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Tran Type</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Dep GL Acct</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Accu Dep GL Acct</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Comment</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Provisional?</TD>" +
-						"<TD style=\"border-style:solid; border-color:black; border-width:1px;\">Amount</TD>" +
-					"</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Tran Date</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Location</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Asset#</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Description</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Tran Type</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Dep GL Acct</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Accu Dep GL Acct</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Comment</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Provisional</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Amount</B></TD>");
+	    out.println("</TR>");
 		
 	}
 	
@@ -287,7 +290,8 @@ public class FATransactionList extends java.lang.Object{
 	    boolean bAllowAssetEditing,
 	    PrintWriter out,
 	    ServletContext context,
-	    String sDBID
+	    String sDBID,
+	    int iCount
 	    ){
 		
 		String sAssetLink = sAssetNumber;
@@ -299,34 +303,39 @@ public class FATransactionList extends java.lang.Object{
 			;
 		}
 		
-		out.println("<TR>" +
-			"<TD ALIGN=CENTER>" + sdfDateOnly.format(datTranDate) + "</TD>" +
-			"<TD ALIGN=LEFT>" + sLocation + "</TD>" +	
-			"<TD ALIGN=CENTER>" + sAssetLink + "</TD>" +
-			"<TD ALIGN=LEFT>" + sDesc + "</TD>" +
-			"<TD ALIGN=LEFT>" + sTranType + "</TD>" +
-			"<TD ALIGN=LEFT>" + sDepGLAcct + "</TD>" +
-			"<TD ALIGN=LEFT>" + sAccuDepGLAcct + "</TD>" +
-			"<TD ALIGN=LEFT>" + sComment + "</TD>" +
-			"<TD ALIGN=LEFT>" + ((iProvisional == 1)?"Yes":"No") + "</TD>" +
-			"<TD ALIGN=RIGHT>" + bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>" +
-			"</TR>"
-		);
-		
+		if(iCount % 2 == 0) {
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+		}else {
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+		}
+
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sdfDateOnly.format(datTranDate) + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sLocation + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sAssetLink + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDesc + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sTranType + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDepGLAcct + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sAccuDepGLAcct + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sComment + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" +  ((iProvisional == 1)?"Yes":"No") + "</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
 	}
 	
 	private void Print_Class_Totals(BigDecimal bdClassAmount,
 									String sClass,
 									PrintWriter out){
 
-		out.println("<TR>" +
-						"<TD COLSPAN=8>&nbsp;</TD><TD><HR></TD>" +
-					"</TR><TR>" +
-						"<TD ALIGN=RIGHT COLSPAN=8>Subtotal for class " + sClass + "</TD>" +
-						"<TD ALIGN=RIGHT>" + bdClassAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>" +
-					"</TR>" +
-					"<TR><TD>&nbsp;</TD></TR>"
-					);
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;</TD><TD><HR></TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> SUBTOTAL FOR CLASS " + sClass + ": </B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdClassAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
 		
 		
 	}
@@ -336,46 +345,57 @@ public class FATransactionList extends java.lang.Object{
 									 int iFP,
 									 PrintWriter out){
 
-		out.println("<TR>" +
-						"<TD COLSPAN=8>&nbsp;</TD><TD><HR></TD>" +
-					"</TR><TR>" +
-						"<TD ALIGN=RIGHT COLSPAN=8>Subtotal for year " + iFY + ",period " + iFP + "</TD>" +
-						"<TD ALIGN=RIGHT>" + bdFPAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>" +
-					"</TR>" +
-					"<TR><TD>&nbsp;</TD></TR>"
-					);
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;</TD><TD><HR></TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> SUBTOTAL FOR YEAR " + iFY + ", PERIOD " + iFP + ": </B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdFPAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
 		
 		
 	}
 	
 	private void Print_Grand_Totals(BigDecimal bdGrandAmount,
 									PrintWriter out){
+		
 
-		out.println("<TR>" +
-						"<TD COLSPAN=9>&nbsp;</TD>" + 
-					"</TR><TR>" +
-						"<TD COLSPAN=9><HR></TD>" + 
-					"</TR><TR>" +
-						"<TD ALIGN=RIGHT COLSPAN=8><FONT SIZE=3><B>GRAND TOTAL</B></FONT></TD>" +
-						"<TD ALIGN=RIGHT><FONT SIZE=3><B>" + bdGrandAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</B></FONT></TD>" +
-					"</TR>");
+		
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> GRAND TOTAL: </B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdGrandAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
+	    out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+
 		
 	}
 
 	private void Print_Class_Header(String sClass, 
 								    String sClassDescription,
 								    PrintWriter out){
-		out.println("<TR>" +
-						"<TD ALIGN=LEFT COLSPAN=9>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Asset Class:&nbsp;&nbsp;&nbsp;&nbsp;" + sClass + "</TD>" + // + "&nbsp;&nbsp;" + sClassDescription
-					"</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Asset Class:&nbsp;&nbsp;&nbsp;&nbsp;" + sClass + "</B></TD>");
+		out.println("</TR>");
 	}
 
 	private void Print_Period_Header(int iFY,
 									 int iFP,
 								     PrintWriter out){
-		out.println("<TR>" + 
-						"<TD ALIGN=LEFT COLSPAN=9>Fiscal Year:&nbsp;&nbsp;&nbsp;&nbsp;" + iFY + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fiscal Period:&nbsp;&nbsp;&nbsp;&nbsp;" + iFP + "</TD>" + 
-					"</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Fiscal Year:&nbsp;&nbsp;&nbsp;&nbsp;" + iFY + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fiscal Period:&nbsp;&nbsp;&nbsp;&nbsp;" + iFP + "</B></TD>");
+		out.println("</TR>");
+
 	}
 
 	public String getErrorMessageString(){

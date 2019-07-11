@@ -9,6 +9,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTableicvendoritems;
 import ServletUtilities.clsDatabaseFunctions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 
 public class ICItemNumberMatchUpList extends java.lang.Object{
@@ -85,25 +86,29 @@ public class ICItemNumberMatchUpList extends java.lang.Object{
 			while(rs.next()){
 				
 				//Print the line:
-				out.println("<TR>");
+				if(iCounter%2 == 0) {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}
 							
 				//Vendor Item Number 
-				String sVendorItemNumber = "<TD><FONT SIZE=2>" + rs.getString(SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber) + "</FONT></TD>";
+				String sVendorItemNumber ="<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + rs.getString(SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber) + "</TD>";
 
 				//Item Number 
 				String sItemNumber;
 				String sItem = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemNumber);
 				if (sItem == null){
-					sItemNumber = "<TD><FONT SIZE=2>N/A</FONT></TD>";
+					sItemNumber = "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >N/A</TD>";
 				}else{
 					if (bViewItemPermitted){
-						sItemNumber = "<TD><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(context) 
+						sItemNumber = "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 								+ "smic.ICDisplayItemInformation?ItemNumber=" 
 								+ sItem
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" + sItem + "</A>";
 					}else{
-						sItemNumber = "<TD><FONT SIZE=2>" + sItem + "</FONT></TD>";
+						sItemNumber = "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"  + sItem + "</TD>";
 					}
 				}
 				
@@ -117,27 +122,27 @@ public class ICItemNumberMatchUpList extends java.lang.Object{
 				//Vendor
 				String s = rs.getString(SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendor);
 				if (s == null){
-					out.println("<TD><FONT SIZE=2>N/A</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >N/A</TD>");
 				}else{
-					out.println("<TD><FONT SIZE=2>" 
-						+ s + "</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
+						+ s + "</TD>");
 				}
 				
 				//Desc
 				s = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemDescription);
 				if (s == null){
-					out.println("<TD><FONT SIZE=2>N/A</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >N/A</TD>");
 				}else{
-					out.println("<TD><FONT SIZE=2>" 
-								+ s + "</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"  
+								+ s + "</TD>");
 				}
 				//UOM
 				s = rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sCostUnitOfMeasure);
 				if (s == null){
-					out.println("<TD><FONT SIZE=2>N/A</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >N/A</TD>");
 				}else{
-					out.println("<TD><FONT SIZE=2>" 
-								+ s + "</FONT></TD>");
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
+								+ s + "</TD>");
 				}
 				
 				out.println("</TR>");
@@ -157,18 +162,18 @@ public class ICItemNumberMatchUpList extends java.lang.Object{
 	private void printRowHeader(String sSortByOurItem,
 								PrintWriter out){
 		
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
 		if (sSortByOurItem.compareTo("0") == 0){
-			out.println("<TD><B><FONT SIZE=2>Item Number</FONT></B></TD>");
-			out.println("<TD><B><FONT SIZE=2>Vendor Item Number</FONT></B></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item Number</TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Vendor Item Number</TD>");
 		}else{
-			out.println("<TD><B><FONT SIZE=2>Vendor Item Number</FONT></B></TD>");
-			out.println("<TD><B><FONT SIZE=2>Item Number</FONT></B></TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Vendor Item Number</TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Item Number</TD>");
 		}
-		out.println("<TD><B><FONT SIZE=2>Vendor</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Description</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>UOM</FONT></B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Vendor</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >Description</TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >UOM</TD>");
 		out.println("</TR>");
 	}
 	public String getErrorMessage (){

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
@@ -388,7 +389,11 @@ public class AREditCustomersEdit extends HttpServlet {
         String sSQL = "";
 	    try{
 	        //Terms
-	        sSQL = ARSQLs.Get_Terms_List_SQL();
+	        sSQL =  "SELECT " 
+	        		+ SMTablearterms.sTermsCode + ", "
+	        		+ SMTablearterms.sDescription
+	        		+ " FROM " + SMTablearterms.TableName
+	        		+ " ORDER BY " + SMTablearterms.sTermsCode;
 	        ResultSet rsTerms = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
@@ -418,7 +423,11 @@ public class AREditCustomersEdit extends HttpServlet {
 	        		)
 	        );
 	        //Customer group
-	        sSQL = ARSQLs.Get_CustomerGroup_List_SQL();
+	        sSQL = "SELECT " 
+	        		+ SMTablearcustomergroups.sGroupCode + ", "
+	        		+ SMTablearcustomergroups.sDescription
+	        		+ " FROM " + SMTablearcustomergroups.TableName
+	        		+ " ORDER BY " + SMTablearcustomergroups.sGroupCode;
 	        ResultSet rsCustomerGroups = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
@@ -447,7 +456,9 @@ public class AREditCustomersEdit extends HttpServlet {
 	        	)
 	        );
 	        //Account set
-	        sSQL = ARSQLs.Get_AcctSets_List_SQL();
+	        sSQL =  "SELECT *" 
+	        		+ " FROM " + SMTablearacctset.TableName
+	        		+ " ORDER BY " + SMTablearacctset.sAcctSetCode;
 	        ResultSet rsAcctSets = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
@@ -475,7 +486,9 @@ public class AREditCustomersEdit extends HttpServlet {
 	        	)
 	        );
 	        //Price list code
-	        sSQL = ARSQLs.Get_PriceListCodes_List_SQL();
+	        sSQL = "SELECT *" 
+	        		+ " FROM " + SMTablepricelistcodes.TableName
+	        		+ " ORDER BY " + SMTablepricelistcodes.spricelistcode;
 	        ResultSet rsPriceListCodes = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 
@@ -795,7 +808,7 @@ public class AREditCustomersEdit extends HttpServlet {
         
         //Create a list for the default sales group salesperson:
         //Salesperson
-        sSQL = ARSQLs.Get_Salesperson_List_SQL();
+        sSQL = SMMySQLs.Get_Salesperson_List_SQL();
         try {
 			ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
 				sSQL, 

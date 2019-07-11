@@ -271,7 +271,7 @@ import java.util.ArrayList;
 			        out.println("</div>");
 				}
 				
-	    		out.println("<BR>");
+	    		out.println("<BR> <font size=2><i>* Showing users for ALL types of critical dates.</i></font>");
 	    		out.println("</TD></TR>");
 	        	
 	    		//Select 'Assigned By':

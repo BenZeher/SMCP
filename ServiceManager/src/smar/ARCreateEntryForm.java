@@ -422,7 +422,11 @@ public class ARCreateEntryForm {
             
         	ArrayList<String>sValues = new ArrayList<String>();
             ArrayList<String>sDescriptions = new ArrayList<String>();
-            String sSQL = ARSQLs.Get_Terms_List_SQL();
+            String sSQL =  "SELECT " 
+            		+ SMTablearterms.sTermsCode + ", "
+            		+ SMTablearterms.sDescription
+            		+ " FROM " + SMTablearterms.TableName
+            		+ " ORDER BY " + SMTablearterms.sTermsCode;
             try{
     	        ResultSet rsTerms = clsDatabaseFunctions.openResultSet(
     	        	sSQL, 
@@ -1384,7 +1388,16 @@ public class ARCreateEntryForm {
 		//IF it's a cash receipt entry, now add lines for all the invoices or retainage 
         //that a cash line could be applied to:
 		if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
-			String sSQL = ARSQLs.Get_OpenAppliableDocuments_By_Customer(entryInput.getsCustomerNumber());
+			String sSQL =  "SELECT *" 
+					+ " FROM " + SMTableartransactions.TableName
+					+ " WHERE ("
+						+ "(" + SMTableartransactions.spayeepayor + " = '" + entryInput.getsCustomerNumber() + "')"
+						+ " AND (" 
+							+ "(" + SMTableartransactions.idoctype + " = " + ARDocumentTypes.INVOICE_STRING + ")"
+							+ " OR (" + SMTableartransactions.idoctype + " = " + ARDocumentTypes.RETAINAGE_STRING + ")"
+						+ ")"
+						+ " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)"
+						+ ")";
 	        try{
 	        	ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 

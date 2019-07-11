@@ -8,7 +8,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 
 public class ICPostPhysicalInventory extends HttpServlet{
 	

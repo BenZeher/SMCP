@@ -257,13 +257,13 @@ public class SMLogin extends HttpServlet {
 		
 		Connection conn = null;
 		if (bDebugMode){
-			System.out.println("In SMLogin - getting connection for company name - sDbID = " + sDbID 
-					+ ".");
+		/*	System.out.println("In SMLogin - getting connection for company name - sDbID = " + sDbID 
+					+ ".");*/
 		}
 		
-		if (sDbID.contains("SMCP16")){
+		/*if (sDbID.contains("SMCP16")){
 			System.out.println("[1550151144] - sDBID = '" + sDbID + "', CallingClass = '" + SMUtilities.getFullClassName(this.toString() + ".getCompanyName") + "'.");
-		}
+		}*/
 
 		try {
 			conn = PoolUtilities.getConnection(

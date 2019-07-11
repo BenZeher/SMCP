@@ -73,7 +73,11 @@ public class ARSelectForActivityReport  extends HttpServlet {
 	    	out.println("<TD ALIGN=LEFT><B>Customer Selection:</B></TD>");
 	    	
 	    	//get customer list from database
-	    	String sSQL = ARSQLs.Get_Customer_List_SQL() + " ASC LIMIT 1";
+	    	String sSQL =  "SELECT " 
+	    			+ SMTablearcustomer.sCustomerNumber + ", "
+	    			+ SMTablearcustomer.sCustomerName
+	    			+ " FROM " + SMTablearcustomer.TableName
+	    			+ " ORDER BY " + SMTablearcustomer.sCustomerNumber + " ASC LIMIT 1";
 	    	ResultSet rsCustomers = clsDatabaseFunctions.openResultSet(
 	    			sSQL, 
 	    			getServletContext(), 
@@ -96,7 +100,11 @@ public class ARSelectForActivityReport  extends HttpServlet {
 	    					SMTablearcustomer.sCustomerNumberLength, 
 	    					"") + "</TD>");
 	    	
-	    	sSQL = ARSQLs.Get_Customer_List_SQL() + " DESC LIMIT 1";
+	    	sSQL =  "SELECT " 
+	    			+ SMTablearcustomer.sCustomerNumber + ", "
+	    			+ SMTablearcustomer.sCustomerName
+	    			+ " FROM " + SMTablearcustomer.TableName
+	    			+ " ORDER BY " + SMTablearcustomer.sCustomerNumber + " DESC LIMIT 1";
 	    	rsCustomers = clsDatabaseFunctions.openResultSet(
 	    			sSQL, 
 	    			getServletContext(), 

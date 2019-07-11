@@ -198,13 +198,14 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
     	}
     	sCriteria += " - NOT INCLUDING PO'S ON HOLD.";
 	    boolean bOutputToCSV = (request.getParameter("OutputToCSV") != null);
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    
 	    String sPageHeader = "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 			   "Transitional//EN\">" +
 		       "<HTML>" +
 		       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 			   "<BODY BGCOLOR=\"#FFFFFF\">" +
-			   "<TABLE BORDER=0 WIDTH=100%>" +
+			   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 			   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 			   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 			   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "ICPOReceivingReportGenerate") 
@@ -251,7 +252,8 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
     	if(!bOutputToCSV) {
         	out.println(sPageHeader);
     	}
-
+    	out.println(SMUtilities.getMasterStyleSheetLink());
+    	
     	ICPOReceivingReport rpt = new ICPOReceivingReport();
     	String sReportBody = "";
     	try {

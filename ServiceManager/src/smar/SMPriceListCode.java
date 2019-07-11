@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsDatabaseFunctions;
@@ -45,7 +46,10 @@ public class SMPriceListCode extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		try{
 			//Get the record to edit:
-			String sSQL = ARSQLs.Get_PriceListCode_By_Code(sCode);
+			String sSQL =  "SELECT * FROM " + SMTablepricelistcodes.TableName + 
+					" WHERE (" + 
+					"(" + SMTablepricelistcodes.spricelistcode + " = '" + sCode + "')" +
+				")";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		context, 
@@ -100,7 +104,10 @@ public class SMPriceListCode extends java.lang.Object{
 	public boolean save (ServletContext context, String sDBID){
 		m_sErrorMessageArray.clear();
 		//Check to see if the record already exists:
-		String SQL =  ARSQLs.Get_PriceListCode_By_Code(m_sPriceListCode);
+		String SQL =   "SELECT * FROM " + SMTablepricelistcodes.TableName + 
+				" WHERE (" + 
+				"(" + SMTablepricelistcodes.spricelistcode + " = '" + m_sPriceListCode + "')" +
+			")";
 	;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -125,10 +132,14 @@ public class SMPriceListCode extends java.lang.Object{
 				}
 				
 				//Update the record:
-				SQL = ARSQLs.Update_PriceListCode_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode),
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription)
-						);
+				SQL = "UPDATE " + SMTablepricelistcodes.TableName
+						+ " SET " 
+						+ SMTablepricelistcodes.sdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+						
+						+ " WHERE (" 
+							+ "(" + SMTablepricelistcodes.spricelistcode + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode) + "')"
+							+ ")"; 
+				
 				if(!clsDatabaseFunctions.executeSQL(
 						SQL, 
 						context, 
@@ -155,10 +166,16 @@ public class SMPriceListCode extends java.lang.Object{
 				if (!validateNewCode()){
 					return false;
 				}
-				SQL = ARSQLs.Insert_PriceCode_SQL(
-						clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode),
-						clsDatabaseFunctions.FormatSQLStatement(m_sDescription)
-					);
+				SQL =  "INSERT into " + SMTablepricelistcodes.TableName
+						+ " (" 
+						+ SMTablepricelistcodes.spricelistcode
+						+ ", " + SMTablepricelistcodes.sdescription
+					+ ")"
+					+ " VALUES ("
+						+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_sPriceListCode) + "'"
+						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDescription) + "'"
+					+ ")"
+					;
 
 				if(!clsDatabaseFunctions.executeSQL(
 						SQL, 
@@ -225,7 +242,10 @@ public class SMPriceListCode extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the price list code exists:
-		String SQL = ARSQLs.Get_PriceListCode_By_Code(sPriceListCode);
+		String SQL =  "SELECT * FROM " + SMTablepricelistcodes.TableName + 
+				" WHERE (" + 
+				"(" + SMTablepricelistcodes.spricelistcode + " = '" + sPriceListCode + "')" +
+			")";
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -244,7 +264,13 @@ public class SMPriceListCode extends java.lang.Object{
 			throw new Exception("Error reading price list code - " + e.getMessage() + ".");
 		}
 		//Customers
-		SQL = ARSQLs.Get_Customers_By_PriceListCode(sPriceListCode);
+		SQL =  "SELECT"
+				+ " " + SMTablearcustomer.sCustomerNumber
+				+ " FROM " + SMTablearcustomer.TableName 
+				+ " WHERE (" 
+					+ "(" + SMTablearcustomer.sPriceListCode + " = '" + sPriceListCode + "')"
+				+ ")"
+				;
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -283,7 +309,11 @@ public class SMPriceListCode extends java.lang.Object{
 			throw new Exception("Error checking price list codes on orders - " + e.getMessage() + ".");
 		}
 		*/
-		SQL = ARSQLs.Delete_PriceListCode_SQL(sPriceListCode);
+		SQL =  "DELETE FROM " +
+				SMTablepricelistcodes.TableName +
+				" WHERE (" + 
+					"(" + SMTablepricelistcodes.spricelistcode + " = '" + sPriceListCode + "')" +
+				")";
 		Connection conn = clsDatabaseFunctions.getConnection(context, sDBID, "MySQL", this.toString());
 		
 		clsDatabaseFunctions.start_data_transaction(conn);

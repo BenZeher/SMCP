@@ -8,7 +8,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglexternalcompanies;
@@ -27,7 +26,7 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	public static final String ADDING_LINE_FLAG = "ADDINGLINE";
-	public static final String LINE_NUMBER_TO_DELETE_PARAM = "LineNumberParam";
+	public static final String LID_TO_DELETE_PARAM = "LineNumberParam";
 	public static final String COMMAND_VALUE_SAVE = "SaveEntry";
 	
 	public static final String TABLE_UNAPPLIED_DOCUMENTS = "APPLYTODOCSTABLE";
@@ -65,7 +64,7 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 				request,
 				response,
 				getServletContext(),
-				"GL Entry",
+				"GL External Companies",
 				SMUtilities.getFullClassName(this.toString()),
 				"smgl.GLEditExternalCompaniesAction",
 				"smcontrolpanel.SMUserLogin",
@@ -80,8 +79,6 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 		
 		//If this is a 'resubmit', meaning it's being called by the 'Action' class, then
 		//the session will have an entry object in it, and that's what we'll pick up.
-		HttpSession currentSession = smedit.getCurrentSession();
-		
 		//long lStartingtime = System.currentTimeMillis();
 		
 	    smedit.getPWOut().println(SMUtilities.getSMCPJSIncludeString(getServletContext()));
@@ -130,8 +127,8 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 		+ "\">" + "\n";
 		
 		//Store which line the user has chosen to delete:
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + LINE_NUMBER_TO_DELETE_PARAM + "\" VALUE=\"" + "" + "\""
-		+ " id=\"" + LINE_NUMBER_TO_DELETE_PARAM + "\""
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + LID_TO_DELETE_PARAM + "\" VALUE=\"" + "" + "\""
+		+ " id=\"" + LID_TO_DELETE_PARAM + "\""
 		+ "\">" + "\n";
 				
 		s += clsServletUtilities.createHTMLComment("Start the details table here.");
@@ -345,9 +342,9 @@ public class GLEditExternalCompaniesEdit  extends HttpServlet {
 			+ "        alert ('You have made changes that must be saved before removing a line.');\n"
 			+ "        return;\n"
 			+ "    }\n"
-			+ "    if (confirm('Are you sure you want to remove company with ID ' + sLineNumber + '?')){\n"
+			+ "    if (confirm('Are you sure you want to remove the company with ID ' + sLineNumber + '?')){\n"
 			+ "        document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" + COMMAND_VALUE_REMOVELINE + "\";\n"
-			+ "        document.getElementById(\"" + LINE_NUMBER_TO_DELETE_PARAM + "\").value = sLineNumber;\n"
+			+ "        document.getElementById(\"" + LID_TO_DELETE_PARAM + "\").value = sLineNumber;\n"
 			+ "        document.forms[\"" + SMMasterEditEntry.MAIN_FORM_NAME + "\"].submit();\n"
 			+ "    }\n"
 			+ "}\n"

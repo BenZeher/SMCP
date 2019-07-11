@@ -41,58 +41,69 @@ public class ARChronLog {
     		String sParentDoc
    		) throws Exception{
     
-    		String SQL = "INSERT INTO " + SMTablearchronlog.TableName
-    			+ " ("
-	    			+ SMTablearchronlog.datlogdate
-	    			+ ", " + SMTablearchronlog.damount
-	    			+ ", " + SMTablearchronlog.idoctype
-	    			+ ", " + SMTablearchronlog.ldocid
-	    			+ ", " + SMTablearchronlog.loriginalbatchnumber
-	    			+ ", " + SMTablearchronlog.loriginalentrynumber
-	    			+ ", " + SMTablearchronlog.sdescription
-	    			+ ", " + SMTablearchronlog.sdocnumber
-	    			+ ", " + SMTablearchronlog.spayeepayor
-	    			+ ", " + SMTablearchronlog.ssql
-	    			+ ", " + SMTablearchronlog.luserid
-	    			+ ", " + SMTablearchronlog.sapplyfromdoc
-	    			+ ", " + SMTablearchronlog.sapplytodoc
-	    			+ ", " + SMTablearchronlog.sparentdoc
-	    			+ ", " + SMTablearchronlog.suserfullname
-	    			
-	    			+ ") SELECT"
-    				+ " NOW()" //datlogdate
-    				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmount) //damount
-    				+ ", " + Integer.toString(iDocType) //idoctype
-    				+ ", " + Long.toString(lDocID) //ldocid
-    				+ ", " + Long.toString(lOriginalBatchNumber) //loriginalbatchnumber
-    				+ ", " + Long.toString(lOriginalEntryNumber) //loriginalentrynumber
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDocNumber) + "'" //sdocnumber
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sPayeePayor) + "'" //spayeepayor
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sSQL) + "'" //ssql
-    				+ ", " + sUserID + "" //luserid
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sApplyFromDoc) + "'" //sapplyfromdoc
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sApplyToDoc) + "'" //sapplytodoc
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sParentDoc) + "'" //sparentdoc
-    				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'" //suserfullname
-    			;
-    		
-    		if (conn != null){
-    			try {
-					Statement stmt = conn.createStatement();
-					stmt.execute(SQL);
-				} catch (Exception e) {
-					throw new Exception("Error [1387574611] adding archron entry - " + e.getMessage() + ".");
-				}
-    		}else{
-        		try {
-					if (!clsDatabaseFunctions.executeSQL(SQL, context, m_sDBID)){
-						throw new Exception("Error [1387574612] adding archron entry.");
-					}
-				} catch (Exception e) {
-					throw new Exception("Error [1387574613] adding archron entry - " + e.getMessage() + ".");
-				}
-    		}
+		String SQL = "";
+		try {
+			SQL = "INSERT INTO " + SMTablearchronlog.TableName
+				+ " ("
+					+ SMTablearchronlog.datlogdate
+					+ ", " + SMTablearchronlog.damount
+					+ ", " + SMTablearchronlog.idoctype
+					+ ", " + SMTablearchronlog.ldocid
+					+ ", " + SMTablearchronlog.loriginalbatchnumber
+					+ ", " + SMTablearchronlog.loriginalentrynumber
+					+ ", " + SMTablearchronlog.sdescription
+					+ ", " + SMTablearchronlog.sdocnumber
+					+ ", " + SMTablearchronlog.spayeepayor
+					+ ", " + SMTablearchronlog.ssql
+					+ ", " + SMTablearchronlog.luserid
+					+ ", " + SMTablearchronlog.sapplyfromdoc
+					+ ", " + SMTablearchronlog.sapplytodoc
+					+ ", " + SMTablearchronlog.sparentdoc
+					+ ", " + SMTablearchronlog.suserfullname
+					
+					+ ") SELECT"
+					+ " NOW()" //datlogdate
+					+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmount) //damount
+					+ ", " + Integer.toString(iDocType) //idoctype
+					+ ", " + Long.toString(lDocID) //ldocid
+					+ ", " + Long.toString(lOriginalBatchNumber) //loriginalbatchnumber
+					+ ", " + Long.toString(lOriginalEntryNumber) //loriginalentrynumber
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sDocNumber) + "'" //sdocnumber
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sPayeePayor) + "'" //spayeepayor
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sSQL) + "'" //ssql
+					+ ", " + sUserID + "" //luserid
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sApplyFromDoc) + "'" //sapplyfromdoc
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sApplyToDoc) + "'" //sapplytodoc
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sParentDoc) + "'" //sparentdoc
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'" //suserfullname
+;
+		} catch (Exception e1) {
+			throw new Exception("Error [20191821424588] " + "Error creating SQL Insert statement to add archron log "
+				+ "entry with SQL: '" + SQL + "' - " + e1.getMessage()
+			);
+		}
+		
+		if (conn != null){
+			try {
+				Statement stmt = conn.createStatement();
+				stmt.execute(SQL);
+			} catch (Exception e) {
+				throw new Exception("Error [1387574611] adding archron entry with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+			}
+		}else{
+    		try {
+				clsDatabaseFunctions.executeSQLWithException(
+					SQL, 
+					m_sDBID, 
+					"MySQL", 
+					this.toString() + ".writeEntry - user: " + sUserFullName, 
+					context
+				);
+    		} catch (Exception e) {
+					throw new Exception("Error [1387574612] adding archron entry with SQL: '" + SQL + " - " + e.getMessage());
+			}
+		}
     	return;
     }
 }

@@ -18,6 +18,7 @@ import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicphysicalinventories;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -49,7 +50,7 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    //Get the variables for the class:
 	    String title = "Physical inventories.";
 	    String subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
 
 	    //Display any warnings:
 	    if (request.getParameter("Warning") != null){
@@ -58,22 +59,38 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    		out.println("<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>");
 	    	}
 	    }
-	    
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalInventoryEdit' METHOD='POST'>");
+	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+	    out.println(SMUtilities.getMasterStyleSheetLink());
+	    out.println("<TABLE WIDTH = 100% BGCOLOR=\""+ sColor +"\">");
 	    //Print a link to the first page after login:
+	    out.println("<TR>");
+	    out.println("<TD>");
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
+	    out.println("</TD>");
+	    out.println("</TR>");
+	    
+	    out.println("<TR>");
+	    out.println("<TD>");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 	    		+ "smic.ICMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Inventory Main Menu</A><BR>");
+	    out.println("</TD>");
+	    out.println("</TR>");
+	    
+	    out.println("<TR>");
+	    out.println("<TD>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.ICEditPhysicalInventory) 
 	    		+ "\">Summary</A><BR><BR>");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalInventoryEdit' METHOD='POST'>");
-	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
+	    out.println("</TD>");
+	    out.println("</TR>");
+
 	    //Add links to create new physicals:
-	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
 	    out.println("<TR>");
 	    out.println("<TD>");
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalInventory"
@@ -83,54 +100,32 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    		+ "\">Create a new physical inventory</A>");
 	    out.println("</TD>");
 	    out.println("</TR>");
+	    
+	    
+	    out.println("<TR>");
+	    out.println("<TD>");
+	    out.println(
+		    	"<B>NOTE:</B> When a new physical inventory is created, the current quantities on hand are recorded in the "
+		    	+ "inventory worksheet.  The write off and inventory accounts associated with the location are used"
+		    	+ " for ALL the items in the physical inventory."
+		    );
+	    out.println("</TD>");
+	    out.println("</TR>");
+	    
 	    out.println("</TABLE>");
 	    
-	    out.println(
-	    	"<B>NOTE:</B> When a new physical inventory is created, the current quantities on hand are recorded in the "
-	    	+ "inventory worksheet.  The write off and inventory accounts associated with the location are used"
-	    	+ " for ALL the items in the physical inventory."
-	    );
+
 	    
 	    //Build List
-	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-	    out.println("<TR>");
-	    
-	    out.println("<TD>");
-	    out.println("<B>Physical inv.#</B>");
-	    out.println("</TD>");
-	    
-	    out.println("<TD>");
-	    out.println("<B>Created</B>");
-	    out.println("</TD>");
-
-	    out.println("<TD>");
-	    out.println("<B>Created by</B>");
-	    out.println("</TD>");
-
-	    out.println("<TD>");
-	    out.println("<B>Description</B>");
-	    out.println("</TD>");
-
-	    out.println("<TD>");
-	    out.println("<B>Location</B>");
-	    out.println("</TD>");
-
-	    //out.println("<TD>");
-	    //out.println("<B>From item</B>");
-	    //out.println("</TD>");
-
-	    //out.println("<TD>");
-	    //out.println("<B>To item</B>");
-	    //out.println("</TD>");
-
-	    out.println("<TD>");
-	    out.println("<B>Status</B>");
-	    out.println("</TD>");
-	    
-	    out.println("<TD>");
-	    out.println("<B>IC Batchnumber</B>");
-	    out.println("</TD>");
-
+	    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Physical Inv. #</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Created</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Created By</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Description</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Location</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Status</B></TD>");
+		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>IC Batch Number</B></TD>");
 	    out.println("</TR>");
 	    
 	    try{
@@ -147,10 +142,14 @@ public class ICListPhysicalInventories extends HttpServlet {
 	        	sDBID,
 	        	"MySQL",
 	        	this.toString() + ".doPost - User: " + sUserName);
-	        
+	        int iCount =0;
         	while (rs.next()){
         		//Start a row:
-        		out.println("<TR>");
+        		if(iCount%2 == 0) {
+        			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
+        		}else {
+        			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+        		}
         		out.println(
         			Build_Row(		
 	        			out,
@@ -172,7 +171,8 @@ public class ICListPhysicalInventories extends HttpServlet {
         			)
         		);
         		//End the row:
-        		out.println("<TR>");
+        		out.println("</TR>");
+        		iCount++;
         	}
         	rs.close();
 	        out.println ("<BR>");
@@ -207,47 +207,21 @@ public class ICListPhysicalInventories extends HttpServlet {
 			String sDBID
 			){
 
-		String sOutPut = "<TD>";
-		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditPhysicalInventory" 
+		String sOutPut = "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICEditPhysicalInventory" 
 	    		+ "?" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysInvNumber
 	    		+ "&CallingClass=" + sCallingClass
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		+ "\">"
 	    		+ sPhysInvNumber
-	    		+ "</A>";
-		sOutPut += "</TD>";
-		
-		sOutPut += "<TD>";
-		sOutPut += sDateCreated;
-		sOutPut += "</TD>";
-		
-		sOutPut += "<TD>";
-		sOutPut += sCreatedBy;
-		sOutPut += "</TD>";
-		
-		sOutPut += "<TD>";
-		sOutPut += sDesc;
-		sOutPut += "</TD>";
-		
-		sOutPut += "<TD>";
-		sOutPut += sLocation;
-		sOutPut += "</TD>";
-		
-		//sOutPut += "<TD>";
-		//sOutPut += sStartingItemNumber;
-		//sOutPut += "</TD>";
-		
-		//sOutPut += "<TD>";
-		//sOutPut += sEndingItemNumber;
-		//sOutPut += "</TD>";
+	    		+ "</A></TD>";
+		sOutPut += "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDateCreated + "</TD>";
+		sOutPut += "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sCreatedBy + "</TD>";
+		sOutPut += "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sDesc + "</TD>";
+		sOutPut += "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sLocation + "</TD>";
+		sOutPut += "<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sStatus + "</TD>";
 
-		sOutPut += "<TD>";
-		sOutPut += sStatus;
-		sOutPut += "</TD>";
-
-		sOutPut += "<TD ALIGN=RIGHT>";
-		sOutPut += sBatchNumber;
-		sOutPut += "</TD>";
+		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sBatchNumber + "</TD>";
 		
 		return sOutPut;
 

@@ -257,13 +257,6 @@ public class SMCriticalDateReport extends java.lang.Object{
 	private void printMultipleTypes(PrintWriter out, String sSQL, Connection conn, ServletContext context, String sDBID) throws Exception {
 		//printout column header
 				out.println(SMUtilities.getMasterStyleSheetLink());
-				out.println("<STYLE>"
-						+ "@media print {\n"  
-						+ "  TABLE { border-collapse: collapse; }\n"
-						+ "  TR:nth-child(even) { background: #FFFFFF; }\n "
-						+ "  TR:nth-child(odd) { background: #DCDCDC; }\n"
-						+ "}" + 
-						"</STYLE>");
 				out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >\n");
 				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">\n ");
 				//out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>ID</B></FONT></TD>");
@@ -295,7 +288,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"> " + rs.getString((SMTablecriticaldates.sassignedbyuserfullname).replace("`", "")) + "</TD>");
 
 
-						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"><A HREF=\"" 
+						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \"><A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMCriticalDateEdit?" + SMTablecriticaldates.sId + "=" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
@@ -303,7 +296,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ "#CriticalDatesFooter\">" 
 								+ rs.getString((SMTablecriticaldates.sId).replace("`", ""))
 							+ "</A>" + "</TD>");
-						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
+						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + clsDateAndTimeConversions.utilDateToString(rs.getDate((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sCriticalDate).replace("`", "")),"M/d/yyyy") + "</TD>");
 						out.println("<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \">" + rs.getString((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sComments).replace("`", "")) + "</TD>");
 						
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
@@ -333,24 +326,22 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<b>Customer Account: </b>" + "<A HREF=\"" 
 									+ SMUtilities.getURLLinkBase(context) 
 									+ "smar.ARDisplayCustomerInformation?CustomerNumber=" 
-									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("&", "%26")).trim() 
+									+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber ).replace("&", "%26").trim() 
 									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 									+ "\">" 
-									+ rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber).replace("`", "")).trim()  
+									+ clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber ).replace("`", "").trim()  
 									+ "</A>");
-							out.println("<br><b>Customer Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Phone: </b>" + rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Last Invoice Date: </b>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
+							out.println("<br><b>Customer Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs, SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "").trim() + ""); 
+							out.println("<br><b>Contact Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs , SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "").trim() + ""); 
+							out.println("<br><b>Phone: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber ).replace("`", "").trim() + ""); 
+							out.println("<br><b>Last Invoice Date: </b>" +  clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
 							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMSalesContactEdit?id=" 
-								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
-								+ SMTablebids.lid).replace("`", ""))) 
+								+ clsDatabaseFunctions.getRecordsetIntegerValue(rs, SMTablesalescontacts.TableName + "." + SMTablebids.lid).replace("`", "")
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" 
-								+ Integer.toString(rs.getInt((SMTablesalescontacts.TableName + "." 
-								+ SMTablebids.lid).replace("`", "")))  
+								+ clsDatabaseFunctions.getRecordsetIntegerValue(rs, SMTablesalescontacts.TableName + "." + SMTablebids.lid).replace("`", "")
 								+ "</A>");	
 						}
 						

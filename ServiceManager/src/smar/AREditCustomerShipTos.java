@@ -71,7 +71,14 @@ public class AREditCustomerShipTos extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    //Add drop down list
 		try{
-	        String sSQL = ARSQLs.Get_CustomerShipTo_List_SQL();
+	        String sSQL = "SELECT " 
+	        		+ SMTablearcustomershiptos.sCustomerNumber + ", "
+	        		+ SMTablearcustomershiptos.sShipToCode + ", "
+	        		+ SMTablearcustomershiptos.sDescription
+	        		+ " FROM " + SMTablearcustomershiptos.TableName
+	        		+ " ORDER BY " 
+	        		+ SMTablearcustomershiptos.sCustomerNumber + ", "
+	        		+ SMTablearcustomershiptos.sShipToCode;
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 

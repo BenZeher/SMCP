@@ -63,12 +63,14 @@ public class ICListUnusedPOsGenerate extends HttpServlet {
     	String sCriteria = "Listing any purchase orders that have been assigned, but do no yet have any lines"
     		+ " added to them.";
     	
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+    	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "ICListUnusedPOsGenerate") 
@@ -117,6 +119,8 @@ public class ICListUnusedPOsGenerate extends HttpServlet {
 				CurrentSession.getAttribute("URLMaxSize"))
 				);
     	
+		out.println(SMUtilities.getMasterStyleSheetLink());
+		
     	ICListUnusedPOsReport rpt = new ICListUnusedPOsReport();
     	if (!rpt.processReport(
     			conn, 

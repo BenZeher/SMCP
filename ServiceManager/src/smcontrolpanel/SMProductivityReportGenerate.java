@@ -57,12 +57,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
     	String sSQL = "";
     	ResultSet rs = null;
 
-	    out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 Transitional//EN\">" +
-			        "<HTML>" +
-			        "<HEAD><TITLE>" + title + "</TITLE></HEAD>\n<BR>" + 
-				    "<BODY BGCOLOR=\"#"
-			        + SMUtilities.getInitBackGroundColor(getServletContext(), sDBID)
-			        + "\">");
 		
 	 	   //log usage of this this report
 	 	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
@@ -128,12 +122,78 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    /*************END of PARAMETER list***************/
 	    
 	    boolean bHasRecord = false;
-	    sSQL = SMMySQLs.Get_Productivity_Report_SQL(datStartingDate,
-	    											datEndingDate,
-	    											alLocations,
-	    											alServiceTypes,
-	    											alItemCategories
-	    											);
+	    sSQL = "SELECT * FROM " + SMTableinvoiceheaders.TableName + ", " + 
+	    		SMTableinvoicedetails.TableName + 
+	    		" WHERE" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " =" + 
+	    		" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber +
+	    		" AND" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " >= '" + datStartingDate.toString() + "'" +
+	    		" AND" +
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate + " <= '" + datEndingDate.toString() + "'";
+
+	    //if there is any location selected, attach them
+	    if (alLocations.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation + " = '-1'";
+	    }else{
+	    	if (alLocations.get(0).toString().compareTo("ALLLOC") != 0){
+	    		String sLocations = "";
+	    		sSQL = sSQL + " AND (";
+	    		for (int i=0;i<alLocations.size();i++){
+	    			sLocations = sLocations + " OR" + 
+	    					" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sLocation + " = '" + alLocations.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sLocations = sLocations.substring(4);
+	    		sSQL = sSQL + sLocations + ")";
+	    	}
+	    }
+
+	    //if there is any service type selected, attach them
+	    if (alServiceTypes.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = 'SH9999'";
+	    }else{
+	    	if (alServiceTypes.get(0).toString().compareTo("ALLST") != 0){
+	    		sSQL = sSQL + " AND (";
+	    		String sServiceTypes = "";
+	    		for (int i=0;i<alServiceTypes.size();i++){
+	    			sServiceTypes = sServiceTypes + " OR" + 
+	    					" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = '" + alServiceTypes.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sServiceTypes = sServiceTypes.substring(4);
+	    		sSQL = sSQL + sServiceTypes + ")";
+	    	}
+	    }
+
+	    //if there is any category type selected, attach them
+	    if (alItemCategories.size() == 0){
+	    	//no location selected, make the SQL return nothing
+	    	sSQL = sSQL + " AND" +
+	    			" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode + " = ''";
+	    }else{
+	    	if (alItemCategories.get(0).toString().compareTo("ALLIC") != 0){
+	    		sSQL = sSQL + " AND (";
+	    		String sItemCategories = "";
+	    		for (int i=0;i<alItemCategories.size();i++){
+	    			sItemCategories = sItemCategories + " OR" + 
+	    					" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemCategory + " = '" + alItemCategories.get(i) + "'";
+	    		}
+	    		//remove the leading OR
+	    		sItemCategories = sItemCategories.substring(4);
+	    		sSQL = sSQL + sItemCategories + ")";
+	    	}
+	    }
+
+	    sSQL = sSQL + " ORDER BY" + 
+	    		" " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sMechInitial + ", " + 
+	    		" " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber;
+
+
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){
@@ -142,17 +202,30 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
 	    }
-	    
+
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    try{
-		    out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    out.println("<TR><TD ALIGN=CENTER><FONT SIZE=4><B>Mechanic Productivity Report</B></FONT><BR>" +
-		    								 "<FONT SIZE=2>" + sCompanyName + "</FONT><BR>" +
-		    								 "<FONT SIZE=2>" + USDateTimeformatter.format(new Date(System.currentTimeMillis())) + "</FONT><BR><BR>" +
-		    								 "<FONT SIZE=2>Based on Invoice(s) From  " +
-		    								 		USDateOnlyformatter.format(datStartingDate) + " To " + 
-		    								 		USDateOnlyformatter.format(datEndingDate) + "</FONT><BR>" +
-				    						 "<FONT SIZE=2>Printed by " + sUserFullName + "</FONT><BR>" +
-						   "</TD></TR>");
+	    	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
+	    			   "Transitional//EN\">" +
+	    		       "<HTML>" +
+	    		       "<HEAD><TITLE>" + title + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
+	    			   "<BODY BGCOLOR=\"#FFFFFF\">" +
+	    			   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\" >" +
+	    			   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+	    			   + USDateTimeformatter.format(new Date(System.currentTimeMillis())) 
+	    			   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "SMMonthlySalesReportGenerate") 
+	    			   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
+	    			   "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + title + "</B></FONT></TD></TR>" +
+	    			   
+	    			   "<TR><TD COLSPAN=2><FONT SIZE=2>Based on Invoice(s) From <B> " +
+				 		USDateOnlyformatter.format(datStartingDate) + " to " + 
+				 		USDateOnlyformatter.format(datEndingDate) + "</B></FONT></TD></TR>");
+	    					   
+	    		   out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	    					+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+	    					+ "\">Return to user login</A><BR>" +
+	    			   "</TD></TR></TABLE>");
 		    
 		    Long lCurrentMechanicID = 0L;
 		    String sCurrentMechanicName = null;
@@ -160,6 +233,9 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    BigDecimal bdInvoiceTotal = BigDecimal.ZERO;
 		    BigDecimal bdMechanicTotal = BigDecimal.ZERO;
 		    //BigDecimal bdGrandTotal = BigDecimal.ZERO;
+		    
+		    int iCount = 0;
+		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
 		    
 		    while (rs.next()){	    
 		    	bHasRecord = true;
@@ -169,24 +245,50 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    		if (lCurrentMechanicID != 0){
 		    			if (!bShowSubtotalOnly){
 			    			//print out total for this invoice 
-			    			out.println("<TR><TD COLSPAN=5><HR></TD></TR>");
-			    			out.println("<TR><TD>&nbsp;</TD>" +
-			    							"<TD ALIGN=RIGHT COLSPAN=3>Total For Invoice#&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>:</TD>" + 
-			    							"<TD ALIGN=RIGHT>" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</TD>" + 
-			    							"</TR></TABLE></TD></TR></TABLE></TD></TR>");
+				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+			    		out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+		    			out.println("</TR>");
 		    			}
 		    			//print out total for this mechanic
-		    			out.println("<TR><TD ALIGN=RIGHT COLSPAN=4><B>Total For Mechanic " + sCurrentMechanicName + ":</B>   " + 
-		    							bdMechanicTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + 
-		    							"</TD></TR>");
-		    			out.println("</TD></TR>");
+				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+			    		out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total For Mechanic " + sCurrentMechanicName + ": </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdMechanicTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+		    			out.println("</TR>");
+				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+			    		out.println("</TR>");
+		    			iCount=0;
 		    		}
 		    		//print out new name
 		    		if (rs.getLong(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.imechid) == 0){
-		    			out.println("<TR><TD><HR></TD></TR><TR><TD ALIGN=LEFT><FONT SIZE=4><B>Mechanic: N/A</B></FONT></TD></TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Mechanic: N/A: </TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			iCount=0;
 		    		}else{
-		    			out.println("<TR><TD><HR></TD></TR><TR><TD ALIGN=LEFT><FONT SIZE=4><B>Mechanic: " 
-		    				+ rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sMechFullName) + "</B></FONT></TD></TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Mechanic:" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sMechFullName) + "</TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			iCount=0;
 		    		}
 
 		    		lCurrentMechanicID = rs.getLong(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.imechid);
@@ -197,77 +299,91 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    			bdMechanicTotal = BigDecimal.ZERO;
 		    		bdInvoiceTotal = BigDecimal.ZERO;
 		    		if (!bShowSubtotalOnly){
-					    out.println("<TR><TD><TABLE BORDER=1 WIDTH=100%>" +
-							    		"<TR><TD><TABLE BORDER=0 WIDTH=100%>" +
-							    					"<TR>" +
-							    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Inv#:</B>&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber)) + "\">" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber).trim() + "</A></FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Date:</B>&nbsp;"+ USDateOnlyformatter.format(rs.getDate(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate)) + "</FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Bill To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sBillToName) + "</FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Ship To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sShipToName) + "</FONT></TD>" +
-						    						"</TR>" + 
-					    						"</TABLE>" + 
-			    						"</TD></TR>" + 
-					    
-			    						"<TR><TD><TABLE BORDER=0 WIDTH=100%>" +
-							    					"<TR>" +
-							    						"<TD ALIGn=LEFT WIDTH=15%><FONT SIZE=1><B>Item Number</B></FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=50%><FONT SIZE=1><B>Item Description</B></FONT></TD>" +
-							    						"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=1><B>Qty.Shipped</B></FONT></TD>" +
-							    						"<TD ALIGN=CENTER WIDTH=12%><FONT SIZE=1><B>UOM</B></FONT></TD>" +
-							    						"<TD ALIGN=RIGHT WIDTH=13%><FONT SIZE=1><B>Ext. Price</B></FONT></TD>" + 
-						    						"</TR>" + 
-						    						"<TR><TD COLSPAN=5><HR></TD></TR>" +
-										"</TD></TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN=\"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Inv#:&nbsp;" 
+		    					+ "&nbsp;<A HREF=\"" 
+		    					+ SMUtilities.getURLLinkBase(getServletContext()) + "" 
+		    					+ SMUtilities.lnViewInvoice(sDBID, rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber)) + "\">" 
+		    					+ rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber).trim() + "</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
+		    							+ "Date:</B>&nbsp;"+ USDateOnlyformatter.format(rs.getDate(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate)) +""
+		    									+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sBillToName)  
+		    									+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ship To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sShipToName) 
+		    									+ "</TD>");
+		    			out.println("</TR>");
+		    			
+		    			
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item Number </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item Description </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty.Shipped </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">UOM </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ext. Price </TD>");
+		    			out.println("</TR>");
+
 		    		}
 		    	}
 
 			    if (sCurrentInvoiceNumber.compareTo(rs.getString(SMTableinvoiceheaders.sInvoiceNumber).trim()) != 0){
 			    	if (!bShowSubtotalOnly){
 		    			//print out total for this invoice 
-		    			out.println("<TR><TD COLSPAN=5><HR></TD></TR>");
-		    			out.println("<TR><TD>&nbsp;</TD>" +
-		    							"<TD ALIGN=RIGHT COLSPAN=3>Total For Invoice#&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>:</TD>" + 
-		    							"<TD ALIGN=RIGHT>" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</TD>" + 
-		    							"</TR></TABLE></TD></TR></TABLE></TD></TR>");
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR><TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+		    			out.println("</TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+		    			out.println("</TR>");
+		    			iCount=0;
 			    	}
 	    			sCurrentInvoiceNumber = rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber).trim();
 	    			//System.out.println("Inv: " + sCurrentInvoiceNumber);
 	    			//reset invoice total counter
 	    			bdInvoiceTotal = BigDecimal.ZERO;
 	    			if (!bShowSubtotalOnly){
-					    out.println("<TR><TD><TABLE BORDER=1 WIDTH=100%>" +
-							    		"<TR><TD><TABLE BORDER=0 WIDTH=100%>" +
-							    					"<TR>" +
-							    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Inv#:</B>&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber) ) + "\">" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber).trim() + "</A></FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Date:</B> "+ USDateOnlyformatter.format(rs.getDate(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate)) + "</FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Bill To:</B> " + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sBillToName) + "</FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=35%><FONT SIZE=2><B>Ship To:</B> " + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sShipToName) + "</FONT></TD>" +
-						    						"</TR>" + 
-					    						"</TABLE>" + 
-			    						"</TD></TR>" + 
-					    
-			    						"<TR><TD><TABLE BORDER=0 WIDTH=100%>" +
-							    					"<TR>" +
-							    						"<TD ALIGn=LEFT WIDTH=15%><FONT SIZE=2><B>Item Number</B></FONT></TD>" +
-							    						"<TD ALIGN=LEFT WIDTH=50%><FONT SIZE=2><B>Item Description</B></FONT></TD>" +
-							    						"<TD ALIGN=RIGHT WIDTH=10%><FONT SIZE=2><B>Qty.Shipped</B></FONT></TD>" +
-							    						"<TD ALIGN=CENTER WIDTH=12%><FONT SIZE=2><B>UOM</B></FONT></TD>" +
-							    						"<TD ALIGN=RIGHT WIDTH=13%><FONT SIZE=2><B>Ext. Price</B></FONT></TD>" + 
-						    						"</TR>" + 
-						    						"<TR><TD COLSPAN=5><HR></TD></TR>" +
-										"</TD></TR>");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN=\"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Inv#:&nbsp;" 
+		    					+ "&nbsp;<A HREF=\"" 
+		    					+ SMUtilities.getURLLinkBase(getServletContext()) + "" 
+		    					+ SMUtilities.lnViewInvoice(sDBID, rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber)) + "\">" 
+		    					+ rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber).trim() + "</A>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; "
+		    							+ "Date:</B>&nbsp;"+ USDateOnlyformatter.format(rs.getDate(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datInvoiceDate)) +""
+		    									+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bill To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sBillToName)  
+		    									+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ship To:</B>&nbsp;" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sShipToName) 
+		    									+ "</TD>");
+		    			out.println("</TR>");
+		    			
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD COLSPAN = \"5\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp; </TD>");
+		    			out.println("</TR>");
+		    			
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item Number </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item Description </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty.Shipped </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">UOM </TD>");
+		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ext. Price </TD>");
+		    			out.println("</TR>");
 	    			}
 			    }
 
 			    BigDecimal bdLine = BigDecimal.valueOf(rs.getDouble(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedPrice));
 			    if (!bShowSubtotalOnly){
-				    out.println("<TR>" +
-									"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber).trim() + "</FONT></TD>" +
-									"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sDesc).trim() + "</FONT></TD>" +
-									"<TD ALIGN=RIGHT><FONT SIZE=2>" + rs.getDouble(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dQtyShipped) + "</FONT></TD>" +
-									"<TD ALIGN=CENTER><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sUnitOfMeasure).trim() + "</FONT></TD>" +
-									"<TD ALIGN=RIGHT><FONT SIZE=2>" + bdLine.setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</FONT></TD>" + 
-								"</TR>");
+					if(iCount % 2 == 0) {
+						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+					}else {
+						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}
+					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber).trim() +"</TD>");
+					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sDesc).trim() +" </TD>");
+					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getDouble(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dQtyShipped) + "</TD>");
+					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sUnitOfMeasure).trim() +" </TD>");
+					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ bdLine.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+					out.println("</TR>");
+				    iCount++;
 			    }
 			    bdInvoiceTotal = bdInvoiceTotal.add(bdLine);
 			    bdMechanicTotal = bdMechanicTotal.add(bdLine);
@@ -278,25 +394,32 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    if (bHasRecord){
 			    //print out last total
 		    	if (!bShowSubtotalOnly){
-				    out.println("<TR><TD COLSPAN=5><HR></TD></TR>");
-					out.println("<TR><TD>&nbsp;</TD>" +
-									"<TD ALIGN=RIGHT COLSPAN=3>Total For Invoice#&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>:</TD>" + 
-									"<TD ALIGN=RIGHT>" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>" + 
-									"</TR></TABLE></TD></TR></TABLE></TD></TR>");
+			    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+		    		out.println("</TR>");
+	    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+	    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
+	    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+	    			out.println("</TR>");
 		    	}
 				//print out total for this mechanic
-				out.println("<TR><TD ALIGN=RIGHT COLSPAN=4><B>Total For Mechanic " + sCurrentMechanicName + ":</B>   " + 
-								bdMechanicTotal.setScale(2, BigDecimal.ROUND_HALF_UP) + 
-								"</TD></TR>");
-				out.println("</TD></TR>");
+		    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+	    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+	    		out.println("</TR>");
+    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total For Mechanic " + sCurrentMechanicName + ": </TD>");
+    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdMechanicTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
+    			out.println("</TR>");
+		    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+	    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
+	    		out.println("</TR>");
 		    }else{
-		    	out.println("<TR><TD ALIGN=CENTER><HR></TD></TR>");
 		    	out.println("<TR><TD ALIGN=CENTER><B>No Record Found</B></TD></TR>");
 		    	
 		    }
 			/*
 			//print out grand total
-			out.println("<TR><TD><HR></TD></TR>");
+			out.println("<TR><TD></TD></TR>");
 			out.println("<TR><TD ALIGN=RIGHT COLSPAN=3><FONT SIZE=5><B>Grand Total :   " + 
 							bdGrandTotal.setScale(2, BigDecimal.ROUND_HALF_UP) + 
 							"</B></FONT></TD></TR>");

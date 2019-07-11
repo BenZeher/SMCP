@@ -174,6 +174,7 @@ public class SMEditUsersEdit extends HttpServlet {
 	    //LTO 20120814 color picker for users.
 		out.println("<script type='text/javascript' src='/sm/scripts/jquery-1.8.0.min.js'></script>");
 		out.println("<script type='text/javascript' src='/sm/scripts/jquery.simple-color.js'></script>");
+		out.println(get_javascript_validation());
 		
 	    //Get license level to control content displayed
 	    long lLicenseModuleLevel = 0;
@@ -186,6 +187,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditUsersAction' ONSUBMIT=\" return checkInput()\" METHOD='POST'>");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME=\"" + SMUser.Paramlid + "\" VALUE=\"" + userentry.getlid() + "\">");
+		
 	    String sOutPut = "";
 	    String sSQL = "";
         sOutPut = "<TABLE BORDER=12 CELLSPACING=2>";
@@ -215,11 +217,6 @@ public class SMEditUsersEdit extends HttpServlet {
 		sOutPut += "SIZE=28";
 		sOutPut += " MAXLENGTH=" + Integer.toString(SMTableusers.sUserUserNameLength);
 		sOutPut += " STYLE=\"width: 1.2in; height: 0.25in\" ";
-		if(userentry.bIsNewRecord()) {
-			sOutPut +=  "";
-		}else {
-			sOutPut +=  "readonly";
-		}
 		sOutPut += "></TD>";
 		
 		sOutPut += "<TD ALIGN=LEFT>Enter a <i>unique</i> username that will be used to log into SMCP.</TD>";
@@ -756,36 +753,6 @@ public class SMEditUsersEdit extends HttpServlet {
 				+ (iCol * 18 + Math.abs(iRow - 6) * 9) + "px';\n";
 		s += "	document.getElementById('selectedColor').style.visibility='visible';\n";
 		
-		s += "  function checkInput (){ \n"
-				//Validate the users first name
-		  +  "    var errors = [];\n"
-		  +  "    var alertMessage = \"\";\n"
-		  + "     if(document.getElementById('" + SMTableusers.sUserName + "').value == '' ){"
-		  +  "      errors.push('"+SMTableusers.sUserName+"');\n"
-		  +  "      alertMessage += \"Username field is BLANK\";\n"		  
-		  + "     }"
-		  +  "    if(document.getElementById('" + SMTableusers.sUserFirstName + "').value == '' && document.getElementById('" + SMTableusers.sUserLastName + "').value == ''){\n"
-		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
-		  +  "      errors.push('"+SMTableusers.sUserLastName+"');\n"
-		  +  "      alertMessage += \"Firstname and Lastname field is BLANK\";\n"		  
-		  +  "       }else if (document.getElementById('"+SMTableusers.sUserFirstName+"').value == ''){\n"
-		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
-		  +  "      alertMessage += \"Firstname  is BLANK\";\n"
-		  +  "       }else if (document.getElementById('"+SMTableusers.sUserLastName+"').value == ''){\n"
-		  +  "         errors.push('"+SMTableusers.sUserLastName+"');\n"
-		  +  "         alertMessage += \"Lastname  is BLANK\";\n"
-		  +  "      }\n"
-		  + ""
-		  + ""
-		  +  "       if(errors === undefined || errors.length == 0){\n"
-		  +  "            return true;\n"
-		  +  "       }\n"
-		  +  "         alert(alertMessage);\n"
-		  +  "         document.getElementById(errors[0]).scrollIntoView();\n"
-		  +  "         document.getElementById(errors[0]).focus();\n"
-		  +  "         return false;\n"
-		  +  "     }\n";
-		
 		s += "</script>\n";
 		s += "<div style='width:300px;padding-top:33px;padding-left:66px;margin-bottom:30px;'>"
 				+ "<div id='divpreview' style='float: left; height: 20px; width: 100px; border-width: 1px 1px medium; border-style: solid solid none; border-color: rgb(212, 212, 212) rgb(212, 212, 212) -moz-use-text-color; -moz-border-top-colors: none; -moz-border-right-colors: none; -moz-border-bottom-colors: none; -moz-border-left-colors: none; -moz-border-image: none; background-color: #"
@@ -846,6 +813,44 @@ public class SMEditUsersEdit extends HttpServlet {
 		return s;
 }
 	
+	
+	private String get_javascript_validation() {
+		
+		String s = "<script>\n";
+		s += "  function checkInput (){ \n"
+				//Validate the users first name
+		  +  "    var errors = [];\n"
+		  +  "    var alertMessage = \"\";\n"
+		  + "     if(document.getElementById('" + SMTableusers.sUserName + "').value == '' ){"
+		  +  "      errors.push('"+SMTableusers.sUserName+"');\n"
+		  +  "      alertMessage += \"Username field is BLANK\";\n"		  
+		  + "     }"
+		  +  "    if(document.getElementById('" + SMTableusers.sUserFirstName + "').value == '' && document.getElementById('" + SMTableusers.sUserLastName + "').value == ''){\n"
+		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
+		  +  "      errors.push('"+SMTableusers.sUserLastName+"');\n"
+		  +  "      alertMessage += \"Firstname and Lastname field is BLANK\";\n"		  
+		  +  "       }else if (document.getElementById('"+SMTableusers.sUserFirstName+"').value == ''){\n"
+		  +  "      errors.push('"+SMTableusers.sUserFirstName+"');\n"
+		  +  "      alertMessage += \"Firstname  is BLANK\";\n"
+		  +  "       }else if (document.getElementById('"+SMTableusers.sUserLastName+"').value == ''){\n"
+		  +  "         errors.push('"+SMTableusers.sUserLastName+"');\n"
+		  +  "         alertMessage += \"Lastname  is BLANK\";\n"
+		  +  "      }\n"
+		  + ""
+		  + ""
+		  +  "       if(errors === undefined || errors.length == 0){\n"
+		  +  "            return true;\n"
+		  +  "       }\n"
+		  +  "         alert(alertMessage);\n"
+		  +  "         document.getElementById(errors[0]).scrollIntoView();\n"
+		  +  "         document.getElementById(errors[0]).focus();\n"
+		  +  "         return false;\n"
+		  +  "     }\n\n"
+
+		  + "</script>\n";
+		
+		return s;
+	}
 private String print_area_list(){
 		
 		return 

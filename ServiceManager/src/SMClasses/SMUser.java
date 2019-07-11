@@ -247,23 +247,29 @@ public class SMUser extends clsMasterEntry{
 			throw new Exception (e1.getMessage());
 		}
     	//Check if this username is already in use.
-    	String SQL = ""; 
-    	//TODO validate if the user has been edited. 
-    	if(getsNewRecord().compareToIgnoreCase(SMUser.ParamNewRecordValue) == 0){
-			String sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
+    	String SQL = "";
+			String sSQL = SMMySQLs.Get_User_By_UserID(getlid());
 			try{
 				//System.out.println(sSQL);
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (rs.next()){
-					//This user already exists, so we can't add it:
-					rs.close();
-					throw new Exception("The user '" + getsUserName() + "' already exists - it cannot be added.<BR>");
-				}
+					//This username has been changed or this is a new record check to see if the username is on another record.
+					if(rs.getString(SMTableusers.sUserName).compareToIgnoreCase(getsUserName()) != 0 || bIsNewRecord()) {	
+						sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
+						ResultSet rsCheck = clsDatabaseFunctions.openResultSet(sSQL, conn);
+						//This user already exists, so we can't add it:
+						if (rsCheck.next()){
+							rsCheck.close();
+							rs.close();
+							throw new Exception("The user '" + getsUserName() + "' already exists - it cannot be added.<BR>");
+						}
+						rsCheck.close();
+					}
+				}	
 				rs.close();
 			}catch(SQLException ex){
 				throw new Exception ("[1421996275]" + ex.getMessage());
 				}
-    	}
 	
 
 

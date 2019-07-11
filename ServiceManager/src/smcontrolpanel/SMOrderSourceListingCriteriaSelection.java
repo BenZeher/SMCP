@@ -103,15 +103,13 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     		out.println("<TD><B>Report type:</B></TD>");
     		out.println("<TD>");
     		out.println("<input type=\"radio\" name=\"ReportType\" value=\"Order\" checked> Orders&nbsp;");
-    		out.println("<input type=\"radio\" name=\"ReportType\" value=\"" + SMBidEntry.ParamObjectName + "\"> " + SMBidEntry.ParamObjectName + "s&nbsp;");
     		out.println("<input type=\"radio\" name=\"ReportType\" value=\"Invoice\"> Invoices&nbsp;");
     		out.println("</TD>");
     		out.println("</TR>");
     		
     		//checkboxes for Order types:
     		out.println("<TR>");
-    		out.println("<TD><B>Include order types:<B><BR><FONT COLOR=RED SIZE=2>"
-    			+ "(This only applies to orders and invoices, NOT " + SMBidEntry.ParamObjectName + "s.)</FONT></TD>");
+    		out.println("<TD><B>Include order types:</B></TD>");
     		out.println("<TD>");
     		
     		String SQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
@@ -143,8 +141,7 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
         	
     		//Locations:
     		out.println("<TR>");
-    		out.println("<TD><B>Include locations:</B><BR><B><FONT COLOR=RED SIZE=2>"
-    			+ "(This only applies to orders and invoices, NOT " + SMBidEntry.ParamObjectName + "s.)</FONT></B></TD>");
+    		out.println("<TD><B>Include order Locations:</B></TD>");
     		out.println("<TD>");
     		SQL = "SELECT"
     			+ " " + SMTablelocations.sLocation

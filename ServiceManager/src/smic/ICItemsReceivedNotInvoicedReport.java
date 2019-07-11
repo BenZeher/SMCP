@@ -419,6 +419,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 				lLastPOID = lPOID;
 				sLastExpenseAcct = sExpenseAcct;
 				sLastVendorString = rs.getString(SMTableicpoheaders.svendor) + " - " + rs.getString(SMTableicpoheaders.svendorname); 
+				iCount++;
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -488,7 +489,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 				+ "</FONT></B></TD>");
 			out.println("</TR>");
 			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING+"\">");
-			out.println("<TD COLSPAN = \"15\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK +"\"><HR></TD>");
+			out.println("<TD COLSPAN = \"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK +"\">&nbsp;</TD>");
 			out.println("</TR>");
 		}
 	private void printAccountFooter(
@@ -504,6 +505,9 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 				SMTableicporeceiptlines.bdextendedcostScale, bdAccountTotal)
 			+ "</FONT></B></TD>");
+		out.println("</TR>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL +"\">");
+		out.println("<TD COLSPAN=\"14\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
 		out.println("</TR>");
 
 		}

@@ -3,6 +3,7 @@ package ServletUtilities;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
@@ -216,6 +217,18 @@ public class clsDatabaseFunctions {
 		return true;
 	}
 
+	public static void start_data_transaction_with_exception (Connection conn) throws Exception{
+		
+		String SQL = "START TRANSACTION";
+		try{
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		}catch (SQLException ex){
+			throw new Exception("Error [2019192160353] " + " Could not start data transaction - " + ex.getMessage());
+		}
+		return;
+	}
+	
 	public static boolean rollback_data_transaction (Connection conn){
 	
 		String SQL = "ROLLBACK";
@@ -248,6 +261,18 @@ public class clsDatabaseFunctions {
 			return false;
 		}
 		return true;
+	}
+	
+	public static void commit_data_transaction_with_exception (Connection conn) throws Exception{
+		
+		String SQL = "COMMIT";
+		try{
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		}catch (SQLException ex){
+			throw new Exception("Error [2019192160363] " + " Could not commit data transaction - " + ex.getMessage());
+		}
+		return;
 	}
 
 	public static long getLastInsertID(Connection conn) throws SQLException {

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.Statement;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMBatchStatuses;
 import SMDataDefinition.SMTableglexternalcompanies;
+import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsManageRequestParameters;
@@ -36,9 +38,27 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		String sFiscalYear = sFiscalYearAndPeriodPeriod.substring(0, sFiscalYearAndPeriodPeriod.indexOf(GLPullIntoConsolidationSelect.PARAM_VALUE_DELIMITER));
 		String sFiscalPeriod = sFiscalYearAndPeriodPeriod.replace(sFiscalYear + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER, "");
 		
+    	Connection conn = null;
+    	try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				smaction.getsDBID(), 
+				"MySQL", 
+				this.toString() + ".updateCompanies - user: " + smaction.getFullUserName()
+			);
+		} catch (Exception e1) {
+			smaction.redirectAction(
+					e1.getMessage(), 
+					"", 
+		    		""
+				);
+				return;
+		}
+    	
 		try {
-			pullCompany(smaction, request, sExternalCompanyID, sFiscalYear, sFiscalPeriod, bAddNewGLs);
+			pullCompany(smaction, request, sExternalCompanyID, sFiscalYear, sFiscalPeriod, bAddNewGLs, conn);
 		} catch (Exception e) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875614]");
 			smaction.redirectAction(
 				e.getMessage(), 
 				"", 
@@ -46,6 +66,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			);
 			return;
 		}
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875615]");
 		smaction.redirectAction(
 			"", 
 			"Company with ID '" + sExternalCompanyID + "' was successfully pulled into the consolidated company.",
@@ -59,29 +80,16 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		String sCompanyID, 
 		String sFiscalYear, 
 		String sFiscalPeriod, 
-		boolean bAddNewGLs
+		boolean bAddNewGLs,
+		Connection conn
 		) throws Exception{
 		
-		//Read the external company lines:
-		String sErrorString = "";
-    	
-    	Connection conn = null;
-    	try {
-			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
-				getServletContext(), 
-				sm.getsDBID(), 
-				"MySQL", 
-				this.toString() + ".updateCompanies - user: " + sm.getFullUserName()
-			);
-		} catch (Exception e1) {
-			throw new Exception("Error [1562702050] " + "Could not get data connection - " + e1.getMessage());
-		}
-    	
     	//Pull the transactions into a single GL batch:
     	
     	//First confirm that the period in the consolidated company is unlocked:
     	GLFiscalYear period = new GLFiscalYear();
     	if (period.isPeriodLocked(sFiscalYear, Integer.parseInt(sFiscalPeriod), conn)){
+    		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875355]");
 			throw new Exception(
 					"Error [20191901557102] " + "fiscal period '" + sFiscalYear + " - " + sFiscalPeriod + "' is locked.");
     	}
@@ -129,6 +137,13 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	glentry.setsfiscalyear(sFiscalYear);
     	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
 
+    	//Start a data transaction:
+    	try {
+			ServletUtilities.clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [2019192162080] " + "Could not start data transaction - " + e1.getMessage() + ".");
+		}
+    	
     	//Now load all the transactions into the entry:
     	SQL = "SELECT * FROM " + sDBName + "." + SMTablegltransactionlines.TableName
     		+ " WHERE ("
@@ -171,14 +186,51 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	
     	//Save the batch:
     	glbatch.addBatchEntry(glentry);
-    	glbatch.save_without_data_transaction(conn, sm.getUserID(), sm.getFullUserName(), false);
+    	try {
+			glbatch.save_without_data_transaction(conn, sm.getUserID(), sm.getFullUserName(), false);
+		} catch (Exception e) {
+			throw new Exception("Error [2019192164281] " + "Could not save GL Transaction batch - " + e.getMessage());
+		}
     	
+    	//Add a record to the list of 'pulls':
+    	SQL = "INSERT INTO " + SMTableglexternalcompanypulls.TableName
+    		+ " ("
+    		+ SMTableglexternalcompanypulls.dattimepulldate
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
+    		+ ", " + SMTableglexternalcompanypulls.lbatchnumber
+    		+ ", " + SMTableglexternalcompanypulls.lcompanyid
+    		+ ", " + SMTableglexternalcompanypulls.luserid
+    		+ ", " + SMTableglexternalcompanypulls.scompanyname
+    		+ ", " + SMTableglexternalcompanypulls.sdbname
+    		+ ", " + SMTableglexternalcompanypulls.sfullusername
+    		+ " ) VALUES ("
+    		+ "NOW()"
+    		+ ", " + sFiscalPeriod
+    		+ ", " + sFiscalYear
+    		+ ", " + glbatch.getsbatchnumber()
+    		+ ", " + sCompanyID
+    		+ ", " + sm.getUserID()
+    		+ ", '" + sCompanyName + "'"
+    		+ ", '" + sDBName + "'"
+    		+ ", '" + sm.getFullUserName()
+    		+ ")"
+    	;
+    	try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20191921611298] " 
+				+ "Could not insert 'pull' record with SQL: '" + SQL + "'" + e.getMessage() + ".");
+		}
     	
-    	if (sErrorString.compareToIgnoreCase("") != 0){
-    		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562702052]");
-    		throw new Exception("Error [1562702051] pulling external company's transactions - " + sErrorString);
-    	}
-    	ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562702053]");
+    	//Commit the data transaction:
+    	try {
+			ServletUtilities.clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [20191921620409] " + "Could not commit data transaction - " + e1.getMessage() + ".");
+		}
+    	
 		return;
 	}
 

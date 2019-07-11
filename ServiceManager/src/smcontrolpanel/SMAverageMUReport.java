@@ -382,18 +382,22 @@ public class SMAverageMUReport extends java.lang.Object{
 				}
 			}
 			//Print the grand totals:
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
 			out.println("<TD colspan=\"8\">&nbsp;</TD>");
-			out.println("<TR>");
-			out.println("<TD ALIGN=RIGHT colspan=\"4\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalAmount) + "</B></FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalMU) + "</B></FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTruckDays) + "</B></FONT></TD>");
+			out.println("</TR>");
+			
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+			out.println("<TD COLSPAN = \"4\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Report Totals:</TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalAmount) + "</TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalMU) + "</TD>");
+			out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTruckDays) + "</TD>");
+
 
 			MathContext mc=new MathContext(5, RoundingMode.HALF_EVEN);
 			if(dGrandTotalTruckDays.compareTo(BigDecimal.ZERO) != 0){
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalMU.divide(dGrandTotalTruckDays, mc)) + "</B></FONT></TD>");
+				out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalMU.divide(dGrandTotalTruckDays, mc)) + "</TD>");
 			}else{
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>0.00</B></FONT></TD>");
+				out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">0.00</TD>");
 			}
 			out.println("</TR>");
 			out.println("</TABLE>");

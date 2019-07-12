@@ -103,7 +103,11 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	}
     	
     	//Next, confirm that the period hasn't been 'pulled' before:
-    	//TODO
+    	try {
+			checkForPreviousPull(conn, sFiscalYear, sFiscalPeriod, sCompanyID);
+		} catch (Exception e2) {
+			throw new Exception("Error [2019193811396] " + e2.getMessage());
+		}
     	
     	//Get the company information:
     	String sDBName = "";
@@ -133,9 +137,6 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		} catch (Exception e1) {
 			throw new Exception("Error [2019192162080] " + "Could not start data transaction - " + e1.getMessage() + ".");
 		}
-    	
-    	//If the user chose to add any new GL's, handle that now:
-    	addNewGLAccounts(conn, sDBName, sFiscalYear, sFiscalPeriod);
     	
     	//Now create a new batch:
     	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
@@ -244,6 +245,37 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	
 		return;
 	}
+	private void checkForPreviousPull(Connection conn, String sFiscalYear, String sFiscalPeriod, String sCompanyID) throws Exception{
+		String SQL = "SELECT"
+			+ " " + SMTableglexternalcompanypulls.lid
+			+ ", " + SMTableglexternalcompanypulls.scompanyname
+			+ ", " + SMTableglexternalcompanypulls.sfullusername
+			+ " FROM " + SMTableglexternalcompanypulls.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglexternalcompanypulls.lcompanyid + " = " + sCompanyID + ")"
+				+ " AND (" + SMTableglexternalcompanypulls.ifiscalperiod + " = " + sFiscalPeriod + ")"
+				+ " AND (" + SMTableglexternalcompanypulls.ifiscalyear + " = " + sFiscalYear + ")"
+			+ ")"
+		;
+		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+		if (rs.next()){
+			String sCompanyName = rs.getString(SMTableglexternalcompanypulls.scompanyname);
+			String sFullUserName = rs.getString(SMTableglexternalcompanypulls.sfullusername);
+			String sPullTime = ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+				rs.getString(SMTableglexternalcompanypulls.dattimepulldate),
+				ServletUtilities.clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY,
+				ServletUtilities.clsServletUtilities.EMPTY_DATETIME_VALUE)
+			;
+			rs.close();
+			throw new Exception("Error [201919384192] " + "Fiscal period " + sFiscalPeriod + " for fiscal year " + sFiscalYear + " has already been pulled"
+				+ " for company '" + sCompanyName + "' with company ID " + sCompanyID + " by " + sFullUserName + " - " + sPullTime + "."
+			);
+		}
+		rs.close();
+		
+		return;
+	}
+	/* TJR - 7/12/2019 - probably can't use this because the account structures may not be the same in the SOURCE and TARGET companies....
 	private void addNewGLAccounts(Connection conn, String sDBName, String sFiscalYear, String sFiscalPeriod) throws Exception{
 		
 		String SQL = "SELECT DISTINCT " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
@@ -272,6 +304,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		
 		return;
 	}
+	*/
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

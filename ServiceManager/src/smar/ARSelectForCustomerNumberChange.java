@@ -18,6 +18,7 @@ import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearoptions;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARSelectForCustomerNumberChange  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -46,11 +47,11 @@ public class ARSelectForCustomerNumberChange  extends HttpServlet {
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-	    String sStatus = ARUtilities.get_Request_Parameter("Status", request);
+	    String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 		if (! sStatus.equalsIgnoreCase("")){
 			out.println("<B><FONT>NOTE: " + sStatus + "</FONT></B><BR>");
 		}

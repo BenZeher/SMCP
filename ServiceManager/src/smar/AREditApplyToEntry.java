@@ -47,6 +47,7 @@ import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -88,7 +89,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		
 	    //Get the request parameters:
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}else{
 				m_bIsNewEntry = false;
@@ -98,18 +99,18 @@ public class AREditApplyToEntry extends HttpServlet {
 			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
 			m_bEditable = true;
 		}else {
 			m_bEditable = false;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", request).toUpperCase();
-		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter("CustomerNumber", request).toUpperCase();
+		String m_sDocumentType = clsManageRequestParameters.get_Request_Parameter("DocumentType", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
 		try {
@@ -727,22 +728,22 @@ public class AREditApplyToEntry extends HttpServlet {
         	
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamDocAppliedTo 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedTo() + "\">");
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineDocAppliedToID 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedToID() + "\">");
         	
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineApplyToOrderNumber
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getApplyToOrderNumber() + "\">");
 
         	//GL Acct:
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamDistAcct 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getLineAcct() + "\">");
 
         	pwOut.println("<TR>");
@@ -826,7 +827,7 @@ public class AREditApplyToEntry extends HttpServlet {
 	        pwOut.println("<TD ALIGN = RIGHT>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamLineAmt 
-	        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 	        			line.getAmount(), 
 	        			9, 
 	        			"", 
@@ -840,7 +841,7 @@ public class AREditApplyToEntry extends HttpServlet {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getDescription()), 
         			25, 
         			"", 
@@ -853,7 +854,7 @@ public class AREditApplyToEntry extends HttpServlet {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getComment()), 
         			25, 
         			"", 
@@ -876,7 +877,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			//if the line is a prepay - we'll leave it blank and let it be set when we save these lines:
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamDistAcct 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + "" + "\">");
 			
     		//Apply to doc
@@ -893,7 +894,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			//Apply to doc
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamDocAppliedTo
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
         			12, 
         			"", 
@@ -934,7 +935,7 @@ public class AREditApplyToEntry extends HttpServlet {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineAmt 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         			"0.00", 
         			9, 
         			"", 
@@ -949,7 +950,7 @@ public class AREditApplyToEntry extends HttpServlet {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
         			25, 
         			"", 
@@ -962,7 +963,7 @@ public class AREditApplyToEntry extends HttpServlet {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
         			25, 
         			"", 
@@ -1002,11 +1003,11 @@ public class AREditApplyToEntry extends HttpServlet {
 	        	}else{
 					pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 		        			+ ARLineInput.ParamDocAppliedTo 
-		        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+		        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 		        			+ "\" VALUE=\"" + rs.getString(SMTableartransactions.sdocnumber) + "\">");
 					pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 		        			+ ARLineInput.ParamLineDocAppliedToID 
-		        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+		        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 		        			+ "\" VALUE=\"" + Long.toString(rs.getLong(SMTableartransactions.lid)) + "\">");
 			
 					//On an apply-to, the GL for the entry AND the lines is the AR account unless
@@ -1022,7 +1023,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
 		        	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 		        			+ ARLineInput.ParamDistAcct 
-		        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+		        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 		        			+ "\" VALUE=\"" + sLineGLAcct + "\">");
 		        	
 					pwOut.println("<TR>");
@@ -1031,7 +1032,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					pwOut.println(
 							"<INPUT TYPE=CHECKBOX NAME=\""
 							+ ARLineInput.ParamLineApplyCashToChk
-							+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6)
+							+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6)
 							+ "\" >" 
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
 							+ SMUtilities.lnViewInvoice(sDBID, sDocNumber )
@@ -1089,7 +1090,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		            pwOut.println("<TD>");
 		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineAmt 
-		        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        			"0.00", 
 		        			9, 
 		        			"", 
@@ -1104,7 +1105,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		            pwOut.println("<TD>");
 		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineDesc 
-		        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        				"", 
 		        			25, 
 		        			"", 
@@ -1117,7 +1118,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		            pwOut.println("<TD>");
 		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineComment 
-		        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        				"", 
 		        			25, 
 		        			"", 

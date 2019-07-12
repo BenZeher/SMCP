@@ -15,6 +15,7 @@ import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
 public class ARAccountSet extends java.lang.Object{
@@ -60,9 +61,9 @@ public class ARAccountSet extends java.lang.Object{
         	m_sErrorMessageArray = new ArrayList<String> (0);
         }
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sAcctSetCode = ARUtilities.get_Request_Parameter(ParamsAcctSetCode, req).trim().replace("&quot;", "\"");
-    	m_sDescription = ARUtilities.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sAcctSetCode = clsManageRequestParameters.get_Request_Parameter(ParamsAcctSetCode, req).trim().replace("&quot;", "\"");
+    	m_sDescription = clsManageRequestParameters.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(ParamiActive) == null){
 			m_iActive = "0";
 		}else{
@@ -72,16 +73,16 @@ public class ARAccountSet extends java.lang.Object{
 				m_iActive = "1";
 			}
 		}
-		m_datLastMaintained = ARUtilities.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
+		m_datLastMaintained = clsManageRequestParameters.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
 		if(m_datLastMaintained.compareToIgnoreCase("") == 0){
 			m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		}
-    	m_sAcctsReceivableControlAcct = ARUtilities.get_Request_Parameter(ParamdsAcctsReceivableControlAcct, req).trim().replace("&quot;", "\"");
-    	m_sReceiptDiscountsAcct =  ARUtilities.get_Request_Parameter(ParamsReceiptDiscountsAcct, req).trim().replace("&quot;", "\"");
-    	m_sPrepaymentLiabilityAcct = ARUtilities.get_Request_Parameter(ParamsPrepaymentLiabilityAcct, req).trim().replace("&quot;", "\"");
-    	m_sWriteOffAcct = ARUtilities.get_Request_Parameter(ParamsWriteOffAcct, req).trim().replace("&quot;", "\"");
-    	m_sRetainageAcct = ARUtilities.get_Request_Parameter(ParamsRetainageAcct, req).trim().replace("&quot;", "\"");
-    	m_sCashAcct = ARUtilities.get_Request_Parameter(ParamsCashAcct, req).trim().replace("&quot;", "\"");
+    	m_sAcctsReceivableControlAcct = clsManageRequestParameters.get_Request_Parameter(ParamdsAcctsReceivableControlAcct, req).trim().replace("&quot;", "\"");
+    	m_sReceiptDiscountsAcct =  clsManageRequestParameters.get_Request_Parameter(ParamsReceiptDiscountsAcct, req).trim().replace("&quot;", "\"");
+    	m_sPrepaymentLiabilityAcct = clsManageRequestParameters.get_Request_Parameter(ParamsPrepaymentLiabilityAcct, req).trim().replace("&quot;", "\"");
+    	m_sWriteOffAcct = clsManageRequestParameters.get_Request_Parameter(ParamsWriteOffAcct, req).trim().replace("&quot;", "\"");
+    	m_sRetainageAcct = clsManageRequestParameters.get_Request_Parameter(ParamsRetainageAcct, req).trim().replace("&quot;", "\"");
+    	m_sCashAcct = clsManageRequestParameters.get_Request_Parameter(ParamsCashAcct, req).trim().replace("&quot;", "\"");
 		
     }
 	private boolean load(
@@ -116,20 +117,20 @@ public class ARAccountSet extends java.lang.Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sAcctSetCode = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sAcctSetCode));
-            	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sDescription));
+	        	m_sAcctSetCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sAcctSetCode));
+            	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sDescription));
 	        	m_iActive = rs.getString(SMTablearterms.iActive);
 	        	if(clsDateAndTimeConversions.IsValidDate(rs.getDate(SMTablearterms.datLastMaintained))){
 	        		m_datLastMaintained = clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearterms.datLastMaintained),"MM/dd/yyyy");
 	        	}else{
 	        		m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 	        	}
-            	m_sAcctsReceivableControlAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sAcctsReceivableControlAcct));
-            	m_sReceiptDiscountsAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sReceiptDiscountsAcct));
-            	m_sPrepaymentLiabilityAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sPrepaymentLiabilityAcct));
-            	m_sWriteOffAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sWriteOffAcct));
-            	m_sRetainageAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sRetainageAcct));
-            	m_sCashAcct = ARUtilities.checkStringForNull(rs.getString(SMTablearacctset.sCashAcct));	
+            	m_sAcctsReceivableControlAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sAcctsReceivableControlAcct));
+            	m_sReceiptDiscountsAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sReceiptDiscountsAcct));
+            	m_sPrepaymentLiabilityAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sPrepaymentLiabilityAcct));
+            	m_sWriteOffAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sWriteOffAcct));
+            	m_sRetainageAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sRetainageAcct));
+            	m_sCashAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablearacctset.sCashAcct));	
 	        	m_iNewRecord = "0";
 	        	rs.close();
 	        	return true;

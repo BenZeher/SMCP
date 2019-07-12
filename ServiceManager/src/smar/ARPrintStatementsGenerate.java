@@ -27,6 +27,7 @@ import SMDataDefinition.SMTablecompanyprofile;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARPrintStatementsGenerate extends HttpServlet {
 
@@ -57,7 +58,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 				
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sWarning = "";
 
 		boolean bPrintOnlyOverCurrent = false;

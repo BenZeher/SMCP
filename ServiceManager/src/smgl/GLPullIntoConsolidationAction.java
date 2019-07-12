@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMClasses.SMBatchStatuses;
-import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTablegltransactionlines;

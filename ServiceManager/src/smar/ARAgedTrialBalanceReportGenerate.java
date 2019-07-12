@@ -75,7 +75,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sWarning = "";
 		String sAgeAsOf = request.getParameter("AsOfDate");
 		String sCutOffDate = request.getParameter("CutOffDate");
@@ -83,7 +83,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		String sEndingCustomer = request.getParameter("EndingCustomer");
 		String sAccountSet = request.getParameter(ARAccountSet.ParamsAcctSetCode);
 		String sSortBy = request.getParameter("SORTBY");
-		String sRetainageFlag = ARUtilities.get_Request_Parameter("AgingType", request);
+		String sRetainageFlag = clsManageRequestParameters.get_Request_Parameter("AgingType", request);
 		boolean bDownloadAsHTML = (request.getParameter(ARAgedTrialBalanceReport.DOWNLOAD_TO_HTML) != null);
 		int iPrintTransactionsIn = Integer.parseInt(request.getParameter("PrintTransactionIn").trim());
 		int iCurrent = Integer.parseInt(request.getParameter("Current").trim());

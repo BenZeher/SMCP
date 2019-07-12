@@ -22,6 +22,7 @@ import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableglexportheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -33,7 +34,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ARClearpostedbatches)){
 	    	return;
@@ -65,7 +66,7 @@ public class ARClearPostedBatchesAction extends HttpServlet{
 			);			
 	    	return;
 		}
-		String sClearingDate = ARUtilities.get_Request_Parameter("ClearingDate", request);
+		String sClearingDate = clsManageRequestParameters.get_Request_Parameter("ClearingDate", request);
 
     	//Convert the date to a SQL one:
     	java.sql.Date datClearingDate = null;

@@ -20,6 +20,7 @@ import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARPrintStatementsSelection  extends HttpServlet {
 
@@ -50,7 +51,7 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -67,7 +68,7 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 	    try {
 	    	
 	    	boolean bSelectAllTypes = true;
-	    	if (ARUtilities.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
+	    	if (clsManageRequestParameters.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
 	    		bSelectAllTypes = false;
 	    	}
 	    	

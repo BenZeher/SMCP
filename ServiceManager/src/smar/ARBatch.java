@@ -27,6 +27,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import smgl.GLTransactionBatch;
 
 public class ARBatch extends SMClasses.SMEntryBatch{
@@ -2399,7 +2400,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 		}
 
 		String sExportBatchNumber = Long.toString(lBatchNumber());
-		sExportBatchNumber = ARUtilities.PadLeft(sExportBatchNumber, "0", 6);
+		sExportBatchNumber = clsStringFunctions.PadLeft(sExportBatchNumber, "0", 6);
 		
 		try {
 			export.saveExport(sExportBatchNumber, conn);

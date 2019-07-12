@@ -187,22 +187,22 @@ public class SMOptionInput extends java.lang.Object{
 	
 	public SMOptionInput (HttpServletRequest req){
 
-		m_sdummykey = ARUtilities.get_Request_Parameter(SMOptionInput.ParamDummyKey, req).trim();
-		m_snextorderuniquifier = ARUtilities.get_Request_Parameter(SMOptionInput.ParamNextOrderUniquifier, req).trim();
-		m_snextordernumber = ARUtilities.get_Request_Parameter(SMOptionInput.ParamNextOrderNumber, req).trim();
-		m_slastedituserfullname = ARUtilities.get_Request_Parameter(SMOptionInput.ParamLastEditUserFullName, req).trim();
-		m_llastedituserid = ARUtilities.get_Request_Parameter(SMOptionInput.ParamLastEditUserID, req).trim();
-		m_slasteditprocess = ARUtilities.get_Request_Parameter(SMOptionInput.ParamLastEditProcess, req).trim();
-		m_slasteditdate = ARUtilities.get_Request_Parameter(SMOptionInput.ParamLastEditDate, req).trim();
-		m_slastedittime = ARUtilities.get_Request_Parameter(SMOptionInput.ParamLastEditTime, req).trim();
-		m_snextinvoicenumber = ARUtilities.get_Request_Parameter(SMOptionInput.ParamNextInvoiceNumber, req).trim();
-		m_sfileexportpath = ARUtilities.get_Request_Parameter(SMOptionInput.ParamFileExportPath, req).trim();
-		m_ssmtpserver = ARUtilities.get_Request_Parameter(SMOptionInput.ParamSMTPServer, req).trim();
-		m_ssmtpport = ARUtilities.get_Request_Parameter(SMOptionInput.ParamSMTPPort, req).trim();
-		m_ssmtpsourceservername = ARUtilities.get_Request_Parameter(SMOptionInput.ParamSMTPSourceServerName, req).trim();
-		m_stimecarddatabase = ARUtilities.get_Request_Parameter(SMOptionInput.ParamTimeCardDatabase, req).trim();
-		m_sorderdocsftpurl = ARUtilities.get_Request_Parameter(SMOptionInput.ParamOrderDocsFTPUrl, req).trim();
-		m_sbiddocsftpurl = ARUtilities.get_Request_Parameter(SMOptionInput.ParamBidDocsFTPUrl, req).trim();
+		m_sdummykey = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamDummyKey, req).trim();
+		m_snextorderuniquifier = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamNextOrderUniquifier, req).trim();
+		m_snextordernumber = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamNextOrderNumber, req).trim();
+		m_slastedituserfullname = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamLastEditUserFullName, req).trim();
+		m_llastedituserid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamLastEditUserID, req).trim();
+		m_slasteditprocess = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamLastEditProcess, req).trim();
+		m_slasteditdate = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamLastEditDate, req).trim();
+		m_slastedittime = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamLastEditTime, req).trim();
+		m_snextinvoicenumber = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamNextInvoiceNumber, req).trim();
+		m_sfileexportpath = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamFileExportPath, req).trim();
+		m_ssmtpserver = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamSMTPServer, req).trim();
+		m_ssmtpport = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamSMTPPort, req).trim();
+		m_ssmtpsourceservername = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamSMTPSourceServerName, req).trim();
+		m_stimecarddatabase = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamTimeCardDatabase, req).trim();
+		m_sorderdocsftpurl = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamOrderDocsFTPUrl, req).trim();
+		m_sbiddocsftpurl = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.ParamBidDocsFTPUrl, req).trim();
 		m_sErrorMessageArray = new ArrayList<String> (0);
 		m_sbackgroundcolor = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsbackgroundcolor, req).trim();
 		m_ssmtpusername = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramssmtpusername, req).trim();
@@ -250,7 +250,7 @@ public class SMOptionInput extends java.lang.Object{
 		if (getscurrentperiodenddate().compareToIgnoreCase("") == 0){
 			setscurrentperiodenddate(SMOption.EMPTY_DATE_STRING);
 		}
-		m_isignatureboxwidth = ARUtilities.get_Request_Parameter(SMOptionInput.Paramisigantureboxwidth, req).trim();
+		m_isignatureboxwidth = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramisigantureboxwidth, req).trim();
 		m_sgoogleapikey = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapikey, req).trim();
 		m_sgoogleapiclientid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapiclientid, req).trim();
 		m_sgoogleapiprojectid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgoogleapiprojectid, req).trim();

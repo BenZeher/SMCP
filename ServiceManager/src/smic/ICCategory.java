@@ -150,11 +150,11 @@ public class ICCategory extends Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sCategoryCode = ARUtilities.checkStringForNull(rs.getString(SMTableiccategories.sCategoryCode));
-	        	m_sLastEditUser = ARUtilities.checkStringForNull(rs.getString(SMTableiccategories.sLastEditUserFullName));
-	        	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTableiccategories.sDescription));
-	        	m_sCostOfGoodsSoldAccount = ARUtilities.checkStringForNull(rs.getString(SMTableiccategories.sCostofGoodsSoldAccount));
-	        	m_sSalesAccount = ARUtilities.checkStringForNull(rs.getString(SMTableiccategories.sSalesAccount));
+	        	m_sCategoryCode = clsStringFunctions.checkStringForNull(rs.getString(SMTableiccategories.sCategoryCode));
+	        	m_sLastEditUser = clsStringFunctions.checkStringForNull(rs.getString(SMTableiccategories.sLastEditUserFullName));
+	        	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableiccategories.sDescription));
+	        	m_sCostOfGoodsSoldAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableiccategories.sCostofGoodsSoldAccount));
+	        	m_sSalesAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableiccategories.sSalesAccount));
 	        	m_sActive = Integer.toString(rs.getInt(SMTableiccategories.iActive));
 	        	String sDate = rs.getString(SMTableiccategories.datLastMaintained);
 	        	m_sLastMaintainedDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);

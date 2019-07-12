@@ -6,13 +6,13 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
-import smar.ARUtilities;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 import java.sql.*;
 
@@ -46,7 +46,7 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
     					+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}

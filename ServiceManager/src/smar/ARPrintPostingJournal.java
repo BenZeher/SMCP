@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -43,8 +44,8 @@ public class ARPrintPostingJournal extends HttpServlet{
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		
-		String m_sStartingBatchNumber = ARUtilities.get_Request_Parameter("StartingBatchNumber", request);
-		String m_sEndingBatchNumber = ARUtilities.get_Request_Parameter("EndingBatchNumber", request);
+		String m_sStartingBatchNumber = clsManageRequestParameters.get_Request_Parameter("StartingBatchNumber", request);
+		String m_sEndingBatchNumber = clsManageRequestParameters.get_Request_Parameter("EndingBatchNumber", request);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sReportTitle = "AR Posting Journal";
 		boolean m_bIncludeInvoiceBatches = false;

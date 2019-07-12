@@ -44,6 +44,19 @@ public class clsValidateFormFields {
 		}
 		return s;
 	}
+	
+	public static boolean IsValidInteger(String sInt){
+		sInt = sInt.replace(",", "");
+    	try{
+    		Integer.parseInt(sInt);
+    		return true;
+    	}catch (NumberFormatException e){
+    		System.out.println("In IsValidInteger: Error converting number from string: " + sInt + ".");
+    		System.out.println("In IsValidInteger: " + e.getMessage());
+    		return false;
+    	}
+	}
+	
 	public static String validateLongIntegerField(String sTestField, String sFieldName, long iMinimumValue, long iMaximumValue) throws Exception{
 		String s = "";
 		if (sTestField == null){
@@ -64,6 +77,19 @@ public class clsValidateFormFields {
 		}
 		return s;
 	}
+	
+	public static boolean IsValidLong(String sLong){
+		String sTestLong = sLong.replace(",", "");
+    	try{
+    		Long.parseLong(sTestLong);
+    		return true;
+    	}catch (NumberFormatException e){
+    		//System.out.println("In IsValidLong: Error converting number from string: " + sLong + ".");
+    		//System.out.println("In IsValidLong: " + e.getMessage());
+    		return false;
+    	}
+	}
+	
 	public static String validateBigdecimalField(
 			String sTestField, 
 			String sFieldName, 
@@ -90,6 +116,20 @@ public class clsValidateFormFields {
 		}
 		return clsManageBigDecimals.BigDecimalToScaledFormattedString(iScale, bdTest);
 	}
+	
+	public static boolean IsValidBigDecimal(String sNumber, int iScale){
+		sNumber = sNumber.replace(",", "");
+    	try{
+    		BigDecimal bd = new BigDecimal(sNumber);
+    		bd = bd.setScale(iScale, BigDecimal.ROUND_HALF_UP);
+    		return true;
+    	}catch (NumberFormatException e){
+    		//System.out.println("In IsValidBigDecimal: Error converting number from string: " + sNumber + ".");
+    		//System.out.println("In IsValidBigDecimal: " + e.getMessage());
+    		return false;
+    	}
+	}
+	
 	public static String validateStandardDateField(String sDateField, String sDateFieldLabel, boolean bAllowEmptyDate) throws Exception{
 		String s = sDateField;
 		s = s.trim();

@@ -5,6 +5,7 @@ import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsStringFunctions;
 
 import java.sql.Date;
 import java.util.Calendar;
@@ -688,8 +689,8 @@ public class AREntry extends java.lang.Object{
     	
     	while (bNoMatch == false){
     		iUniqueifier++;
-    		String sTestDocNumber = "AT" + ARUtilities.PadLeft(Long.toString(lEntryID), "0", 9) 
-    			+ "-" + ARUtilities.PadLeft(Integer.toString(iUniqueifier), "0", 3);
+    		String sTestDocNumber = "AT" + clsStringFunctions.PadLeft(Long.toString(lEntryID), "0", 9) 
+    			+ "-" + clsStringFunctions.PadLeft(Integer.toString(iUniqueifier), "0", 3);
     		
     		try{
     			String SQL = "SELECT * FROM " + SMTableentries.TableName
@@ -722,8 +723,8 @@ public class AREntry extends java.lang.Object{
     	
     	while (bNoMatch == false){
     		iUniqueifier++;
-    		String sTestDocNumber = "RV" + ARUtilities.PadLeft(Long.toString(lEntryID), "0", 9) 
-    			+ "-" + ARUtilities.PadLeft(Integer.toString(iUniqueifier), "0", 3);
+    		String sTestDocNumber = "RV" + clsStringFunctions.PadLeft(Long.toString(lEntryID), "0", 9) 
+    			+ "-" + clsStringFunctions.PadLeft(Integer.toString(iUniqueifier), "0", 3);
     		
     		try{
     			String SQL = "SELECT * FROM " + SMTableentries.TableName
@@ -985,11 +986,11 @@ public class AREntry extends java.lang.Object{
     	}
     }
     public boolean datDocDate (String sFormat, String sDocDate){
-		if (! ARUtilities.isValidDateStr(sDocDate, sFormat)){
+		if (! clsDateAndTimeConversions.IsValidDateString(sFormat, sDocDate)){
     		return false;
     	}else{
     		java.sql.Date datTestDate;
-    		datTestDate = ARUtilities.StringToSQLDateStrict(sFormat, sDocDate);
+    		datTestDate = clsDateAndTimeConversions.StringToSQLDateStrict(sFormat, sDocDate);
     		
     		//Test that the date is within 90 years in either direction:
     		Calendar c1 = Calendar.getInstance();

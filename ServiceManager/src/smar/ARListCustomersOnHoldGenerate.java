@@ -17,6 +17,7 @@ import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARListCustomersOnHoldGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -43,7 +44,7 @@ public class ARListCustomersOnHoldGenerate extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sWarning = "";
 	    /**************Get Parameters**************/
 

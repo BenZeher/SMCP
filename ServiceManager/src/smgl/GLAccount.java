@@ -46,7 +46,9 @@ import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import smar.ARUtilities;
 import smcontrolpanel.SMUtilities;
@@ -100,11 +102,11 @@ public class GLAccount extends java.lang.Object{
 		m_inormalbalancetype = "0";
 	}
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sacctid = ARUtilities.get_Request_Parameter(Paramsacctid, req).trim().replace("&quot;", "\"");
-    	m_sformattedacctid = ARUtilities.get_Request_Parameter(Paramsformattedacctid, req).trim().replace("&quot;", "\"");
-    	m_sdescription = ARUtilities.get_Request_Parameter(Paramsdescription, req).trim().replace("&quot;", "\"");
-    	m_stype = ARUtilities.get_Request_Parameter(Paramstype, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sacctid = clsManageRequestParameters.get_Request_Parameter(Paramsacctid, req).trim().replace("&quot;", "\"");
+    	m_sformattedacctid = clsManageRequestParameters.get_Request_Parameter(Paramsformattedacctid, req).trim().replace("&quot;", "\"");
+    	m_sdescription = clsManageRequestParameters.get_Request_Parameter(Paramsdescription, req).trim().replace("&quot;", "\"");
+    	m_stype = clsManageRequestParameters.get_Request_Parameter(Paramstype, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(Paramlactive) == null){
 			m_sactive = "0";
 		}else{
@@ -115,16 +117,16 @@ public class GLAccount extends java.lang.Object{
 		}else{
 			m_iallowaspoexpense = "1";
 		}
-		m_icostcenterid = ARUtilities.get_Request_Parameter(Paramicostcenterid, req).trim().replace("&quot;", "\"");
-		m_laccountstructureid = ARUtilities.get_Request_Parameter(Paramlaccountstructureid, req).trim().replace("&quot;", "\"");
+		m_icostcenterid = clsManageRequestParameters.get_Request_Parameter(Paramicostcenterid, req).trim().replace("&quot;", "\"");
+		m_laccountstructureid = clsManageRequestParameters.get_Request_Parameter(Paramlaccountstructureid, req).trim().replace("&quot;", "\"");
 		if (m_laccountstructureid.compareToIgnoreCase("") == 0){ m_laccountstructureid = "0"; }
-		m_laccountgroupid = ARUtilities.get_Request_Parameter(Paramlaccountgroupid, req).trim().replace("&quot;", "\"");
+		m_laccountgroupid = clsManageRequestParameters.get_Request_Parameter(Paramlaccountgroupid, req).trim().replace("&quot;", "\"");
 		if (m_laccountgroupid.compareToIgnoreCase("") == 0){ m_laccountgroupid = "0"; }
-		m_sbdannualbudget = ARUtilities.get_Request_Parameter(Parambdannualbudget, req).trim().replace("&quot;", "\"");
+		m_sbdannualbudget = clsManageRequestParameters.get_Request_Parameter(Parambdannualbudget, req).trim().replace("&quot;", "\"");
 		if (getsbdannualbudget().compareToIgnoreCase("") == 0){
 			setsbdannualbudget("0.00");
 		}
-		m_inormalbalancetype = ARUtilities.get_Request_Parameter(Paraminormalbalancetype, req).trim().replace("&quot;", "\"");
+		m_inormalbalancetype = clsManageRequestParameters.get_Request_Parameter(Paraminormalbalancetype, req).trim().replace("&quot;", "\"");
     }
     public boolean load (
     		Connection conn
@@ -143,10 +145,10 @@ public class GLAccount extends java.lang.Object{
 			rs.next();
 
 			//Load the variables:
-			m_sacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
-			m_sformattedacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
-			m_sdescription = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
-			m_stype = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
+			m_sacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
+			m_sformattedacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
+			m_sdescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
+			m_stype = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
 			m_sactive = Long.toString(rs.getLong(SMTableglaccounts.lActive));
 			m_icostcenterid = Long.toString(rs.getLong(SMTableglaccounts.iCostCenterID));
 			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));
@@ -186,10 +188,10 @@ public class GLAccount extends java.lang.Object{
     			rs.next();
 
     			//Load the variables:
-    			m_sacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
-    			m_sformattedacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
-    			m_sdescription = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
-    			m_stype = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
+    			m_sacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
+    			m_sformattedacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
+    			m_sdescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
+    			m_stype = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
     			m_sactive = Long.toString(rs.getLong(SMTableglaccounts.lActive));
     			m_icostcenterid = Long.toString(rs.getLong(SMTableglaccounts.iCostCenterID));
     			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));

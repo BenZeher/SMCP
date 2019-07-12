@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -23,7 +24,7 @@ public class ARCustomerNumberChangeGenerate extends HttpServlet{
 			HttpServletResponse response)
 			throws ServletException, IOException {
 	
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ARRenumberMergeCustomers)){
 	    	return;
@@ -81,8 +82,8 @@ public class ARCustomerNumberChangeGenerate extends HttpServlet{
 			return;
 	    }
 	    
-	    String sFromCustomer = ARUtilities.get_Request_Parameter("FromCustomer", request);
-	    String sToCustomer = ARUtilities.get_Request_Parameter("ToCustomer", request);
+	    String sFromCustomer = clsManageRequestParameters.get_Request_Parameter("FromCustomer", request);
+	    String sToCustomer = clsManageRequestParameters.get_Request_Parameter("ToCustomer", request);
 
 	    ARCustomerNumberChange acnc = new ARCustomerNumberChange();
 	    

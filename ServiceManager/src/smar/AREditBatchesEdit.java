@@ -429,7 +429,7 @@ public class AREditBatchesEdit extends HttpServlet {
 		    	    		+ "&DocumentType=" + rsEntries.getString(SMTableentries.idocumenttype)
 		    	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		    	    		+ "\">"
-		    	    		+ ARUtilities.PadLeft(rsEntries.getString(SMTableentries.ientrynumber), "0", 5)
+		    	    		+ clsStringFunctions.PadLeft(rsEntries.getString(SMTableentries.ientrynumber), "0", 5)
 		    	    		+ "</A>"
 		    	    		);
 		    	    //} else{

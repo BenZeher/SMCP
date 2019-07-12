@@ -190,7 +190,7 @@ public class AREditBatches extends HttpServlet {
         			Build_Row(		
 	        			out,
 	        			Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),
-	        			ARUtilities.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6),
+	        			clsStringFunctions.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6),
 	        			clsDateAndTimeConversions.TimeStampToString(rs.getTimestamp(SMEntryBatch.datbatchdate), "MM-dd-yyyy"),
 	        			rs.getInt(SMEntryBatch.ibatchtype),
 	        			SMBatchTypes.Get_Batch_Type(rs.getInt(SMEntryBatch.ibatchtype)),

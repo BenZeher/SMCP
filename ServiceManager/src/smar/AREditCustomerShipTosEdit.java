@@ -16,6 +16,8 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomershiptos;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
 public class AREditCustomerShipTosEdit extends HttpServlet {
 
@@ -61,12 +63,12 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		    }
 		    //Get the customer code and the ship-to code:
 			shipto.setM_sCustomerNumber(
-				ARUtilities.StringLeft(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+				clsStringFunctions.StringLeft(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sCustomerNumberLength));
 			shipto.setM_sShipToCode(
-				ARUtilities.StringRight(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringRight(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sShipToCodeLength));
 		    if (shipto.getM_sCustomerNumber().compareToIgnoreCase("") == 0){
 				response.sendRedirect(
@@ -151,12 +153,12 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		//load the input class from the database if possible:
 		if(request.getParameter("SubmitEdit") != null){
 			shipto.setM_sCustomerNumber(
-				ARUtilities.StringLeft(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringLeft(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sCustomerNumberLength));
 			shipto.setM_sShipToCode(
-					ARUtilities.StringRight(
-						ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringRight(
+						clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 							SMTablearcustomershiptos.sShipToCodeLength));
 			if(!shipto.load(getServletContext(), sDBID)){
 				response.sendRedirect(
@@ -188,13 +190,13 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
 		//If there is a status from previous input, print it here:
-		String sStatus = ARUtilities.get_Request_Parameter("Status", request);
+		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 	    if (! sStatus.equalsIgnoreCase("")){
 			out.println("<B>Status: " + sStatus + "</B><BR>");
 		}

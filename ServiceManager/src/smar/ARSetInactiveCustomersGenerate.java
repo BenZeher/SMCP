@@ -22,6 +22,7 @@ import SMDataDefinition.*;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARSetInactiveCustomersGenerate extends HttpServlet {
 
@@ -53,10 +54,10 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String m_sWarning = "";
 	    /**************Get Parameters**************/
-	    String sLastActivityDate = ARUtilities.get_Request_Parameter("LastActivityDate", request);
+	    String sLastActivityDate = clsManageRequestParameters.get_Request_Parameter("LastActivityDate", request);
 	  
     	//Convert the date to a SQL one:
     	java.sql.Date datLastActivityDate = null;

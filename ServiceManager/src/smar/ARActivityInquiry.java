@@ -18,6 +18,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.*;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARActivityInquiry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -61,7 +62,7 @@ public class ARActivityInquiry extends HttpServlet {
 	    }
 
     	boolean bSelectAllTypes = true;
-    	if (ARUtilities.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
+    	if (clsManageRequestParameters.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
     		bSelectAllTypes = false;
     	}
 	    

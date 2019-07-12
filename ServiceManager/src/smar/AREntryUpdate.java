@@ -62,11 +62,11 @@ public class AREntryUpdate extends HttpServlet{
 	    String m_sApplyToDocumentID = "";
 	    AREntryInput m_EntryInput = null;
 	    try {
-			m_sDelete = ARUtilities.get_Request_Parameter("Delete", request);
-			m_sConfirmDelete = ARUtilities.get_Request_Parameter("ConfirmDelete", request);
+			m_sDelete = clsManageRequestParameters.get_Request_Parameter("Delete", request);
+			m_sConfirmDelete = clsManageRequestParameters.get_Request_Parameter("ConfirmDelete", request);
 			m_EntryInput = new AREntryInput(request);
-			m_sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
-			m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+			m_sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+			m_sApplyToDocumentID = clsManageRequestParameters.get_Request_Parameter("DocumentID", request);
 			if(request.getParameter("SaveAndAdd") != null){
 				bSaveAndAdd = true;
 			}

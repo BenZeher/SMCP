@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablemechanics;
@@ -54,7 +53,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    	bSelectByCategory = true;
 	    }
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}

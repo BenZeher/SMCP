@@ -164,14 +164,14 @@ public class ICAccountSet extends Object{
     	m_sNewRecord = "1";
 	        	 */
 	        	
-	        	m_sAccountSetCode = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sAccountSetCode));
-	        	m_sLastEditUser = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sLastEditUserFullName));
-	        	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sDescription));
-	        	m_sInventoryAccount = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sInventoryAccount));
-	        	m_sPayablesClearingAccount = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sPayablesClearingAccount));
-	        	m_sAdjustmentWriteOffAccount = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sAdjustmentWriteOffAccount));
-	        	m_sNonStockClearingAccount = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sNonStockClearingAccount));
-	        	m_sTransferClearingAccount = ARUtilities.checkStringForNull(rs.getString(SMTableicaccountsets.sTransferClearingAccount));
+	        	m_sAccountSetCode = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sAccountSetCode));
+	        	m_sLastEditUser = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sLastEditUserFullName));
+	        	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sDescription));
+	        	m_sInventoryAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sInventoryAccount));
+	        	m_sPayablesClearingAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sPayablesClearingAccount));
+	        	m_sAdjustmentWriteOffAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sAdjustmentWriteOffAccount));
+	        	m_sNonStockClearingAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sNonStockClearingAccount));
+	        	m_sTransferClearingAccount = clsStringFunctions.checkStringForNull(rs.getString(SMTableicaccountsets.sTransferClearingAccount));
 	        	m_sActive = Integer.toString(rs.getInt(SMTableicaccountsets.iActive));
 	        	String sDate = rs.getString(SMTableicaccountsets.datLastMaintained);
 	        	m_sLastMaintainedDate = sDate.substring(5, 7) + "/" + sDate.substring(8, 10) + "/" + sDate.substring(0, 4);

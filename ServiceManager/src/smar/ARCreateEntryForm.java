@@ -86,23 +86,23 @@ public class ARCreateEntryForm {
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + AREntryInput.ParamNumberOfLines + "\" VALUE=1>");
 	    		ARLineInput line = entryInput.getLine(0);
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineID
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getLineID() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getLineID() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamDocAppliedTo
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDocAppliedTo() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDocAppliedTo() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamDistAcct
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getLineAcct() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getLineAcct() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineDesc
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDescription() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDescription() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineAmt
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getAmount() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getAmount() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineComment
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getComment() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getComment() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineDocAppliedToID
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDocAppliedToID() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getDocAppliedToID() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineApplyToOrderNumber
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getApplyToOrderNumber() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getApplyToOrderNumber() + "'>");
 	    		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + ARLineInput.ParamLineApplyCashToChk
-	    				+ ARUtilities.PadLeft("0", "0", 6) + "\" VALUE='" + line.getApplyCashToChk() + "'>");
+	    				+ clsStringFunctions.PadLeft("0", "0", 6) + "\" VALUE='" + line.getApplyCashToChk() + "'>");
 	    	}else{
 	    		pwOut.println("<B>Line distribution:</B><BR>");
 		        //Display the line header:
@@ -1018,18 +1018,18 @@ public class ARCreateEntryForm {
         	
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamDocAppliedTo 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedTo() + "\">");
         	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineDocAppliedToID 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedToID() + "\">");
         	
         	//If it's a prepay, we'll need to store the apply to order number here, too:
         	if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING)){
             	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamLineApplyToOrderNumber
-            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
             			+ "\" VALUE=\"" + line.getApplyToOrderNumber() + "\">");
         	}
         	
@@ -1135,13 +1135,13 @@ public class ARCreateEntryForm {
         	){
             	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamDistAcct 
-            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
             			+ "\" VALUE=\"" + line.getLineAcct() + "\">");
 
         		pwOut.println(line.getLineAcct());
         	}else{
 	        	pwOut.println("<SELECT NAME = \"" + ARLineInput.ParamDistAcct 
-	            		+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
+	            		+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
 	            
 	            //Read out the array list:
 	            for (int iGLCount = 0; iGLCount<m_sGLValues.size();iGLCount++){
@@ -1161,7 +1161,7 @@ public class ARCreateEntryForm {
         	if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
             	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamLineAmt 
-            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
             			+ "\" VALUE=\"" + line.getAmount() + "\">");
 
         		pwOut.println(line.getAmount());
@@ -1169,7 +1169,7 @@ public class ARCreateEntryForm {
 		        
 	            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamLineAmt 
-	        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 	        			line.getAmount(), 
 	        			9, 
 	        			"", 
@@ -1184,7 +1184,7 @@ public class ARCreateEntryForm {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getDescription()), 
         			25, 
         			"", 
@@ -1197,7 +1197,7 @@ public class ARCreateEntryForm {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getComment()), 
         			25, 
         			"", 
@@ -1231,11 +1231,11 @@ public class ARCreateEntryForm {
 			}else{
 				pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 	        			+ ARLineInput.ParamDocAppliedTo 
-	        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+	        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 	        			+ "\" VALUE=\"" + m_sApplyToDocNumber + "\">");
 				pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 	        			+ ARLineInput.ParamLineDocAppliedToID 
-	        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+	        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 	        			+ "\" VALUE=\"" + m_sApplyToDocID + "\">");
 				}
 			pwOut.println("<TR>");
@@ -1245,7 +1245,7 @@ public class ARCreateEntryForm {
 			if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
 	            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamDocAppliedTo
-	        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 	        				"", 
 	        			12, 
 	        			"", 
@@ -1257,7 +1257,7 @@ public class ARCreateEntryForm {
 				if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING)){
 		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineApplyToOrderNumber 
-		        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        				"", 
 		        			12, 
 		        			"", 
@@ -1325,11 +1325,11 @@ public class ARCreateEntryForm {
 				pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sDefaultGLAcct));
             	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamDistAcct 
-            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
             			+ "\" VALUE=\"" + sDefaultGLAcct + "\">");
 			}else{
 				pwOut.println("<SELECT NAME = \"" + ARLineInput.ParamDistAcct 
-	            		+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
+	            		+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
 				for (int i = 0; i<m_sGLValues.size();i++){
 	            	pwOut.println("<OPTION");
 	            	if (m_sGLValues.get(i).toString().compareToIgnoreCase(sDefaultGLAcct) == 0){
@@ -1346,7 +1346,7 @@ public class ARCreateEntryForm {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineAmt 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         			"0.00", 
         			9, 
         			"", 
@@ -1361,7 +1361,7 @@ public class ARCreateEntryForm {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
         			25, 
         			"", 
@@ -1374,7 +1374,7 @@ public class ARCreateEntryForm {
             pwOut.println("<TD>");
             pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
         			25, 
         			"", 
@@ -1412,11 +1412,11 @@ public class ARCreateEntryForm {
 		        	}else{
 						pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 			        			+ ARLineInput.ParamDocAppliedTo 
-			        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+			        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 			        			+ "\" VALUE=\"" + rs.getString(SMTableartransactions.sdocnumber) + "\">");
 						pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 			        			+ ARLineInput.ParamLineDocAppliedToID 
-			        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+			        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 			        			+ "\" VALUE=\"" + Long.toString(rs.getLong(SMTableartransactions.lid)) + "\">");
 						
 						pwOut.println("<TR>");
@@ -1425,7 +1425,7 @@ public class ARCreateEntryForm {
 						pwOut.println(
 								"<INPUT TYPE=CHECKBOX NAME=\""
 								+ ARLineInput.ParamLineApplyCashToChk
-								+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6)
+								+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6)
 								+ "\" >" 
 								+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" 
 								+ SMUtilities.lnViewInvoice(sDBID, sDocNumber )
@@ -1494,14 +1494,14 @@ public class ARCreateEntryForm {
 			            	){
 			            	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
 			            			+ ARLineInput.ParamDistAcct 
-			            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+			            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
 			            			+ "\" VALUE=\"" + sARTransGL + "\">");
 
 			        		pwOut.println(sARTransGL);
 			        	}else{
 						
 							pwOut.println("<SELECT NAME = \"" + ARLineInput.ParamDistAcct 
-				            		+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
+				            		+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
 				            
 				            //Read out the array list:
 				            for (int i = 0; i<m_sGLValues.size();i++){
@@ -1521,7 +1521,7 @@ public class ARCreateEntryForm {
 			            pwOut.println("<TD>");
 			            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 			        			ARLineInput.ParamLineAmt 
-			        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+			        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 			        			"0.00", 
 			        			9, 
 			        			"", 
@@ -1536,7 +1536,7 @@ public class ARCreateEntryForm {
 			            pwOut.println("<TD>");
 			            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 			        			ARLineInput.ParamLineDesc 
-			        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+			        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 			        				"", 
 			        			25, 
 			        			"", 
@@ -1549,7 +1549,7 @@ public class ARCreateEntryForm {
 			            pwOut.println("<TD>");
 			            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
 			        			ARLineInput.ParamLineComment 
-			        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+			        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 			        				"", 
 			        			25, 
 			        			"", 

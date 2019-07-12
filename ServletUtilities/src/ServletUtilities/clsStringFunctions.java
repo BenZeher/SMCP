@@ -1,5 +1,7 @@
 package ServletUtilities;
 
+import java.math.BigDecimal;
+
 public class clsStringFunctions {
 
 	public static String FormatSQLResult(String s){
@@ -197,5 +199,18 @@ public class clsStringFunctions {
 	    }
 	    return true;
 	}
+	
+    public static BigDecimal bdStringToBigDecimal (String sValue, int iScale){
+    	sValue = sValue.replace(",", "");
+    	try{
+    		BigDecimal bd = new BigDecimal(sValue);
+    		bd = bd.setScale(iScale, BigDecimal.ROUND_HALF_UP);
+    		return  bd;
+    	}catch (NumberFormatException e){
+    		System.out.println("ARUtilities.bdStringToDecimal - Error converting Original amount from string: " + sValue + ".");
+    		System.out.println("ARUtilities.bdStringToDecimal - " + e.getMessage());
+    		return null;
+    	}
+    }
 
 }

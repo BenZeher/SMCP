@@ -22,6 +22,7 @@ import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARViewChronLogGenerate extends HttpServlet {
 
@@ -53,7 +54,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String m_sWarning = "";
 	    /**************Get Parameters**************/
     	String sCustomer = request.getParameter("CustomerNumber");

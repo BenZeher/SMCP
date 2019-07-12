@@ -15,6 +15,7 @@ import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTablearacctset;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -52,21 +53,21 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 	    
 		boolean m_bIsNewEntry = false;
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		boolean m_bEditable = false;
 		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
 			m_bEditable = true;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sAccountSet = ARUtilities.get_Request_Parameter("AccountSet", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sAccountSet = clsManageRequestParameters.get_Request_Parameter("AccountSet", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
 		if (m_EntryInput == null){

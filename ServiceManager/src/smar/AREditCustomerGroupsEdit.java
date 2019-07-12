@@ -14,6 +14,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomergroups;
+import ServletUtilities.clsManageRequestParameters;
 
 public class AREditCustomerGroupsEdit extends HttpServlet {
 	
@@ -127,7 +128,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}

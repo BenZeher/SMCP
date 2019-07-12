@@ -64,5 +64,7 @@ public class clsManageBigDecimals {
 		DecimalFormat TwoDecimal = new DecimalFormat("###,###,##0.00");
 		return TwoDecimal.format(d);
 	}
+	
+
 
 }

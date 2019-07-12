@@ -27,6 +27,7 @@ import SMDataDefinition.SMTablearoptions;
 import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARClearPaidTransactionsAction extends HttpServlet{
 
@@ -35,8 +36,8 @@ public class ARClearPaidTransactionsAction extends HttpServlet{
 			HttpServletResponse response)
 	throws ServletException, IOException {
 
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
-		String sClearingDate = ARUtilities.get_Request_Parameter("ClearingDate", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
+		String sClearingDate = clsManageRequestParameters.get_Request_Parameter("ClearingDate", request);
 
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.ARClearfullypaidtransactions)){
 	    	return;

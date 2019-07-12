@@ -19,6 +19,7 @@ import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablesitelocations;
 import SMDataDefinition.SMTablessorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsDateAndTimeConversions;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -627,20 +628,20 @@ public class ARCustomerNumberChange extends java.lang.Object{
     		arToCustomer.setM_bdamountofhighestinvoicelastyear(arFromCustomer.getM_bdamountofhighestinvoicelastyear());
     	}
 
-       	if(ARUtilities.DateStringToLong(arFromCustomer.getM_datlastcredit()) 
-       			> ARUtilities.DateStringToLong(arToCustomer.getM_datlastcredit())){
+       	if(clsDateAndTimeConversions.DateStringToLong(arFromCustomer.getM_datlastcredit()) 
+       			> clsDateAndTimeConversions.DateStringToLong(arToCustomer.getM_datlastcredit())){
     		arToCustomer.setM_datlastcredit(arFromCustomer.getM_datlastcredit());
     		arToCustomer.setM_bdamountoflastcredit(arFromCustomer.getM_bdamountoflastcredit());
     	}
 
-       	if(ARUtilities.DateStringToLong(arFromCustomer.getM_datlastinvoice()) 
-       			> ARUtilities.DateStringToLong(arToCustomer.getM_datlastinvoice())){
+       	if(clsDateAndTimeConversions.DateStringToLong(arFromCustomer.getM_datlastinvoice()) 
+       			> clsDateAndTimeConversions.DateStringToLong(arToCustomer.getM_datlastinvoice())){
     		arToCustomer.setM_datlastinvoice(arFromCustomer.getM_datlastinvoice());
     		arToCustomer.setM_bdamountoflastinvoice(arFromCustomer.getM_bdamountoflastinvoice());
     	}
 
-       	if(ARUtilities.DateStringToLong(arFromCustomer.getM_datlastpayment()) 
-       			> ARUtilities.DateStringToLong(arToCustomer.getM_datlastpayment())){
+       	if(clsDateAndTimeConversions.DateStringToLong(arFromCustomer.getM_datlastpayment()) 
+       			> clsDateAndTimeConversions.DateStringToLong(arToCustomer.getM_datlastpayment())){
     		arToCustomer.setM_datlastpayment(arFromCustomer.getM_datlastpayment());
     		arToCustomer.setM_bdamountoflastpayment(arFromCustomer.getM_bdamountoflastpayment());
     	}

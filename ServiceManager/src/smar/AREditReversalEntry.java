@@ -9,7 +9,9 @@ import SMDataDefinition.SMTableglaccounts;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsValidateFormFields;
 import SMDataDefinition.SMTableentries;
 
 import java.io.IOException;
@@ -114,24 +116,24 @@ public class AREditReversalEntry extends HttpServlet {
 	    
 		boolean m_bIsNewEntry = false;
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sDocumentType = clsManageRequestParameters.get_Request_Parameter("DocumentType", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		boolean m_bEditable = false;
 		if (m_sEditable.compareToIgnoreCase("Yes") == 0){
 			m_bEditable = true;
 		}else {
 			m_bEditable = false;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sApplyToDocumentID = clsManageRequestParameters.get_Request_Parameter("DocumentID", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
 		if (m_EntryInput == null){
@@ -224,7 +226,7 @@ public class AREditReversalEntry extends HttpServlet {
 			//If it's a new entry:
 			//Load the transaction this adjustment will apply to:
 			//Load the transaction this adjustment will apply to:
-			if(!ARUtilities.IsValidLong(sApplyToDocumentID)){
+			if(!clsValidateFormFields.IsValidLong(sApplyToDocumentID)){
 	    		throw new Exception("Document ID " + sApplyToDocumentID + " is not valid.");
 			}
 	    	ARTransaction m_Transaction = new ARTransaction(sApplyToDocumentID);
@@ -394,7 +396,7 @@ public class AREditReversalEntry extends HttpServlet {
 			    BigDecimal bdCalculatedLineTotal = BigDecimal.ZERO;
 			    for (int i = 0; i < m_EntryInput.getLineCount(); i++){
 			    	bdCalculatedLineTotal = bdCalculatedLineTotal.add(
-			    		ARUtilities.bdStringToBigDecimal(m_EntryInput.getLine(i).getAmount(),2));
+			    		clsStringFunctions.bdStringToBigDecimal(m_EntryInput.getLine(i).getAmount(),2));
 			    }
 			    
 			    //TJR - test these lines - 3/14/2011:
@@ -887,21 +889,21 @@ public class AREditReversalEntry extends HttpServlet {
 
         	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamDocAppliedTo 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedTo() + "\">");
         	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineDocAppliedToID 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getDocAppliedToID() + "\">");
 
         	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineAmt 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getAmount() + "\">");
 
         	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
         			+ ARLineInput.ParamLineApplyToOrderNumber 
-        			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+        			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getApplyToOrderNumber() + "\">");
 
         	m_pwOut.println("<TR>");
@@ -920,7 +922,7 @@ public class AREditReversalEntry extends HttpServlet {
         	//GL account in it, but the line GL account for a misc cash reversal will be blank:
         	if (line.getLineAcct().trim().compareToIgnoreCase("") == 0){
 	        	m_pwOut.println("<SELECT NAME = \"" + ARLineInput.ParamDistAcct 
-	            		+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
+	            		+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) + "\">");
 	        	
 	        	//add the first line as a default, so we can tell if they didn't pick a GL:
 	        	m_pwOut.println("<OPTION");
@@ -941,7 +943,7 @@ public class AREditReversalEntry extends HttpServlet {
         	}else{
             	m_pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamDistAcct
-            			+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6) 
+            			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
             			+ "\" VALUE=\"" + line.getLineAcct() + "\">");
 
             	m_pwOut.println(line.getLineAcct());
@@ -957,7 +959,7 @@ public class AREditReversalEntry extends HttpServlet {
             m_pwOut.println("<TD>");
             m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getDescription()), 
         			25, 
         			"", 
@@ -970,7 +972,7 @@ public class AREditReversalEntry extends HttpServlet {
             m_pwOut.println("<TD>");
             m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
-        				+ ARUtilities.PadLeft(Integer.toString(iLineIndex), "0", 6), 
+        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getComment()), 
         			25, 
         			"", 

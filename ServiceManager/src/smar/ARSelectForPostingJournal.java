@@ -21,6 +21,8 @@ import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
 import SMClasses.TRANSACTIONSQLs;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
 public class ARSelectForPostingJournal extends HttpServlet{
 	
@@ -46,9 +48,9 @@ public class ARSelectForPostingJournal extends HttpServlet{
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sStartingBatchNumber = ARUtilities.get_Request_Parameter("StartingBatchNumber", request);
-		String m_sEndingBatchNumber = ARUtilities.get_Request_Parameter("EndingBatchNumber", request);
+	    String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sStartingBatchNumber = clsManageRequestParameters.get_Request_Parameter("StartingBatchNumber", request);
+		String m_sEndingBatchNumber = clsManageRequestParameters.get_Request_Parameter("EndingBatchNumber", request);
     
 		String title = "AR Posting Journal";
 		String subtitle = "";
@@ -93,7 +95,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
         		arrBatchList.add(
         				Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)));
         		arrBatchDescList.add(
-        				ARUtilities.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6)
+        				clsStringFunctions.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6)
         				+ " - " + SMBatchTypes.Get_Batch_Type(rs.getInt(SMEntryBatch.ibatchtype)));
         	}
         	rs.close();

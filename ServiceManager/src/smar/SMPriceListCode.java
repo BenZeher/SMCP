@@ -13,6 +13,7 @@ import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
 public class SMPriceListCode extends java.lang.Object{
@@ -34,9 +35,9 @@ public class SMPriceListCode extends java.lang.Object{
         	m_sErrorMessageArray = new ArrayList<String> (0);
         }
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sPriceListCode = ARUtilities.get_Request_Parameter(ParamsPriceListCode, req).trim().replace("&quot;", "\"");
-    	m_sDescription = ARUtilities.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sPriceListCode = clsManageRequestParameters.get_Request_Parameter(ParamsPriceListCode, req).trim().replace("&quot;", "\"");
+    	m_sDescription = clsManageRequestParameters.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
     }
 	private boolean load(
 			String sCode,
@@ -75,8 +76,8 @@ public class SMPriceListCode extends java.lang.Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sPriceListCode = ARUtilities.checkStringForNull(rs.getString(SMTablepricelistcodes.spricelistcode));
-            	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTablepricelistcodes.sdescription));
+	        	m_sPriceListCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablepricelistcodes.spricelistcode));
+            	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTablepricelistcodes.sdescription));
 	        	m_iNewRecord = "0";
 	        	rs.close();
 	        	return true;

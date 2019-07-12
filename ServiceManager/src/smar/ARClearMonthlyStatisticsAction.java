@@ -14,6 +14,7 @@ import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 public class ARClearMonthlyStatisticsAction extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -31,10 +32,10 @@ public class ARClearMonthlyStatisticsAction extends HttpServlet {
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    /**************Get Parameters**************/
-	    String sClearBeforeYear = ARUtilities.get_Request_Parameter("ClearBeforeYear", request);
-	    String sClearBeforeMonth = ARUtilities.get_Request_Parameter("ClearBeforeMonth", request);
+	    String sClearBeforeYear = clsManageRequestParameters.get_Request_Parameter("ClearBeforeYear", request);
+	    String sClearBeforeMonth = clsManageRequestParameters.get_Request_Parameter("ClearBeforeMonth", request);
 	    
 	    try {
 			clearRecords(request, sClearBeforeYear, sClearBeforeMonth, sDBID, sUserID);

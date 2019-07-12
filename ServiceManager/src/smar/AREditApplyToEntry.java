@@ -44,10 +44,12 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMBatchTypes;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTableentries;
+import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -410,7 +412,7 @@ public class AREditApplyToEntry extends HttpServlet {
         //Doc date:
 		pwOut.println("<TD>");
 
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         		AREntryInput.ParamDocDate, 
         		clsStringFunctions.filter(entryInput.getsDocDate()), 
         		10, 
@@ -460,9 +462,9 @@ public class AREditApplyToEntry extends HttpServlet {
 		
         //Description:
         pwOut.println("<TD>");
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+        pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         		AREntryInput.ParamDocDescription, 
-        		ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocDescription())), 
+        		clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocDescription())), 
         		SMTableentries.sdocdescriptionLength, 
         		"Description:", 
         		"",
@@ -511,13 +513,13 @@ public class AREditApplyToEntry extends HttpServlet {
 		//START ROW 1
         //Doc Number:
 		pwOut.println("<TD>Doc #: <B>" 
-				+ ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocNumber()))+ "</B></TD>");
+				+ clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocNumber()))+ "</B></TD>");
         //Doc date:
 		pwOut.println("<TD>Doc. date: <B>" + entryInput.getsDocDate() + "</B></TD>");
         //Original amt:
 		pwOut.println("<TD>Entry amt: <B>" + entryInput.getsOriginalAmount() + "</B></TD>");
         //Control Acct:
-		pwOut.println("<TD>Control acct: <B>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(entryInput.getsControlAcct()) + "</B></TD>");
+		pwOut.println("<TD>Control acct: <B>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entryInput.getsControlAcct()) + "</B></TD>");
 
         //END ROW 1
 		pwOut.println("</TR>");
@@ -533,7 +535,7 @@ public class AREditApplyToEntry extends HttpServlet {
 		pwOut.println("<TD>Out of balance: <B>" + entryInput.getsUndistributedAmount() + "</B></TD>");		
 		//Description:
 		pwOut.println("<TD>Description: <B>"
-        		+ ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocDescription())) 
+        		+ clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(entryInput.getsDocDescription())) 
         		+ "</B></TD>");
         
         //END ROW 2:
@@ -625,12 +627,12 @@ public class AREditApplyToEntry extends HttpServlet {
         	//Apply to doc #:
         	pwOut.println("<TR>");
         	pwOut.println("<TD>");
-       		pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedTo())));
+       		pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedTo())));
         	pwOut.println("</TD>");
 
         	//Apply to doc ID:
         	pwOut.println("<TD>");
-        	pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedToID())));
+        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedToID())));
         	pwOut.println("</TD>");
         	
 			if (line.getDocAppliedToID().compareTo("-1") != 0){
@@ -696,12 +698,12 @@ public class AREditApplyToEntry extends HttpServlet {
         	
         	//Description:
         	pwOut.println("<TD>");
-        	pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDescription())));
+        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDescription())));
         	pwOut.println("</TD>");
         	
         	//Comment:
         	pwOut.println("<TD>");
-        	pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getComment())));
+        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getComment())));
         	pwOut.println("</TD>");
         	
         	pwOut.println("</TR>");
@@ -825,7 +827,7 @@ public class AREditApplyToEntry extends HttpServlet {
             
         	//Amount:
 	        pwOut.println("<TD ALIGN = RIGHT>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamLineAmt 
 	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 	        			line.getAmount(), 
@@ -839,7 +841,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
         	//Description:
             pwOut.println("<TD>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getDescription()), 
@@ -852,7 +854,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
         	//Comment:
             pwOut.println("<TD>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getComment()), 
@@ -892,7 +894,7 @@ public class AREditApplyToEntry extends HttpServlet {
     		//Line comment
 			
 			//Apply to doc
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamDocAppliedTo
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
@@ -933,7 +935,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			            
         	//Amount:
             pwOut.println("<TD>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineAmt 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         			"0.00", 
@@ -948,7 +950,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
         	//Description:
             pwOut.println("<TD>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
@@ -961,7 +963,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
         	//Comment:
             pwOut.println("<TD>");
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				"", 
@@ -1088,7 +1090,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					
 		        	//Amount:
 		            pwOut.println("<TD>");
-		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineAmt 
 		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        			"0.00", 
@@ -1103,7 +1105,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
 		        	//Description:
 		            pwOut.println("<TD>");
-		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineDesc 
 		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        				"", 
@@ -1116,7 +1118,7 @@ public class AREditApplyToEntry extends HttpServlet {
 
 		        	//Comment:
 		            pwOut.println("<TD>");
-		            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineComment 
 		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
 		        				"", 

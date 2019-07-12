@@ -30,6 +30,8 @@ import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsCreateHTMLFormFields;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -302,7 +304,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    pwOut.println("<TABLE BORDER=12 CELLSPACING=2>");
         //Customer number:
 	    if(cust.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARCustomer.ParamsCustomerNumber + "\" ID=\"" + ARCustomer.ParamsCustomerNumber + "\" ONCHANGE=\"flagDirty();", 
 	        		cust.getM_sCustomerNumber().replace("\"", "&quot;"),
 	        		SMTablearcustomer.sCustomerNumberLength, 
@@ -322,7 +324,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    }else{
 	    	iTrueOrFalse = 0;
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 			ARCustomer.ParamiActive + "\" ID=\"" + ARCustomer.ParamiActive + "\" ONCHANGE=\"flagDirty();", 
 			iTrueOrFalse,
 			"Active customer?", 
@@ -335,7 +337,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    }else{
 	    	iTrueOrFalse = 0;
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
     		ARCustomer.ParamiOnHold + "\" ID=\"" + ARCustomer.ParamiOnHold + "\" ONCHANGE=\"flagDirty();", 
     		iTrueOrFalse,
 			"On hold?", 
@@ -349,7 +351,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    }else{
 	    	iTrueOrFalse = 0;
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
     		ARCustomer.Paramiuseselectronicdeposit + "\" ID=\"" + ARCustomer.Paramiuseselectronicdeposit + "\" ONCHANGE=\"flagDirty();", 
     		iTrueOrFalse, 
 			"Uses electronic deposit?", 
@@ -363,7 +365,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    }else{
 	    	iTrueOrFalse = 0;
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
     		ARCustomer.Paramirequiresstatements + "\" ID=\"" + ARCustomer.Paramirequiresstatements + "\" ONCHANGE=\"flagDirty();", 
     		iTrueOrFalse,
 			"Requires statements?", 
@@ -377,7 +379,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	    }else{
 	    	iTrueOrFalse = 0;
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
     		ARCustomer.Paramirequirespo + "\" ID=\"" + ARCustomer.Paramirequirespo + "\" ONCHANGE=\"flagDirty();", 
     		iTrueOrFalse,
 			"Requires purchase order?", 
@@ -413,7 +415,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        }
 	        rsTerms.close();
 	        
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		ARCustomer.ParamsTerms + "\" ID=\"" + ARCustomer.ParamsTerms + "\" ONCHANGE=\"flagDirty();", 
 	        		sValues, 
 	        		cust.getM_sTerms().replace("\"", "&quot;"),  
@@ -446,7 +448,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        }
 	        rsCustomerGroups.close();
 
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		ARCustomer.ParamsCustomerGroup + "\" ID=\"" + ARCustomer.ParamsCustomerGroup + "\" ONCHANGE=\"flagDirty();", 
 	        		sValues, 
 	        		cust.getM_sCustomerGroup().replace("\"", "&quot;"), 
@@ -476,7 +478,7 @@ public class AREditCustomersEdit extends HttpServlet {
 	        	sDescriptions.add((String) (rsAcctSets.getString(SMTablearacctset.sAcctSetCode).trim() + " - " + rsAcctSets.getString(SMTablearacctset.sDescription).trim()));
 	        }
 	        rsAcctSets.close();
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		ARCustomer.ParamsAccountSet + "\" ID=\"" + ARCustomer.ParamsAccountSet + "\" ONCHANGE=\"flagDirty();", 
 	        		sValues, 
 	        		cust.getM_sAccountSet().replace("\"", "&quot;"), 
@@ -510,7 +512,7 @@ public class AREditCustomersEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("<BR><FONT COLOR=RED>Error [1454085134] with SQL: '" + sSQL + "' - " + ex.getMessage() + "</FONT><BR>");
 		}
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARCustomer.Paramspricelistcode + "\" ID=\"" + ARCustomer.Paramspricelistcode + "\" ONCHANGE=\"flagDirty();", 
         		sValues, 
         		cust.getM_sPriceListCode().replace("\"", "&quot;"), 
@@ -534,7 +536,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		sDescriptions.add("Price Level " + Integer.toString(i));
         	}
         }
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARCustomer.Paramspricelevel + "\" ID=\"" + ARCustomer.Paramspricelevel + "\" ONCHANGE=\"flagDirty();", 
         		sValues, 
         		cust.getM_sPriceLevel().replace("\"", "&quot;"), 
@@ -579,7 +581,7 @@ public class AREditCustomersEdit extends HttpServlet {
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>Error [1454085133] reading tax information with SQL: '" + sSQL + "' - " + e.getMessage() + "</FONT><BR>");
 		}
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARCustomer.Paramitaxid + "\" ID=\"" + ARCustomer.Paramitaxid + "\" ONCHANGE=\"flagDirty();", 
         		sValues, 
         		cust.getstaxid().replace("\"", "&quot;"), 
@@ -590,7 +592,7 @@ public class AREditCustomersEdit extends HttpServlet {
         );
 
         //Customer name:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsCustomerName + "\" ID=\"" + ARCustomer.ParamsCustomerName + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sCustomerName().replace("\"", "&quot;"), 
         		SMTablearcustomer.sCustomerNameLength, 
@@ -600,7 +602,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
         );
         //Address Line 1:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsAddressLine1 + "\" ID=\"" + ARCustomer.ParamsAddressLine1 + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sAddressLine1().replace("\"", "&quot;"), 
         		SMTablearcustomer.sAddressLine1Length,
@@ -609,7 +611,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		)
         );
         //Address Line 2:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsAddressLine2 + "\" ID=\"" + ARCustomer.ParamsAddressLine2 + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sAddressLine2().replace("\"", "&quot;"), 
         		SMTablearcustomer.sAddressLine2Length, 
@@ -619,7 +621,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		)
         );
         //Address Line 3:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsAddressLine3 + "\" ID=\"" + ARCustomer.ParamsAddressLine3 + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sAddressLine3().replace("\"", "&quot;"), 
         		SMTablearcustomer.sAddressLine3Length, 
@@ -629,7 +631,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		)
         );
         //Address Line 4:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsAddressLine4 + "\" ID=\"" + ARCustomer.ParamsAddressLine4 + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sAddressLine4().replace("\"", "&quot;"), 
         		SMTablearcustomer.sAddressLine4Length, 
@@ -639,7 +641,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		)
         );
         //City:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsCity + "\" ID=\"" + ARCustomer.ParamsCity + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sCity().replace("\"", "&quot;"),  
         		SMTablearcustomer.sCityLength, 
@@ -649,7 +651,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //State:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsState + "\" ID=\"" + ARCustomer.ParamsState + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sState().replace("\"", "&quot;"), 
         		SMTablearcustomer.sStateLength, 
@@ -659,7 +661,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Country:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsCountry + "\" ID=\"" + ARCustomer.ParamsCountry + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sCountry().replace("\"", "&quot;"), 
         		SMTablearcustomer.sCountryLength, 
@@ -669,7 +671,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Postal code:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsPostalCode + "\" ID=\"" + ARCustomer.ParamsPostalCode + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sPostalCode().replace("\"", "&quot;"), 
         		SMTablearcustomer.sPostalCodeLength, 
@@ -679,7 +681,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Contact name:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsContactName + "\" ID=\"" + ARCustomer.ParamsContactName + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sContactName().replace("\"", "&quot;"),  
         		SMTablearcustomer.sContactNameLength, 
@@ -689,7 +691,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Phone:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsPhoneNumber + "\" ID=\"" + ARCustomer.ParamsPhoneNumber + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sPhoneNumber().replace("\"", "&quot;"), 
         		SMTablearcustomer.sPhoneNumberLength, 
@@ -699,7 +701,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Fax:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsFaxNumber + "\" ID=\"" + ARCustomer.ParamsFaxNumber + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sFaxNumber().replace("\"", "&quot;"),  
         		SMTablearcustomer.sFaxNumberLength, 
@@ -709,7 +711,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
 		);
         //Email address:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsEmailAddress + "\" ID=\"" + ARCustomer.ParamsEmailAddress + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sEmailAddress().replace("\"", "&quot;"), 
         		SMTablearcustomer.sEmailAddressLength, 
@@ -719,7 +721,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
        	);
         //Web address:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamsWebAddress + "\" ID=\"" + ARCustomer.ParamsWebAddress + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sWebAddress().replace("\"", "&quot;"), 
         		SMTablearcustomer.sWebAddressLength, 
@@ -729,7 +731,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
        	);
         //Credit limit:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.ParamdCreditLimit + "\" ID=\"" + ARCustomer.ParamdCreditLimit + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_dCreditLimit().replace("\"", "&quot;"), 
         		18, 
@@ -740,7 +742,7 @@ public class AREditCustomersEdit extends HttpServlet {
 		);
 
         //Accounting Notes:
-        pwOut.println(ARUtilities.Create_Edit_Form_MultilineText_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_MultilineText_Input_Row(
         		ARCustomer.ParammAccountingNotes + "\" ID=\"" + ARCustomer.ParammAccountingNotes + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_mAccountingNotes().replace("\"", "&quot;"),
         		"Accounting notes:", 
@@ -750,7 +752,7 @@ public class AREditCustomersEdit extends HttpServlet {
         	)
        	);
         //Customer comments:
-        pwOut.println(ARUtilities.Create_Edit_Form_MultilineText_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_MultilineText_Input_Row(
         		ARCustomer.ParammCustomerComments + "\" ID=\"" + ARCustomer.ParammCustomerComments + "\" ONCHANGE=\"flagDirty();",
         		cust.getM_mCustomerComments().replace("\"", "&quot;"),
         		"Customer comments:", 
@@ -774,7 +776,7 @@ public class AREditCustomersEdit extends HttpServlet {
         
         
         //Invoicing Contact
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.Paramsinvoicingcontact + "\" ID=\"" + ARCustomer.Paramsinvoicingcontact + "\" ONCHANGE=\"flagDirty();", 
         		cust.getsinvoicingcontact().replace("\"", "&quot;"),  
         		SMTablearcustomer.sInvoicingContactLength, 
@@ -785,7 +787,7 @@ public class AREditCustomersEdit extends HttpServlet {
 		);
         
         //Invoicing Email
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomer.Paramsinvoicingemail + "\" ID=\"" + ARCustomer.Paramsinvoicingemail + "\" ONCHANGE=\"flagDirty();", 
         		cust.getsinvoicingemail().replace("\"", "&quot;"), 
         		SMTablearcustomer.sInvoicingEmailLength, 
@@ -796,7 +798,7 @@ public class AREditCustomersEdit extends HttpServlet {
        	);
         
         //Invoicing Instructions
-        pwOut.println(ARUtilities.Create_Edit_Form_MultilineText_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_MultilineText_Input_Row(
         		ARCustomer.Paramsinvoicingnotes + "\" ID=\"" + ARCustomer.Paramsinvoicingnotes + "\" ONCHANGE=\"flagDirty();", 
         		cust.getsinvoicingnotes().replace("\"", "&quot;"),
         		"Invoicing instructions:", 
@@ -907,7 +909,7 @@ public class AREditCustomersEdit extends HttpServlet {
 					}
 				}
 				pwOut.println(
-					ARUtilities.Create_Edit_Form_List_Field(
+						clsCreateHTMLFormFields.Create_Edit_Form_List_Field(
 						CUSTOMER_SALESGROUP_SALESPERSON_FIELD  
 						+ (Long.toString(rsSalesGroups.getLong(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId))
 						+ "\" ID=\"" + CUSTOMER_SALESGROUP_SALESPERSON_FIELD  

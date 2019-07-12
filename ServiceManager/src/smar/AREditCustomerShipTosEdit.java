@@ -15,6 +15,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomershiptos;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
@@ -229,7 +230,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    
         //Ship to code:
 	    if(shipto.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARCustomerShipTo.ParamsShipToCode, 
 	        		shipto.getM_sShipToCode().replace("\"", "&quot;"),  
 	        		SMTablearcustomershiptos.sShipToCodeLength, 
@@ -245,7 +246,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    }
 
         //Description:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsDescription, 
         		shipto.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sDescriptionLength, 
@@ -256,7 +257,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         );
 		
         //Address Line 1:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine1, 
         		shipto.getM_sAddressLine1().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine1Length, 
@@ -267,7 +268,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         );
 
         //Address Line 2:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine2, 
         		shipto.getM_sAddressLine2().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine2Length, 
@@ -278,7 +279,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         );
         		
         //Address Line 3:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine3, 
         		shipto.getM_sAddressLine3().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine3Length, 
@@ -289,7 +290,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         );
 
         //Address Line 4:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine4, 
         		shipto.getM_sAddressLine4().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine4Length, 
@@ -300,7 +301,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         );
 
         //City:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsCity, 
         		shipto.getM_sCity().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sCityLength, 
@@ -311,7 +312,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
 
         //State:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsState, 
         		shipto.getM_sState().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sStateLength, 
@@ -322,7 +323,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
         
         //Country:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsCountry, 
         		shipto.getM_sCountry().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sCountryLength, 
@@ -333,7 +334,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
 
         //Postal code:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsPostalCode, 
         		shipto.getM_sPostalCode().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sPostalCodeLength, 
@@ -344,7 +345,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
         
         //Contact name:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsContactName, 
         		shipto.getM_sContactName().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sContactNameLength, 
@@ -355,7 +356,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
         
         //Phone:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsPhoneNumber, 
         		shipto.getM_sPhoneNumber().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sPhoneNumberLength, 
@@ -366,7 +367,7 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
         
         //Fax:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsFaxNumber, 
         		shipto.getM_sFaxNumber().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sFaxNumberLength, 

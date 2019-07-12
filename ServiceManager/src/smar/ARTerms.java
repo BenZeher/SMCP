@@ -23,6 +23,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 
@@ -369,16 +370,16 @@ public class ARTerms extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsTermsCode + "=" + ARUtilities.URLEncode(m_sTermsCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamdDiscountPercent + "=" + ARUtilities.URLEncode(m_dDiscountPercent);
-		sQueryString += "&" + ParamiDiscountNumberOfDays + "=" + ARUtilities.URLEncode(m_iDiscountNumberOfDays);
-		sQueryString += "&" + ParamiDiscountDayOfTheMonth + "=" + ARUtilities.URLEncode(m_iDiscountDayOfTheMonth);
-		sQueryString += "&" + ParamiDueNumberOfDays + "=" + ARUtilities.URLEncode(m_iDueNumberOfDays);
-		sQueryString += "&" + ParamiDueDayOfTheMonth + "=" + ARUtilities.URLEncode(m_iDueDayOfTheMonth);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsTermsCode + "=" + clsServletUtilities.URLEncode(m_sTermsCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamdDiscountPercent + "=" + clsServletUtilities.URLEncode(m_dDiscountPercent);
+		sQueryString += "&" + ParamiDiscountNumberOfDays + "=" + clsServletUtilities.URLEncode(m_iDiscountNumberOfDays);
+		sQueryString += "&" + ParamiDiscountDayOfTheMonth + "=" + clsServletUtilities.URLEncode(m_iDiscountDayOfTheMonth);
+		sQueryString += "&" + ParamiDueNumberOfDays + "=" + clsServletUtilities.URLEncode(m_iDueNumberOfDays);
+		sQueryString += "&" + ParamiDueDayOfTheMonth + "=" + clsServletUtilities.URLEncode(m_iDueDayOfTheMonth);
 				
 		return sQueryString;
 	}

@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -333,7 +332,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
 		}
 		
 	    //Inventory Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICAccountSet.ParamInventoryAccount, 
         		arrValues, 
         		acctset.getInventoryAccount().replace("\"", "&quot;"),  
@@ -344,7 +343,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
         );
         
 	    //Payables Clearing Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICAccountSet.ParamPayablesClearingAccount, 
         		arrValues, 
         		acctset.getPayablesClearingAccount().replace("\"", "&quot;"),  
@@ -355,7 +354,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
         );
 
 	    //Adjustment Write Off Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICAccountSet.ParamAdjustmentWriteOffAccount, 
         		arrValues, 
         		acctset.getAdjustmentWriteOffAccount().replace("\"", "&quot;"),  
@@ -366,7 +365,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
         );
         
 	    //Non Stock Clearing Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICAccountSet.ParamNonStockClearingAccount, 
         		arrValues, 
         		acctset.getNonStockClearingAccount().replace("\"", "&quot;"),  
@@ -377,7 +376,7 @@ public class ICEditAccountSetsEdit extends HttpServlet {
         );
 
 	    //Transfer Clearing Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICAccountSet.ParamTransferClearingAccount, 
         		arrValues, 
         		acctset.getTransferClearingAccount().replace("\"", "&quot;"),  

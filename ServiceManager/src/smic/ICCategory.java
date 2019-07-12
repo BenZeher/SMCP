@@ -12,7 +12,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
-import smar.*;
 
 public class ICCategory extends Object{
 	public static final String ParamAddingNewRecord = "bAddingNewRecord";

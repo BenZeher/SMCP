@@ -27,6 +27,7 @@ import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class AREditBatchesEdit extends HttpServlet {
@@ -191,7 +192,7 @@ public class AREditBatchesEdit extends HttpServlet {
         
         if (batch.bEditable()){
             //Description:
-            pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
             		SMEntryBatch.sbatchdescription, 
             		clsStringFunctions.filter(batch.sBatchDescription()),  
             		SMEntryBatch.sBatchDescriptionLength, 
@@ -201,7 +202,7 @@ public class AREditBatchesEdit extends HttpServlet {
             
             //Add an editable cell for the batch date:
 /*
-            pwOut.println(ARUtilities.Create_Edit_Form_Date_Input_Field(
+            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Date_Input_Field(
             		"BatchDateYear", 
             		"BatchDateMonth", 
             		"BatchDateDay", 
@@ -454,15 +455,13 @@ public class AREditBatchesEdit extends HttpServlet {
 		        	
 		        	//PayeePayor
 		        	pwOut.println("<TD>");
-		        	pwOut.println(
-		        			ARUtilities.Fill_In_Empty_String_For_HTML_Cell(
+		        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(
 		        					rsEntries.getString(SMTableentries.spayeepayor)));
 		        	pwOut.println("</TD>");
 		        	
 		        	//Description
 		        	pwOut.println("<TD>");
-		        	pwOut.println(
-		        			ARUtilities.Fill_In_Empty_String_For_HTML_Cell(
+		        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(
 		        					rsEntries.getString(SMTableentries.sdocdescription)));
 		        	pwOut.println("</TD>");	        	
 		        	

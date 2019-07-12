@@ -614,5 +614,89 @@ public class clsCreateHTMLTableFormFields {
 		sRow += "</TR>\n\n";
 		return sRow;
 	}
+	
+	  public static String Create_Edit_Form_DateText_Input_Row (
+			  String sFieldName,
+			  String sValue,
+			  int iFieldLength,
+			  String sLabel,
+			  String sRemark,
+			  String sTextBoxWidth,
+			  ServletContext context
+			  ){
+				
+		        String sRow = "<TR>\n";
+		        sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
+		        
+		        sRow += "<TD ALIGN=LEFT>";
+		        sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
+		        if (sValue != null){
+		        	sRow += " VALUE=\"" + sValue + "\"";
+		        }
+		        else{
+		        	sRow += " VALUE=\"\"";
+		        }
+		        sRow += "SIZE=28";
+		        sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
+		        sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
+		        sRow += ">";
+		        sRow += clsServletUtilities.getDatePickerString(sFieldName, context);
+		        sRow += "</TD>\n";
+		  		
+		        sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		        sRow += "</TR>\n\n";
+		  		return sRow;
+		  		
+			  }
+	  
+	  public static String Create_Edit_Form_Checkbox_Row (
+			  String sFieldName,
+			  String sValueAsTrueOrFalse,
+			  String sLabel,
+			  String sRemark
+			  ){
+
+		  String sRow = "<TR>\n";
+		  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
+	    
+		  sRow += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX";
+		  if (sValueAsTrueOrFalse.compareToIgnoreCase("true") == 0){
+			  sRow += " CHECKED ";
+		  }
+		  sRow += " NAME=\"" + sFieldName + "\" width=0.25></TD>\n";
+	    
+		  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		  sRow += "</TR>\n\n";
+		  return sRow;
+	  }
+	  
+	  public static String Create_Edit_Form_RadioButton_Row (
+			  String sFieldName,
+			  ArrayList<String> sValues,
+			  String sDefaultValue,
+			  ArrayList<String> sDescriptions,
+			  String sLabel,
+			  String sRemark
+			  ){
+
+		  String sRow = "<TR>\n";
+		  sRow += "<TD ALIGN=RIGHT><B>" + sLabel + " </B></TD>\n";
+		  
+		  sRow += "<TD ALIGN=LEFT>"; 
+		  for (int i = 0; i < sValues.size(); i++){
+			  sRow += "<LABEL><INPUT TYPE=RADIO NAME = \"" + sFieldName + "\"";
+			  sRow += " VALUE=\"" + sValues.get(i).toString() + "\"";
+	    	  if (sValues.get(i).toString().compareTo(sDefaultValue) == 0){
+	    		  sRow += " CHECKED ";
+	    	  }
+	    	  sRow += ">" + sDescriptions.get(i).toString() + "</LABEL>\n<BR>";
+	      }
+		  sRow += "</SELECT></TD>\n";
+		  
+		  sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		  sRow += "</TR>\n\n";
+		  return sRow;
+	  }
+	  
 
 }

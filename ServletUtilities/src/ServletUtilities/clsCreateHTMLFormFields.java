@@ -311,5 +311,33 @@ public class clsCreateHTMLFormFields {
 		return sField;
 	
 	}
+	
+	  public static String Create_Edit_Form_Text_Input_Field (
+			  String sFieldName,
+			  String sValue,
+			  int iMaxFieldLength,
+			  String sLabel,
+			  String sRemark,
+			  int iFieldSize
+			  ){
+				
+		        String sField = sLabel;
+		        sField += " <INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
+		        if (sValue != null){
+		        	sField += " VALUE=\"" + sValue + "\"";
+		        }
+		        else{
+		        	sField += " VALUE=\"\"";
+		        }
+		        sField += "SIZE=" + Integer.toString(iFieldSize);
+		        sField += "; MAXLENGTH=" + Integer.toString(iMaxFieldLength);
+		        sField += ">";
+		        //sField += " STYLE=\"width: 2.41in; height: 0.25in\"";
+		  		return sField;
+		  		
+			  }
+	  
+
+	  
 
 }

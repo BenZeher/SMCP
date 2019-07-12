@@ -25,6 +25,7 @@ import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class AREditBatches extends HttpServlet {
@@ -279,11 +280,11 @@ public class AREditBatches extends HttpServlet {
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sDesc);
+		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDesc);
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditedDate));
+		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditedDate));
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

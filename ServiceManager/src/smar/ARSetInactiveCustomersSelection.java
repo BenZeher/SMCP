@@ -17,6 +17,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsCreateHTMLFormFields;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -117,7 +118,7 @@ public class ARSetInactiveCustomersSelection  extends HttpServlet {
 	    	out.println("</TR>");
 	    	
 	    	//Transaction Date Range
-		    out.println(ARUtilities.Create_Edit_Form_DateText_Input_Row(
+		    out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_DateText_Input_Row(
 		    		"LastActivityDate", 
 		    		"1/1/1900", 
 		    		10, 

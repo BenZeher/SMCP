@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
-import smar.ARUtilities;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
@@ -435,7 +434,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 			pwOut.println(sOutPut);
 	        
 			//Inventory account
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		SMTablelocations.sGLInventoryAcct, 
 	        		arrValues, 
 	        		clsStringFunctions.filter(rs.getString(SMTablelocations.sGLInventoryAcct)),  
@@ -446,7 +445,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 	        );
 	        
 	        //Payables clearing:
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		SMTablelocations.sGLPayableClearingAcct, 
 	        		arrValues, 
 	        		clsStringFunctions.filter(rs.getString(SMTablelocations.sGLPayableClearingAcct)),  
@@ -457,7 +456,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 	        );
 	        
 	        //Write off account
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		SMTablelocations.sGLWriteOffAcct, 
 	        		arrValues, 
 	        		clsStringFunctions.filter(rs.getString(SMTablelocations.sGLWriteOffAcct)),  
@@ -468,7 +467,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 	        );
 	        
 	        //Transfer clearing account
-	        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 	        		SMTablelocations.sGLTransferClearingAcct, 
 	        		arrValues, 
 	        		clsStringFunctions.filter(rs.getString(SMTablelocations.sGLTransferClearingAcct)),  

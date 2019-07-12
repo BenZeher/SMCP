@@ -18,6 +18,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearacctset;
 import SMDataDefinition.SMTableglaccounts;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -160,7 +161,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 
         //Account set code:
 	    if(set.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARAccountSet.ParamsAcctSetCode, 
 	        		set.getM_sAcctSetCode().replace("\"", "&quot;"),  
 	        		SMTablearacctset.sAcctSetCodeLength, 
@@ -182,7 +183,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 	    }else{
 	    	sTrueOrFalse = "false";
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    		ARAccountSet.ParamiActive, 
 			sTrueOrFalse, 
 			"Active acct set?", 
@@ -191,7 +192,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 		);
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				ARAccountSet.ParamsDescription, 
         		set.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearacctset.sDescriptionLength, 
@@ -234,7 +235,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
 		}
 		
 	    //A/R Control Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamdsAcctsReceivableControlAcct, 
         		sValues, 
         		set.getM_sAcctsReceivableControlAcct().replace("\"", "&quot;"),  
@@ -245,7 +246,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
         );
 
 		//ReceiptDiscountsAcct
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamsReceiptDiscountsAcct, 
         		sValues, 
         		set.getM_sReceiptDiscountsAcct().replace("\"", "&quot;"),  
@@ -255,7 +256,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
         		)
         );
 		//PrepaymentLiabilityAcct
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamsPrepaymentLiabilityAcct, 
         		sValues, 
         		set.getM_sPrepaymentLiabilityAcct().replace("\"", "&quot;"),  
@@ -266,7 +267,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
         );
         
 		//WriteOffAcct
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamsWriteOffAcct, 
         		sValues, 
         		set.getM_sWriteOffAcct().replace("\"", "&quot;"),  
@@ -276,7 +277,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
         		)
         );
 		//RetainageAcct
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamsRetainageAcct, 
         		sValues, 
         		set.getM_sRetainageAcct().replace("\"", "&quot;"),  
@@ -286,7 +287,7 @@ public class AREditAccountSetsEdit extends HttpServlet {
         		)
         );       
 		//CashAcct
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARAccountSet.ParamsCashAcct, 
         		sValues, 
         		set.getM_sCashAcct().replace("\"", "&quot;"),  

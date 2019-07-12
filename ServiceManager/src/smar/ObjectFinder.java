@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMUtilities;
@@ -188,7 +189,7 @@ public class ObjectFinder extends HttpServlet {
 	    	}
 	    }
 	    
-	    sOutPut += ARUtilities.Create_Edit_Form_RadioButton_Row(
+	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_RadioButton_Row(
 	    		"sSearchField", 
 	    		sSearchFields, 
 	    		//Default to the first value:
@@ -214,7 +215,7 @@ public class ObjectFinder extends HttpServlet {
 
 	    String sDefaultType = "Containing";
 	    
-	    sOutPut += ARUtilities.Create_Edit_Form_RadioButton_Row(
+	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_RadioButton_Row(
 	    		"sSearchType", 
 	    		sSearchTypes, 
 	    		sDefaultType, 
@@ -224,7 +225,7 @@ public class ObjectFinder extends HttpServlet {
 	    		);
 
 	    //The actual search text:
-	    sOutPut += ARUtilities.Create_Edit_Form_Text_Input_Row(
+	    sOutPut += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	    		"sSearchString", 
 	    		"", 
 	    		50, 

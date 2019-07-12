@@ -20,6 +20,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
 import SMClasses.TRANSACTIONSQLs;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
@@ -112,7 +113,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");	
 		
 		//Starting number:
-		out.println(ARUtilities.Create_Edit_Form_List_Row(
+		out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 				"StartingBatchNumber", 
 				arrBatchList, 
 				m_sStartingBatchNumber, 
@@ -121,7 +122,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		"Choose the first batch you want to see in the posting journal"));
 		
 		//Ending number:
-		out.println(ARUtilities.Create_Edit_Form_List_Row(
+		out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 				"EndingBatchNumber", 
 				arrBatchList, 
 				m_sEndingBatchNumber, 

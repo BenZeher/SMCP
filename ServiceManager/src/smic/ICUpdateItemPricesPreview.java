@@ -6,13 +6,13 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICUpdateItemPricesPreview extends java.lang.Object{
 
@@ -177,7 +177,7 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 						+ "smic.ICDisplayItemInformation?ItemNumber=" 
 			    		+ sItem
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-			    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>");
+			    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>");
 				}else{
 					out.println("<TD><FONT SIZE=2>" + sItem + "</FONT></TD>");
 				}

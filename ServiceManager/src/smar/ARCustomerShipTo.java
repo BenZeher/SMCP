@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class ARCustomerShipTo extends Object{
@@ -379,21 +380,21 @@ public class ARCustomerShipTo extends Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsCustomerNumber + "=" + ARUtilities.URLEncode(m_sCustomerNumber);
-		sQueryString += "&" + ParamsShipToCode + "=" + ARUtilities.URLEncode(m_sShipToCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamsAddressLine1 + "=" + ARUtilities.URLEncode(m_sAddressLine1);
-		sQueryString += "&" + ParamsAddressLine2 + "=" + ARUtilities.URLEncode(m_sAddressLine2);
-		sQueryString += "&" + ParamsAddressLine3 + "=" + ARUtilities.URLEncode(m_sAddressLine3);
-		sQueryString += "&" + ParamsAddressLine4 + "=" + ARUtilities.URLEncode(m_sAddressLine4);
-		sQueryString += "&" + ParamsCity + "=" + ARUtilities.URLEncode(m_sCity);
-		sQueryString += "&" + ParamsState + "=" + ARUtilities.URLEncode(m_sState);
-		sQueryString += "&" + ParamsCountry + "=" + ARUtilities.URLEncode(m_sCountry);
-		sQueryString += "&" + ParamsPostalCode + "=" + ARUtilities.URLEncode(m_sPostalCode);
-		sQueryString += "&" + ParamsContactName + "=" + ARUtilities.URLEncode(m_sContactName);
-		sQueryString += "&" + ParamsPhoneNumber + "=" + ARUtilities.URLEncode(m_sPhoneNumber);
-		sQueryString += "&" + ParamsFaxNumber + "=" + ARUtilities.URLEncode(m_sFaxNumber);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsCustomerNumber + "=" + clsServletUtilities.URLEncode(m_sCustomerNumber);
+		sQueryString += "&" + ParamsShipToCode + "=" + clsServletUtilities.URLEncode(m_sShipToCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamsAddressLine1 + "=" + clsServletUtilities.URLEncode(m_sAddressLine1);
+		sQueryString += "&" + ParamsAddressLine2 + "=" + clsServletUtilities.URLEncode(m_sAddressLine2);
+		sQueryString += "&" + ParamsAddressLine3 + "=" + clsServletUtilities.URLEncode(m_sAddressLine3);
+		sQueryString += "&" + ParamsAddressLine4 + "=" + clsServletUtilities.URLEncode(m_sAddressLine4);
+		sQueryString += "&" + ParamsCity + "=" + clsServletUtilities.URLEncode(m_sCity);
+		sQueryString += "&" + ParamsState + "=" + clsServletUtilities.URLEncode(m_sState);
+		sQueryString += "&" + ParamsCountry + "=" + clsServletUtilities.URLEncode(m_sCountry);
+		sQueryString += "&" + ParamsPostalCode + "=" + clsServletUtilities.URLEncode(m_sPostalCode);
+		sQueryString += "&" + ParamsContactName + "=" + clsServletUtilities.URLEncode(m_sContactName);
+		sQueryString += "&" + ParamsPhoneNumber + "=" + clsServletUtilities.URLEncode(m_sPhoneNumber);
+		sQueryString += "&" + ParamsFaxNumber + "=" + clsServletUtilities.URLEncode(m_sFaxNumber);
 				
 		return sQueryString;
 	}

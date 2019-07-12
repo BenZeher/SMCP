@@ -14,6 +14,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablepricelistcodes;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
 
 public class AREditPriceListCodesEdit extends HttpServlet {
@@ -156,7 +157,7 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 
         //Code:
 	    if(plc.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		SMPriceListCode.ParamsPriceListCode, 
 	        		plc.getM_sPriceListCode().replace("\"", "&quot;"),  
 	        		SMTablepricelistcodes.spricelistcodeLength, 
@@ -172,7 +173,7 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 	    }
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				SMPriceListCode.ParamsDescription, 
 				plc.getM_sDescription().replace("\"", "&quot;"), 
 				SMTablepricelistcodes.sdescriptionLength, 

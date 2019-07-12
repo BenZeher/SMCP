@@ -14,6 +14,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearterms;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
 
 public class AREditTermsEdit extends HttpServlet {
@@ -146,7 +147,7 @@ public class AREditTermsEdit extends HttpServlet {
 
         //Terms code:
 	    if(terms.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARTerms.ParamsTermsCode, 
 	        		terms.getM_sTermsCode().replace("\"", "&quot;"),  
 	        		SMTablearterms.sTermsCodeLength, 
@@ -168,7 +169,7 @@ public class AREditTermsEdit extends HttpServlet {
 	    }else{
 	    	sTrueOrFalse = "false";
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 			ARTerms.ParamiActive, 
 			sTrueOrFalse, 
 			"Active terms?", 
@@ -177,7 +178,7 @@ public class AREditTermsEdit extends HttpServlet {
 		);
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				ARTerms.ParamsDescription, 
         		terms.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearterms.sDescriptionLength, 
@@ -188,7 +189,7 @@ public class AREditTermsEdit extends HttpServlet {
         );
 
 		//Discount percent:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamdDiscountPercent,
         		terms.getM_dDiscountPercent().replace("\"", "&quot;"), 
         		18, 
@@ -199,7 +200,7 @@ public class AREditTermsEdit extends HttpServlet {
         );
 
 		//iDiscountNumberOfDays
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDiscountNumberOfDays,
         		terms.getM_iDiscountNumberOfDays().replace("\"", "&quot;"), 
         		3, 
@@ -210,7 +211,7 @@ public class AREditTermsEdit extends HttpServlet {
         );
 		
 		//iDiscountDayOfTheMonth
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDiscountDayOfTheMonth,
         		terms.getM_iDiscountDayOfTheMonth().replace("\"", "&quot;"), 
         		3, 
@@ -221,7 +222,7 @@ public class AREditTermsEdit extends HttpServlet {
         );
 		
 		//iDueNumberOfDays
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDueNumberOfDays,
         		terms.getM_iDueNumberOfDays().replace("\"", "&quot;"), 
         		3, 
@@ -232,7 +233,7 @@ public class AREditTermsEdit extends HttpServlet {
         );
 		
 		//iDueDayOfTheMonth
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDueDayOfTheMonth,
         		terms.getM_iDueDayOfTheMonth().replace("\"", "&quot;"), 
         		3, 

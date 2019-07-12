@@ -19,6 +19,7 @@ import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 public class ARDisplayMatchingTransactions extends HttpServlet {
 
 	
@@ -102,7 +103,7 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 					"<META http-equiv='Refresh' content='0;URL=" 
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARActivityInquiry"
 					+ "?Warning=Error loading customer from database!"
-					+ "&CustomerNumber=" + ARUtilities.URLEncode(cust.getM_sCustomerNumber())
+					+ "&CustomerNumber=" + clsServletUtilities.URLEncode(cust.getM_sCustomerNumber())
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "'>"		
 				);
@@ -231,7 +232,7 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 		sOutPut += "<TD>" + sDocNumber + "</TD>";
 		sOutPut += "<TD>" + ARDocumentTypes.Get_Document_Type_Label(iDocType) + "</TD>";
 		sOutPut += "<TD ALIGN = RIGHT>" + sAmount + "</TD>";
-		sOutPut += "<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>";
+		sOutPut += "<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>";
 		
 		String SQL = "SELECT * FROM " + SMTableartransactions.TableName
 			+ " WHERE ("

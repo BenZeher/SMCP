@@ -19,6 +19,7 @@ import ConnectionPool.WebContextParameters;
 import SMDataDefinition.*;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 public class ARActivityInquiry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -182,7 +183,7 @@ public class ARActivityInquiry extends HttpServlet {
 	    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
 	    	}
 	    }
-	    out.println(ARUtilities.Build_HTML_Table(6, alDocTypes, 0, false));
+	    out.println(clsServletUtilities.Build_HTML_Table(6, alDocTypes, 0, false));
 	    out.println("</TD></TR>");
 	    out.println("</TABLE>");
 	    out.println("<P><INPUT TYPE=SUBMIT NAME='Submit' VALUE='Inquire' STYLE='width: 2.00in; height: 0.24in'></P>");

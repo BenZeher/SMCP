@@ -22,7 +22,6 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsStringFunctions;
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -309,7 +308,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 		sOutPut += "</TD>\n";
 		
 		sOutPut += "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sLastEditedDate);
+		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sLastEditedDate);
 		sOutPut += "</TD>\n";
 		
 		sOutPut += "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

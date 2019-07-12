@@ -21,6 +21,7 @@ import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 public class ARPrintStatementsSelection  extends HttpServlet {
 
@@ -244,7 +245,7 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 		    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
 		    	}
 		    }
-		    out.println(ARUtilities.Build_HTML_Table(5, alDocTypes, 0, false));
+		    out.println(clsServletUtilities.Build_HTML_Table(5, alDocTypes, 0, false));
 		    out.println("</TD></TR></TABLE></TD></TR>");
 		    
 	        out.println("</TABLE><BR><BR>");

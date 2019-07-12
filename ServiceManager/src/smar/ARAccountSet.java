@@ -16,6 +16,7 @@ import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class ARAccountSet extends java.lang.Object{
@@ -355,17 +356,17 @@ public class ARAccountSet extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsAcctSetCode + "=" + ARUtilities.URLEncode(m_sAcctSetCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamdsAcctsReceivableControlAcct + "=" + ARUtilities.URLEncode(m_sAcctsReceivableControlAcct);
-		sQueryString += "&" + ParamsReceiptDiscountsAcct + "=" + ARUtilities.URLEncode(m_sReceiptDiscountsAcct);
-		sQueryString += "&" + ParamsPrepaymentLiabilityAcct + "=" + ARUtilities.URLEncode(m_sPrepaymentLiabilityAcct);
-		sQueryString += "&" + ParamsWriteOffAcct + "=" + ARUtilities.URLEncode(m_sWriteOffAcct);
-		sQueryString += "&" + ParamsRetainageAcct + "=" + ARUtilities.URLEncode(m_sRetainageAcct);
-		sQueryString += "&" + ParamsCashAcct + "=" + ARUtilities.URLEncode(m_sCashAcct);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsAcctSetCode + "=" + clsServletUtilities.URLEncode(m_sAcctSetCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamdsAcctsReceivableControlAcct + "=" + clsServletUtilities.URLEncode(m_sAcctsReceivableControlAcct);
+		sQueryString += "&" + ParamsReceiptDiscountsAcct + "=" + clsServletUtilities.URLEncode(m_sReceiptDiscountsAcct);
+		sQueryString += "&" + ParamsPrepaymentLiabilityAcct + "=" + clsServletUtilities.URLEncode(m_sPrepaymentLiabilityAcct);
+		sQueryString += "&" + ParamsWriteOffAcct + "=" + clsServletUtilities.URLEncode(m_sWriteOffAcct);
+		sQueryString += "&" + ParamsRetainageAcct + "=" + clsServletUtilities.URLEncode(m_sRetainageAcct);
+		sQueryString += "&" + ParamsCashAcct + "=" + clsServletUtilities.URLEncode(m_sCashAcct);
 		return sQueryString;
 	}
 	public boolean delete(String sAcctSetCode, ServletContext context, String sDBID){

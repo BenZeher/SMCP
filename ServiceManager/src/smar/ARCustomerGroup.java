@@ -4,6 +4,7 @@ import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 import java.sql.ResultSet;
@@ -272,13 +273,13 @@ public class ARCustomerGroup extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsGroupCode + "=" + ARUtilities.URLEncode(m_sGroupCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamsLastEditUserFullName + "=" + ARUtilities.URLEncode(m_sLastEditUserFullName);
-		sQueryString += "&" + ParamlLastEditUserID + "=" + ARUtilities.URLEncode(m_lLastEditUserID);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsGroupCode + "=" + clsServletUtilities.URLEncode(m_sGroupCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamsLastEditUserFullName + "=" + clsServletUtilities.URLEncode(m_sLastEditUserFullName);
+		sQueryString += "&" + ParamlLastEditUserID + "=" + clsServletUtilities.URLEncode(m_lLastEditUserID);
 				
 		return sQueryString;
 	}

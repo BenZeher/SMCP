@@ -13,6 +13,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
 public class ARClearPaidTransactionsSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -59,7 +60,7 @@ public class ARClearPaidTransactionsSelection extends HttpServlet {
 	    
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>");
 		out.println("<TR>");
-	    out.println(ARUtilities.Create_Edit_Form_DateText_Input_Row(
+	    out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_DateText_Input_Row(
 	    		"ClearingDate", 
 	    		"1/1/1900", 
 	    		10, 

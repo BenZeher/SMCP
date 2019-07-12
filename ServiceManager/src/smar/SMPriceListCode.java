@@ -14,6 +14,7 @@ import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class SMPriceListCode extends java.lang.Object{
@@ -233,9 +234,9 @@ public class SMPriceListCode extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsPriceListCode + "=" + ARUtilities.URLEncode(m_sPriceListCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsPriceListCode + "=" + clsServletUtilities.URLEncode(m_sPriceListCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
 		return sQueryString;
 	}
 	public void delete(String sPriceListCode, ServletContext context, String sDBID) throws Exception{

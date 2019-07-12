@@ -6,10 +6,12 @@ import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTableartransactionline;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTableglaccounts;
+import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import SMDataDefinition.SMTableentries;
@@ -439,7 +441,7 @@ public class AREditReversalEntry extends HttpServlet {
 			    	/*
 					line = new ARLineInput();
 					line.setAmount(
-						ARUtilities.BigDecimalTo2DecimalSTDFormat(
+						clsCreateHTMLFormFields.BigDecimalTo2DecimalSTDFormat(
 							m_Transaction.getdOriginalAmount().subtract(bdCalculatedLineTotal)));
 					line.setApplyToOrderNumber("");
 					line.setComment("Reversing Doc ID " + m_sApplyToDocumentID);
@@ -650,7 +652,7 @@ public class AREditReversalEntry extends HttpServlet {
         //Doc date:
 		m_pwOut.println("<TD>");
 		
-		m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         		AREntryInput.ParamDocDate, 
         		clsStringFunctions.filter(m_EntryInput.getsDocDate()), 
         		10, 
@@ -722,9 +724,9 @@ public class AREditReversalEntry extends HttpServlet {
 		
         //Description:
 		m_pwOut.println("<TD>");
-		m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+		m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         		AREntryInput.ParamDocDescription, 
-        		ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(m_EntryInput.getsDocDescription())), 
+        		clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(m_EntryInput.getsDocDescription())), 
         		SMTableentries.sdocdescriptionLength, 
         		"Description:", 
         		"",
@@ -811,7 +813,7 @@ public class AREditReversalEntry extends HttpServlet {
 		m_pwOut.println("<TD>Out of balance: <B>" + m_EntryInput.getsUndistributedAmount() + "</B></TD>");		
 		//Description:
 		m_pwOut.println("<TD>Description: <B>"
-        		+ ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(m_EntryInput.getsDocDescription())) 
+        		+ clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(m_EntryInput.getsDocDescription())) 
         		+ "</B></TD>");
         
         //END ROW 2:
@@ -850,7 +852,7 @@ public class AREditReversalEntry extends HttpServlet {
         	//Apply to doc #:
         	m_pwOut.println("<TR>");
         	m_pwOut.println("<TD>");
-        	m_pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedTo())));
+        	m_pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedTo())));
         	m_pwOut.println("</TD>");
 
         	//Apply to doc ID:
@@ -909,7 +911,7 @@ public class AREditReversalEntry extends HttpServlet {
         	m_pwOut.println("<TR>");
 
         	m_pwOut.println("<TD>");
-        	m_pwOut.println(ARUtilities.Fill_In_Empty_String_For_HTML_Cell(line.getDocAppliedTo()));
+        	m_pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(line.getDocAppliedTo()));
         	m_pwOut.println("</TD>");
 
         	m_pwOut.println("<TD>");
@@ -957,7 +959,7 @@ public class AREditReversalEntry extends HttpServlet {
 
         	//Description:
             m_pwOut.println("<TD>");
-            m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getDescription()), 
@@ -970,7 +972,7 @@ public class AREditReversalEntry extends HttpServlet {
 
         	//Comment:
             m_pwOut.println("<TD>");
-            m_pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Field(
+            m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
         				clsStringFunctions.filter(line.getComment()), 

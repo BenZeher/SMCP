@@ -15,7 +15,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
-import smar.*;
 
 public class ICAccountSet extends Object{
 	public static final String ParamAddingNewRecord = "bAddingNewRecord";

@@ -50,7 +50,6 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
-import smar.ARUtilities;
 import smcontrolpanel.SMUtilities;
 import smic.ICEntryBatch;
 
@@ -617,16 +616,16 @@ public class GLAccount extends java.lang.Object{
 	
 	public String getQueryString(){
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + Paramsacctid + "=" + ARUtilities.URLEncode(m_sacctid);
-		sQueryString += "&" + Paramsformattedacctid + "=" + ARUtilities.URLEncode(m_sformattedacctid);
-		sQueryString += "&" + Paramsdescription + "=" + ARUtilities.URLEncode(m_sdescription);
-		sQueryString += "&" + Paramstype + "=" + ARUtilities.URLEncode(m_stype);
-		sQueryString += "&" + Paramicostcenterid + "=" + ARUtilities.URLEncode(m_icostcenterid);
-		sQueryString += "&" + Paramlaccountstructureid + "=" + ARUtilities.URLEncode(m_laccountstructureid);
-		sQueryString += "&" + Paramlaccountgroupid + "=" + ARUtilities.URLEncode(m_laccountgroupid);
-		sQueryString += "&" + Parambdannualbudget + "=" + ARUtilities.URLEncode(getsbdannualbudget());
-		sQueryString += "&" + Paraminormalbalancetype + "=" + ARUtilities.URLEncode(getsinormalbalancetype());
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + Paramsacctid + "=" + clsServletUtilities.URLEncode(m_sacctid);
+		sQueryString += "&" + Paramsformattedacctid + "=" + clsServletUtilities.URLEncode(m_sformattedacctid);
+		sQueryString += "&" + Paramsdescription + "=" + clsServletUtilities.URLEncode(m_sdescription);
+		sQueryString += "&" + Paramstype + "=" + clsServletUtilities.URLEncode(m_stype);
+		sQueryString += "&" + Paramicostcenterid + "=" + clsServletUtilities.URLEncode(m_icostcenterid);
+		sQueryString += "&" + Paramlaccountstructureid + "=" + clsServletUtilities.URLEncode(m_laccountstructureid);
+		sQueryString += "&" + Paramlaccountgroupid + "=" + clsServletUtilities.URLEncode(m_laccountgroupid);
+		sQueryString += "&" + Parambdannualbudget + "=" + clsServletUtilities.URLEncode(getsbdannualbudget());
+		sQueryString += "&" + Paraminormalbalancetype + "=" + clsServletUtilities.URLEncode(getsinormalbalancetype());
 		
 		if (m_iallowaspoexpense.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramiallowaspoexpense + "=" + m_iallowaspoexpense;

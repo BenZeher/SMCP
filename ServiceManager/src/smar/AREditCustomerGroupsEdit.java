@@ -14,6 +14,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomergroups;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
 
 public class AREditCustomerGroupsEdit extends HttpServlet {
@@ -162,7 +163,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 
         //Group code:
 	    if(group.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARCustomerGroup.ParamsGroupCode, 
 	        		group.getM_sGroupCode().replace("\"", "&quot;"),  
 	        		SMTablearcustomergroups.sGroupCodeLength, 
@@ -184,7 +185,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    }else{
 	    	sTrueOrFalse = "false";
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	ARCustomerGroup.ParamiActive, 
 			sTrueOrFalse, 
 			"Active group?", 
@@ -193,7 +194,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 		);
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				ARCustomerGroup.ParamsDescription, 
         		group.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearcustomergroups.sDescriptionLength, 

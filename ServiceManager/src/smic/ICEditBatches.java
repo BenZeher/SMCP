@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -394,7 +393,7 @@ public class ICEditBatches extends HttpServlet {
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += ARUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditedDate));
+		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditedDate));
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";

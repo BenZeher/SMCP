@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
@@ -18,6 +17,7 @@ import SMDataDefinition.SMTableictransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICTransactionHistory extends java.lang.Object{
 
@@ -218,7 +218,7 @@ public class ICTransactionHistory extends java.lang.Object{
 					sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICDisplayItemInformation?ItemNumber=" 
 					+ sItemNumber
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-					+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
+					+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
@@ -272,7 +272,7 @@ public class ICTransactionHistory extends java.lang.Object{
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 							+ "smic.ICEditReceiptEdit?lid=" + sReceiptNumber 
 									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-									+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sReceiptNumber) + "</A>"
+									+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sReceiptNumber) + "</A>"
 							+ "</TD>"
 					);
 				}else{

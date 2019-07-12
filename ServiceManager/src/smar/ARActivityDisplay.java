@@ -26,6 +26,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 public class ARActivityDisplay extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -410,8 +411,8 @@ public class ARActivityDisplay extends HttpServlet {
 		//Build a link into this field:
 		pwout.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smar.ARDisplayMatchingTransactions" 
     		+ "?MatchedTransactionID=" + sTransactionID
-    		+ "&CustomerNumber=" + ARUtilities.URLEncode(sCustomerNumber)
-    		+ "&DocNumber=" + ARUtilities.URLEncode(sDocNumber)
+    		+ "&CustomerNumber=" + clsServletUtilities.URLEncode(sCustomerNumber)
+    		+ "&DocNumber=" + clsServletUtilities.URLEncode(sDocNumber)
     		+ "&OpenTransactionsOnly=" + sOpenTransactionsOnly
     		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		+ "\">"
@@ -423,8 +424,8 @@ public class ARActivityDisplay extends HttpServlet {
 		pwout.println("<TD>");
 		pwout.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smar.ARDisplayMatchingTransactions" 
     		+ "?MatchedTransactionID=" + sTransactionID
-    		+ "&CustomerNumber=" + ARUtilities.URLEncode(sCustomerNumber)
-    		+ "&DocNumber=" + ARUtilities.URLEncode(sDocNumber)
+    		+ "&CustomerNumber=" + clsServletUtilities.URLEncode(sCustomerNumber)
+    		+ "&DocNumber=" + clsServletUtilities.URLEncode(sDocNumber)
     		+ "&OpenTransactionsOnly=" + sOpenTransactionsOnly
     		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		+ "\">"
@@ -461,10 +462,10 @@ public class ARActivityDisplay extends HttpServlet {
 		pwout.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 		+ sOrderNumber 
 		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></TD>");
+		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></TD>");
 		
-		pwout.println("<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sPONumber) + "</TD>");
-		pwout.println("<TD>" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>");
+		pwout.println("<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sPONumber) + "</TD>");
+		pwout.println("<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>");
 	}
 	
 	private void printTableHeader(PrintWriter pwOut, String sOrderBy, String sLinkMain){

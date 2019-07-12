@@ -7,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import javax.servlet.ServletContext;
-import smar.ARUtilities;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableicinventoryworksheet;
@@ -16,6 +15,7 @@ import SMDataDefinition.SMTableicphysicalcountlines;
 import SMDataDefinition.SMTableicphysicalcounts;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICPhysicalInventoryVarianceReport extends java.lang.Object{
 
@@ -266,7 +266,7 @@ public class ICPhysicalInventoryVarianceReport extends java.lang.Object{
     		+ sItem
     		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
     		+ "\">" 
-    		+ ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>";
+    		+ clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>";
 		
 		pwOut.println("<TD><FONT SIZE=2>" + sReportItemNumber + "</FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2>" + sItemDesc + "</FONT></TD>");

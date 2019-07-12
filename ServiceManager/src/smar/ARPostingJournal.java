@@ -61,6 +61,9 @@ public class ARPostingJournal extends java.lang.Object{
 	private BigDecimal m_bdInvoiceTotal;
 	private BigDecimal m_bdReceiptTotal;
 	private BigDecimal m_bdAdjustmentTotal;
+	private static int AR_INVOICE = 0;
+	private static int AR_CASH = 1;
+	private static int AR_ADJUSTMENT = 0;
 	
 	ARPostingJournal(
     		String sStartingBatchNumber,
@@ -473,13 +476,13 @@ public class ARPostingJournal extends java.lang.Object{
 				}
 				
 				m_lTransactionCount++;
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_INVOICE){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_INVOICE){
 					m_bdInvoiceTotal = m_bdInvoiceTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_CASH){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_CASH){
 					m_bdReceiptTotal = m_bdReceiptTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_ADJUSTMENT){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_ADJUSTMENT){
 					m_bdAdjustmentTotal = m_bdAdjustmentTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
 			}

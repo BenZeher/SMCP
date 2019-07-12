@@ -1895,6 +1895,13 @@ public class GLFiscalYear extends java.lang.Object{
 	public final boolean isPeriodLocked(String sFiscalYear, int iPeriod, Connection conn) throws Exception{
 		String sPeriodIsLocked = "1";
 		
+		//Load the fiscal year first:
+		set_sifiscalyear(sFiscalYear);
+		try {
+			load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error [2019193817296] " + "Could not load fiscal year " + sFiscalYear + " - " + e.getMessage() + ".");
+		}
 		
 		switch (iPeriod){
 		case 1:

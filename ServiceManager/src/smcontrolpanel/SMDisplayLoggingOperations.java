@@ -28,7 +28,7 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 				request, 
 				response, 
 				getServletContext(),
-				SMSystemFunctions.SMDisplayDataDefs
+				SMSystemFunctions.SMDisplayLoggingOperations
 		)
 		){
 			return;

@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1397;
+	private static final int m_CurrentDatabaseVersion = 1398;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "7/12/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14474,7 +14474,23 @@ public class SMUpdateData extends java.lang.Object{
 			//BEGIN CASE:
 			case 1396:
 				//Added by TJR 7/11/2019
-				SQL = "CREATE TABLE `glexternalcompanypulls` ("
+				SQL = "CREATE TABLE `glexternalcompanies` ("
+					+ "lid int(11) NOT NULL auto_increment"
+					+ ", sdbname varchar(64) NOT NULL DEFAULT ''"
+					+ ", scompanyname varchar(128) NOT NULL DEFAULT ''"
+					+ ", PRIMARY KEY  (`lid`)"
+					+ ", UNIQUE KEY `dbname_key` (`sdbname`)"
+					+ " ) ENGINE=InnoDB"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1397:
+				//Added by TJR 7/11/2019
+				SQL = "CREATE TABLE IF NOT EXISTS `glexternalcompanypulls` ("
 						+ "lid int(11) NOT NULL auto_increment"
 						+ ", dattimepulldate datetime NOT NULL default '0000-00-00 00:00:00'"
 						+ ", lcompanyid INT(11) NOT NULL DEFAULT '0'"

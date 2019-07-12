@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditLaborTypesAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Labor Type";
@@ -47,7 +49,7 @@ public class SMEditLaborTypesAction extends HttpServlet{
 	
 	    String sOutPut = "";
 	
-	    String sSQL = SMMySQLs.Update_LaborType_SQL(
+	    String sSQL = MySQLs.Update_LaborType_SQL(
 	    		sEditCode, 
 	    		clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTablelabortypes.sLaborName)), 
 	    		clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTablelabortypes.dMarkupAmount)), 

@@ -6,6 +6,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 import ACCPACDataDefinition.ARCSP;
+import SMClasses.MySQLs;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -163,7 +164,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
         //System.out.println("sLabel = " + sLabel);
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
+	        String sSQL = MySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();
@@ -205,7 +206,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
-		sSQLList.add((String) SMMySQLs.Delete_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel));
+		sSQLList.add((String) MySQLs.Delete_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -226,7 +227,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 			PrintWriter pwOut){
 		
 		//First, make sure there isn't a record already:
-		String sSQL = SMMySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
+		String sSQL = MySQLs.Get_SiteLocations_By_Code(sCustomerNumber, sCustomerShipTo, sLabel);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -243,7 +244,7 @@ public class SMEditSiteLocationsEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel);
+		sSQL = MySQLs.Add_New_SiteLocation_SQL(sCustomerNumber, sCustomerShipTo, sLabel);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

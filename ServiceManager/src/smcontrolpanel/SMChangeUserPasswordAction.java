@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
 
@@ -106,7 +107,7 @@ public class SMChangeUserPasswordAction extends HttpServlet {
 			){
 		
 		try{
-	        String sSQL = SMMySQLs.Get_User_Password_Check_SQL(clsDatabaseFunctions.FormatSQLStatement(sUserName), clsDatabaseFunctions.FormatSQLStatement(sCurrentPassword));
+	        String sSQL = MySQLs.Get_User_Password_Check_SQL(clsDatabaseFunctions.FormatSQLStatement(sUserName), clsDatabaseFunctions.FormatSQLStatement(sCurrentPassword));
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    if (rs.next()){
 		    	String sHashedPw = rs.getString("sHashedPw");
@@ -139,7 +140,7 @@ public class SMChangeUserPasswordAction extends HttpServlet {
 			){
 	
 		//System.out.println("*** Into Check Current PAssword)");
-		String sSQL = SMMySQLs.Update_User_Password_SQL(clsDatabaseFunctions.FormatSQLStatement(sUserName), clsDatabaseFunctions.FormatSQLStatement(sNewPassword));
+		String sSQL = MySQLs.Update_User_Password_SQL(clsDatabaseFunctions.FormatSQLStatement(sUserName), clsDatabaseFunctions.FormatSQLStatement(sNewPassword));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-
+import SMClasses.MySQLs;
 import SMDataDefinition.*;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -59,9 +59,9 @@ public class SMSalesContactListCriteriaSelection extends HttpServlet {
         	out.println("<TABLE CELLPADDING=10 BORDER=1>");
         	
         	//select salesperson
-        	String sSQL = SMMySQLs.Get_Salesperson_List_SQL();
+        	String sSQL = MySQLs.Get_Salesperson_List_SQL();
         	ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (sDBID));
-        	sSQL = SMMySQLs.Get_User_By_Username(sUserName);
+        	sSQL = MySQLs.Get_User_By_Username(sUserName);
         	ResultSet rsUserInfo = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	String sDefaultSPCode;
         	if (rsUserInfo.next()){

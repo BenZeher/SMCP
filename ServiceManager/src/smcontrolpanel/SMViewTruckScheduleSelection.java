@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.*;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -156,7 +157,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			out.println("</TR>");
 
 			//select service type
-			sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
+			sSQL = MySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMUnbilledContractReportCriteriaSelection");
 			out.println("<TR><TD ALIGN=RIGHT><H4>If the job OR mechanic is associated with these service types:&nbsp;</H4></TD><TD>");

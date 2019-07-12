@@ -1,5 +1,6 @@
 package smcontrolpanel;
 
+import SMClasses.MySQLs;
 import SMClasses.SMAppointment;
 import SMDataDefinition.*;
 import ServletUtilities.clsServletUtilities;
@@ -112,9 +113,9 @@ public class SMSalesContactEdit extends HttpServlet {
 	    		out.println("<TR><TD ALIGN=RIGHT>Sales Contact ID:&nbsp;</TD><TD>" 
 		    			+ "<B>(NEW)</B>" + "</TD></TR>");
 	    		//Salesperson
-	    		String sSQL = SMMySQLs.Get_Salesperson_List_SQL();
+	    		String sSQL = MySQLs.Get_Salesperson_List_SQL();
 	    		ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-	        	sSQL = SMMySQLs.Get_User_By_Username((String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME));
+	        	sSQL = MySQLs.Get_User_By_Username((String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME));
 	        	ResultSet rsUserInfo = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        	String sDefaultSPCode;
 	        	if (rsUserInfo.next()){
@@ -208,8 +209,10 @@ public class SMSalesContactEdit extends HttpServlet {
 	    }else{
 	    	//modify existing sales contact record
 	    	try{
-		    	String sSQL = SMMySQLs.Get_Sales_Contact_By_ID_SQL(Integer.parseInt(request.getParameter("id")));
-		    	ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+	    		String sSQL = "SELECT * FROM " + SMTablesalescontacts.TableName + 
+	    				" WHERE" + 
+	    				" " + SMTablesalescontacts.id + " = " + Integer.parseInt(request.getParameter("id"));
+	    		ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    	if (rs.next()){
 		    		//Contact ID:
 		    		out.println("<INPUT TYPE=\"HIDDEN\" NAME=\"id\" VALUE=" + request.getParameter("id") + "><BR>");
@@ -217,7 +220,7 @@ public class SMSalesContactEdit extends HttpServlet {
 		    			+ request.getParameter("id") + "</B></TD></TR>");
 		    		
 		    		//Salesperson
-		    		sSQL = SMMySQLs.Get_Salesperson_By_Salescode(rs.getString(SMTablesalescontacts.salespersoncode));
+		    		sSQL = MySQLs.Get_Salesperson_By_Salescode(rs.getString(SMTablesalescontacts.salespersoncode));
 		    		ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD>"); 
 	    			while (rsSalesperson.next()){
@@ -615,7 +618,9 @@ public class SMSalesContactEdit extends HttpServlet {
     		String sCustomerName = "";
     		//Get the default user to create an appointment with
    		 try {
-	    	String sSQL = SMMySQLs.Get_Sales_Contact_By_ID_SQL(iSalesContactID);
+	    	String sSQL = "SELECT * FROM " + SMTablesalescontacts.TableName + 
+	  			  " WHERE" + 
+				  	" " + SMTablesalescontacts.id + " = " + iSalesContactID;
 	    	ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    	if(rs.next()){
 	    	 sSalespersonCode = rs.getString(SMTablesalescontacts.salespersoncode);

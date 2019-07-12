@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
 
@@ -81,7 +82,7 @@ public class SMManagePasswordsAction extends HttpServlet {
 			String sNewPassword
 			){
 	
-		String sSQL = SMMySQLs.Update_User_Password_SQL(sUserName, sNewPassword);
+		String sSQL = MySQLs.Update_User_Password_SQL(sUserName, sNewPassword);
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;

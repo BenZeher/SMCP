@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTableglaccounts;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
@@ -71,7 +71,7 @@ public class GLEditAccounts extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = SMMySQLs.Get_GL_Account_List_SQL(true);
+	        String sSQL = MySQLs.Get_GL_Account_List_SQL(true);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        		sSQL, 
 	        		getServletContext(), 

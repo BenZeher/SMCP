@@ -6,6 +6,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import SMClasses.MySQLs;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -59,9 +61,9 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
         	out.println("<TABLE BORDER=10 CELLPADDING=10>");
         	
         	//Starting salesperson
-        	String sSQL = SMMySQLs.Get_Salesperson_List_SQL();
+        	String sSQL = MySQLs.Get_Salesperson_List_SQL();
         	ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (sDBID));
-        	sSQL = SMMySQLs.Get_User_By_Username(sUserName);
+        	sSQL = MySQLs.Get_User_By_Username(sUserName);
         	ResultSet rsUserInfo = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	String sDefaultSPCode;
         	if (rsUserInfo.next()){
@@ -92,7 +94,7 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
     		//Project Type
     		ArrayList<String> alValues = new ArrayList<String>(0);
     		ArrayList<String> alTexts = new ArrayList<String>(0);
-    		sSQL = SMMySQLs.Get_Project_Type_SQL();
+    		sSQL = "SELECT * FROM " + SMTableprojecttypes.TableName;
     		ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     		alValues.add("0");
     		alTexts.add("All Types");

@@ -18,6 +18,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class CustomerCallLogEntry extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -131,7 +133,7 @@ public class CustomerCallLogEntry extends HttpServlet {
 	    
 	    try{ 
 		    //order source list
-	        String sSQL = SMMySQLs.Get_OrderSource_List_SQL();
+	        String sSQL = MySQLs.Get_OrderSource_List_SQL();
 	        //System.out.println("OrderSource SQL: " + sSQL);
 	        ResultSet rsOrderSources = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID));
 	    	out.println ("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Order Source</B></FONT></TD><TD VALIGN=CENTER><SELECT NAME=\"OrderSource\">");

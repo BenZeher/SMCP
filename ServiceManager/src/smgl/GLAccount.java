@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.MySQLs;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
@@ -48,7 +49,6 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
 import smar.ARUtilities;
-import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMUtilities;
 import smic.ICEntryBatch;
 
@@ -137,7 +137,7 @@ public class GLAccount extends java.lang.Object{
     	Connection conn
     	){
     
-	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
+	    String SQL = MySQLs.Get_GL_Account_SQL(sAccountID);
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
 			rs.next();
@@ -175,7 +175,7 @@ public class GLAccount extends java.lang.Object{
         	String sDBIB
         	){
         
-    	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
+    	    String SQL = MySQLs.Get_GL_Account_SQL(sAccountID);
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     					SQL, 
@@ -206,7 +206,7 @@ public class GLAccount extends java.lang.Object{
         	return true;
         }
     public boolean save(ServletContext context, String sDBIB, String sUserFullName){
-    	String SQL = SMMySQLs.Get_GL_Account_SQL(m_sacctid);
+    	String SQL = MySQLs.Get_GL_Account_SQL(m_sacctid);
     	
 		m_sErrorMessageArray.clear();
 		if(!validateEntries(sDBIB, context, sUserFullName)){
@@ -230,7 +230,7 @@ public class GLAccount extends java.lang.Object{
 				rs.close();
 				
 				//Update the record:
-				SQL = SMMySQLs.Update_GL_Account_SQL(
+				SQL = MySQLs.Update_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -260,7 +260,7 @@ public class GLAccount extends java.lang.Object{
 				}
 				rs.close();
 				//Insert the record:
-				SQL = SMMySQLs.Insert_GL_Account_SQL(
+				SQL = MySQLs.Insert_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -640,7 +640,7 @@ public class GLAccount extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the acct exists:
-		String SQL = SMMySQLs.Get_GL_Account_SQL(sGLAcct);
+		String SQL = MySQLs.Get_GL_Account_SQL(sGLAcct);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(

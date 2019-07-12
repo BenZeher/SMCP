@@ -186,7 +186,7 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
     		//Project Type
     		ArrayList<String> alValues = new ArrayList<String>(0);
     		ArrayList<String> alTexts = new ArrayList<String>(0);
-    		sSQL = SMMySQLs.Get_Project_Type_SQL();
+    		sSQL = "SELECT * FROM " + SMTableprojecttypes.TableName;
     		ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     		alValues.add("0");
     		alTexts.add("All Types");

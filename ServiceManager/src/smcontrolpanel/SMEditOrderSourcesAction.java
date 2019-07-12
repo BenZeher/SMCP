@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditOrderSourcesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -49,7 +51,7 @@ public class SMEditOrderSourcesAction extends HttpServlet{
 	
 	    String sOutPut = "";
 	
-	    String sSQL = SMMySQLs.Update_OrderSource_SQL(
+	    String sSQL = MySQLs.Update_OrderSource_SQL(
 	    		sEditCode,
 	    		clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTableordersources.sSourceDesc))
 				);

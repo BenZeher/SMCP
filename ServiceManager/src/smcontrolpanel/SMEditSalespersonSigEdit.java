@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditSalespersonSigEdit extends HttpServlet {
 
 	public static final String SUBMIT_BUTTON_NAME = "SUBMIT";
@@ -133,7 +135,7 @@ public class SMEditSalespersonSigEdit extends HttpServlet {
 	    String sSQL = "";
 		try{
 			//Get the record to edit:
-	        sSQL = SMMySQLs.Get_Salesperson_By_Salescode(sCode);
+	        sSQL = MySQLs.Get_Salesperson_By_Salescode(sCode);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();

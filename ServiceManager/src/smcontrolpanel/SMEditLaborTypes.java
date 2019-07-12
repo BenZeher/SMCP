@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditLaborTypes extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -53,7 +55,7 @@ public class SMEditLaborTypes extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = SMMySQLs.Get_LaborType_List_SQL();
+	        String sSQL = MySQLs.Get_LaborType_List_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
         	

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.SMOption;
+import SMClasses.MySQLs;
 import SMClasses.SMAppointment;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
@@ -441,7 +442,7 @@ public class SMEditBidEntry  extends HttpServlet {
     	try{
     		//Salesperson
         	ResultSet rsUserInfo = clsDatabaseFunctions.openResultSet(
-        		SMMySQLs.Get_User_By_Username(sm.getUserName()),
+        		MySQLs.Get_User_By_Username(sm.getUserName()),
         		getServletContext(),
         		sm.getsDBID(),
         		"MySQL",
@@ -456,7 +457,7 @@ public class SMEditBidEntry  extends HttpServlet {
     	//Select list:
 	    try{
 	        ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
-	        		SMMySQLs.Get_Salesperson_List_SQL(),
+	        		MySQLs.Get_Salesperson_List_SQL(),
 	        		getServletContext(),
 	        		sm.getsDBID(),
 	        		"MySQL",
@@ -526,9 +527,10 @@ public class SMEditBidEntry  extends HttpServlet {
         //First, add a blank to make sure the user selects one:
         sValues.add("");
         sDescriptions.add("-- Select a project type --");
+    	String smSQL = "SELECT * FROM " + SMTableprojecttypes.TableName;
         try{
 			ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(
-					SMMySQLs.Get_Project_Type_SQL(), 
+					smSQL,
 	        		getServletContext(),
 	        		sm.getsDBID(),
 	        		"MySQL",
@@ -608,7 +610,7 @@ public class SMEditBidEntry  extends HttpServlet {
         sDescriptions.add("-- Select a marketing source --");
         try{ 
 		    //order source list
-	        String sSQL = SMMySQLs.Get_OrderSource_List_SQL();
+	        String sSQL = MySQLs.Get_OrderSource_List_SQL();
 	        ResultSet rsOrderSources = clsDatabaseFunctions.openResultSet(sSQL, 
 				 getServletContext(), 
 				 sm.getsDBID(),
@@ -1055,7 +1057,7 @@ public class SMEditBidEntry  extends HttpServlet {
 	    	//Select list:
 		    try{
 		        ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
-		        		SMMySQLs.Get_Salesperson_List_SQL(),
+		        		MySQLs.Get_Salesperson_List_SQL(),
 		        		getServletContext(),
 		        		sm.getsDBID(),
 		        		"MySQL",

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditWorkPerformedCodes extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -55,7 +57,7 @@ public class SMEditWorkPerformedCodes extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = SMMySQLs.Get_WorkPerformedCode_List_SQL();
+	        String sSQL = MySQLs.Get_WorkPerformedCode_List_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );
         	
@@ -117,7 +119,7 @@ public class SMEditWorkPerformedCodes extends HttpServlet {
 		//Build a list of Service Types:
 		sOutPut += "<P>Service Type For New " + sObjectName + ": ";
 		try{
-	        String sSQL = SMMySQLs.Get_Servicetypes_SQL();
+	        String sSQL = MySQLs.Get_Servicetypes_SQL();
 	        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        sOutPut += "<SELECT NAME=\"NewServiceType\">";
         	

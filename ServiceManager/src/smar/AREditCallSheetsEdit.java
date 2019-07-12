@@ -10,9 +10,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
-import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTablecallsheets;
@@ -236,7 +236,7 @@ public class AREditCallSheetsEdit  extends HttpServlet {
         sDescriptions.add("-- Set Responsibility --");
 	    try{
 	        ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(
-	        		SMMySQLs.Get_Salesperson_List_SQL(),
+	        		MySQLs.Get_Salesperson_List_SQL(),
 	        		getServletContext(),
 	        		sm.getsDBID(),
 	        		"MySQL",

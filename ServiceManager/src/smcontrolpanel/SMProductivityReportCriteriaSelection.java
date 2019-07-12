@@ -5,6 +5,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import SMClasses.MySQLs;
+
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -87,7 +89,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
         	
         	try{ 
     		    //Location List
-    	        String sSQL = SMMySQLs.Get_Locations_SQL();
+    	        String sSQL = MySQLs.Get_Locations_SQL();
     	        //System.out.println("Location SQL: " + sSQL);
     	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     	    	out.println("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Location</B></FONT></TD><TD VALIGN=CENTER>");
@@ -101,7 +103,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 		        out.println ("</TD></TR>");
     	    
 		        //Service Type List
-    	        sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
+    	        sSQL = MySQLs.Get_Distinct_Servicetypes_SQL();
     	        //System.out.println("Servicetype SQL: " + sSQL);
     	        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     	    	out.println("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Service Type</B></FONT></TD><TD VALIGN=CENTER>");

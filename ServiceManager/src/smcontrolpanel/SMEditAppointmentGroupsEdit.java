@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smcontrolpanel.SMSystemFunctions;
+import SMClasses.MySQLs;
 import SMClasses.SMAppointmentCalendarGroup;
 import SMDataDefinition.SMTableappointmentgroups;
 import SMDataDefinition.SMTableappointmentusergroups;
@@ -156,7 +157,7 @@ public class SMEditAppointmentGroupsEdit  extends HttpServlet {
 	        		;
 	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());
         	
-	        sSQL = SMMySQLs.Get_Appointment_Group_Users_SQL(entry.getsappointmentgroupname());
+	        sSQL = MySQLs.Get_Appointment_Group_Users_SQL(entry.getsappointmentgroupname());
 	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());
 	        
 	        String sCheckedOrNot = "";

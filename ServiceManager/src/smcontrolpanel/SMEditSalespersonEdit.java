@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableusers;
@@ -137,7 +138,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
         String sSQL = "";
 		try{
 			//Get the record to edit:
-	        sSQL = SMMySQLs.Get_Salesperson_By_Salescode(sCode);
+	        sSQL = MySQLs.Get_Salesperson_By_Salescode(sCode);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();
@@ -312,7 +313,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 	private void Add_Record(String sCode, String sDBID, PrintWriter pwOut) throws Exception{
 		
 		//First, make sure there isn't a user by this name already:
-		String sSQL = SMMySQLs.Get_Salesperson_By_Salescode(sCode);
+		String sSQL = MySQLs.Get_Salesperson_By_Salescode(sCode);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -325,7 +326,7 @@ public class SMEditSalespersonEdit extends HttpServlet {
 		}catch(SQLException ex){
 			throw new Exception("Error [1391451569] checking if " + sObjectName + " '" + sCode + "' already exists - " + ex.getMessage());
 		}
-		sSQL = SMMySQLs.Add_New_Salesperson_SQL(sCode);
+		sSQL = MySQLs.Add_New_Salesperson_SQL(sCode);
 		try {
 			if(!clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID)){
 				throw new Exception("Could not add " + sObjectName + " '" + sCode + "' with SQL: " + sSQL);

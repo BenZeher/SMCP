@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditSiteLocationsAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	private static String sObjectName = "Site Location";
@@ -51,7 +53,7 @@ public class SMEditSiteLocationsAction extends HttpServlet{
 	
 	    String sOutPut = "";
 	
-	    String sSQL = SMMySQLs.Update_SiteLocation_SQL(
+	    String sSQL = MySQLs.Update_SiteLocation_SQL(
 	    		sCustomerNumber, 
 	    		sCustomerShipTo, 
 	    		sLabel, 

@@ -1,5 +1,6 @@
 package smcontrolpanel;
 
+import SMClasses.MySQLs;
 import SMClasses.SMUser;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsDatabaseFunctions;
@@ -72,7 +73,7 @@ public class SMEditUsersSelection extends HttpServlet {
 	    //Add drop down list
 		try{
 			String sUserPrefix = "";
-	        String sSQL = SMMySQLs.Get_User_List_SQL(true);
+	        String sSQL = MySQLs.Get_User_List_SQL(true);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"" + SMUser.Paramlid + "\">" );
         	

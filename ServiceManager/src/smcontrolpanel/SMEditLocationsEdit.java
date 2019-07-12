@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import smar.ARUtilities;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablelocations;
@@ -141,7 +142,7 @@ public class SMEditLocationsEdit extends HttpServlet {
         
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_Location_By_Code(sCode);
+	        String sSQL = MySQLs.Get_Location_By_Code(sCode);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
@@ -582,7 +583,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		}
 
 		//Include all the SQLs needed to delete a record:
-		sSQLList.add((String) SMMySQLs.Delete_Location_SQL(sCode));
+		sSQLList.add((String) MySQLs.Delete_Location_SQL(sCode));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -598,7 +599,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 	private void Add_Record(String sCode, String sDBID, PrintWriter pwOut) throws Exception{
 		
 		//First, make sure there isn't a user by this name already:
-		String sSQL = SMMySQLs.Get_Location_By_Code(sCode);
+		String sSQL = MySQLs.Get_Location_By_Code(sCode);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -611,7 +612,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 		}catch(SQLException ex){
 			throw new Exception("Error [1439993937] checking for existing location with SQL: " + sSQL + " - " + ex.getMessage());
 		}
-		sSQL = SMMySQLs.Add_New_Location_SQL(sCode);
+		sSQL = MySQLs.Add_New_Location_SQL(sCode);
 
 		Connection conn = null;
 		try {

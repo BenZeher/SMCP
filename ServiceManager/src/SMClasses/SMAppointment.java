@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import smcontrolpanel.SMBidEntry;
 import smcontrolpanel.SMGeocoder;
-import smcontrolpanel.SMMySQLs;
 import SMDataDefinition.SMTableappointments;
+import SMDataDefinition.SMTablesalescontacts;
 import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -513,7 +513,9 @@ public class SMAppointment extends clsMasterEntry{
         	try{
         		int icontactid = Integer.parseInt(m_isalescontactid);
 
-        		String sSQL = SMMySQLs.Get_Sales_Contact_By_ID_SQL(icontactid);
+        		String sSQL = "SELECT * FROM " + SMTablesalescontacts.TableName + 
+        				" WHERE" + 
+        				" " + SMTablesalescontacts.id + " = " + icontactid;
         		ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	    		if(!rs.next()){
 	    			sErrors += "Sales contact ID '" + m_isalescontactid + "' does not exist. ";

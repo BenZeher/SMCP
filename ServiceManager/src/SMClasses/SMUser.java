@@ -6,7 +6,6 @@ import java.sql.Statement;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import smcontrolpanel.SMEditUsersSelection;
-import smcontrolpanel.SMMySQLs;
 import SMDataDefinition.SMTableappointments;
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablereminders;
@@ -248,14 +247,14 @@ public class SMUser extends clsMasterEntry{
 		}
     	//Check if this username is already in use.
     	String SQL = "";
-			String sSQL = SMMySQLs.Get_User_By_UserID(getlid());
+			String sSQL = MySQLs.Get_User_By_UserID(getlid());
 			try{
 				//System.out.println(sSQL);
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 				if (rs.next()){
 					//This username has been changed or this is a new record check to see if the username is on another record.
 					if(rs.getString(SMTableusers.sUserName).compareToIgnoreCase(getsUserName()) != 0 || bIsNewRecord()) {	
-						sSQL = SMMySQLs.Get_User_By_Username(getsUserName());
+						sSQL = MySQLs.Get_User_By_Username(getsUserName());
 						ResultSet rsCheck = clsDatabaseFunctions.openResultSet(sSQL, conn);
 						//This user already exists, so we can't add it:
 						if (rsCheck.next()){

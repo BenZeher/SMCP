@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsServletUtilities;
@@ -86,7 +87,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    if (iProjectType == 0){
 	    	alCriteria.add("<FONT SIZE=2><B>Project Type:</B>&nbsp;ALL</FONT>");
 	    }else{
-		    sSQL = SMMySQLs.Get_Project_Type_List_SQL();
+		    sSQL = MySQLs.Get_Project_Type_List_SQL();
 		    try{
 			    ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			    while (rsProjectTypes.next()){

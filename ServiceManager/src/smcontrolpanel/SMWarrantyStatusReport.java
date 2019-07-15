@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -40,18 +41,20 @@ public class SMWarrantyStatusReport extends java.lang.Object{
     	
     	//print out the column headers.
     	//Salesperson, date, job#, customer, amount, MU, truck days, avg MU/TD
-    	out.println("<TABLE BORDER=0 WIDTH=100%>");
-		out.println("<TR>" + 
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Loc</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Exp. Date</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Order #</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Bill to</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Ship To</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Project Mgr</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Phone</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Sales</FONT></B></TD>" +
-		"</TR>" + 
-   		"<TR><TD COLSPAN=8><HR></TD><TR>");
+    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Loc</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Exp. Date</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order #</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill to</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ship to</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Project Mgr</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Phone</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Sales</TD>");
+		out.println("</TR>"); 
+    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	out.println("<TD COLSPAN=\"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+		out.println("</TR>"); 
 
     	String SQL = "SELECT "
     		+ SMTableorderheaders.datwarrantyexpiration + " AS ExpirationDate"
@@ -102,22 +105,29 @@ public class SMWarrantyStatusReport extends java.lang.Object{
 			//System.out.println("Warranty Status SQL = " + SQL);
     	try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			int iCount = 0;
 			while(rs.next()){
-    			out.println("<TR>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sLocation) + "</FONT></TD>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsDateAndTimeConversions.utilDateToString(rs.getDate("ExpirationDate"),"MM/dd/yyyy") + "</FONT></TD>");
+				if(iCount % 2 == 0) {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}
 				
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>"
-    					+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString("JobNumber") 
-    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-    					+ "\">" + rs.getString("JobNumber") + "</A>" 
-    					+ "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sBillToName) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sShipToName) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sBillToContact) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sBillToPhone) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.sSalesperson) + "</FONT></TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sLocation) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDateAndTimeConversions.utilDateToString(rs.getDate("ExpirationDate"),"MM/dd/yyyy") + "</TD>");
+		    	
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" +  
+		    	"<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString("JobNumber") 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+				+ "\">" + rs.getString("JobNumber") + "</A>"  + "</TD>");
+		    	
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sBillToName) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sShipToName) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sBillToContact) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sBillToPhone) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableorderheaders.sSalesperson) + "</TD>");
     			out.println("</TR>");
+    			iCount++;
 			}
 			rs.close();
 
@@ -128,7 +138,6 @@ public class SMWarrantyStatusReport extends java.lang.Object{
 			m_sErrorMessage = "Error in " + this.toString() + ":processReport - " + e.getMessage();
 			return false;
 		}
-		out.println("</TABLE>");
 		return true;
 	}
 

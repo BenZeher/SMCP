@@ -74,8 +74,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Cost</FONT></B></TD>" +
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Price</FONT></B></TD>" +
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Tax</FONT></B></TD>" +
-			"</TR>" + 
-	   		"<TR><TD COLSPAN=13><HR></TD><TR>");
+			"</TR>");
     	}else{
     		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">" + 
 			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
@@ -89,8 +88,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Cost</FONT></B></TD>" +
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Price</FONT></B></TD>" +
 			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Tax</FONT></B></TD>" +
-    			"</TR>" + 
-    	   		"<TR><TD COLSPAN=13><HR></TD><TR>");
+    			"</TR>");
     		
     	}
     	String sCurrentCategory = "";

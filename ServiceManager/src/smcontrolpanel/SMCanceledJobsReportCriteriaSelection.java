@@ -91,7 +91,7 @@ public class SMCanceledJobsReportCriteriaSelection extends HttpServlet {
 	    	out.println("<TR><TD VALIGN=CENTER><B>Item Categories</B></TD><TD VALIGN=CENTER>");
         	out.println("<TABLE WIDTH=100% BORDER=0>");
 	        //make this criterion optional
-	        out.println("<TR><TD><INPUT TYPE=CHECKBOX NAME=CheckItemCategories VALUE=0 CHECKED>Check item categories</TD></TR>");
+	        out.println("<TR><TD><LABEL><INPUT TYPE=CHECKBOX NAME=CheckItemCategories VALUE=0 CHECKED>Check item categories</LABEL></TD></TR>");
 	        out.println("<TR><TD><HR></TD></TR>");
         	//display available status.
         	ArrayList<String> alItemCategories = new ArrayList<String>(0);
@@ -99,9 +99,9 @@ public class SMCanceledJobsReportCriteriaSelection extends HttpServlet {
         		//TBDL
         		//if (sDatabaseType.compareToIgnoreCase("MySQL") == 0){
             		alItemCategories.add(
-               			"<INPUT TYPE=CHECKBOX NAME=!!" 
+               			"<LABEL><INPUT TYPE=CHECKBOX NAME=!!" 
                			+ rsItemCategories.getString(SMTableiccategories.sCategoryCode) + " VALUE=0>" 
-               			+ rsItemCategories.getString(SMTableiccategories.sCategoryCode));
+               			+ rsItemCategories.getString(SMTableiccategories.sCategoryCode) + "<LABEL>");
         	
         	}
         	rsItemCategories.close();

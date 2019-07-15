@@ -86,7 +86,7 @@ public class SMPrintInvoiceCriteriaSelection extends HttpServlet {
 	    				+ "&ResultListField4="  + SMTableinvoiceheaders.strimmedordernumber
 	    				+ "&ResultHeading4=Order%20Number"
 	    				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    				+ "\"> Find invoice</A><HR>" +
+	    				+ "\"> Find invoice</A><HR><LABEL>" +
 	    				clsCreateHTMLFormFields.TDCheckBox("PrintMultipleInvoices", 
 	    									   bPrintMultiple, 
 	    									   "Print a range of invoices starting with the invoice above, and going through the invoice number below:") + 
@@ -98,7 +98,7 @@ public class SMPrintInvoiceCriteriaSelection extends HttpServlet {
 								""
 								) +
     			
-    	"</TD></TR>");
+    	"</LABEL></TD></TR>");
 
     	out.println("<TR><TD ALIGN=CENTER><H3>Options </H3></TD>");
     	out.println("<TD>");
@@ -116,11 +116,11 @@ public class SMPrintInvoiceCriteriaSelection extends HttpServlet {
 		
 		out.println("</SELECT>");
 		out.println("<HR>");
-    	out.println("<INPUT TYPE=\"CHECKBOX\" NAME=\"ShowExtendedPriceForEachItem\" VALUE=1>Show extended price for each item<BR>" + 
-					"<INPUT TYPE=\"CHECKBOX\" NAME=\"ShowLaborAndMaterialSubtotals\" VALUE=1>Show labor and material subtotals<BR>" +
-					"<INPUT TYPE=\"CHECKBOX\" NAME=\"ShowTaxBreakdown\" VALUE=1>Show tax breakdown<BR>" +
-					"<INPUT TYPE=\"CHECKBOX\" NAME=\"ShowALLItemsOnInvoiceIncludingDNP\" VALUE=1>Show all items on invoice (including 'DNP' items)<BR>" +
-					"<INPUT TYPE=\"CHECKBOX\" NAME=\"SuppressDetailsPageBreak\" VALUE=1>Start details immediately below totals (no page break before the details)<BR>" +
+    	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"ShowExtendedPriceForEachItem\" VALUE=1>Show extended price for each item<BR></LABEL>" + 
+					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"ShowLaborAndMaterialSubtotals\" VALUE=1>Show labor and material subtotals<BR></LABEL>" +
+					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"ShowTaxBreakdown\" VALUE=1>Show tax breakdown<BR></LABEL>" +
+					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"ShowALLItemsOnInvoiceIncludingDNP\" VALUE=1>Show all items on invoice (including 'DNP' items)<BR></LABEL>" +
+					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"SuppressDetailsPageBreak\" VALUE=1>Start details immediately below totals (no page break before the details)<BR></LABEL>" +
     				"</TD></TR>");
     	out.println("</TABLE>");
     	

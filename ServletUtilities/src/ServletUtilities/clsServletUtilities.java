@@ -1510,6 +1510,11 @@ public class clsServletUtilities {
 			+ "<link rel=\"stylesheet\" href=\"https://ajax.googleapis.com/ajax/libs/jqueryui/1.12.1/themes/base/jquery-ui.css\">";
 	}
 	
+	public static String getBootstrapCSSIncludeString (){
+		//Get local boostrap.css file
+		return "\n<link rel=\"stylesheet\" type=\"text/css\" href=\"styles/Boostrap3.4.1.css?v=1.3\" media=\"all\" />\n";
+	}
+	
 	public static String getPlacesJavascript (
 			String sPlaceHolderText,
 			String sAddressParamID, 

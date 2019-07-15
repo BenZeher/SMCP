@@ -359,57 +359,23 @@ public class SMAuthenticate{
 		s += "<HTML>"
 				+ clsServletUtilities.getJQueryIncludeString() 
 				+ clsServletUtilities.getJQueryUIIncludeString() 
+				+ clsServletUtilities.getBootstrapCSSIncludeString()
 				+ "<BODY>";
-		//Style notifications
-		s += "<style>\n";
-		if(sUpdateRquired != null) {
-			s +=  "#updatenotification {\n" 
-					+ " position: fixed;\n" 
-					+ " width: 100%;\n"  
-					+ " height: 100%;\n"  
-					+ " top: 0;\n" 
-					+ " left: 0;\n"  
-					+ " right: 0;\n"  
-					+ " bottom: 0;\n"  
-					+ " background-color: rgba(0,0,0,0.5);\n"  
-					+ " z-index: 2;\n"  
-					+ "}\n"; 
-			
-			s +=  "#updatenotificationtext {\n" 
-					+ " border: 1px solid black;"  
-					+ " align-items: center;"  
-					+ " height: 100hv;\n" 
-					+ " background-color: white;" 
-					+ " display: flex;"  
-					+ " justify-content: center;"  
-					+ "}\n"; 
-		}
-		
-		s +=  "#sessionnotification {\n" 
-				+ " position: fixed;\n"  
-				+ " margin: -10px 0 0 -10px;" 
-				+ " top: 1%;"
-				+ " padding-left: 10px;"
-				+ " padding-right: 10px;"
-				+ " left: 30%;"
-				+ " border: 1px solid transparent;" 
-				+ " border-radius: 0.25rem;"
-				+ " color: #155724;" 
-				+ " background-color: #d4edda;" 
-				+ " border-color: #c3e6cb;" 
-				+ " }\n"; 			
-		s += "</style>";		
-		
 		//HTML for notifications
-		s +="<div id = \"sessionnotification\">" 
-				+ "You have created a new session in <B>" +sCompanyName+"</B>" 
-				+ "</div> ";
 		if(sUpdateRquired != null) {
-			s += "<div id=\"updatenotification\">"
-					+ "<div id=\"updatenotificationtext\">"
+			s += "<div class=\"overlay\">"
+					+ "<div class=\"alert\" id=\"updatenotification\">"
+					+ "<div class=\"alert-info\" id=\"updatenotificationtext\">"
 					+ " Updating database from version " + sUpdateRquired + " to version " + Integer.toString(SMUpdateData.getDatabaseVersion()) + ". Please wait..."
 					+ "</div>" 
+			+ "  </div>"
 			+ "  </div>";	
+		}else {
+			s +="<div class=\"alert \" id = \"sessionnotification\">" 
+					+ "<div class=\"alert-success\" id=\"sessionnotificationtext\">"
+					+ "You have created a new session in <B>" +sCompanyName+"</B>" 
+					+ "</div>" 
+					+ "</div> ";
 		}
 		
 		//Scripts for notifications
@@ -417,11 +383,14 @@ public class SMAuthenticate{
 		
 		if(sUpdateRquired != null) {
 			s += "function asyncRequest() {\n"
+					+ " "
 					+ "var xhr = new XMLHttpRequest();\n\n" 
 	                + "xhr.onreadystatechange = function(){\n"  
 	                + "    if (this.readyState == 4 && this.status == 200){\n"
 	                + "   		if (this.responseText.includes(\"Error\")){\n"
-	                + "			     document.getElementById(\"updatenotificationtext\").style.color = 'red';\n"		
+	                + "			     document.getElementById(\"updatenotificationtext\").removeAttribute(\"class\");\n"	
+	                + "			     document.getElementById(\"updatenotificationtext\").setAttribute(\"class\", \"alert-danger\");\n"	
+	                
 	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
 	                + "    		}else{\n"
 	                + "         	document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"

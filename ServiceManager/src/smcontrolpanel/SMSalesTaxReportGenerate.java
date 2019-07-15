@@ -165,12 +165,12 @@ public class SMSalesTaxReportGenerate extends HttpServlet {
 
 	    sDetailOptions += "</B></FONT>";
 	    alCriteria.add(sDetailOptions);
-	    
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    /*************END of PARAMETER list***************/
 
     	//print out report heading and selected criteria
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-	    out.println("<TABLE BORDER=0 WIDTH=100%><TR>");
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    out.println("<TABLE BORDER=0 WIDTH=100% BGCOLOR = \""+ sColor + "\"><TR>");
 	    out.println("<TD ALIGN=LEFT VALIGN=TOP><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 		+ "\">Return to user login</A>&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
@@ -181,7 +181,8 @@ public class SMSalesTaxReportGenerate extends HttpServlet {
 			100,			//Width
 			0,				//Border
 			false,			//Equal Width?
-			false)			//Vertical?
+			false,
+			sColor)			//Vertical?
 		);
 	    out.println("<BR>");
 	    SMSalesTaxReport rpt = new SMSalesTaxReport();

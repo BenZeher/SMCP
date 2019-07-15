@@ -420,7 +420,7 @@ public class SMAverageMUReport extends java.lang.Object{
 			boolean bShowServiceTypeTotals,
 			PrintWriter out
 	){
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		out.println("<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ");
 		if (bShowServiceTypeTotals){
 			out.println(sCurrentServiceType + ", ");
@@ -461,7 +461,7 @@ public class SMAverageMUReport extends java.lang.Object{
 			sOutPut += "<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ";
 			sOutPut = sOutPut + "Salesperson " + sCurrentSalesperson;
 		}else{
-			sOutPut ="<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">";
+			sOutPut ="<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">";
 			sOutPut += "<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for ";
 			if (bShowServiceTypeTotals){
 				sOutPut = sOutPut + sCurrentServiceType + ", ";
@@ -502,7 +502,7 @@ public class SMAverageMUReport extends java.lang.Object{
 
 
 		if (sGroupBy.compareTo("Salesperson") == 0){
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 			out.println("<TD COLSPAN=\"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for salesperson " 
 					+ sCurrentSalesperson + ", " + sCurrentServiceType + ":</TD>");
 		}else{

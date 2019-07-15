@@ -685,7 +685,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		
 		//First, end the order header table:
 		if (bShowIndividualOrders){
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		}
 
 		//Suppress this if there are no orders:

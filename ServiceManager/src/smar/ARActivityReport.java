@@ -99,12 +99,12 @@ public class ARActivityReport extends java.lang.Object{
 	    		if (rs.getString(sCustomer).compareToIgnoreCase(sCurrentCustomer) != 0){
 	    			//Print the footer, if the record is for a new customer:
 		    		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
 		    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
 			    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
 		    			out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
 		    			out.println("</TR>");
 		    			
@@ -172,12 +172,12 @@ public class ARActivityReport extends java.lang.Object{
 			
 			//Print the last customer's totals, if at least one customer was listed:
     		if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+    			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
     			out.println("<TD COLSPAN = \"9\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>Customer total:</B></TD>");
     			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerTransactionTotal) + "</B></TD>");
 	    		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCustomerBalanceTotal) + "</B></TD>");
     			out.println("</TR>");
-    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
     			out.println("<TD COLSPAN = \"11\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp</TD>");
     			out.println("</TR>");
     	    	iCustomersPrinted++;

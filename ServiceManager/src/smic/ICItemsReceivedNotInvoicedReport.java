@@ -488,7 +488,7 @@ public class ICItemsReceivedNotInvoicedReport extends java.lang.Object{
 					SMTableicporeceiptlines.bdextendedcostScale, bdPOTotal)
 				+ "</FONT></B></TD>");
 			out.println("</TR>");
-			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING+"\">");
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER+"\">");
 			out.println("<TD COLSPAN = \"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK +"\">&nbsp;</TD>");
 			out.println("</TR>");
 		}

@@ -242,10 +242,10 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    		if (lCurrentMechanicID != 0){
 		    			if (!bShowSubtotalOnly){
 			    			//print out total for this invoice 
-				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 			    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 			    		out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 		    			out.println("</TR>");
@@ -327,10 +327,10 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    if (sCurrentInvoiceNumber.compareTo(rs.getString(SMTableinvoiceheaders.sInvoiceNumber).trim()) != 0){
 			    	if (!bShowSubtotalOnly){
 		    			//print out total for this invoice 
-			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TR><TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		    			out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 		    			out.println("</TR>");
@@ -389,10 +389,10 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    if (bHasRecord){
 			    //print out last total
 		    	if (!bShowSubtotalOnly){
-			    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		    		out.println("</TR>");
-	    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+	    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 	    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 	    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 	    			out.println("</TR>");

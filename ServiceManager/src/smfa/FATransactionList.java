@@ -326,14 +326,14 @@ public class FATransactionList extends java.lang.Object{
 									String sClass,
 									PrintWriter out){
 
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;</TD><TD><HR></TD>");
 		out.println("</TR>");
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> SUBTOTAL FOR CLASS " + sClass + ": </B></TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdClassAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
 	    out.println("</TR>");
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
 		out.println("</TR>");
 		
@@ -345,14 +345,14 @@ public class FATransactionList extends java.lang.Object{
 									 int iFP,
 									 PrintWriter out){
 
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;</TD><TD><HR></TD>");
 		out.println("</TR>");
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"9\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B> SUBTOTAL FOR YEAR " + iFY + ", PERIOD " + iFP + ": </B></TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdFPAmount.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
 	    out.println("</TR>");
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"10\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
 		out.println("</TR>");
 		

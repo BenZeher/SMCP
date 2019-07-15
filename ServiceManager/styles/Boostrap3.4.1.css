@@ -5163,6 +5163,7 @@ a.thumbnail.active {
   position:relative; 
   left:-50%;
   padding: 15px;
+  border-radius: 15px;
 }
 .alert-success hr {
   border-top-color: #c9e2b3;
@@ -5177,6 +5178,7 @@ a.thumbnail.active {
   position:relative; 
   left:-50%;
   padding: 15px;
+  border-radius: 15px;
 }
 .alert-info hr {
   border-top-color: #a6e1ec;
@@ -5191,6 +5193,7 @@ a.thumbnail.active {
   position:relative; 
   left:-50%;
   padding: 15px;
+  border-radius: 15px;
 }
 .alert-warning hr {
   border-top-color: #f7e1b5;
@@ -5205,6 +5208,7 @@ a.thumbnail.active {
   position:relative; 
   left:-50%;
   padding: 15px;
+  border-radius: 15px;
 }
 .alert-danger hr {
   border-top-color: #e4b9c0;

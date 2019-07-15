@@ -684,7 +684,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			Connection conn,
 			int iSalespersonOrderCount) throws Exception{
 		String s = "";
-		 s += "<TABLE CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
+		 s += "<TABLE WIDTH = 100% CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
 		String sOrderNumberLink = rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber);
 		if (bViewOrderInformationAllowed){
 			sOrderNumberLink = "<A href=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" +

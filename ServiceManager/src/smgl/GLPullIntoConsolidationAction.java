@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMClasses.SMBatchStatuses;
+import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTablegltransactionlines;
@@ -27,7 +28,11 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			throws ServletException, IOException {
 	
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
-		smaction.getCurrentSession().removeAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT);
+		try {
+			smaction.getCurrentSession().removeAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT);
+		} catch (Exception e2) {
+			//If this attribute isn't in the session, just go on without disruption....
+		}
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLPullExternalDataIntoConsolidation)){return;}
 	    //Read the entry fields from the request object:
 	    String sExternalCompanyID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLPullIntoConsolidationSelect.RADIO_BUTTONS_NAME, request);
@@ -135,17 +140,18 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		}
     	
     	//Make sure that all the GLs in the 'source' data are also in the consolidated company:
-    	SQL = "SELECT DISTINCT " + sDBName + "." + SMTablegltransactionlines.sacctid
+    	SQL = "SELECT DISTINCT SOURCETABLE." + SMTablegltransactionlines.sacctid
     		+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName + " AS SOURCETABLE"
-    		+ " LEFT JOIN " + SMTablegltransactionlines.TableName + " AS TARGETTABLE ON "
+    		+ " LEFT JOIN " + SMTableglaccounts.TableName + " ON "
     		+ "SOURCETABLE." + SMTablegltransactionlines.sacctid + " = "
-    		+ "TARGETTABLE." + SMTablegltransactionlines.sacctid
+    		+ SMTableglaccounts.TableName + "." + SMTablegltransactionlines.sacctid
     		+ " WHERE ("
 			+ "(SOURCETABLE." + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
 			+ " AND (SOURCETABLE." + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
-    		+ " AND (TARGETTABLE." + SMTablegltransactionlines.sacctid + " IS NULL"
+    		+ " AND (" + SMTableglaccounts.TableName + "." + SMTablegltransactionlines.sacctid + " IS NULL)"
     		+ ")"
     	;
+    	//System.out.println("[20191961339222] " + "SQL = " + SQL);
     	String sMissingAccts = "";
     	try {
 			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -160,6 +166,25 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     	if (sMissingAccts.compareToIgnoreCase("") != 0){
     		throw new Exception("Error [2019196138589] " + "These accounts are missing in the consolidated company GL:  " + sMissingAccts);
     	}
+    	
+      	//Get the last transaction ID from the gltransactions table:
+    	long lPreviousTransactionID = 0L;
+    	long lStartingTransactionID = 0L;
+    	long lEndingTransactionID = 0L;
+    	SQL = "SELECT " + SMTablegltransactionlines.lid
+    		+ " FROM " + SMTablegltransactionlines.TableName
+    		+ " ORDER BY " + SMTablegltransactionlines.lid + " DESC"
+    		+ " LIMIT 1"
+    	;
+    	try {
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()){
+				lPreviousTransactionID = rs.getLong(SMTableglexternalcompanypulls.lid);
+			}
+			rs.close();
+		} catch (Exception e2) {
+			throw new Exception("Error [20191961636255] " + "Could not read last transaction ID with SQL: '" + SQL + " - " + e2.getMessage());
+		}
     	
     	//Start a data transaction:
     	try {
@@ -191,6 +216,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     		+ " WHERE ("
     			+ "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
     			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    			+ " AND (" + SMTablegltransactionlines.bdamount + " != 0.00)"
     		+ ")"
     	;
     	try {
@@ -235,6 +261,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		}
     	
     	//Add a record to the list of 'pulls':
+    	lStartingTransactionID = lPreviousTransactionID + 1;
     	SQL = "INSERT INTO " + SMTableglexternalcompanypulls.TableName
     		+ " ("
     		+ SMTableglexternalcompanypulls.dattimepulldate
@@ -243,6 +270,8 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     		+ ", " + SMTableglexternalcompanypulls.lbatchnumber
     		+ ", " + SMTableglexternalcompanypulls.lcompanyid
     		+ ", " + SMTableglexternalcompanypulls.luserid
+    		+ ", " + SMTableglexternalcompanypulls.lstartingtransactionid
+    		+ ", " + SMTableglexternalcompanypulls.lendingtransactionid
     		+ ", " + SMTableglexternalcompanypulls.scompanyname
     		+ ", " + SMTableglexternalcompanypulls.sdbname
     		+ ", " + SMTableglexternalcompanypulls.sfullusername
@@ -253,9 +282,11 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     		+ ", " + glbatch.getsbatchnumber()
     		+ ", " + sCompanyID
     		+ ", " + sm.getUserID()
+    		+ ", " + Long.toString(lStartingTransactionID)
+    		+ ", " + Long.toString(lEndingTransactionID)
     		+ ", '" + sCompanyName + "'"
     		+ ", '" + sDBName + "'"
-    		+ ", '" + sm.getFullUserName()
+    		+ ", '" + sm.getFullUserName() + "'"
     		+ ")"
     	;
     	try {
@@ -277,7 +308,8 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 	}
 	private void checkForPreviousPull(Connection conn, String sFiscalYear, String sFiscalPeriod, String sCompanyID) throws Exception{
 		String SQL = "SELECT"
-			+ " " + SMTableglexternalcompanypulls.lid
+			+ " " + SMTableglexternalcompanypulls.dattimepulldate
+			+ ", " + SMTableglexternalcompanypulls.lid
 			+ ", " + SMTableglexternalcompanypulls.scompanyname
 			+ ", " + SMTableglexternalcompanypulls.sfullusername
 			+ " FROM " + SMTableglexternalcompanypulls.TableName

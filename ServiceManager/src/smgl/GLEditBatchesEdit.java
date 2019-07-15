@@ -181,7 +181,7 @@ public class GLEditBatchesEdit extends HttpServlet {
         		+ "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatches.sbatchdescription + "\""
         		+ " VALUE=\"" + clsStringFunctions.filter(batch.getsbatchdescription()) + "\""
         		+ " MAXLENGTH=" + Integer.toString(SMTablegltransactionbatches.sBatchDescriptionLength)
-        		+ " SIZE = " + "30"
+        		+ " SIZE = " + "50"
         		+ ">"
         		+ "\n"
         	);

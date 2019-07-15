@@ -65,9 +65,10 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
+	    //String sWarning = "";
 	    String sWarning = (String)CurrentSession.getAttribute(SESSION_WARNING_OBJECT);
 	    CurrentSession.removeAttribute(SESSION_WARNING_OBJECT);
-		if (! sWarning.equalsIgnoreCase("")){
+		if (sWarning != null){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    

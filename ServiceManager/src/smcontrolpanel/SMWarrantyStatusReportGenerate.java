@@ -153,13 +153,15 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
     			sCriteria = sCriteria + ", <B>" + sSalespersons.get(i) + "</B>";
     		}
     	}
+
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor  + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
@@ -188,6 +190,7 @@ public class SMWarrantyStatusReportGenerate extends HttpServlet {
         	return;
     	}
 
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	SMWarrantyStatusReport wsr = new SMWarrantyStatusReport();
     	if (!wsr.processReport(
     		conn, 

@@ -598,7 +598,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sCustomerNameLength, 
         		"Customer name<B><FONT COLOR=\"RED\">*</FONT></B>:",
         		"Normally the company name, up to " + SMTablearcustomer.sCustomerNameLength + " characters.",
-        		"6.4"
+        		"50"
         	)
         );
         //Address Line 1:
@@ -606,8 +606,9 @@ public class AREditCustomersEdit extends HttpServlet {
         		ARCustomer.ParamsAddressLine1 + "\" ID=\"" + ARCustomer.ParamsAddressLine1 + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sAddressLine1().replace("\"", "&quot;"), 
         		SMTablearcustomer.sAddressLine1Length,
+        		"Address Line 1:",
         		"First line of the address, up to " + SMTablearcustomer.sAddressLine1Length + " characters.",
-        		"6.4"
+        		"50"
         		)
         );
         //Address Line 2:
@@ -617,7 +618,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sAddressLine2Length, 
         		"Address Line 2:",
         		"Second line of the address, up to " + SMTablearcustomer.sAddressLine2Length + " characters.",
-        		"6.4"
+        		"50"
         		)
         );
         //Address Line 3:
@@ -627,7 +628,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sAddressLine3Length, 
         		"Address Line 3:",
         		"Third line of the address, up to " + SMTablearcustomer.sAddressLine3Length + " characters.",
-        		"6.4"
+        		"50"
         		)
         );
         //Address Line 4:
@@ -637,7 +638,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sAddressLine4Length, 
         		"Address Line 4:",
         		"Fourth line of the address, up to " + SMTablearcustomer.sAddressLine4Length + " characters.",
-        		"6.4"
+        		"50"
         		)
         );
         //City:
@@ -647,7 +648,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sCityLength, 
         		"City:",
         		"Name of city, up to " + SMTablearcustomer.sCityLength + " characters.",
-        		"6.4"
+        		Integer.toString(SMTablearcustomer.sCityLength)
         	)
 		);
         //State:
@@ -657,7 +658,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sStateLength, 
         		"State Or Province:",
         		"Up to " + SMTablearcustomer.sStateLength + " characters.",
-        		"3.2"
+        		Integer.toString(SMTablearcustomer.sStateLength)
         	)
 		);
         //Country:
@@ -667,7 +668,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sCountryLength, 
         		"Country:",
         		"Up to " + SMTablearcustomer.sCountryLength + " characters.",
-        		"6.4"
+        		Integer.toString(SMTablearcustomer.sCountryLength)
         	)
 		);
         //Postal code:
@@ -677,7 +678,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sPostalCodeLength, 
         		"Zip Or Postal Code:",
         		"Up to " + SMTablearcustomer.sPostalCodeLength + " characters.",
-        		"3.2"
+        		"10"
         	)
 		);
         //Contact name:
@@ -687,7 +688,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sContactNameLength, 
         		"Contact name:",
         		"Up to " + SMTablearcustomer.sContactNameLength + " characters.",
-        		"6.4"
+        		"50"
         	)
 		);
         //Phone:
@@ -697,7 +698,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sPhoneNumberLength, 
         		"Phone<B><FONT COLOR=\"RED\">*</FONT></B>:",
         		"Up to " + SMTablearcustomer.sPhoneNumberLength + " characters.",
-        		"3.2"
+        		Integer.toString(SMTablearcustomer.sPhoneNumberLength)
         	)
 		);
         //Fax:
@@ -707,7 +708,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sFaxNumberLength, 
         		"Fax:",
         		"Up to " + SMTablearcustomer.sFaxNumberLength + " characters.",
-        		"3.2"
+        		Integer.toString(SMTablearcustomer.sFaxNumberLength)
         	)
 		);
         //Email address:
@@ -717,7 +718,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sEmailAddressLength, 
         		"Email:",
         		"The company email address, up to " + SMTablearcustomer.sEmailAddressLength + " characters.",
-        		"6.4"
+        		"30"
         	)
        	);
         //Web address:
@@ -727,7 +728,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sWebAddressLength, 
         		"Web address:",
         		"The company web address, up to " + SMTablearcustomer.sWebAddressLength + " characters.",
-        		"6.4"
+        		"30"
         	)
        	);
         //Credit limit:
@@ -737,7 +738,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		18, 
         		"Credit limit:",
         		"Maximum credit allowed.",
-        		"3.2"
+        		"10"
         	)
 		);
 
@@ -782,7 +783,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sInvoicingContactLength, 
         		"Invoicing contact name:",
         		"Up to " + SMTablearcustomer.sInvoicingContactLength + " characters.",
-        		"6.4"
+        		"50"
         	)
 		);
         
@@ -793,7 +794,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		SMTablearcustomer.sInvoicingEmailLength, 
         		"Invoicing email:",
         		"The invoicing email address, up to " + SMTablearcustomer.sInvoicingEmailLength + " characters.",
-        		"6.4"
+        		"30"
         	)
        	);
         

@@ -145,11 +145,11 @@ public class ICTransactionHistorySelection  extends HttpServlet {
 				sChecked = "CHECKED";
 			}
 			out.println(
-				"<INPUT TYPE=CHECKBOX NAME=\"TRANSACTIONTYPE" 
+				"<LABEL><INPUT TYPE=CHECKBOX NAME=\"TRANSACTIONTYPE" 
 					+ Integer.toString(i) 
 					+ "\" " + sChecked + " width=0.25>" 
 					+ ICEntryTypes.Get_Entry_Type(i)
-					+ "<BR>"
+					+ "<BR></LABEL>"
 			);
 		}
 		

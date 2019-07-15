@@ -87,9 +87,9 @@ public class ICItemNumberMatchUpList extends java.lang.Object{
 				
 				//Print the line:
 				if(iCounter%2 == 0) {
-					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-				}else {
 					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 				}
 							
 				//Vendor Item Number 

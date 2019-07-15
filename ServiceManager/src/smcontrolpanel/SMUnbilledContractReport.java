@@ -872,9 +872,9 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			ServletContext context,
 			boolean bOddRow) throws Exception{
 		String s = "";
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN ;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD ;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
 		s += "<TR CLASS = \"" + sBackgroundColor +  " \" >";
 		
@@ -1025,9 +1025,9 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		;
 		boolean bOddRow = true;
 		for (int i = 0; i < arrGroupNames.size(); i++){
-			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 			if (bOddRow){
-				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 			}
 			s += "<TR CLASS = \"" + sBackgroundColor + "\" >"
 				+ "<TD CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +" \" >"
@@ -1049,9 +1049,9 @@ public class SMUnbilledContractReport extends java.lang.Object{
 			bdTotalPrice = bdTotalPrice.add(arrGroupPrice.get(i));
 			bOddRow = !bOddRow;
 		}
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
 		s += "<TR CLASS = \"" + sBackgroundColor + " \" >"
 				+ "<TD CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL+ " \" >"

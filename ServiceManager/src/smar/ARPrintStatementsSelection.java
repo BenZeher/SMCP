@@ -240,9 +240,9 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 		    ArrayList<String> alDocTypes = new ArrayList<String>(0);
 		    for (int i=0;i<=10;i++){
 		    	if (bSelectAllTypes){
-		    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+		    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 		    	}else{
-		    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+		    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 		    	}
 		    }
 		    out.println(clsServletUtilities.Build_HTML_Table(5, alDocTypes, 0, false));

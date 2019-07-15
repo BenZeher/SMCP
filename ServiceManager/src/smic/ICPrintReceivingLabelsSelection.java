@@ -130,9 +130,9 @@ public class ICPrintReceivingLabelsSelection  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -152,11 +152,11 @@ public class ICPrintReceivingLabelsSelection  extends HttpServlet {
 			sReceivedChecked = "CHECKED";
 			sUnreceivedChecked = "";
 		}
-		out.println("<input type=\"radio\" name=\"" + PRINT_RECEIVED_OR_UNRECEIVED_ITEMS + "\" value=\"" 
-				+ PRINT_UNRECEIVED_ITEMS_VALUE + "\"" + sUnreceivedChecked + ">" + PRINT_UNRECEIVED_ITEMS_LABEL + "<BR>");
+		out.println("<LABEL><input type=\"radio\" name=\"" + PRINT_RECEIVED_OR_UNRECEIVED_ITEMS + "\" value=\"" 
+				+ PRINT_UNRECEIVED_ITEMS_VALUE + "\"" + sUnreceivedChecked + ">" + PRINT_UNRECEIVED_ITEMS_LABEL + "<BR></LABEL>");
 
-		out.println("<input type=\"radio\" name=\"" + PRINT_RECEIVED_OR_UNRECEIVED_ITEMS + "\" value=\"" 
-				+ PRINT_RECEIVED_ITEMS_VALUE + "\"" + sReceivedChecked + ">" + PRINT_RECEIVED_ITEMS_LABEL + "<BR>");
+		out.println("<LABEL><input type=\"radio\" name=\"" + PRINT_RECEIVED_OR_UNRECEIVED_ITEMS + "\" value=\"" 
+				+ PRINT_RECEIVED_ITEMS_VALUE + "\"" + sReceivedChecked + ">" + PRINT_RECEIVED_ITEMS_LABEL + "<BR></LABEL>");
 		out.println("</TD>");
 		out.println("</TR>");
 		

@@ -325,9 +325,9 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredRemark.compareToIgnoreCase("") == 0){
 			sFilteredRemark = "&nbsp;";
 		}
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
 		String s = "<TR class = \" " + sBackgroundColor +  " \">";
 		s +=  "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \">"
@@ -357,9 +357,9 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredComment.compareToIgnoreCase("") == 0){
 			sFilteredComment = "&nbsp;";
 		}
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
 		String s = "<TR class = \"  " + sBackgroundColor +  " \">";
 		s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"

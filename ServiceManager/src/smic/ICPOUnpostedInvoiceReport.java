@@ -107,10 +107,10 @@ public class ICPOUnpostedInvoiceReport {
 						rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 				String sInvoiceIDLink = getLink(sInvoiceID, context, sDBID, sCallingClass);
 				if(alt%2 != 0) {
-					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
 					alt++;
 				}else {
-					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
 					alt++;
 				}
 				s += "    <TD class = \""

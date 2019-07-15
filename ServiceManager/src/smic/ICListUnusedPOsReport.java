@@ -80,9 +80,9 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 			while(rs.next()){
 				//Print the line:
 				if(iCount%2 ==0) {
-					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-				}else {
 					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 				}
 				
 				//PO:

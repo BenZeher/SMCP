@@ -419,12 +419,12 @@ public class ICItemValuationReport extends java.lang.Object{
 			//Print header:
 			out.println("<BR>");
 			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  +" \">");
-			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 			out.println("<TD COLSPAN = \"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><U>Cost buckets for&nbsp;item&nbsp<B>" 
 					+ sItemNumber + "</B>, location&nbsp;<B>" 
 					+ sLocation + "</B>:</U></TD>");
 			out.println("</TR>");
-			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Type</B></TD>"
 					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Remark</B></TD>"
 					+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>UOM</B></TD>"
@@ -439,9 +439,9 @@ public class ICItemValuationReport extends java.lang.Object{
 		
 
 				if(iLineNumberForLocation%2 == 0) {
-					out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-				}else {
 					out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					out.println( "<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 				}
 				out.println(
 				 "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + SMTableiccosts.getCostSourceLabel(iSource) + "</TD>"

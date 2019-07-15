@@ -95,9 +95,9 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -125,9 +125,9 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
 						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
 				}
 			}
 			rs.close();

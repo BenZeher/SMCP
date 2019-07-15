@@ -348,9 +348,9 @@ public class FAAssetList extends java.lang.Object{
 			;
 		}
 		if(iCount % 2 == 0) {
-			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-		}else {
 			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+		}else {
+			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 		}
 
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + sLocation + "</TD>");
@@ -401,11 +401,11 @@ public class FAAssetList extends java.lang.Object{
 			String sClass,
 			PrintWriter out){
 		
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
 		out.println("</TR>");
 		
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >&nbsp;</TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Purchases</B></TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>YTD Disposed</B></TD>");
@@ -418,7 +418,7 @@ public class FAAssetList extends java.lang.Object{
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Book Value Of Non-Disposed Assets</B></TD>");
 	    out.println("</TR>");
 	    
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"4\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" >" + sClass + "</TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDPurch.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdYTDDisp.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
@@ -430,7 +430,7 @@ public class FAAssetList extends java.lang.Object{
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdAccuDepOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
 		out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" + bdBookValueOfNonDisposedAssets.setScale(2, BigDecimal.ROUND_HALF_UP) + "</TD>");
 	    out.println("</TR>");
-		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\" >");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\" >");
 		out.println("<TD COLSPAN = \"13\"  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BREAK + "\" >&nbsp;&nbsp;&nbsp;&nbsp;</TD>");
 		out.println("</TR>");
 

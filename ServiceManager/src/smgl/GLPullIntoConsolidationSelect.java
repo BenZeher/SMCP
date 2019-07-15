@@ -33,6 +33,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
 	public static String PARAM_BATCH_DATE = "BATCHDATE";
+	public static final String SESSION_WARNING_OBJECT = "PULLEXTERNALCOMPANIESWARNING";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -64,7 +65,8 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+	    String sWarning = (String)CurrentSession.getAttribute(SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(SESSION_WARNING_OBJECT);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}

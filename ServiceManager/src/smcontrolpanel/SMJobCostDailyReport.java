@@ -264,9 +264,9 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					sOrderNumberLink = sOrderNumber;
 				}
 				if(iCount % 2 == 0) {
-					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD +"\">");
-				}else {
 					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN +"\">");
+				}else {
+					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD +"\">");
 				}
 
 				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + sOrderNumberLink + "</TD>");
@@ -625,7 +625,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 		//End the embedded hours table:
 		pwOut.println("</TABLE></TD></TR>");
 		
-		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		
 		pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\"><U><B>Total Hours For Day From Job Cost: </B></U><BR>" 
 			+ "Working: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdChargedHoursForDay) + "<BR>"

@@ -258,9 +258,9 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 			String sDetailRowBackgroupColor;
 			for (int i=0;i<cInvoice.getM_iNumberOfLinesOnInvoice();i++){
 				if (cInvoice.getDetailByIndex(i).getM_iLineNumber() % 2 == 0){
-					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 				}else{
-					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;			
+					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;			
 				}
 				
 				pwOut.println("<TR class =" + sDetailRowBackgroupColor + ">");

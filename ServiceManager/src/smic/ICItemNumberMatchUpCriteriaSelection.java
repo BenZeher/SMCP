@@ -104,12 +104,12 @@ public class ICItemNumberMatchUpCriteriaSelection  extends HttpServlet {
     	out.println("<TR><TD ALIGN=RIGHT><B>Sort by:</B></TD>");
 		if (clsManageRequestParameters.get_Request_Parameter(SORTBYOURITEM_PARAM, request).compareTo("1") != 0){
 	    	out.println("<TD>" + 
-	    				"<INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=0 CHECKED=\"yes\">Item Number<BR>" + 
-						"<INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=1 >Vendor item number*");  
+	    				"<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=0 CHECKED=\"yes\">Item Number<BR></LABEL>" + 
+						"<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=1 >Vendor item number*</LABEL>");  
 		}else{
 	    	out.println("<TD>" + 
-	    				"<INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=0>Item Number<BR>" + 
-						"<INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=1 CHECKED=\"yes\">Vendor item number*");  
+	    				"<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=0>Item Number<BR></LABEL>" + 
+						"<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + SORTBYOURITEM_PARAM + "\" VALUE=1 CHECKED=\"yes\">Vendor item number*</LABEL>");  
 		}
 		out.println("</TD></TR>");
 		

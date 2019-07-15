@@ -96,7 +96,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 	        	//display available status. 
 	        	ArrayList<String> alPayTypes = new ArrayList<String>(0);
 	        	while (rsLocations.next()){
-	        		alPayTypes.add("<INPUT TYPE=CHECKBOX NAME=!1!" + rsLocations.getString(SMTablelocations.sLocation) + " VALUE=0>" + rsLocations.getString(SMTablelocations.sLocation) + " - " + rsLocations.getString(SMTablelocations.sLocationDescription));
+	        		alPayTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=!1!" + rsLocations.getString(SMTablelocations.sLocation) + " VALUE=0>" + rsLocations.getString(SMTablelocations.sLocation) + " - " + rsLocations.getString(SMTablelocations.sLocationDescription) + "</LABEL>");
 	        	}
 	        	rsLocations.close();
 	        	out.println(SMUtilities.Build_HTML_Table(4, alPayTypes, 0, false));
@@ -111,8 +111,8 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 	        	ArrayList<String> alServiceTypes = new ArrayList<String>(0);
 	        	while (rsServiceTypes.next()){
 	        		if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-	        			alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=!2!" + rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) 
-		        		+ " VALUE=0>" + rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "");
+	        			alServiceTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=!2!" + rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) 
+		        		+ " VALUE=0>" + rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "</LABEL>");
 	        		}
 	        	}
 	        	rsServiceTypes.close();
@@ -139,7 +139,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
     	    	out.println("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Item Categories</B></FONT></TD><TD VALIGN=CENTER>");
             	out.println("<TABLE WIDTH=100% BORDER=0>");
     	        //make this criterion optional
-    	        out.println("<TR><TD><INPUT TYPE=CHECKBOX NAME=CheckItemCategories VALUE=0>Check item categories</TD></TR>");
+    	        out.println("<TR><TD><LABEL><INPUT TYPE=CHECKBOX NAME=CheckItemCategories VALUE=0>Check item categories<LABEL></TD></TR>");
     	        out.println("<TR><TD><HR></TD></TR>");
 	        	//display available status.
 	        	ArrayList<String> alItemCategories = new ArrayList<String>(0);
@@ -147,12 +147,12 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 	        		//TBDL
 	        		//if (sDatabaseType.compareToIgnoreCase("MySQL") == 0){
 		        		alItemCategories.add(
-		        			"<INPUT TYPE=CHECKBOX NAME=!3!" 
+		        			"<LABEL><INPUT TYPE=CHECKBOX NAME=!3!" 
 		        			+ rsItemCategories.getString(
 		        			SMTableiccategories.TableName + "." + SMTableiccategories.sCategoryCode) 
 		        			+ " VALUE=0 CHECKED>" 
 		        			+ rsItemCategories.getString(
-		        			SMTableiccategories.TableName + "." + SMTableiccategories.sCategoryCode)
+		        			SMTableiccategories.TableName + "." + SMTableiccategories.sCategoryCode) + "</LABEL>"
 		        		);
 	        		//}else{
 	        		//alItemCategories.add(

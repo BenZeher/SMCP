@@ -133,8 +133,8 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		out.println("</TABLE>");
 		
 		//Create checkboxes for batch types:
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"IncludeInvoiceBatches\" VALUE=1 CHECKED>Include invoice batches<BR>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"IncludeCashBatches\" VALUE=1 CHECKED>Include cash batches<BR>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"IncludeInvoiceBatches\" VALUE=1 CHECKED>Include invoice batches<BR></LABEL>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"IncludeCashBatches\" VALUE=1 CHECKED>Include cash batches<BR></LABEL>");
 		
 		//Submit button:
 		out.println("<BR><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Print posting journal' STYLE='height: 0.24in'>");

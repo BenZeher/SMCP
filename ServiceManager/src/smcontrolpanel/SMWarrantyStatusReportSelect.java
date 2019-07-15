@@ -22,6 +22,12 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	public static String UNSELECT_ALL_SALESPERSONS_PARAMETER = "UNSELECTALLSALESPERSONS"; 
+	private static final String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
+	private static final String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
+	private static final String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
+	private static final String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
+	public static final String SALESPERSON_PARAMETER = "SALESPERSON";
+	private static final String FORM_NAME = "WSFORM";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -57,7 +63,7 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
 	    
-		out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWarrantyStatusReportGenerate\">");
+		out.println ("<FORM NAME = \"" +	 FORM_NAME + "\" ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWarrantyStatusReportGenerate\">");
 		out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 		out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" + this.getClass().getName() + "\">");
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>");
@@ -69,9 +75,9 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 		out.println("<TD><B>Date range (choose 'Previous Month', 'Current Month',<BR>or enter a date range"
 				+ " in mm/dd/yyyy format):</B></TD>");
 		out.println("<TD>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR>");
-		out.println("<input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
+		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR></LABEL>");
+		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR></LABEL>");
+		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;</LABEL>");
 		
 		out.println(
 			"Starting:&nbsp;" 
@@ -108,8 +114,8 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" width=0.25>" 
-							  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" width=0.25>" 
+							  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
 				}		  
 			}
 			rs.close();
@@ -121,28 +127,16 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 		out.println("</TR>");
 		out.println("</TABLE>");
 		
-		out.println("<B><U>Including salespersons:</B></U>");
-		String sChecked = "";
-		if (clsManageRequestParameters.get_Request_Parameter(UNSELECT_ALL_SALESPERSONS_PARAMETER, request).compareTo("") == 0){
-			sChecked = " checked=\"Yes\"";
-			out.println(
-				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" 
-				+ SMUtilities.getFullClassName(this.toString())
-				+ "?" + UNSELECT_ALL_SALESPERSONS_PARAMETER + "=YES"
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\">Unselect all salespersons</A><BR>"
-			);
-		}else{
-			out.println(
-				"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" 
-				+ SMUtilities.getFullClassName(this.toString())
-				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				+ "\">Select all salespersons</A><BR>"
-			);
-		}
+
 		out.println();
 		
 		//Salespersons:
+		
+			out.println("<U><B>Salespersons</B></U>&nbsp;");
+			out.println("<input type=\"button\" name=\"" + CHECKALLSALESPERSONSBUTTON + "\" value=\"" + CHECKALLSALESPERSONSLABEL 
+				+ "\" onClick=\"checkall()\">");
+			out.println("<input type=\"button\" name=\"" + UNCHECKALLSALESPERSONSBUTTON + "\" value=\"" + UNCHECKALLSALESPERSONSLABEL 
+				+ "\" onClick=\"uncheckall()\">");
 		//Add table of salespeople:
 		try{
 			//String SQL = "SELECT * FROM " + SMTablesalesperson.TableName
@@ -185,13 +179,14 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 					sLastName = rs.getString(SMTablesalesperson.sSalespersonLastName).trim();
 				}
 				
-				sSalespersonList.add((String) "<INPUT TYPE=CHECKBOX " + sChecked 
+				sSalespersonList.add((String) "<LABEL><INPUT TYPE=CHECKBOX CHECKED= \"YES\" " 
 	        			+ " NAME=\"SALESPERSON" 
 	        			+ rs.getString(SMTableorderheaders.sSalesperson) 
 	        			+ "\">" 
 	        			+ rs.getString(SMTableorderheaders.sSalesperson)
 	        			+ "&nbsp;" + sFirstName
 	        			+ "&nbsp;" + sLastName
+	        			+ "</LABEL>"
 	        			);
 	    	}
 	        rs.close();
@@ -208,6 +203,26 @@ public class SMWarrantyStatusReportSelect  extends HttpServlet {
 				+ "- some may no longer be in the salespersons table, and those may appear with no names.");
 		out.println("<BR>");
 		out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Process report----\">");
+		String s ="<script LANGUAGE=\"JavaScript\">\n"; 
+		s  += "function checkall(){\n"
+				+ "    for (i=0; i<document.forms[\"" + FORM_NAME + "\"].elements.length; i++){\n"
+	   			+ "        var testName = document.forms[\"" + FORM_NAME + "\"].elements[i].name;\n"
+	   			+ "        if (testName.substring(0, " + Integer.toString(SALESPERSON_PARAMETER.length()) + "	) == \"" + SALESPERSON_PARAMETER + "\"){\n"
+	   			+ "            document.forms[\"" + FORM_NAME + "\"].elements[i].checked = true;\n"
+	   			+ "        }\n"
+	   			+ "    }\n"
+			  + "}\n";
+
+       	s += "function uncheckall(){\n"
+				+ "    for (i=0; i<document.forms[\"" + FORM_NAME + "\"].elements.length; i++){\n"
+	   			+ "        var testName = document.forms[\"" + FORM_NAME + "\"].elements[i].name;\n"
+	   			+ "        if (testName.substring(0, " + Integer.toString(SALESPERSON_PARAMETER.length()) + "	) == \"" + SALESPERSON_PARAMETER + "\"){\n"
+	   			+ "            document.forms[\"" + FORM_NAME + "\"].elements[i].checked = false;\n"
+	   			+ "        }\n"
+	   			+ "    }\n"
+			  + "}\n";
+       	s  += "</script>\n";
+       	out.println(s);
 		out.println("</FORM>");
 	    	
 		out.println("</BODY></HTML>");

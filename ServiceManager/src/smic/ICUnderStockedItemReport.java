@@ -265,9 +265,9 @@ public class ICUnderStockedItemReport extends java.lang.Object{
 			boolean bFlipper = false;
 			while(rs.next()){
 				if (!bFlipper){
-					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-				}else{
 					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}else{
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 				}
 				//Print the line:
 				

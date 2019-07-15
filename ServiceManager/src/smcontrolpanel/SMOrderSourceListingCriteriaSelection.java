@@ -81,9 +81,9 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     				+ "</span>"
     				+ "</TD>");
     		out.println("<TD>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR></LABEL>");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR></LABEL>");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;</LABEL>");
     		
     		out.println(
     			"Starting:&nbsp;" 
@@ -102,8 +102,8 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     		out.println("<TR>");
     		out.println("<TD><B>Report type:</B></TD>");
     		out.println("<TD>");
-    		out.println("<input type=\"radio\" name=\"ReportType\" value=\"Order\" checked> Orders&nbsp;");
-    		out.println("<input type=\"radio\" name=\"ReportType\" value=\"Invoice\"> Invoices&nbsp;");
+    		out.println("<LABEL><input type=\"radio\" name=\"ReportType\" value=\"Order\" checked> Orders&nbsp;</LABEL>");
+    		out.println("<LABEL><input type=\"radio\" name=\"ReportType\" value=\"Invoice\"> Invoices&nbsp;</LABEL>");
     		out.println("</TD>");
     		out.println("</TR>");
     		
@@ -126,9 +126,9 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     			while(rs.next()){
     			if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
     				out.println(
-  						  "<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+  						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
   						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
-  						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+  						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
     			}
     			}
     			rs.close();
@@ -160,9 +160,9 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
 				
 				while (rs.next()){
   				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAM 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAM 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocation) + " - " + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocation) + " - " + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 				}
 				rs.close();
 			} catch (Exception e) {
@@ -175,8 +175,8 @@ public class SMOrderSourceListingCriteriaSelection extends HttpServlet {
     		out.println("<TR>");
     		out.println("<TD><B>Report format:</B></TD>");
     		out.println("<TD>");
-        	out.println ("<INPUT TYPE=CHECKBOX NAME=\"" + SUMMARYONLY_PARAM + "\" VALUE=0>Show summary only.<BR>");
-        	out.println ("<INPUT TYPE=CHECKBOX NAME=\"" + PIECHART_PARAM + "\" VALUE=0 CHECKED>Show pie chart.");
+        	out.println ("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SUMMARYONLY_PARAM + "\" VALUE=0>Show summary only.<BR></LABEL>");
+        	out.println ("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PIECHART_PARAM + "\" VALUE=0 CHECKED>Show pie chart.</LABEL>");
     		out.println("</TD>");
     		out.println("</TR>");
     		

@@ -326,9 +326,9 @@ public class ICPOReceivingReport extends java.lang.Object{
 				while(rs.next()){
 					//Print the line:
 					if(iCount%2 == 0) {
-						sOutPut += "<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >";
-					}else {
 						sOutPut += "<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >";
+					}else {
+						sOutPut += "<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >";
 					}
 					
 					//PO:

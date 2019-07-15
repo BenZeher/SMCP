@@ -141,9 +141,9 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
 						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
 				}
 				}
 			rs.close();
@@ -180,13 +180,13 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 				}
 
 				out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
 						  + sSalesGroupCode
 						  + SALESGROUP_PARAM_SEPARATOR
 						  + Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup))						   
 						  + "\" CHECKED width=0.25>" 
 						  + sSalesGroupCode + " - " + sSalesGroupDesc
-						  + "<BR>");
+						  + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){

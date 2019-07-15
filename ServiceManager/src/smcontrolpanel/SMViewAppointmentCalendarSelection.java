@@ -130,16 +130,16 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR></LABEL>");
 
 		if (bDateRangeNextWeek){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR></LABEL>");
 		
 		if (bDateRangeToday){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
@@ -147,16 +147,16 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 			sChecked = "";
 		}
 				
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR></LABEL>");
 
 		if (bDateRangeChosen){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR></LABEL>");
 		out.println ("&nbsp;&nbsp;&nbsp;&nbsp;Starting date:&nbsp;"
 				+ clsCreateHTMLFormFields.TDTextBox(
 						STARTING_DATE_FIELD, 
@@ -187,13 +187,13 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 		//Add a checkbox for editing:
 		if (bAllowEditAppointments){
 			out.println("<TR><TD>");
-			out.println("<INPUT TYPE=CHECKBOX NAME=\"" + EDITAPPOINTMENT_PARAMETER  + "\"");
+			out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + EDITAPPOINTMENT_PARAMETER  + "\"");
 			if ((request.getParameter(SMViewAppointmentCalendarSelection.EDITAPPOINTMENT_PARAMETER) != null)){
 				sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 			}else{
 				sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 			}
-			out.println(" " + sChecked + " " + " width=0.25>" + "Allow appointment editing." + "<BR>");
+			out.println(" " + sChecked + " " + " width=0.25>" + "Allow appointment editing." + "<BR><LABEL>");
 			out.println("</TD></TR>");
 		}
 		
@@ -219,7 +219,7 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 					+ SMTableappointmentgroups.sappointmentgroupname).trim();
 				String sAppointmentGroupID = rsAppointmentGroups.getString(SMTableappointmentgroups.TableName + "." 
 						+ SMTableappointmentgroups.igroupid).trim();
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + APPOINTMENT_GROUP_PARAMETER + "\""
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + APPOINTMENT_GROUP_PARAMETER + "\""
 					+ " ID=\"GID*" + sAppointmentGroupID + "\""
 					+ " onclick=\"selectusers()\""
 				);
@@ -233,14 +233,14 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
 					+ sAppointmentGroup + " - "
-					+ rsAppointmentGroups.getString(SMTableappointmentgroups.TableName + "." + SMTableappointmentgroups.sappointmentgroupdesc) + "<BR>");
+					+ rsAppointmentGroups.getString(SMTableappointmentgroups.TableName + "." + SMTableappointmentgroups.sappointmentgroupdesc) + "<BR></LABEL>");
 			}
 			rsAppointmentGroups.close();
 			out.println("</TD></TR>");
 			out.println("</TABLE>");
-			out.println("<BR><INPUT TYPE=\"SUBMIT\" NAME=" 
+			out.println("<BR><LABEL><INPUT TYPE=\"SUBMIT\" NAME=" 
 					+ GENERATE_REPORT_PARAMETER 
-					+ " VALUE=\"" + GENERATE_REPORT_LABEL + "\">&nbsp;&nbsp;<BR><BR>");
+					+ " VALUE=\"" + GENERATE_REPORT_LABEL + "\">&nbsp;&nbsp;<BR><BR></LABEL>");
 		}catch(SQLException ex){
 			//handle any errors
 			out.println("Error reading appointment groups - " + ex.getMessage() + "<BR>");
@@ -280,11 +280,12 @@ public class SMViewAppointmentCalendarSelection  extends HttpServlet {
         		while (rsAppointmentGroups.next()){
         			sGroupID += "Group" +  rsAppointmentGroups.getString(SMTableappointmentgroups.igroupid) ;
         		}      	
-            		sUserTable.add((String) "<INPUT TYPE=CHECKBOX" 
+            		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX" 
             			+ " ID=\"" + sGroupID + "\""  
             			+ " NAME=\"" + SMViewAppointmentCalendarSelection.USER_PREFIX +  sCurrentUserID + "\""
             			+ " CLASS=\"users\">" 
                 		+ sCurrentUserFullName
+                		+ "</LABEL>"
                 	);
         			sGroupID = "";
         			rsAppointmentGroups.close();

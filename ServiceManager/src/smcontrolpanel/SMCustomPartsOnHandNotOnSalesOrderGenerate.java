@@ -186,9 +186,9 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 					//System.out.println("6");
 					bHasRecord = true;
 					if(iCount % 2 == 0) {
-				    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-					}else {
 				    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+				    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 					}
 					
 					String sItemNumber = rsItemOnHandList.getString("ITEM");

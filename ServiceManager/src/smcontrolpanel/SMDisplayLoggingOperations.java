@@ -88,9 +88,9 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 			
 			String[] sLine  = arrOperationsList.get(i).split(FIELD_DELIMITER);
 			
-			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 			if (bOddRow){
-				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 			}
 			s += "  <TR class = \"" + sBackgroundColor + "\" > \n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED_WITH_BORDER + "\""

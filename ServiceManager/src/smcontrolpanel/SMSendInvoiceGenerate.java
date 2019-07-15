@@ -612,9 +612,9 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				}
 
 				if(bIsRowOdd){
-					sRowColor = " class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" ";
-				}else{
 					sRowColor = " class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" ";
+				}else{
+					sRowColor = " class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" ";
 				}
 				
 				String sChecked = "";

@@ -159,9 +159,9 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 			int iCount = 0;
 			while(rs.next()){
 				if(iCount % 2 == 0) {
-			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-				}else {
 			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 				}
     			String sScheduleDate = clsDateAndTimeConversions.utilDateToString(rs.getDate(
         				SMTableorderheaders.TableName + "." + SMTableorderheaders.datExpectedShipDate),"MM/dd/yyyy");

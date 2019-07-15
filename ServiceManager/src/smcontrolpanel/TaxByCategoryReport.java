@@ -223,9 +223,9 @@ public class TaxByCategoryReport extends java.lang.Object{
 	    		bdTax = rs.getBigDecimal(SMTableinvoicedetails.bdlinesalestaxamount);
 		    	if (bShowInvoiceLines){
 		    		if( alt%2 ==0) {
-		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \">");
-		    		}else {
 		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \">");
+		    		}else {
+		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \">");
 		    		}
 					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.sItemCategory) + "</FONT></TD>");
 	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoiceheaders.staxjurisdiction) + "</FONT></TD>");

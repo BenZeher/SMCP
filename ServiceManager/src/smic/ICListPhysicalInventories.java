@@ -146,9 +146,9 @@ public class ICListPhysicalInventories extends HttpServlet {
         	while (rs.next()){
         		//Start a row:
         		if(iCount%2 == 0) {
-        			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-        		}else {
         			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+        		}else {
+        			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
         		}
         		out.println(
         			Build_Row(		

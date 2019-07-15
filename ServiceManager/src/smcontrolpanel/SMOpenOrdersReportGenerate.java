@@ -170,9 +170,9 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 		    		iCount = 0;
 		    	} 
 				if(iCount % 2 == 0) {
-			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-				}else {
 			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 				}
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson) + "</TD>");
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate)) + "</TD>");
@@ -184,7 +184,7 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 		    	iCount++;
 		    }
 		    if (!bHasRecord){
-		    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 	        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">No Record Found</TD>");
 	    		out.println("</TR>"); 
 		    }

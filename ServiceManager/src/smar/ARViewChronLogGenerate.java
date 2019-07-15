@@ -249,9 +249,9 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			
 			while (rs.next()){
 				if(count%2 == 0 ) {
-					pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-				}else {
 					pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					pwOut.println("<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 				}
 				pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">" + rs.getString(SMTablearchronlog.datlogdate).replace(" ", "&nbsp;") +"</TD>");
 				pwOut.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">" + rs.getString(SMTablearchronlog.suserfullname).trim() +"</TD>");

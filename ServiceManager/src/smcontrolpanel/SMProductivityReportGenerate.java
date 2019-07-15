@@ -370,9 +370,9 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    BigDecimal bdLine = BigDecimal.valueOf(rs.getDouble(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedPrice));
 			    if (!bShowSubtotalOnly){
 					if(iCount % 2 == 0) {
-						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-					}else {
 						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 					}
 					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber).trim() +"</TD>");
 					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sDesc).trim() +" </TD>");

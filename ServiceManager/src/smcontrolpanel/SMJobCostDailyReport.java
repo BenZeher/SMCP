@@ -264,9 +264,9 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					sOrderNumberLink = sOrderNumber;
 				}
 				if(iCount % 2 == 0) {
-					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD +"\">");
-				}else {
 					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN +"\">");
+				}else {
+					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD +"\">");
 				}
 
 				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + sOrderNumberLink + "</TD>");

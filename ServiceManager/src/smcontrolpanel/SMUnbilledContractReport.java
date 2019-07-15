@@ -1007,7 +1007,7 @@ public class SMUnbilledContractReport extends java.lang.Object{
 		BigDecimal bdTotalPrice = new BigDecimal("0.00");
 		
 		//System.out.println("[1431351974] arrSalespersons.size() = " + arrSalespersons.size());
-		String s = "<TABLE CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
+		String s = "<TABLE WIDTH = 100% CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >";
 		s += "<TR CLASS = \""+SMMasterStyleSheetDefinitions.TABLE_BREAK +"\">"
 			+ "<TD WIDTH=25% CLASS = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" style = \" font-weight:bold; color:white; \" >"
 			+ sTitle

@@ -14,6 +14,7 @@ import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablesystemlog;
+import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
 public class SMDisplayLoggingOperations  extends HttpServlet {
@@ -39,10 +40,41 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		String title = "SM List Logging Operations";
-		String subtitle = "";
-		
-		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+		String sReportTitle = "SM List Logging Operations";
+		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, this.toString());
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
+		 		   + "Transitional//EN\">"
+		 	       + "<HTML>"
+		 	       + "<HEAD>"
+
+		 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
+		 		   + "<BODY BGCOLOR=\"" 
+		 		   + "#FFFFFF"
+		 		   + "\""
+		 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
+		 		   //Jump to the last edit:
+		 		   + " onLoad=\"window.location='#LastEdit'\""
+		 		   + ">"
+		 		   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">"
+		 		   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+		 		   + clsDateAndTimeConversions.nowStdFormat() + " Printed by " + sUserFullName 
+		 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
+		 		   + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
+		 		   + "</TR>");
+		 				   
+		     	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+		 			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+		 			+ "\">Return to user login</A><BR>");
+		 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMListOrdersForScheduling) 
+		 	    		+ "\">Summary</A><BR>");
+
+		 	    out.println("</TD></TR></TABLE>");
+			
+		 	    out.println(SMUtilities.getMasterStyleSheetLink());
+			
+			   
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		
@@ -50,19 +82,13 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-		//Print a link to the first page after login:
-		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to user login</A><BR>");
-		out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMDisplayLoggingOperations) 
-				+ "\">Summary</A><BR><BR>");
 		
 		out.println("<I><B>LIST OF LOGGING OPERATIONS:</B></I>");
 		out.println("<BR>    The 'marker', which appears in the '" + SMTablesystemlog.soperation + "' field of the '" + SMTablesystemlog.TableName
 			+ "' table is on the left, description of the event being recorded is on the right.");
 		
 		String s = "";
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH = 100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 				//+ " style = \" width:100%; \" "
 				+ " ID = \"" + "LOGGINGOPERATIONS" + "\""
 				+ ">\n";
@@ -83,16 +109,16 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		s += "  </TR>\n\n";
 		
 		ArrayList<String>arrOperationsList = SMLogEntry.getOperationDescriptions(FIELD_DELIMITER);
-		boolean bOddRow = true;
 		for (int i = 0; i < arrOperationsList.size(); i++){
 			
 			String[] sLine  = arrOperationsList.get(i).split(FIELD_DELIMITER);
 			
-			String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
-			if (bOddRow){
-				sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		
+			if (i % 2 == 0){
+		    	s+="<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">";
+			}else {
+				s+="<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">";
 			}
-			s += "  <TR class = \"" + sBackgroundColor + "\" > \n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED_WITH_BORDER + "\""
 					+ " style = \" font-weight:bold; color: black; \" >"
 		    		+ sLine[0]
@@ -105,7 +131,6 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 				;
 			s += "  </TR> \n\n";
 			
-			bOddRow = !bOddRow;
 		}
 		
 		s += "</TABLE>" + "\n";

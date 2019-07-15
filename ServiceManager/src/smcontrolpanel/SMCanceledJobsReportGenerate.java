@@ -200,8 +200,6 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 	    	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
 			out.println("</TR>"); 
 
-		    boolean bFlipper = false;
-		    String sbgColor = "";
 		    String sCurrentCategory = null;
 		    int iCount = 0;
 		    while (rs.next()){

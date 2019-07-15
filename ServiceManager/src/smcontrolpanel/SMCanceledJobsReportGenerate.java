@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
@@ -43,15 +44,42 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, this.toString());
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String title = "Canceled Orders Report";
-	    String subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+	    String sReportTitle = "Canceled Orders Report";
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
+	    
+	    out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
+	 		   + "Transitional//EN\">"
+	 	       + "<HTML>"
+	 	       + "<HEAD>"
+
+	 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
+	 		   + "<BODY BGCOLOR=\"" 
+	 		   + "#FFFFFF"
+	 		   + "\""
+	 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
+	 		   //Jump to the last edit:
+	 		   + " onLoad=\"window.location='#LastEdit'\""
+	 		   + ">"
+	 		   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">"
+	 		   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+	 		   + clsDateAndTimeConversions.nowStdFormat() + " Printed by " + sUserFullName 
+	 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
+	 		   + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
+	 		   + "</TR>");
+	 				   
+	     	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	 			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+	 			+ "\">Return to user login</A><BR>");
+	 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMListOrdersForScheduling) 
+	 	    		+ "\">Summary</A><BR>");
+
+	 	    out.println("</TD></TR></TABLE>");
 		
-	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to user login</A><BR><BR>");
-		   
+	 	    out.println(SMUtilities.getMasterStyleSheetLink());
+
  	   //log usage of this this report
  	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
  	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCANCELEDJOBSREPORT, "REPORT", "SMCanceledJobsReport", "[1376509311]");
@@ -160,45 +188,58 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 			
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 		    //print out column headers
-		    out.println("<TABLE BORDER=0 WIDTH=100%>");
-		    out.println("<TR>\n<TD COLSPAN=5 ALIGN=CENTER><HR></TD>\n</TR>\n" +
-		    			"<TR BGCOLOR=\"#EEEEEE\"><TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>Order#</B></TD>\n" +
-		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=23%><B>Bill To Name</B></TD>\n" +
-		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>USER</B></TD>\n" +
-		    				"<TD ALIGN=CENTER VALIGN=TOP WIDTH=13%><B>Canceled Date</B></TD>\n" +
-		    				"<TD ALIGN=LEFT VALIGN=TOP WIDTH=50%><B>Reason For Cancellation</B></TD>\n" +
-	    				"</TR>\n");
+	    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+	    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order #</TD>");
+	    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill To Name</TD>");
+	    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">USER</TD>");
+	    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Canceled Date</TD>");
+	    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Reason For Cancellation</TD>");
+			out.println("</TR>"); 
+	    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+			out.println("</TR>"); 
+
 		    boolean bFlipper = false;
 		    String sbgColor = "";
 		    String sCurrentCategory = null;
+		    int iCount = 0;
 		    while (rs.next()){
 		    	
 		    	if (sCurrentCategory == null || rs.getString(SMTableorderheaders.sDefaultItemCategory).compareTo(sCurrentCategory) != 0){
-		    		out.println("<TR>\n<TD COLSPAN=5 ALIGN=CENTER><HR></TD>\n</TR>\n");
-		    		out.println("<TR>\n<TD COLSPAN=2 ALIGN=LEFT><B>Default Category:&nbsp;&nbsp;&nbsp;&nbsp;" + rs.getString(SMTableorderheaders.sDefaultItemCategory) + "</B></TD>\n</TR>\n");
-		    		out.println("<TR>\n<TD COLSPAN=2 ALIGN=CENTER><HR></TD>\n</TR>\n");
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			    	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+					out.println("</TR>"); 
+
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			    	out.println("<TD COLSPAN = \"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTableorderheaders.sDefaultItemCategory) +"</TD>");
+					out.println("</TR>"); 
+		    		
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			    	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+					out.println("</TR>"); 
+
 		    		sCurrentCategory = rs.getString(SMTableorderheaders.sDefaultItemCategory);
+		    		iCount = 0;
 		    	}
-		    	bFlipper = !bFlipper;
-		    	if (bFlipper){
-		    		sbgColor = "\"#FFFFFF\"";
-		    	}else{
-		    		sbgColor = "\"#DDDDDD\"";
-		    	}
-    			out.println("<TR BGCOLOR=" + sbgColor + ">");
+				if(iCount % 2 == 0) {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}
 	    		//out.println("<TD ALIGN=CENTER>" + rs.getInt(SMTablecustomercalllog.id) + "</TD>\n");
-    			out.println("<TD ALIGN=CENTER><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-    				+ "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.sOrderNumber) 
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
-    				+ rs.getString(SMTableorderheaders.sOrderNumber).trim() + "</A></TD>\n");
-	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.sBillToName)) + "</TD>\n");
-	    		out.println("<TD ALIGN=CENTER>" + rs.getString(SMTableorderheaders.LASTEDITUSERFULLNAME) + "</TD>\n");
-	    		out.println("<TD ALIGN=CENTER>" + USDateOnlyformatter.format(rs.getTimestamp(SMTableorderheaders.datOrderCanceledDate)) + "</TD>\n");
-	    		out.println("<TD ALIGN=LEFT>" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.mInternalComments)) + "</TD>\n");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				+ "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.sOrderNumber) 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
+				+ rs.getString(SMTableorderheaders.sOrderNumber).trim() + "</A></TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.sBillToName)) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.LASTEDITUSERFULLNAME) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateOnlyformatter.format(rs.getTimestamp(SMTableorderheaders.datOrderCanceledDate)) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsStringFunctions.FormatSQLResult(rs.getString(SMTableorderheaders.mInternalComments)) + "</TD>");
 	    		out.println("</TR>\n");
+	    		iCount++;
 		    }
 		    rs.close();
-		    out.println("<TR>\n<TD ALIGN=RIGHT VALIGN=TOP COLSPAN=5><HR></TD>\n</TR>\n");
 		    out.println("</TABLE>");
 	    }catch (SQLException ex){
 	    	System.out.println("Error in SMCanceledJobsReportGenerate");

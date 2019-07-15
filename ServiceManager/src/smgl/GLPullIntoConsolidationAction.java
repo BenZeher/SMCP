@@ -27,6 +27,7 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			throws ServletException, IOException {
 	
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
+		smaction.getCurrentSession().removeAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT);
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLPullExternalDataIntoConsolidation)){return;}
 	    //Read the entry fields from the request object:
 	    String sExternalCompanyID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLPullIntoConsolidationSelect.RADIO_BUTTONS_NAME, request);
@@ -37,8 +38,9 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		String sFiscalPeriod = sFiscalYearAndPeriodPeriod.replace(sFiscalYear + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER, "");
 		
 		if (request.getParameter(GLPullIntoConsolidationSelect.CONFIRM_PROCESS) == null){
+			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
 			smaction.redirectAction(
-					"You must check the 'Confirm' checkbox to continue.", 
+					"", 
 					"", 
 		    		""
 				);
@@ -54,8 +56,9 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 				this.toString() + ".updateCompanies - user: " + smaction.getFullUserName()
 			);
 		} catch (Exception e1) {
+			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, e1.getMessage());
 			smaction.redirectAction(
-					e1.getMessage(), 
+					"", 
 					"", 
 		    		""
 				);
@@ -66,8 +69,9 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			pullCompany(smaction, request, sExternalCompanyID, sFiscalYear, sFiscalPeriod, bAddNewGLs, conn);
 		} catch (Exception e) {
 			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875614]");
+			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, e.getMessage());
 			smaction.redirectAction(
-				e.getMessage(), 
+				"", 
 				"", 
 	    		""
 			);
@@ -129,6 +133,33 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		} catch (Exception e) {
 			throw new Exception("Error [20191911553508] " + "reading external company information with SQL: '" + SQL + "' - " + e.getMessage());
 		}
+    	
+    	//Make sure that all the GLs in the 'source' data are also in the consolidated company:
+    	SQL = "SELECT DISTINCT " + sDBName + "." + SMTablegltransactionlines.sacctid
+    		+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName + " AS SOURCETABLE"
+    		+ " LEFT JOIN " + SMTablegltransactionlines.TableName + " AS TARGETTABLE ON "
+    		+ "SOURCETABLE." + SMTablegltransactionlines.sacctid + " = "
+    		+ "TARGETTABLE." + SMTablegltransactionlines.sacctid
+    		+ " WHERE ("
+			+ "(SOURCETABLE." + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
+			+ " AND (SOURCETABLE." + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    		+ " AND (TARGETTABLE." + SMTablegltransactionlines.sacctid + " IS NULL"
+    		+ ")"
+    	;
+    	String sMissingAccts = "";
+    	try {
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rs.next()){
+				sMissingAccts += rs.getString("SOURCETABLE." + SMTablegltransactionlines.sacctid) + ".  ";
+			}
+			rs.close();
+		} catch (Exception e2) {
+			throw new Exception("Error [2019196139556] " + "Error checking for missing GL Accounts in the consolidate company with SQL: '" + SQL + "' - " + e2.getMessage());
+		}
+    	
+    	if (sMissingAccts.compareToIgnoreCase("") != 0){
+    		throw new Exception("Error [2019196138589] " + "These accounts are missing in the consolidated company GL:  " + sMissingAccts);
+    	}
     	
     	//Start a data transaction:
     	try {

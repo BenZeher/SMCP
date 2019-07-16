@@ -87,7 +87,7 @@ public class APVendorTransactionsReport {
 	private String printTableHeading(){
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
+		s += "<TABLE WIDTH = 100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
 		
 		return s;
 	}
@@ -238,6 +238,7 @@ public class APVendorTransactionsReport {
 		BigDecimal bdTotalVendorCurrentAmt = new BigDecimal("0.00");
 		BigDecimal bdGrandTotalOriginalAmt = new BigDecimal("0.00");
 		BigDecimal bdGrandTotalCurrentAmt = new BigDecimal("0.00");
+		int iCount = 0;
 		
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -269,6 +270,7 @@ public class APVendorTransactionsReport {
 						rs.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sname),
 						rs.getBigDecimal("VENDORBALANCES.VENDORBALANCE")
 					);
+					iCount = 0;
 				}
 				
 				//If the document number/vendor combination has changed, print the document line
@@ -309,9 +311,10 @@ public class APVendorTransactionsReport {
 					bIncludeLinkToTransactionInformation,
 					bIncludeLinkToBatchInformation,
 					sDBID,
-					context
+					context,
+					iCount
 				);
-				
+				iCount++;
 				//Print the applied details lines, every time, if requested:
 				if (bIncludeAppliedDetails){
 					sRecordBuffer += printApplyingLines(
@@ -320,7 +323,8 @@ public class APVendorTransactionsReport {
 						sDBID, 
 						context,
 						conn,
-						Long.toString(rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lid)))
+						Long.toString(rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lid)),
+						iCount)
 					;
 				}
 				
@@ -372,7 +376,7 @@ public class APVendorTransactionsReport {
 	private String printVendorHeading(int iNumberOfColumns, String svendoracct, String svendorname, BigDecimal bdVendorBalance){
 		String s = "";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + " \""
 			+ " COLSPAN = " + Integer.toString(iNumberOfColumns) + ">"
 			+ "<B>Vendor account:</B>&nbsp;" + svendoracct
@@ -387,7 +391,7 @@ public class APVendorTransactionsReport {
 	private String printVendorFooting(int iNumberOfColumns, BigDecimal bdVendorTotalOriginalAmt, BigDecimal bdVendorTotalCurrentAmt){
 		String s = "";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + " \" COLSPAN=" + Integer.toString(iNumberOfColumns - 2) + " >"
 			+ "<B>Vendor totals:</B>"
 			+ "</TD>\n"
@@ -403,8 +407,8 @@ public class APVendorTransactionsReport {
 			+ "  </TR>\n"
 		;
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + " \" >\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + ">&nbsp;</TD>\n"
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + " \" >\n"
+			+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN = " + Integer.toString(iNumberOfColumns) + ">&nbsp;</TD>\n"
 			+ "  </TR>\n"
 		;
 		
@@ -414,7 +418,7 @@ public class APVendorTransactionsReport {
 	private String printReportTotals(int iNumberOfColumns, BigDecimal bdGrandTotalOriginalAmt, BigDecimal bdGrandTotalCurrentAmt){
 		String s = "";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + " \" COLSPAN=" + Integer.toString(iNumberOfColumns - 2) + " >"
 			+ "<B>GRAND TOTALS:</B>"
 			+ "</TD>\n"
@@ -427,11 +431,6 @@ public class APVendorTransactionsReport {
 			+ "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdGrandTotalCurrentAmt) + "</B>"
 			+ "</TD>\n"
 			
-			+ "  </TR>\n"
-		;
-		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + " \" >\n"
-			+ "    <TD COLSPAN = " + Integer.toString(iNumberOfColumns) + ">&nbsp;</TD>\n"
 			+ "  </TR>\n"
 		;
 		
@@ -457,7 +456,8 @@ public class APVendorTransactionsReport {
 		boolean bIncludeLinkToTransactionInformation,
 		boolean bIncludeLinkToBatches,
 		String sDBID,
-		ServletContext context
+		ServletContext context,
+		int iCount
 		) {
 		
 		String s = "";
@@ -500,8 +500,12 @@ public class APVendorTransactionsReport {
 		if (iOnHold == 1){
 			sOnHold = "<B><FONT COLOR=RED>Y</FONT></B>";
 		}
-		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		if(iCount % 2 == 0) {
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+		}else {
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+		}
+
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+ sIndent
 			
@@ -646,7 +650,8 @@ public class APVendorTransactionsReport {
 		String sDBID, 
 		ServletContext context, 
 		Connection conn,
-		String sApplyToDocID) throws Exception{
+		String sApplyToDocID,
+		int iCount) throws Exception{
 		String s = "";
 		
 		String sIndent = "&nbsp;&nbsp;&nbsp;&nbsp;";
@@ -711,7 +716,11 @@ public class APVendorTransactionsReport {
 					sCheckNumber = rs.getString(SMTableaptransactions.TableName + "." + SMTableaptransactions.schecknumber);
 				}
 
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
+				if(iCount % 2 == 0) {
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+				}else {
+					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+				}
 				s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 					
 					+  sIndent 
@@ -786,7 +795,7 @@ public class APVendorTransactionsReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Doc #" + sHeadingPadding
 			+ "</TD>\n"
@@ -848,7 +857,7 @@ public class APVendorTransactionsReport {
 		
 		if (bIncludeAppliedDetails){
 			String sIndent = "&nbsp;&nbsp;";
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+  sIndent + "<I>" + "Applying<BR>Doc #" + "</I>"
 				+ "</TD>\n"

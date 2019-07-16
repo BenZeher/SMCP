@@ -139,11 +139,11 @@ public class GLEditEntryEdit  extends HttpServlet {
 						smedit.getUserID(), 
 						smedit.getFullUserName()
 					);
+		    		entry.setsfiscalperiod(sLastUnlockedFiscalYearAndPeriod.split(" - ")[1]);
+		    		entry.setsfiscalyear(sLastUnlockedFiscalYearAndPeriod.split(" - ")[0]);
 				} catch (Exception e) {
 					//Don't choke on this - it's not critical...
 				}
-	    		entry.setsfiscalperiod(sLastUnlockedFiscalYearAndPeriod.split(" - ")[1]);
-	    		entry.setsfiscalyear(sLastUnlockedFiscalYearAndPeriod.split(" - ")[0]);
 	    	}
 	    }
 	    

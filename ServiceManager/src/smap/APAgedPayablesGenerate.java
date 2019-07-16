@@ -213,6 +213,8 @@ public class APAgedPayablesGenerate extends HttpServlet {
 			return;
 		}
 		
+		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+		 out.println(SMUtilities.getMasterStyleSheetLink());
 		//Customized title
 		String sReportTitle = "A/P Aged Payables Ordered by Document Date";
 		
@@ -229,7 +231,7 @@ public class APAgedPayablesGenerate extends HttpServlet {
 			+ "  </HEAD>\n"
 			+ "<BR>" 
 			+ "  <BODY BGCOLOR=\"#FFFFFF\">\n" 
-			+ "    <TABLE BORDER=0 WIDTH=100%>\n" 
+			+ "    <TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">\n" 
 			+ "      <TR>\n"
 			+ "        <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + "</FONT></TD>\n"
 			+ "        <TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD>\n"
@@ -250,14 +252,12 @@ public class APAgedPayablesGenerate extends HttpServlet {
 			+ "</TABLE>"
 		);
 		
-		out.println(SMUtilities.getMasterStyleSheetLink());
-		out.println("<BR>\n");
-		out.println("<TABLE BORDER=0>\n");
+		out.println("<TABLE WIDTH = 100% BORDER=0 BGCOLOR = \"" + sColor + "\">\n");
 		
 		String s = "";
 		
 		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+			+ "    <TD WIDTH = 20% class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 			+ "Age as of:&nbsp;"
 			+ "    </TD>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"

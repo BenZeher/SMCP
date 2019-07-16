@@ -126,7 +126,6 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		
 		s += printReportTotals(sPrintTransactionsInDetailOrSummary.compareToIgnoreCase(APAgedPayablesSelect.PARAM_PRINT_TRANSACTION_IN_SUMMARY_LABEL) == 0);
 		
-		s += printTableFooting();
 		
 		s += printDocTypeLegends();
 		
@@ -388,7 +387,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 			arrReportTotals.get(AGING_CATEGORY_THIRD)).add(
 			arrReportTotals.get(AGING_CATEGORY_FOURTH))
 		;
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \" >\n";
 		
 		if (bPrintInSummary){
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + " \" COLSPAN=2 >"
@@ -456,7 +455,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 			bdTotalPct = (bdTotalPayables.divide(bdTotalPayables, 2, BigDecimal.ROUND_HALF_UP)).multiply(new BigDecimal("100.00"));
 		}
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \" >\n";
 		
 		if (bPrintInSummary){
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_RIGHT_JUSTIFIED + " \" COLSPAN=2 >"
@@ -508,7 +507,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 	private String printColumnHeadings(boolean bIncludeAppliedDetails, boolean bPrintInSummary){
 		String s = "";
 
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		
 		if (!bPrintInSummary){
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
@@ -575,7 +574,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		
 		if (bIncludeAppliedDetails && !bPrintInSummary){
 			String sIndent = "&nbsp;&nbsp;";
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+  sIndent + "Apply Date"
 				+ "</TD>"
@@ -633,15 +632,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 	private String printTableHeading(){
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
-		
-		return s;
-	}
-
-	private String printTableFooting(){
-		String s = "";
-		
-		s += "</TABLE>\n";
+		s += "<TABLE WIDTH = 100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
 		
 		return s;
 	}
@@ -667,7 +658,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 			m_ltransactionid = lTransactionID;
 		}
 		
-		private String printApplyingLine(boolean bIncludeLinkToTransaction, String sDBID, ServletContext context){
+		private String printApplyingLine(boolean bIncludeLinkToTransaction,boolean bFlipper, String sDBID, ServletContext context){
 			String s = "";
 			//System.out.println("[1510426475]");
 			String sIndent = "&nbsp;&nbsp;";
@@ -681,8 +672,12 @@ public class APAgedPayablesReport  extends java.lang.Object{
 					+ "\">" + sDocNumber + "</A>"
 				;
 			}
-			
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
+			if(bFlipper == true) {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+			}else {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+			}
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 				+  sIndent + "<I>" + m_sdatapplyingdate + "</I>"
 				+ "</TD>\n"
@@ -861,7 +856,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 			//arrAgingValuesForEachTransaction.set(AGING_CATEGORY_CURRENT, arrAgingValuesForEachTransaction.get(AGING_CATEGORY_CURRENT).subtract(bdApplyingAmt));
 		}
 		
-		private String printTransactionLine(boolean bIncludeLinkToTransactionInformation, String sDBID, ServletContext context){
+		private String printTransactionLine(boolean bIncludeLinkToTransactionInformation, boolean bFlipper , String sDBID, ServletContext context){
 			
 			String s = "";
 			
@@ -874,8 +869,12 @@ public class APAgedPayablesReport  extends java.lang.Object{
 					+ "\">" + sDocNumber + "</A>"
 				;
 			}
-			
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+			if(bFlipper == true) {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+			}else {
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+			}
+
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 				+  getDocDate()
 				+ "</TD>\n"
@@ -929,7 +928,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 			//System.out.println("[1510426474] arrApplyingTransactionsForEachTransaction.size() = " + arrApplyingTransactionsForEachTransaction.size());
 			for (int iApplyingTransactionCounter = 0; iApplyingTransactionCounter < arrApplyingTransactionsForEachTransaction.size(); iApplyingTransactionCounter++){
 				//System.out.println("[1510426477]");
-				s += arrApplyingTransactionsForEachTransaction.get(iApplyingTransactionCounter).printApplyingLine(bIncludeLinkToTransactionInformation, sDBID, context);
+				s += arrApplyingTransactionsForEachTransaction.get(iApplyingTransactionCounter).printApplyingLine(bIncludeLinkToTransactionInformation, (iApplyingTransactionCounter % 2 ==1), sDBID, context);
 			}
 			
 			return s;
@@ -999,7 +998,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
     	    		+ "</A>";
 			}
 			
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_LEFT_JUSTIFIED + " \""
 				+ " COLSPAN = " + Integer.toString(m_iNumberOfColumns) + ">"
 				+ "<B>Vendor account:</B>&nbsp;" + sVendorLink
@@ -1028,9 +1027,10 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		
 		private String printVendorLines(boolean bIncludeLinkToTransactionInformation, String sDBID, ServletContext context){
 			String s = "";
-			
+			boolean bFlipper = true;
 			for (int iTransactionCounter = 0; iTransactionCounter < arrTransactions.size(); iTransactionCounter++){
-				s += arrTransactions.get(iTransactionCounter).printTransactionLine(bIncludeLinkToTransactionInformation, sDBID, context);
+				s += arrTransactions.get(iTransactionCounter).printTransactionLine(bIncludeLinkToTransactionInformation, bFlipper, sDBID, context);
+				bFlipper = !bFlipper;
 			}
 			
 			return s;
@@ -1085,7 +1085,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 		private String printVendorFooting(boolean bPrintInSummary){
 			String s = "";
 			
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + " \" >\n";
 				
 			;
 			if (!bPrintInSummary){
@@ -1123,8 +1123,8 @@ public class APAgedPayablesReport  extends java.lang.Object{
 				;
 				s += "  </TR>\n";
 				
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_BLACK + " \" >\n"
-					+ "    <TD COLSPAN = " + Integer.toString(m_iNumberOfColumns) + ">&nbsp;</TD>\n"
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + " \" >\n"
+					+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN = " + Integer.toString(m_iNumberOfColumns) + ">&nbsp;</TD>\n"
 					+ "  </TR>\n"
 				;
 			}else{
@@ -1178,13 +1178,15 @@ public class APAgedPayablesReport  extends java.lang.Object{
 	private String printDocTypeLegends(){
 		String s = "";
 		
-		s += "<BR><TABLE BORDER=0>\n";
-		s += "  <TR>\n";
+		s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">\n";
+		s += "    <TD COLSPAN = \"12\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\">";
 		for (int i = SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE;i <= 7; i++){
+			
 			if (SMTableapbatchentries.getDocType(i).compareToIgnoreCase("NA") != 0){
-				s += "    <TD><FONT SIZE=2><I>" + SMTableapbatchentries.getDocumentTypeLabel(i) + " = " + SMTableapbatchentries.getDocType(i) + "</I></FONT></TD>\n";
+			s+= "<I>" + SMTableapbatchentries.getDocumentTypeLabel(i) + " = " + SMTableapbatchentries.getDocType(i) + "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</I>";
 			}
 		}
+		s += "</TD>\n";
 		s += "  </TR>\n";
 		s += "</TABLE>\n";
 		

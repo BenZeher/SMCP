@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 
 import javax.servlet.ServletException;
@@ -16,6 +17,7 @@ import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTablegltransactionlines;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
@@ -167,25 +169,6 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     		throw new Exception("Error [2019196138589] " + "These accounts are missing in the consolidated company GL:  " + sMissingAccts);
     	}
     	
-      	//Get the last transaction ID from the gltransactions table:
-    	long lPreviousTransactionID = 0L;
-    	long lStartingTransactionID = 0L;
-    	long lEndingTransactionID = 0L;
-    	SQL = "SELECT " + SMTablegltransactionlines.lid
-    		+ " FROM " + SMTablegltransactionlines.TableName
-    		+ " ORDER BY " + SMTablegltransactionlines.lid + " DESC"
-    		+ " LIMIT 1"
-    	;
-    	try {
-			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-			if (rs.next()){
-				lPreviousTransactionID = rs.getLong(SMTableglexternalcompanypulls.lid);
-			}
-			rs.close();
-		} catch (Exception e2) {
-			throw new Exception("Error [20191961636255] " + "Could not read last transaction ID with SQL: '" + SQL + " - " + e2.getMessage());
-		}
-    	
     	//Start a data transaction:
     	try {
 			ServletUtilities.clsDatabaseFunctions.start_data_transaction_with_exception(conn);
@@ -193,85 +176,16 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			throw new Exception("Error [2019192162080] " + "Could not start data transaction - " + e1.getMessage() + ".");
 		}
     	
-    	//Now create a new batch:
-    	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
-    	glbatch.setlcreatedby(sm.getUserID());
-    	glbatch.setllasteditedby(sm.getUserID());
-    	glbatch.setsbatchdate(clsManageRequestParameters.get_Request_Parameter(
-    			GLPullIntoConsolidationSelect.PARAM_BATCH_DATE, req).replace("&quot;", "\""));
-    	glbatch.setsbatchdescription("Pulled from company '" + sCompanyName + "'");
-    	glbatch.setsbatchstatus(Integer.toString(SMBatchStatuses.IMPORTED));
-
-    	//Create a single entry for all the transactions:
-    	GLTransactionBatchEntry glentry = new GLTransactionBatchEntry();
-    	glentry.setsdatdocdate(glbatch.getsbatchdate());
-    	glentry.setsdatentrydate(glbatch.getsbatchdate());
-    	glentry.setsentrydescription("Consolidated pull");
-    	glentry.setsfiscalperiod(sFiscalPeriod);
-    	glentry.setsfiscalyear(sFiscalYear);
-    	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
-
-    	//Now load all the transactions into the entry:
-    	SQL = "SELECT * FROM " + sDBName + "." + SMTablegltransactionlines.TableName
-    		+ " WHERE ("
-    			+ "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
-    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
-    			+ " AND (" + SMTablegltransactionlines.bdamount + " != 0.00)"
-    		+ ")"
-    	;
-    	try {
-			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-			while (rs.next()){
-				GLTransactionBatchLine line = new GLTransactionBatchLine();
-				line.setsacctid(rs.getString(SMTablegltransactionlines.sacctid));
-				line.setscomment("");
-				if (rs.getBigDecimal(SMTablegltransactionlines.bdamount).compareTo(BigDecimal.ZERO) < 0.00){
-					line.setscreditamt(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat
-						(rs.getBigDecimal(SMTablegltransactionlines.bdamount).abs())
-					);
-					line.setsdebitamt("0.00");
-				}else{
-					line.setsdebitamt(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablegltransactionlines.bdamount).abs()));
-					line.setscreditamt("0.00");
-				}
-				line.setsdescription(rs.getString(SMTablegltransactionlines.sdescription));
-				line.setsreference(rs.getString(SMTablegltransactionlines.sreference));
-				line.setssourceledger(rs.getString(SMTablegltransactionlines.ssourceledger));
-				line.setssourcetype(rs.getString(SMTablegltransactionlines.ssourcetype));
-				line.setstransactiondate(ServletUtilities.clsDateAndTimeConversions.resultsetDateStringToFormattedString(
-					rs.getString(SMTablegltransactionlines.dattransactiondate), 
-					ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
-					ServletUtilities.clsServletUtilities.EMPTY_DATE_VALUE)
-				);
-				glentry.addLine(line);
-			}
-			rs.close();
-		} catch (Exception e) {
-			throw new Exception("Error [2019191165588] " + "could not get records of GL transactions using SQL '"
-				+ SQL + "' - " + e.getMessage()
-			);
-		}
-    	
-    	//Save the batch:
-    	glbatch.addBatchEntry(glentry);
-    	try {
-			glbatch.save_without_data_transaction(conn, sm.getUserID(), sm.getFullUserName(), false);
-		} catch (Exception e) {
-			throw new Exception("Error [2019192164281] " + "Could not save GL Transaction batch - " + e.getMessage());
-		}
+    	long lExternalCompanyPullID = 0L;
     	
     	//Add a record to the list of 'pulls':
-    	lStartingTransactionID = lPreviousTransactionID + 1;
     	SQL = "INSERT INTO " + SMTableglexternalcompanypulls.TableName
     		+ " ("
     		+ SMTableglexternalcompanypulls.dattimepulldate
     		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
     		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
-    		+ ", " + SMTableglexternalcompanypulls.lbatchnumber
     		+ ", " + SMTableglexternalcompanypulls.lcompanyid
     		+ ", " + SMTableglexternalcompanypulls.luserid
-    		+ ", " + SMTableglexternalcompanypulls.lstartingtransactionid
-    		+ ", " + SMTableglexternalcompanypulls.lendingtransactionid
     		+ ", " + SMTableglexternalcompanypulls.scompanyname
     		+ ", " + SMTableglexternalcompanypulls.sdbname
     		+ ", " + SMTableglexternalcompanypulls.sfullusername
@@ -279,11 +193,8 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
     		+ "NOW()"
     		+ ", " + sFiscalPeriod
     		+ ", " + sFiscalYear
-    		+ ", " + glbatch.getsbatchnumber()
     		+ ", " + sCompanyID
     		+ ", " + sm.getUserID()
-    		+ ", " + Long.toString(lStartingTransactionID)
-    		+ ", " + Long.toString(lEndingTransactionID)
     		+ ", '" + sCompanyName + "'"
     		+ ", '" + sDBName + "'"
     		+ ", '" + sm.getFullUserName() + "'"
@@ -293,9 +204,85 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.execute(SQL);
 		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [20191921611298] " 
 				+ "Could not insert 'pull' record with SQL: '" + SQL + "'" + e.getMessage() + ".");
 		}
+    	
+		SQL = "SELECT LAST_INSERT_ID()";
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (!rs.next()){
+		    	clsDatabaseFunctions.rollback_data_transaction(conn);
+		    	rs.close();
+		    	throw new Exception("Error [20191971220397] " + "no last insert ID record with SQL '" + SQL + ".");
+			}else{
+				lExternalCompanyPullID = rs.getLong(1);
+				rs.close();
+			}
+		} catch (SQLException e) {
+	    	clsDatabaseFunctions.rollback_data_transaction(conn);
+	    	throw new Exception("Error [20191971222108] " + "getting last insert ID with SQL '" + SQL + "' - " + e.getMessage());
+		}
+    	
+    	//Now insert all the transactions:
+    	SQL = "INSERT INTO " + SMTablegltransactionlines.TableName
+    		+ "("
+    		+ SMTablegltransactionlines.bdamount
+    		+ ", " + SMTablegltransactionlines.datpostingdate
+    		+ ", " + SMTablegltransactionlines.dattransactiondate
+    		+ ", " + SMTablegltransactionlines.ifiscalperiod
+    		+ ", " + SMTablegltransactionlines.ifiscalyear
+    		+ ", " + SMTablegltransactionlines.lexternalcompanypullid
+    		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
+    		+ ", " + SMTablegltransactionlines.loriginalentrynumber
+    		+ ", " + SMTablegltransactionlines.loriginallinenumber
+    		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+    		+ ", " + SMTablegltransactionlines.sacctid
+    		+ ", " + SMTablegltransactionlines.sdescription
+    		+ ", " + SMTablegltransactionlines.sreference
+    		+ ", " + SMTablegltransactionlines.ssourceledger
+    		+ ", " + SMTablegltransactionlines.ssourcetype
+    		+ ", " + SMTablegltransactionlines.stransactiontype
+
+    		+ ") "
+    		
+    		+ " SELECT"
+    		+ " " + SMTablegltransactionlines.bdamount
+    		+ ", " + SMTablegltransactionlines.datpostingdate
+    		+ ", " + SMTablegltransactionlines.dattransactiondate
+    		+ ", " + SMTablegltransactionlines.ifiscalperiod
+    		+ ", " + SMTablegltransactionlines.ifiscalyear
+    		+ ", " + Long.toString(lExternalCompanyPullID)
+    		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
+    		+ ", " + SMTablegltransactionlines.loriginalentrynumber
+    		+ ", " + SMTablegltransactionlines.loriginallinenumber
+    		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+    		+ ", " + SMTablegltransactionlines.sacctid
+    		+ ", " + SMTablegltransactionlines.sdescription
+    		+ ", " + SMTablegltransactionlines.sreference
+    		+ ", " + SMTablegltransactionlines.ssourceledger
+    		+ ", " + SMTablegltransactionlines.ssourcetype
+    		+ ", " + SMTablegltransactionlines.stransactiontype
+    		+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
+    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    			+ " AND (" + SMTablegltransactionlines.bdamount + " != 0.00)"
+    		+ ")"
+    	;
+    	try {
+    		Statement stmt = conn.createStatement();
+    		stmt.execute(SQL);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [2019191165588] " + "could not pull GL transactions using SQL '"
+				+ SQL + "' - " + e.getMessage()
+			);
+		}
+    	
+    	//Now update the fiscal set data:
+    	//TODO
     	
     	//Commit the data transaction:
     	try {

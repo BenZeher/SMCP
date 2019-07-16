@@ -15,9 +15,6 @@ public class SMTableglexternalcompanypulls {
 	public static final String ifiscalyear = "ifiscalyear";
 	public static final String ifiscalperiod = "ifiscalperiod"; 
 	public static final String lbatchnumber = "lbatchnumber";
-	public static final String lstartingtransactionid = "lstartingtransactionid";
-	public static final String lendingtransactionid = "lendingtransactionid";
-	
 
 	//Field Lengths:
 	public static final int sdbnameLength = 64;

@@ -40,6 +40,7 @@ public class SMAuthenticate{
 		} catch (IOException e) {
 			return false;		
 		}
+		
 		//String sSessionParameter = clsManageRequestParameters.get_Request_Parameter(SMUtilities.REQUEST_PARAM_SESSIONTAG, req);
 	    String sUserName = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_USER, req);
 	    String sUserFullName = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME, req) + " "

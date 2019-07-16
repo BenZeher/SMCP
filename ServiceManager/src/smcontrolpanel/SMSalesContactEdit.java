@@ -554,6 +554,10 @@ public class SMSalesContactEdit extends HttpServlet {
 				out.println("</TABLE>");
 				out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITSAVE\" VALUE=\" Save \">");
 				out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITREMOVE\" VALUE=\" Remove \" ONCLICK=\"return confirm('This Sales Contact will be deleted.')\">  ");
+				out.println(" <INPUT TYPE=\"BUTTON\" "
+						+ "ONCLICK=\"location.href = \'/sm/smcontrolpanel.SMSalesContactEdit?id=-1&OriginalURL=%2Fsm%2Fsmcontrolpanel.SMSalesContactSelect%3Fdb%3DServMgr1%26SalesContactID%3D4&db=ServMgr1\'\""
+						+ " VALUE =\"Create New Sales Contact\"/>");
+
 				
 		    	}else{
 		    		out.println("<BR>No sales contact record found with this ID.");
@@ -563,6 +567,10 @@ public class SMSalesContactEdit extends HttpServlet {
 
 	    		out.println("<BR>Error [1396989523] reading sales contact record - " + ex.getMessage() + ".");
 	    	}    	
+	    }
+	    if(bIsNewRecord) {
+			out.println("</TABLE>");
+			out.println("<INPUT TYPE=\"SUBMIT\" NAME=\"SUBMITSAVE\" VALUE=\" Save \">");
 	    }
 		out.println("</BODY></HTML>");
 	}

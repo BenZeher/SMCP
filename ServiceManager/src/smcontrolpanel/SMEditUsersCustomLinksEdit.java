@@ -156,10 +156,11 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 		        String sSQL = MySQLs.Get_User_List_SQL(false);	       
 		        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());	        
 	        	while (rsUsers.next()){
-	        		sUserTable.add((String) "<INPUT TYPE=CHECKBOX " + " NAME=\"" + USER_UPDATE_ID_MARKER  
+	        		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + " NAME=\"" + USER_UPDATE_ID_MARKER  
 	        			+  Integer.toString(rsUsers.getInt(SMTableusers.lid)) + "\">" 
 	        			+ rsUsers.getString(SMTableusers.sUserFirstName) 
 	        			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
+	        			+ "</LABEL>"
 	        			//+ " (" + rsUsers.getString("sUserName") + ")" 
 	        		);
 	        	}

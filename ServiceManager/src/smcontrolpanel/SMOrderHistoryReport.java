@@ -955,7 +955,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 		pwOut.println("<TR>");
 		pwOut.println("<TD><FONT SIZE=2><B>Created by: </B>" + rsOrder.getString(SMTableorderheaders.sOrderCreatedByFullName) + "</FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2><B>Tax amount: </B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsOrder.getBigDecimal(SMTableorderheaders.bdordertaxamount)) + "</FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B>Tax type: </B>" + Integer.toString(rsOrder.getInt(SMTableorderheaders.staxtype)) + "</FONT></TD>");
+		pwOut.println("<TD><FONT SIZE=2><B>Tax type: </B>" + rsOrder.getString(SMTableorderheaders.staxtype) + "</FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2><B>&nbsp;</B></FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");

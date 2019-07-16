@@ -115,6 +115,8 @@ public class SMOrderHistoryAction extends HttpServlet {
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMOrderHistory) 
 	    		+ "\">Summary</A><BR><BR>");
 		out.println("</TD></TR></TABLE>");
+		
+		 out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	//Retrieve information
     	SMOrderHistoryReport por = new SMOrderHistoryReport();

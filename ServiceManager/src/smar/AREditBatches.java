@@ -21,6 +21,7 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -112,7 +113,7 @@ public class AREditBatches extends HttpServlet {
 	    out.println("</TD>");
 	    out.println("</TR>");
 	    out.println("</TABLE>");
-	    
+	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println("<FONT SIZE=2><B>NOTE:</B>&nbsp;Background color indicates batch status - "
 	    	+ "GREEN = Entered, BLUE = Imported, RED = Deleted, WHITE = Posted"
 	    	+ "</FONT>"
@@ -121,19 +122,19 @@ public class AREditBatches extends HttpServlet {
 	    //Build List
 	    out.println(sStyleScripts());
 	    out.println(javaScript());
-	    out.println("<TABLE class = \" batchlist \" >");
+	    out.println("<TABLE WIDTH = 100% class = \" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \" >");
 	    //out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-	    out.println("<TR>");
-	    out.println("<TH class=\"headingleft\" >Batch #</TH>");
-	    out.println("<TH class=\"headingleft\" >Date</TH>");
-	    out.println("<TH class=\"headingleft\" >Type</TH>");
-	    out.println("<TH class=\"headingleft\" >Status</TH>");
-	    out.println("<TH class=\"headingright\" >Entries</TH>");
-	    out.println("<TH class=\"headingright\" >Total</TH>");
-	    out.println("<TH class=\"headingleft\" >Created by</TH>");
-	    out.println("<TH class=\"headingleft\" >Description</TH>");
-	    out.println("<TH class=\"headingleft\" >Last edited</TH>");
-	    out.println("<TH class=\"headingleft\" >Posted</TH>");
+	    out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Batch #</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Date</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Type</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Status</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Entries</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Total</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Created by</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Last edited</TD>");
+	    out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Posted</TD>");
 	    out.println("</TR>");
 	    
 	    String SQL = "";

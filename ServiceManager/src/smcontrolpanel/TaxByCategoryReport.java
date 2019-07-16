@@ -58,36 +58,36 @@ public class TaxByCategoryReport extends java.lang.Object{
     	BigDecimal dGrandTotalTax = new BigDecimal(0);
 		out.println(SMUtilities.getMasterStyleSheetLink());
     	//print out the column headers.
-    	out.println("<TABLE BORDER=0 WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+    	out.println("<TABLE WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
     	if (bShowInvoiceLines){
     		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>Item Category</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>Tax Jurisdiction</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=2%><B><FONT SIZE=2>Tax Type</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=2%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><FONT SIZE=2>Invoice Date</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><FONT SIZE=2>Invoice #</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>Qty</FONT></B></TD>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Item #</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=40%><B><FONT SIZE=2>Item Decription</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>Taxable</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Cost</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Price</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Tax</FONT></B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>Item Category</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>Tax Jurisdiction</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=2%><B>Tax Type</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=2%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=6%><B>Invoice Date</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=6%><B>Invoice #</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=7%><B>Qty</B></TD>" + 
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=10%><B>Item #</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=40%><B>Item Decription</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>Taxable</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Cost</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Price</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Tax</B></TD>" +
 			"</TR>");
     	}else{
     		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \">" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=2%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=6%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=7%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" + 
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=40%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=4%><B><FONT SIZE=2>&nbsp;</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Cost</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Price</FONT></B></TD>" +
-			    "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>Tax</FONT></B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=2%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=6%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=7%><B>&nbsp;</B></TD>" + 
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=10%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=40%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" WIDTH=4%><B>&nbsp;</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Cost</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Price</B></TD>" +
+			    "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" VALIGN=BOTTOM WIDTH=8%><B>Tax</B></TD>" +
     			"</TR>");
     		
     	}
@@ -142,17 +142,12 @@ public class TaxByCategoryReport extends java.lang.Object{
     			+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.staxtype
     			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
     		;
-    	long lLinesInTable = 0;
     	try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			out.println("</TABLE>");
 			out.println("<TABLE BORDER=0 WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 			int alt = 0;
 			while(rs.next()){
-				
-	    		if(lLinesInTable == 100){
-	    			lLinesInTable = 0;
-	    		}
 				
 				//Print the header for any new tax class OR tax group OR category:
 				if (
@@ -176,6 +171,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 		    			dTaxClassCost = BigDecimal.ZERO;
 		    			dTaxClassPrice = BigDecimal.ZERO;
 		    			dTaxClassTax = BigDecimal.ZERO;
+		    			alt = 0;
 		    		}
 	    		}
 	    		
@@ -198,6 +194,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 		    			dCategoryCost = BigDecimal.ZERO;
 		    			dCategoryPrice = BigDecimal.ZERO;
 		    			dCategoryTax = BigDecimal.ZERO;
+		    			alt = 0;
 	    			}
 	    		}
 	    		//Print the footer for any new tax group:
@@ -216,6 +213,7 @@ public class TaxByCategoryReport extends java.lang.Object{
 		    			dTaxGroupCost = BigDecimal.ZERO;
 		    			dTaxGroupPrice = BigDecimal.ZERO;
 		    			dTaxGroupTax = BigDecimal.ZERO;
+		    			alt = 0;
 		    		}
 	    		}
 	    		bdCost = new BigDecimal(Double.toString(rs.getDouble(SMTableinvoicedetails.dExtendedCost)));
@@ -223,29 +221,29 @@ public class TaxByCategoryReport extends java.lang.Object{
 	    		bdTax = rs.getBigDecimal(SMTableinvoicedetails.bdlinesalestaxamount);
 		    	if (bShowInvoiceLines){
 		    		if( alt%2 ==0) {
-		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \">");
-		    		}else {
 		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \">");
+		    		}else {
+		        		out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \">");
 		    		}
-					out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.sItemCategory) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoiceheaders.staxjurisdiction) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoiceheaders.staxtype) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>&nbsp;</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" 
+					out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.sItemCategory) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoiceheaders.staxjurisdiction) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoiceheaders.staxtype) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp;</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 	    					+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
 									rs.getString(SMTableinvoiceheaders.datInvoiceDate), 
 									SMUtilities.DATE_FORMAT_FOR_DISPLAY, 
 									SMUtilities.EMPTY_DATE_VALUE)
-	    					+ "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>"+rs.getString(SMTableinvoicedetails.sInvoiceNumber)+"</FONT></TD>");
+	    					+ "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+rs.getString(SMTableinvoicedetails.sInvoiceNumber)+"</TD>");
 	    			BigDecimal bdQtyShipped = new BigDecimal(Double.toString(rs.getDouble(SMTableinvoicedetails.dQtyShipped)));
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdQtyShipped) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.sItemNumber) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableinvoicedetails.sDesc) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString("Taxable") + "</FONT></TD>");
-	    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCost) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice) + "</FONT></TD>");
-	    			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTax) + "</FONT></TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdQtyShipped) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.sItemNumber) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.sDesc) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString("Taxable") + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCost) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice) + "</TD>");
+	    			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTax) + "</TD>");
 	    			out.println("</TR>");
 	    			alt++;
 		    	}
@@ -273,7 +271,6 @@ public class TaxByCategoryReport extends java.lang.Object{
     			sCurrentCategory = rs.getString(SMTableinvoicedetails.sItemCategory);
     			sCurrentTaxType = rs.getString(SMTableinvoiceheaders.staxtype);
     			
-    			lLinesInTable++;
 			}
 			rs.close();
 			
@@ -314,12 +311,15 @@ public class TaxByCategoryReport extends java.lang.Object{
     		}
     		
 		    //Print the grand totals:
-		    out.println("<TD colspan=\"11\">&nbsp;</TD>");
-        	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \">");
-			out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Report totals:</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalCost) + "</FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalPrice) + "</FONT></TD>");
-			out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTax) + "</FONT></TD>");
+        	out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \">");
+			out.println("<TD COLSPAN=\"13\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+			out.println("</TR>");
+			
+        	out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \">");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" colspan=\"10\"><B>Report totals:</B></TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalCost) + "</TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalPrice) + "</TD>");
+			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dGrandTotalTax) + "</TD>");
 			out.println("</TR>");
 		    out.println("</TABLE>");
 		    
@@ -340,16 +340,16 @@ public class TaxByCategoryReport extends java.lang.Object{
 			PrintWriter out
 			){
     	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
-		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for category " + sCurrentCategory 
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" colspan=\"10\"><B>Total for category " + sCurrentCategory 
 				+ ", Tax group " + sCurrentTaxGroup
 				+ ", Tax class " + sCurrentTaxClass
-				+ ":</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassCost) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassPrice) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassTax) + "</FONT></TD>");
+				+ ":</B></TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassCost) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassPrice) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxClassTax) + "</TD>");
 		out.println("</TR>");
 	}
 	private void printTaxGroupFooter(
@@ -360,10 +360,10 @@ public class TaxByCategoryReport extends java.lang.Object{
 			PrintWriter out
 			){
     	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
-		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ":</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupCost) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupPrice) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupTax) + "</FONT></TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" colspan=\"10\"><B>Total for tax group " + sCurrentTaxGroup + ":</B></TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupCost) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupPrice) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTaxGroupTax) + "</TD>");
 		out.println("</TR>");
 	}
 	private void printCategoryFooter(
@@ -375,10 +375,10 @@ public class TaxByCategoryReport extends java.lang.Object{
 			PrintWriter out
 			){
     	out.println("<TR Class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTALS_HEADING + " \">");
-		out.println("<TD ALIGN=RIGHT colspan=\"10\"><B><FONT SIZE=2>Total for tax group " + sCurrentTaxGroup + ", category " + sCurrentCategory + ":</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryCost) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryPrice) + "</FONT></TD>");
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryTax) + "</FONT></TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" colspan=\"10\"><B>Total for tax group " + sCurrentTaxGroup + ", category " + sCurrentCategory + ":</B></TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryCost) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryPrice) + "</TD>");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dCategoryTax) + "</TD>");
 		out.println("</TR>");
 	}
 	public String getErrorMessage (){

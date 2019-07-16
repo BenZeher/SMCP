@@ -188,7 +188,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 				);
 			
 			pwOut.println(
-			"<BR><a name=\"OrderDetails\"><B><U>Order Details</U></B><BR>");
+			"<a name=\"OrderDetails\"><P STYLE = \"font-family:arial;\"><B><U>Order Details</U></B></P>");
 			pwOut.println(
 			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 
@@ -338,7 +338,8 @@ public class SMOrderHistoryReport extends java.lang.Object{
 					+ " - "
 					+ sUserFullName
 				);
-			pwOut.println("<a name=\"ChangeOrders\"><B><U>Change Orders</U></B></a>"+ "<BR>");
+			pwOut.println(
+			"<a name=\"ChangeOrders\"><P STYLE = \"font-family:arial;\"><B><U>Change Orders</U></B></P>");
 			pwOut.println(
 			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 			
@@ -421,7 +422,8 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			ServletContext context,
 			PrintWriter pwOut) throws SQLException{
 		String SQL = "";
-		pwOut.println("<BR><B><U>Critical Dates</U></B><BR>");
+		pwOut.println(
+		"<P STYLE = \"font-family:arial;\"><B><U>Critical Dates</U></B></P>");
 		
 		try{
 			SQL = "SELECT * FROM " + SMTablecriticaldates.TableName
@@ -487,7 +489,8 @@ public class SMOrderHistoryReport extends java.lang.Object{
 		String SQL = "";
 		String sBackgroundColor = "";
 		int iNumberofColumns = 0;
-		pwOut.println("<BR><B><U>Job cost/schedule</U></B><BR>");
+		pwOut.println(
+		"<P STYLE = \"font-family:arial;\"><B><U>Job cost/schedule</U></B></P>");
 		
 		try{
 			SQL = "SELECT * FROM " + SMTableworkorders.TableName
@@ -700,7 +703,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 
 			ResultSet rsInvoices = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printInvoices [1332178419]");
 			pwOut.println(
-			"<BR><a name=\"BILLINGSUMMARY\"><B><U>Billing Summary</U></B><BR>");
+			"<a name=\"BILLINGSUMMARY\"><P STYLE = \"font-family:arial;\"><B><U>Billing Summary</U></B></P>");
 			
 			pwOut.println(
 			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
@@ -833,7 +836,9 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			sCustomerOnHold = "Y";
 		}
 		String sOrderDate = clsDateAndTimeConversions.utilDateToString(rsOrder.getDate(SMTableorderheaders.datOrderDate),"M/d/yyyy");
-		pwOut.print("<FONT SIZE=2><BR><B>" + "Order number" + ":</B> " + rsOrder.getString(SMTableorderheaders.sOrderNumber).trim() + "&nbsp;&nbsp;"
+		pwOut.println("<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1>");
+		pwOut.println("<TR>");
+		pwOut.print("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + "Order number" + ":</B> " + rsOrder.getString(SMTableorderheaders.sOrderNumber).trim() + "&nbsp;&nbsp;"
 				+ "<B>Customer code:</B> " + sCustomerCode + "&nbsp;&nbsp;"
 				+ "<B>Customer on hold?:</B> " + sCustomerOnHold + "&nbsp;&nbsp;"
 				+ "<B>Order date:</B> " + sOrderDate + "&nbsp;&nbsp;"
@@ -845,7 +850,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 		}else{
 			pwOut.print(rsOrder.getString(SMTablesalesgroups.sSalesGroupDesc).trim() + "&nbsp;&nbsp;");
 		}
-		pwOut.println("</FONT><BR>");
+		pwOut.println("</TABLE>");
 
 		pwOut.println("<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1>");
 		pwOut.println("<tr><TD colspan=2><hr></TD></tr>");
@@ -1010,16 +1015,16 @@ public class SMOrderHistoryReport extends java.lang.Object{
 
 		pwOut.println("<TR>");
 		pwOut.println("<tr><TD colspan=4><hr></TD></tr>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Internal notes: </B>" + rsOrder.getString(SMTableorderheaders.mInternalComments) + "</FONT></TD>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Internal notes: </B>" + rsOrder.getString(SMTableorderheaders.mInternalComments) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Invoice notes: </B>" + rsOrder.getString(SMTableorderheaders.mInvoiceComments) + "</FONT></TD>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Invoice notes: </B>" + rsOrder.getString(SMTableorderheaders.mInvoiceComments) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Directions: </B>" + rsOrder.getString(SMTableorderheaders.mDirections) + "</FONT></TD>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Directions: </B>" + rsOrder.getString(SMTableorderheaders.mDirections) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Work order notes: </B>" + rsOrder.getString(SMTableorderheaders.mTicketComments) + "</FONT></TD>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Work order notes: </B>" + rsOrder.getString(SMTableorderheaders.mTicketComments) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		
 		/* TJR - 10/2/2014 - removed:
@@ -1028,28 +1033,28 @@ public class SMOrderHistoryReport extends java.lang.Object{
 		if (sFieldNotes == null){
 			sFieldNotes = "";
 		}
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Field notes: </B>" + sFieldNotes + "</FONT></TD>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Field notes: </B>" + sFieldNotes + "</FONT></TD>");
 		pwOut.println("</TR>");
 		*/
 		pwOut.println("<TR>");
 		String sWageScaleNotes = rsOrder.getString(SMTableorderheaders.swagescalenotes);
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Wage scale notes: </B>" 
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Wage scale notes: </B>" 
 			+ sWageScaleNotes + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Carpenter rate: </B>" 
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Carpenter rate: </B>" 
 				+ rsOrder.getString(SMTableorderheaders.scarpenterrate) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Laborer rate: </B>" 
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Laborer rate: </B>" 
 				+ rsOrder.getString(SMTableorderheaders.slaborerrate) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Electrician rate: </B>" 
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Electrician rate: </B>" 
 				+ rsOrder.getString(SMTableorderheaders.selectricianrate) + "</FONT></TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>" + SMBidEntry.ParamObjectName + " ID: </B>"
+		pwOut.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + SMBidEntry.ParamObjectName + " ID: </B>"
 				+ Long.toString(rsOrder.getLong(SMTableorderheaders.lbidid))
 				+ "&nbsp;Quote description:&nbsp;"
 				+ rsOrder.getString(SMTableorderheaders.squotedescription) + "</FONT></TD>");

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import SMClasses.SMDeliveryTicket;
 import SMClasses.SMLogEntry;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTablesmoptions;
@@ -19,7 +20,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsEmailInlineHTML;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
-import smar.SMOption;
 
 
 public class SMEditDeliveryTicketAction extends HttpServlet{

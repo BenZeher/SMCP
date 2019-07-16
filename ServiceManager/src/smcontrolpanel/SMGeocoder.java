@@ -22,7 +22,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import SMClasses.SMLogEntry;
-import smar.SMOption;
+import SMClasses.SMOption;
 
 public class SMGeocoder {
 	//All information regarding Google Maps Geocode API 

@@ -1,7 +1,6 @@
 package SMClasses;
 
 import SMDataDefinition.SMTableicitems;
-import smar.FinderResults;
 
 public class SMFinderFunctions {
 

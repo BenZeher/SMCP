@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import ConnectionPool.ServerSettingsFileParameters;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableorderheaders;
@@ -19,7 +20,6 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import smar.SMOption;
 
 public class SMEditOrderAction extends HttpServlet{
 	

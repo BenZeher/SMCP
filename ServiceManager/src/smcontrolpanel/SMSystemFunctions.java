@@ -1441,7 +1441,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(ICFindItemsSortedByMostUsed);
 			arrFunctionLinks.add(
 					"smar.ObjectFinder?"
-							+ "ObjectName=" + smar.FinderResults.SEARCH_MOSTUSEDITEMS
+							+ "ObjectName=" + SMClasses.FinderResults.SEARCH_MOSTUSEDITEMS
 							+ "&ResultClass=FinderResults&SearchingClass=smic.ICEditItemsSelection"
 							+ "&ReturnField=%22%22"
 							+ "&SearchField1=" + SMTableicitems.sItemDescription

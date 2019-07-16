@@ -15,6 +15,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTablearmonthlystatistics;
@@ -29,6 +30,7 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import smgl.GLTransactionBatch;
+import smgl.SMGLExport;
 
 public class ARBatch extends SMClasses.SMEntryBatch{
 	private SMLogEntry log;

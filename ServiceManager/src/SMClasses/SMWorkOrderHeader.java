@@ -31,7 +31,6 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
-import smar.SMOption;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;

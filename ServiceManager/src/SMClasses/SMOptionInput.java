@@ -1,4 +1,4 @@
-package smar;
+package SMClasses;
 
 import java.util.ArrayList;
 

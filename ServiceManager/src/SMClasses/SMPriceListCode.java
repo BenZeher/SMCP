@@ -1,4 +1,4 @@
-package smar;
+package SMClasses;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -27,7 +27,7 @@ public class SMPriceListCode extends java.lang.Object{
 	private String m_sDescription;
 	private String m_iNewRecord;
 	private ArrayList<String> m_sErrorMessageArray = new ArrayList<String> (0);
-	SMPriceListCode(
+	public SMPriceListCode(
     		String sPriceListCode
         ) {
     		m_sPriceListCode = sPriceListCode;

@@ -13,13 +13,13 @@ import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMClasses.FinderResults;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableglaccounts;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import smar.FinderResults;
 
 public class ICEditPOLineAction extends HttpServlet{
 

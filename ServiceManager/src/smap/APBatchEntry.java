@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatchentrylines;
@@ -29,7 +30,6 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
-import smar.SMOption;
 import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;

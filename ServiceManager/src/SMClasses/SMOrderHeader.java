@@ -15,7 +15,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import smar.ARCustomer;
 import smar.AROptions;
-import smar.SMOption;
 import smcontrolpanel.SMBidEntry;
 import smcontrolpanel.SMEditOrderEdit;
 import smcontrolpanel.SMGeocoder;

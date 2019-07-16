@@ -13,6 +13,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableentrylines;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccategories;
@@ -27,7 +28,6 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
-import smar.SMOption;
 
 public class ICEntry extends java.lang.Object {
 

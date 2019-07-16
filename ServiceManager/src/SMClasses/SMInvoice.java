@@ -19,7 +19,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsStringFunctions;
-import smar.SMOption;
 import smcontrolpanel.SMSalesOrderTaxCalculator;
 
 public class SMInvoice extends clsMasterEntry{//java.lang.Object{

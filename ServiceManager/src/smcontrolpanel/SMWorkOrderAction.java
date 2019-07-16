@@ -9,12 +9,12 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smar.FinderResults;
-import smar.SMOption;
 import ConnectionPool.WebContextParameters;
+import SMClasses.FinderResults;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMLogEntry;
 import SMClasses.SMMaterialReturn;
+import SMClasses.SMOption;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
@@ -389,8 +389,8 @@ public class SMWorkOrderAction extends HttpServlet{
 	    		String sRedirectString = 
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-						+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
-						+ "&ObjectName=" + smar.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
+						+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
+						+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
 						+ "&ResultClass=FinderResults"
 						+ "&SearchingClass=" + smaction.getCallingClass()
 						+ "&ReturnField=" 

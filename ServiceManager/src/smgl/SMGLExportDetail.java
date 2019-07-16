@@ -1,4 +1,4 @@
-package smar;
+package smgl;
 
 import java.math.BigDecimal;
 

@@ -14,9 +14,9 @@ import javax.servlet.http.HttpServletRequest;
 
 import smap.APTermsCalculator;
 import smap.APVendor;
-import smar.SMOption;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicpoinvoicelines;

@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoicePrinter;
 import SMClasses.SMLogEntry;
+import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
@@ -32,7 +33,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsPDFFileCreator;
-import smar.SMOption;
 
 public class SMSendInvoiceGenerate extends HttpServlet {
 

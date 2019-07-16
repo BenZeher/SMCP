@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMClasses.FinderResults;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
@@ -19,7 +20,6 @@ import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
-import smar.FinderResults;
 
 public class SMEditOrderDetailAction extends HttpServlet{
 	
@@ -129,7 +129,7 @@ public class SMEditOrderDetailAction extends HttpServlet{
 			String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
+				+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
 				+ "&ObjectName=" + FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
@@ -173,8 +173,8 @@ public class SMEditOrderDetailAction extends HttpServlet{
 			String sRedirectString = 
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&" + smar.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
-				+ "&ObjectName=" + smar.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
+				+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
+				+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
 				+ "&ReturnField=" + SMOrderDetail.ParamsItemNumber

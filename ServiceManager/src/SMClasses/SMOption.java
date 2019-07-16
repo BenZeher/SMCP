@@ -1,4 +1,4 @@
-package smar;
+package SMClasses;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -9,7 +9,6 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMBidEntry;
 import smcontrolpanel.SMUtilities;
-import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmoptions;
 import ServletUtilities.clsDatabaseFunctions;

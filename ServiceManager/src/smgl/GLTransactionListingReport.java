@@ -89,10 +89,25 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		
 		s += printColumnHeadings();
 
-		String sFiscalYear = sStartingFiscalPeriod.substring(0, sStartingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
-		String sStartingPeriod = sStartingFiscalPeriod.replace(sFiscalYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
-		String sEndingYear = sEndingFiscalPeriod.substring(0, sEndingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
-		String sEndingPeriod = sEndingFiscalPeriod.replace(sEndingYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
+		String sStartingFiscalYear = sStartingFiscalPeriod.substring(0, sStartingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
+		String sStartingPeriod = sStartingFiscalPeriod.replace(sStartingFiscalYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
+		String sEndingFiscalYear = sEndingFiscalPeriod.substring(0, sEndingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
+		String sEndingPeriod = sEndingFiscalPeriod.replace(sEndingFiscalYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
+		
+		int iStartingFiscalPeriodProduct;
+		try {
+			iStartingFiscalPeriodProduct = (Integer.parseInt(sStartingFiscalYear) * 100) + Integer.parseInt(sStartingPeriod);
+		} catch (Exception e) {
+			throw new Exception("Error [20191981522491] " + "Could not parse starting fiscal year '" + sStartingFiscalYear 
+				+ "', or starting fiscal period '" + sStartingFiscalPeriod + "'.");
+		}
+		int iEndingFiscalPeriodProduct;
+		try {
+			iEndingFiscalPeriodProduct = (Integer.parseInt(sEndingFiscalYear) * 100) + Integer.parseInt(sEndingPeriod);
+		} catch (Exception e) {
+			throw new Exception("Error [20191981522492] " + "Could not parse ending fiscal year '" + sEndingFiscalYear 
+				+ "', or ending fiscal period '" + sEndingFiscalPeriod + "'.");
+		}
 		
 		String sSQL = "SELECT" + "\n"
 			+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
@@ -134,9 +149,16 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")"
 			
 			+ " WHERE (" + "\n"
-				+ "(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " >= " + sFiscalYear + ")" + "\n"
-				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " >= " + sStartingPeriod + ")" + "\n"
-				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " <= " + sEndingPeriod + ")" + "\n"
+			
+				+ "("
+					+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+					+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") >= " + iStartingFiscalPeriodProduct
+				+ ")"
+				
+				+ " AND ("
+					+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+					+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
+				+ ")"
 				
 				//Account range:
 				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " >= '" + sStartingAccount + "')" + "\n"
@@ -691,7 +713,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
 		;
 		
-		//System.out.println("[1553548501] - SQL = '" + sSQL + "'");
+		System.out.println("[1553548501] - SQL = '" + sSQL + "'");
 			
 		boolean bOddRow = false;
 		BigDecimal bdGrandDebitTotal = new BigDecimal("0.00");
@@ -711,8 +733,12 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		
 		long lRecordCounter = 0;
 		String sStringBuffer = "";
+		int iPreviousFiscalYear = 0;
 		int iPreviousFiscalPeriod = 0;
 		String sPreviousAccount = "";
+		
+		//System.out.println("[20191981532436] " + "001");
+		
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 			while(rs.next()){
@@ -725,6 +751,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					&& (iPreviousFiscalPeriod != 0)
 				){
 					sStringBuffer += printFiscalPeriodSubtotals(
+						iPreviousFiscalYear,
 						iPreviousFiscalPeriod,
 						bdNetChangeForFiscalPeriod,
 						bdEndingBalanceForPeriod
@@ -732,6 +759,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
 					bdEndingBalanceForPeriod = BigDecimal.ZERO;
 				}
+				
+				//System.out.println("[1554320754] - into the loop...2");
 				
 				if (
 					(rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareToIgnoreCase(sPreviousAccount) != 0)
@@ -753,6 +782,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					bdTotalCreditsForAccount = BigDecimal.ZERO;
 				}
 				
+				//System.out.println("[1554320755] - into the loop...3");
+				
 				if (rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareTo(sPreviousAccount) != 0){
 					sStringBuffer += printAccountHeadingLine(
 						rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid), 
@@ -760,22 +791,44 @@ public class GLTransactionListingReport  extends java.lang.Object{
 						getStartingAccountBalance(
 							conn,
 							rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid),
-							sFiscalYear,
+							sStartingFiscalYear,
 							sStartingPeriod
 						)
 					);
 				}
 				
+				//System.out.println("[1554320756] - into the loop...4");
+				
 				bdDebit = BigDecimal.ZERO;
 				bdCredit = BigDecimal.ZERO;
 				bdAmount = rs.getBigDecimal(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount);
 				
+				//System.out.println("[1554320757] - into the loop...5");
+				
 				bdNetChangeForFiscalPeriod = bdNetChangeForFiscalPeriod.add(bdAmount);
+				//System.out.println("[1554320758] - into the loop...6");
+				
 				//This value keeps being rewritten on every record within a fiscal period, but there's no harm in that:
+				
+//				System.out.println("[2019198154586] " + "Acct = '" + rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid)
+//					+ ", year = " + rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear)
+//					+ ", period = " + rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod)
+//				);
+//				
+//				System.out.println("[20191981540566] " + "rs.getBigDecimal(" 
+//						+ "SMTableglfinancialstatementdata.TableName .SMTableglfinancialstatementdata.bdopeningbalance) = " + rs.getBigDecimal(
+//						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance));
+//				
+//				System.out.println("[20191981540567] " + "rs.getBigDecimal(" 
+//						+ "SMTableglfinancialstatementdata.TableName .SMTableglfinancialstatementdata.bdtotalyeartodate) = " + rs.getBigDecimal(
+//						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate));
+				
 				bdEndingBalanceForPeriod = rs.getBigDecimal(
 						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance).add(
 								rs.getBigDecimal(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate))
 						;
+				
+				//System.out.println("[1554320757] - into the loop...10");
 				
 				bdNetChangeForAccount = bdNetChangeForAccount.add(bdAmount);
 				bdEndingBalanceForAccount = rs.getBigDecimal(
@@ -851,6 +904,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				bOddRow = !bOddRow;
 				lRecordCounter++;
 				iPreviousFiscalPeriod = rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod);
+				iPreviousFiscalYear = rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear);
 				sPreviousAccount = rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid);
 				sPreviousAccountDescription = rs.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc);
 			}
@@ -859,15 +913,20 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
 		}
 		
+		//System.out.println("[20191981532437] " + "002");
+		
 		s += sStringBuffer;
 		
 		//Print the final fiscal period totals:
 		s += printFiscalPeriodSubtotals(
+			iPreviousFiscalYear,
 			iPreviousFiscalPeriod,
 			bdNetChangeForFiscalPeriod,
 			bdEndingBalanceForPeriod
 			);
 	
+		//System.out.println("[20191981532438] " + "003");
+		
 		s += printAccountSubTotals(
 			bdNetChangeForAccount,
 			bdEndingBalanceForAccount,
@@ -878,6 +937,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 
 		//add the last account balance:
 		bdGrandBalanceTotal = bdGrandBalanceTotal.add(bdEndingBalanceForAccount);
+		
+		//System.out.println("[20191981532439] " + "004");
 		
 		s += printGrandTotals(
 			bdGrandDebitTotal, 
@@ -968,6 +1029,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 	}
 	
 	private String printFiscalPeriodSubtotals(
+			int iFiscalYear,
 			int iFiscalPeriod,
 			BigDecimal bdNetChange,
 			BigDecimal bdBalance
@@ -977,7 +1039,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
 		
 		s += "    <TD COLSPAN = 8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  "<B>Net Change and Ending Balance For Fiscal Period " + Integer.toString(iFiscalPeriod) + ":</B>"
+			+  "<B>Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
 			+ "</TD>\n"
 							
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"

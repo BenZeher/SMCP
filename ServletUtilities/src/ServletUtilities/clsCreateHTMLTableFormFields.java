@@ -117,6 +117,38 @@ public class clsCreateHTMLTableFormFields {
 		return sRow;
 	
 	}
+	
+	public static String Create_Edit_Form_Text_Input_Row (
+			String sFieldName,
+			String sValue,
+			int iFieldLength,
+			String sLabel,
+			String sRemark,
+			String sTextBoxWidth,
+			boolean  oldAR
+	){
+	
+		String sRow = "<TR>\n";
+		sRow += "<TD ALIGN=RIGHT><B>" + sLabel  + " </B></TD>\n";
+	
+		sRow += "<TD ALIGN=LEFT>";
+		sRow += "<INPUT TYPE=TEXT NAME=\"" + sFieldName + "\"";
+		if (sValue != null){
+			sRow += " VALUE=\"" + sValue + "\"";
+		}
+		else{
+			sRow += " VALUE=\"\"";
+		}
+		sRow += " MAXLENGTH=" + Integer.toString(iFieldLength);
+		sRow += " STYLE=\"width: " + sTextBoxWidth + " in; height: 0.25in\"";
+		sRow += "></TD>\n";
+	
+		sRow += "<TD ALIGN=LEFT>" + sRemark + "</TD>\n";
+		sRow += "</TR>\n\n";
+		return sRow;
+	
+	}
+	
 	public static String Create_Edit_Form_Disabled_Text_Input_Row (
 			String sFieldName,
 			String sValue,

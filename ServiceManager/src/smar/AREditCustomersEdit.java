@@ -310,7 +310,8 @@ public class AREditCustomersEdit extends HttpServlet {
 	        		SMTablearcustomer.sCustomerNumberLength, 
 	        		"Customer number<B><FONT COLOR=\"RED\">*</FONT></B>:", 
 	        		"Up to " + SMTablearcustomer.sCustomerNumberLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    }else{

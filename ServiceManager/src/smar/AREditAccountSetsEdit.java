@@ -167,7 +167,8 @@ public class AREditAccountSetsEdit extends HttpServlet {
 	        		SMTablearacctset.sAcctSetCodeLength, 
 	        		"Acct set code:", 
 	        		"Up to " + SMTablearacctset.sAcctSetCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -198,7 +199,8 @@ public class AREditAccountSetsEdit extends HttpServlet {
         		SMTablearacctset.sDescriptionLength, 
         		"Acct set description:", 
         		"Up to " + SMTablearacctset.sDescriptionLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 

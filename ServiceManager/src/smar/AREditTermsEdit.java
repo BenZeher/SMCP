@@ -153,7 +153,8 @@ public class AREditTermsEdit extends HttpServlet {
 	        		SMTablearterms.sTermsCodeLength, 
 	        		"Terms code:", 
 	        		"Up to " + SMTablearterms.sTermsCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -195,7 +196,8 @@ public class AREditTermsEdit extends HttpServlet {
         		18, 
         		"Discount percentage:", 
         		"Enter WITHOUT percent sign - enter a zero if no discount is offered.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
@@ -206,7 +208,8 @@ public class AREditTermsEdit extends HttpServlet {
         		3, 
         		"Discount number of days:", 
         		"Used if discount is offered after a specified number of days; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 		
@@ -217,7 +220,8 @@ public class AREditTermsEdit extends HttpServlet {
         		3, 
         		"Discount day of the month:", 
         		"Used if discount is offered by payment on a particular day of the month; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 		
@@ -228,7 +232,8 @@ public class AREditTermsEdit extends HttpServlet {
         		3, 
         		"Due number of days:", 
         		"Used if payment is due after a specified number of days; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2", 
+        		true
         	)
         );
 		
@@ -239,7 +244,8 @@ public class AREditTermsEdit extends HttpServlet {
         		3, 
         		"Due day of the month:", 
         		"Used if payment is due on a specified day of the month; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
         

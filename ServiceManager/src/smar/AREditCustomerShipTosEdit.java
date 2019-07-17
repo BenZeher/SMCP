@@ -236,7 +236,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	        		SMTablearcustomershiptos.sShipToCodeLength, 
 	        		"Ship-to code:", 
 	        		"Up to " + SMTablearcustomershiptos.sShipToCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -252,7 +253,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sDescriptionLength, 
         		"Description:", 
         		"Up to " + SMTablearcustomershiptos.sAddressLine1Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 		
@@ -263,7 +265,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sAddressLine1Length, 
         		"Address Line 1:", 
         		"First line of the address, up to " + SMTablearcustomershiptos.sAddressLine1Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
@@ -274,7 +277,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sAddressLine2Length, 
         		"Address Line 2:", 
         		"Second line of the address, up to " + SMTablearcustomershiptos.sAddressLine2Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
         		
@@ -285,7 +289,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sAddressLine3Length, 
         		"Address Line 3:", 
         		"Third line of the address, up to " + SMTablearcustomershiptos.sAddressLine3Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
@@ -296,7 +301,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sAddressLine4Length, 
         		"Address Line 4:", 
         		"Fourth line of the address, up to " + SMTablearcustomershiptos.sAddressLine4Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
@@ -307,7 +313,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sCityLength, 
         		"City:", 
         		"Name of city, up to " + SMTablearcustomershiptos.sCityLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
 
@@ -318,7 +325,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sStateLength, 
         		"State Or Province:", 
         		"Up to " + SMTablearcustomershiptos.sStateLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
@@ -329,7 +337,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sCountryLength, 
         		"Country:", 
         		"Up to " + SMTablearcustomershiptos.sCountryLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
 
@@ -340,7 +349,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sPostalCodeLength, 
         		"Zip Or Postal Code:", 
         		"Up to " + SMTablearcustomershiptos.sPostalCodeLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
@@ -351,7 +361,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sContactNameLength, 
         		"Contact name:", 
         		"Up to " + SMTablearcustomershiptos.sContactNameLength + " characters.",
-        		"3.2"
+        		"3.2", 
+        		true
         	)
 		);
         
@@ -362,7 +373,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sPhoneNumberLength, 
         		"Phone:", 
         		"Up to " + SMTablearcustomershiptos.sPhoneNumberLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
@@ -373,7 +385,8 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
         		SMTablearcustomershiptos.sFaxNumberLength, 
         		"Fax:", 
         		"Up to " + SMTablearcustomershiptos.sFaxNumberLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         

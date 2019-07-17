@@ -164,7 +164,8 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 	        		SMTablepricelistcodes.spricelistcodeLength, 
 	        		"Price list code:", 
 	        		"Up to " + SMTablepricelistcodes.spricelistcodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -180,7 +181,8 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 				SMTablepricelistcodes.sdescriptionLength, 
         		"Code description:", 
         		"Up to " + SMTablepricelistcodes.sdescriptionLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 

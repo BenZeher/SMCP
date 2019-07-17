@@ -168,7 +168,8 @@ public class GLEditAccountsEdit extends HttpServlet {
 	        		SMTableglaccounts.sAcctIDLength, 
 	        		"Account number:", 
 	        		"Up to " + SMTableglaccounts.sAcctIDLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -185,7 +186,8 @@ public class GLEditAccountsEdit extends HttpServlet {
         		"Formatted account number:", 
         		"Including hyphens or any additional formatting, up to " 
         			+ SMTableglaccounts.sFormattedAcctLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
@@ -254,7 +256,8 @@ public class GLEditAccountsEdit extends HttpServlet {
         		SMTableglaccounts.sDescLength, 
         		"Account description:", 
         		"Up to " + SMTableglaccounts.sDescLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
@@ -373,7 +376,8 @@ public class GLEditAccountsEdit extends HttpServlet {
         		13, 
         		"Annual budget:", 
         		"",
-        		"7"
+        		"7",
+        		true
         	)
         );
 		

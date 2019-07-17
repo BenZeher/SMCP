@@ -2427,16 +2427,6 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			|| (iFeedGL == SMTablearoptions.FEED_GL_SMCP_GL_ONLY)
 				
 		){
-			switch (iBatchType()) {
-			case 0:
-				sBatch = "Invoice";
-			case 1:
-				sBatch =  "Cash";
-			case 2:
-				sBatch =  "Adjustment";
-			default:  // optional default case
-				sBatch =  "Invoice";
-			}
 			GLTransactionBatch gltransactionbatch = null;
 			try {
 				gltransactionbatch = export.createGLTransactionBatch(
@@ -2444,7 +2434,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 					sCreatedByID(), 
 					sLastEditedByID(), 
 					sStdBatchDateString(), 
-					"AR " + sBatch + " Batch #" + lBatchNumber()
+					"AR " + SMBatchTypes.Get_Batch_Type(super.iBatchType()) + " Batch #" + lBatchNumber()
 				);
 			} catch (Exception e) {
 				super.addErrorMessage("Error [1557446823] creating SMCP GL batch - " + e.getMessage());

@@ -267,7 +267,12 @@ public class GLEditBatchesEdit extends HttpServlet {
     	pwOut.println("<B><U>Entry date</B></U>");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
-    	    	
+
+    	pwOut.println("    <TD>");
+    	pwOut.println("<B><U>Fiscal<BR>Yr-Pd</B></U>");
+    	pwOut.println("</TD>\n");
+    	iColumnCount++;
+    	
     	pwOut.println("    <TD>");
     	pwOut.println("<B><U>Entry&nbsp;description</B></U>");
     	pwOut.println("</TD>\n");
@@ -370,6 +375,11 @@ public class GLEditBatchesEdit extends HttpServlet {
 	    		}
 	    		*/
 	        	pwOut.println(sEntryDate);
+	        	pwOut.println("</TD>\n");
+	        	
+	        	//Fiscal year - period:
+	        	pwOut.println("    <TD>");
+	        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entry.getsfiscalyear() + " - " + entry.getsfiscalperiod()));
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Description

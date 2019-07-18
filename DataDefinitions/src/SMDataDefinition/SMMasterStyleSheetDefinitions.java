@@ -69,4 +69,22 @@ public class SMMasterStyleSheetDefinitions {
 	public static final String TABLE_NOTES = TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK;
 	public static final String TABLE_SUB_BREAK = TABLE_ROW_BACKGROUNDCOLOR_GREY;
 	
+	
+	//Notification defs
+	public static final String SCREEN_OVERLAY = "overlay";
+	public static final String NOTIFICATION = "notification";
+	public static final String NOTIFICATION_CENTER = "notification-center";
+	public static final String NOTIFICATION_SUCCESS_CENTER = "notification-success-center";
+	public static final String NOTIFICATION_SUCCESS = "notification-success";
+	public static final String NOTIFICATION_INFO_CENTER = "notification-info-center";
+	public static final String NOTIFICATION_INFO = "notification-info";
+	public static final String NOTIFICATION_WARNING_CENTER = "notification-warning-center";
+	public static final String NOTIFICATION_WARNING = "notification-warning";
+	
+	public static final String SUCCESS_NOTIFICATION_TEXT_ID = "notification-success-text";
+	public static final String INFO_NOTIFICATION_TEXT_ID = "notification-info-text";
+	public static final String WARNING_NOTIFICATION_TEXT_ID = "notification-warning-text";
+	
+	
+	
 }

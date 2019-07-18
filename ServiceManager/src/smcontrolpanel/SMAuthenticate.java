@@ -13,11 +13,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsNotifications;
 import ServletUtilities.clsStringFunctions;
 
 /** Servlet that authenticates the user.*/
@@ -360,23 +362,17 @@ public class SMAuthenticate{
 		s += "<HTML>"
 				+ clsServletUtilities.getJQueryIncludeString() 
 				+ clsServletUtilities.getJQueryUIIncludeString() 
-				+ clsServletUtilities.getBootstrapCSSIncludeString()
+				+ clsServletUtilities.getMasterStyleSheetLink()
 				+ "<BODY>";
 		//HTML for notifications
 		if(sUpdateRquired != null) {
-			s += "<div class=\"overlay\">"
-					+ "<div class=\"alert\" id=\"updatenotification\">"
-					+ "<div class=\"alert-info\" id=\"updatenotificationtext\">"
-					+ " Updating database from version " + sUpdateRquired + " to version " + Integer.toString(SMUpdateData.getDatabaseVersion()) + ". Please wait..."
-					+ "</div>" 
-			+ "  </div>"
-			+ "  </div>";	
+			s += clsNotifications.info_center_overlay(
+					"Updating database from version " + sUpdateRquired + " to version " + Integer.toString(SMUpdateData.getDatabaseVersion()) 
+					+ ". Please wait..."
+					);
+	
 		}else {
-			s +="<div class=\"alert \" id = \"sessionnotification\">" 
-					+ "<div class=\"alert-success\" id=\"sessionnotificationtext\">"
-					+ "You have created a new session in <B>" +sCompanyName+"</B>" 
-					+ "</div>" 
-					+ "</div> ";
+			s += clsNotifications.success_center_fade("You have created a new session in <B>" +sCompanyName+"</B>" );
 		}
 		
 		//Scripts for notifications
@@ -389,20 +385,21 @@ public class SMAuthenticate{
 	                + "xhr.onreadystatechange = function(){\n"  
 	                + "    if (this.readyState == 4 && this.status == 200){\n"
 	                + "   		if (this.responseText.includes(\"Error\")){\n"
-	                + "			     document.getElementById(\"updatenotificationtext\").removeAttribute(\"class\");\n"	
-	                + "			     document.getElementById(\"updatenotificationtext\").setAttribute(\"class\", \"alert-danger\");\n"	
+	                + "			     document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").removeAttribute(\"class\");\n"	
+	                + "			     document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").setAttribute(\"class\", \""+SMMasterStyleSheetDefinitions.NOTIFICATION_WARNING_CENTER+"\");\n"	
 	                
-	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "        		 document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").innerHTML = this.responseText; \n"
 	                + "    		}else{\n"
-	                + "         	document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "         	document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").innerHTML = this.responseText; \n"
 	                + "         	setTimeout(function(){\n"
 	                + " 				location.reload();\n"	
 	                + "				}, 4000); \n"
 	                + "			}\n" 
 	                + "    }"
 	                + "     if (this.readyState == 4 && this.status != 200){\n"
-	                + "			     document.getElementById(\"updatenotificationtext\").style.color = 'red';\n"
-	                + "        		 document.getElementById(\"updatenotificationtext\").innerHTML = this.responseText; \n"
+	                + "			      document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").removeAttribute(\"class\");\n"
+	                + "	             document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").setAttribute(\"class\", \""+ SMMasterStyleSheetDefinitions.NOTIFICATION_WARNING_CENTER +"\");\n"
+	                + "        		 document.getElementById(\""+SMMasterStyleSheetDefinitions.INFO_NOTIFICATION_TEXT_ID+"\").innerHTML = this.responseText; \n"
 	                + "	   }\n" 
 	                +"};\n\n"
 	                
@@ -417,12 +414,12 @@ public class SMAuthenticate{
 		s +=   "$(document).ready(function (){\n";
 		
 		if(sUpdateRquired != null) {
-			s += "setTimeout(asyncRequest, 3000);\n";
+	//		s += "setTimeout(asyncRequest, 3000);\n";
 		}
 		
-		s +=	 " setTimeout(function (){\n"
-				+ " $(\"#sessionnotification\").fadeOut();\n"
-				+ "},4000);\n";
+	//	s +=	 " setTimeout(function (){\n"
+	//			+ " $(\"#sessionnotification\").fadeOut();\n"
+	//			+ "},4000);\n";
 		
 		s +=	"});\n";
 		

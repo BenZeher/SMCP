@@ -202,10 +202,15 @@ public class SMQueryGenerate extends HttpServlet {
 						+ "\" VALUE=\"" + "1"
 						+ "\">" + "\n");
     		}
+        	if	(sQueryTitle.trim().compareToIgnoreCase("") == 0){
+        		sQueryTitle="(Default Query Title)";
+        	}
 			out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>" + "\n");
 			out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" 
 					+ "smcontrolpanel.SMQuerySelect" + "\">" + "\n");
 			
+			if(!sQueryTitle.trim().equalsIgnoreCase("(Default Query Title)")) {
+				
 			out.println("<B>Query ID #:&nbsp;" + sQueryID + "</B><BR>" + "\n");
 			
 			out.println("Comment:<BR>"
@@ -230,6 +235,7 @@ public class SMQueryGenerate extends HttpServlet {
 						+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
 				);
 			}
+	    }
 			out.println("</FORM>");
 			
 		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"
@@ -296,13 +302,12 @@ public class SMQueryGenerate extends HttpServlet {
     		response.sendRedirect(sRedirect);
         	return;
     	}
-    	
+
     	if (
-    			(sQueryTitle.trim().compareToIgnoreCase("") == 0)
-    			|| (sQueryString.trim().compareToIgnoreCase("") == 0)
+    	(sQueryString.trim().compareToIgnoreCase("") == 0)
     	){
     		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080654]");
-    		sWarning = "You must enter a query title and a query string.";
+    		sWarning = "You must enter a query string.";
     		String sRedirect = SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     		+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&" + SMQuerySelect.PARAM_QUERYTITLE + "=" + sQueryTitle

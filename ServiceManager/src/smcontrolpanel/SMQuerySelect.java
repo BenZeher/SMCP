@@ -363,7 +363,7 @@ public class SMQuerySelect  extends HttpServlet {
 				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'value 1', 'value 2', 'value 3'}{First description, Second description, Third description}]]</B><BR>");
 		out.println("Drop down list example:<B>[[" 
 				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'1','2','3'}{Yellow,Blue,Red}]]</B><BR>");
-		out.println("To assign valuse to MySQL variables, enclose the 'SET' commands in a '<B>*SETCOMMANDS*</B>' phrase : <B>[[" 
+		out.println("To assign value to MySQL variables, enclose the 'SET' commands in a '<B>*SETCOMMANDS*</B>' phrase : <B>[[" 
 				+ SMCustomQuery.SETVARIABLECOMMAND + "Set variable string]]</B><BR>");
 		out.println("Set variable example:<B>[[" 
 				+ SMCustomQuery.SETVARIABLECOMMAND + "SET @rownum = NULL, @item = NULL]]</B><BR>");

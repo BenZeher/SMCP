@@ -411,19 +411,14 @@ public class SMAuthenticate{
 					;
 		}
 		
+		//Add on document ready function.
 		s +=   "$(document).ready(function (){\n";
 		
 		if(sUpdateRquired != null) {
-	//		s += "setTimeout(asyncRequest, 3000);\n";
+			s += "setTimeout(asyncRequest, 3000);\n";
 		}
-		
-	//	s +=	 " setTimeout(function (){\n"
-	//			+ " $(\"#sessionnotification\").fadeOut();\n"
-	//			+ "},4000);\n";
-		
-		s +=	"});\n";
-		
-				s += "</script>";
+				s +=	"});\n";
+	    s += "</script>";
 	
 		s +=	"</BODY>"
 				+ "</HTML>";

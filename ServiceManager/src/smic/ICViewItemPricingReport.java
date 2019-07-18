@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
@@ -17,6 +16,7 @@ import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICViewItemPricingReport extends java.lang.Object{
 
@@ -290,7 +290,7 @@ public class ICViewItemPricingReport extends java.lang.Object{
 				+ "&PriceListCode=" + sPriceCode
 				+ "&PriceListCodeDesc=" + sPriceCodeDesc 
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-	    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sPriceCode) + "</A>";
+	    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sPriceCode) + "</A>";
 		}
 		out.println("<TD><FONT SIZE=2>" + sPriceCodeLink + "</FONT></TD>");
 		
@@ -341,7 +341,7 @@ public class ICViewItemPricingReport extends java.lang.Object{
 			sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICDisplayItemInformation?ItemNumber=" 
 	    		+ sItem
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-	    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>";
+	    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>";
 		}else{
 			sOutPut += sItem;
 		}

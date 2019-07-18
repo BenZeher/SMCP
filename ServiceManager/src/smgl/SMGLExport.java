@@ -1,4 +1,4 @@
-package smar;
+package smgl;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import org.apache.commons.net.ftp.FTP;
 
 import SMClasses.SMBatchStatuses;
+import SMClasses.SMOption;
 import SMDataDefinition.SMExportTypes;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableglexportheaders;
@@ -21,11 +22,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsFTPFunctions;
 import ServletUtilities.clsServletUtilities;
-import smgl.GLAccount;
-import smgl.GLFiscalYear;
-import smgl.GLTransactionBatch;
-import smgl.GLTransactionBatchEntry;
-import smgl.GLTransactionBatchLine;
 
 public class SMGLExport extends java.lang.Object{
 

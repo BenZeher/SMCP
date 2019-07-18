@@ -3,6 +3,8 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
+import smgl.GLExternalPull;
+
 public class TESTBatchExport extends HttpServlet{
 
 	private static final long serialVersionUID = 1L;
@@ -134,7 +136,22 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		
+		//Test GL Pull:
+		GLExternalPull pull = new GLExternalPull();
+		try {
+			pull.pullCompany(
+					sDBID,
+					"2",
+					"Tom Ronayne",
+					"1", 
+					"2019", 
+					"7", 
+					conn,
+					null);
+		} catch (Exception e1) {
+			System.out.println("Error - " + e1.getMessage());
+		}
+		System.out.println("DONE");
 		
 		//Test GL Transaction Batch for AR:
 		ARBatch arbatch = new ARBatch("28260");

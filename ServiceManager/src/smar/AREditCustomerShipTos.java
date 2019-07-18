@@ -18,6 +18,8 @@ import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablearcustomershiptos;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
 public class AREditCustomerShipTos extends HttpServlet {
 
@@ -49,11 +51,11 @@ public class AREditCustomerShipTos extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
-		String sStatus = ARUtilities.get_Request_Parameter("Status", request);
+		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 	    if (! sStatus.equalsIgnoreCase("")){
 			out.println("<B>STATUS: " + sStatus + "</B><BR>");
 		}
@@ -93,12 +95,12 @@ public class AREditCustomerShipTos extends HttpServlet {
         	while (rs.next()){
         		String sOptionValue = "<OPTION VALUE=\"";
         		sOptionValue = sOptionValue +
-        			ARUtilities.PadLeft(rs.getString(
+        				clsStringFunctions.PadLeft(rs.getString(
         				SMTablearcustomershiptos.sCustomerNumber).trim()," ", 
         					SMTablearcustomershiptos.sCustomerNumberLength);
 
         		sOptionValue = sOptionValue +
-        			ARUtilities.PadLeft(rs.getString(
+        				clsStringFunctions.PadLeft(rs.getString(
         				SMTablearcustomershiptos.sShipToCode).trim()," ",
         					SMTablearcustomershiptos.sShipToCodeLength);
         		

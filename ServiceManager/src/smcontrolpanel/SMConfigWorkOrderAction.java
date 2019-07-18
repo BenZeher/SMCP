@@ -7,7 +7,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smar.FinderResults;
+import SMClasses.FinderResults;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableworkorders;

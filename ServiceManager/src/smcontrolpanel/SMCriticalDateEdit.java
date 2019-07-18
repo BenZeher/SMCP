@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 
 public class SMCriticalDateEdit  extends HttpServlet {
 
@@ -401,7 +403,7 @@ public class SMCriticalDateEdit  extends HttpServlet {
 
 		try{
 			ResultSet rsUsers = clsDatabaseFunctions.openResultSet(
-					SMMySQLs.Get_User_List_SQL(false),
+					MySQLs.Get_User_List_SQL(false),
 					getServletContext(),
 					sm.getsDBID(),
 					"MySQL",

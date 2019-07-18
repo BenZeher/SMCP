@@ -93,12 +93,15 @@ public class SMOrderHistoryAction extends HttpServlet {
 			String disposition = "attachment; fileName= " + "PURGEORDERLIST " + clsDateAndTimeConversions.now("MM-dd-yyyy hh:mm") + ".html";
 			response.setHeader("Content-Disposition", disposition);
 		}    	
+
+		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + sUserName 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>" +
@@ -112,6 +115,8 @@ public class SMOrderHistoryAction extends HttpServlet {
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMOrderHistory) 
 	    		+ "\">Summary</A><BR><BR>");
 		out.println("</TD></TR></TABLE>");
+		
+		 out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	//Retrieve information
     	SMOrderHistoryReport por = new SMOrderHistoryReport();

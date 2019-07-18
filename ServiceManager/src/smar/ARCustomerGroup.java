@@ -3,6 +3,8 @@ package smar;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 import java.sql.ResultSet;
@@ -45,9 +47,9 @@ public class ARCustomerGroup extends java.lang.Object{
         }
     
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sGroupCode = ARUtilities.get_Request_Parameter(ParamsGroupCode, req).trim().replace("&quot;", "\"");
-    	m_sDescription = ARUtilities.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sGroupCode = clsManageRequestParameters.get_Request_Parameter(ParamsGroupCode, req).trim().replace("&quot;", "\"");
+    	m_sDescription = clsManageRequestParameters.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(ParamiActive) == null){
 			m_iActive = "0";
 		}else{
@@ -57,12 +59,12 @@ public class ARCustomerGroup extends java.lang.Object{
 				m_iActive = "1";
 			}
 		}
-		m_datLastMaintained = ARUtilities.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
+		m_datLastMaintained = clsManageRequestParameters.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
 		if(m_datLastMaintained.compareToIgnoreCase("") == 0){
 			m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		}
-		m_sLastEditUserFullName = ARUtilities.get_Request_Parameter(ParamsLastEditUserFullName, req).trim().replace("&quot;", "\"");
-		m_lLastEditUserID = ARUtilities.get_Request_Parameter(ParamlLastEditUserID, req).trim().replace("&quot;", "\"");
+		m_sLastEditUserFullName = clsManageRequestParameters.get_Request_Parameter(ParamsLastEditUserFullName, req).trim().replace("&quot;", "\"");
+		m_lLastEditUserID = clsManageRequestParameters.get_Request_Parameter(ParamlLastEditUserID, req).trim().replace("&quot;", "\"");
     }
 	private boolean load(
 			String sCustomerGroup,
@@ -101,16 +103,16 @@ public class ARCustomerGroup extends java.lang.Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sGroupCode = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomergroups.sGroupCode));
-	        	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomergroups.sDescription));
+	        	m_sGroupCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomergroups.sGroupCode));
+	        	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomergroups.sDescription));
 	        	m_iActive = rs.getString(SMTablearcustomergroups.iActive);
 	        	if(clsDateAndTimeConversions.IsValidDate(rs.getDate(SMTablearcustomergroups.datLastMaintained))){
 	        		m_datLastMaintained = clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearcustomergroups.datLastMaintained),"MM/dd/yyyy");
 	        	}else{
 	        		m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 	        	}
-	        	m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomergroups.sLastEditUserFullName));
-	        	m_lLastEditUserID = ARUtilities.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomergroups.lLastEditUserID)));
+	        	m_sLastEditUserFullName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomergroups.sLastEditUserFullName));
+	        	m_lLastEditUserID = clsStringFunctions.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomergroups.lLastEditUserID)));
 	        	m_iNewRecord = "0";
 	        	rs.close();
 	        	return true;
@@ -271,13 +273,13 @@ public class ARCustomerGroup extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsGroupCode + "=" + ARUtilities.URLEncode(m_sGroupCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamsLastEditUserFullName + "=" + ARUtilities.URLEncode(m_sLastEditUserFullName);
-		sQueryString += "&" + ParamlLastEditUserID + "=" + ARUtilities.URLEncode(m_lLastEditUserID);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsGroupCode + "=" + clsServletUtilities.URLEncode(m_sGroupCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamsLastEditUserFullName + "=" + clsServletUtilities.URLEncode(m_sLastEditUserFullName);
+		sQueryString += "&" + ParamlLastEditUserID + "=" + clsServletUtilities.URLEncode(m_lLastEditUserID);
 				
 		return sQueryString;
 	}

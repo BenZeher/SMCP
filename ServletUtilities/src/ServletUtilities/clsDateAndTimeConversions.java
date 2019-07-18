@@ -1,6 +1,8 @@
 package ServletUtilities;
 
 import java.sql.Date;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -635,6 +637,48 @@ public class clsDateAndTimeConversions {
 			}
 		}
 		return sDuration;
+	}
+	
+	public static java.sql.Date StringToSQLDateStrict (String sFormat, String s){
+		SimpleDateFormat sdf = new SimpleDateFormat(sFormat);
+
+//		strFormat is the required format of the date.
+
+		sdf.setLenient(false); // This is very important
+
+//		Parse the date entered by the user to check the
+//		format.
+		try{
+
+//		 get the valid value into the Date class object.
+		java.util.Date myDate = sdf.parse(s);
+		return clsDateAndTimeConversions.UtilDateToSQLDate(myDate);
+
+		}catch(ParseException pse){
+//		Handle Your invalid date format exception here.
+			return null;
+		}
+
+	}
+	
+	public static long DateStringToLong (String sDateString){
+		
+		try{
+			return Long.parseLong(sDateString.replace("-", ""));
+		}catch (NumberFormatException e) {
+			return 0;
+		}
+	}
+	
+	public static boolean testResultSetTSFieldForNull(ResultSet rs, String sFieldName){
+		
+		try{
+			@SuppressWarnings("unused")
+			Timestamp ts = rs.getTimestamp(sFieldName);
+		}catch(SQLException e){
+			return false;
+		}
+		return true;
 	}
 
 }

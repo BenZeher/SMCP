@@ -22,6 +22,7 @@ public class SMTablegltransactionlines {
 	public static final String sreference = "sreference";
 	public static final String datpostingdate = "datpostingdate";
 	public static final String iconsolidatedposting = "iconsolidatedposting";
+	public static final String lexternalcompanypullid = "lexternalcompanypullid";
 	
 	//Field Lengths:
 	public static final int sacctidLength = 45;

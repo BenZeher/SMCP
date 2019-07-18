@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMClasses.SMReminders;
 import SMDataDefinition.SMTablereminderusers;
 import SMDataDefinition.SMTablereminders;
@@ -430,7 +431,7 @@ public class SMRemindersEdit  extends HttpServlet {
 			ArrayList<String> sUserTable = new ArrayList<String>(0);
 			try{
 				//First get a list of all the users:
-		        String sSQL = SMMySQLs.Get_User_List_SQL(false);
+		        String sSQL = MySQLs.Get_User_List_SQL(false);
 		       
 		        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());
 		        

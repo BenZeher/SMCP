@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -140,7 +142,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
         
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_WorkPerformedCode_By_Code(sWPCode, sServiceType);
+	        String sSQL = MySQLs.Get_WorkPerformedCode_By_Code(sWPCode, sServiceType);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
 	        rs.next();
@@ -191,7 +193,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 		//Include all the SQLs needed to delete a record:
 		String sWPCode = clsStringFunctions.StringRight(sCode, SMTableworkperformedcodes.sWorkPerformedCodeLength).trim();
         String sServiceType = clsStringFunctions.StringLeft(sCode, SMTableworkperformedcodes.sCodeLength).trim();
-		sSQLList.add(SMMySQLs.Delete_WorkPerformedCode_SQL(sWPCode, sServiceType));
+		sSQLList.add(MySQLs.Delete_WorkPerformedCode_SQL(sWPCode, sServiceType));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -209,7 +211,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 		//First, make sure there isn't a record already:
 		String sWPCode = clsStringFunctions.StringRight(sCode, SMTableworkperformedcodes.sWorkPerformedCodeLength).trim();
         String sServiceType = clsStringFunctions.StringLeft(sCode, SMTableworkperformedcodes.sCodeLength).trim();
-		String sSQL = SMMySQLs.Get_WorkPerformedCode_By_Code(sWPCode, sServiceType);
+		String sSQL = MySQLs.Get_WorkPerformedCode_By_Code(sWPCode, sServiceType);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -227,7 +229,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_WorkPerformedCode_SQL(sWPCode, sServiceType);
+		sSQL = MySQLs.Add_New_WorkPerformedCode_SQL(sWPCode, sServiceType);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

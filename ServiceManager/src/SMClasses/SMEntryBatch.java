@@ -10,7 +10,6 @@ import java.util.Calendar;
 
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -115,7 +114,7 @@ public class SMEntryBatch {
 			rs.next();
     		if (!sBatchDescription(rs.getString(sbatchdescription))){ rs.close(); throw new Exception("Error getting batch description [1385582776]"); };
     		if (!iBatchType(rs.getInt(ibatchtype))){ rs.close(); throw new Exception("Error getting batch type [1385582777]"); };
-    		if(ARUtilities.testResultSetTSFieldForNull(rs, datlasteditdate)){
+    		if(clsDateAndTimeConversions.testResultSetTSFieldForNull(rs, datlasteditdate)){
     			if (!tsLastEditDate(rs.getTimestamp(datlasteditdate))){
     				m_tslasteditdate = null;
     			};
@@ -124,7 +123,7 @@ public class SMEntryBatch {
     		}
     		if (!sLastEditedByID(Integer.toString(rs.getInt(llasteditedbyid)))){ rs.close(); throw new Exception("Error getting last edited by [1385582778]"); };
     		if (!sLastEditedByFullName(rs.getString(slasteditedbyfullname))){ rs.close(); throw new Exception("Error getting last edited by [1385582779]"); };
-    		if(ARUtilities.testResultSetTSFieldForNull(rs, datbatchdate)){
+    		if(clsDateAndTimeConversions.testResultSetTSFieldForNull(rs, datbatchdate)){
     			if (!tsBatchDate(rs.getTimestamp(datbatchdate))){
     				m_tsbatchdate = null;
     			};
@@ -170,7 +169,7 @@ public class SMEntryBatch {
     		
     		if (!sBatchDescription(rs.getString(sbatchdescription))){ rs.close();  throw new Exception("Error getting batch description [1385582789]"); };
     		if (!iBatchType(rs.getInt(ibatchtype))){ rs.close(); throw new Exception("Error getting batch type [1385582790]"); };
-    		if(ARUtilities.testResultSetTSFieldForNull(rs, datlasteditdate)){
+    		if(clsDateAndTimeConversions.testResultSetTSFieldForNull(rs, datlasteditdate)){
     			if (!tsLastEditDate(rs.getTimestamp(datlasteditdate))){
     				m_tslasteditdate = null;
     			};
@@ -178,7 +177,7 @@ public class SMEntryBatch {
     			m_tslasteditdate = null;
     		}
     		if (!sLastEditedByID(Integer.toString(rs.getInt(llasteditedbyid)))){ rs.close(); throw new Exception("Error getting last edited by [1385582791]"); };
-    		if(ARUtilities.testResultSetTSFieldForNull(rs, datbatchdate)){
+    		if(clsDateAndTimeConversions.testResultSetTSFieldForNull(rs, datbatchdate)){
     			if (!tsLastEditDate(rs.getTimestamp(datbatchdate))){
     				m_tsbatchdate = null;
     			};

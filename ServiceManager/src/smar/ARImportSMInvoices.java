@@ -27,6 +27,7 @@ public class ARImportSMInvoices extends java.lang.Object{
 	private boolean iFlagImports = false;
 	private SMLogEntry log;
 	private boolean bDebugMode = false;
+	private int AR_INVOICE = 0;
 
 	ARImportSMInvoices(){
 		m_sErrorMessage = "";
@@ -240,7 +241,7 @@ public class ARImportSMInvoices extends java.lang.Object{
 				//Populate the entry:
 				AREntry m_CurrentAREntry = new AREntry();
 				m_CurrentAREntry.sBatchNumber(m_sBatchNumber);
-				m_CurrentAREntry.iBatchType(ARBatchTypes.AR_INVOICE);
+				m_CurrentAREntry.iBatchType(AR_INVOICE);
 
 				ARCustomer cust = new ARCustomer(inv.getM_sCustomerCode());
 				//System.out.println("In ARImportSMInvoices, cust code = " + cust.getM_sCustomerNumber());
@@ -418,7 +419,7 @@ public class ARImportSMInvoices extends java.lang.Object{
 		ARBatch batch = new ARBatch("-1");
 
 		batch.iBatchStatus(SMBatchStatuses.IMPORTED);
-		batch.iBatchType(ARBatchTypes.AR_INVOICE);
+		batch.iBatchType(AR_INVOICE);
 		batch.sBatchDescription("SM Invoice Batch");
 		batch.sCreatedByID(m_lCreatedByID);
 		batch.sCreatedByFullName(m_sCreatedByFullName);

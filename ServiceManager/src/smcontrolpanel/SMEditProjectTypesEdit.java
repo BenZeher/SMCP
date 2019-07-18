@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditProjectTypesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -128,7 +130,7 @@ public class SMEditProjectTypesEdit extends HttpServlet {
         
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_Project_Type_By_ID(sID);
+	        String sSQL = MySQLs.Get_Project_Type_By_ID(sID);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
@@ -173,7 +175,7 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
-		sSQLList.add(SMMySQLs.Delete_Project_Type_SQL(sID));
+		sSQLList.add(MySQLs.Delete_Project_Type_SQL(sID));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -189,7 +191,7 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 	private boolean Add_Record(String sID, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
-		String sSQL = SMMySQLs.Get_Project_Type_By_ID(sID);
+		String sSQL = MySQLs.Get_Project_Type_By_ID(sID);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -207,7 +209,7 @@ public class SMEditProjectTypesEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_Project_Type_SQL(sID);
+		sSQL = MySQLs.Add_New_Project_Type_SQL(sID);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

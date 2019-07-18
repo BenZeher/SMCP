@@ -57,13 +57,13 @@ public class SMLogin extends HttpServlet {
 		
 		String sDBID = clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
 		if (sDBID.contains("SMCP16")){
-			clsServletUtilities.sysprint(this.toString(),
+			/*clsServletUtilities.sysprint(this.toString(),
 				clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_USER, request),
 				"[1550240637] - "
                	+ " req parameters  = '" + clsManageRequestParameters.getAllRequestParameters(request) + "', " 
                	+ " session parameters = '" + clsServletUtilities.getSessionAttributes(request.getSession()) + "', "
                	+ " context parameters = '" + clsServletUtilities.getContextParameters(getServletContext()) + "'"
-			);
+			);*/
 		}
 		
 		try {

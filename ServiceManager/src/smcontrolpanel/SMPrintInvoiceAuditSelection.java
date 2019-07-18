@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesalesgroups;
@@ -19,6 +18,7 @@ import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class SMPrintInvoiceAuditSelection extends HttpServlet {
 	public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
@@ -46,7 +46,7 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -141,9 +141,9 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
 						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
 				}
 				}
 			rs.close();
@@ -180,13 +180,13 @@ public class SMPrintInvoiceAuditSelection extends HttpServlet {
 				}
 
 				out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SALESGROUP_PARAM
 						  + sSalesGroupCode
 						  + SALESGROUP_PARAM_SEPARATOR
 						  + Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup))						   
 						  + "\" CHECKED width=0.25>" 
 						  + sSalesGroupCode + " - " + sSalesGroupDesc
-						  + "<BR>");
+						  + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){

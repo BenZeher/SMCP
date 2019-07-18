@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecustomlinks;
 import SMDataDefinition.SMTableusers;
@@ -152,13 +153,14 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 			//Display all Users
 			ArrayList<String> sUserTable = new ArrayList<String>(0);
 			try{
-		        String sSQL = SMMySQLs.Get_User_List_SQL(false);	       
+		        String sSQL = MySQLs.Get_User_List_SQL(false);	       
 		        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sm.getsDBID());	        
 	        	while (rsUsers.next()){
-	        		sUserTable.add((String) "<INPUT TYPE=CHECKBOX " + " NAME=\"" + USER_UPDATE_ID_MARKER  
+	        		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + " NAME=\"" + USER_UPDATE_ID_MARKER  
 	        			+  Integer.toString(rsUsers.getInt(SMTableusers.lid)) + "\">" 
 	        			+ rsUsers.getString(SMTableusers.sUserFirstName) 
 	        			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
+	        			+ "</LABEL>"
 	        			//+ " (" + rsUsers.getString("sUserName") + ")" 
 	        		);
 	        	}

@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditCompanyProfile extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -66,7 +68,7 @@ public class SMEditCompanyProfile extends HttpServlet {
         
 		try{
 			// Get the record to edit:
-	        String sSQL = SMMySQLs.Get_CompanyProfile_SQL();
+	        String sSQL = MySQLs.Get_CompanyProfile_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();

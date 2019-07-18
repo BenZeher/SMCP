@@ -6,7 +6,9 @@ import java.math.BigDecimal;
 import javax.servlet.http.HttpServletRequest;
 
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 
 import javax.servlet.ServletContext;
 public class AREntryInput extends java.lang.Object{
@@ -77,52 +79,52 @@ public class AREntryInput extends java.lang.Object{
 	
 	AREntryInput (HttpServletRequest req) throws Exception{
 
-		m_sEntryID = ARUtilities.get_Request_Parameter(AREntryInput.ParamEntryID, req).trim();
-		m_sBatchType = ARUtilities.get_Request_Parameter(AREntryInput.ParamBatchType, req).trim();
-		m_sBatchNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamBatchNumber, req).trim();
-		m_sEntryNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamEntryNumber, req).trim();
-		m_sDocumentType = ARUtilities.get_Request_Parameter(AREntryInput.ParamDocumentType, req).trim();
-		m_sDocNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamDocNumber, req).trim();
-		m_sDocDescription = ARUtilities.get_Request_Parameter(AREntryInput.ParamDocDescription, req).trim();
-		m_sDocDate = ARUtilities.get_Request_Parameter(AREntryInput.ParamDocDate, req).trim();
+		m_sEntryID = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamEntryID, req).trim();
+		m_sBatchType = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamBatchType, req).trim();
+		m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamBatchNumber, req).trim();
+		m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamEntryNumber, req).trim();
+		m_sDocumentType = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocumentType, req).trim();
+		m_sDocNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocNumber, req).trim();
+		m_sDocDescription = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocDescription, req).trim();
+		m_sDocDate = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocDate, req).trim();
 		//m_sDocDate = 
-		//	ARUtilities.get_Request_Parameter(AREntryInput.ParamDocDateYear, req)
-		//	+ "-" + ARUtilities.get_Request_Parameter(AREntryInput.ParamDocDateMonth, req)
-		//	+ "-" + ARUtilities.get_Request_Parameter(AREntryInput.ParamDocDateDay, req);
-		m_sControlAcct = ARUtilities.get_Request_Parameter(AREntryInput.ParamControlAcct, req).trim();
-		m_sOrderNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamOrderNumber, req).trim();
-		m_sPONumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamPONumber, req).trim();
-		m_sOriginalAmount = ARUtilities.get_Request_Parameter(AREntryInput.ParamOriginalAmount, req).trim();
-		m_sUndistributedAmount = ARUtilities.get_Request_Parameter(AREntryInput.ParamUndistributedAmount, req).trim();
+		//	clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocDateYear, req)
+		//	+ "-" + clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocDateMonth, req)
+		//	+ "-" + clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDocDateDay, req);
+		m_sControlAcct = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamControlAcct, req).trim();
+		m_sOrderNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamOrderNumber, req).trim();
+		m_sPONumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamPONumber, req).trim();
+		m_sOriginalAmount = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamOriginalAmount, req).trim();
+		m_sUndistributedAmount = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamUndistributedAmount, req).trim();
 		
 		//Based on the document types, we'll set values differently:
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.APPLYTO_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CASHADJUSTMENT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CREDIT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CREDITADJUSTMENT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.INVOICE_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
-			m_sTerms = ARUtilities.get_Request_Parameter(AREntryInput.ParamTerms, req).trim();
-			m_sDueDate = ARUtilities.get_Request_Parameter(AREntryInput.ParamDueDate, req).trim();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sTerms = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamTerms, req).trim();
+			m_sDueDate = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDueDate, req).trim();
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.INVOICEADJUSTMENT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
@@ -132,22 +134,22 @@ public class AREntryInput extends java.lang.Object{
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
-			m_sTerms = ARUtilities.get_Request_Parameter(AREntryInput.ParamTerms, req).trim();
-			m_sDueDate = ARUtilities.get_Request_Parameter(AREntryInput.ParamDueDate, req).trim();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sTerms = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamTerms, req).trim();
+			m_sDueDate = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamDueDate, req).trim();
 		}
 		if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.REVERSAL_STRING)){
-			m_sCustomerNumber = ARUtilities.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
+			m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(AREntryInput.ParamCustomerNumber, req).trim().toUpperCase();
 			m_sTerms = "";
 			m_sDueDate = "";
 		}
@@ -179,81 +181,81 @@ public class AREntryInput extends java.lang.Object{
 				if (sParamName.contains(ARLineInput.ParamDistAcct)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDistAcct.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setLineAcct((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setLineAcct((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if (sParamName.contains(ARLineInput.ParamLineAmt)){
 					//Strip off the line number
-					//System.out.println("In AREntryInput.AREntryInput(req), ARUtilities.get_Request_Parameter(sParamName, req) = " + ARUtilities.get_Request_Parameter(sParamName, req));
+					//System.out.println("In AREntryInput.AREntryInput(req), clsManageRequestParameters.get_Request_Parameter(sParamName, req) = " + clsManageRequestParameters.get_Request_Parameter(sParamName, req));
 					
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineAmt.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setAmount((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setAmount((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if (sParamName.contains(ARLineInput.ParamLineApplyToOrderNumber)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineApplyToOrderNumber.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setApplyToOrderNumber((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setApplyToOrderNumber((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if (sParamName.contains(ARLineInput.ParamLineComment)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineComment.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setComment((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setComment((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if (sParamName.contains(ARLineInput.ParamLineDesc)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDesc.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setDescription((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setDescription((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if (sParamName.contains(ARLineInput.ParamLineID)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineID.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setLineID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setLineID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.APPLYTO_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CASHADJUSTMENT_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CREDIT_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.CREDITADJUSTMENT_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.INVOICE_STRING)){
@@ -272,12 +274,12 @@ public class AREntryInput extends java.lang.Object{
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.MISCRECEIPT_STRING)){
@@ -308,43 +310,43 @@ public class AREntryInput extends java.lang.Object{
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				if(m_sDocumentType.equalsIgnoreCase(ARDocumentTypes.REVERSAL_STRING)){
 					if (sParamName.contains(ARLineInput.ParamDocAppliedTo)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamDocAppliedTo.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedTo((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 					if (sParamName.contains(ARLineInput.ParamLineDocAppliedToID)){
 						//Strip off the line number
 						iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineDocAppliedToID.length(), sParamName.length()));
-						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+						m_LineInputArray.get(iLineNumber).setDocAppliedToID((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 					}
 				}
 				
 				if (sParamName.contains(ARLineInput.ParamLineApplyCashToChk)){
 					//Strip off the line number
 					iLineNumber =  Integer.parseInt(sParamName.substring(ARLineInput.ParamLineApplyCashToChk.length(), sParamName.length()));
-					m_LineInputArray.get(iLineNumber).setApplyCashToChk((String) ARUtilities.get_Request_Parameter(sParamName, req).trim());
+					m_LineInputArray.get(iLineNumber).setApplyCashToChk((String) clsManageRequestParameters.get_Request_Parameter(sParamName, req).trim());
 				}
 			}
 		} catch (NumberFormatException e) {
@@ -1172,23 +1174,23 @@ public class AREntryInput extends java.lang.Object{
 		sQueryString += "&" + ParamNumberOfLines + "=" + clsServletUtilities.URLEncode(Integer.toString(m_iNumberOfLines));
 		
 		for (int i = 0; i < m_LineInputArray.size(); i ++){
-			sQueryString += "&" + ARLineInput.ParamDistAcct + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamDistAcct + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getLineAcct());
-			sQueryString += "&" + ARLineInput.ParamDocAppliedTo + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamDocAppliedTo + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDocAppliedTo());
-			sQueryString += "&" + ARLineInput.ParamLineAmt + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineAmt + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getAmount());
-			sQueryString += "&" + ARLineInput.ParamLineApplyToOrderNumber + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineApplyToOrderNumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getApplyToOrderNumber());
-			sQueryString += "&" + ARLineInput.ParamLineComment + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineComment + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getComment());
-			sQueryString += "&" + ARLineInput.ParamLineDesc + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineDesc + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDescription());
-			sQueryString += "&" + ARLineInput.ParamLineDocAppliedToID + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineDocAppliedToID + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDocAppliedToID());
-			sQueryString += "&" + ARLineInput.ParamLineID + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineID + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getLineID());
-			sQueryString += "&" + ARLineInput.ParamLineApplyCashToChk + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			sQueryString += "&" + ARLineInput.ParamLineApplyCashToChk + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getApplyCashToChk());
 		}
 		
@@ -1216,23 +1218,23 @@ public class AREntryInput extends java.lang.Object{
 		s += "\n" + ParamNumberOfLines + "=" + clsServletUtilities.URLEncode(Integer.toString(m_iNumberOfLines));
 		
 		for (int i = 0; i < m_LineInputArray.size(); i ++){
-			s += "\n" + ARLineInput.ParamDistAcct + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamDistAcct + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getLineAcct());
-			s += "\n" + ARLineInput.ParamDocAppliedTo + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamDocAppliedTo + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDocAppliedTo());
-			s += "\n" + ARLineInput.ParamLineAmt + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineAmt + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getAmount());
-			s += "\n" + ARLineInput.ParamLineApplyToOrderNumber + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineApplyToOrderNumber + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getApplyToOrderNumber());
-			s += "\n" + ARLineInput.ParamLineComment + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineComment + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getComment());
-			s += "\n" + ARLineInput.ParamLineDesc + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineDesc + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDescription());
-			s += "\n" + ARLineInput.ParamLineDocAppliedToID + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineDocAppliedToID + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getDocAppliedToID());
-			s += "\n" + ARLineInput.ParamLineID + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineID + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getLineID());
-			s += "\n" + ARLineInput.ParamLineApplyCashToChk + ARUtilities.PadLeft(Integer.toString(i), "0", 6)
+			s += "\n" + ARLineInput.ParamLineApplyCashToChk + clsStringFunctions.PadLeft(Integer.toString(i), "0", 6)
 				+ "=" + clsServletUtilities.URLEncode(m_LineInputArray.get(i).getApplyCashToChk());
 		}
 		return s;

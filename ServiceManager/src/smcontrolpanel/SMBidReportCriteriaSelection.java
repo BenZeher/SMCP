@@ -108,14 +108,15 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 					sLastName = rs.getString(SMTablesalesperson.sSalespersonLastName).trim();
 				}
 				
-				sSalespersonList.add((String) "<INPUT TYPE=CHECKBOX" + (bCheckSalesperson?" checked":"")  
+				sSalespersonList.add((String) "<LABEL><INPUT TYPE=CHECKBOX" + (bCheckSalesperson?" checked":"")  
 	        			+ " NAME=\"SALESPERSON" 
 	        			+ rs.getString(SMTablebids.ssalespersoncode) 
 	        			+ "\" CLASS=\"sales\""
 	        			+ ">" 
 	        			+ rs.getString(SMTablebids.ssalespersoncode)
 	        			+ "&nbsp;" + sFirstName
-	        			+ "&nbsp;" + sLastName
+	        			+ "&nbsp;" + sLastName 
+	        			+ "</LABEL>"
 	        			);
 	    	}
 	        rs.close();
@@ -186,7 +187,7 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
     		//Project Type
     		ArrayList<String> alValues = new ArrayList<String>(0);
     		ArrayList<String> alTexts = new ArrayList<String>(0);
-    		sSQL = SMMySQLs.Get_Project_Type_SQL();
+    		sSQL = "SELECT * FROM " + SMTableprojecttypes.TableName;
     		ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
     		alValues.add("0");
     		alTexts.add("All Types");
@@ -212,9 +213,9 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
     		out.println("<TD><B>Date range (choose 'Previous Month', 'Current Month',<BR>or enter a date range"
     				+ " in mm/dd/yyyy format):</B></TD>");
     		out.println("<TD>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR>");
-    		out.println("<input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"PreviousMonth\"> Previous month<BR></LABEL>");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"CurrentMonth\" checked> Current month<BR></LABEL>");
+    		out.println("<LABEL><input type=\"radio\" name=\"DateRange\" value=\"SelectedDates\">&nbsp;</LABEL>");
     		
     		out.println(
     			"Starting:&nbsp;" 
@@ -236,16 +237,16 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
         	//Show salesperson totals only:
         	out.println("<TR><TD ALIGN=CENTER><B>Suppress individual " + SMBidEntry.ParamObjectName.toLowerCase() +"s?</B></TD>");
            	out.println("<TD>" + 
-    				"<INPUT TYPE=\"CHECKBOX\" NAME=\"OnlyShowSubtotals\" VALUE=0 >Only show salesperson subtotals" + 
+    				"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"OnlyShowSubtotals\" VALUE=0 >Only show salesperson subtotals</LABEL>" + 
     				"</TD></TR>");
     		
         	//Status
         	out.println("<TR><TD ALIGN=CENTER><B>" + SMBidEntry.ParamObjectName + " Status</B></TD>");
         	out.println("<TD>" + 
-        				"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1 CHECKED>Successful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1 CHECKED>Unsuccessful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive" + 
+        				"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1 CHECKED>Successful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1 CHECKED>Unsuccessful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive</LABEL>" + 
         				"</TD></TR>");
         	
 	        out.println ("</TABLE><BR><BR>");

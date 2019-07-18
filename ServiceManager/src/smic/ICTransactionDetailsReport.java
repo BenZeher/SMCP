@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTableicitems;
@@ -17,6 +16,7 @@ import SMDataDefinition.SMTableictransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICTransactionDetailsReport extends java.lang.Object{
 
@@ -235,7 +235,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			+ "smic.ICDisplayItemInformation?ItemNumber=" 
 		    		+ sItemNumber
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-		    		+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
+		    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
 		}else{
 			sItemNumberLink = sItemNumber;
 		}

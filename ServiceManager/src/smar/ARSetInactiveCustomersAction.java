@@ -16,6 +16,7 @@ import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARSetInactiveCustomersAction extends HttpServlet {
 
@@ -46,7 +47,7 @@ public class ARSetInactiveCustomersAction extends HttpServlet {
     	Enumeration <String> paramNames = request.getParameterNames();
 	    String sCustomerNumber = "";
 	    String SQL = "";
-	    String sSetActiveFlagTo = ARUtilities.get_Request_Parameter("SETACTIVEFLAGTO", request);
+	    String sSetActiveFlagTo = clsManageRequestParameters.get_Request_Parameter("SETACTIVEFLAGTO", request);
 	    if (sSetActiveFlagTo.trim().compareToIgnoreCase("") == 0){
 	    	sWarning = "SETACTIVEFLAGTO is blank";
     		response.sendRedirect(

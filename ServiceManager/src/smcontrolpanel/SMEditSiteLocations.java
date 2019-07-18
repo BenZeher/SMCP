@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditSiteLocations extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -55,7 +57,7 @@ public class SMEditSiteLocations extends HttpServlet {
 	    
 	    //Add drop down list of current records:
 		try{
-	        String sSQL = SMMySQLs.Get_SiteLocations_SQL();
+	        String sSQL = MySQLs.Get_SiteLocations_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        out.println("Current site locations:<BR>");
 	     	out.println ("<SELECT NAME=\"" + sObjectName + "\">" );

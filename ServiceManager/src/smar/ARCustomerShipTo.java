@@ -8,6 +8,8 @@ import java.util.ArrayList;
 
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 
 public class ARCustomerShipTo extends Object{
@@ -69,21 +71,21 @@ public class ARCustomerShipTo extends Object{
         }
     
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-		m_sCustomerNumber = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsCustomerNumber, req).trim().replace("&quot;", "\"");
-		m_sShipToCode = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsShipToCode, req).trim().replace("&quot;", "\"");
-		m_sDescription = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsDescription, req).trim().replace("&quot;", "\"");
-		m_sAddressLine1 = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine1, req).trim().replace("&quot;", "\"");
-		m_sAddressLine2 = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine2, req).trim().replace("&quot;", "\"");
-		m_sAddressLine3 = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine3, req).trim().replace("&quot;", "\"");
-		m_sAddressLine4 = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine4, req).trim().replace("&quot;", "\"");
-		m_sCity = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsCity, req).trim().replace("&quot;", "\"");
-		m_sState = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsState, req).trim().replace("&quot;", "\"");
-		m_sCountry = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsCountry, req).trim().replace("&quot;", "\"");
-		m_sPostalCode = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsPostalCode, req).trim().replace("&quot;", "\"");
-		m_sContactName = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsContactName, req).trim().replace("&quot;", "\"");
-		m_sPhoneNumber = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsPhoneNumber, req).trim().replace("&quot;", "\"");
-		m_sFaxNumber = ARUtilities.get_Request_Parameter(ARCustomerShipTo.ParamsFaxNumber, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+		m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsCustomerNumber, req).trim().replace("&quot;", "\"");
+		m_sShipToCode = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsShipToCode, req).trim().replace("&quot;", "\"");
+		m_sDescription = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsDescription, req).trim().replace("&quot;", "\"");
+		m_sAddressLine1 = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine1, req).trim().replace("&quot;", "\"");
+		m_sAddressLine2 = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine2, req).trim().replace("&quot;", "\"");
+		m_sAddressLine3 = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine3, req).trim().replace("&quot;", "\"");
+		m_sAddressLine4 = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsAddressLine4, req).trim().replace("&quot;", "\"");
+		m_sCity = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsCity, req).trim().replace("&quot;", "\"");
+		m_sState = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsState, req).trim().replace("&quot;", "\"");
+		m_sCountry = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsCountry, req).trim().replace("&quot;", "\"");
+		m_sPostalCode = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsPostalCode, req).trim().replace("&quot;", "\"");
+		m_sContactName = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsContactName, req).trim().replace("&quot;", "\"");
+		m_sPhoneNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsPhoneNumber, req).trim().replace("&quot;", "\"");
+		m_sFaxNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomerShipTo.ParamsFaxNumber, req).trim().replace("&quot;", "\"");
     }
 	private boolean load(
 			String sCustomerNumber,
@@ -124,20 +126,20 @@ public class ARCustomerShipTo extends Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sCustomerNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCustomerNumber));
-	        	m_sShipToCode = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sShipToCode));
-	        	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sDescription));
-				m_sAddressLine1 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine1));
-				m_sAddressLine2 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine2));
-				m_sAddressLine3 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine3));
-				m_sAddressLine4 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine4));
-				m_sCity = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCity));
-				m_sState = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sState));
-				m_sCountry = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCountry));
-				m_sPostalCode = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sPostalCode));
-				m_sContactName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sContactName));
-				m_sPhoneNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sPhoneNumber));
-				m_sFaxNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomershiptos.sFaxNumber));
+	        	m_sCustomerNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCustomerNumber));
+	        	m_sShipToCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sShipToCode));
+	        	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sDescription));
+				m_sAddressLine1 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine1));
+				m_sAddressLine2 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine2));
+				m_sAddressLine3 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine3));
+				m_sAddressLine4 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sAddressLine4));
+				m_sCity = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCity));
+				m_sState = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sState));
+				m_sCountry = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sCountry));
+				m_sPostalCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sPostalCode));
+				m_sContactName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sContactName));
+				m_sPhoneNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sPhoneNumber));
+				m_sFaxNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomershiptos.sFaxNumber));
 	        	m_iNewRecord = "0";
 	        	rs.close();
 	        	return true;
@@ -378,21 +380,21 @@ public class ARCustomerShipTo extends Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsCustomerNumber + "=" + ARUtilities.URLEncode(m_sCustomerNumber);
-		sQueryString += "&" + ParamsShipToCode + "=" + ARUtilities.URLEncode(m_sShipToCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamsAddressLine1 + "=" + ARUtilities.URLEncode(m_sAddressLine1);
-		sQueryString += "&" + ParamsAddressLine2 + "=" + ARUtilities.URLEncode(m_sAddressLine2);
-		sQueryString += "&" + ParamsAddressLine3 + "=" + ARUtilities.URLEncode(m_sAddressLine3);
-		sQueryString += "&" + ParamsAddressLine4 + "=" + ARUtilities.URLEncode(m_sAddressLine4);
-		sQueryString += "&" + ParamsCity + "=" + ARUtilities.URLEncode(m_sCity);
-		sQueryString += "&" + ParamsState + "=" + ARUtilities.URLEncode(m_sState);
-		sQueryString += "&" + ParamsCountry + "=" + ARUtilities.URLEncode(m_sCountry);
-		sQueryString += "&" + ParamsPostalCode + "=" + ARUtilities.URLEncode(m_sPostalCode);
-		sQueryString += "&" + ParamsContactName + "=" + ARUtilities.URLEncode(m_sContactName);
-		sQueryString += "&" + ParamsPhoneNumber + "=" + ARUtilities.URLEncode(m_sPhoneNumber);
-		sQueryString += "&" + ParamsFaxNumber + "=" + ARUtilities.URLEncode(m_sFaxNumber);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsCustomerNumber + "=" + clsServletUtilities.URLEncode(m_sCustomerNumber);
+		sQueryString += "&" + ParamsShipToCode + "=" + clsServletUtilities.URLEncode(m_sShipToCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamsAddressLine1 + "=" + clsServletUtilities.URLEncode(m_sAddressLine1);
+		sQueryString += "&" + ParamsAddressLine2 + "=" + clsServletUtilities.URLEncode(m_sAddressLine2);
+		sQueryString += "&" + ParamsAddressLine3 + "=" + clsServletUtilities.URLEncode(m_sAddressLine3);
+		sQueryString += "&" + ParamsAddressLine4 + "=" + clsServletUtilities.URLEncode(m_sAddressLine4);
+		sQueryString += "&" + ParamsCity + "=" + clsServletUtilities.URLEncode(m_sCity);
+		sQueryString += "&" + ParamsState + "=" + clsServletUtilities.URLEncode(m_sState);
+		sQueryString += "&" + ParamsCountry + "=" + clsServletUtilities.URLEncode(m_sCountry);
+		sQueryString += "&" + ParamsPostalCode + "=" + clsServletUtilities.URLEncode(m_sPostalCode);
+		sQueryString += "&" + ParamsContactName + "=" + clsServletUtilities.URLEncode(m_sContactName);
+		sQueryString += "&" + ParamsPhoneNumber + "=" + clsServletUtilities.URLEncode(m_sPhoneNumber);
+		sQueryString += "&" + ParamsFaxNumber + "=" + clsServletUtilities.URLEncode(m_sFaxNumber);
 				
 		return sQueryString;
 	}

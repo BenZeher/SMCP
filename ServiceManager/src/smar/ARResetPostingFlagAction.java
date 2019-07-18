@@ -16,6 +16,7 @@ import smcontrolpanel.SMUtilities;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ARResetPostingFlagAction extends HttpServlet {
 
@@ -41,7 +42,7 @@ public class ARResetPostingFlagAction extends HttpServlet {
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
-	    String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sWarning = "";
 	    /**************Get Parameters**************/
 

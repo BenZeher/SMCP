@@ -10,6 +10,7 @@ import javax.servlet.ServletContext;
 import SMClasses.SMLogEntry;
 import SMClasses.SMReminders;
 import SMDataDefinition.SMModuleListing;
+import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
@@ -332,6 +333,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLResetPostingInProcessFlag = 1240;
 	public static long GLPullExternalDataIntoConsolidation = 1241;
 	public static long GLManageExternalCompanies = 1242;
+	public static long GLListPreviousExternalCompanyPulls = 1243;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -1441,7 +1443,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(ICFindItemsSortedByMostUsed);
 			arrFunctionLinks.add(
 					"smar.ObjectFinder?"
-							+ "ObjectName=" + smar.FinderResults.SEARCH_MOSTUSEDITEMS
+							+ "ObjectName=" + SMClasses.FinderResults.SEARCH_MOSTUSEDITEMS
 							+ "&ResultClass=FinderResults&SearchingClass=smic.ICEditItemsSelection"
 							+ "&ReturnField=%22%22"
 							+ "&SearchField1=" + SMTableicitems.sItemDescription
@@ -2658,6 +2660,46 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLManageExternalCompanies); 
 			arrFunctionLinks.add("smgl.GLEditExternalCompaniesEdit"); 
 			arrFunctionDescriptions.add("Used to manage external companies so that they can be 'pulled' into a consolidated company.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL List Previous External Company Pulls");
+			arrFunctionIDs.add(GLListPreviousExternalCompanyPulls);
+			arrFunctionLinks.add(
+					"smcontrolpanel.SMQueryParameters?" 
+							+ "QUERYSTRING="
+							+ clsServletUtilities.URLEncode(
+									"select"
+											+ " DATE_FORMAT(" + SMTableglexternalcompanypulls.dattimepulldate + ", '%c/%e/%Y %l:%i:%s %p') as 'Time'"
+											+ ", " + SMTableglexternalcompanypulls.sfullusername + " as 'Name'"
+											+ ", " + SMTableglexternalcompanypulls.scompanyname + " as 'Pulled From'"
+											+ ", " + SMTableglexternalcompanypulls.ifiscalyear + " as 'Fiscal Year'"
+											+ ", " + SMTableglexternalcompanypulls.ifiscalperiod + " as 'Fiscal Period'"
+											+ " FROM " + SMTableglexternalcompanypulls.TableName
+											+ " ORDER BY " + SMTableglexternalcompanypulls.dattimepulldate + " DESC"
+									)
+									+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("GL List Previous External Company Pulls")
+									+ "&ALTERNATEROWCOLORS=Y"
+									+ "&FONTSIZE=small"
+									//+ "&SHOWSQLCOMMAND=Y"
+									//				Possible parameters:				
+									//				public static String PARAM_EXPORTOPTIONS = "EXPORTOPTIONS";
+									//				public static String EXPORT_COMMADELIMITED_VALUE = "COMMADELIMITED";
+									//				public static String EXPORT_HTML_VALUE = "HTML";
+									//				public static String EXPORT_NOEXPORT_VALUE = "NOEXPORT";
+									//				public static String EXPORT_COMMADELIMITED_LABEL = "Comma delimited file";
+									//				public static String EXPORT_HTML_LABEL = "HTML (web page) file";
+									//				public static String EXPORT_NOEXPORT_LABEL = "Do not export - display on screen";
+									//				public static String PARAM_QUERYID = "QUERYID";
+									//				public static String PARAM_QUERYTITLE = "QUERYTITLE";
+									//				public static String PARAM_QUERYSTRING = "QUERYSTRING";
+									//				public static String PARAM_PWFORQUICKLINK = "PWFORQUICKLINK";
+									//				public static String PARAM_FONTSIZE = "FONTSIZE";
+									//				public static String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
+									//				public static String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
+									//				public static String PARAM_TOTALNUMERICFIELDS = "TOTALNUMERICFIELDS";
+									//				public static String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
+					); 
+			arrFunctionDescriptions.add("Lists the previous 'pulls' from an external company into this company's GL.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

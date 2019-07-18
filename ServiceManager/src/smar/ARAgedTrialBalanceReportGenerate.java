@@ -26,6 +26,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
@@ -75,7 +76,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		
 		//Get parameters here:
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
-		String sCallingClass = ARUtilities.get_Request_Parameter("CallingClass", request);
+		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sWarning = "";
 		String sAgeAsOf = request.getParameter("AsOfDate");
 		String sCutOffDate = request.getParameter("CutOffDate");
@@ -83,7 +84,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 		String sEndingCustomer = request.getParameter("EndingCustomer");
 		String sAccountSet = request.getParameter(ARAccountSet.ParamsAcctSetCode);
 		String sSortBy = request.getParameter("SORTBY");
-		String sRetainageFlag = ARUtilities.get_Request_Parameter("AgingType", request);
+		String sRetainageFlag = clsManageRequestParameters.get_Request_Parameter("AgingType", request);
 		boolean bDownloadAsHTML = (request.getParameter(ARAgedTrialBalanceReport.DOWNLOAD_TO_HTML) != null);
 		int iPrintTransactionsIn = Integer.parseInt(request.getParameter("PrintTransactionIn").trim());
 		int iCurrent = Integer.parseInt(request.getParameter("Current").trim());
@@ -566,7 +567,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 				if (rsBalanceList.getString("scustomer").compareToIgnoreCase(sCurrentCustomer) != 0){
 					//Print the footer, if the record is for a new customer:
 					if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 						out.println("<TD COLSPAN=\"7\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Customer total:</TD>");
 						out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sSummaryCurrentHeading + "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTotalCurrent) + "</B></TD>");
 						out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sSummary1stHeading + "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTotal1st) + "</B></TD>");
@@ -577,7 +578,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 						out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + "&nbsp;" + "</B></TD>");
 						out.println("</TR>");
 						
-						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 						out.println("<TD COLSPAN = \"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
 						out.println("</TR>");
 
@@ -638,9 +639,9 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 					
 
 					if(iLinesPrinted%2==0) {
-						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-					}else {
 						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 					}
 					out.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp;&nbsp;" + sDocAppliedTo + "</TD>");
 					int iDocType = rsBalanceList.getInt("idoctype");
@@ -678,7 +679,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 							"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 							+ sOrderNumber 
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-							+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A>"
+							+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A>"
 							;
 					}
 					out.println("<TD CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sOrderNumberLink + "</TD>");
@@ -720,7 +721,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 			//Print the footer for the last customer, if at least one customer was found:
 			if (sCurrentCustomer.compareToIgnoreCase("") != 0){
-				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 				out.println("<TD COLSPAN=\"7\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Customer total:</TD>");
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sSummaryCurrentHeading + "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTotalCurrent) + "</B></TD>");
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sSummary1stHeading + "<B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(dTotal1st) + "</B></TD>");
@@ -731,7 +732,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>" + "&nbsp;" + "</B></TD>");
 				out.println("</TR>");
 				
-				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 				out.println("<TD COLSPAN = \"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
 				out.println("</TR>");
 				iCustomersPrinted++;

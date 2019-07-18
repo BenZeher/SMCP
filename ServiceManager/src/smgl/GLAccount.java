@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.MySQLs;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
@@ -45,10 +46,10 @@ import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTabletax;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
-import smar.ARUtilities;
-import smcontrolpanel.SMMySQLs;
 import smcontrolpanel.SMUtilities;
 import smic.ICEntryBatch;
 
@@ -100,11 +101,11 @@ public class GLAccount extends java.lang.Object{
 		m_inormalbalancetype = "0";
 	}
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sacctid = ARUtilities.get_Request_Parameter(Paramsacctid, req).trim().replace("&quot;", "\"");
-    	m_sformattedacctid = ARUtilities.get_Request_Parameter(Paramsformattedacctid, req).trim().replace("&quot;", "\"");
-    	m_sdescription = ARUtilities.get_Request_Parameter(Paramsdescription, req).trim().replace("&quot;", "\"");
-    	m_stype = ARUtilities.get_Request_Parameter(Paramstype, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sacctid = clsManageRequestParameters.get_Request_Parameter(Paramsacctid, req).trim().replace("&quot;", "\"");
+    	m_sformattedacctid = clsManageRequestParameters.get_Request_Parameter(Paramsformattedacctid, req).trim().replace("&quot;", "\"");
+    	m_sdescription = clsManageRequestParameters.get_Request_Parameter(Paramsdescription, req).trim().replace("&quot;", "\"");
+    	m_stype = clsManageRequestParameters.get_Request_Parameter(Paramstype, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(Paramlactive) == null){
 			m_sactive = "0";
 		}else{
@@ -115,16 +116,16 @@ public class GLAccount extends java.lang.Object{
 		}else{
 			m_iallowaspoexpense = "1";
 		}
-		m_icostcenterid = ARUtilities.get_Request_Parameter(Paramicostcenterid, req).trim().replace("&quot;", "\"");
-		m_laccountstructureid = ARUtilities.get_Request_Parameter(Paramlaccountstructureid, req).trim().replace("&quot;", "\"");
+		m_icostcenterid = clsManageRequestParameters.get_Request_Parameter(Paramicostcenterid, req).trim().replace("&quot;", "\"");
+		m_laccountstructureid = clsManageRequestParameters.get_Request_Parameter(Paramlaccountstructureid, req).trim().replace("&quot;", "\"");
 		if (m_laccountstructureid.compareToIgnoreCase("") == 0){ m_laccountstructureid = "0"; }
-		m_laccountgroupid = ARUtilities.get_Request_Parameter(Paramlaccountgroupid, req).trim().replace("&quot;", "\"");
+		m_laccountgroupid = clsManageRequestParameters.get_Request_Parameter(Paramlaccountgroupid, req).trim().replace("&quot;", "\"");
 		if (m_laccountgroupid.compareToIgnoreCase("") == 0){ m_laccountgroupid = "0"; }
-		m_sbdannualbudget = ARUtilities.get_Request_Parameter(Parambdannualbudget, req).trim().replace("&quot;", "\"");
+		m_sbdannualbudget = clsManageRequestParameters.get_Request_Parameter(Parambdannualbudget, req).trim().replace("&quot;", "\"");
 		if (getsbdannualbudget().compareToIgnoreCase("") == 0){
 			setsbdannualbudget("0.00");
 		}
-		m_inormalbalancetype = ARUtilities.get_Request_Parameter(Paraminormalbalancetype, req).trim().replace("&quot;", "\"");
+		m_inormalbalancetype = clsManageRequestParameters.get_Request_Parameter(Paraminormalbalancetype, req).trim().replace("&quot;", "\"");
     }
     public boolean load (
     		Connection conn
@@ -137,16 +138,16 @@ public class GLAccount extends java.lang.Object{
     	Connection conn
     	){
     
-	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
+	    String SQL = MySQLs.Get_GL_Account_SQL(sAccountID);
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
 			rs.next();
 
 			//Load the variables:
-			m_sacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
-			m_sformattedacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
-			m_sdescription = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
-			m_stype = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
+			m_sacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
+			m_sformattedacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
+			m_sdescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
+			m_stype = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
 			m_sactive = Long.toString(rs.getLong(SMTableglaccounts.lActive));
 			m_icostcenterid = Long.toString(rs.getLong(SMTableglaccounts.iCostCenterID));
 			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));
@@ -175,7 +176,7 @@ public class GLAccount extends java.lang.Object{
         	String sDBIB
         	){
         
-    	    String SQL = SMMySQLs.Get_GL_Account_SQL(sAccountID);
+    	    String SQL = MySQLs.Get_GL_Account_SQL(sAccountID);
     		try {
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     					SQL, 
@@ -186,10 +187,10 @@ public class GLAccount extends java.lang.Object{
     			rs.next();
 
     			//Load the variables:
-    			m_sacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
-    			m_sformattedacctid = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
-    			m_sdescription = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
-    			m_stype = ARUtilities.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
+    			m_sacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctID));
+    			m_sformattedacctid = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sFormattedAcct));
+    			m_sdescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sDesc));
+    			m_stype = clsStringFunctions.checkStringForNull(rs.getString(SMTableglaccounts.sAcctType));
     			m_sactive = Long.toString(rs.getLong(SMTableglaccounts.lActive));
     			m_icostcenterid = Long.toString(rs.getLong(SMTableglaccounts.iCostCenterID));
     			m_iallowaspoexpense = Long.toString(rs.getLong(SMTableglaccounts.iallowaspoexpense));
@@ -206,7 +207,7 @@ public class GLAccount extends java.lang.Object{
         	return true;
         }
     public boolean save(ServletContext context, String sDBIB, String sUserFullName){
-    	String SQL = SMMySQLs.Get_GL_Account_SQL(m_sacctid);
+    	String SQL = MySQLs.Get_GL_Account_SQL(m_sacctid);
     	
 		m_sErrorMessageArray.clear();
 		if(!validateEntries(sDBIB, context, sUserFullName)){
@@ -230,7 +231,7 @@ public class GLAccount extends java.lang.Object{
 				rs.close();
 				
 				//Update the record:
-				SQL = SMMySQLs.Update_GL_Account_SQL(
+				SQL = MySQLs.Update_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -260,7 +261,7 @@ public class GLAccount extends java.lang.Object{
 				}
 				rs.close();
 				//Insert the record:
-				SQL = SMMySQLs.Insert_GL_Account_SQL(
+				SQL = MySQLs.Insert_GL_Account_SQL(
 						clsDatabaseFunctions.FormatSQLStatement(m_sacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sformattedacctid), 
 						clsDatabaseFunctions.FormatSQLStatement(m_sdescription), 
@@ -615,16 +616,16 @@ public class GLAccount extends java.lang.Object{
 	
 	public String getQueryString(){
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + Paramsacctid + "=" + ARUtilities.URLEncode(m_sacctid);
-		sQueryString += "&" + Paramsformattedacctid + "=" + ARUtilities.URLEncode(m_sformattedacctid);
-		sQueryString += "&" + Paramsdescription + "=" + ARUtilities.URLEncode(m_sdescription);
-		sQueryString += "&" + Paramstype + "=" + ARUtilities.URLEncode(m_stype);
-		sQueryString += "&" + Paramicostcenterid + "=" + ARUtilities.URLEncode(m_icostcenterid);
-		sQueryString += "&" + Paramlaccountstructureid + "=" + ARUtilities.URLEncode(m_laccountstructureid);
-		sQueryString += "&" + Paramlaccountgroupid + "=" + ARUtilities.URLEncode(m_laccountgroupid);
-		sQueryString += "&" + Parambdannualbudget + "=" + ARUtilities.URLEncode(getsbdannualbudget());
-		sQueryString += "&" + Paraminormalbalancetype + "=" + ARUtilities.URLEncode(getsinormalbalancetype());
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + Paramsacctid + "=" + clsServletUtilities.URLEncode(m_sacctid);
+		sQueryString += "&" + Paramsformattedacctid + "=" + clsServletUtilities.URLEncode(m_sformattedacctid);
+		sQueryString += "&" + Paramsdescription + "=" + clsServletUtilities.URLEncode(m_sdescription);
+		sQueryString += "&" + Paramstype + "=" + clsServletUtilities.URLEncode(m_stype);
+		sQueryString += "&" + Paramicostcenterid + "=" + clsServletUtilities.URLEncode(m_icostcenterid);
+		sQueryString += "&" + Paramlaccountstructureid + "=" + clsServletUtilities.URLEncode(m_laccountstructureid);
+		sQueryString += "&" + Paramlaccountgroupid + "=" + clsServletUtilities.URLEncode(m_laccountgroupid);
+		sQueryString += "&" + Parambdannualbudget + "=" + clsServletUtilities.URLEncode(getsbdannualbudget());
+		sQueryString += "&" + Paraminormalbalancetype + "=" + clsServletUtilities.URLEncode(getsinormalbalancetype());
 		
 		if (m_iallowaspoexpense.compareToIgnoreCase("1") == 0){
 			sQueryString += "&" + Paramiallowaspoexpense + "=" + m_iallowaspoexpense;
@@ -640,7 +641,7 @@ public class GLAccount extends java.lang.Object{
 		m_sErrorMessageArray.clear();
 		
 		//First, check that the acct exists:
-		String SQL = SMMySQLs.Get_GL_Account_SQL(sGLAcct);
+		String SQL = MySQLs.Get_GL_Account_SQL(sGLAcct);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(

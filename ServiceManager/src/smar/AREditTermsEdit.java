@@ -14,6 +14,8 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearterms;
+import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsManageRequestParameters;
 
 public class AREditTermsEdit extends HttpServlet {
 	
@@ -117,7 +119,7 @@ public class AREditTermsEdit extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -145,13 +147,14 @@ public class AREditTermsEdit extends HttpServlet {
 
         //Terms code:
 	    if(terms.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARTerms.ParamsTermsCode, 
 	        		terms.getM_sTermsCode().replace("\"", "&quot;"),  
 	        		SMTablearterms.sTermsCodeLength, 
 	        		"Terms code:", 
 	        		"Up to " + SMTablearterms.sTermsCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -167,7 +170,7 @@ public class AREditTermsEdit extends HttpServlet {
 	    }else{
 	    	sTrueOrFalse = "false";
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 			ARTerms.ParamiActive, 
 			sTrueOrFalse, 
 			"Active terms?", 
@@ -176,7 +179,7 @@ public class AREditTermsEdit extends HttpServlet {
 		);
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				ARTerms.ParamsDescription, 
         		terms.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearterms.sDescriptionLength, 
@@ -187,57 +190,62 @@ public class AREditTermsEdit extends HttpServlet {
         );
 
 		//Discount percent:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamdDiscountPercent,
         		terms.getM_dDiscountPercent().replace("\"", "&quot;"), 
         		18, 
         		"Discount percentage:", 
         		"Enter WITHOUT percent sign - enter a zero if no discount is offered.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
 		//iDiscountNumberOfDays
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDiscountNumberOfDays,
         		terms.getM_iDiscountNumberOfDays().replace("\"", "&quot;"), 
         		3, 
         		"Discount number of days:", 
         		"Used if discount is offered after a specified number of days; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 		
 		//iDiscountDayOfTheMonth
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDiscountDayOfTheMonth,
         		terms.getM_iDiscountDayOfTheMonth().replace("\"", "&quot;"), 
         		3, 
         		"Discount day of the month:", 
         		"Used if discount is offered by payment on a particular day of the month; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 		
 		//iDueNumberOfDays
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDueNumberOfDays,
         		terms.getM_iDueNumberOfDays().replace("\"", "&quot;"), 
         		3, 
         		"Due number of days:", 
         		"Used if payment is due after a specified number of days; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2", 
+        		true
         	)
         );
 		
 		//iDueDayOfTheMonth
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARTerms.ParamiDueDayOfTheMonth,
         		terms.getM_iDueDayOfTheMonth().replace("\"", "&quot;"), 
         		3, 
         		"Due day of the month:", 
         		"Used if payment is due on a specified day of the month; otherwise, enter a zero.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
         

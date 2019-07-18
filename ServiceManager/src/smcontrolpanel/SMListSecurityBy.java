@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -46,7 +47,7 @@ public class SMListSecurityBy extends HttpServlet {
 	    
 	    // Get the recordset of security information:
 		try{
-	        String sSQL = SMMySQLs.Get_Security_List_SQL(sListBy);
+	        String sSQL = MySQLs.Get_Security_List_SQL(sListBy);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 
 	        String sHeading1 = "";

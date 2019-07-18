@@ -33,6 +33,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_PERIOD_SELECTION = "FISCALPERIODSELECTION";
 	public static String PARAM_BATCH_DATE = "BATCHDATE";
+	public static final String SESSION_WARNING_OBJECT = "PULLEXTERNALCOMPANIESWARNING";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -64,8 +65,10 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-		if (! sWarning.equalsIgnoreCase("")){
+	    //String sWarning = "";
+	    String sWarning = (String)CurrentSession.getAttribute(SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(SESSION_WARNING_OBJECT);
+		if (sWarning != null){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
@@ -81,14 +84,12 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    	+ "\">Summary</A><BR>");
 	    
 	    out.println("<BR>This function will pull GL transactions for the selected fiscal year and period"
-	    		+ " into this company's data.  If any transactions have already been pulled, they won't be "
-	    		+ " duplicated.  If you check the 'Add new GL accounts' checkbox, then the process will also"
-	    		+ " add any GL accounts that it finds in the transactions to the current company.  If the "
-	    		+ " process does not complete, the it will be rolled back and none of the transactions will"
-	    		+ " be pulled in.<BR><BR>"
+	    		+ " into this company's data.  If any transactions have already been pulled for that fiscal year,"
+	    		+ " and period, the process will stop and report the error."
+	    		+ "<BR><BR>"
 	    );
 	    
-    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationSelect\">");
+    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationAction\">");
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>\n");
     	
@@ -170,7 +171,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
     	);
 		out.println(SMUtilities.getDatePickerString(PARAM_BATCH_DATE, getServletContext()) + "\n");
     	
-    	out.println("<BR>Add any new GL accounts which are not already in the consolidated company?: <INPUT TYPE=CHECKBOX NAME=\"" + ADD_GL_ACCOUNTS + "\"><BR>");
+    	//out.println("<BR>Add any new GL accounts which are not already in the consolidated company?: <INPUT TYPE=CHECKBOX NAME=\"" + ADD_GL_ACCOUNTS + "\"><BR>");
     	
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Pull transactions----\">");
     	out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");

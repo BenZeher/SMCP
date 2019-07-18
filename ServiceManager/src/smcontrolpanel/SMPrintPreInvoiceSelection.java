@@ -11,7 +11,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderheaders;
@@ -19,6 +18,7 @@ import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class SMPrintPreInvoiceSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -42,7 +42,7 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -95,9 +95,9 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -125,9 +125,9 @@ public class SMPrintPreInvoiceSelection extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" 
 						  + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR>");
+						  + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "<BR></LABEL>");
 				}
 			}
 			rs.close();

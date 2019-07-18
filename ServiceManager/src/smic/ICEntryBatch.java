@@ -17,6 +17,7 @@ import SMClasses.SMBatchStatuses;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccosts;
@@ -35,9 +36,8 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
-import smar.SMGLExport;
-import smar.SMOption;
 import smgl.GLTransactionBatch;
+import smgl.SMGLExport;
 
 public class ICEntryBatch {
 

@@ -13,6 +13,8 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsManageRequestParameters;
 public class ARClearPaidTransactionsSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
@@ -33,7 +35,7 @@ public class ARClearPaidTransactionsSelection extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -58,7 +60,7 @@ public class ARClearPaidTransactionsSelection extends HttpServlet {
 	    
 		out.println("<TABLE WIDTH=100% CELLPADDING=10 border=4>");
 		out.println("<TR>");
-	    out.println(ARUtilities.Create_Edit_Form_DateText_Input_Row(
+	    out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_DateText_Input_Row(
 	    		"ClearingDate", 
 	    		"1/1/1900", 
 	    		10, 

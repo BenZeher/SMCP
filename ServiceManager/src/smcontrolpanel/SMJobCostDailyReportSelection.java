@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablemechanics;
@@ -54,7 +53,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    	bSelectByCategory = true;
 	    }
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -152,10 +151,11 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 
         	ArrayList <String> alMechanics = new ArrayList<String>(0);
         	while (rsMechanics.next()){
-       			alMechanics.add("<INPUT TYPE=CHECKBOX NAME=MechCheckbox" 
+       			alMechanics.add("<LABEL><INPUT TYPE=CHECKBOX NAME=MechCheckbox" 
        				+ rsMechanics.getString(SMTablemechanics.sMechInitial) + " VALUE=0 >" 
        				+ rsMechanics.getString(SMTablemechanics.sMechInitial) + " - "
        				+ rsMechanics.getString(SMTablemechanics.sMechFullName)
+       				+ "</LABEL>"
        				);
         	}
         	rsMechanics.close();
@@ -195,11 +195,12 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 
         	ArrayList <String> alLocations = new ArrayList<String>(0);
         	while (rsLocations.next()){
-       			alLocations.add("<INPUT TYPE=CHECKBOX NAME=LocationCheckBox"
+       			alLocations.add("<LABEL><INPUT TYPE=CHECKBOX NAME=LocationCheckBox"
        				+ rsLocations.getString(SMTablelocations.sLocation)
        				+ " VALUE=0" + " >" 
        				+ rsLocations.getString(SMTablelocations.sLocation) + " - "
        				+ rsLocations.getString(SMTablelocations.sLocationDescription)
+       				+ "</LABEL>"
        				);
         	}
         	rsLocations.close();
@@ -239,9 +240,10 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    	ArrayList <String> alServiceTypes = new ArrayList<String>(0);
 	    	while (rsServiceTypes.next()){
 	   			if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-	   				alServiceTypes.add("<INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
+	   				alServiceTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
 	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sCode) + " VALUE=0 >" 
 	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sName)
+	   		   				+ "</LABEL>"
 	   		   				);	
 	   			}		
 	    	}

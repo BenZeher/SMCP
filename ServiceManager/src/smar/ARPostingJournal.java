@@ -20,6 +20,7 @@ import SMDataDefinition.SMTableentrylines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ARPostingJournal extends java.lang.Object{
 
@@ -61,6 +62,9 @@ public class ARPostingJournal extends java.lang.Object{
 	private BigDecimal m_bdInvoiceTotal;
 	private BigDecimal m_bdReceiptTotal;
 	private BigDecimal m_bdAdjustmentTotal;
+	private static int AR_INVOICE = 0;
+	private static int AR_CASH = 1;
+	private static int AR_ADJUSTMENT = 0;
 	
 	ARPostingJournal(
     		String sStartingBatchNumber,
@@ -473,13 +477,13 @@ public class ARPostingJournal extends java.lang.Object{
 				}
 				
 				m_lTransactionCount++;
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_INVOICE){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_INVOICE){
 					m_bdInvoiceTotal = m_bdInvoiceTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_CASH){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_CASH){
 					m_bdReceiptTotal = m_bdReceiptTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
-				if (m_rs.getInt(SMEntryBatch.ibatchtype) == ARBatchTypes.AR_ADJUSTMENT){
+				if (m_rs.getInt(SMEntryBatch.ibatchtype) == AR_ADJUSTMENT){
 					m_bdAdjustmentTotal = m_bdAdjustmentTotal.add(m_rs.getBigDecimal(SMTableentries.TableName + "." + SMTableentries.doriginalamount));
 				}
 			}
@@ -525,26 +529,26 @@ public class ARPostingJournal extends java.lang.Object{
 		
 	}
 	private void printDocumentTotals(PrintWriter out){
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		out.println("<TD COLSPAN = \"2\"></TD>");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "<B>TOTAL:</B></TD>");
 		out.println("<TD CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_bdDebitTotal) + "</TD>");
 		out.println("<TD CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(m_bdCreditTotal) + "</TD>");
 		out.println("</TR>");
-		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		out.println("<TD COLSPAN = \"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		out.println("</TR>");
 	}
 	private void printLineDetail(PrintWriter out, int iCount){
 		
 		if(iCount %2 ==0) {
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-		}else {
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 		}
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineApplyToDocNumber) + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineDistributionAcct) + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sDistAcctDesc) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineApplyToDocNumber) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sLineDistributionAcct) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sDistAcctDesc) + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sLineDebitAmount + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sLineCreditAmount + "</TD>");
 		out.println("</TR>");
@@ -552,14 +556,14 @@ public class ARPostingJournal extends java.lang.Object{
 	private void printEntryDetail(PrintWriter out, int iCount){
 		
 		if(iCount %2 ==0) {
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-		}else {
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 		}
 
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sDocumentNumber + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcct) + "</TD>");
-		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcctDesc) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcct) + "</TD>");
+		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(m_sControlAcctDesc) + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sEntryDebitAmount + "</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_sEntryCreditAmount + "</TD>");
 		out.println("</TR>");
@@ -602,9 +606,9 @@ public class ARPostingJournal extends java.lang.Object{
 	
 		for (int i = 0; i <m_arrGLAccountArray.size(); i++){
 			if(i%2 !=0 ) {
-				out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
-			}else {
 				out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+			}else {
+				out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 			}
 			out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + m_arrGLAccountArray.get(i) + "</TD>");
 			glacct = new GLAccount(m_arrGLAccountArray.get(i));

@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
 import ServletUtilities.clsDatabaseFunctions;
@@ -53,10 +54,10 @@ public class SMManageSecurityGroupsAction extends HttpServlet {
 	    //First, start a transaction
 	    ArrayList<String> sSQLList = new ArrayList<String>(0);
 	    //First, delete all the SecurityGroupFunctions:
-	    sSQLList.add(SMMySQLs.Delete_Group_Functions_SQL(sGroupName));
+	    sSQLList.add(MySQLs.Delete_Group_Functions_SQL(sGroupName));
 	    
 	    //Next, delete all SecurityUserGroups:
-	    sSQLList.add(SMMySQLs.Delete_Group_Users_SQL(sGroupName));
+	    sSQLList.add(MySQLs.Delete_Group_Users_SQL(sGroupName));
 	    
 	    //Now add back in all the SecurityGroupFunctions for this group:
 		Enumeration<?> paramNames = request.getParameterNames();
@@ -69,13 +70,13 @@ public class SMManageSecurityGroupsAction extends HttpServlet {
 			  String sFunctionID = (sParamName.substring(sParamName.indexOf(sFunctionMarker) + sFunctionMarker.length()));
 
 			  //Now add an insert statement for each function:
-			  sSQLList.add(SMMySQLs.Insert_Security_Group_Function_SQL(sGroupName, sFunctionID));
+			  sSQLList.add(MySQLs.Insert_Security_Group_Function_SQL(sGroupName, sFunctionID));
 		  }
 		  if (sParamName.contains(sUserMarker)){
 			  String sUserID = (sParamName.substring(sParamName.indexOf(sUserMarker) + sUserMarker.length()));
 
 			  //Now add an insert statement for each function:
-			  sSQLList.add(SMMySQLs.Insert_Security_Group_User_SQL(sGroupName, sUserID));
+			  sSQLList.add(MySQLs.Insert_Security_Group_User_SQL(sGroupName, sUserID));
 		  }
 	    }
 		//Update the function names in SecurityFunctionGroups:

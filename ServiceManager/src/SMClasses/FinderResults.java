@@ -1,7 +1,5 @@
-package smar;
+package SMClasses;
 
-import SMClasses.SMMaterialReturn;
-import SMClasses.SMTaxCertificate;
 import SMDataDefinition.*;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
@@ -19,6 +17,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smap.APVendor;
+import smar.ARCallSheet;
+import smar.ARDocumentTypes;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMBidEntry;
 import smcontrolpanel.SMUtilities;

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditOrderSourcesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -129,7 +131,7 @@ public class SMEditOrderSourcesEdit extends HttpServlet {
         
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_OrderSource_By_ID(sCode);
+	        String sSQL = MySQLs.Get_OrderSource_By_ID(sCode);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
@@ -169,7 +171,7 @@ public class SMEditOrderSourcesEdit extends HttpServlet {
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
-		sSQLList.add(SMMySQLs.Delete_OrderSource_SQL(sCode));
+		sSQLList.add(MySQLs.Delete_OrderSource_SQL(sCode));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -185,7 +187,7 @@ public class SMEditOrderSourcesEdit extends HttpServlet {
 	private boolean Add_Record(String sCode, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
-		String sSQL = SMMySQLs.Get_OrderSource_By_ID(sCode);
+		String sSQL = MySQLs.Get_OrderSource_By_ID(sCode);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -203,7 +205,7 @@ public class SMEditOrderSourcesEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_OrderSource_SQL(sCode);
+		sSQL = MySQLs.Add_New_OrderSource_SQL(sCode);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

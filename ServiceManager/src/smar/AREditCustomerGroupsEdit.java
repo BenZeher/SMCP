@@ -14,6 +14,8 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomergroups;
+import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsManageRequestParameters;
 
 public class AREditCustomerGroupsEdit extends HttpServlet {
 	
@@ -127,7 +129,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -161,13 +163,14 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 
         //Group code:
 	    if(group.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARCustomerGroup.ParamsGroupCode, 
 	        		group.getM_sGroupCode().replace("\"", "&quot;"),  
 	        		SMTablearcustomergroups.sGroupCodeLength, 
 	        		"Group code:", 
 	        		"Up to " + SMTablearcustomergroups.sGroupCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -183,7 +186,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	    }else{
 	    	sTrueOrFalse = "false";
 	    }
-	    pwOut.println(ARUtilities.Create_Edit_Form_Checkbox_Row(
+	    pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	ARCustomerGroup.ParamiActive, 
 			sTrueOrFalse, 
 			"Active group?", 
@@ -192,13 +195,14 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 		);
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				ARCustomerGroup.ParamsDescription, 
         		group.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearcustomergroups.sDescriptionLength, 
         		"Group description:", 
         		"Up to " + SMTablearcustomergroups.sDescriptionLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 

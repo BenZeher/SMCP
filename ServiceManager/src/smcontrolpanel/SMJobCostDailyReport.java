@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmoptions;
@@ -160,6 +161,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
     	try{
     		String sOrderNumber = "";
     		String sOrderNumberLink = "";
+    		int iCount = 0;
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
 				
@@ -203,6 +205,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					bdBackChargeHoursForDay = BigDecimal.ZERO;
 					bdJobEfficiencyPercentage = BigDecimal.ZERO;
 					bdDailyEfficiencyProduct = BigDecimal.ZERO;
+					iCount = 0;
 				}
 				
 				//If this is new mechanic AND there was a previous one, print the mechanic footer:
@@ -237,6 +240,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 						sEndingDate,
 						out, 
 						conn);
+					iCount= 0;
 				}
 
 				//If this is a new day OR a new mechanic, print the day header:
@@ -246,6 +250,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 						
 				){
 					printDayHeader(sCurrentDay, sCurrentMechanic, pwSuppressed, conn);
+					iCount = 0;
 				}
 
 				//Add a link for the order number if the user has those rights: 
@@ -258,41 +263,46 @@ public class SMJobCostDailyReport extends java.lang.Object{
 				}else{
 					sOrderNumberLink = sOrderNumber;
 				}
-				pwSuppressed.println("<TR>");
-				pwSuppressed.println("<TD><FONT SIZE=2>" + sOrderNumberLink + "</FONT></TD>");
+				if(iCount % 2 == 0) {
+					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN +"\">");
+				}else {
+					pwSuppressed.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD +"\">");
+				}
 
-				pwSuppressed.println("<TD><FONT SIZE=2>" 
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + sOrderNumberLink + "</TD>");
+
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"
 						+ rs.getString(SMTableorderheaders.TableName + "." 
 								+ SMTableorderheaders.sServiceTypeCodeDescription).trim() + "</FONT></TD>");
 				
-				pwSuppressed.println("<TD><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." 
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">" + rs.getString(SMTableorderheaders.TableName + "." 
 						+ SMTableorderheaders.sShipToName).trim() + "</FONT></TD>");
 				
 				//Hours
 				bdJobHoursUsed = rs.getBigDecimal(SMTableworkorders.TableName + "." 
 					+ SMTableworkorders.bdqtyofhours);
 				bdJobHoursUsed.setScale(2, BigDecimal.ROUND_HALF_UP);
-				pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>"
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdJobHoursUsed) + "</FONT></TD>");
 				
 				//Travel
 				bdJobHoursTravel = rs.getBigDecimal(SMTableworkorders.TableName + "." 
 						+ SMTableworkorders.bdtravelhours);
 				bdJobHoursTravel = bdJobHoursTravel.setScale(2, BigDecimal.ROUND_HALF_UP);
-				pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>"
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdJobHoursTravel) + "</FONT></TD>");
 				
 				//Backcharge
 				bdJobHoursBackCharge = rs.getBigDecimal(SMTableworkorders.TableName + "." 
 						+ SMTableworkorders.bdbackchargehours);
-				pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>"
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdJobHoursBackCharge) + "</FONT></TD>");
 				
 				//Total estimated
 				BigDecimal bdTotalEstimated = new BigDecimal(Double.toString(rs.getDouble(SMTableorderheaders.TableName + "." 
 						+ SMTableorderheaders.dEstimatedHour)));
 				bdTotalEstimated = bdTotalEstimated.setScale(2, BigDecimal.ROUND_HALF_UP);
-				pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalEstimated) + "</FONT></TD>");
 				
 				//Total used
@@ -309,11 +319,11 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					}
 				if (bViewJobCostSummaryPermitted){
 					pwSuppressed.println(
-						"<TD ALIGN=RIGHT><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel."
+							"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel."
 						+ "SMDisplayJobCostInformation?OrderNumber=" + sOrderNumber 
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sTotalUsed + "</A></TD>");
 				}else{
-					pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + sTotalUsed + "</FONT></TD>");
+					pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">" + sTotalUsed + "</FONT></TD>");
 				}
 
 				//Efficiency
@@ -325,12 +335,12 @@ public class SMJobCostDailyReport extends java.lang.Object{
 								bdTotalProductionHoursUsed.add(bdTotalTravelHours).setScale(4), 2,
 								BigDecimal.ROUND_HALF_UP).multiply(bdOneHundred);
 						pwSuppressed.println(
-							"<TD ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+								"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								bdJobEfficiencyPercentage) + "</FONT></TD>");
 						//System.out.println("In " + this.toString() + "04 - bdTotalProductionHoursUsed.compareTo(BigDecimal.ZERO) > 0");
 					}else{
 						bdJobEfficiencyPercentage = BigDecimal.ZERO;
-						pwSuppressed.println("<TD ALIGN=RIGHT><FONT SIZE=2>" + "N/A" + "</FONT></TD>");
+						pwSuppressed.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\">"+ "N/A" + "</FONT></TD>");
 						//System.out.println("In " + this.toString() + "05 - bdTotalProductionHoursUsed.compareTo(BigDecimal.ZERO) <= 0");
 					}
 			 	}catch (ArithmeticException e){
@@ -344,7 +354,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			 		);
 			 	}			
 				pwSuppressed.println ("</TR>");
-				
+				iCount++;
 				//Reset the counters
 				sLastMechanic = sCurrentMechanic;
 				sLastEmployeeID = sEmployeeID;
@@ -519,22 +529,20 @@ public class SMJobCostDailyReport extends java.lang.Object{
 		}
 		
 		pwOut.println("<BR>");
-		pwOut.println("<TABLE BORDER=1 WIDTH = 100% NAME = TABLE3>");
+		pwOut.println("<TABLE  WIDTH = 100% CLASS = \"" +SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");
 		
-		String sBackgroundColor = "\"#AAAAAA\"";
-		//String sBackgroundColor = "\"#FFFFFF\"";
-		pwOut.println("<TR bgcolor =" + sBackgroundColor + ">");
-		pwOut.println("<TD><FONT SIZE=2><B>Overall ratings for " + sMechanic + " - " + sMechanicName 
+		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"+"<B>Overall ratings for " + sMechanic + " - " + sMechanicName 
 			+ "</B> starting <B>" + sStartDate + "</B> through <B>" + sEndDate + "</B>:</FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B>Overall Avg. Job Efficiency %: </B>" 
+		pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"+"<B>Overall Avg. Job Efficiency %: </B>" 
 			+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMechJobEfficiency) + "</FONT></TD>");
 		
-		pwOut.println("<TD><FONT SIZE=2><B>Overall Avg. Net Efficiency%: </B>" 
+		pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"+"<B>Overall Avg. Net Efficiency%: </B>" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdMechNetEfficiency) + "</FONT></TD></TR>");
 
-		pwOut.println("</TABLE NAME = TABLE3>");
+		pwOut.println("</TABLE>");
 		
-		pwOut.println("<HR></HR>");
+		pwOut.println("<BR>");
 		
 		//Reset the mechanic subtotal variables:
 		bdMechanicJobEfficiency = new BigDecimal(0); 
@@ -615,11 +623,11 @@ public class SMJobCostDailyReport extends java.lang.Object{
 		//System.out.println(SQL);
 			
 		//End the embedded hours table:
-		pwOut.println("</TABLE NAME = TABLE2></TD></TR>");
+		pwOut.println("</TABLE></TD></TR>");
 		
-		pwOut.println("<TR>");
+		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		
-		pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><U><B>Total Hours For Day From Job Cost: </B></U><BR>" 
+		pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\"><U><B>Total Hours For Day From Job Cost: </B></U><BR>" 
 			+ "Working: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdChargedHoursForDay) + "<BR>"
 			+ "Travel: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTravelHoursForDay) + "<BR>"
 			+ "<B>TOTAL CHARGED: </B>" 
@@ -646,14 +654,14 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					);
 				}
 			}
-			pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B>Avg JOB Efficiency For Day %: </B>" 
+			pwOut.println("<TD CLASS =\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP +  "\" ><B>Avg JOB Efficiency For Day %: </B>" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDailyJobEfficiency) + "</TD>");
 		}else{
-			pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B>Avg JOB Efficiency %: </B>" 
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP +  " \"><FONT SIZE=2><B>Avg JOB Efficiency %: </B>" 
 				+ "N/A" + "</TD>");
 		}
 		
-		pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B>On The Clock: </B><BR>");
+		pwOut.println("<TD CLASS =\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP +  "\"><FONT SIZE=2><B>On The Clock: </B><BR>");
 		BigDecimal bdTotalHoursOnTheClock = new BigDecimal(0);
 		if (sEmployeeID.compareToIgnoreCase("") != 0){
 			try{
@@ -739,28 +747,28 @@ public class SMJobCostDailyReport extends java.lang.Object{
 				bdTotalHoursOnTheClock.setScale(2), 2, BigDecimal.ROUND_HALF_UP);
 			bdDailyEfficiencyPercentage = bdDailyEfficiencyPercentage.multiply(bdOneHundred);
 			pwOut.println(
-				"<TD VALIGN=TOP><FONT SIZE=2><B>Net Daily Efficiency %:&nbsp;<B>" 
+					"<TD CLASS =\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP +  "\"><B>Net Daily Efficiency %:&nbsp;<B>" 
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDailyEfficiencyPercentage) + "</FONT></TD>");
 		}else{
-			pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B>Net Daily Efficiency %:&nbsp;<B>" + "N/A" + "</FONT></TD>");
+			pwOut.println("<TD CLASS =\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP +  "\" ><B>Net Daily Efficiency %:&nbsp;<B>" + "N/A" + "</TD>");
 		}
 		
 		pwOut.println("</TR>");
 		
 		//if there are any notes, display them
 		if (sEmployeeNote.length() > 0){
-			pwOut.println("<TR>" +
-							"<TD COLSPAN=4 VALIGN=TOP><FONT SIZE=2><B>Note from time card system:</B><HR ALIGN=LEFT WIDTH=30%>" +
-							sEmployeeNote +
-							"</FONT></TD>" +
-						  "</TR>");		
+			pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
+			pwOut.println("<TD COLSPAN=4 CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\"><B>Note from time card system:</B><HR ALIGN=LEFT WIDTH=30%>" +
+					sEmployeeNote +
+					"</TD>");		
+			pwOut.println("</TR>");
 		}
 		
 		//Close the table:
-		pwOut.println("</TABLE NAME = TABLE1>");
+		pwOut.println("</TABLE>");
 		pwOut.println("</TD>");
 		pwOut.println("</TR>");
-		pwOut.println("<TR><TD>&nbsp;</TD><TR>");
+		pwOut.println("<BR>");
 	}
 	
 	private void printDayHeader(
@@ -789,25 +797,26 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			System.out.println("In " + this.toString() + " could not read mechanic's name - " + e.getMessage());
 		}
 		
-		pwOut.println("<TABLE BORDER=1 WIDTH = 100% NAME=TABLE1>");
-		pwOut.println("<TR><TD COLSPAN=4><FONT SIZE=2><B>Date:&nbsp;</B>" + sDate 
-			+ "&nbsp;<B>Mechanic:&nbsp;</B> " + sMechanicName + "</FONT></TD></TR>");
+		pwOut.println("<TABLE  WIDTH = 100% CLASS = \"" +SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");
+		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		pwOut.println("<TD COLSPAN=\"4\" CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \"><B>Date:&nbsp;</B>" + sDate 
+			+ "&nbsp;<B>Mechanic:&nbsp;</B> " + sMechanicName + "</TD>");
+		pwOut.println("</TR>");
 		pwOut.println("<TR>");
 		//Embed the hours table:
-		pwOut.println("<TD COLSPAN=4>");
-		pwOut.println("<TABLE BORDER=0 WIDTH=100% NAME=TABLE2>");
+		pwOut.println("<TD COLSPAN = \"4\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
+		pwOut.println("<TABLE  WIDTH = 100% CLASS = \"" +SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");
 		//Start the row
-		pwOut.println("<TR>");
-		pwOut.println("<TD><FONT SIZE=2><B><U>Order #</U></B></FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B><U>Type</U></B></FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B><U>Ship to</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Hrs</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Travel</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Backcharge</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Total Estimated</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Total Used</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B><U>Efficiency %</U></B></FONT></TD>");
-		pwOut.println("<TD ALIGN=CENTER><FONT SIZE=2>&nbsp;&nbsp;&nbsp;&nbsp;</FONT></TD>");
+		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Order #</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Type</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Ship to</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Hrs</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Travel</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Backcharge</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Total Estimated</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Total Used</U></B></TD>");
+		pwOut.println("<TD  CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \"><B><U>Efficiency %</U></B></TD>");
 		pwOut.println("</TR>");
 		//End this row
 	}

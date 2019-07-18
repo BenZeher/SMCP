@@ -13,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -333,7 +332,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
 		}
 		
 	    //Cost of goods sold:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICCategory.ParamCostOfGoodsSoldAccount, 
         		arrValues, 
         		category.getCostOfGoodsSoldAccount().replace("\"", "&quot;"),  
@@ -344,7 +343,7 @@ public class ICEditCategoriesEdit extends HttpServlet {
         );
         
 	    //Sales Acct:
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ICCategory.ParamSalesAccount, 
         		arrValues, 
         		category.getSalesAccount().replace("\"", "&quot;"),  

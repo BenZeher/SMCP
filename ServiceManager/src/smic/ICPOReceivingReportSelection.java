@@ -111,9 +111,9 @@ public class ICPOReceivingReportSelection  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -198,8 +198,8 @@ public class ICPOReceivingReportSelection  extends HttpServlet {
 		out.println("</TD></TR>");
 		
 		out.println("<TR><TD ALIGN=RIGHT><B>Export report:</B></TD>");
-		out.println("<TD>Output to comma delimited file?&nbsp;&nbsp;");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"OutputToCSV\">");
+		out.println("<TD><LABEL>Output to comma delimited file?&nbsp;&nbsp;");
+		out.println("<INPUT TYPE=CHECKBOX NAME=\"OutputToCSV\"></LABEL>");
 		out.println("</TD></TR>");
 		out.println("</TABLE>");
 		out.println("<BR>");

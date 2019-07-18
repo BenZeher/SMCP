@@ -4,6 +4,7 @@ import SMClasses.*;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -241,7 +242,7 @@ public class AREditBatchesUpdate extends HttpServlet{
 		//		+ ", day = '" + req.getParameter("BatchDateDay") + "'"
 		//);
 		
-		String sBatchDate = ARUtilities.get_Request_Parameter(SMEntryBatch.datbatchdate, req);
+		String sBatchDate = clsManageRequestParameters.get_Request_Parameter(SMEntryBatch.datbatchdate, req);
 		//if (! batch.tsBatchDate(
 		//		req.getParameter("BatchDateYear"), 
 		//		req.getParameter("BatchDateMonth"), 

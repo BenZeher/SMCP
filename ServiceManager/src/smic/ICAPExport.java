@@ -14,7 +14,7 @@ import java.math.BigDecimal;
 
 import org.apache.commons.net.ftp.FTP;
 
-import smar.SMOption;
+import SMClasses.SMOption;
 import SMDataDefinition.SMExportTypes;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import ServletUtilities.*;

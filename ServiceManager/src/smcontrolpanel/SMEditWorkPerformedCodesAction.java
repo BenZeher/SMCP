@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTableworkperformedcodes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
@@ -76,7 +77,7 @@ public class SMEditWorkPerformedCodesAction extends HttpServlet{
 			String sWorkPerformedPhrase,
 			String sUser,
 			String sDBID) throws Exception{
-	    String sSQL = SMMySQLs.Update_WorkPerformedCode_SQL(
+	    String sSQL = MySQLs.Update_WorkPerformedCode_SQL(
 	    		sServiceType, 
 	    		sWPCode, 
 	    		sSortOrder, 

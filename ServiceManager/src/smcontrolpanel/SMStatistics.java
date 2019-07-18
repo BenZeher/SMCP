@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTableicitems;
@@ -66,66 +67,66 @@ public class SMStatistics extends HttpServlet {
 	    	return;
 	    }
 		try{
-	        sSQL = SMMySQLs.Statistics_OrderHeaders_Count_SQL();
+	        sSQL = MySQLs.Statistics_OrderHeaders_Count_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	        long iOrderCount = rs.getLong("CNT");
 	     	out.println ("Number of orders in system: " + iOrderCount + "; " );
 	     	rs.close();
 	     	
-	        sSQL = SMMySQLs.Statistics_OrderDetails_Count_SQL();
+	        sSQL = MySQLs.Statistics_OrderDetails_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	        long iOrderLineCount = rs.getLong("CNT");
 	     	out.println ("number of order lines in system: " + iOrderLineCount+ ", averaging " + iOrderLineCount / iOrderCount + " lines per order.<BR>");
 	     	rs.close();
 	     	
-	        sSQL = SMMySQLs.Statistics_OrderHeadersOldest_SQL();
+	        sSQL = MySQLs.Statistics_OrderHeadersOldest_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	     	out.println ("Date of oldest order in system: " + rs.getDate(SMDataDefinition.SMTableorderheaders.datOrderDate) + ".<BR>");
 	     	rs.close();
 	     	
-	        sSQL = SMMySQLs.Statistics_InvoiceHeaders_Count_SQL();
+	        sSQL = MySQLs.Statistics_InvoiceHeaders_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	        long iInvoiceCount = rs.getLong("CNT");
 	     	out.println ("Number of invoices in system: " + iInvoiceCount+ "; " );
 	     	rs.close();
 	     	
-	        sSQL = SMMySQLs.Statistics_InvoiceDetails_Count_SQL();
+	        sSQL = MySQLs.Statistics_InvoiceDetails_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	        long iInvoiceLineCount = rs.getLong("CNT");
 	     	out.println ("number of invoice details in system: " + iInvoiceLineCount+ ", averaging " + iInvoiceLineCount / iInvoiceCount + " lines per invoice.<BR>" );
 	     	rs.close();
 
-	        sSQL = SMMySQLs.Statistics_CriticalDates_Count_SQL();
+	        sSQL = MySQLs.Statistics_CriticalDates_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	        long iCriticalDateCount = rs.getLong("CNT");
 	     	out.println ("Number of critical dates in system: " + iCriticalDateCount + ".<BR>" );
 	     	rs.close();
 
-	        sSQL = SMMySQLs.Statistics_SpeedSearchHeaders_Count_SQL();
+	        sSQL = MySQLs.Statistics_SpeedSearchHeaders_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	     	out.println ("Number of Speed Search records in system: " + rs.getLong("CNT") + "; " );
 	     	rs.close();
 
-	        sSQL = SMMySQLs.Statistics_SpeedSearchOldest_SQL();
+	        sSQL = MySQLs.Statistics_SpeedSearchOldest_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	     	out.println ("date of oldest Speed Search order in system: " + FormatLongDateAsStringYMD(rs.getLong(SMDataDefinition.SMTablessorderheaders.ORDDATE)) + ".<BR>" );
 	     	rs.close();
 	     	
-	        sSQL = SMMySQLs.Statistics_SiteLocations_Count_SQL();
+	        sSQL = MySQLs.Statistics_SiteLocations_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	     	out.println ("Number of Site Locations (Door Labels) in system: " + rs.getLong("CNT") + ".<BR>" );
 	     	rs.close();
 
-	        sSQL = SMMySQLs.Statistics_Users_Count_SQL();
+	        sSQL = MySQLs.Statistics_Users_Count_SQL();
 	        rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        rs.first();
 	     	out.println ("Number of users in system: " + rs.getLong("CNT") + ".<BR>" );

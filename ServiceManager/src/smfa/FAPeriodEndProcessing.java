@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import SMClasses.SMModuleTypes;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTablefamaster;
 import SMDataDefinition.SMTablefaoptions;
 import SMDataDefinition.SMTablefatransactions;
@@ -18,9 +19,8 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsServletUtilities;
 import smar.AROptions;
-import smar.SMGLExport;
-import smar.SMOption;
 import smgl.GLTransactionBatch;
+import smgl.SMGLExport;
 
 public class FAPeriodEndProcessing extends java.lang.Object{
 

@@ -15,6 +15,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTablearmonthlystatistics;
@@ -27,7 +28,9 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import smgl.GLTransactionBatch;
+import smgl.SMGLExport;
 
 public class ARBatch extends SMClasses.SMEntryBatch{
 	private SMLogEntry log;
@@ -2399,7 +2402,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 		}
 
 		String sExportBatchNumber = Long.toString(lBatchNumber());
-		sExportBatchNumber = ARUtilities.PadLeft(sExportBatchNumber, "0", 6);
+		sExportBatchNumber = clsStringFunctions.PadLeft(sExportBatchNumber, "0", 6);
 		
 		try {
 			export.saveExport(sExportBatchNumber, conn);
@@ -2418,6 +2421,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			return false;
 		}
 		int iFeedGL = Integer.parseInt(aropt.getFeedGl());
+		String sBatch = "";
 		if (
 			(iFeedGL == SMTablearoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
 			|| (iFeedGL == SMTablearoptions.FEED_GL_SMCP_GL_ONLY)
@@ -2430,7 +2434,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 					sCreatedByID(), 
 					sLastEditedByID(), 
 					sStdBatchDateString(), 
-					"AR " + ARBatchTypes.Get_AR_Batch_Type(iBatchType()) + " Batch #" + lBatchNumber()
+					"AR " + SMBatchTypes.Get_Batch_Type(super.iBatchType()) + " Batch #" + lBatchNumber()
 				);
 			} catch (Exception e) {
 				super.addErrorMessage("Error [1557446823] creating SMCP GL batch - " + e.getMessage());

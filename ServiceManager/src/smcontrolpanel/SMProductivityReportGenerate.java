@@ -26,7 +26,7 @@ import ServletUtilities.clsManageRequestParameters;
 public class SMProductivityReportGenerate extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	@Override
+	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -45,8 +45,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
-	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 
     	//Calculate time period
@@ -232,7 +230,6 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    String sCurrentInvoiceNumber = null;
 		    BigDecimal bdInvoiceTotal = BigDecimal.ZERO;
 		    BigDecimal bdMechanicTotal = BigDecimal.ZERO;
-		    //BigDecimal bdGrandTotal = BigDecimal.ZERO;
 		    
 		    int iCount = 0;
 		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
@@ -245,10 +242,10 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    		if (lCurrentMechanicID != 0){
 		    			if (!bShowSubtotalOnly){
 			    			//print out total for this invoice 
-				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+				    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 			    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 			    		out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 		    			out.println("</TR>");
@@ -330,10 +327,10 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    if (sCurrentInvoiceNumber.compareTo(rs.getString(SMTableinvoiceheaders.sInvoiceNumber).trim()) != 0){
 			    	if (!bShowSubtotalOnly){
 		    			//print out total for this invoice 
-			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TR><TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		    			out.println("</TR>");
-		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+		    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 		    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 		    			out.println("</TR>");
@@ -373,9 +370,9 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    BigDecimal bdLine = BigDecimal.valueOf(rs.getDouble(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedPrice));
 			    if (!bShowSubtotalOnly){
 					if(iCount % 2 == 0) {
-						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-					}else {
 						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 					}
 					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber).trim() +"</TD>");
 					out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sDesc).trim() +" </TD>");
@@ -387,17 +384,15 @@ public class SMProductivityReportGenerate extends HttpServlet {
 			    }
 			    bdInvoiceTotal = bdInvoiceTotal.add(bdLine);
 			    bdMechanicTotal = bdMechanicTotal.add(bdLine);
-			    //bdGrandTotal = bdGrandTotal.add(bdLine);
-			    //System.out.println("   " + bdLine + " / " + bdInvoiceTotal + " / " + bdMechanicTotal + " / " + bdGrandTotal);
 			    
 		    }
 		    if (bHasRecord){
 			    //print out last total
 		    	if (!bShowSubtotalOnly){
-			    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			    	out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		    		out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK +"\">&nbsp</TD>");
 		    		out.println("</TR>");
-	    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+	    			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 	    			out.println("<TD COLSPAN = \"4\" CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total for Invoice #: <A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + SMUtilities.lnViewInvoice(sDBID, sCurrentInvoiceNumber ) + "\">" + sCurrentInvoiceNumber + "</A>: </TD>");
 	    			out.println("<TD  CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + bdInvoiceTotal.setScale(2, BigDecimal.ROUND_HALF_UP).toString() +" </TD>");
 	    			out.println("</TR>");
@@ -417,14 +412,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    	out.println("<TR><TD ALIGN=CENTER><B>No Record Found</B></TD></TR>");
 		    	
 		    }
-			/*
-			//print out grand total
-			out.println("<TR><TD></TD></TR>");
-			out.println("<TR><TD ALIGN=RIGHT COLSPAN=3><FONT SIZE=5><B>Grand Total :   " + 
-							bdGrandTotal.setScale(2, BigDecimal.ROUND_HALF_UP) + 
-							"</B></FONT></TD></TR>");
-			out.println("</TD></TR>");
-			*/
+
 		    out.println("</TABLE>");
 		    rs.close();
 		    

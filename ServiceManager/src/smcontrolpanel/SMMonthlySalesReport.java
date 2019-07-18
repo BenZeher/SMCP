@@ -640,9 +640,9 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 			sOrderNumberLink = sOrderNumber;
 		}
 		if(iCount % 2 == 0) {
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
-		}else {
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}else {
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 		}
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sSalesGroup + "/" + sSalesperson +"</TD>");
 		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsDateAndTimeConversions.utilDateToString(datSale, "MM/dd/yyyy")+" </TD>");
@@ -685,7 +685,7 @@ SQL += " ORDER BY " + "SALESGROUP, SALETYPE DESC, SALESPERSON, ORDERNUMBER" + "\
 		
 		//First, end the order header table:
 		if (bShowIndividualOrders){
-			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_SUB_HEADING + "\">");
+			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		}
 
 		//Suppress this if there are no orders:

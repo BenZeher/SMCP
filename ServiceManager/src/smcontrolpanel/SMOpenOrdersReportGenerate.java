@@ -12,9 +12,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsDateAndTimeConversions;
 
 public class SMOpenOrdersReportGenerate extends HttpServlet {
 	
@@ -39,18 +41,42 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+		String sUserFullName = SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, this.toString());
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 
     	SimpleDateFormat USDateOnlyformatter = new SimpleDateFormat("MM/dd/yyyy");
 
-    	String title = "Open Orders Report";
-    	String subtitle = "";
-    	
-    	out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+    	String sReportTitle = "Open Orders Report";
+    	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
+	 		   + "Transitional//EN\">"
+	 	       + "<HTML>"
+	 	       + "<HEAD>"
+
+	 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
+	 		   + "<BODY BGCOLOR=\"" 
+	 		   + "#FFFFFF"
+	 		   + "\""
+	 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
+	 		   //Jump to the last edit:
+	 		   + " onLoad=\"window.location='#LastEdit'\""
+	 		   + ">"
+	 		   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">"
+	 		   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+	 		   + clsDateAndTimeConversions.nowStdFormat() + " Printed by " + sUserFullName 
+	 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
+	 		   + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
+	 		   + "</TR>");
+	 				   
+	     	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	 			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+	 			+ "\">Return to user login</A><BR>");
+	 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMListOrdersForScheduling) 
+	 	    		+ "\">Summary</A><BR>");
+
+	 	    out.println("</TD></TR></TABLE>");
 		
-		//Print a link to the first page after login:
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
-				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-				+ "\">Return to user login</A><BR><BR>");
+	 	    out.println(SMUtilities.getMasterStyleSheetLink());
+		
 		   
 	 	   //log usage of this this report
 	 	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
@@ -94,75 +120,83 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    
-		    out.println("<TABLE BORDER=0 WIDTH=100%>");
+			out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 		    String sCurrentLocation = "";
 		    String sCurrentServiceType = "";
-		    boolean bFlipper = false;
-		    String sbgColor = "";
+		    int iCount = 0;
 		    while (rs.next()){	  
 		    	
 		    	bHasRecord = true;
 		    	
 		    	if (sCurrentLocation.compareTo(rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation)) != 0){
-		    		out.println("<TR>\n<TD COLSPAN=5><HR><BR><BR></TD>\n</TR>\n");
-		    		out.println("<TR>\n<TD COLSPAN=5><TABLE BORDER=1><TR>\n<TD>\n<B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>\n</TR>\n</TABLE></TD>\n</TR>\n");
+		    		
 		    		sCurrentLocation = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation);
 		    		sCurrentServiceType = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode);
-			    	out.println("<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n" + 
-			    				"<TR>\n" +
-		    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>\n" +
-		    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>\n" +
-		    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>\n" +
-		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>\n" +
-		    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>\n" + 
-								"</TR>\n" + 
-			    				"<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n");
+		    		
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Location:&nbsp;&nbsp; " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) +"&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>");
+		    		out.println("</TR>"); 
+		    		
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Sales #</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order Date</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order Number</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill To Name</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ship To Name</TD>");
+		    		out.println("</TR>"); 
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD COLSPAN=\"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+		    		out.println("</TR>"); 
+		    		iCount = 0;
 		    	}
 
 		    	if (sCurrentServiceType.compareTo(rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode)) != 0){
-		    		out.println("<TR>\n<TD COLSPAN=5><HR><BR><BR></TD>\n</TR>\n");
-		    		out.println("<TR>\n<TD COLSPAN=5><TABLE BORDER=1><TR>\n<TD>\n<B>Location:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) + "<B>&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>\n</TR>\n</TABLE></TD>\n</TR>\n");
 		    		sCurrentServiceType = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode);
-			    	out.println("<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n" + 
-		    				"<TR>\n" +
-	    						"<TD ALIGN=CENTER WIDTH=10%><FONT SIZE=2><B>Sales #</B></FONT></TD>\n" +
-	    						"<TD ALIGN=CENTER WIDTH=15%><FONT SIZE=2><B>Order Date</B></FONT></TD>\n" +
-	    						"<TD ALIGN=LEFT WIDTH=15%><FONT SIZE=2><B>Order Number</B></FONT></TD>\n" +
-	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Bill To Name</B></FONT></TD>\n" +
-	    						"<TD ALIGN=LEFT WIDTH=30%><FONT SIZE=2><B>Ship To Name</B></FONT></TD>\n" + 
-							"</TR>\n" + 
-		    				"<TR>\n<TD COLSPAN=5><HR></TD>\n</TR>\n");
+		    		
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD COLSPAN=\"5\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Location:&nbsp;&nbsp; " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sLocation) +"&nbsp;&nbsp;&nbsp;-&nbsp;&nbsp;Service Type:&nbsp;&nbsp;</B>  " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>");
+		    		out.println("</TR>"); 
+		    		
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Sales #</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order Date</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order Number</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill To Name</TD>");
+		        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ship To Name</TD>");
+		    		out.println("</TR>"); 
+		        	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		        	out.println("<TD COLSPAN=\"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+		    		out.println("</TR>"); 
+		    		iCount = 0;
 		    	} 
-		    	bFlipper = !bFlipper;
-		    	if (bFlipper){
-		    		sbgColor = "\"#FFFFFF\"";
-		    	}else{
-		    		sbgColor = "\"#DDDDDD\"";
-		    	}
-		    	out.println("<TR BGCOLOR=" + sbgColor + ">" +
-								"<TD ALIGN=CENTER><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson) + "</FONT></TD>\n" +
-								"<TD ALIGN=CENTER><FONT SIZE=2>" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate)) + "</FONT></TD>\n" +
-								"<TD ALIGN=LEFT><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber) 
-								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
-								+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber).trim() + "</A></FONT></TD>\n" +
-								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).trim() + "</FONT></TD>\n" +
-								"<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim() + "</FONT></TD>\n" + 
-							"</TR>\n");    
+				if(iCount % 2 == 0) {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateOnlyformatter.format(rs.getDate(SMTableorderheaders.TableName + "." + SMTableorderheaders.datOrderDate)) + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber) 
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
+				+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber).trim() + "</A></TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).trim() + "</TD>");
+				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim() + "</TD>");
+		    	iCount++;
 		    }
 		    if (!bHasRecord){
-		    	out.println("<TR>\n<TD ALIGN=CENTER><HR></TD>\n</TR>\n");
-		    	out.println("<TR>\n<TD ALIGN=CENTER><B>No Record Found</B></TD>\n</TR>\n");
-		    	
+		    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+	        	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">No Record Found</TD>");
+	    		out.println("</TR>"); 
 		    }
 			
 		    out.println("</TABLE>");
 		    rs.close();
 		    
 	    }catch (SQLException ex){
-	    	System.out.println("Error in SMOpenOrdersReportGenerate!!");
+	    	/*System.out.println("Error in SMOpenOrdersReportGenerate");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
-	        System.out.println("SQL: " + ex.getErrorCode());
+	        System.out.println("SQL: " + ex.getErrorCode());*/
 	    }
 	    
 		out.println("</BODY></HTML>");

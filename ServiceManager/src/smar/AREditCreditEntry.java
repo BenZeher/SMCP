@@ -14,7 +14,9 @@ import javax.servlet.http.HttpSession;
 import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -51,21 +53,21 @@ public class AREditCreditEntry extends HttpServlet {
 	    
 		boolean m_bIsNewEntry = false;
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		boolean m_bEditable = false;
 		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
 			m_bEditable = true;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sApplyToDocumentID = clsManageRequestParameters.get_Request_Parameter("DocumentID", request);
 	    
 		//Try to load an AREntryInput object from which to build the form:
 		if (m_EntryInput == null){
@@ -170,7 +172,7 @@ public class AREditCreditEntry extends HttpServlet {
 			m_EntryInput.setBatchNumber(sBatchNumber);
 			m_EntryInput.setBatchType(sBatchType);
 			//Load the transaction this adjustment will apply to:
-			if(!ARUtilities.IsValidLong(sApplyToDocumentID)){
+			if(!clsValidateFormFields.IsValidLong(sApplyToDocumentID)){
 	    		throw new Exception("Document ID " + sApplyToDocumentID + " is not valid.");
 			}
 	    	ARTransaction m_Transaction = new ARTransaction(sApplyToDocumentID);

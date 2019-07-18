@@ -12,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -21,6 +20,7 @@ import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
 import SMDataDefinition.SMTablesecurityusergroups;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
 
 public class ICMainMenu extends HttpServlet {
 
@@ -59,7 +59,7 @@ public class ICMainMenu extends HttpServlet {
 				getServletContext()
 		)
 		);
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}

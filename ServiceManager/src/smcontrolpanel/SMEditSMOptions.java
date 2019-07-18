@@ -10,11 +10,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMOption;
+import SMClasses.SMOptionInput;
 import SMDataDefinition.SMTablesmoptions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import smar.SMOption;
-import smar.SMOptionInput;
 
 public class SMEditSMOptions extends HttpServlet {
 

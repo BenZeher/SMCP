@@ -144,12 +144,13 @@ public class ICItemValuationReportSelection  extends HttpServlet {
 				);
 			ArrayList<String> sLocationList = new ArrayList<String>(0);
 			while (rs.next()){
-				sLocationList.add((String) "<INPUT TYPE=CHECKBOX " + " checked=\"Yes\"" 
+				sLocationList.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + " checked=\"Yes\"" 
 	        			+ " NAME=\"LOCATION" 
 	        			+ rs.getString(SMTablelocations.sLocation) 
 	        			+ "\">" 
 	        			+ rs.getString(SMTablelocations.sLocation)
 	        			+ "&nbsp;" + rs.getString(SMTablelocations.sLocationDescription)
+	        			+ "</LABEL>"
 	        			);
 	    	}
 	        rs.close();

@@ -22,7 +22,10 @@ import SMDataDefinition.SMTableorderheaders;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsValidateFormFields;
 
 public class ARTerms extends java.lang.Object{
 	public static final String ParamsAddingNewRecord = "bAddingNewRecord";
@@ -66,9 +69,9 @@ public class ARTerms extends java.lang.Object{
         }
     
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-    	m_sTermsCode = ARUtilities.get_Request_Parameter(ParamsTermsCode, req).trim().replace("&quot;", "\"");
-    	m_sDescription = ARUtilities.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+    	m_sTermsCode = clsManageRequestParameters.get_Request_Parameter(ParamsTermsCode, req).trim().replace("&quot;", "\"");
+    	m_sDescription = clsManageRequestParameters.get_Request_Parameter(ParamsDescription, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(ParamiActive) == null){
 			m_iActive = "0";
 		}else{
@@ -78,16 +81,16 @@ public class ARTerms extends java.lang.Object{
 				m_iActive = "1";
 			}
 		}
-		m_datLastMaintained = ARUtilities.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
+		m_datLastMaintained = clsManageRequestParameters.get_Request_Parameter(ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
 		if(m_datLastMaintained.compareToIgnoreCase("") == 0){
 			m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		}
     	m_iDueDayOfTheMonth = "0"; 
-    	m_dDiscountPercent = ARUtilities.get_Request_Parameter(ParamdDiscountPercent, req).trim().replace("&quot;", "\"");
-    	m_iDiscountNumberOfDays = ARUtilities.get_Request_Parameter(ParamiDiscountNumberOfDays, req).trim().replace("&quot;", "\"");
-    	m_iDiscountDayOfTheMonth = ARUtilities.get_Request_Parameter(ParamiDiscountDayOfTheMonth, req).trim().replace("&quot;", "\"");
-    	m_iDueNumberOfDays = ARUtilities.get_Request_Parameter(ParamiDueNumberOfDays, req).trim().replace("&quot;", "\"");
-    	m_iDueDayOfTheMonth = ARUtilities.get_Request_Parameter(ParamiDueDayOfTheMonth, req).trim().replace("&quot;", "\"");
+    	m_dDiscountPercent = clsManageRequestParameters.get_Request_Parameter(ParamdDiscountPercent, req).trim().replace("&quot;", "\"");
+    	m_iDiscountNumberOfDays = clsManageRequestParameters.get_Request_Parameter(ParamiDiscountNumberOfDays, req).trim().replace("&quot;", "\"");
+    	m_iDiscountDayOfTheMonth = clsManageRequestParameters.get_Request_Parameter(ParamiDiscountDayOfTheMonth, req).trim().replace("&quot;", "\"");
+    	m_iDueNumberOfDays = clsManageRequestParameters.get_Request_Parameter(ParamiDueNumberOfDays, req).trim().replace("&quot;", "\"");
+    	m_iDueDayOfTheMonth = clsManageRequestParameters.get_Request_Parameter(ParamiDueDayOfTheMonth, req).trim().replace("&quot;", "\"");
     }
 	private boolean load(
 			String sTermsCode,
@@ -149,8 +152,8 @@ public class ARTerms extends java.lang.Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sTermsCode = ARUtilities.checkStringForNull(rs.getString(SMTablearterms.sTermsCode));
-	        	m_sDescription = ARUtilities.checkStringForNull(rs.getString(SMTablearterms.sDescription));
+	        	m_sTermsCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearterms.sTermsCode));
+	        	m_sDescription = clsStringFunctions.checkStringForNull(rs.getString(SMTablearterms.sDescription));
 	        	m_iActive = rs.getString(SMTablearterms.iActive);
 	        	if(clsDateAndTimeConversions.IsValidDate(rs.getDate(SMTablearterms.datLastMaintained))){
 	        		m_datLastMaintained = clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearterms.datLastMaintained),"MM/dd/yyyy");
@@ -325,7 +328,7 @@ public class ARTerms extends java.lang.Object{
     		m_sErrorMessageArray.add("Invalid last maintained date: " + m_datLastMaintained); 
         		bEntriesAreValid = false;
     	}
-    	if(!ARUtilities.IsValidBigDecimal(m_dDiscountPercent, 2)){
+    	if(!clsValidateFormFields.IsValidBigDecimal(m_dDiscountPercent, 2)){
     		m_sErrorMessageArray.add("Invalid discount percent: " + m_dDiscountPercent); 
     		bEntriesAreValid = false;
     	}else{
@@ -334,25 +337,25 @@ public class ARTerms extends java.lang.Object{
 	   		bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 	   		m_dDiscountPercent = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bd);
     	}
-    	if(!ARUtilities.IsValidInteger(m_iDiscountNumberOfDays)){
+    	if(!clsValidateFormFields.IsValidInteger(m_iDiscountNumberOfDays)){
     		m_sErrorMessageArray.add("Invalid discount number of days: " + m_iDiscountNumberOfDays); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDiscountNumberOfDays = m_iDiscountNumberOfDays.replace(",", "");
     	}
-    	if(!ARUtilities.IsValidInteger(m_iDiscountDayOfTheMonth)){
+    	if(!clsValidateFormFields.IsValidInteger(m_iDiscountDayOfTheMonth)){
     		m_sErrorMessageArray.add("Invalid discount day of the month: " + m_iDiscountDayOfTheMonth); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDiscountDayOfTheMonth = m_iDiscountDayOfTheMonth.replace(",", "");
     	}
-    	if(!ARUtilities.IsValidInteger(m_iDueNumberOfDays)){
+    	if(!clsValidateFormFields.IsValidInteger(m_iDueNumberOfDays)){
     		m_sErrorMessageArray.add("Invalid due number of days: " + m_iDueNumberOfDays); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDueNumberOfDays = m_iDueNumberOfDays.replace(",", "");
     	}
-    	if(!ARUtilities.IsValidInteger(m_iDueDayOfTheMonth)){
+    	if(!clsValidateFormFields.IsValidInteger(m_iDueDayOfTheMonth)){
     		m_sErrorMessageArray.add("Invalid due day of the month: " + m_iDueDayOfTheMonth); 
     		bEntriesAreValid = false;
     	}else{
@@ -367,16 +370,16 @@ public class ARTerms extends java.lang.Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsTermsCode + "=" + ARUtilities.URLEncode(m_sTermsCode);
-		sQueryString += "&" + ParamsDescription + "=" + ARUtilities.URLEncode(m_sDescription);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamdDiscountPercent + "=" + ARUtilities.URLEncode(m_dDiscountPercent);
-		sQueryString += "&" + ParamiDiscountNumberOfDays + "=" + ARUtilities.URLEncode(m_iDiscountNumberOfDays);
-		sQueryString += "&" + ParamiDiscountDayOfTheMonth + "=" + ARUtilities.URLEncode(m_iDiscountDayOfTheMonth);
-		sQueryString += "&" + ParamiDueNumberOfDays + "=" + ARUtilities.URLEncode(m_iDueNumberOfDays);
-		sQueryString += "&" + ParamiDueDayOfTheMonth + "=" + ARUtilities.URLEncode(m_iDueDayOfTheMonth);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsTermsCode + "=" + clsServletUtilities.URLEncode(m_sTermsCode);
+		sQueryString += "&" + ParamsDescription + "=" + clsServletUtilities.URLEncode(m_sDescription);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamdDiscountPercent + "=" + clsServletUtilities.URLEncode(m_dDiscountPercent);
+		sQueryString += "&" + ParamiDiscountNumberOfDays + "=" + clsServletUtilities.URLEncode(m_iDiscountNumberOfDays);
+		sQueryString += "&" + ParamiDiscountDayOfTheMonth + "=" + clsServletUtilities.URLEncode(m_iDiscountDayOfTheMonth);
+		sQueryString += "&" + ParamiDueNumberOfDays + "=" + clsServletUtilities.URLEncode(m_iDueNumberOfDays);
+		sQueryString += "&" + ParamiDueDayOfTheMonth + "=" + clsServletUtilities.URLEncode(m_iDueDayOfTheMonth);
 				
 		return sQueryString;
 	}

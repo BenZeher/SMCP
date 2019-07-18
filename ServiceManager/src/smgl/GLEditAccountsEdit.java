@@ -17,9 +17,9 @@ import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -162,13 +162,14 @@ public class GLEditAccountsEdit extends HttpServlet {
 
         //Acct ID:
 	    if(glacct.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		GLAccount.Paramsacctid, 
 	        		glacct.getM_sacctid().replace("\"", "&quot;"),  
 	        		SMTableglaccounts.sAcctIDLength, 
 	        		"Account number:", 
 	        		"Up to " + SMTableglaccounts.sAcctIDLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -178,14 +179,15 @@ public class GLEditAccountsEdit extends HttpServlet {
 	    }
 	    
         //Formatted ID:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		GLAccount.Paramsformattedacctid, 
         		glacct.getM_sformattedacctid().replace("\"", "&quot;"), 
         		SMTableglaccounts.sFormattedAcctLength, 
         		"Formatted account number:", 
         		"Including hyphens or any additional formatting, up to " 
         			+ SMTableglaccounts.sFormattedAcctLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
@@ -210,7 +212,7 @@ public class GLEditAccountsEdit extends HttpServlet {
 		} catch (SQLException e) {
 			throw new Exception("Error [1528143735] loading GL Account Structures - " + e.getMessage());
 		}
-		pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 			GLAccount.Paramlaccountstructureid, 
 			arrAccountStructureIDs, 
 			glacct.getM_laccountstructureid(), 
@@ -239,7 +241,7 @@ public class GLEditAccountsEdit extends HttpServlet {
 		} catch (SQLException e) {
 			throw new Exception("Error [1528143736] loading GL Account Groups - " + e.getMessage());
 		}
-		pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 			GLAccount.Paramlaccountgroupid, 
 			arrAccountGroupIDs, 
 			glacct.getM_laccountgroupid(), 
@@ -248,13 +250,14 @@ public class GLEditAccountsEdit extends HttpServlet {
 		);
 		
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		GLAccount.Paramsdescription, 
         		glacct.getM_sdescription().replace("\"", "&quot;"), 
         		SMTableglaccounts.sDescLength, 
         		"Account description:", 
         		"Up to " + SMTableglaccounts.sDescLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 
@@ -268,7 +271,7 @@ public class GLEditAccountsEdit extends HttpServlet {
 		sDescriptions.add("Income statement");
 		sDescriptions.add("Retained earnings");
 		
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         	GLAccount.Paramstype, 
         	sValues, 
         	glacct.getM_stype(), 
@@ -289,7 +292,7 @@ public class GLEditAccountsEdit extends HttpServlet {
         sBalanceTypeDescriptions.add("Normally a DEBIT balance");
         sBalanceTypeDescriptions.add("Normally a CREDIT balance");
 		
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         	GLAccount.Paraminormalbalancetype, 
         	sBalanceTypeValues, 
         	glacct.getsinormalbalancetype(),
@@ -328,7 +331,7 @@ public class GLEditAccountsEdit extends HttpServlet {
 			pwOut.println("<BR><FONT COLOR=RED><B>Error [1450321765] reading GL accounts - " + ex.getMessage() + ".</FONT></B><BR>");
 		}
 		
-        pwOut.println(ARUtilities.Create_Edit_Form_List_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         	GLAccount.Paramicostcenterid, 
         	sValues, 
         	glacct.getM_scostcenterid(), 
@@ -344,7 +347,7 @@ public class GLEditAccountsEdit extends HttpServlet {
         	sActive = "true";
         }
 		pwOut.println(
-				ARUtilities.Create_Edit_Form_Checkbox_Row(
+				clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 						GLAccount.Paramlactive, 
 						sActive, 
 						"Active?:", 
@@ -358,7 +361,7 @@ public class GLEditAccountsEdit extends HttpServlet {
         	sAllowOnPOLines = "true";
         }
 		pwOut.println(
-				ARUtilities.Create_Edit_Form_Checkbox_Row(
+				clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 						GLAccount.Paramiallowaspoexpense, 
 						sAllowOnPOLines, 
 						"Allow on PO lines?:", 
@@ -367,13 +370,14 @@ public class GLEditAccountsEdit extends HttpServlet {
 		);
 		
 		//Annual budget:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		GLAccount.Parambdannualbudget, 
         		glacct.getsbdannualbudget().replace("\"", "&quot;"), 
         		13, 
         		"Annual budget:", 
         		"",
-        		"7"
+        		"7",
+        		true
         	)
         );
 		

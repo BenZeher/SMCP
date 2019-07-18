@@ -20,6 +20,8 @@ import SMDataDefinition.SMTablearcustomer;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 public class ARPrintStatementsSelection  extends HttpServlet {
 
@@ -50,7 +52,7 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -67,7 +69,7 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 	    try {
 	    	
 	    	boolean bSelectAllTypes = true;
-	    	if (ARUtilities.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
+	    	if (clsManageRequestParameters.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
 	    		bSelectAllTypes = false;
 	    	}
 	    	
@@ -238,12 +240,12 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 		    ArrayList<String> alDocTypes = new ArrayList<String>(0);
 		    for (int i=0;i<=10;i++){
 		    	if (bSelectAllTypes){
-		    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+		    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 		    	}else{
-		    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+		    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 		    	}
 		    }
-		    out.println(ARUtilities.Build_HTML_Table(5, alDocTypes, 0, false));
+		    out.println(clsServletUtilities.Build_HTML_Table(5, alDocTypes, 0, false));
 		    out.println("</TD></TR></TABLE></TD></TR>");
 		    
 	        out.println("</TABLE><BR><BR>");

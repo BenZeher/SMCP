@@ -15,6 +15,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditSalespersonAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -50,7 +52,7 @@ public class SMEditSalespersonAction extends HttpServlet{
 	
 	    String sOutPut = "";
 	
-	    String sSQL = SMMySQLs.Update_Salesperson_SQL(
+	    String sSQL = MySQLs.Update_Salesperson_SQL(
 				sEditCode, 
 				clsServletUtilities.ConvertCheckboxResultToString(request.getParameter(SMTablesalesperson.iShowInSalesReport)),
 				clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTablesalesperson.sSalespersonFirstName)), 

@@ -87,9 +87,9 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
 			while(rs.next()){
 				  out.println(
-						  "<INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
+						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"LOCATION" 
 						  + rs.getString(SMTablelocations.sLocation) + "\" CHECKED width=0.25>" 
-						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR>");
+						  + rs.getString(SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){
@@ -164,18 +164,18 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 		out.println("<TD ALIGN=RIGHT><B>Include:<B></TD>");
 		out.println("<TD>");
 
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_STOCK_INVENTORY_ITEMS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_STOCK_INVENTORY_ITEMS + "\"");
 		out.println(" CHECKED ");
-		out.println("width=0.25>STOCK Inventory items");
+		out.println("width=0.25>STOCK Inventory items</LABEL>");
 
 		
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONSTOCK_INVENTORY_ITEMS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONSTOCK_INVENTORY_ITEMS + "\"");
 		out.println(" CHECKED ");
-		out.println("width=0.25>NON-STOCK Inventory items");
+		out.println("width=0.25>NON-STOCK Inventory items</LABEL>");
 		
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONINVENTORY_ITEMS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONINVENTORY_ITEMS + "\"");
 		out.println(" CHECKED ");
-		out.println("width=0.25>NON-INVENTORY items");
+		out.println("width=0.25>NON-INVENTORY items</LABEL>");
 
 		out.println("</TD>");
 		out.println("</TR>");
@@ -184,16 +184,16 @@ public class ICItemsReceivedNotInvoicedSelection  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Include:<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_INVOICED_ITEMS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_INVOICED_ITEMS + "\"");
 		//if (bIncludeInvoicedItems){
 			out.println(" CHECKED ");
 		//}
-		out.println("width=0.25>INVOICED items");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONINVOICED_ITEMS + "\"");
+		out.println("width=0.25>INVOICED items</LABEL>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDE_NONINVOICED_ITEMS + "\"");
 		//if (bIncludeUnInvoicedItems){
 			out.println(" CHECKED ");
 		//}
-		out.println("width=0.25>UN-INVOICED items");
+		out.println("width=0.25>UN-INVOICED items</LABEL>");
 
 		out.println("</TD>");
 		out.println("</TR>");

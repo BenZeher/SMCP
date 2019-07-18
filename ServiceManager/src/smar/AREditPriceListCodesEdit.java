@@ -13,7 +13,10 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMPriceListCode;
 import SMDataDefinition.SMTablepricelistcodes;
+import ServletUtilities.clsCreateHTMLTableFormFields;
+import ServletUtilities.clsManageRequestParameters;
 
 public class AREditPriceListCodesEdit extends HttpServlet {
 	
@@ -126,7 +129,7 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 	    		+ "\">Summary</A><BR><BR>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -155,13 +158,14 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 
         //Code:
 	    if(plc.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		SMPriceListCode.ParamsPriceListCode, 
 	        		plc.getM_sPriceListCode().replace("\"", "&quot;"),  
 	        		SMTablepricelistcodes.spricelistcodeLength, 
 	        		"Price list code:", 
 	        		"Up to " + SMTablepricelistcodes.spricelistcodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -171,13 +175,14 @@ public class AREditPriceListCodesEdit extends HttpServlet {
 	    }
 	    
         //Description:
-		pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 				SMPriceListCode.ParamsDescription, 
 				plc.getM_sDescription().replace("\"", "&quot;"), 
 				SMTablepricelistcodes.sdescriptionLength, 
         		"Code description:", 
         		"Up to " + SMTablepricelistcodes.sdescriptionLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
         );
 

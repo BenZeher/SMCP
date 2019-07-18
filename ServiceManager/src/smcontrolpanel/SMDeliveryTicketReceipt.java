@@ -5,9 +5,9 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.SMOption;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMDeliveryTicket;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTabledeliverytickets;
 import SMDataDefinition.SMTablesmoptions;
 import ServletUtilities.clsEmailInlineHTML;

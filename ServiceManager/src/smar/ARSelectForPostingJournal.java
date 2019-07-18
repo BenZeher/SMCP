@@ -20,7 +20,10 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
 import SMClasses.TRANSACTIONSQLs;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
 public class ARSelectForPostingJournal extends HttpServlet{
 	
@@ -46,9 +49,9 @@ public class ARSelectForPostingJournal extends HttpServlet{
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sStartingBatchNumber = ARUtilities.get_Request_Parameter("StartingBatchNumber", request);
-		String m_sEndingBatchNumber = ARUtilities.get_Request_Parameter("EndingBatchNumber", request);
+	    String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sStartingBatchNumber = clsManageRequestParameters.get_Request_Parameter("StartingBatchNumber", request);
+		String m_sEndingBatchNumber = clsManageRequestParameters.get_Request_Parameter("EndingBatchNumber", request);
     
 		String title = "AR Posting Journal";
 		String subtitle = "";
@@ -93,7 +96,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
         		arrBatchList.add(
         				Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)));
         		arrBatchDescList.add(
-        				ARUtilities.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6)
+        				clsStringFunctions.PadLeft(Integer.toString(rs.getInt(SMEntryBatch.ibatchnumber)),"0",6)
         				+ " - " + SMBatchTypes.Get_Batch_Type(rs.getInt(SMEntryBatch.ibatchtype)));
         	}
         	rs.close();
@@ -110,7 +113,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");	
 		
 		//Starting number:
-		out.println(ARUtilities.Create_Edit_Form_List_Row(
+		out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 				"StartingBatchNumber", 
 				arrBatchList, 
 				m_sStartingBatchNumber, 
@@ -119,7 +122,7 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		"Choose the first batch you want to see in the posting journal"));
 		
 		//Ending number:
-		out.println(ARUtilities.Create_Edit_Form_List_Row(
+		out.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
 				"EndingBatchNumber", 
 				arrBatchList, 
 				m_sEndingBatchNumber, 
@@ -130,8 +133,8 @@ public class ARSelectForPostingJournal extends HttpServlet{
 		out.println("</TABLE>");
 		
 		//Create checkboxes for batch types:
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"IncludeInvoiceBatches\" VALUE=1 CHECKED>Include invoice batches<BR>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"IncludeCashBatches\" VALUE=1 CHECKED>Include cash batches<BR>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"IncludeInvoiceBatches\" VALUE=1 CHECKED>Include invoice batches<BR></LABEL>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"IncludeCashBatches\" VALUE=1 CHECKED>Include cash batches<BR></LABEL>");
 		
 		//Submit button:
 		out.println("<BR><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Print posting journal' STYLE='height: 0.24in'>");

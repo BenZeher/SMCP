@@ -18,6 +18,8 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.*;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 
 public class ARActivityInquiry extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -61,7 +63,7 @@ public class ARActivityInquiry extends HttpServlet {
 	    }
 
     	boolean bSelectAllTypes = true;
-    	if (ARUtilities.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
+    	if (clsManageRequestParameters.get_Request_Parameter("SelectAllTypes", request).compareToIgnoreCase("0") == 0){
     		bSelectAllTypes = false;
     	}
 	    
@@ -161,9 +163,9 @@ public class ARActivityInquiry extends HttpServlet {
 	    //order by
 	    out.println("<TR>" +
 	    				"<TD ALIGN=LEFT><B>Sort By: </B></TD>" +
-	    				"<TD ALIGN=LEFT><INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.datdocdate + "\" CHECKED=\"checked\">Doc Date<BR>" +
-	    							   "<INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.idoctype + "\">Doc Type<BR>" +
-									   "<INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.sordernumber + "\">Order Number</TD>" +
+	    				"<TD ALIGN=LEFT><LABEL><INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.datdocdate + "\" CHECKED=\"checked\">Doc Date<BR></LABEL>" +
+	    							   "<LABEL><INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.idoctype + "\">Doc Type<BR></LABEL>" +
+									   "<LABEL><INPUT TYPE=\"RADIO\" NAME=\"OrderBy\" VALUE=\"" + SMTableartransactions.sordernumber + "\">Order Number</LABEL></TD>" +
 					"</TR>");
 	    //document types to show
 	    out.println("<TR><TD ALIGN=LEFT><B>Document Types: </B><BR>");
@@ -176,12 +178,12 @@ public class ARActivityInquiry extends HttpServlet {
 	    ArrayList<String> alDocTypes = new ArrayList<String>(0);
 	    for (int i=0;i<=10;i++){
 	    	if (bSelectAllTypes){
-	    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+	    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1 CHECKED>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 	    	}else{
-	    		alDocTypes.add("<INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR>");
+	    		alDocTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ARDocumentTypes.Get_Document_Type_Label(i) + "\" VALUE=1>" + ARDocumentTypes.Get_Document_Type_Label(i) + "<BR></LABEL>");
 	    	}
 	    }
-	    out.println(ARUtilities.Build_HTML_Table(6, alDocTypes, 0, false));
+	    out.println(clsServletUtilities.Build_HTML_Table(6, alDocTypes, 0, false));
 	    out.println("</TD></TR>");
 	    out.println("</TABLE>");
 	    out.println("<P><INPUT TYPE=SUBMIT NAME='Submit' VALUE='Inquire' STYLE='width: 2.00in; height: 0.24in'></P>");

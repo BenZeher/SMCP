@@ -7,8 +7,8 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.SMOption;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMTableicitems;

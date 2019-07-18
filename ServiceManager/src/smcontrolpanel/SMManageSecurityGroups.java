@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class SMManageSecurityGroups extends HttpServlet {
@@ -51,7 +52,7 @@ public class SMManageSecurityGroups extends HttpServlet {
 	    
 	    //Add drop down list
 		try{
-	        String sSQL = SMMySQLs.Get_Security_Group_List_SQL();
+	        String sSQL = MySQLs.Get_Security_Group_List_SQL();
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"Security Groups\">" );
         	

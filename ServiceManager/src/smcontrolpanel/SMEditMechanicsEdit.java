@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditMechanicsEdit extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	
@@ -156,7 +158,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
         		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"SELECTEDLOC\" VALUE=0>N/A<BR>");
         		String s;
     	        //get location info
-    	        sSQL = SMMySQLs.Get_Locations_SQL();
+    	        sSQL = MySQLs.Get_Locations_SQL();
     	        try{
 	    	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        		while (rsLocations.next()){
@@ -276,7 +278,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        	out.println("<TD>");
 	      		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"SELECTEDLOC\" VALUE=0>N/A<BR>");
 	      		
-    	        sSQL = SMMySQLs.Get_Locations_SQL();
+    	        sSQL = MySQLs.Get_Locations_SQL();
     	        try{
 	    	        ResultSet rsLocations = clsDatabaseFunctions.openResultSet(sSQL, conn);
 		      		while (rsLocations.next()){
@@ -294,7 +296,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	      		out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Type</B></TD>");
 	      		out.println("<TD>");
 	      		
-		        sSQL = SMMySQLs.Get_Servicetypes_SQL();
+		        sSQL = MySQLs.Get_Servicetypes_SQL();
 		        try{
 			        ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, conn);
 		      		while (rsServiceTypes.next()){

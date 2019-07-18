@@ -17,6 +17,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatchentrylines;
@@ -39,10 +40,9 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
-import smar.SMGLExport;
-import smar.SMOption;
 import smcontrolpanel.SMUtilities;
 import smgl.GLTransactionBatch;
+import smgl.SMGLExport;
 
 public class APBatch {
 

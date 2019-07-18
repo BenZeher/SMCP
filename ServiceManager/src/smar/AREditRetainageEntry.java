@@ -16,7 +16,9 @@ import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -51,7 +53,7 @@ public class AREditRetainageEntry extends HttpServlet {
 	    
 		boolean m_bIsNewEntry = false;
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}else{
 				m_bIsNewEntry = false;
@@ -61,19 +63,19 @@ public class AREditRetainageEntry extends HttpServlet {
 			//System.out.println("In " + this.toString() + " - didn't get parameter EntryNumber");
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		boolean m_bEditable = false;
 		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
 			m_bEditable = true;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sApplyToDocumentID = ARUtilities.get_Request_Parameter("DocumentID", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sApplyToDocumentID = clsManageRequestParameters.get_Request_Parameter("DocumentID", request);
 		
-		String m_sRetainagePercentage = ARUtilities.get_Request_Parameter("RetainagePercentage", request);
-		if(!ARUtilities.IsValidBigDecimal(m_sRetainagePercentage, 2)){
+		String m_sRetainagePercentage = clsManageRequestParameters.get_Request_Parameter("RetainagePercentage", request);
+		if(!clsValidateFormFields.IsValidBigDecimal(m_sRetainagePercentage, 2)){
 			m_sRetainagePercentage = "0.00";
 		}
 	    
@@ -181,7 +183,7 @@ public class AREditRetainageEntry extends HttpServlet {
 		if (bIsNewEntry){
 			//If it's a new entry:
 			//Load the transaction this retainage will apply to:
-			if(!ARUtilities.IsValidLong(sApplyToDocumentID)){
+			if(!clsValidateFormFields.IsValidLong(sApplyToDocumentID)){
 	    		throw new Exception("Document ID '" + sApplyToDocumentID + "' is not valid.");
 			}
 			ARTransaction m_Transaction = new ARTransaction(sApplyToDocumentID);

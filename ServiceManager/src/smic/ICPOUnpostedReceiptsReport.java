@@ -105,10 +105,10 @@ public class ICPOUnpostedReceiptsReport {
 						String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
 
 						if(alt%2 == 1) {
-							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
 							alt++;
 						}else {
-							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
 							alt++;
 						}
 						s += "    <TD class = \""

@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.*;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -137,7 +138,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			while(rsLocations.next()){
 				String sLocation = rsLocations.getString(SMTablelocations.TableName + "." 
 					+ SMTablelocations.sLocation).trim();
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAMETER 
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAMETER 
 					+ sLocation + "\""
 				);
 				if (
@@ -150,13 +151,13 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
 					+ sLocation + " - "
-					+ rsLocations.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription) + "<BR>");
+					+ rsLocations.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rsLocations.close();
 			out.println("</TR>");
 
 			//select service type
-			sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
+			sSQL = MySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMUnbilledContractReportCriteriaSelection");
 			out.println("<TR><TD ALIGN=RIGHT><H4>If the job OR mechanic is associated with these service types:&nbsp;</H4></TD><TD>");
@@ -167,7 +168,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			while(rsServiceTypes.next()){
 			 if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
 				String sServiceType = rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode).trim();
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
 					+ sServiceType + "\""); 
 				if (
 					(request.getParameter(SERVICETYPE_PARAMETER + sServiceType) != null) 
@@ -180,7 +181,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
 					+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName)
-					+ "<BR>");
+					+ "<BR></LABEL>");
 			 }
 			}
 			rsServiceTypes.close();
@@ -227,16 +228,16 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR></LABEL>");
 
 		if (bDateRangeNextWeek){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR></LABEL>");
 		
 		if (bDateRangeToday){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
@@ -244,16 +245,16 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			sChecked = "";
 		}
 				
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR></LABEL>");
 
 		if (bDateRangeChosen){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR></LABEL>");
 		out.println ("&nbsp;&nbsp;&nbsp;&nbsp;Starting date:&nbsp;"
 				+ clsCreateHTMLFormFields.TDTextBox(
 						STARTING_DATE_FIELD, 
@@ -326,13 +327,13 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 		//Add a checkbox for editing:
 		if (bAllowWorkOrderConfiguring){
 			out.println("<TR><TD ALIGN=RIGHT><H4>Edit schedule?&nbsp;</H4></TD><TD>");
-			out.println("<INPUT TYPE=CHECKBOX NAME=\"" + EDITSCHEDULE_PARAMETER  + "\"");
+			out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + EDITSCHEDULE_PARAMETER  + "\"");
 			if ((request.getParameter(SMViewTruckScheduleSelection.EDITSCHEDULE_PARAMETER) != null)){
 				sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 			}else{
 				sChecked = "";
 			}
-			out.println(" " + sChecked + " " + " width=0.25>" + "Allow schedule editing" + "<BR>");
+			out.println(" " + sChecked + " " + " width=0.25>" + "Allow schedule editing" + "<BR></LABEL>");
 			out.println("</TD>");
 			out.println("</TR>");
 		}
@@ -340,27 +341,27 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 		//Add a checkbox to display the move/copy buttons:
 		if (bAllowWorkOrderConfiguring){
 			out.println("<TR><TD ALIGN=RIGHT><H4>Display quick edit buttons?&nbsp;</H4></TD><TD>");
-			out.println("<INPUT TYPE=CHECKBOX NAME=\"" + DISPLAYMOVEANDCOPYBUTTONS_PARAMETER  + "\"");
+			out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + DISPLAYMOVEANDCOPYBUTTONS_PARAMETER  + "\"");
 			if ((request.getParameter(SMViewTruckScheduleSelection.DISPLAYMOVEANDCOPYBUTTONS_PARAMETER) != null)){
 				sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 			}else{
 				sChecked = "";
 			}
-			out.println(" " + sChecked + " " + " width=0.25>" + "Display buttons for moving/copying entries" + "<BR>");
+			out.println(" " + sChecked + " " + " width=0.25>" + "Display buttons for moving/copying entries" + "<BR></LABEL>");
 			out.println("</TD>");
 			out.println("</TR>");
 		}
 		
 		//Add a checkbox to only show zero hours:
 		out.println("<TR><TD ALIGN=RIGHT><H4>Only show entries with NO hours&nbsp;</H4></TD><TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + ONLYSHOWZEROHOURS_PARAMETER  + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + ONLYSHOWZEROHOURS_PARAMETER  + "\"");
 		
 		if (bOnlyShowZeroHours){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println(" " + sChecked + " " + " width=0.25>" + "Don't show entries with any job cost time entered." + "<BR>");
+		out.println(" " + sChecked + " " + " width=0.25>" + "Don't show entries with any job cost time entered." + "<BR></LABEL>");
 		out.println("</TD>");
 		out.println("</TR>");
 		
@@ -373,9 +374,9 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 				sDBID,
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
 			out.println("<TR><TD ALIGN=RIGHT><H4>Enable auto-refresh&nbsp;</H4></TD><TD>");
-			out.println("<INPUT TYPE=CHECKBOX NAME=\"" + AUTOREFRESH_PARAMETER  + "\"");
+			out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + AUTOREFRESH_PARAMETER  + "\"");
 			out.println(" " + "" + " " + " width=0.25>" + "Check to make the schedule refresh every " 
-				+ Integer.toString(SMViewTruckScheduleGenerate.REFRESH_TIME_SECONDS/60) + " min." + "<BR>");
+				+ Integer.toString(SMViewTruckScheduleGenerate.REFRESH_TIME_SECONDS/60) + " min." + "<BR></LABEL>");
 			out.println("</TD>");
 			out.println("</TR>");
 		}

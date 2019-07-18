@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import ServletUtilities.clsDatabaseFunctions;
 
 public class SMManagePasswords extends HttpServlet {
@@ -50,7 +51,7 @@ public class SMManagePasswords extends HttpServlet {
 	    out.println("Change password for:<BR>");
 	    //Add drop down list
 		try{
-	        String sSQL = SMMySQLs.Get_User_List_SQL(false);
+	        String sSQL = MySQLs.Get_User_List_SQL(false);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	     	out.println ("<SELECT NAME=\"User\">" );
         	

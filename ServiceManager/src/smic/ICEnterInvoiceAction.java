@@ -46,7 +46,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 			//Then call the finder to search for receipts:
 			String sRedirectString = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-				+ "&ObjectName=" + smar.FinderResults.UNINVOICED_PO_RECEIPT_OBJECT
+				+ "&ObjectName=" + SMClasses.FinderResults.UNINVOICED_PO_RECEIPT_OBJECT
 				+ "&ResultClass=FinderResults"
 				+ "&SearchingClass=" + smaction.getCallingClass()
 				+ "&ReturnField=" + ICEnterInvoiceEdit.INPUT_RECEIPT_FIELD

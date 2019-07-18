@@ -10,6 +10,7 @@ import java.text.SimpleDateFormat;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMOption;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
 import SMDataDefinition.SMTableicporeceiptlines;
@@ -19,7 +20,6 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsServletUtilities;
-import smar.SMOption;
 import smcontrolpanel.SMUtilities;
 
 public class ICPOReceiptHeader extends clsMasterEntry{

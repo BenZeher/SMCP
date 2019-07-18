@@ -6,6 +6,8 @@ import java.io.*;
 import javax.servlet.*;
 import javax.servlet.http.*;
 
+import SMClasses.MySQLs;
+
 import java.sql.*;
 import java.util.Calendar;
 
@@ -91,7 +93,7 @@ public class CustomerCallLogListCriteriaSelection extends HttpServlet {
         	
         	try{ 
     		    //order source list
-    	        String sSQL = SMMySQLs.Get_OrderSource_List_SQL();
+    	        String sSQL = MySQLs.Get_OrderSource_List_SQL();
     	        //System.out.println("OrderSource SQL: " + sSQL);
     	        ResultSet rsOrderSources = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID));
     	    	out.println ("<TR><TD VALIGN=CENTER><FONT SIZE=4><B>Order Source</B></FONT></TD><TD VALIGN=CENTER><SELECT NAME=\"OrderSource\">");

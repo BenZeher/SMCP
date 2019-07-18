@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -46,22 +47,22 @@ public class AREditCashEntry extends HttpServlet {
 	    
 		boolean m_bIsNewEntry = false;
 		if (request.getParameter("EntryNumber") != null){
-			if (ARUtilities.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
+			if (clsManageRequestParameters.get_Request_Parameter("EntryNumber", request).equalsIgnoreCase("-1")){
 				m_bIsNewEntry = true; 
 			}
 		}
 
-		String m_sBatchNumber = ARUtilities.get_Request_Parameter("BatchNumber", request);
-		String m_sEntryNumber = ARUtilities.get_Request_Parameter("EntryNumber", request);
-		String m_sEditable = ARUtilities.get_Request_Parameter("Editable", request);
+		String m_sBatchNumber = clsManageRequestParameters.get_Request_Parameter("BatchNumber", request);
+		String m_sEntryNumber = clsManageRequestParameters.get_Request_Parameter("EntryNumber", request);
+		String m_sEditable = clsManageRequestParameters.get_Request_Parameter("Editable", request);
 		boolean m_bEditable = false;
 		if (m_sEditable.compareToIgnoreCase("Yes") ==0){
 			m_bEditable = true;
 		}
-		String m_sBatchType = ARUtilities.get_Request_Parameter("BatchType", request);
-		String m_sWarning = ARUtilities.get_Request_Parameter("Warning", request);
-		String m_sCustomerNumber = ARUtilities.get_Request_Parameter("CustomerNumber", request);
-		String m_sDocumentType = ARUtilities.get_Request_Parameter("DocumentType", request);
+		String m_sBatchType = clsManageRequestParameters.get_Request_Parameter("BatchType", request);
+		String m_sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
+		String m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter("CustomerNumber", request);
+		String m_sDocumentType = clsManageRequestParameters.get_Request_Parameter("DocumentType", request);
 	    
 	    //If we are returning from finding an expense account, update that account and account info:
 	    if (request.getParameter("FOUND" + GLAccount.Paramobjectname) != null){

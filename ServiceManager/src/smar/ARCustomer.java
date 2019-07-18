@@ -41,7 +41,9 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
+import ServletUtilities.clsValidateFormFields;
 
 public class ARCustomer extends Object{
 	public static final String ParamsAddingNewRecord = "bAddingNewRecord";
@@ -180,22 +182,22 @@ public class ARCustomer extends Object{
         }
     
     public void loadFromHTTPRequest(HttpServletRequest req){
-    	m_iNewRecord = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
-		m_sCustomerNumber = ARUtilities.get_Request_Parameter(ARCustomer.ParamsCustomerNumber, req).trim().replace("&quot;", "\"").toUpperCase();
-		m_sCustomerName = ARUtilities.get_Request_Parameter(ARCustomer.ParamsCustomerName, req).trim().replace("&quot;", "\"");
-		m_sAddressLine1 = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAddressLine1, req).trim().replace("&quot;", "\"");
-		m_sAddressLine2 = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAddressLine2, req).trim().replace("&quot;", "\"");
-		m_sAddressLine3 = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAddressLine3, req).trim().replace("&quot;", "\"");
-		m_sAddressLine4 = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAddressLine4, req).trim().replace("&quot;", "\"");
-		m_sCity = ARUtilities.get_Request_Parameter(ARCustomer.ParamsCity, req).trim().replace("&quot;", "\"");
-		m_sState = ARUtilities.get_Request_Parameter(ARCustomer.ParamsState, req).trim().replace("&quot;", "\"");
-		m_sCountry = ARUtilities.get_Request_Parameter(ARCustomer.ParamsCountry, req).trim().replace("&quot;", "\"");
-		m_sPostalCode = ARUtilities.get_Request_Parameter(ARCustomer.ParamsPostalCode, req).trim().replace("&quot;", "\"");
-		m_sContactName = ARUtilities.get_Request_Parameter(ARCustomer.ParamsContactName, req).trim().replace("&quot;", "\"");
-		m_sPhoneNumber = ARUtilities.get_Request_Parameter(ARCustomer.ParamsPhoneNumber, req).trim().replace("&quot;", "\"");
-		m_sFaxNumber = ARUtilities.get_Request_Parameter(ARCustomer.ParamsFaxNumber, req).trim().replace("&quot;", "\"");
-		m_sTerms = ARUtilities.get_Request_Parameter(ARCustomer.ParamsTerms, req).trim().replace("&quot;", "\"");
-		m_sAccountSet = ARUtilities.get_Request_Parameter(ARCustomer.ParamsAccountSet, req).trim().replace("&quot;", "\"");
+    	m_iNewRecord = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAddingNewRecord, req).trim().replace("&quot;", "\"");
+		m_sCustomerNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsCustomerNumber, req).trim().replace("&quot;", "\"").toUpperCase();
+		m_sCustomerName = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsCustomerName, req).trim().replace("&quot;", "\"");
+		m_sAddressLine1 = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAddressLine1, req).trim().replace("&quot;", "\"");
+		m_sAddressLine2 = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAddressLine2, req).trim().replace("&quot;", "\"");
+		m_sAddressLine3 = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAddressLine3, req).trim().replace("&quot;", "\"");
+		m_sAddressLine4 = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAddressLine4, req).trim().replace("&quot;", "\"");
+		m_sCity = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsCity, req).trim().replace("&quot;", "\"");
+		m_sState = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsState, req).trim().replace("&quot;", "\"");
+		m_sCountry = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsCountry, req).trim().replace("&quot;", "\"");
+		m_sPostalCode = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsPostalCode, req).trim().replace("&quot;", "\"");
+		m_sContactName = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsContactName, req).trim().replace("&quot;", "\"");
+		m_sPhoneNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsPhoneNumber, req).trim().replace("&quot;", "\"");
+		m_sFaxNumber = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsFaxNumber, req).trim().replace("&quot;", "\"");
+		m_sTerms = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsTerms, req).trim().replace("&quot;", "\"");
+		m_sAccountSet = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsAccountSet, req).trim().replace("&quot;", "\"");
 		//The following allows for BOTH the case in which this parameter is coming from an actual checkbox
 		//(in which case a 'false' is indicated by a null) AND the case in which it's coming from a query
 		//string (in which case a 'false' is indicated by a '0' in the parameter):
@@ -208,16 +210,16 @@ public class ARCustomer extends Object{
 				m_iOnHold = "1";
 			}
 		}
-		m_datStartDate = ARUtilities.get_Request_Parameter(ARCustomer.ParamdatStartDate, req).trim().replace("&quot;", "\"");
+		m_datStartDate = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamdatStartDate, req).trim().replace("&quot;", "\"");
 		if(m_datStartDate.compareToIgnoreCase("") == 0){
 			m_datStartDate = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		}
-		m_dCreditLimit = ARUtilities.get_Request_Parameter(ARCustomer.ParamdCreditLimit, req).trim().replace("&quot;", "\"");
+		m_dCreditLimit = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamdCreditLimit, req).trim().replace("&quot;", "\"");
 		if(m_dCreditLimit.compareToIgnoreCase("") == 0){
 			m_dCreditLimit = "0.00";
 		}
-		m_mAccountingNotes = ARUtilities.get_Request_Parameter(ARCustomer.ParammAccountingNotes, req).trim().replace("&quot;", "\"");
-		m_mCustomerComments = ARUtilities.get_Request_Parameter(ARCustomer.ParammCustomerComments, req).trim().replace("&quot;", "\"");
+		m_mAccountingNotes = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParammAccountingNotes, req).trim().replace("&quot;", "\"");
+		m_mCustomerComments = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParammCustomerComments, req).trim().replace("&quot;", "\"");
 		//The following allows for BOTH the case in which this parameter is coming from an actual checkbox
 		//(in which case a 'false' is indicated by a null) AND the case in which it's coming from a query
 		//string (in which case a 'false' is indicated by a '0' in the parameter):
@@ -230,17 +232,17 @@ public class ARCustomer extends Object{
 				m_iActive = "1";
 			}
 		}
-		m_datLastMaintained = ARUtilities.get_Request_Parameter(ARCustomer.ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
+		m_datLastMaintained = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamdatLastMaintained, req).trim().replace("&quot;", "\"");
 		if(m_datLastMaintained.compareToIgnoreCase("") == 0){
 			m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		}
-		m_sLastEditUserFullName = ARUtilities.get_Request_Parameter(ARCustomer.ParamsLastEditUserFullName, req).trim().replace("&quot;", "\"");
-		m_sLastEditUserID = ARUtilities.get_Request_Parameter(ARCustomer.ParamsLastEditUserID, req).trim().replace("&quot;", "\"");
-		m_sCustomerGroup = ARUtilities.get_Request_Parameter(ARCustomer.ParamsCustomerGroup, req).trim().replace("&quot;", "\"");
-		m_sEmailAddress = ARUtilities.get_Request_Parameter(ARCustomer.ParamsEmailAddress, req).trim().replace("&quot;", "\"");
-		m_sWebAddress = ARUtilities.get_Request_Parameter(ARCustomer.ParamsWebAddress, req).trim().replace("&quot;", "\"");
-		m_sPriceListCode = ARUtilities.get_Request_Parameter(ARCustomer.Paramspricelistcode, req).trim().replace("&quot;", "\"");
-		m_sPriceLevel = ARUtilities.get_Request_Parameter(ARCustomer.Paramspricelevel, req).trim().replace("&quot;", "\"");
+		m_sLastEditUserFullName = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsLastEditUserFullName, req).trim().replace("&quot;", "\"");
+		m_sLastEditUserID = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsLastEditUserID, req).trim().replace("&quot;", "\"");
+		m_sCustomerGroup = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsCustomerGroup, req).trim().replace("&quot;", "\"");
+		m_sEmailAddress = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsEmailAddress, req).trim().replace("&quot;", "\"");
+		m_sWebAddress = clsManageRequestParameters.get_Request_Parameter(ARCustomer.ParamsWebAddress, req).trim().replace("&quot;", "\"");
+		m_sPriceListCode = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramspricelistcode, req).trim().replace("&quot;", "\"");
+		m_sPriceLevel = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramspricelevel, req).trim().replace("&quot;", "\"");
 
 		
 		if(req.getParameter(ARCustomer.Paramiuseselectronicdeposit) == null){
@@ -270,11 +272,11 @@ public class ARCustomer extends Object{
 				m_sRequiresPO = "1";
 			}
 		}
-		m_sgdoclink = ARUtilities.get_Request_Parameter(ARCustomer.Paramsgdoclink, req).trim().replace("&quot;", "\"");
-		m_itaxid = ARUtilities.get_Request_Parameter(ARCustomer.Paramitaxid, req).trim().replace("&quot;", "\"");
-		m_sinvoicingcontact = ARUtilities.get_Request_Parameter(ARCustomer.Paramsinvoicingcontact, req).trim().replace("&quot;", "\"");
-		m_sinvoicingemail = ARUtilities.get_Request_Parameter(ARCustomer.Paramsinvoicingemail, req).trim().replace("&quot;", "\"");
-		m_sinvoicingnotes = ARUtilities.get_Request_Parameter(ARCustomer.Paramsinvoicingnotes, req).trim().replace("&quot;", "\"");
+		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramsgdoclink, req).trim().replace("&quot;", "\"");
+		m_itaxid = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramitaxid, req).trim().replace("&quot;", "\"");
+		m_sinvoicingcontact = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramsinvoicingcontact, req).trim().replace("&quot;", "\"");
+		m_sinvoicingemail = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramsinvoicingemail, req).trim().replace("&quot;", "\"");
+		m_sinvoicingnotes = clsManageRequestParameters.get_Request_Parameter(ARCustomer.Paramsinvoicingnotes, req).trim().replace("&quot;", "\"");
 		//Load the default salespersons for each sales group:
 		Enumeration <String> e = req.getParameterNames();
 		String sParam = "";
@@ -825,20 +827,20 @@ public class ARCustomer extends Object{
 	private boolean loadFromResultSet(ResultSet rs){
 		try{
 	        if (rs.next()){
-	        	m_sCustomerName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerName));
-	        	m_sAddressLine1 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine1));
-	        	m_sAddressLine2 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine2));
-	        	m_sAddressLine3 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine3));
-	        	m_sAddressLine4 = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine4));
-	        	m_sCity = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sCity));
-	        	m_sState = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sState));
-	        	m_sCountry = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sCountry));
-	        	m_sPostalCode = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sPostalCode));
-	        	m_sContactName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sContactName));
-	        	m_sPhoneNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sPhoneNumber));
-	        	m_sFaxNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sFaxNumber));
-	        	m_sTerms = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sTerms));
-	        	m_sAccountSet = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sAccountSet));
+	        	m_sCustomerName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerName));
+	        	m_sAddressLine1 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine1));
+	        	m_sAddressLine2 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine2));
+	        	m_sAddressLine3 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine3));
+	        	m_sAddressLine4 = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sAddressLine4));
+	        	m_sCity = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sCity));
+	        	m_sState = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sState));
+	        	m_sCountry = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sCountry));
+	        	m_sPostalCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sPostalCode));
+	        	m_sContactName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sContactName));
+	        	m_sPhoneNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sPhoneNumber));
+	        	m_sFaxNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sFaxNumber));
+	        	m_sTerms = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sTerms));
+	        	m_sAccountSet = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sAccountSet));
 	        	m_iOnHold = Integer.toString(rs.getInt(SMTablearcustomer.iOnHold));
 	        	if(clsDateAndTimeConversions.IsValidDate(rs.getDate(SMTablearcustomer.datStartDate))){
 	        		m_datStartDate = clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearcustomer.datStartDate),"MM/dd/yyyy");
@@ -846,31 +848,31 @@ public class ARCustomer extends Object{
 	        		m_datStartDate = clsDateAndTimeConversions.now("MM/dd/yyyy");
 	        	}
 	        	m_dCreditLimit = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearcustomer.dCreditLimit));
-	        	m_mAccountingNotes = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.mAccountingNotes));
-	        	m_mCustomerComments = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.mCustomerComments));
+	        	m_mAccountingNotes = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.mAccountingNotes));
+	        	m_mCustomerComments = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.mCustomerComments));
 	        	m_iActive = Integer.toString(rs.getInt(SMTablearcustomer.iActive));
 	        	if(clsDateAndTimeConversions.IsValidDate(rs.getDate(SMTablearcustomer.datLastMaintained))){
 	        		m_datLastMaintained = clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablearcustomer.datLastMaintained),"MM/dd/yyyy");
 	        	}else{
 	        		m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 	        	}	        	
-	        	m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
-	        	m_sLastEditUserID = ARUtilities.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
-	        	m_sCustomerGroup = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerGroup));
-	        	m_sEmailAddress = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sEmailAddress));
-	        	m_sWebAddress = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sWebAddress));
-	        	m_sPriceListCode = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sPriceListCode));
+	        	m_sLastEditUserFullName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
+	        	m_sLastEditUserID = clsStringFunctions.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
+	        	m_sCustomerGroup = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerGroup));
+	        	m_sEmailAddress = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sEmailAddress));
+	        	m_sWebAddress = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sWebAddress));
+	        	m_sPriceListCode = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sPriceListCode));
 	        	m_sPriceLevel = Long.toString(rs.getLong(SMTablearcustomer.ipricelevel));
 	        	m_iNewRecord = "0";
 	        	m_sUsesElectronicDeposit = Integer.toString(rs.getInt(SMTablearcustomer.iuseselectronicdeposit));
 	        	m_sRequiresStatements = Integer.toString(rs.getInt(SMTablearcustomer.irequiresstatements));
 	        	m_sRequiresPO = Integer.toString(rs.getInt(SMTablearcustomer.irequirespo));
-	        	m_sgdoclink = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sgdoclink));
-	        	m_sCustomerNumber = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerNumber));
+	        	m_sgdoclink = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sgdoclink));
+	        	m_sCustomerNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sCustomerNumber));
 	        	m_itaxid = Integer.toString(rs.getInt(SMTablearcustomer.itaxid));
-	        	m_sinvoicingcontact = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingcontact));
-	        	m_sinvoicingemail = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingemail));
-	        	m_sinvoicingnotes = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingnotes));
+	        	m_sinvoicingcontact = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingcontact));
+	        	m_sinvoicingemail = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingemail));
+	        	m_sinvoicingnotes = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sinvoicingnotes));
 	        	rs.close();
 	        }else{
 	        	m_sErrorMessageArray.add("No customer found.");
@@ -1013,8 +1015,8 @@ public class ARCustomer extends Object{
 		        	}else{
 		        		m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 		        	}	        	
-		        	m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
-		        	m_sLastEditUserID = ARUtilities.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
+		        	m_sLastEditUserFullName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
+		        	m_sLastEditUserID = clsStringFunctions.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
 		        	rs.close();
 				}
 				m_iNewRecord = "0";
@@ -1197,8 +1199,8 @@ public class ARCustomer extends Object{
 	        	}else{
 	        		m_datLastMaintained = clsDateAndTimeConversions.now("MM/dd/yyyy");
 	        	}	        	
-	        	m_sLastEditUserFullName = ARUtilities.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
-	        	m_sLastEditUserID = ARUtilities.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
+	        	m_sLastEditUserFullName = clsStringFunctions.checkStringForNull(rs.getString(SMTablearcustomer.sLastEditUserFullName));
+	        	m_sLastEditUserID = clsStringFunctions.checkStringForNull(Long.toString(rs.getLong(SMTablearcustomer.lLastEditUserID)));
 	        	rs.close();
 			}
 
@@ -1578,7 +1580,7 @@ public class ARCustomer extends Object{
     		m_sErrorMessageArray.add("Invalid last maintained date: " + m_datLastMaintained); 
         		bEntriesAreValid = false;
     	}
-    	if(!ARUtilities.IsValidBigDecimal(m_dCreditLimit, 2)){
+    	if(!clsValidateFormFields.IsValidBigDecimal(m_dCreditLimit, 2)){
     		m_sErrorMessageArray.add("Invalid credit limit: " + m_dCreditLimit); 
     		bEntriesAreValid = false;
     	}else{
@@ -1604,44 +1606,44 @@ public class ARCustomer extends Object{
 	public String getQueryString(){
 		
 		String sQueryString = "";
-		sQueryString += ParamsAddingNewRecord + "=" + ARUtilities.URLEncode(m_iNewRecord);
-		sQueryString += "&" + ParamsCustomerNumber + "=" + ARUtilities.URLEncode(m_sCustomerNumber);
-		sQueryString += "&" + ParamsCustomerName + "=" + ARUtilities.URLEncode(m_sCustomerName);
-		sQueryString += "&" + ParamsAddressLine1 + "=" + ARUtilities.URLEncode(m_sAddressLine1);
-		sQueryString += "&" + ParamsAddressLine2 + "=" + ARUtilities.URLEncode(m_sAddressLine2);
-		sQueryString += "&" + ParamsAddressLine3 + "=" + ARUtilities.URLEncode(m_sAddressLine3);
-		sQueryString += "&" + ParamsAddressLine4 + "=" + ARUtilities.URLEncode(m_sAddressLine4);
-		sQueryString += "&" + ParamsCity + "=" + ARUtilities.URLEncode(m_sCity);
-		sQueryString += "&" + ParamsState + "=" + ARUtilities.URLEncode(m_sState);
-		sQueryString += "&" + ParamsCountry + "=" + ARUtilities.URLEncode(m_sCountry);
-		sQueryString += "&" + ParamsPostalCode + "=" + ARUtilities.URLEncode(m_sPostalCode);
-		sQueryString += "&" + ParamsContactName + "=" + ARUtilities.URLEncode(m_sContactName);
-		sQueryString += "&" + ParamsPhoneNumber + "=" + ARUtilities.URLEncode(m_sPhoneNumber);
-		sQueryString += "&" + ParamsFaxNumber + "=" + ARUtilities.URLEncode(m_sFaxNumber);
-		sQueryString += "&" + ParamsTerms + "=" + ARUtilities.URLEncode(m_sTerms);
-		sQueryString += "&" + ParamsAccountSet + "=" + ARUtilities.URLEncode(m_sAccountSet);
-		sQueryString += "&" + ParamiOnHold + "=" + ARUtilities.URLEncode(m_iOnHold);
-		sQueryString += "&" + ParamdatStartDate + "=" + ARUtilities.URLEncode(m_datStartDate);
-		sQueryString += "&" + ParamdCreditLimit + "=" + ARUtilities.URLEncode(m_dCreditLimit);
-		sQueryString += "&" + ParammAccountingNotes + "=" + ARUtilities.URLEncode(m_mAccountingNotes);
-		sQueryString += "&" + ParammCustomerComments + "=" + ARUtilities.URLEncode(m_mCustomerComments);
-		sQueryString += "&" + ParamiActive + "=" + ARUtilities.URLEncode(m_iActive);
-		sQueryString += "&" + ParamdatLastMaintained + "=" + ARUtilities.URLEncode(m_datLastMaintained);
-		sQueryString += "&" + ParamsLastEditUserFullName + "=" + ARUtilities.URLEncode(m_sLastEditUserFullName);
-		sQueryString += "&" + ParamsLastEditUserID + "=" + ARUtilities.URLEncode(m_sLastEditUserID);
-		sQueryString += "&" + ParamsCustomerGroup + "=" + ARUtilities.URLEncode(m_sCustomerGroup);
-		sQueryString += "&" + ParamsEmailAddress + "=" + ARUtilities.URLEncode(m_sEmailAddress);
-		sQueryString += "&" + ParamsWebAddress + "=" + ARUtilities.URLEncode(m_sWebAddress);
-		sQueryString += "&" + Paramspricelistcode + "=" + ARUtilities.URLEncode(m_sPriceListCode);
-		sQueryString += "&" + Paramspricelevel + "=" + ARUtilities.URLEncode(m_sPriceLevel);
-		sQueryString += "&" + Paramiuseselectronicdeposit + "=" + ARUtilities.URLEncode(m_sUsesElectronicDeposit);
-		sQueryString += "&" + Paramirequiresstatements + "=" + ARUtilities.URLEncode(m_sRequiresStatements);
-		sQueryString += "&" + Paramirequirespo + "=" + ARUtilities.URLEncode(m_sRequiresPO);
-		sQueryString += "&" + Paramsgdoclink + "=" + ARUtilities.URLEncode(m_sgdoclink);
-		sQueryString += "&" + Paramitaxid + "=" + ARUtilities.URLEncode(m_itaxid);
-		sQueryString += "&" + Paramsinvoicingcontact + "=" + ARUtilities.URLEncode(m_sinvoicingcontact);
-		sQueryString += "&" + Paramsinvoicingemail + "=" + ARUtilities.URLEncode(m_sinvoicingemail);
-		sQueryString += "&" + Paramsinvoicingnotes + "=" + ARUtilities.URLEncode(m_sinvoicingnotes);
+		sQueryString += ParamsAddingNewRecord + "=" + clsServletUtilities.URLEncode(m_iNewRecord);
+		sQueryString += "&" + ParamsCustomerNumber + "=" + clsServletUtilities.URLEncode(m_sCustomerNumber);
+		sQueryString += "&" + ParamsCustomerName + "=" + clsServletUtilities.URLEncode(m_sCustomerName);
+		sQueryString += "&" + ParamsAddressLine1 + "=" + clsServletUtilities.URLEncode(m_sAddressLine1);
+		sQueryString += "&" + ParamsAddressLine2 + "=" + clsServletUtilities.URLEncode(m_sAddressLine2);
+		sQueryString += "&" + ParamsAddressLine3 + "=" + clsServletUtilities.URLEncode(m_sAddressLine3);
+		sQueryString += "&" + ParamsAddressLine4 + "=" + clsServletUtilities.URLEncode(m_sAddressLine4);
+		sQueryString += "&" + ParamsCity + "=" + clsServletUtilities.URLEncode(m_sCity);
+		sQueryString += "&" + ParamsState + "=" + clsServletUtilities.URLEncode(m_sState);
+		sQueryString += "&" + ParamsCountry + "=" + clsServletUtilities.URLEncode(m_sCountry);
+		sQueryString += "&" + ParamsPostalCode + "=" + clsServletUtilities.URLEncode(m_sPostalCode);
+		sQueryString += "&" + ParamsContactName + "=" + clsServletUtilities.URLEncode(m_sContactName);
+		sQueryString += "&" + ParamsPhoneNumber + "=" + clsServletUtilities.URLEncode(m_sPhoneNumber);
+		sQueryString += "&" + ParamsFaxNumber + "=" + clsServletUtilities.URLEncode(m_sFaxNumber);
+		sQueryString += "&" + ParamsTerms + "=" + clsServletUtilities.URLEncode(m_sTerms);
+		sQueryString += "&" + ParamsAccountSet + "=" + clsServletUtilities.URLEncode(m_sAccountSet);
+		sQueryString += "&" + ParamiOnHold + "=" + clsServletUtilities.URLEncode(m_iOnHold);
+		sQueryString += "&" + ParamdatStartDate + "=" + clsServletUtilities.URLEncode(m_datStartDate);
+		sQueryString += "&" + ParamdCreditLimit + "=" + clsServletUtilities.URLEncode(m_dCreditLimit);
+		sQueryString += "&" + ParammAccountingNotes + "=" + clsServletUtilities.URLEncode(m_mAccountingNotes);
+		sQueryString += "&" + ParammCustomerComments + "=" + clsServletUtilities.URLEncode(m_mCustomerComments);
+		sQueryString += "&" + ParamiActive + "=" + clsServletUtilities.URLEncode(m_iActive);
+		sQueryString += "&" + ParamdatLastMaintained + "=" + clsServletUtilities.URLEncode(m_datLastMaintained);
+		sQueryString += "&" + ParamsLastEditUserFullName + "=" + clsServletUtilities.URLEncode(m_sLastEditUserFullName);
+		sQueryString += "&" + ParamsLastEditUserID + "=" + clsServletUtilities.URLEncode(m_sLastEditUserID);
+		sQueryString += "&" + ParamsCustomerGroup + "=" + clsServletUtilities.URLEncode(m_sCustomerGroup);
+		sQueryString += "&" + ParamsEmailAddress + "=" + clsServletUtilities.URLEncode(m_sEmailAddress);
+		sQueryString += "&" + ParamsWebAddress + "=" + clsServletUtilities.URLEncode(m_sWebAddress);
+		sQueryString += "&" + Paramspricelistcode + "=" + clsServletUtilities.URLEncode(m_sPriceListCode);
+		sQueryString += "&" + Paramspricelevel + "=" + clsServletUtilities.URLEncode(m_sPriceLevel);
+		sQueryString += "&" + Paramiuseselectronicdeposit + "=" + clsServletUtilities.URLEncode(m_sUsesElectronicDeposit);
+		sQueryString += "&" + Paramirequiresstatements + "=" + clsServletUtilities.URLEncode(m_sRequiresStatements);
+		sQueryString += "&" + Paramirequirespo + "=" + clsServletUtilities.URLEncode(m_sRequiresPO);
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(m_sgdoclink);
+		sQueryString += "&" + Paramitaxid + "=" + clsServletUtilities.URLEncode(m_itaxid);
+		sQueryString += "&" + Paramsinvoicingcontact + "=" + clsServletUtilities.URLEncode(m_sinvoicingcontact);
+		sQueryString += "&" + Paramsinvoicingemail + "=" + clsServletUtilities.URLEncode(m_sinvoicingemail);
+		sQueryString += "&" + Paramsinvoicingnotes + "=" + clsServletUtilities.URLEncode(m_sinvoicingnotes);
 				
 		return sQueryString;
 	}

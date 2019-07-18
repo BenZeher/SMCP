@@ -776,7 +776,7 @@ public class GLTransactionBatch {
 
     	//Update the fiscal set data:
     	try {
-			updateFiscalSets(log, sUserID, conn);
+			updateFiscalSets(log, sUserID, getsbatchnumber(), "", conn);
 		} catch (Exception e) {
 			throw new Exception("Error [1555957702] updating fiscal sets - " + e.getMessage());
 		}
@@ -883,13 +883,25 @@ public class GLTransactionBatch {
     	return reversedbatch.getsbatchnumber();
     }
 	
-	private void updateFiscalSets(SMLogEntry log, String sUserID, Connection conn) throws Exception{
+	public static void updateFiscalSets(
+		SMLogEntry log, 
+		String sUserID, 
+		String sBatchNumber,
+		String sExternalCompanyPullID, 
+		Connection conn
+		) throws Exception{
     	if (bDebugMode){
+    		String sDescription = "In GLTransactionBatch, batchnumber: '" + sBatchNumber + "',"
+	        		+ " Going into updateFiscalSets";
+    		if (sExternalCompanyPullID.compareToIgnoreCase("") != 0){
+    			sDescription = "In GLTransactionBatch, "
+    	        	+ "external company pull ID: '" + sExternalCompanyPullID + "'"
+    	        	+ " Going into updateFiscalSets";
+    		}
 	    	log.writeEntry(
 	        		sUserID, 
 	        		SMLogEntry.LOG_OPERATION_GLBATCHPOST, 
-	        		"In post_without_data_transaction Batch #:" + getsbatchnumber()
-	        		+ " Going into updateFiscalSets",
+	        		sDescription,
 	        		"",
 	        		"[1555957796]"
 	        );
@@ -903,8 +915,14 @@ public class GLTransactionBatch {
     		+ ", " + SMTablegltransactionlines.sacctid
     		+ " FROM " + SMTablegltransactionlines.TableName
     		+ " WHERE ("
-    			 + "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + getsbatchnumber() + ")"
-    		+ ")"
+    		;
+    		if (sExternalCompanyPullID.compareToIgnoreCase("") != 0){
+    			SQL += "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sExternalCompanyPullID + ")";
+    		}else{
+    			SQL += "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + sBatchNumber + ")";
+    		}
+    			 
+    		SQL += ")"
     		+ " GROUP BY " + SMTablegltransactionlines.sacctid
     		+ ", " + SMTablegltransactionlines.ifiscalyear
     		+ ", " + SMTablegltransactionlines.ifiscalperiod
@@ -928,7 +946,7 @@ public class GLTransactionBatch {
     	return;
 	}
 	
-	private void updateFiscalSetsForAccount(
+	private static void updateFiscalSetsForAccount(
 		Connection conn,
 		String sAccount,
 		int iFiscalYear,
@@ -1367,7 +1385,7 @@ public class GLTransactionBatch {
 		
     	return;
     }
-    private void updateFinancialStatementData(
+    private static void updateFinancialStatementData(
     	String sAccount,
     	int iFiscalYear,
     	int iFiscalPeriod,
@@ -2398,6 +2416,7 @@ public class GLTransactionBatch {
 	public String getsbatchnumber(){
 		return m_sbatchnumber;
 	}
+	
 	public void setsbatchnumber(String sBatchNumber){
 		m_sbatchnumber = sBatchNumber;
 	}

@@ -141,12 +141,12 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 					+ " - " + sUserFullName
 					);
 			out.println("<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Sales Group</B><TD>");
-			out.println("<INPUT TYPE=CHECKBOX " + clsServletUtilities.CHECKBOX_CHECKED_STRING + " NAME=\"" + SALESGROUP_PARAMETER + "0\" width=0.25>0 - N/A&nbsp;");
+			out.println("<LABEL><INPUT TYPE=CHECKBOX " + clsServletUtilities.CHECKBOX_CHECKED_STRING + " NAME=\"" + SALESGROUP_PARAMETER + "0\" width=0.25>0 - N/A&nbsp;</LABEL>");
 			while(rsSalesGroups.next()){
-				out.println("<INPUT TYPE=CHECKBOX " + clsServletUtilities.CHECKBOX_CHECKED_STRING + " NAME=\"" + SALESGROUP_PARAMETER
+				out.println("<LABEL><INPUT TYPE=CHECKBOX " + clsServletUtilities.CHECKBOX_CHECKED_STRING + " NAME=\"" + SALESGROUP_PARAMETER
 						+ rsSalesGroups.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.iSalesGroupId) + "\" width=0.25>" + 
 						//rsSalesGroups.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode) + " - " +
-						rsSalesGroups.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc) + "&nbsp;");
+						rsSalesGroups.getString(SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupDesc) + "&nbsp;</LABEL>");
 			}
 			rsSalesGroups.close();
 		} catch (Exception e1) {
@@ -184,10 +184,10 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 			while(rsServiceTypes.next()){
 				if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
 					iServiceTypeCount++;
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICE_TYPE_PARAMETER 
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SERVICE_TYPE_PARAMETER 
 							+ rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\" id = \""+
 							SERVICE_TYPE_PARAMETER+iServiceTypeCount+"\"width=0.25>" 
-							+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "&nbsp;");
+							+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "&nbsp;</LABEL>");
 				}
 			}
 			rsServiceTypes.close();
@@ -199,8 +199,8 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 
 		//Job status
 		out.println ("<TR><TD ALIGN=RIGHT VALIGN=TOP><B>Job Status </B></TD><TD VALIGN=TOP>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SHOW_ACTIVE_PARAMETER + "\" CHECKED> Active&nbsp;");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SHOW_STANDING_PARAMETER + "\" CHECKED> Standing");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SHOW_ACTIVE_PARAMETER + "\" CHECKED> Active&nbsp;</LABEL>");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SHOW_STANDING_PARAMETER + "\" CHECKED> Standing</LABEL>");
 		out.println ("</TD></TR>");
 
 		//show details or not
@@ -286,7 +286,7 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 					if (sSalespersonLabel.compareToIgnoreCase("") == 0){
 						sSalespersonLabel = SMOrderHeader.UNLISTEDSALESPERSON_MARKER;
 					}
-					sSalespersonList.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedStatus  
+					sSalespersonList.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedStatus  
 							+ " NAME=\"" + SALESPERSON_PARAMETER
 							+ rs.getString(SMTableorderheaders.sSalesperson) + "\""
 							+ " VALUE=\"" + SALESPERSON_PARAMETER
@@ -295,7 +295,7 @@ public class SMUnbilledContractReportSelection  extends HttpServlet {
 							+ sSalespersonLabel
 							+ "&nbsp;" + sFirstName
 							+ "&nbsp;" + sLastName
-							+ "\n"
+							+ "</LABEL>\n"
 							);
 				}
 				rs.close();

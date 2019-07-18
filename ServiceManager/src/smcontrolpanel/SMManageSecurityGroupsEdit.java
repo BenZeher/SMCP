@@ -11,6 +11,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import SMClasses.MySQLs;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
 import SMDataDefinition.SMTableusers;
@@ -182,7 +184,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        	+ " ORDER BY " + SMTablesecurityfunctions.sFunctionName;
 	        ResultSet rsFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
-	        sSQL = SMMySQLs.Get_Security_Group_Functions_SQL(sGroup);
+	        sSQL = MySQLs.Get_Security_Group_Functions_SQL(sGroup);
 	        ResultSet rsGroupFunctions = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
@@ -229,10 +231,10 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		ArrayList<String> sUserTable = new ArrayList<String>(0);
 		try{
 			//First get a list of all the users:
-	        String sSQL = SMMySQLs.Get_User_List_SQL(false);
+	        String sSQL = MySQLs.Get_User_List_SQL(false);
 	        ResultSet rsUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
         	
-	        sSQL = SMMySQLs.Get_Security_Group_Users_SQL(sGroup);
+	        sSQL = MySQLs.Get_Security_Group_Users_SQL(sGroup);
 	        ResultSet rsGroupUsers = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        String sCheckedOrNot = "";
@@ -273,9 +275,9 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 		
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
-		sSQLList.add((String) SMMySQLs.Delete_Group_Functions_SQL(sGroup));
-		sSQLList.add((String) SMMySQLs.Delete_Group_Users_SQL(sGroup));
-		sSQLList.add((String) SMMySQLs.Delete_Group_SQL(sGroup));
+		sSQLList.add((String) MySQLs.Delete_Group_Functions_SQL(sGroup));
+		sSQLList.add((String) MySQLs.Delete_Group_Users_SQL(sGroup));
+		sSQLList.add((String) MySQLs.Delete_Group_SQL(sGroup));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -291,7 +293,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	private boolean Add_Group(String sGroup, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a group by this name already:
-		String sSQL = SMMySQLs.Get_Security_Group_SQL(sGroup);
+		String sSQL = MySQLs.Get_Security_Group_SQL(sGroup);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -309,7 +311,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_Group_SQL(sGroup);
+		sSQL = MySQLs.Add_New_Group_SQL(sGroup);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

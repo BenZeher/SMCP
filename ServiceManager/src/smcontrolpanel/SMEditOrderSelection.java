@@ -11,8 +11,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import smar.ARCustomer;
-import smar.FinderResults;
 import ConnectionPool.WebContextParameters;
+import SMClasses.FinderResults;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableorderdetails;

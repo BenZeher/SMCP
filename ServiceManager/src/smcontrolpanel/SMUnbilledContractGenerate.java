@@ -98,7 +98,10 @@ public class SMUnbilledContractGenerate extends HttpServlet {
     	Collections.sort(alSelectedSalesGroups);
     	String s;
     	
-    	s = "<TABLE BORDER=0><TR>" +
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+    	 s = SMUtilities.getMasterStyleSheetLink();
+    	
+    	s += "<TABLE BORDER=0 BGCOLOR = \"" + sColor + "\"><TR>" +
 				"<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2><B>Sales Group(s):</B></FONT></TD>" 
     			+ "<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" 
 				+ getSelectedSalesGroups(alSelectedSalesGroups, sDBID) 
@@ -107,7 +110,7 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 				+ "</TR></TABLE>";
     	alCriteria.add(s);
     	
-    	s = "<TABLE BORDER=0><TR>" 
+    	s = "<TABLE BORDER=0 BGCOLOR = \"" + sColor + "\"><TR>" 
     			+ "<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2><B>Service Type(s):</B></FONT></TD>" 
     			+ "<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>"
     			+ getSelectedServiceTypes(alSelectedServiceTypes, sDBID) 
@@ -196,7 +199,7 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 	    /*************END of PARAMETER list***************/
 
     	//print out report heading and selected criteria
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
 	    out.println("<TABLE BORDER=0 WIDTH=100%><TR>");
 	    out.println("<TD ALIGN=LEFT VALIGN=TOP><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 		+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
@@ -208,7 +211,9 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 			100,			//Width
 			0,				//Border
 			false,			//Equal Width?
-			false)			//Vertical?
+			false,			//Vertical?
+			sColor      //BGColor
+			)			
 		);
 	    
 	    //Print the list of salespeople:
@@ -220,7 +225,9 @@ public class SMUnbilledContractGenerate extends HttpServlet {
 				100,			//Width
 				0,				//Border
 				false,			//Equal Width?
-				false)			//Vertical?
+				false,			//Vertical?
+				sColor		//BGColor
+				)			
 			);
 		} catch (Exception e2) {
 			out.println("<BR><FONT COLOR=RED><B>" + e2.getMessage() + "</B></FONT><BR>");

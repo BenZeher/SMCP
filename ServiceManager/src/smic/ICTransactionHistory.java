@@ -8,7 +8,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
@@ -18,6 +17,7 @@ import SMDataDefinition.SMTableictransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
+import ServletUtilities.clsServletUtilities;
 
 public class ICTransactionHistory extends java.lang.Object{
 
@@ -200,9 +200,9 @@ public class ICTransactionHistory extends java.lang.Object{
 
 				//Print the line:
 				if(iCounter%2 == 0) {
-					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
-				}else {
 					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\" >");
+				}else {
+					out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\" >");
 				}
 				//Transaction date:
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + 
@@ -218,7 +218,7 @@ public class ICTransactionHistory extends java.lang.Object{
 					sItemNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic.ICDisplayItemInformation?ItemNumber=" 
 					+ sItemNumber
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-					+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
+					+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItemNumber) + "</A>";
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
@@ -272,7 +272,7 @@ public class ICTransactionHistory extends java.lang.Object{
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 							+ "smic.ICEditReceiptEdit?lid=" + sReceiptNumber 
 									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-									+ "\">" + ARUtilities.Fill_In_Empty_String_For_HTML_Cell(sReceiptNumber) + "</A>"
+									+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sReceiptNumber) + "</A>"
 							+ "</TD>"
 					);
 				}else{

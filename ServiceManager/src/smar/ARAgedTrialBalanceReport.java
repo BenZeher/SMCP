@@ -52,7 +52,7 @@ public class ARAgedTrialBalanceReport  extends HttpServlet {
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
@@ -215,7 +215,7 @@ public class ARAgedTrialBalanceReport  extends HttpServlet {
 			alValues.add("0"); alOptions.add("Regular only (non-retainage)");
 			alValues.add("1"); alOptions.add("Retainage only");
 			out.println("<TD>" + 
-					ARUtilities.Create_Edit_Form_List_Field("AgingType", alValues, sAgingType, alOptions)
+					clsCreateHTMLFormFields.Create_Edit_Form_List_Field("AgingType", alValues, sAgingType, alOptions)
 					+ "</TD>");
 
 			//Print transactions in
@@ -225,7 +225,7 @@ public class ARAgedTrialBalanceReport  extends HttpServlet {
 			alValues.add("1"); alOptions.add("Summary");
 
 			out.println("<TD>" + 
-					ARUtilities.Create_Edit_Form_List_Field(
+					clsCreateHTMLFormFields.Create_Edit_Form_List_Field(
 							"PrintTransactionIn", 
 							alValues, 
 							sPrintTransactionsIn, 

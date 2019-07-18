@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
 import SMDataDefinition.*;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -102,7 +103,7 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 			while(rsLocations.next()){
 				String sLocation = rsLocations.getString(SMTablelocations.TableName + "." 
 					+ SMTablelocations.sLocation).trim();
-				out.println("<INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAMETER 
+				out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + LOCATION_PARAMETER 
 					+ sLocation + "\""
 				);
 				if (
@@ -115,13 +116,13 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
 					+ sLocation + " - "
-					+ rsLocations.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription) + "<BR>");
+					+ rsLocations.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription) + "<BR></LABEL>");
 			}
 			rsLocations.close();
 			out.println("</TR>");
 
 			//select service type
-			sSQL = SMMySQLs.Get_Distinct_Servicetypes_SQL();
+			sSQL = MySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(
 				sSQL, 
@@ -134,7 +135,7 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 			while(rsServiceTypes.next()){
 				String sServiceType = rsServiceTypes.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode).trim();
 				if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
-					out.println("<INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
+					out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + SERVICETYPE_PARAMETER 
 							+ sServiceType + "\""); 
 					if (
 						(request.getParameter(SERVICETYPE_PARAMETER + sServiceType) != null) 
@@ -147,7 +148,7 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 				out.println(" " + sChecked + " "
 					+ " width=0.25>" 
 					+ rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName)
-					+ "<BR>");
+					+ "<BR></LABEL>");
 				}	
 			}
 			rsServiceTypes.close();
@@ -168,16 +169,16 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_THISWEEK + "\" " + sChecked + ">This week only (Mon-Sun)<BR></LABEL>");
 
 		if (bDateRangeNextWeek){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_NEXTWEEK + "\" " + sChecked + ">Next week only (Mon-Sun)<BR></LABEL>");
 		
 		if (bDateRangeToday){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
@@ -185,16 +186,16 @@ public class SMListOrdersForSchedulingSelection  extends HttpServlet {
 			sChecked = "";
 		}
 				
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_TODAY + "\" " + sChecked + ">Today only<BR></LABEL>");
 
 		if (bDateRangeChosen){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
 			sChecked = "";
 		}
-		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
-				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR>");
+		out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + DATE_RANGE_PARAM 
+				+ "\" VALUE=\"" + DATE_RANGE_CHOOSE + "\" " + sChecked + ">OR Choose dates:<BR></LABEL>");
 		out.println ("&nbsp;&nbsp;&nbsp;&nbsp;Starting date:&nbsp;"
 				+ clsCreateHTMLFormFields.TDTextBox(
 						STARTING_DATE_FIELD, 

@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditProjectTypesAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
@@ -48,7 +50,7 @@ public class SMEditProjectTypesAction extends HttpServlet{
 	
 	    String sOutPut = "";
 	
-	    String sSQL = SMMySQLs.Update_Project_Type_SQL(sID,
+	    String sSQL = MySQLs.Update_Project_Type_SQL(sID,
 											    	   clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTableprojecttypes.sTypeCode)),
 											    	   clsDatabaseFunctions.FormatSQLStatement(request.getParameter(SMTableprojecttypes.sTypeDesc))
 													   );

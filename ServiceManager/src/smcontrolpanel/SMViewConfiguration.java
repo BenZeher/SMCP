@@ -82,7 +82,7 @@ public class SMViewConfiguration  extends HttpServlet {
 		
 		title = "View System Configuration";
 		String subtitle = "";
-		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
 
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
@@ -325,9 +325,9 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredRemark.compareToIgnoreCase("") == 0){
 			sFilteredRemark = "&nbsp;";
 		}
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
 		String s = "<TR class = \" " + sBackgroundColor +  " \">";
 		s +=  "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \">"
@@ -357,11 +357,11 @@ public class SMViewConfiguration  extends HttpServlet {
 		if (sFilteredComment.compareToIgnoreCase("") == 0){
 			sFilteredComment = "&nbsp;";
 		}
-		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
+		String sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 		if (bOddRow){
-			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
+			sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 		}
-		String s = "<TR class = \"  " + sBackgroundColor +  " \">";
+		String s = "<TR CLASS = \"" + sBackgroundColor +  "\">";
 		s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \">"
 			+ sDBID
 			+ "</TD>\n"

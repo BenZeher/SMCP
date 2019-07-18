@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
@@ -26,7 +27,6 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
-import smar.SMOption;
 import smic.ICItem;
 
 public class SMWorkOrderSignatureEdit  extends HttpServlet {

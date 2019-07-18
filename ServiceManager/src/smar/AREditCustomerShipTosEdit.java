@@ -15,7 +15,10 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomershiptos;
+import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsStringFunctions;
 
 public class AREditCustomerShipTosEdit extends HttpServlet {
 
@@ -61,12 +64,12 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		    }
 		    //Get the customer code and the ship-to code:
 			shipto.setM_sCustomerNumber(
-				ARUtilities.StringLeft(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+				clsStringFunctions.StringLeft(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sCustomerNumberLength));
 			shipto.setM_sShipToCode(
-				ARUtilities.StringRight(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringRight(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sShipToCodeLength));
 		    if (shipto.getM_sCustomerNumber().compareToIgnoreCase("") == 0){
 				response.sendRedirect(
@@ -151,12 +154,12 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		//load the input class from the database if possible:
 		if(request.getParameter("SubmitEdit") != null){
 			shipto.setM_sCustomerNumber(
-				ARUtilities.StringLeft(
-					ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringLeft(
+					clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 						SMTablearcustomershiptos.sCustomerNumberLength));
 			shipto.setM_sShipToCode(
-					ARUtilities.StringRight(
-						ARUtilities.get_Request_Parameter("EditCode", request),
+					clsStringFunctions.StringRight(
+						clsManageRequestParameters.get_Request_Parameter("EditCode", request),
 							SMTablearcustomershiptos.sShipToCodeLength));
 			if(!shipto.load(getServletContext(), sDBID)){
 				response.sendRedirect(
@@ -188,13 +191,13 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    if (! sWarning.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
 		//If there is a status from previous input, print it here:
-		String sStatus = ARUtilities.get_Request_Parameter("Status", request);
+		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 	    if (! sStatus.equalsIgnoreCase("")){
 			out.println("<B>Status: " + sStatus + "</B><BR>");
 		}
@@ -227,13 +230,14 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    
         //Ship to code:
 	    if(shipto.getM_iNewRecord().compareToIgnoreCase("1") == 0){
-	        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+	        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 	        		ARCustomerShipTo.ParamsShipToCode, 
 	        		shipto.getM_sShipToCode().replace("\"", "&quot;"),  
 	        		SMTablearcustomershiptos.sShipToCodeLength, 
 	        		"Ship-to code:", 
 	        		"Up to " + SMTablearcustomershiptos.sShipToCodeLength + " characters.",
-	        		"1.6"
+	        		"1.6",
+	        		true
 	        	)
 	        );
 	    	
@@ -243,134 +247,146 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 	    }
 
         //Description:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsDescription, 
         		shipto.getM_sDescription().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sDescriptionLength, 
         		"Description:", 
         		"Up to " + SMTablearcustomershiptos.sAddressLine1Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 		
         //Address Line 1:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine1, 
         		shipto.getM_sAddressLine1().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine1Length, 
         		"Address Line 1:", 
         		"First line of the address, up to " + SMTablearcustomershiptos.sAddressLine1Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
         //Address Line 2:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine2, 
         		shipto.getM_sAddressLine2().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine2Length, 
         		"Address Line 2:", 
         		"Second line of the address, up to " + SMTablearcustomershiptos.sAddressLine2Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
         		
         //Address Line 3:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine3, 
         		shipto.getM_sAddressLine3().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine3Length, 
         		"Address Line 3:", 
         		"Third line of the address, up to " + SMTablearcustomershiptos.sAddressLine3Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
         //Address Line 4:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsAddressLine4, 
         		shipto.getM_sAddressLine4().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sAddressLine4Length, 
         		"Address Line 4:", 
         		"Fourth line of the address, up to " + SMTablearcustomershiptos.sAddressLine4Length + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         		)
         );
 
         //City:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsCity, 
         		shipto.getM_sCity().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sCityLength, 
         		"City:", 
         		"Name of city, up to " + SMTablearcustomershiptos.sCityLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
 
         //State:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsState, 
         		shipto.getM_sState().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sStateLength, 
         		"State Or Province:", 
         		"Up to " + SMTablearcustomershiptos.sStateLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
         //Country:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsCountry, 
         		shipto.getM_sCountry().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sCountryLength, 
         		"Country:", 
         		"Up to " + SMTablearcustomershiptos.sCountryLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
 
         //Postal code:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsPostalCode, 
         		shipto.getM_sPostalCode().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sPostalCodeLength, 
         		"Zip Or Postal Code:", 
         		"Up to " + SMTablearcustomershiptos.sPostalCodeLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
         //Contact name:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsContactName, 
         		shipto.getM_sContactName().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sContactNameLength, 
         		"Contact name:", 
         		"Up to " + SMTablearcustomershiptos.sContactNameLength + " characters.",
-        		"3.2"
+        		"3.2", 
+        		true
         	)
 		);
         
         //Phone:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsPhoneNumber, 
         		shipto.getM_sPhoneNumber().replace("\"", "&quot;"), 
         		SMTablearcustomershiptos.sPhoneNumberLength, 
         		"Phone:", 
         		"Up to " + SMTablearcustomershiptos.sPhoneNumberLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         
         //Fax:
-        pwOut.println(ARUtilities.Create_Edit_Form_Text_Input_Row(
+        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
         		ARCustomerShipTo.ParamsFaxNumber, 
         		shipto.getM_sFaxNumber().replace("\"", "&quot;"),  
         		SMTablearcustomershiptos.sFaxNumberLength, 
         		"Fax:", 
         		"Up to " + SMTablearcustomershiptos.sFaxNumberLength + " characters.",
-        		"3.2"
+        		"3.2",
+        		true
         	)
 		);
         

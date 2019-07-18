@@ -19,6 +19,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMEditLaborTypesEdit extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
@@ -130,7 +132,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
         
 		try{
 			//Get the record to edit:
-	        String sSQL = SMMySQLs.Get_LaborType_By_ID(sCode);
+	        String sSQL = MySQLs.Get_LaborType_By_ID(sCode);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	        
 	        rs.next();
@@ -275,7 +277,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 		ArrayList<String> sSQLList = new ArrayList<String>(0);
 		
 		//Include all the SQLs needed to delete a record:
-		sSQLList.add((String) SMMySQLs.Delete_LaborType_SQL(sCode));
+		sSQLList.add((String) MySQLs.Delete_LaborType_SQL(sCode));
 		try {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
@@ -291,7 +293,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 	private boolean Add_Record(String sCode, String sDBID, PrintWriter pwOut){
 		
 		//First, make sure there isn't a user by this name already:
-		String sSQL = SMMySQLs.Get_LaborType_By_ID(sCode);
+		String sSQL = MySQLs.Get_LaborType_By_ID(sCode);
 		
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
@@ -310,7 +312,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			return false;
 		}
-		sSQL = SMMySQLs.Add_New_LaborType_SQL(sCode);
+		sSQL = MySQLs.Add_New_LaborType_SQL(sCode);
 		try {
 			
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 

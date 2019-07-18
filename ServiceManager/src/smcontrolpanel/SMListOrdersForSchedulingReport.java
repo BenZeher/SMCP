@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import SMClasses.SMWorkOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableworkorders;
@@ -66,17 +67,19 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 		
     	//print out the column headers.
     	//Salesperson, date, job#, customer, amount, MU, truck days, avg MU/TD
-    	out.println("<TABLE BORDER=0 WIDTH=100%>");
-		out.println("<TR>" + 
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Expected<BR>Ship</FONT></B></TD>" +
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Order #</FONT></B></TD>" +
-			"<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Type</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Terms</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Bill to</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Ship To</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM><B><FONT SIZE=2>Work order notes</FONT></B></TD>" +
-		"</TR>" + 
-   		"<TR><TD COLSPAN=8><HR></TD><TR>");
+    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Exp. Date</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Order #</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Type</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Terms</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Bill to</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Ship To</TD>");
+    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Work order notes</TD>");
+		out.println("</TR>"); 
+    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	out.println("<TD COLSPAN=\"8\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD>");
+		out.println("</TR>"); 
 
     	String SQL = "SELECT "
     		+ SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber
@@ -153,8 +156,13 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 															  + " - "
 															  + sUserFullName
 															  + " [1332278012]");
+			int iCount = 0;
 			while(rs.next()){
-    			out.println("<TR>");
+				if(iCount % 2 == 0) {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+			    	out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
     			String sScheduleDate = clsDateAndTimeConversions.utilDateToString(rs.getDate(
         				SMTableorderheaders.TableName + "." + SMTableorderheaders.datExpectedShipDate),"MM/dd/yyyy");
     			String sOrderLink = rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber);
@@ -169,7 +177,8 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 						+ "&ReturnToTruckSchedule=N"
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 						+ "\">" + "Schedule this order" + "</A></FONT>";
-    				out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + sScheduleLink + "</FONT></TD>");
+    				
+    		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sScheduleLink + "</TD>");
     			}
 				
 				if (bAllowOrderViewing){
@@ -179,13 +188,11 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 	    				+ "\">" + sOrderLink + "</A>"
 	    			;
 				}
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + sOrderLink + "</FONT></TD>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>" 
-						+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</FONT></TD>");
-				out.println("<TD ALIGN=LEFT><FONT SIZE=2>" 
-					+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sTerms) + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" 
-					+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName) + "</FONT></TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sOrderLink + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCodeDescription) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sTerms) + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName) + "</TD>");
+
     			
     			String sShipTo = "";
     			if (rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToAddress1).trim().compareToIgnoreCase("") != 0){
@@ -209,13 +216,14 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
     			if (rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToZip).trim().compareToIgnoreCase("") != 0){
     				sShipTo += " " + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToZip).trim();
     			}
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2><A HREF=\"" 
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><A HREF=\"" 
 						+ clsServletUtilities.createGoogleMapLink(sShipTo)
 						+ "\">"
 						+ rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).trim() + " " + sShipTo
-						+ "</A>" + "</FONT></TD>");
-    			out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.mTicketComments) + "</FONT></TD>");
+						+ "</A>" + "</TD>");
+		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" +  rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.mTicketComments) + "</TD>");
     			out.println("</TR>");
+    			iCount++;
 			}
 			rs.close();
 		    out.println("</TABLE>");

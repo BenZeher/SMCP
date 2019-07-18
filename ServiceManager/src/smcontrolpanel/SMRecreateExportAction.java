@@ -9,11 +9,11 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smar.SMGLExport;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMExportTypes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smgl.SMGLExport;
 
 public class SMRecreateExportAction extends HttpServlet{
 	public static final String BATCHNUMBER_PARAM = "BATCH_NUMBER";

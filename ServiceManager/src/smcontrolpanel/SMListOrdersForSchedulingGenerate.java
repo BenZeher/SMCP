@@ -206,6 +206,8 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
     	
     	sCriteria += ". Orders shown have at least ONE item remaining on the order."; //, and have NEVER been scheduled previously.";
     	sCriteria += "  <B>NOTE:</B>If an order is scheduled for the day of its 'Expected ship date', it will <B>NOT</B> show on the list.";
+    	
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 "
 		   + "Transitional//EN\">"
@@ -214,13 +216,13 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
 
 	       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" 
 		   + "<BODY BGCOLOR=\"" 
-		   + SMUtilities.getInitBackGroundColor(getServletContext(), sDBID) 
+		   + "#FFFFFF"
 		   + "\""
 		   + " style=\"font-family: " + SMUtilities.DEFAULT_FONT_FAMILY + "\";"
 		   //Jump to the last edit:
 		   + " onLoad=\"window.location='#LastEdit'\""
 		   + ">"
-		   + "<TABLE BORDER=0 WIDTH=100%>"
+		   + "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">"
 		   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + clsDateAndTimeConversions.nowStdFormat() + " Printed by " + sUserFullName 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
@@ -242,6 +244,8 @@ public class SMListOrdersForSchedulingGenerate extends HttpServlet {
 	    //log usage of this this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 	    log.writeEntry(sUserID, "SMLISTORDERSFORSCHEDULING", "REPORT", "SMListOrdersForScheduling", "[1376509328]");
+
+	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    
 		SMListOrdersForSchedulingReport rpt = new SMListOrdersForSchedulingReport();
     	if (!rpt.processReport(

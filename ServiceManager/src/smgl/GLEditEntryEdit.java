@@ -116,7 +116,9 @@ public class GLEditEntryEdit  extends HttpServlet {
 
 	    		//We'll need to reload the entry every time then, to make sure we get the lines loaded as well:
 	    		try {
+	    			Long lStartingTime = System.currentTimeMillis();
 					entry.load(getServletContext(), smedit.getsDBID(), smedit.getUserName());
+					System.out.println("[2019196149222] " + "Loading time: " + (System.currentTimeMillis() - lStartingTime)/1000);
 				} catch (Exception e) {
 					response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCallingClass()
@@ -137,11 +139,11 @@ public class GLEditEntryEdit  extends HttpServlet {
 						smedit.getUserID(), 
 						smedit.getFullUserName()
 					);
+		    		entry.setsfiscalperiod(sLastUnlockedFiscalYearAndPeriod.split(" - ")[1]);
+		    		entry.setsfiscalyear(sLastUnlockedFiscalYearAndPeriod.split(" - ")[0]);
 				} catch (Exception e) {
 					//Don't choke on this - it's not critical...
 				}
-	    		entry.setsfiscalperiod(sLastUnlockedFiscalYearAndPeriod.split(" - ")[1]);
-	    		entry.setsfiscalyear(sLastUnlockedFiscalYearAndPeriod.split(" - ")[0]);
 	    	}
 	    }
 	    
@@ -811,6 +813,7 @@ public class GLEditEntryEdit  extends HttpServlet {
     	
 
 		s += clsServletUtilities.createHTMLComment("Start the details table here.");
+		
 		try {
 			s += buildDetailTables(entry, bEditable, sm);
 		} catch (Exception e) {
@@ -841,6 +844,8 @@ public class GLEditEntryEdit  extends HttpServlet {
 		SMMasterEditEntry smmastereditentry
 		) throws Exception{
 		String s = "";
+		int i1stLineBufferSize = 50;
+		int i2ndLineBufferSize = 20;
 		
 		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
@@ -957,6 +962,10 @@ public class GLEditEntryEdit  extends HttpServlet {
 		//Load the lines for the current entry:
 		String sBackgroundColor = "";
 		boolean bOddRow = true;
+		long lLineCounter = 0;
+		String s1stBufferLineText = "";
+		String s2ndBufferLineText = "";
+		Long lStartingTime = System.currentTimeMillis();
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			GLTransactionBatchLine line = entry.getLineArray().get(i);
 			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
@@ -964,9 +973,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
 
-			String sLineText = "";
-			
-			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
+			s1stBufferLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
 				+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
 				+ " onmousemove=\"setRowBackgroundColor(this, '" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "');\""
 				+ ">\n"
@@ -976,7 +983,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			if (bEditable){
 				//Store the unseen fields for the lines here:
-				sLineText += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.lid + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getslid()) + "\""
@@ -990,7 +997,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			if (line.getslinenumber().compareToIgnoreCase("-1") != 0){
 				sLineNumber = line.getslinenumber();
 			}
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
 				+ sLineNumber 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
@@ -1000,9 +1007,9 @@ public class GLEditEntryEdit  extends HttpServlet {
 				+ "</TD>\n";
 			
 			// acct:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT"
+				s1stBufferLineText += "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.sacctid + "\""
@@ -1025,7 +1032,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 				;
 			}else{
 				//sLineText += clsStringFunctions.filter(line.getsacctid());
-				sLineText += "<INPUT TYPE=TEXT"
+				s1stBufferLineText += "<INPUT TYPE=TEXT"
 					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.sacctid + "\""
@@ -1046,19 +1053,19 @@ public class GLEditEntryEdit  extends HttpServlet {
 				;
 
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Acct description:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
-			sLineText += "<LABEL ID = \"" + ACCT_DESC_LABEL_BASE 
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "<LABEL ID = \"" + ACCT_DESC_LABEL_BASE 
 				+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) + "\" >" 
 				+  clsStringFunctions.filter(line.getsacctid()) + "</LABEL>";
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Debit:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT"
+				s1stBufferLineText += "<INPUT TYPE=TEXT"
 					+ " style=\"text-align:right;\""
 					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
@@ -1070,14 +1077,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ ">"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getsdebitamt());
+				s1stBufferLineText += clsStringFunctions.filter(line.getsdebitamt());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Credit:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT"
+				s1stBufferLineText += "<INPUT TYPE=TEXT"
 					+ " style=\"text-align:right;\""	
 					+ " NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
@@ -1089,14 +1096,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ ">"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getscreditamt());
+				s1stBufferLineText += clsStringFunctions.filter(line.getscreditamt());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Transaction date:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.dattransactiondate + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getstransactiondate()) + "\""
@@ -1112,14 +1119,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 						)
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getstransactiondate());
+				s1stBufferLineText += clsStringFunctions.filter(line.getstransactiondate());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Source type:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "\n<SELECT NAME = \"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ PARAM_SOURCE_LEDGER_AND_TYPE + "\""
 					+ " ID=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
@@ -1138,18 +1145,18 @@ public class GLEditEntryEdit  extends HttpServlet {
 					}
 					ssSourceTypeSelections += " VALUE=\"" + GLSourceLedgers.getSourceTypes().get(j) + "\">" + GLSourceLedgers.getSourceTypes().get(j) + "\n";
 				}
-				sLineText += ssSourceTypeSelections;
-				sLineText += "</SELECT>"
+				s1stBufferLineText += ssSourceTypeSelections;
+				s1stBufferLineText += "</SELECT>"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getssourceledger() + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + line.getssourcetype());
+				s1stBufferLineText += clsStringFunctions.filter(line.getssourceledger() + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + line.getssourcetype());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Line description:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.sdescription + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsdescription()) + "\""
@@ -1159,14 +1166,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ ">"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getsdescription());
+				s1stBufferLineText += clsStringFunctions.filter(line.getsdescription());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			//Reference:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.sreference + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getsreference()) + "\""
@@ -1176,14 +1183,14 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ ">"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getsreference());
+				s1stBufferLineText += clsStringFunctions.filter(line.getsreference());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 
 			//Comment:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
-				sLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
+				s1stBufferLineText += "<INPUT TYPE=TEXT NAME=\"" + GLTransactionBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", GLTransactionBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
 					+ SMTablegltransactionbatchlines.scomment + "\""
 			    	+ " VALUE=\"" + clsStringFunctions.filter(line.getscomment()) + "\""
@@ -1193,22 +1200,36 @@ public class GLEditEntryEdit  extends HttpServlet {
 			    	+ ">"
 				;
 			}else{
-				sLineText += clsStringFunctions.filter(line.getscomment());
+				s1stBufferLineText += clsStringFunctions.filter(line.getscomment());
 			}
-			sLineText += "</TD>\n";
+			s1stBufferLineText += "</TD>\n";
 			
 			if (bEditable){
-				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				s1stBufferLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
 					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
 			}
 			
-			sLineText += "  </TR>\n";
+			s1stBufferLineText += "  </TR>\n";
 			bOddRow = !bOddRow;
 			
+			//We're trying a DOUBLE buffering here to speed up the string concatenation:
 			//Add the buffer into the main string:
-			s += sLineText;
+			if ((lLineCounter % i1stLineBufferSize) == 0){
+				s2ndBufferLineText += s1stBufferLineText;
+				s1stBufferLineText = "";
+			}
+			if ((lLineCounter % (i1stLineBufferSize * i2ndLineBufferSize)) == 0){
+				s += s2ndBufferLineText;
+				s2ndBufferLineText = "";
+			}
+			lLineCounter++;
 		}
-
+		//Get any lines left in the buffer:
+		s += s2ndBufferLineText;
+		s += s1stBufferLineText;
+		
+		System.out.println("[20191961415398] " + " Time to display = " + (System.currentTimeMillis() - lStartingTime)/1000);
+		
 		if (bEditable){
 			//Add one blank line so the user can add lines:
 			GLTransactionBatchLine transactionline = new GLTransactionBatchLine();

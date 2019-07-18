@@ -19,7 +19,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARUtilities;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -301,11 +300,11 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 				+ "\">Summary</A><BR>");
 		out.println("</TD></TR></TABLE>");
 
-		String sWarnings = ARUtilities.get_Request_Parameter("Warning", request);
+		String sWarnings = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarnings.equalsIgnoreCase("")){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarnings + "</FONT></B><BR>");
 		}
-		String sStatus = ARUtilities.get_Request_Parameter("Status", request);
+		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);
 		if (! sStatus.equalsIgnoreCase("")){
 			out.println("<B>" + sStatus + "</B><BR>");
 		}

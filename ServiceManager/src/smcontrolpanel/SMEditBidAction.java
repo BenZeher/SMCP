@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablearcustomer;
@@ -15,7 +16,6 @@ import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsManageRequestParameters;
 import smar.ARCustomer;
-import smar.SMOption;
 
 public class SMEditBidAction extends HttpServlet{
 	

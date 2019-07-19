@@ -2850,12 +2850,12 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			sMapAddress += orderheader.getM_sShipToCountry().trim() + "";
 		}
 		//Make the toolbar for small screens 
-		s += "<div class=\"d-block d-md-none\">";
-		s += "<div class=\"d-flex justify-content-between\"> "
+		s += "<div class=\"visible-xs visible-sm\">";
+		s += "<div class=\"text-center\"> "//TODO not working
 		   + "<div style=\"font-size:large; padding: 7px;\">"
 		   + "<b>" + sWorkOrderID + "</b><font style=\"font-size:small;\">" + sLinkToConfigureWorkOrder + "</font>"
 		   	+ "</div>";
-		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('d-none');\">" + "Details" + " </button>"
+		s += "<button class=\"btn\" type=\"button\" onclick=\"$('#headerTable').toggleClass('hidden');\">" + "Details" + " </button>"
 		+ "</div><BR>";
 		s += "<div class=\"row \">";
 	
@@ -2887,7 +2887,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		s += "</div>";
 		
 		
-		s += "<div class=\"container-fluid  d-none d-md-block\" id=\"headerTable\">";
+		s += "<div class=\"container-fluid visible-md visible-lg\" id=\"headerTable\">";
 
 		
 		if(sLinkToWorkOrderList.compareToIgnoreCase("") != 0 
@@ -2973,8 +2973,10 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		//This line should keep the font widths 'screen' wide:
 		+ "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1.0\" />"
 		+ "<script src=\"https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js\"></script>"
-		+ "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js\" integrity=\"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl\" crossorigin=\"anonymous\"></script>"
-		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
+		//+ "<script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js\" integrity=\"sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl\" crossorigin=\"anonymous\"></script>"
+		//+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css\" integrity=\"sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T\" crossorigin=\"anonymous\">"
+		+" <script src=\"https://maxcdn.bootstrapcdn.com/bootstrap/3.4.0/js/bootstrap.min.js\"></script>"
+		+ "<link rel=\"stylesheet\" href=\"https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css\" integrity=\"sha384-HSMxcRTRxnN+Bdg0JdbxYKrThecOKuH5zCYotlSAcp1+c8xmyTe9GYg1l9a69psu\" crossorigin=\"anonymous\">"
 		+ "<link rel=\"stylesheet\" href=\"https://fonts.googleapis.com/icon?family=Material+Icons\">"
 		+ "<!--[if lt IE 9]><script src=\"scripts/flashcanvas.js\"></script><![endif]-->"
 		+ "</HEAD>\n" 

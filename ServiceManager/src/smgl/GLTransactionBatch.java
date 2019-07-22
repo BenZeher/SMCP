@@ -1396,7 +1396,7 @@ public class GLTransactionBatch {
     	//Now update the GL fiscalstatementdata table:
     	
     	//We only need to worry about financial statement data that is in the SAME YEAR OR LATER THAN OUR CURRENT POSTING:
-    	x
+    	
     	
     	//First get all the fiscal sets starting with the one we updated and including all the subsequent ones:
 		String SQL = "SELECT * from " + SMTableglfiscalsets.TableName

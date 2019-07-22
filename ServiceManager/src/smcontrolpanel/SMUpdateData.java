@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1401;
+	private static final int m_CurrentDatabaseVersion = 1402;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "7/17/2019";
+	private static final String m_sLastRevisionDate = "7/19/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14542,11 +14542,20 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
-			//END CASE
-			
-			//End switch:
-		}
 		
+			case 1401:
+				//Added by BJA 7/16/2019
+				SQL = "ALTER TABLE `glexternalcompanypulls` "
+						+ " DROP lbatchnumber"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+				//END CASE
+
+				//End switch:
+		}
+
 		//Now update the database version in the data:
 		SQL = "UPDATE " + SMTablecompanyprofile.TableName
 		+ " SET " + SMTablecompanyprofile.iDatabaseVersion

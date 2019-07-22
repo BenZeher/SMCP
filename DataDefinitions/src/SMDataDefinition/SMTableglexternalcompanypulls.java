@@ -14,7 +14,6 @@ public class SMTableglexternalcompanypulls {
 	public static final String sfullusername = "sfullusername";
 	public static final String ifiscalyear = "ifiscalyear";
 	public static final String ifiscalperiod = "ifiscalperiod"; 
-	public static final String lbatchnumber = "lbatchnumber";
 
 	//Field Lengths:
 	public static final int sdbnameLength = 64;

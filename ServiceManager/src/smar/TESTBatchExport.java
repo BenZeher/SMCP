@@ -3,7 +3,7 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLExternalPull;
+import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -135,7 +135,7 @@ public class TESTBatchExport extends HttpServlet{
 			return;
 		}
 		*/
-		
+		/*
 		//Test GL Pull:
 		GLExternalPull pull = new GLExternalPull();
 		try {
@@ -152,7 +152,9 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Error - " + e1.getMessage());
 		}
 		System.out.println("DONE");
+		*/
 		
+		/*
 		//Test GL Transaction Batch for AR:
 		ARBatch arbatch = new ARBatch("28260");
 		
@@ -163,11 +165,11 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
+		*/
 		
 		
-		/*
 		//Test GL Transaction Batch posting:
-		GLTransactionBatch glbatch = new GLTransactionBatch("54");
+		GLTransactionBatch glbatch = new GLTransactionBatch("83");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
@@ -175,7 +177,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		
 		System.out.println("DONE");
-		*/
+		
 		
 		//Test GL conversion function:
 		/*

@@ -33,6 +33,7 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 				HttpServletResponse response)
 				throws ServletException, IOException {
 		
+
 		PrintWriter out = response.getWriter();
 		if(!SMAuthenticate.authenticateSMCPCredentials(
 			request, 
@@ -122,23 +123,23 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Accounts Receivable Main Menu</A><BR>");
+		out.println(SMUtilities.getMasterStyleSheetLink());
 
 	    //Build table header for listing:
-	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-	    out.println("<TR>");
-	    out.println("<TD>Doc. Date</TD>");
-	    out.println("<TD>Doc. ID</TD>");
-	    out.println("<TD>Doc. #</TD>");
-	    out.println("<TD>Doc. Type</TD>");
-	    out.println("<TD>Matching Amt.</TD>");
-	    //out.println("<TD>Order #</TD>");
-	    out.println("<TD>Description</TD>");
-	    out.println("<TD>Orig. Doc Date</TD>");
-	    out.println("<TD>Orig. Doc ID</TD>");
-	    out.println("<TD>Orig. Doc#</TD>");
-	    out.println("<TD>Orig. Doc Type</TD>");
-	    out.println("<TD>Orig. Doc Amt</TD>");
-	    
+	    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+	    out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B> Doc. Date</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B> Doc. ID</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B> Doc. #</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B> Doc. Type</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B> Matching Amt.</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Description</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Orig. Doc Date</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Orig. Doc ID</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Orig. Doc #</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\"><B>Orig. Doc Type</B></TD>");
+	    out.println("<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + "\"><B>Orig. Doc Amt</B></TD>");
+
 	    out.println("</TR>");
 	    
 	    try{
@@ -165,10 +166,14 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 	        	+ " - "
 	        	+ sUserFullName
 	        		);
-	        
+	        int iCount = 0;
         	while (rs.next()){
         		//Start a row:
-        		out.println("<TR>");
+				if(iCount%2 == 0){
+					out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else{
+					out.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
         		out.println(
         			Build_Row(		
 	        			out,
@@ -187,6 +192,7 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
         			));
         		//End the row:
         		out.println("</TR>");
+        		iCount++;
         	}
         	rs.close();
 	        out.println ("<BR>");
@@ -227,12 +233,12 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 		 * amount 
 		 * desc
 		 */
-		String sOutPut = "<TD>" + sTransactionDate + "</TD>";
-		sOutPut += "<TD>" + lDocID + "</TD>";
-		sOutPut += "<TD>" + sDocNumber + "</TD>";
-		sOutPut += "<TD>" + ARDocumentTypes.Get_Document_Type_Label(iDocType) + "</TD>";
-		sOutPut += "<TD ALIGN = RIGHT>" + sAmount + "</TD>";
-		sOutPut += "<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>";
+		String sOutPut = "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + sTransactionDate + "</TD>";
+		sOutPut +="<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + lDocID + "</TD>";
+		sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + sDocNumber + "</TD>";
+		sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + ARDocumentTypes.Get_Document_Type_Label(iDocType) + "</TD>";
+		sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +"\">" + sAmount + "</TD>";
+		sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>";
 		
 		String SQL = "SELECT * FROM " + SMTableartransactions.TableName
 			+ " WHERE ("
@@ -251,25 +257,25 @@ public class ARDisplayMatchingTransactions extends HttpServlet {
 		        	+ sUserFullName
 					);
 			if (rsParent.next()){
-				sOutPut += "<TD>" + clsDateAndTimeConversions.TimeStampToString(rsParent.getTimestamp(SMTableartransactions.datdocdate),"MM-dd-yyyy") + "</TD>";
-				sOutPut += "<TD>" + Long.toString(lParentTransactionID) + "</TD>";
-				sOutPut += "<TD>" + rsParent.getString(SMTableartransactions.sdocnumber).trim() + "</TD>";
-				sOutPut += "<TD>" + ARDocumentTypes.Get_Document_Type_Label(rsParent.getInt(SMTableartransactions.idoctype)) + "</TD>";
-				sOutPut += "<TD ALIGN=RIGHT>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsParent.getBigDecimal(SMTableartransactions.doriginalamt)) + "</TD>";
+				sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + clsDateAndTimeConversions.TimeStampToString(rsParent.getTimestamp(SMTableartransactions.datdocdate),"MM-dd-yyyy") + "</TD>";
+				sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + Long.toString(lParentTransactionID) + "</TD>";
+				sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + rsParent.getString(SMTableartransactions.sdocnumber).trim() + "</TD>";
+				sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL +"\">" + ARDocumentTypes.Get_Document_Type_Label(rsParent.getInt(SMTableartransactions.idoctype)) + "</TD>";
+				sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL +"\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsParent.getBigDecimal(SMTableartransactions.doriginalamt)) + "</TD>";
 			}else{
-				sOutPut += "<TD>N/A</TD>";
-				sOutPut += "<TD>N/A</TD>";
-				sOutPut += "<TD>N/A</TD>";
-				sOutPut += "<TD>N/A</TD>";
-				sOutPut += "<TD>N/A</TD>";
+				sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+				sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+				sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+				sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+				sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
 			}
 			rsParent.close();
 		}catch(SQLException e){
-			sOutPut += "<TD>N/A</TD>";
-			sOutPut += "<TD>N/A</TD>";
-			sOutPut += "<TD>N/A</TD>";
-			sOutPut += "<TD>N/A</TD>";
-			sOutPut += "<TD>N/A</TD>";
+			sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+			sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+			sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+			sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
+			sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">N/A</TD>";
 		}
 
 		return sOutPut;

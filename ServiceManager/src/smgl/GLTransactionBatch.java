@@ -1040,9 +1040,9 @@ public class GLTransactionBatch {
 				+ sAccount + "' - " + glacct.getErrorMessageString());
 		}
 		
-		//If it's a balance sheet  or retained earnings account, then we simply update all the opening balances in any subsequent
+		//If it's a balance sheet account, then we simply update all the opening balances in any subsequent
 		//fiscal sets:
-		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) != 0){
+		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET) == 0){
 			SQL = "UPDATE " + SMTableglfiscalsets.TableName
 					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
 						+ SMTableglfiscalsets.bdopeningbalance + " + " 
@@ -1396,6 +1396,7 @@ public class GLTransactionBatch {
     	//Now update the GL fiscalstatementdata table:
     	
     	//We only need to worry about financial statement data that is in the SAME YEAR OR LATER THAN OUR CURRENT POSTING:
+    	
     	
     	//First get all the fiscal sets starting with the one we updated and including all the subsequent ones:
 		String SQL = "SELECT * from " + SMTableglfiscalsets.TableName

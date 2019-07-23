@@ -2918,7 +2918,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 		
 
 		s += "<div style=\"\" class=\" \">";
-		s += "<div class=\"row \">";
+		s += "<div class=\"row\">";
 		s += "<div style=\"width: auto !important;\" class=\"col-sm-1 hidden-xs\"><b>WO&nbsp;#:</b>&nbsp;" + sWorkOrderID + "</div>";
 		s += "<div style=\"width: auto !important;\" class=\"col-sm-1 \"><b>Scheduled:</b>&nbsp;" + "" + workorder.getsscheduleddate() + "</div>"
 			+ "<INPUT type=\"hidden\" name=\"" + SMWorkOrderHeader.Paramscheduleddate+ "\" value=\"" + workorder.getsscheduleddate() + "\">"

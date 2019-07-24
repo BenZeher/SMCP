@@ -1700,7 +1700,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String SQLInsert = "";
 		//System.out.println("[1553458952] - going into while loop.");
 		
+		long lLineNumber = 0;
 		while (rsPostedTransactions.next()){
+			lLineNumber++;
 			if (lInsertCounter == 0){
 				SQLInsert = "INSERT INTO " + sTablename + "("
 					+ SMTablegltransactionlines.bdamount
@@ -1732,9 +1734,15 @@ public class GLACCPACConversion  extends java.lang.Object{
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("CONSOLIDAT")) //consolidated posting
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALPERD")) //fiscal period
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALYR")) //fiscal year
-			+ ", " + Integer.toString(rsPostedTransactions.getInt("BATCHNBR") * -1) //original batch number
-			+ ", " + Integer.toString(rsPostedTransactions.getInt("ENTRYNBR") * -1) //original entry number
-			+ ", " + Integer.toString(rsPostedTransactions.getInt("TRANSNBR") * -1) //original line number
+			
+			//We're putting artificial numbers in here because there are some duplicate entries in the ACCPAC
+			// data, but we need unique combinations here:
+			//+ ", " + Integer.toString(rsPostedTransactions.getInt("BATCHNBR") * -1) //original batch number
+			+ ", " + "0" //original batch number
+			
+			//+ ", " + Integer.toString(rsPostedTransactions.getInt("ENTRYNBR") * -1) //original entry number
+			+ ", " + "0" //original entry number
+			+ ", " + Long.toString(lLineNumber) //original line number
 			+ ", 0" //source transaction line ID
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription

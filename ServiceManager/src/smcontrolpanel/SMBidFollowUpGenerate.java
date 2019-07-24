@@ -66,35 +66,36 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    /*************GET the PARAMETERs***************/
 	    title = SMBidEntry.ParamObjectName + " Follow-Up List";
 	    subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-		
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR><BR>");
 
 	    out.println(
 	    		"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMBidFollowUpCriteriaSelection"
-	    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\"><B>New Search</B></A><BR><BR>");
+	    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\"><B>New Search</A><BR><BR>");
 
     	//Display all selected criteria
     	ArrayList<String> alCriteria = new ArrayList<String>(0);
     	
 	    String sSalespersonCode = request.getParameter("SelectedSalesperson");
 	    if (sSalespersonCode.compareTo("ALLSP") == 0){
-	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:</B>&nbsp;All</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;All</FONT>");
 	    }else{
-	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:</B>&nbsp;" + sSalespersonCode + "</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;" + sSalespersonCode + "</FONT>");
 	    }
 	    int iProjectType = Integer.parseInt(request.getParameter("ProjectType"));
 	    if (iProjectType == 0){
-	    	alCriteria.add("<FONT SIZE=2><B>Project Type:</B>&nbsp;ALL</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;ALL</FONT>");
 	    }else{
 		    sSQL = MySQLs.Get_Project_Type_List_SQL();
 		    try{
 			    ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			    while (rsProjectTypes.next()){
 			    	if (rsProjectTypes.getInt(SMTableprojecttypes.iTypeId) == iProjectType){
-			    		alCriteria.add("<FONT SIZE=2><B>Project Type:</B>&nbsp;" + rsProjectTypes.getString(SMTableprojecttypes.sTypeDesc) + "</FONT>");
+			    		alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;" + rsProjectTypes.getString(SMTableprojecttypes.sTypeDesc) + "</FONT>");
 			    		break;
 			    	}
 			    }
@@ -127,7 +128,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
     			"M/d/yyyy H:m:s", sLastContactEndDate + " 23:59:59");
 
 	    if (iCheckLastContactDate == 1){
-    		alCriteria.add("<FONT SIZE=2><B>Last Contact Date Range:</B>&nbsp;" + USDateOnlyformatter.format(new Date(datLastContactStartDate.getTime())) +
+    		alCriteria.add("<FONT SIZE=2><B>Last Contact Date Range:&nbsp;" + USDateOnlyformatter.format(new Date(datLastContactStartDate.getTime())) +
     																	  " - " + USDateOnlyformatter.format(new Date(datLastContactEndDate.getTime())) +
     					   "</FONT>");
 	    }
@@ -151,7 +152,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
     	Timestamp datNextContactEndDate = clsDateAndTimeConversions.StringToTimestamp(
     			"M/d/yyyy H:m:s", sNextContactEndDate + " 23:59:59");
 	    if (iCheckNextContactDate == 1){
-    		alCriteria.add("<FONT SIZE=2><B>Next Contact Date Range:</B>&nbsp;" + USDateOnlyformatter.format(new Date(datNextContactStartDate.getTime())) +
+    		alCriteria.add("<FONT SIZE=2><B>Next Contact Date Range:&nbsp;" + USDateOnlyformatter.format(new Date(datNextContactStartDate.getTime())) +
     																	  " - " + USDateOnlyformatter.format(new Date(datNextContactEndDate.getTime())) +
     					   "</FONT>");
 	    }
@@ -159,7 +160,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    //System.out.println("Order 1 = " + sSortBy1);
 	    String sSortBy2 = request.getParameter("SelectedSortOrder2");
 	    //System.out.println("Order 2 = " + sSortBy2);
-	    alCriteria.add("<FONT SIZE=2><B>Sort Order:</B>&nbsp;" + sSortBy1 + "&nbsp;then&nbsp;" + sSortBy2 + "</FONT>");
+	    alCriteria.add("<FONT SIZE=2><B>Sort Order:&nbsp;" + sSortBy1 + "&nbsp;then&nbsp;" + sSortBy2 + "</FONT>");
 
 	    //Status check
 	    int iStatusPending = 0;
@@ -169,29 +170,29 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    
     	if (request.getParameter("StatusPending") != null){
     		iStatusPending = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Pending:</B>&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Pending:&nbsp;Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Pending:</B>&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Pending:&nbsp;No</FONT>");
     	}
     	if (request.getParameter("StatusSuccessful") != null){
     		iStatusSuccessful = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Successful:</B>&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Successful:</B>&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;No</FONT>");
     	}
     	if (request.getParameter("StatusUnsuccessful") != null){
     		iStatusUnsuccessful = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:</B>&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:</B>&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;No</FONT>");
     	}
     	if (request.getParameter("StatusInactive") != null){
     		iStatusInactive = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:</B>&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:</B>&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;No</FONT>");
     	}
-    	
+    	out.println("</TABLE>");
 	    //log usage of this report
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMBIDFOLLOWUPREPORT, "REPORT", "SMBidFollowUp", "[1376509308]");
@@ -201,8 +202,10 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 			    								 100,
 			    								 0,
 			    								 false,
-			    								 false)
+			    								 false,
+			    								 sColor)
 			    	);
+    	out.println(SMUtilities.getMasterStyleSheetLink());
    
 		sSQL = "SELECT * FROM " + SMTablebids.TableName + ", " + SMTablesalesperson.TableName + ", " + SMTableprojecttypes.TableName + 
 				  " WHERE" + 
@@ -274,71 +277,71 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    BigDecimal iBidTotal = BigDecimal.ZERO;
 	    try{
 	    	if (rs != null){
-			    
+	    		out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+	    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">ID </TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> SP</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Origination Date</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Follow Up Note</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bill-to Name</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Ship-to Name</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Project Type</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Contact Name</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Phone Number</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Proposed Amount</TD>");
+	    		out.println("</TR>");
 			    //print out column headers
-			    out.println("<TABLE BORDER=1 WIDTH=1250>");
-			    
-			    out.println("<TR>");
-			        //10 columns
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=4%><B>ID</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=3%><B>SP</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=8%><B>Origination Date</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=5%><B>Follow Up Note</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=15%><B>Bill-to Name</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=25%><B>Ship-to Name</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=7%><B>Project Type</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=13%><B>Contact Name</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=10%><B>Phone Number</B></TD>");
-			    	out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=10%><B>Proposed Amount</B></TD>");
-			    out.println("</TR>");
-				
 			    while (rs.next()){
-				    out.println("<TR>");
+			    	if(iBidCount % 2 == 0) {
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+			    	}else {
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+			    	}
 				    iBidCount++;
 				    iBidTotal = iBidTotal.add(rs.getBigDecimal(SMTablebids.dapproximateamount));
 				    //id
-				    out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>"
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					    	+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
 					    	+ "?" + SMBidEntry.ParamID + "=" + rs.getInt(SMTablebids.lid) 
 					    	+ "&OriginalURL=" + sCurrentURL 
 					    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 					    	+ "\">" 
-					    	+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></FONT></TD>");
+					    	+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></TD>");
 
 				    //salesperson code
-				    out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</TD>");
 				    //origination date
-				    out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimeoriginationdate)) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimeoriginationdate)) + "</TD>");
 				    //followup note
 				    if (rs.getString(SMTablebids.mfollowupnotes).trim().length() > 0){
 				    	String sImagePath = getServletContext().getInitParameter("imagepath");
 				    	if (sImagePath == null){
 				    		sImagePath = "../images/smcontrolpanel/";
 				    	}
-				    	out.println("<TD ALIGN=CENTER VALIGN=TOP><IMG src=\"" 
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><IMG src=\"" 
 				    			+ sImagePath 
 				    			+ "note.gif\" title=\"" 
 				    			+ clsStringFunctions.FormatSQLResult(rs.getString(SMTablebids.mfollowupnotes)) + "\"></TD>");
 				    }else{
-				    	out.println("<TD ALIGN=CENTER VALIGN=TOP>&nbsp;</TD>");
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">&nbsp;</TD>");
 				    }
 				    //customer name
-				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.scustomername) + "&nbsp;</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTablebids.scustomername) + "&nbsp;</TD>");
 				    //project name
-				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.sprojectname) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + rs.getString(SMTablebids.sprojectname) + "</TD>");
 				    //project type
-				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTableprojecttypes.sTypeCode) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + rs.getString(SMTableprojecttypes.sTypeCode) + "</TD>");
 				    //contact name
-				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.scontactname) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + rs.getString(SMTablebids.scontactname) + "</TD>");
 				    //phone number
-				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablebids.sphonenumber)) + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablebids.sphonenumber)) + "</TD>");
 				    //proposed amount
-				    out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" + rs.getBigDecimal(SMTablebids.dapproximateamount).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</FONT></TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + rs.getBigDecimal(SMTablebids.dapproximateamount).setScale(2, BigDecimal.ROUND_HALF_UP).toString() + "</TD>");
 				    out.println("</TR>");
 			    }
-			    out.println("<TR><TD COLSPAN=10><HR></TD></TR>");
-			    out.println("<TR><TD ALIGN=RIGHT COLSPAN=10><FONT SIZE=4><B>Total Follow-Up Calls: " + iBidCount + "</B></FONT></TD></TR>");
-			    out.println("<TR><TD ALIGN =RIGHT COLSPAN=10><FONT SIZE=4><B> Total Proposed Amount : "+currency.format(iBidTotal)+"</B></FONT></TD></TR>");
+			    out.println("<TR><TD COLSPAN=10 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+			    out.println("<TD COLSPAN=10 CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total Follow-Up Calls: " + iBidCount + "</TD></TR>");
+			    out.println("<TD COLSPAN=10 CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total Proposed Amount : "+currency.format(iBidTotal)+"</TD></TR>");
 			    out.println("</TABLE>");
 			    rs.close();
 	    	}else{

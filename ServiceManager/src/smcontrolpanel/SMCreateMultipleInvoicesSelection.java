@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoice;
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;

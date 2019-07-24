@@ -810,6 +810,9 @@ public class GLTransactionBatch {
     		);
     	}
     	
+    	//TEST - remove later!
+    	//throw new Exception("TEST EXCEPTION - REMOVE THIS LINE!");
+    	
     	return;
     }
 
@@ -1200,21 +1203,6 @@ public class GLTransactionBatch {
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
         		+ ", 0" //stransactiontype
         		+ ")"
-        		
-        		+ " ON DUPLICATE KEY UPDATE "
-        		+ " " + SMTablegltransactionlines.bdamount + " = " + sTransactionAmt	//bdamount
-        		+ ", " + SMTablegltransactionlines.datpostingdate + " = '" + getsposteddateInSQLFormat() + "'" //datpostingdate
-        		+ ", " + SMTablegltransactionlines.dattransactiondate + " = '" + entry.getsdatdocdateInSQLFormat() + "'"  //dattransactiondate
-        		+ ", " + SMTablegltransactionlines.iconsolidatedposting + " = 0" 	//iconsolidatedposting
-        		+ ", " + SMTablegltransactionlines.ifiscalperiod + " = " + entry.getsfiscalperiod() //ifiscalperiod
-        		+ ", " + SMTablegltransactionlines.ifiscalyear + " = " + entry.getsfiscalyear() //ifiscalyear
-        		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid + " = " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
-        		+ ", " + SMTablegltransactionlines.sacctid + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
-        		+ ", " + SMTablegltransactionlines.sdescription + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsdescription()) + "'" //sdescription
-        		+ ", " + SMTablegltransactionlines.sreference + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
-        		+ ", " + SMTablegltransactionlines.ssourceledger + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourceledger()) + "'" //ssourceledger
-        		+ ", " + SMTablegltransactionlines.ssourcetype + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
-        		+ ", " + SMTablegltransactionlines.stransactiontype + " = 0" //stransactiontype
         	;
 
         	try {
@@ -1436,8 +1424,8 @@ public class GLTransactionBatch {
 				//We need to determine the LAST PERIOD of the two previous years:
 				String SQLFiscalPeriods = "SELECT * FROM " + SMTableglfiscalperiods.TableName
 					+ " WHERE ("
-						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 1L) + ")"
-						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 2L) + ")"
+						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1L) + ")"
+						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2L) + ")"
 					+ ")"
 					+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC"
 				;
@@ -1458,7 +1446,7 @@ public class GLTransactionBatch {
 			//Get the previous year's fiscal set, if there is one:
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 1) + ")"
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1) + ")"
 					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;
@@ -1471,7 +1459,7 @@ public class GLTransactionBatch {
 			//Get the fiscal set from TWO YEARS PREVIOUS, if there is one:
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 2) + ")"
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2) + ")"
 					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;

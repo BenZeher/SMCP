@@ -131,14 +131,9 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     		out.println("<TR><TD><B>Include order types:<B></TD></TR>");
     		out.println("<TR><TD>\n");
 
-    		SQL = "SELECT " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
-    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
-    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
-    				+ " FROM " + SMTableorderheaders.TableName
-    				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
-    				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
-    				+ SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode
-    				+ " GROUP BY " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode 
+    		SQL = "SELECT " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode
+    				+ " FROM " + SMTableservicetypes.TableName
     				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
     		try{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -151,8 +146,8 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     			while(rs.next()){
     				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
     					out.println(
-    						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode) + "\"");
-    					if (request.getParameter("SERVICETYPE" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sServiceTypeCode)) != null){
+    						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode) + "\"");
+    					if (request.getParameter("SERVICETYPE" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode)) != null){
     					  out.println(" CHECKED");
     					}
     					out.println(" width=0.25>" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "</LABEL><BR>\n");

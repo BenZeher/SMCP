@@ -55,6 +55,10 @@ public class GLTransactionListingAction extends HttpServlet {
 		String sStartingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_FISCAL_PERIOD_SELECTION);
 		String sEndingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_ENDING_FISCAL_PERIOD_SELECTION);
 		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTransactionListingSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
+		String sExternalPull = request.getParameter(GLTransactionListingSelect.PARAM_EXTERNAL_PULL);
+		String sSelectBy = request.getParameter(GLTransactionListingSelect.PARAM_SELECT_BY);
+
+		
 
 		//Get the starting and ending segment values:
 		ArrayList<String>alStartingSegmentNames = new ArrayList<String>(0);
@@ -151,8 +155,37 @@ public class GLTransactionListingAction extends HttpServlet {
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		out.println("<BR>\n");
 		out.println("<TABLE BORDER=0>\n");
-		
 		String s = "";
+		if(sExternalPull.compareToIgnoreCase("-1")==0) {
+			if(sSelectBy.compareToIgnoreCase("EXTERNAL")==0) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+						+ "Warning=External pull chosen, but default value still selected "
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ sParamString);
+			}
+		}
+		
+		//If an External Pull is Chosen Display only that Info
+		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
+			if(sSelectBy.compareToIgnoreCase("SEGMENT")==0) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+						+ "Warning=Segment chosen but External Pull was selected - leave default "
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ sParamString);
+			}else {
+			s += "  <TR>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "FROM period:&nbsp;"
+				+ "    </TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
+				+ "<B>" + sStartingFiscalPeriod + "</B>"
+				+ "    </TD>\n"
+				+ "  </TR>\n";
+			}
+		}else {
+
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 			+ "FROM period:&nbsp;"
@@ -241,7 +274,7 @@ public class GLTransactionListingAction extends HttpServlet {
 				+ "  </TR>\n"
 			;
 		}
-
+	}
 		out.println(s);
 		out.println("</TABLE>\n");
 		out.println("<BR>\n");
@@ -286,7 +319,8 @@ public class GLTransactionListingAction extends HttpServlet {
 					alStartingSegmentValueDescriptions,
 					alEndingSegmentIDs,
 					alEndingSegmentValueDescriptions,
-					bAllowBatchViewing
+					bAllowBatchViewing,
+					sExternalPull
 				)
 			);
 		} catch (Exception e) {

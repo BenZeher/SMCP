@@ -16,6 +16,7 @@ import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglacctsegmentvalues;
+import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -40,6 +41,8 @@ public class GLTransactionListingSelect extends HttpServlet {
 	public static String PARAM_ENDING_SEGMENT_BASE = "ENDINGSEGMENTBASE";
 	public static String DEFAULT_FIRST_STARTING_VALUE = "";
 	public static String DEFAULT_LAST_ENDING_VALUE = "ZZZZZZ";
+	public static String PARAM_EXTERNAL_PULL = "EXTERNALPULLS";		
+	public static String PARAM_SELECT_BY = "SELECTBY";
 	
 	
 	public void doPost(HttpServletRequest request,
@@ -403,7 +406,50 @@ public class GLTransactionListingSelect extends HttpServlet {
 				);
 			out.println("  </TR>");
 		}
-
+		
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=LEFT COLSPAN=4>"
+			+  "<B><I><U>Individual External Pull&nbsp;</U></I></B>"
+			+ "</TD>"
+		);
+		out.println("  </TR>");
+		
+		sSQL = "SELECT * FROM " + SMTableglexternalcompanypulls.TableName
+				+ " ORDER BY " + SMTableglexternalcompanypulls.lid
+			;
+		out.println("  <TR>");
+		out.println("    <TD ALIGN=RIGHT><B>External Pull:&nbsp;</B></TD>");
+		out.println("    <TD COLSPAN = \"3\">");
+		out.println("&nbsp;<SELECT NAME = \"" +  PARAM_EXTERNAL_PULL + "\" ID = \"" + PARAM_EXTERNAL_PULL + " \">");
+		out.println("<OPTION VALUE = \"-1\" SELECTED=yes> DEFAULT");
+		try {
+			ResultSet rsExternalPull =   clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sDBID,
+					"MySQL",
+					this.toString() + ".getting account segments - User: " + sUserID
+					+ " - "
+					+ sUserFullName
+				);
+			while(rsExternalPull.next()) {
+				out.println("<OPTION   \" VALUE = \"" + rsExternalPull.getInt(SMTableglexternalcompanypulls.lid) +  "\"> " + rsExternalPull.getString(SMTableglexternalcompanypulls.scompanyname) + " -> " + rsExternalPull.getInt(SMTableglexternalcompanypulls.ifiscalyear) +  " - " + rsExternalPull.getInt(SMTableglexternalcompanypulls.ifiscalperiod) +"");
+			}
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1553714400] getting GL external company pulls - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		
+		out.println("  </TD>");
+		out.println("  </TR>");
+		
+		out.println("  <TR>");
+		out.println("  <TD ALIGN=RIGHT><B> Select by:<B></TD>");
+		out.println(" <TD COLSPAN=3>");
+		out.println("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + PARAM_SELECT_BY + "\" VALUE=\"SEGMENT\" CHECKED> Segment</LABEL>");
+		out.println("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + PARAM_SELECT_BY + "\" VALUE=\"EXTERNAL\" > External Pull</LABEL>");
+		out.println( "</TD>");
+		out.println("  </TR>");
+		
 		//End the table:
 		out.println("</TABLE>\n");
 		out.println("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Print----\">");

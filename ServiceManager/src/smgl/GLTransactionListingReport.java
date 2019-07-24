@@ -11,6 +11,7 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglaccountgroups;
 import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglaccountstructures;
+import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
@@ -39,7 +40,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		ArrayList<String>alStartingSegmentValueDescriptions,
 		ArrayList<String>alEndingSegmentIDs,
 		ArrayList<String>alEndingSegmentValueDescriptions,
-		boolean bAllowBatchViewing
+		boolean bAllowBatchViewing,
+		String sExternalPull
 		) throws Exception{
 		
 		String s = "";
@@ -60,7 +62,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			conn,
 			sDBID, 
 			context,
-			bAllowBatchViewing
+			bAllowBatchViewing,
+			sExternalPull
 		);			
 
 		s += printTableFooting();
@@ -83,7 +86,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		Connection conn,
 		String sDBID, 
 		ServletContext context,
-		boolean bAllowBatchViewing) throws Exception{
+		boolean bAllowBatchViewing,
+		String sExternalPull) throws Exception{
 		
 		String s = "";
 		
@@ -108,67 +112,78 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			throw new Exception("Error [20191981522492] " + "Could not parse ending fiscal year '" + sEndingFiscalYear 
 				+ "', or ending fiscal period '" + sEndingFiscalPeriod + "'.");
 		}
-		
 		String sSQL = "SELECT" + "\n"
-			+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
-			
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
-			//+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod
-			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
-			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
-			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
-			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
-			+ " FROM " + SMTablegltransactionlines.TableName + "\n"
-			+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
-			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ " = " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
-			+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
-			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
+				+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+				//+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod
+				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
+				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
+				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
+				+ " FROM " + SMTablegltransactionlines.TableName + "\n"
+				+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
+				+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+				+ " = " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
+				+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
+				+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
 				+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid + "\n"
-			+ " LEFT JOIN " + SMTableglaccountstructures.TableName + "\n"
-			+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
-			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
-			+ " LEFT JOIN " + SMTableglfinancialstatementdata.TableName + " ON "
-			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " = "
+				+ " LEFT JOIN " + SMTableglaccountstructures.TableName + "\n"
+				+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
+				+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
+				+ " LEFT JOIN " + SMTableglfinancialstatementdata.TableName + " ON "
+				+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " = "
 				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + ")"
-			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = "
+				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = "
 				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + ")"
-			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = "
-				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")"
-			
-			+ " WHERE (" + "\n"
-			
+				+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = "
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")";
+		
+		//Change the Where Clause when External Pull is not the Default Value
+		//This disregards all the other inputs from the selections screen and will print the hole input from that external company pull
+		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
+
+			sSQL += " LEFT JOIN " + SMTableglexternalcompanypulls.TableName + "\n" 
+			+ " ON " + SMTableglexternalcompanypulls.TableName + "." + SMTableglexternalcompanypulls.lid
+			+ " = " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lexternalcompanypullid + "\n"
+			+ " WHERE ("
+			+ "(" + SMTableglexternalcompanypulls.TableName + "." + SMTableglexternalcompanypulls.lid + " = " + sExternalPull + ")"
+			+ "\n)";
+		}else{
+
+
+			sSQL +=  " WHERE (" + "\n"
+
 				+ "("
-					+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
-					+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") >= " + iStartingFiscalPeriodProduct
+				+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") >= " + iStartingFiscalPeriodProduct
 				+ ")"
-				
+
 				+ " AND ("
-					+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
-					+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
+				+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
 				+ ")"
-				
+
 				//Account range:
 				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " >= '" + sStartingAccount + "')" + "\n"
 				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " <= '" + sEndingAccount + "')" + "\n"
-				
+
 				//Account group range:
 				+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')" + "\n"
 				+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " <= '" + sEndingAccountGroupCode + "')" + "\n"
-			;
-		
+				;
+
 			//Include accounts with no activity?
 			//if(!bIncludeAccountsWithNoActivity){
 			//	sSQL += " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdtotalyeartodate
@@ -703,9 +718,10 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				;
 
 			}
-			
-			sSQL += ")"
-			+ " ORDER BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+			sSQL += ")";
+		}
+
+			sSQL += " ORDER BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger

@@ -24,8 +24,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 public class SMBidTODOGenerate extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String CELL_BORDER_COLOR = "#808080";
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	@Override
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -66,8 +64,8 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    
 	    title = "Pending " + SMBidEntry.ParamObjectName + "s";
 	    subtitle = "";
-	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-		
+	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 	    out.println(sStyleScripts());
 	    
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -147,7 +145,8 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMPENDINGBIDSREPORT, "REPORT", "SMPendingBidsReport", "[1376509310]");
 
-    	out.println(SMUtilities.Build_HTML_Table(4, alCriteria, 100, 0, false, false));
+    	out.println(SMUtilities.Build_HTML_Table(4, alCriteria, 100, 0, false, false,sColor));
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	
 		sSQL = "SELECT * FROM " + SMTablebids.TableName + ", " + SMTablesalesperson.TableName + 
 				  " WHERE" + 
@@ -200,54 +199,40 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    /*************END of PARAMETER list***************/
 
 	    int iBidCount = 0;
-	    int iColumnCount = 0;
 	    try{
 	    	if (rs != null){
 			    
 			    //print out column headers
 			    //Original:
 	    		//out.println("<TABLE BORDER=1 WIDTH=100%> style = \" table-layout:fixed");
+
+	    		out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+	    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">ID </TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> SP</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Origination Date</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bid Date/Time</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Appointments</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bill-to Name</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Ship-to Name</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> T/O Complete</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Price Complete</TD>");
+	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Description</TD>");
+	    		out.println("</TR>");
+
 	    		
-	    		//table-layout:fixed; 
-	    		out.println("<TABLE style= \" border: 1px solid black; width:100%;\" >");
-			    out.println("<TR>");
-   	
-		    	out.println("<TD class = \" centerjustifiedheading \" ><B>ID</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>SP</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Ori. Date</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Bid Date/Time</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Appointments</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Bill-to Name</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Ship-to Name</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>T/O Complete</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Price Complete</B></TD>");
-		    	iColumnCount++;
-		    	out.println("<TD class = \" leftjustifiedheading \" ><B>Description</B></TD>");
-		    	iColumnCount++;
-		    	
-				out.println("</TR>");
 				
 				boolean bOddRow = true;
-				String sBackgroundColor = "";
-			    while (rs.next()){
+				while (rs.next()){
 					if(bOddRow){
-						sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 					}else{
-						sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+			    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 					}
 					bOddRow = !bOddRow;
-				    out.println("<TR bgcolor =" + sBackgroundColor + ">");
 				    iBidCount++;
 				    //id
-				    out.println("<TD class = \" centerjustifiedcell \" >"
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 					    	+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
 					    	+ "?" + SMBidEntry.ParamID + "=" + rs.getInt(SMTablebids.lid) 
 					    	+ "&OriginalURL=" + sCurrentURL 
@@ -256,14 +241,14 @@ public class SMBidTODOGenerate extends HttpServlet {
 					    	+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></TD>");
 				    
 				    //salesperson code
-				    out.println("<TD class = \" leftjustifiedcell \" >" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"+ rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</TD>");
 				    //Origination Date
-				    out.println("<TD class = \" leftjustifiedcell \" >" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimeoriginationdate)) + "</TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimeoriginationdate)) + "</TD>");
 				    //Date
 				    if (rs.getString(SMTablebids.dattimebiddate).compareTo("0000-00-00 00:00:00") == 0){
-				    	out.println("<TD class = \" leftjustifiedcell \" >N/A</TD>");
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">N/A</TD>");
 				    }else{
-				    	out.println("<TD class = \" leftjustifiedcell \" >" + USDateTimeformatter.format(rs.getTimestamp(SMTablebids.dattimebiddate)) + "</TD>"); //rs.getString(SMTablebids.mfollwupnotes).trim()
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateTimeformatter.format(rs.getTimestamp(SMTablebids.dattimebiddate)) + "</TD>"); //rs.getString(SMTablebids.mfollwupnotes).trim()
 				    }
 				    //Appointments
 				    sSQL = "SELECT " + SMTableappointments.TableName + "." + SMTableappointments.datentrydate 
@@ -279,7 +264,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    }catch (SQLException ex){
 				    	System.out.println("Error in SQL: " + sSQL + " Failed to get appointments. " + ex.getMessage());
 				    }
-				    out.println("<TD class = \" leftjustifiedcell \" >");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">");
 				    while(rsAppointments.next()){
 				    	try {
 							out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditAppointmentEdit"
@@ -298,37 +283,36 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    out.println("</TD>");
 				    rsAppointments.close();			    
 				    //customer name and phone number:
-				    out.println("<TD class = \" leftjustifiedcell \" >" + rs.getString(SMTablebids.scustomername) 
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"+ rs.getString(SMTablebids.scustomername) 
 				    		+ "<BR>" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablebids.sphonenumber))
 				    		+ "</TD>");
 				    //project name
-				    out.println("<TD class = \" leftjustifiedcell \" >" + rs.getString(SMTablebids.sprojectname) + "</TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTablebids.sprojectname) + "</TD>");
 
 				    //take off complete date
 				    if (rs.getString(SMTablebids.dattimetakeoffcomplete).compareTo("0000-00-00 00:00:00") == 0){
-				    	out.println("<TD class = \" leftjustifiedcell \" >N/A&nbsp;-&nbsp;" + rs.getString(SMTablebids.stakeoffpersoncode) + "</TD>");
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">N/A&nbsp;-&nbsp;" + rs.getString(SMTablebids.stakeoffpersoncode) + "</TD>");
 				    }else{
-				    	out.println("<TD class = \" leftjustifiedcell \" >" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimetakeoffcomplete)) 
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimetakeoffcomplete)) 
 				    		+ "&nbsp;-&nbsp;" + rs.getString(SMTablebids.stakeoffpersoncode) + "</TD>");
 				    }
 				    //price complete date
 				    if (rs.getString(SMTablebids.dattimepricecomplete).compareTo("0000-00-00 00:00:00") == 0){
-				    	out.println("<TD class = \" leftjustifiedcell \" >N/A&nbsp;-&nbsp;" + rs.getString(SMTablebids.spricingpersoncode) + "</TD>");
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">N/A&nbsp;-&nbsp;" + rs.getString(SMTablebids.spricingpersoncode) + "</TD>");
 				    }else{
-				    	out.println("<TD class = \" leftjustifiedcell \" >" + USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimepricecomplete)) 
+				    	out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"+ USDateOnlyformatter.format(rs.getTimestamp(SMTablebids.dattimepricecomplete)) 
 				    			+ "&nbsp;-&nbsp;" + rs.getString(SMTablebids.spricingpersoncode) + "</TD>");
 				    }
 				    //description
-				    out.println("<TD class = \" leftjustifiedcell \" >" + rs.getString(SMTablebids.mdescription).replace("\n", "<BR>").replaceAll("[^\\x00-\\x7F]", " ") + "</TD>");
+				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"+ rs.getString(SMTablebids.mdescription).replace("\n", "<BR>").replaceAll("[^\\x00-\\x7F]", " ") + "</TD>");
 				    /*
 				    //bin number
 				    out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.sbinnumber).trim() + "&nbsp;</FONT></TD>");
 					*/
 				    out.println("</TR>");
 			    }
-			    out.println("<TR><TD COLSPAN=" + Integer.toString(iColumnCount) + "><HR></TD></TR>");
-			    out.println("<TR><TD ALIGN=RIGHT COLSPAN=" + Integer.toString(iColumnCount) + "><FONT SIZE=4><B>Total Pending " + SMBidEntry.ParamObjectName + "s: " + iBidCount + "</B></FONT></TD></TR>");
-			    
+			    out.println("<TR><TD COLSPAN=10 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+			    out.println("<TD COLSPAN=10 CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total Follow-Up Calls: " + iBidCount + "</TD></TR>");
 			    out.println("</TABLE>");
 			    rs.close();
 	    	}else{

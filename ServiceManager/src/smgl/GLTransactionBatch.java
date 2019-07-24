@@ -1042,7 +1042,7 @@ public class GLTransactionBatch {
 		
 		//If it's a balance sheet account, then we simply update all the opening balances in any subsequent
 		//fiscal sets:
-		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET) == 0){
+		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) != 0){
 			SQL = "UPDATE " + SMTableglfiscalsets.TableName
 					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
 						+ SMTableglfiscalsets.bdopeningbalance + " + " 
@@ -1162,7 +1162,6 @@ public class GLTransactionBatch {
 			}else{
 				sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
 			}
-        	
 	    	String SQL = "INSERT INTO"
         		+ " " + SMTablegltransactionlines.TableName
         		+ " ("
@@ -1201,6 +1200,21 @@ public class GLTransactionBatch {
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
         		+ ", 0" //stransactiontype
         		+ ")"
+        		
+        		+ " ON DUPLICATE KEY UPDATE "
+        		+ " " + SMTablegltransactionlines.bdamount + " = " + sTransactionAmt	//bdamount
+        		+ ", " + SMTablegltransactionlines.datpostingdate + " = '" + getsposteddateInSQLFormat() + "'" //datpostingdate
+        		+ ", " + SMTablegltransactionlines.dattransactiondate + " = '" + entry.getsdatdocdateInSQLFormat() + "'"  //dattransactiondate
+        		+ ", " + SMTablegltransactionlines.iconsolidatedposting + " = 0" 	//iconsolidatedposting
+        		+ ", " + SMTablegltransactionlines.ifiscalperiod + " = " + entry.getsfiscalperiod() //ifiscalperiod
+        		+ ", " + SMTablegltransactionlines.ifiscalyear + " = " + entry.getsfiscalyear() //ifiscalyear
+        		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid + " = " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
+        		+ ", " + SMTablegltransactionlines.sacctid + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
+        		+ ", " + SMTablegltransactionlines.sdescription + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsdescription()) + "'" //sdescription
+        		+ ", " + SMTablegltransactionlines.sreference + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
+        		+ ", " + SMTablegltransactionlines.ssourceledger + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourceledger()) + "'" //ssourceledger
+        		+ ", " + SMTablegltransactionlines.ssourcetype + " = '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getssourcetype()) + "'" //ssourcetype
+        		+ ", " + SMTablegltransactionlines.stransactiontype + " = 0" //stransactiontype
         	;
 
         	try {
@@ -1418,7 +1432,7 @@ public class GLTransactionBatch {
 		while(rsFiscalSets.next()){
 			
 			//IF we've moved to a new fiscal year, then we have to determine the LAST period of the two previous fiscal years:
-			if (iFiscalYear != lLastFiscalYear){
+			if (rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) != lLastFiscalYear){
 				//We need to determine the LAST PERIOD of the two previous years:
 				String SQLFiscalPeriods = "SELECT * FROM " + SMTableglfiscalperiods.TableName
 					+ " WHERE ("

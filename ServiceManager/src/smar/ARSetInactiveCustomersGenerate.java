@@ -109,13 +109,13 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     		+ "1) have no activity since <B>" + sLastActivityDate + "</B>&nbsp;"
     		+ "and 2) have <B>NO</B> open transactions<BR>"
     		;
-    	
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR = \"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD></TR>" +
@@ -141,6 +141,8 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     		out.println("<INPUT TYPE=HIDDEN NAME='SETACTIVEFLAGTO' VALUE='0'>");
     		out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Set checked customers to INACTIVE----\">");
     	}
+    	
+    	out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	try {
 			printList(
@@ -179,16 +181,17 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
 			sCheckBoxHeading = "Make ACTIVE?";
 		}
 		
-		pwOut.println("<TABLE BORDER=0 WIDTH=100%>");
-		pwOut.println("<TR>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8%><B><FONT SIZE=2>" + sCheckBoxHeading + "</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Customer #</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=35%><B><FONT SIZE=2>Name</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Last invoice</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Last payment</FONT></B></TD>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10%><B><FONT SIZE=2>Last credit</FONT></B></TD>" +
-		"</TR>" + 
-   		"<TR><TD COLSPAN=6><HR></TD><TR>");
+		pwOut.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> " + sCheckBoxHeading + "</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Customer #</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Name</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Last invoice</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Last payment</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Last credit</TD>");
+		pwOut.println("</TR>");
+
+		pwOut.println("<TR><TD COLSPAN=6 CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD><TR>");
 		
 	}
 	private void printList(
@@ -278,23 +281,22 @@ public class ARSetInactiveCustomersGenerate extends HttpServlet {
     				);
     		printHeading(pwOut, bIncInactives);
     		while (rs.next()){
-    			if (iLinesPrinted == 50){
-    				pwOut.println("</TABLE><BR>");
-    				printHeading(pwOut, bIncInactives);
-    				iLinesPrinted = 0;
+
+    			if(iLinesPrinted%2 == 0) {
+    				pwOut.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+    			}else {
+    				pwOut.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
     			}
-    			
-    			pwOut.println("<TR>");
-    			pwOut.println("<TD>" + clsCreateHTMLFormFields.TDCheckBox(
-	    			"CUSTNUM" + rs.getString(SMTablearcustomer.sCustomerNumber), false, "") + "</TD>");
-    			pwOut.println("<TD>" + rs.getString(SMTablearcustomer.sCustomerNumber) + "</TD>");
-    			pwOut.println("<TD>" + rs.getString(SMTablearcustomer.sCustomerName) + "</TD>");
-    			pwOut.println("<TD>" + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
-    				+ SMTablearcustomerstatistics.sDateOfLastInvoice)) + "</TD>");
-    			pwOut.println("<TD>" + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
-    				+ SMTablearcustomerstatistics.sDateOfLastPayment)) + "</TD>");
-    			pwOut.println("<TD>" + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
-    				+ SMTablearcustomerstatistics.sDateOfLastCredit)) + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + clsCreateHTMLFormFields.TDCheckBox(
+    	    			"CUSTNUM" + rs.getString(SMTablearcustomer.sCustomerNumber), false, "") + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + rs.getString(SMTablearcustomer.sCustomerNumber) + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + rs.getString(SMTablearcustomer.sCustomerName) + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
+        				+ SMTablearcustomerstatistics.sDateOfLastInvoice)) + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
+        				+ SMTablearcustomerstatistics.sDateOfLastPayment)) + "</TD>");
+    			pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"> " + reverseSQLDateString(rs.getString(SMTablearcustomerstatistics.TableName + "." 
+        				+ SMTablearcustomerstatistics.sDateOfLastCredit)) + "</TD>");	
     			pwOut.println("</TR>");
     			iLinesPrinted++;
     			lCustomersPrinted++;

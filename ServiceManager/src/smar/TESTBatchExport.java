@@ -169,7 +169,7 @@ public class TESTBatchExport extends HttpServlet{
 		
 		
 		//Test GL Transaction Batch posting:
-		GLTransactionBatch glbatch = new GLTransactionBatch("83");
+		GLTransactionBatch glbatch = new GLTransactionBatch("84");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {

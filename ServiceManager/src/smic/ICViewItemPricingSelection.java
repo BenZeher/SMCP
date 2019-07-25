@@ -104,7 +104,7 @@ public class ICViewItemPricingSelection  extends HttpServlet {
 		try{
 	        String sSQL = "SELECT *" 
 	    		+ " FROM " + SMTablepricelistcodes.TableName
-	    		+ " ORDER BY " + SMTablepricelistcodes.spricelistcode;
+	    		+ " ORDER BY CAST(" + SMTablepricelistcodes.spricelistcode + " AS unsigned)";
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(
 	        	sSQL, 
 	        	getServletContext(), 

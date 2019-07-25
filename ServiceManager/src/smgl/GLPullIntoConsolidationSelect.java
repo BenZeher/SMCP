@@ -16,7 +16,6 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;

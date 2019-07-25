@@ -82,20 +82,20 @@ public class SMBidFollowUpGenerate extends HttpServlet {
     	
 	    String sSalespersonCode = request.getParameter("SelectedSalesperson");
 	    if (sSalespersonCode.compareTo("ALLSP") == 0){
-	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;All</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;</B>All</FONT>");
 	    }else{
-	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;" + sSalespersonCode + "</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Salesperson:&nbsp;</B>" + sSalespersonCode + "</FONT>");
 	    }
 	    int iProjectType = Integer.parseInt(request.getParameter("ProjectType"));
 	    if (iProjectType == 0){
-	    	alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;ALL</FONT>");
+	    	alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;</B>ALL</FONT>");
 	    }else{
 		    sSQL = MySQLs.Get_Project_Type_List_SQL();
 		    try{
 			    ResultSet rsProjectTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 			    while (rsProjectTypes.next()){
 			    	if (rsProjectTypes.getInt(SMTableprojecttypes.iTypeId) == iProjectType){
-			    		alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;" + rsProjectTypes.getString(SMTableprojecttypes.sTypeDesc) + "</FONT>");
+			    		alCriteria.add("<FONT SIZE=2><B>Project Type:&nbsp;</B>" + rsProjectTypes.getString(SMTableprojecttypes.sTypeDesc) + "</FONT>");
 			    		break;
 			    	}
 			    }
@@ -152,7 +152,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
     	Timestamp datNextContactEndDate = clsDateAndTimeConversions.StringToTimestamp(
     			"M/d/yyyy H:m:s", sNextContactEndDate + " 23:59:59");
 	    if (iCheckNextContactDate == 1){
-    		alCriteria.add("<FONT SIZE=2><B>Next Contact Date Range:&nbsp;" + USDateOnlyformatter.format(new Date(datNextContactStartDate.getTime())) +
+    		alCriteria.add("<FONT SIZE=2><B>Next Contact Date Range:&nbsp;</B>" + USDateOnlyformatter.format(new Date(datNextContactStartDate.getTime())) +
     																	  " - " + USDateOnlyformatter.format(new Date(datNextContactEndDate.getTime())) +
     					   "</FONT>");
 	    }
@@ -160,7 +160,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    //System.out.println("Order 1 = " + sSortBy1);
 	    String sSortBy2 = request.getParameter("SelectedSortOrder2");
 	    //System.out.println("Order 2 = " + sSortBy2);
-	    alCriteria.add("<FONT SIZE=2><B>Sort Order:&nbsp;" + sSortBy1 + "&nbsp;then&nbsp;" + sSortBy2 + "</FONT>");
+	    alCriteria.add("<FONT SIZE=2><B>Sort Order:&nbsp;</B>" + sSortBy1 + "&nbsp;then&nbsp;" + sSortBy2 + "</FONT>");
 
 	    //Status check
 	    int iStatusPending = 0;
@@ -170,27 +170,27 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    
     	if (request.getParameter("StatusPending") != null){
     		iStatusPending = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Pending:&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Pending:&nbsp;</B>Yes</FONT>");
     	}else{
     		alCriteria.add("<FONT SIZE=2><B>Show Pending:&nbsp;No</FONT>");
     	}
     	if (request.getParameter("StatusSuccessful") != null){
     		iStatusSuccessful = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;</B>Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Successful:&nbsp;</B>No</FONT>");
     	}
     	if (request.getParameter("StatusUnsuccessful") != null){
     		iStatusUnsuccessful = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;</B>Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Unsuccessful:&nbsp;</B>No</FONT>");
     	}
     	if (request.getParameter("StatusInactive") != null){
     		iStatusInactive = 1;
-    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;Yes</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;</B>Yes</FONT>");
     	}else{
-    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;No</FONT>");
+    		alCriteria.add("<FONT SIZE=2><B>Show Inactive:&nbsp;</B>No</FONT>");
     	}
     	out.println("</TABLE>");
 	    //log usage of this report

@@ -2421,7 +2421,6 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 			return false;
 		}
 		int iFeedGL = Integer.parseInt(aropt.getFeedGl());
-		String sBatch = "";
 		if (
 			(iFeedGL == SMTablearoptions.FEED_GL_BOTH_EXTERNAL_AND_SMCP_GL)
 			|| (iFeedGL == SMTablearoptions.FEED_GL_SMCP_GL_ONLY)

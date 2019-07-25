@@ -3,6 +3,7 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
+import ServletUtilities.clsDatabaseFunctions;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -169,13 +170,15 @@ public class TESTBatchExport extends HttpServlet{
 		
 		
 		//Test GL Transaction Batch posting:
-		GLTransactionBatch glbatch = new GLTransactionBatch("84");
+		clsDatabaseFunctions.start_data_transaction(conn);
+		GLTransactionBatch glbatch = new GLTransactionBatch("3");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
 			System.out.println(e.getMessage());
 		}
-		
+		clsDatabaseFunctions.commit_data_transaction(conn);
 		System.out.println("DONE");
 		
 		

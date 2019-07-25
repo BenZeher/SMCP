@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1403;
+	private static final int m_CurrentDatabaseVersion = 1402;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "7/24/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14554,18 +14554,8 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
-			//BEGIN CASE
-			case 1402:
-				//Added by TJR 7/24/2019
-				SQL = "ALTER TABLE `gltransactionlines` "
-						+ " ADD UNIQUE KEY batchentrylinekey (loriginalbatchnumber, loriginalentrynumber, loriginallinenumber)";
-						;
-				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
-				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
-			break;	
-			//END CASE
 
-				//End switch:
+			//End switch:
 		}
 
 		//Now update the database version in the data:

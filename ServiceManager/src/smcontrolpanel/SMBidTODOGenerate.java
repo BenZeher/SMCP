@@ -312,7 +312,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    out.println("</TR>");
 			    }
 			    out.println("<TR><TD COLSPAN=10 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
-			    out.println("<TD COLSPAN=10 CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total Follow-Up Calls: " + iBidCount + "</TD></TR>");
+			    out.println("<TD COLSPAN=10 CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total Pending Sales Leads: " + iBidCount + "</TD></TR>");
 			    out.println("</TABLE>");
 			    rs.close();
 	    	}else{

@@ -133,6 +133,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 
     		SQL = "SELECT " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
     				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode
+    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
     				+ " FROM " + SMTableservicetypes.TableName
     				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
     		try{

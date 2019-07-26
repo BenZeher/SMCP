@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoice;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
@@ -32,7 +33,6 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 	public static final String CREATE_SINGLE_INVOICE_PARAM = "CREATESINGLEINVOICE";  
 	public static final String LIST_ORDERS_TO_INVOICE_PARAM = "LISTORDERSTOBEINVOICED";
 	public static final String LIST_OF_INVOICES_CREATED_PARAM = "LISTOFINVOICESCREATED";
-	private static final String DARK_BG_COLOR = "DCDCDC";
 	private static final long serialVersionUID = 1L;
 	
 	public void doGet(HttpServletRequest request,
@@ -90,6 +90,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 		if (!bCreateSingleInvoice){
 			out.println("<FORM ACTION=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCreateMultipleInvoicesSelection\">");
 	    	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");        	
+	    	out.println(SMUtilities.getMasterStyleSheetLink());
         	out.println("<TABLE BORDER=1 WIDTH=100%>");
 
         	//check boxes for locations
@@ -322,27 +323,26 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 				int iCounter = 0;
 				boolean bOddRow = true;
 				int iColumnCounter = 10;
-				out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=75%><TABLE STYLE=\"table-layout:fixed;\" BORDER=0 WIDTH=100%>");
-				out.println("<TR>"
-					+ "<TD ALIGN=CENTER style = \"font-size:small; font-weight:bold\">&nbsp;</TD>" 
-					+ "<TD ALIGN=CENTER style = \"font-size:small; font-weight:bold\">Order#</TD>" 
-					+ "<TD ALIGN=LEFT style = \"font-size:small; font-weight:bold\">Bill&nbsp;To</TD>" 
-					+ "<TD ALIGN=LEFT style = \"font-size:small; font-weight:bold\">Ship&nbsp;To</TD>"
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Total</TD>"
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Disc&nbsp;%</TD>" 
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Disc&nbsp;amt</TD>"
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Tax</TD>"
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Deposit</TD>"
-					+ "<TD ALIGN=RIGHT style = \"font-size:small; font-weight:bold\">Amt&nbsp;due</TD>"
-					+ "</TR>" 
-					+ "<TR><TD COLSPAN=" + Integer.toString(iColumnCounter) + "><HR></TD></TR>");
-
+				out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=75%><TABLE CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\"  WIDTH=100%>");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp;</TD>" 
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Order#</TD>" 
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Bill&nbsp;To</TD>" 
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Ship&nbsp;To</TD>"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Total</TD>"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Disc&nbsp;%</TD>" 
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Disc&nbsp;amt</TD>"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Tax</TD>"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Deposit</TD>"
+					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Amt&nbsp;due</TD>"
+					+ "</TR>");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=10>&nbsp;</TD></TR>");
 				while (rs.next()){
 					String sBackgroundColor = "";
 					if(bOddRow){
-						sBackgroundColor = "\"#" + DARK_BG_COLOR + "\"";
+						sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 					}else{
-						sBackgroundColor = "\"#FFFFFF\"";
+						sBackgroundColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 					}
 					BigDecimal bdTotalExtendedPrice = new BigDecimal(clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble("TOTALEXTENDEDPRICE"), 2).replace(",",""));
 					BigDecimal bdDiscountAmt = new BigDecimal(clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountAmount), 2).replace(",",""));
@@ -366,28 +366,28 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 						;
 					}
 
-					out.println("<TR bgcolor =" + sBackgroundColor + ">" +
-						"<TD ALIGN=CENTER style = \"font-size:small\"><LABEL><INPUT TYPE=CHECKBOX NAME=\"ORDER\" VALUE=\"ORDER" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber) + "\" CHECKED width=0.25></TD>" +  
-				  		"<TD ALIGN=CENTER style = \"font-size:small\">" + sOrderNumberEditLink + "</LABEL></TD>" +  
-				  		"<TD ALIGN=LEFT style = \"font-size:small\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName) + "</TD>" +  
-				  		"<TD ALIGN=LEFT style = \"font-size:small\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName) + "</TD>" +
-				  		"<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdTotalExtendedPrice) + "</TD>" +
-				  		"<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountPercentage), 2) + "</TD>" +
-				  		"<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountAmount), 2) + "</TD>" +
-				  		"<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdTaxTotal) + "</TD>" +
-				  		"<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderheaders.bdOrderTaxAmountScale, rs.getBigDecimal(SMTableorderheaders.TableName + "." + SMTableorderheaders.bddepositamount))
+					out.println("<TR CLASS =" + sBackgroundColor + ">" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\"><LABEL><INPUT TYPE=CHECKBOX NAME=\"ORDER\" VALUE=\"ORDER" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber) + "\" CHECKED width=0.25></TD>" +  
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sOrderNumberEditLink + "</LABEL></TD>" +  
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName) + "</TD>" +  
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName) + "</TD>" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdTotalExtendedPrice) + "</TD>" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountPercentage), 2) + "</TD>" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.doubleToDecimalFormat(rs.getDouble(SMTableorderheaders.TableName + "." + SMTableorderheaders.dPrePostingInvoiceDiscountAmount), 2) + "</TD>" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdTaxTotal) + "</TD>" +
+						"<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderheaders.bdOrderTaxAmountScale, rs.getBigDecimal(SMTableorderheaders.TableName + "." + SMTableorderheaders.bddepositamount))
 				  		   + "<INPUT TYPE=HIDDEN SIZE=15 MAXLENGTH=15 NAME=\"DEPO" 
 						   + rs.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber).trim() 
 						   + "\" VALUE=\"" 
 						   + rs.getBigDecimal(SMTableorderheaders.TableName + "." + SMTableorderheaders.bddepositamount) + "\"></TD>"
-						+ "<TD ALIGN=RIGHT style = \"font-size:small\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdAmountDue) + "</TD>"							
+						+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdAmountDue) + "</TD>"							
 						+ "</TR>"
 					);
 					iCounter++;
 					bOddRow = !bOddRow;
 				}
 				rs.close();
-				out.println("<TR><TD COLSPAN=" + Integer.toString(iColumnCounter) + "><HR></TD></TR>");
+				out.println("<TR><TD COLSPAN=10 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
 				//invoice date
 				Calendar c = Calendar.getInstance();
 				//last contact date, default to today.

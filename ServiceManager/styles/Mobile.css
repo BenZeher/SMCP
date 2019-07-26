@@ -3,6 +3,7 @@
   margin-left: -15px;
 }
 
+/* Classes used to align content in a columns based on screen size*/
 .col-xs-1,
 .col-sm-1,
 .col-md-1,
@@ -64,8 +65,39 @@
    	 	width: 8.33333333%;
 	}		
 }
+
+
+/* Classes used to hide content based on screen size*/
+.visible-xs,
+.visible-sm,
+.visible-md,
+.visible-lg {
+  display: none !important;
+}
+
 @media (max-width: 767px) {
   .hidden-xs {
     display: none !important;
   }
 }
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .hidden-sm {
+    display: none !important;
+  }
+}
+
+@media (max-width: 767px) {
+  .visible-xs {
+    display: block !important;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .visible-sm {
+    display: block !important;
+  }
+}
+
+
+

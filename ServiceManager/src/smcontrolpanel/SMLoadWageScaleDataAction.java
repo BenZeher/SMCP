@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.text.ParseException;
@@ -86,7 +87,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	private static double m_dNetPay = 0;
 	*/
 	private static SimpleDateFormat USDateformatter = new SimpleDateFormat("MM/dd/yyyy");
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({ "unchecked", "deprecation" })
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -134,27 +135,36 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    try {
 			validateWageScaleRecords(getServletContext(), sDBID, sUserName, sUserFullName);
 		} catch (Exception e) {
-			out.println("<BR>" + e.getMessage() + "<BR>");
-	    	out.println("</HTML>");
-	    	return;
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					+ "?Warning=" + URLEncoder.encode(e.getMessage())
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
 		}
 
 	    //Create a Temporary File Folder if not present
 	    try {
 			createTempImportFileFolder(sTempFilePath);
 		} catch (Exception e) {
-			out.println("<BR>" + e.getMessage() + "<BR>");
-	    	out.println("</HTML>");
-	    	return;
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					+ "?Warning=" + URLEncoder.encode(e.getMessage())
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
 		}
 	    
     	//Delete Temporary Files if present
 		try {
 			deleteCurrentTempImportFiles(sTempFilePath);
 		} catch (Exception e) {
-			out.println("<BR>" + e.getMessage() + "<BR>");
-	    	out.println("</HTML>");
-	    	return;
+			response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+					+ "?Warning=" + e.getMessage()
+					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+			);
+			return;
 		}
 
 		 //Read the file from the request:
@@ -176,8 +186,11 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			try {
 				fileItems = upload.parseRequest(request);
 			} catch (FileUploadException e1) {
-				out.println("<BR>Error [20191691250215] reading request parameters - " + e1.getMessage() + ".<BR>");
-		    	out.println("</HTML>");
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+								+ "?Warning=" + URLEncoder.encode(e1.getMessage())
+						+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+				);
 				return;
 			}
 			
@@ -210,14 +223,19 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 			        try {
 						fi.write(new File(sTempFilePath, sFileName)); 
 					} catch (Exception e) {
-						throw new Exception("Error [1548682857] - error writing temporary file - " + e.getMessage());
+						response.sendRedirect(
+								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
+										+ "?Warning=" + URLEncoder.encode(e.getMessage())
+								+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
+						);
+						return;
 					}
 			    }
 			}
 		} catch (Exception e) {		
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + "smcontrolpanel.SMLoadWageScaleDataSelect"
-					+ "?Warning=" + e.getMessage()
+					+ "?Warning=" + URLEncoder.encode(e.getMessage())
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;
@@ -229,7 +247,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 		} catch (Exception e) {	
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass
-					+ "?Warning=" + e.getMessage()
+					+ "?Warning=" + URLEncoder.encode(e.getMessage())
 					+ "&" + "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			
 			);
 			return;

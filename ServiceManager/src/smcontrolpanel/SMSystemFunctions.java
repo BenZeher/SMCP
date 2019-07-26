@@ -334,6 +334,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLPullExternalDataIntoConsolidation = 1241;
 	public static long GLManageExternalCompanies = 1242;
 	public static long GLListPreviousExternalCompanyPulls = 1243;
+	public static long GLCloseFiscalYear = 1244;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2700,6 +2701,12 @@ public class SMSystemFunctions extends java.lang.Object{
 									//				public static String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
 					); 
 			arrFunctionDescriptions.add("Lists the previous 'pulls' from an external company into this company's GL.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL Close Fiscal Year"); 
+			arrFunctionIDs.add(GLCloseFiscalYear); 
+			arrFunctionLinks.add("smgl.GLCloseFiscalYearEdit"); 
+			arrFunctionDescriptions.add("Automatically creates journal entries to close the fiscal year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

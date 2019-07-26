@@ -66,7 +66,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		/*************GET the PARAMETERs***************/
 		title = SMBidEntry.ParamObjectName + " Report";
 		subtitle = "";
-		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
+		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
 
 		out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
@@ -91,6 +91,9 @@ public class SMBidReportGenerate extends HttpServlet {
 				}
 			}
 		}
+		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
+
 		
 		String s = "<TABLE BORDER=0><TR>" +
 		"<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2><B>Sales Group(s):</B></FONT></TD>" +
@@ -245,7 +248,8 @@ public class SMBidReportGenerate extends HttpServlet {
 				100,
 				0,
 				false,
-				false)
+				false,
+				sColor)
 		);
 		out.print("<FONT SIZE=2><B>Selected salesperson: ");
 		for (int i=0;i<alSalespersons.size()-1;i++){
@@ -260,6 +264,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMBIDREPORT, "REPORT", "SMBidReport", "[1376509309]");
+    	out.println(SMUtilities.getMasterStyleSheetLink());
 
 		sSQL = Get_Bid_Report_SQL(alSelectedSalesGroups,
 				alSalespersons,
@@ -311,8 +316,8 @@ public class SMBidReportGenerate extends HttpServlet {
 			if (rs != null){
 
 				//print out column headers
-				out.println("<TABLE style = \" border-collapse: collapse \" BORDER=0 WIDTH=1250 cellspacing=0 cellpadding=1>");
-
+				out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+				int iCount=0;
 				while (rs.next()){
 
 					if (sCurrentSalesperson.compareTo("NOSALESPERSON") == 0 &&
@@ -321,9 +326,11 @@ public class SMBidReportGenerate extends HttpServlet {
 						//this is the beginning of the report.
 						//print out headers
 						//new salesperson, print out name
-						out.println("<TR><TD ALIGN=LEFT COLSPAN=7><FONT SIZE=3><B>" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+								+ "<TD COLSPAN=7 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
 								rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) + ", " + 
-								rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</B></FONT></TD></TR>");
+								rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</TD>"
+										+ "</TR>");
 						sCurrentSalesperson = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode);
 						sCurrentSalespersonFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + " "+ rs.getString(SMTablesalesperson.sSalespersonLastName);
 						
@@ -335,27 +342,29 @@ public class SMBidReportGenerate extends HttpServlet {
 						sCurrentSalesGroup = sNextSalesGroup;
 						bdSalespersonTotal = BigDecimal.ZERO;
 						iSalespersonBidCount = 0;
+						iCount=0;
 
 						if (iShowSalespersonTotalsOnly == 0){
-							out.println("<TR style = \"background-color: #C2E0FF\">");
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 							//10 columns
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>GRP/SP</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>ID</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Actual Bid Date</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Bill-to Name</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Ship-to Name</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=10%><FONT SIZE=2><B>Project Type</B></FONT></TD>");
-							out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Proposed Amount</B></FONT></TD>");
-							out.println("</TR>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">GRP/SP </TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> ID</TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Actual Bid Date</TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bill-to Name</TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Ship-to Name</TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Project Type</TD>");
+				    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Proposed Amount</TD>");
+				    		out.println("</TR>");
 						}
 						//new project type
-						out.println("<TR><TD>&nbsp;</TD><TD ALIGN=LEFT COLSPAN=6><FONT SIZE=2><B>" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
-								rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</B></FONT></TD></TR>");
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\"><TD COLSPAN=7 CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
+								rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</TD></TR>");
 						iCurrentProjectType = rs.getInt(SMTablebids.TableName + "." + SMTablebids.iprojecttype); 
 						sCurrentProjectTypeCode = rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode);
 						sCurrentProjectTypeDesc = rs.getString(SMTableprojecttypes.sTypeDesc); 
 						bdProjectTypeTotal = BigDecimal.ZERO;
 						iProjectTypeBidCount = 0;
+						iCount=0;
 					}else{
 						//Gets the next sales group
 						sNextSalesGroup = rs.getString(SMTablesalesgroups.TableName +"."+SMTablesalesgroups.sSalesGroupCode);
@@ -365,16 +374,16 @@ public class SMBidReportGenerate extends HttpServlet {
 						if(sNextSalesGroup.compareTo(sCurrentSalesGroup) != 0){
 							//finish last sales group
 							//finish last project type
-							out.println("<TR style = \"background-color: #FFCCFF;\">" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=2><B> " + sCurrentProjectTypeCode +" - "+sCurrentProjectTypeDesc+ " " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</B></FONT></TD>" +
-									"<TD style=\"border: 1px solid black\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=2><B> " + sCurrentProjectTypeCode +"  proposed total: " +  decimal.format(bdProjectTypeTotal) + "</B></FONT></TD>" +
-							"</TR><BR>");
-							
-							out.println("<TR style = \"background-color: #FFCCFF\">" +
-									"<TD style=\"border: 1px solid black \" ALIGN=RIGHT COLSPAN=5><FONT SIZE=3><B> GRP: "+sCurrentSalesGroup+", SP: " + sCurrentSalesperson + " - "+sCurrentSalespersonFullName+"  " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</B></FONT></TD>" +
-									"<TD style=\"border: 1px solid black\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=3><B> SP: " + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</B></FONT></TD>" +
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5>" + sCurrentProjectTypeCode +" - "+sCurrentProjectTypeDesc+ " " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</TD>" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>"+ sCurrentProjectTypeCode +"  proposed total: " +  decimal.format(bdProjectTypeTotal) + "</TD>" +
 							"</TR>");
-							out.println("<TR><TD COLSPAN=7><BR></TD></TR>");
+							
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5> GRP: "+sCurrentSalesGroup+", SP: " + sCurrentSalesperson + " - "+sCurrentSalespersonFullName+"  " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</TD>" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>SP: " + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</TD>" +
+							"</TR>");
+							out.println("<TR><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=7>&nbsp;</TD></TR>");
 
 							//get the next sales group
 							sCurrentSalesGroup = sNextSalesGroup;
@@ -382,11 +391,14 @@ public class SMBidReportGenerate extends HttpServlet {
 							bdSalespersonTotal = BigDecimal.ZERO;
 							//set the count for the next group
 							iSalespersonBidCount = 0;
+							iCount=0;
 							
 							if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode).compareTo(sCurrentSalesperson) != 0){
-								out.println("<TR><TD ALIGN=LEFT COLSPAN=7><FONT SIZE=3><B>" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
+								out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+										+ "<TD COLSPAN=7 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
 										rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) + ", " + 
-										rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</B></FONT></TD></TR>");
+										rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</TD>"
+												+ "</TR>");
 								sCurrentSalesperson = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode);
 								sCurrentSalespersonFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + " "+ rs.getString(SMTablesalesperson.sSalespersonLastName);
 								
@@ -404,58 +416,60 @@ public class SMBidReportGenerate extends HttpServlet {
 							}
 							
 
-							out.println("<TR style = \"background-color: #C2E0FF\">");
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 							//10 columns
 							if (iShowSalespersonTotalsOnly == 0){
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>Grp/SP</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid;\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>ID</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Actual Bid Date</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Bill-to Name</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Ship-to Name</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=10%><FONT SIZE=2><B>Project Type</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Proposed Amount</B></FONT></TD>");
-								out.println("</TR>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">GRP/SP </TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> ID</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Actual Bid Date</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bill-to Name</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Ship-to Name</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Project Type</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Proposed Amount</TD>");
+					    		out.println("</TR>");
 							}
-
+							iCount=0;
 						} else if (rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode).compareTo(sCurrentSalesperson) != 0){
 							//finish last salesperson
 							//finish last project type
-							out.println("<TR style = \"background-color: #FFCCFF;\">" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " - "+sCurrentProjectTypeDesc+" " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</B></FONT></TD>" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " proposed total: " +  decimal.format(bdProjectTypeTotal) + "</B></FONT></TD>" +
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5>" + sCurrentProjectTypeCode +" - "+sCurrentProjectTypeDesc+ " " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</TD>" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>"+ sCurrentProjectTypeCode +"  proposed total: " +  decimal.format(bdProjectTypeTotal) + "</TD>" +
 							"</TR>");
-							
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\"><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=7>&nbsp;</TD></TR>");
 
-							out.println("<TR style = \"background-color: #FFCCFF;\">" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=3><B> GRP: "+ sCurrentSalesGroup+", SP: " + sCurrentSalesperson + " - "+sCurrentSalespersonFullName+"  " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</B></FONT></TD>" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=3><B> SP: " + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</B></FONT></TD>" +
+
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5> GRP: "+sCurrentSalesGroup+", SP: " + sCurrentSalesperson + " - "+sCurrentSalespersonFullName+"  " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</TD>" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>SP: " + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</TD>" +
 							"</TR>");
-							out.println("<TR><TD COLSPAN=7><BR></TD></TR>");
+							out.println("<TR><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=7>&nbsp;</TD></TR>");
 
 							//new salesperson, print out name
-							out.println("<TR><TD ALIGN=LEFT COLSPAN=7><FONT SIZE=3><B>" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+									+ "<TD COLSPAN=7 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
 									rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName) + ", " + 
-									rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</B></FONT></TD></TR>");
+									rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + "</TD>"
+											+ "</TR>");
 							sCurrentSalesperson = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode);
 							sCurrentSalespersonFullName = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName) + " "+ rs.getString(SMTablesalesperson.sSalespersonLastName);
 							bdSalespersonTotal = BigDecimal.ZERO;
 							iSalespersonBidCount = 0;
-
-							out.println("<TR style = \"background-color: #C2E0FF\">");
+							iCount=0;
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 							//10 columns
 							if (iShowSalespersonTotalsOnly == 0){
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>Grp/SP</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=5%><FONT SIZE=2><B>ID</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Actual Bid Date</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Bill-to Name</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=25%><FONT SIZE=2><B>Ship-to Name</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=10%><FONT SIZE=2><B>Project Type</B></FONT></TD>");
-								out.println("<TD ALIGN=CENTER bordercolor=\"000\" style=\"border: 1px solid\" VALIGN=TOP WIDTH=15%><FONT SIZE=2><B>Proposed Amount</B></FONT></TD>");
-								out.println("</TR>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">GRP/SP </TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> ID</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Actual Bid Date</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Bill-to Name</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Ship-to Name</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Project Type</TD>");
+					    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> Proposed Amount</TD>");
+					    		out.println("</TR>");
 							}
-							//new project type
-							out.println("<TR><TD>&nbsp;</TD><TD ALIGN=LEFT COLSPAN=6><FONT SIZE=2><B>" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
-									rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</B></FONT></TD></TR>");
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\"><TD COLSPAN=7 CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
+									rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</TD></TR>");
 							iCurrentProjectType = rs.getInt(SMTablebids.TableName + "." + SMTablebids.iprojecttype); 
 							sCurrentProjectTypeCode = rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode);
 							sCurrentProjectTypeDesc = rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc);
@@ -466,14 +480,15 @@ public class SMBidReportGenerate extends HttpServlet {
 								rs.getInt(SMTablebids.TableName + "." + SMTablebids.iprojecttype) != iCurrentProjectType){
 
 							//finish last project type
-							out.println("<TR style = \"background-color: #FFCCFF;\">" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " - "+sCurrentProjectTypeDesc+" " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</B></FONT></TD>" +
-									"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " proposed total: " +  decimal.format(bdProjectTypeTotal) + "</B></FONT></TD>" +
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5>" + sCurrentProjectTypeCode +" - "+sCurrentProjectTypeDesc+ " " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</TD>" +
+									"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>"+ sCurrentProjectTypeCode +"  proposed total: " +  decimal.format(bdProjectTypeTotal) + "</TD>" +
 							"</TR>");
-							out.println("<TR><TD COLSPAN=7><BR></TD></TR>");
+							out.println("<TR><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=7>&nbsp;</TD></TR>");
 							//new project type
-							out.println("<TR><TD>&nbsp;</TD><TD ALIGN=LEFT COLSPAN=6><FONT SIZE=2><B>" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
-									rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</B></FONT></TD></TR>");
+							iCount=0;
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\"><TD COLSPAN=7 CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode) + "&nbsp;-&nbsp;" + 
+									rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc) + "</TD></TR>");
 							iCurrentProjectType = rs.getInt(SMTablebids.TableName + "." + SMTablebids.iprojecttype); 
 							sCurrentProjectTypeCode = rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeCode);
 							sCurrentProjectTypeDesc = rs.getString(SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc);
@@ -536,134 +551,164 @@ public class SMBidReportGenerate extends HttpServlet {
 					//id
 
 					if (iShowSalespersonTotalsOnly == 0){
-						out.println("<TR>");
+						if(iCount % 2 == 0) {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+						}else {
+							out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+						}
+
 						//salesperson and salesgroup code
 						String group = "";
 						group = rs.getString(SMTablesalesgroups.TableName +"."+SMTablesalesgroups.sSalesGroupCode);
 						if(group == null){
 							group = "(BLANK)";
 						}
-						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>"+group+ "/"+ rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</FONT></TD>");
-						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>"
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+group+ "/"+ rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode) + "</TD>");
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 								+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
 								+ "?" + SMBidEntry.ParamID + "=" + rs.getInt(SMTablebids.lid) 
 								+ "&OriginalURL=" + sCurrentURL 
 								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 								+ "\">" 
-								+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></FONT></TD>");
+								+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></TD>");
 						//actual date
 						if (rs.getString(SMTablebids.TableName + "." + SMTablebids.dattimeactualbiddate).compareTo("0000-00-00 00:00:00") == 0){
-							out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>N/A</FONT></TD>");
+							out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">N/A</FONT></TD>");
 						}else{
-							out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>" + USDateTimeformatter.format(rs.getTimestamp(SMTablebids.TableName + "." + SMTablebids.dattimeactualbiddate)) + "</FONT></TD>");
+							out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + USDateTimeformatter.format(rs.getTimestamp(SMTablebids.TableName + "." + SMTablebids.dattimeactualbiddate)) + "</FONT></TD>");
 						}
 						//customer name
-						out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.scustomername) + "&nbsp;</FONT></TD>");
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(SMTablebids.scustomername) + "&nbsp;</FONT></TD>");
 						//project name
-						out.println("<TD ALIGN=LEFT VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTablebids.sprojectname) + "</FONT></TD>");
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTablebids.sprojectname) + "</FONT></TD>");
 						//project type
-						out.println("<TD ALIGN=CENTER VALIGN=TOP><FONT SIZE=2>" + rs.getString(SMTableprojecttypes.sTypeCode) + "</FONT></TD>");
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableprojecttypes.sTypeCode) + "</FONT></TD>");
 						//proposed amount
-						out.println("<TD ALIGN=RIGHT VALIGN=TOP><FONT SIZE=2>" + decimal.format(rs.getBigDecimal(SMTablebids.dapproximateamount)) + "</FONT></TD>");
+						out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + decimal.format(rs.getBigDecimal(SMTablebids.dapproximateamount)) + "</FONT></TD>");
 
 						out.println("</TR>");
 					}
+					iCount++;
 				}
 
 				//finish last salesperson
 				//finish last project type
-				out.println("<TR style = \"background-color: #FFCCFF;\">" +
-						"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " - "+sCurrentProjectTypeDesc+" " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</B></FONT></TD>" +
-						"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=2><B> " + sCurrentProjectTypeCode + " proposed total: " +  decimal.format(bdProjectTypeTotal) + "</B></FONT></TD>" +
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+						"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5>" + sCurrentProjectTypeCode +" - "+sCurrentProjectTypeDesc+ " " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iProjectTypeBidCount + "</TD>" +
+						"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>"+ sCurrentProjectTypeCode +"  proposed total: " +  decimal.format(bdProjectTypeTotal) + "</TD>" +
 				"</TR>");
 				
-				out.println("<TR style = \"background-color: #FFCCFF;\">" +
-						"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=5><FONT SIZE=3><B> SG:  " +sCurrentSalesGroup+ ", SP:  "+ sCurrentSalesperson+" - "+sCurrentSalespersonFullName+" " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</B></FONT></TD>" +
-						"<TD style=\"border: 1px solid black; border-spacing: 5em;\" ALIGN=RIGHT COLSPAN=2><FONT SIZE=3><B> SP:" + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</B></FONT></TD>" +
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">" +
+						"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=5> GRP: "+sCurrentSalesGroup+", SP: " + sCurrentSalesperson + " - "+sCurrentSalespersonFullName+"  " + SMBidEntry.ParamObjectName.toLowerCase() + " count: " + iSalespersonBidCount + "</TD>" +
+						"<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=2>SP: " + sCurrentSalesperson + " proposed total: " +  decimal.format(bdSalespersonTotal) + "</TD>" +
 				"</TR>");
-				
-				out.println("<TR><TD COLSPAN = 7><BR></TD></TR>");
+				out.println("<TR><TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\" COLSPAN=7>&nbsp;</TD></TR>");
 
-				out.println("<TR><TD COLSPAN=10><HR></TD></TR>");
+
 				
 				
 				//SUMMARY TABLE FOR SALES PERSON
-				out.println("<TR><TD><U><B>SUMMARY</B></U></TD></TR>\n");
-				out.println("<TR style =  \" background-color: #CCFF99\" >\n");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >SALESPERSON</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >NO. OF LEADS</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=\"7\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">SUMMARY</TD></TR>\n");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >\n");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"3\" >SALESPERSON</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >NO. OF LEADS</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("</TR>");
 				int iTotalsaleslead = 0;
 				BigDecimal iTotalproposedamount = BigDecimal.ZERO;
 				//sorts the sales person alphabetically
-				
+				iCount = 0;
 				for(Entry<String, Integer> entry : hEachSalePersonCount.entrySet()){
 					iTotalproposedamount.add(hEachSalePersonTotal.get(entry.getKey()));
-					out.println("<TR ><TD>"+entry.getKey()+"</TD>\n");
-					out.println("<TD align = \" right \">"+entry.getValue()+"</TD>\n");
-					out.println("<TD align = \" right \">"+decimal.format(hEachSalePersonTotal.get(entry.getKey()))+"</TD></TR>");
+					if(iCount % 2 == 0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+					}
+					out.println("<TD COLSPAN=\"3\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getKey()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getValue()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+decimal.format(hEachSalePersonTotal.get(entry.getKey()))+"</TD></TR>");
 					iTotalsaleslead += entry.getValue();
 					iTotalproposedamount = iTotalproposedamount.add(hEachSalePersonTotal.get(entry.getKey()));
+					iCount++;
 				}
-				out.println("<TR style = \"background-color: #FFCCFF; font-weight:bold; color: black;\">\n");
-				out.println("<TD style =  > TOTAL </TD>");
-				out.println("<TD align = \" right \">"+iTotalsaleslead+"</TD>\n");
-				out.println("<TD align = \" right \">"+decimal.format(iTotalproposedamount)+"</TD>\n");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+				out.println("<TD COLSPAN=\"3\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"  > TOTAL </TD>");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+iTotalsaleslead+"</TD>\n");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+decimal.format(iTotalproposedamount)+"</TD>\n");
 				out.println("</TR>\n");
-				out.println("<TR COLSPAN = 3><TD><BR></TD></TR>");
-				
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=\"7\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+				iCount=0;
 				
 				
 				//SUMMARY TABLE FOR PROJECT TYPE
-				out.println("<TR style =  \" background-color: #CCFF99\" >\n");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >Project Type</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >NO. OF LEADS</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >\n");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"3\" >PROJECT TYPE</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >NO. OF LEADS</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("</TR>");
 				iTotalsaleslead = 0;
 				iTotalproposedamount = BigDecimal.ZERO;
 				for(Entry<String, Integer> entry : hEachProjectCount.entrySet()){
-					out.println("<TR ><TD>"+entry.getKey()+"</TD>\n");
-					out.println("<TD align = \" right \">"+entry.getValue()+"</TD>\n");
-					out.println("<TD align = \" right \">"+decimal.format(hEachProjectTotal.get(entry.getKey()))+"</TD></TR>");
+					if(iCount % 2 == 0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+					}
+					out.println("<TD COLSPAN=\"3\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getKey()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getValue()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+decimal.format(hEachProjectTotal.get(entry.getKey()))+"</TD></TR>");
 					iTotalsaleslead += entry.getValue();
 					iTotalproposedamount = iTotalproposedamount.add(hEachProjectTotal.get(entry.getKey()));
+					iCount++;
 				}
-				out.println("<TR style = \"background-color: #FFCCFF; font-weight:bold; color: black;\">\n");
-				out.println("<TD style =  > TOTAL </TD>");
-				out.println("<TD align = \" right \">"+iTotalsaleslead+"</TD>\n");
-				out.println("<TD align = \" right \">"+decimal.format(iTotalproposedamount)+"</TD>\n");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+				out.println("<TD COLSPAN=\"3\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"  > TOTAL </TD>");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+iTotalsaleslead+"</TD>\n");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+decimal.format(iTotalproposedamount)+"</TD>\n");
 				out.println("</TR>\n");
-				out.println("<TR COLSPAN = 3><TD><BR></TD></TR>");
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=\"7\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+				iCount=0;
 				
 				//SUMMARY TABLE FOR GROUP
-				out.println("<TR style =  \" background-color: #CCFF99\" >\n");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >GROUP</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >NO. OF LEADS</TD>");
-				out.println(   "<TD width = 15% class = \" rightjustifiedcell \" style = \" font-weight:bold; color:black; \" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >\n");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"3\" >GROUP</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >NO. OF LEADS</TD>");
+				out.println(   "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=\"2\" >TOTAL PROPOSED AMOUNT</TD>");
+				out.println("</TR>");
 				iTotalsaleslead = 0;
 				iTotalproposedamount = BigDecimal.ZERO;
 				for(Entry<String, Integer> entry : hEachGroupCount.entrySet()){
 					iTotalproposedamount.add(hEachGroupTotal.get(entry.getKey()));
-					out.println("<TR ><TD>"+entry.getKey()+"</TD>\n");
-					out.println("<TD align = \" right \">"+entry.getValue()+"</TD>\n");
-					out.println("<TD align = \" right \">"+decimal.format(hEachGroupTotal.get(entry.getKey()))+"</TD></TR>");
+					if(iCount % 2 == 0) {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+					}else {
+						out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+					}
+					out.println("<TD COLSPAN=\"3\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getKey()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+entry.getValue()+"</TD>\n");
+					out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+decimal.format(hEachGroupTotal.get(entry.getKey()))+"</TD></TR>");
 					iTotalsaleslead += entry.getValue();
 					iTotalproposedamount = iTotalproposedamount.add(hEachGroupTotal.get(entry.getKey()));
+					iCount++;
 				}
-				out.println("<TR style = \"background-color: #FFCCFF; font-weight:bold; color: black;\">\n");
-				out.println("<TD style =  > TOTAL </TD>");
-				out.println("<TD align = \" right \">"+iTotalsaleslead+"</TD>\n");
-				out.println("<TD align = \" right \">"+decimal.format(iTotalproposedamount)+"</TD>\n");
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+				out.println("<TD COLSPAN=\"3\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"  > TOTAL </TD>");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+iTotalsaleslead+"</TD>\n");
+				out.println("<TD COLSPAN=\"2\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">"+decimal.format(iTotalproposedamount)+"</TD>\n");
 				out.println("</TR>\n");
+				out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=\"7\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+				iCount=0;
+
 				
 				
 				
 
-				out.println("<TR>" +
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">"+
 						"<TD ALIGN=RIGHT COLSPAN=5><FONT SIZE=4><B>Total " + SMBidEntry.ParamObjectName.toLowerCase() + " count</B></FONT></TD>" +
 						"<TD ALIGN=RIGHT COLSPAN=2><FONT SIZE=4><B>" + iGrandTotalBidCount + "</B></FONT></TD>" +
 				"</TR>");
-				out.println("<TR>" +
+				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">" +
 						"<TD ALIGN=RIGHT COLSPAN=5><FONT SIZE=4><B>Total Proposed Amount</B></FONT></TD>" +
 						"<TD ALIGN=RIGHT COLSPAN=2><FONT SIZE=4><B>" + decimal.format(bdGrandTotal) + "</B></FONT></TD>" +
 				"</TR>");

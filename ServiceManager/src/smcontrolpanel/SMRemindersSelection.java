@@ -89,6 +89,7 @@ public class SMRemindersSelection extends HttpServlet {
 	    
 
 	    String sSQL = "";
+     	boolean NoReminders = false;
 	    //Use a drop down list here:
 		try{
 			if(sEditPersonalSchedule.compareToIgnoreCase(Integer.toString(SMTablereminders.GENERAL_REMINDER_VALUE)) == 0){
@@ -119,7 +120,7 @@ public class SMRemindersSelection extends HttpServlet {
 	        	"MySQL",
 	        	this.toString() + ".doPost - User: " + sUserFullName);
 	     	out.println ("<SELECT NAME=\"" + SMReminders.Paramlid + "\">" );
-        	
+        		     	
         	while (rs.next()){
         		String sDescription = rs.getString(SMTablereminders.sdescription);
         		if(sDescription.length() > 80){
@@ -127,6 +128,7 @@ public class SMRemindersSelection extends HttpServlet {
         		}
         		out.println ("<OPTION VALUE=\"" + rs.getString(SMTablereminders.lid) + "\">");
         		out.println (rs.getString(SMTablereminders.sschedulecode) + " - " + sDescription);
+        		NoReminders=true;
         	}
         	rs.close();
 	        	//End the drop down list:
@@ -137,9 +139,10 @@ public class SMRemindersSelection extends HttpServlet {
 			//return false;
 		}
 		
+		if(NoReminders) {
 		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_EDIT_BUTTON_NAME 
 				+ "' VALUE='" + SUBMIT_EDIT_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>";
-		
+		}
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='" + SUBMIT_ADD_BUTTON_NAME 
 				+ "' VALUE='" + SUBMIT_ADD_BUTTON_VALUE + "' STYLE='width: 2.25in; height: 0.24in'></P>";
 		

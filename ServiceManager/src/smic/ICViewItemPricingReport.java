@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablepricelistcodes;
@@ -66,26 +67,14 @@ public class ICViewItemPricingReport extends java.lang.Object{
 			+ " ORDER BY sitemnumber, spricelistcode"
 			;
 
-		int iItemCounter = 0;
-		out.println("<TABLE BORDER=0>");
+		int iCount = 0;
+		out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
     	try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
 				String sItem = rs.getString("sitemnumber").trim();
-				iItemCounter++;
-				//If there WAS a previous item, and the item is different now, print a footer:
-				if (
-						(sCurrentItem.compareToIgnoreCase("") !=0)
-						&& (sCurrentItem.compareToIgnoreCase(sItem) !=0)
-				){
-					printItemFooter(out);
-					
-					//If we've printed enough items, end and restart the table:
-					if (iItemCounter > 20){
-						out.println("</TABLE><TABLE BORDER=0>");
-						iItemCounter = 0;
-					}
-				}
+
+
 				
 				//If it's a new item, print the item header:
 				if (sCurrentItem.compareToIgnoreCase(sItem) !=0){
@@ -97,6 +86,7 @@ public class ICViewItemPricingReport extends java.lang.Object{
 							bItemViewingPermitted,
 							out,
 							context);
+					iCount=0;
 				}
 				
 				printItemPrices(
@@ -113,9 +103,11 @@ public class ICViewItemPricingReport extends java.lang.Object{
 						bEditPricingPermitted, 
 						out, 
 						conn,
-						context);
+						context,
+						iCount);
 				
 				sCurrentItem = sItem;
+				iCount++;
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -278,10 +270,15 @@ public class ICViewItemPricingReport extends java.lang.Object{
 			boolean bEditPricingPermitted, 
 			PrintWriter out, 
 			Connection con,
-			ServletContext context){
+			ServletContext context,
+			int iCount){
 		
 		//Print the line:
-		out.println("<TR>");
+		if(iCount % 2 == 0) {
+			out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		}else {
+			out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		}
 		//Price code:
 		String sPriceCodeLink = sPriceCode;
 		if (bEditPricingPermitted){
@@ -292,35 +289,21 @@ public class ICViewItemPricingReport extends java.lang.Object{
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 	    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sPriceCode) + "</A>";
 		}
-		out.println("<TD><FONT SIZE=2>" + sPriceCodeLink + "</FONT></TD>");
-		
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+sPriceCodeLink +"</TD>\n");
 		//Description:
-		out.println("<TD><FONT SIZE=2>" + sPriceCodeDesc + "</FONT></TD>");
-		
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+sPriceCodeDesc +"</TD>\n");
 		//Base price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBasePrice) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBasePrice) +"</TD>\n");
 		//Level 1 price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice1) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice1) +"</TD>\n");
 		//Level 2 price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice2) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice2) +"</TD>\n");
 		//Level 3 price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice3) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice3) +"</TD>\n");
 		//Level 4 price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice4) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice4) +"</TD>\n");
 		//Level 5 price
-		out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice5) + "</FONT></TD>");
-
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdPrice5) +"</TD>\n");
 		out.println("</TR>");
 
 		return true;
@@ -334,7 +317,9 @@ public class ICViewItemPricingReport extends java.lang.Object{
 		PrintWriter out,
 		ServletContext context
 	){
-		String sOutPut = "<TR><TD COLSPAN = 8>";
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=\"8\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+		String sOutPut = "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+				+ "<TD COLSPAN = 8 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">";
 		sOutPut += "Item:&nbsp;";
 		
 		if (bViewItemPermitted){
@@ -347,16 +332,19 @@ public class ICViewItemPricingReport extends java.lang.Object{
 		}
 		out.println(sOutPut + "&nbsp;-&nbsp;" + sDescription.trim() 
 			+ "&nbsp;Unit of measure:&nbsp;" + sUOM + "</TD></TR>");
-		out.println("<TR>");
-		out.println("<TD><B><U><FONT SIZE=2>Price List Code</FONT></U></B></TD>");
-		out.println("<TD><B><U><FONT SIZE=2>Description</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Base</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Level 1</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Level 2</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Level 3</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Level 4</FONT></U></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><U><FONT SIZE=2>Level 5</FONT></U></B></TD>");
+		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=\"8\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
+		
+		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Price List Code</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Base</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 1</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 2</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 3</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 4</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 5</TD>\n");
 		out.println("</TR>");
+
 	}
 	private void printItemFooter(
 			PrintWriter out

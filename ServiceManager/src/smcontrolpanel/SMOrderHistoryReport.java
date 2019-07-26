@@ -703,7 +703,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 
 			ResultSet rsInvoices = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printInvoices [1332178419]");
 			pwOut.println(
-			"<a name=\"BILLINGSUMMARY\"><P STYLE = \"font-family:arial;\"><B><U>Billing Summary</U></B></P>");
+			"<A NAME=\"BILLINGSUMMARY\"><P STYLE = \"font-family:arial;\"><B><U>Billing Summary</U></B></P></A>");
 			
 			pwOut.println(
 			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
@@ -729,7 +729,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 					pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 				}
 
-				pwOut.println("TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsDateAndTimeConversions.utilDateToString(
 								rsInvoices.getDate(
 										SMTableinvoiceheaders.TableName + "." 
@@ -737,7 +737,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 				
 				String sInvoiceNumber = rsInvoices.getString(SMTableinvoicedetails.TableName + "." 
 						+ SMTableinvoicedetails.sInvoiceNumber).trim();
-				pwOut.println("TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 					+ sInvoiceNumber + "</TD>");
 
 				if (rsInvoices.getInt(SMTableinvoiceheaders.TableName + "." 

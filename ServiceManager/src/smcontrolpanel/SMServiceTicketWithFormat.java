@@ -7,6 +7,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTableservicetypes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsStringFunctions;
@@ -879,11 +880,23 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 		//Set up the table inside the center cell:
 				s += "<table style = \"width:100%; border-style:none;\">";
 		//Now print the lines in the center table:
-		String sServiceType = "Commercial";
-		if (sServiceTypeCode.compareToIgnoreCase("SH0001") == 0 || 
-			sServiceTypeCode.compareToIgnoreCase("SH0002") == 0){
-			sServiceType = "Residential";
+		String sServiceType = "";
+		SQL = "SELECT " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+			+ " FROM " + SMTableservicetypes.TableName
+			+ " WHERE ("
+			+ "(" + SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = '" + sServiceTypeCode + "')"
+			+ ")"
+			;
+		try {
+			ResultSet rsServiceType = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsServiceType.next()){
+				sServiceType = rsServiceType.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName);
+			}
+			rsServiceType.close();
+		} catch (SQLException e) {
+			//Don't do anything... the service type will not be displayed
 		}
+
 		s += "<TR>\n<TD>\n<H2 class = \"western\" align=center font-size:9pt;>" + sServiceType + "</H2>" 
 				+ "<H2 class = \"western\" align=center font-size:9pt;>" + "Work Order" + "</H2>"
 				+ "</TD>\n</TR>\n";

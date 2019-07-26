@@ -19,7 +19,6 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMInvoice;
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;
 import SMDataDefinition.SMTableorderheaders;
@@ -131,16 +130,11 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     		out.println("<TR><TD><B>Include order types:<B></TD></TR>");
     		out.println("<TR><TD>\n");
 
-    		SQL = "SELECT " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode 
-    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+    		SQL = "SELECT " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName
+    				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode
     				+ ", " + SMTableservicetypes.TableName + "." + SMTableservicetypes.id
-    				+ " FROM " + SMTableinvoiceheaders.TableName
-    				+ " LEFT JOIN " + SMTableservicetypes.TableName + " ON "
-    				+ SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode + " = "
-    				+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode
-    				+ " GROUP BY " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode 
+    				+ " FROM " + SMTableservicetypes.TableName
     				+ " ORDER BY " + SMTableservicetypes.TableName + "." + SMTableservicetypes.sName + " DESC";
-    				
     		try{
     			ResultSet rs = clsDatabaseFunctions.openResultSet(
     				SQL, 
@@ -152,8 +146,8 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
     			while(rs.next()){
     				if(rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
     					out.println(
-    						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode) + "\"");
-    					if (request.getParameter("SERVICETYPE" + rs.getString(SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sServiceTypeCode)) != null){
+    						  "<LABEL><INPUT TYPE=CHECKBOX NAME=\"SERVICETYPE" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode) + "\"");
+    					if (request.getParameter("SERVICETYPE" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sCode)) != null){
     					  out.println(" CHECKED");
     					}
     					out.println(" width=0.25>" + rs.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.sName) + "</LABEL><BR>\n");

@@ -20,7 +20,7 @@ public class SMUpdateData extends java.lang.Object{
 
 	private static final int m_CurrentDatabaseVersion = 1402;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "7/19/2019";
+	private static final String m_sLastRevisionDate = "7/26/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14543,6 +14543,7 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 		
+			//BEGIN CASE
 			case 1401:
 				//Added by BJA 7/16/2019
 				SQL = "ALTER TABLE `glexternalcompanypulls` "
@@ -14551,9 +14552,10 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
-				//END CASE
+			//END CASE
+			
 
-				//End switch:
+			//End switch:
 		}
 
 		//Now update the database version in the data:

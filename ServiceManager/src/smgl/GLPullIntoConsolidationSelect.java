@@ -16,7 +16,6 @@ import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsDatabaseFunctions;
-import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -159,19 +158,6 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 			}
 		}
 		out.println("</SELECT>");
-		
-		out.println(
-    		"<BR>Set&nbsp;batch&nbsp;date&nbsp;to:&nbsp;"
-    		+ "<INPUT TYPE=TEXT NAME=\"" + PARAM_BATCH_DATE + "\""
-    		+ " VALUE=\"" + ServletUtilities.clsDateAndTimeConversions.now(ServletUtilities.clsServletUtilities.DATE_FORMAT_FOR_DISPLAY) + "\""
-    		+ " MAXLENGTH=" + "10"
-    		+ " SIZE = " + "8"
-    		+ ">"
-    		+ "\n"
-    	);
-		out.println(SMUtilities.getDatePickerString(PARAM_BATCH_DATE, getServletContext()) + "\n");
-    	
-    	//out.println("<BR>Add any new GL accounts which are not already in the consolidated company?: <INPUT TYPE=CHECKBOX NAME=\"" + ADD_GL_ACCOUNTS + "\"><BR>");
     	
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Pull transactions----\">");
     	out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");

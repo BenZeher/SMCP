@@ -810,6 +810,9 @@ public class GLTransactionBatch {
     		);
     	}
     	
+    	//TEST - remove later!
+    	//throw new Exception("TEST EXCEPTION - REMOVE THIS LINE!");
+    	
     	return;
     }
 
@@ -1042,7 +1045,7 @@ public class GLTransactionBatch {
 		
 		//If it's a balance sheet account, then we simply update all the opening balances in any subsequent
 		//fiscal sets:
-		if (glacct.getsinormalbalancetype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET) == 0){
+		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) != 0){
 			SQL = "UPDATE " + SMTableglfiscalsets.TableName
 					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
 						+ SMTableglfiscalsets.bdopeningbalance + " + " 
@@ -1088,8 +1091,6 @@ public class GLTransactionBatch {
 			updateFinancialStatementData(
 			    sAccount,
 			    iFiscalYear,
-			    iFiscalPeriod,
-			    bdAmt,
 			    conn
 			   );
 		} catch (Exception e) {
@@ -1164,7 +1165,6 @@ public class GLTransactionBatch {
 			}else{
 				sTransactionAmt = line.getsdebitamt().replaceAll(",", "");
 			}
-        	
 	    	String SQL = "INSERT INTO"
         		+ " " + SMTablegltransactionlines.TableName
         		+ " ("
@@ -1392,12 +1392,13 @@ public class GLTransactionBatch {
     private static void updateFinancialStatementData(
     	String sAccount,
     	int iFiscalYear,
-    	int iFiscalPeriod,
-    	BigDecimal bdNetChange,
     	Connection conn
     	) throws Exception{
 
     	//Now update the GL fiscalstatementdata table:
+    	
+    	//We only need to worry about financial statement data that is in the SAME YEAR OR LATER THAN OUR CURRENT POSTING:
+    	
     	
     	//First get all the fiscal sets starting with the one we updated and including all the subsequent ones:
 		String SQL = "SELECT * from " + SMTableglfiscalsets.TableName
@@ -1419,12 +1420,12 @@ public class GLTransactionBatch {
 		while(rsFiscalSets.next()){
 			
 			//IF we've moved to a new fiscal year, then we have to determine the LAST period of the two previous fiscal years:
-			if (iFiscalYear != lLastFiscalYear){
+			if (rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) != lLastFiscalYear){
 				//We need to determine the LAST PERIOD of the two previous years:
 				String SQLFiscalPeriods = "SELECT * FROM " + SMTableglfiscalperiods.TableName
 					+ " WHERE ("
-						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 1L) + ")"
-						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(iFiscalYear - 2L) + ")"
+						+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1L) + ")"
+						+ " OR (" + SMTableglfiscalperiods.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2L) + ")"
 					+ ")"
 					+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear + " DESC"
 				;
@@ -1445,7 +1446,7 @@ public class GLTransactionBatch {
 			//Get the previous year's fiscal set, if there is one:
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 1) + ")"
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 1) + ")"
 					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;
@@ -1458,7 +1459,7 @@ public class GLTransactionBatch {
 			//Get the fiscal set from TWO YEARS PREVIOUS, if there is one:
 			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
 				+ " WHERE ("
-					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(iFiscalYear - 2) + ")"
+					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2) + ")"
 					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
 				+ ")"
 			;
@@ -1468,6 +1469,48 @@ public class GLTransactionBatch {
 				bTwoYearsPreviousWasFound = true;
 			}
 
+			//THESE are the fields in the financial statement data records that we might possibly need to update:
+//			x sacctid = "sacctid";
+//			x ifiscalyear = "ifiscalyear";
+//			x ifiscalperiod = "ifiscalperiod";
+//			x bdnetchangeforperiod = "bdnetchangeforperiod";
+//			x bdnetchangeforperiodpreviousyear = "bdnetchangeforperiodpreviousyear";
+//			x bdtotalyeartodate = "bdtotalyeartodate";
+//			x bdtotalpreviousyeartodate = "bdtotalpreviousyeartodate";
+//			bdopeningbalancepreviousyear = "bdopeningbalancepreviousyear";
+//			bdopeningbalance = "bdopeningbalance";
+//			x bdnetchangeforpreviousperiod = "bdnetchangeforpreviousperiod";
+//			x bdnetchangeforpreviousperiodpreviousyear = "bdnetchangeforpreviousperiodpreviousyear";
+			
+			/*
+			THESE fields are affected for the same fiscal year and period:
+			bdnetchangeforperiod
+			bdtotalyeartodate
+			
+			THESE fields are affected for the subsequent fiscal period:
+			bdnetchangeforpreviousperiod
+			
+			THESE fields are affected for the subsequent year, same period:
+			bdnetchangeforperiodpreviousyear
+			bdtotalpreviousyeartodate
+			
+			THESE fields are affected for the subsequent year, previous period:
+			bdnetchangeforpreviousperiodpreviousyear
+			
+			
+			How does a fiscal set update financial statement records?
+			
+			1) The opening balance is the opening balance for all statement records with the same year
+			2) The opening balance is the previous opening balance for the subsequent year. (Income statement accounts are special here...)
+			3) The opening balance of all subsequent years has to be adjusted by the net change amount
+			
+			4) The net change for the period gets added to the net change for that year and period.
+			5) 
+			
+			
+			
+			
+			*/
 			//PERIOD 1:
 			String sPeriod = "1";
 			BigDecimal bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);

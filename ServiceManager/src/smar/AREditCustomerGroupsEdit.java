@@ -169,8 +169,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
 	        		SMTablearcustomergroups.sGroupCodeLength, 
 	        		"Group code:", 
 	        		"Up to " + SMTablearcustomergroups.sGroupCodeLength + " characters.",
-	        		"1.6",
-	        		true
+	        		""  +  SMTablearcustomergroups.sGroupCodeLength + ""
 	        	)
 	        );
 	    	
@@ -201,8 +200,7 @@ public class AREditCustomerGroupsEdit extends HttpServlet {
         		SMTablearcustomergroups.sDescriptionLength, 
         		"Group description:", 
         		"Up to " + SMTablearcustomergroups.sDescriptionLength + " characters.",
-        		"3.2",
-        		true
+        		"" + SMTablearcustomergroups.sDescriptionLength
         	)
         );
 

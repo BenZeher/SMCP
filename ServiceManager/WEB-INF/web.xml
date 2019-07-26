@@ -3926,6 +3926,16 @@
     </servlet>
     
     <servlet>
+    	<servlet-name>GLCloseFiscalYearAction</servlet-name>
+        <servlet-class>smgl.GLClearTransactionsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLCloseFiscalYearEdit</servlet-name>
+        <servlet-class>smgl.GLCloseFiscalYearEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLConvertACCPAC</servlet-name>
         <servlet-class>smgl.GLConvertACCPAC</servlet-class>
     </servlet>
@@ -7877,6 +7887,17 @@
     <servlet-mapping>
         <servlet-name>GLClearTransactionsSelect</servlet-name>
         <url-pattern>/smgl.GLClearTransactionsSelect</url-pattern>
+    </servlet-mapping>
+    
+    
+    <servlet-mapping>
+        <servlet-name>GLCloseFiscalYearAction</servlet-name>
+        <url-pattern>/smgl.GLCloseFiscalYearAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLCloseFiscalYearEdit</servlet-name>
+        <url-pattern>/smgl.GLCloseFiscalYearEdit</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

@@ -165,6 +165,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sTerms
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.datDueDate
         	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.itaxid
+        	+ ", " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sdbadescription
         	
         	+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.bdlinesalestaxamount
         	+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.dExtendedPrice
@@ -603,8 +604,8 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 							+ SMTableinvoiceheaders.datDueDate), "MM/dd/yyyy"),
 						rs.getString(SMTableorderheaders.TableName + "." 
 							+ SMTableorderheaders.sOrderCreatedByFullName).trim(),
-						Integer.toString(rs.getInt(SMTableorderheaders.TableName + "." 
-								+ SMTableorderheaders.idoingbusinessasaddressid)),
+						rs.getString(SMTableinvoiceheaders.TableName + "." 
+								+ SMTableinvoiceheaders.sdbadescription),
 						//sOrderCompletionDate,
 						sOrderCreationDateTime,
 						sOrderDate,
@@ -1065,7 +1066,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			String sTerms,
 			String sDueDate,
 			String sOrderCreatedByFullName,
-			String sDBAid,
+			String sDBADescription,
 			//String sOrderCompletionDate,
 			String sOrderCreationTime,
 			String sOrderDate,
@@ -1159,7 +1160,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		}else{
 			pwOut.println(sOrdNumber);
 		}
-		pwOut.println("&nbsp;<B>Date:</B>&nbsp;" + sOrderDate);
+		pwOut.println("&nbsp;<B>Order Date:</B>&nbsp;" + sOrderDate);
 		
 		if (bViewJobCost){
 			//If there is no Job Cost info available, don't show this link:
@@ -1194,7 +1195,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		}
 
 		//Get the name of the 'ordercreated by':
-		pwOut.println("&nbsp;&nbsp;&nbsp;&nbsp;<B>Created:</B>&nbsp;" + sOrderCreationTime
+		pwOut.println("&nbsp;&nbsp;&nbsp;&nbsp;<B>Order Created:</B>&nbsp;" + sOrderCreationTime
 			+ "&nbsp;by&nbsp;" + sOrderCreatedByFullName
 		);
 		
@@ -1220,24 +1221,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		}
 		pwOut.println("&nbsp;&nbsp;&nbsp;<B>Salesperson:</B>&nbsp;" + sFullSalesName);
 		
-		//Get the name of DBA:
-		String sDBADescription = sDBAid;
-		try{
-			SQL = "SELECT " + SMTabledoingbusinessasaddresses.sDescription 
-				+ " FROM " + SMTabledoingbusinessasaddresses.TableName
-				+ " WHERE ("
-					+ SMTabledoingbusinessasaddresses.lid + " = " + sDBAid + ""
-				+ ")"
-				;
-			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, con);
-			if (rs.next()){
-				sDBADescription = rs.getString(SMTabledoingbusinessasaddresses.sDescription );
-			}
-			rs.close();
-		}catch (SQLException e){
-			System.out.println("In " + this.toString() 
-				+ ".printInvoiceHeader - error getting doing business as description: " + e.getMessage());
-		}
+		//Print the DBA description:
 		pwOut.println("&nbsp;&nbsp;&nbsp;<B>Doing business as:</B>&nbsp;" + sDBADescription);
 		
 		//sSalesGroup

@@ -61,7 +61,6 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 				        "<HEAD><TITLE>" + sReportTitle + "</TITLE></HEAD>\n<BR>" + 
 					    "<BODY BGCOLOR=\""+ SMUtilities.getInitBackGroundColor(getServletContext(), (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID))+ "\">");
 		    
-	    	out.println(sStyleScripts());
 		    out.println(SMUtilities.SMCPTitleSubBGColor(sReportTitle, "", SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME));
 		    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 			//Print a link to the first page after login:
@@ -243,16 +242,15 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 			 *  7.	Unit of Measure
 			 *  8.	Ruturned to Inventory
 			 */
-			
-			pwOut.println("<TABLE border=0 width=100% cellspacing=0 cellpadding=1><TR>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Line#</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Item Number</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Item Description</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Qty. Rtd.</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Ext. Price</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>Item Cat.</TH>");
-			pwOut.println("<TH class=\"orderlineheading\"><B>UOM</TH>");
-			pwOut.println("<TH class=\"orderlineheading\">Rt. to I.</TH>");
+			pwOut.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");			
+			pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Line#</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Item Number</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Item Description</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Qty. Rtd.</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Ext. Price</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Item Cat.</TD>\n");
+			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">UOM</TD>\n");
 			pwOut.println("</TR>");
 			
 			String sDetailRowBackgroupColor;
@@ -263,161 +261,18 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 					sDetailRowBackgroupColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;			
 				}
 				
-				pwOut.println("<TR class =" + sDetailRowBackgroupColor + ">");
-				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_iLineNumber() + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sItemNumber() + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=LEFT style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sDesc() + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=RIGHT style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_dQtyShipped().setScale(2, BigDecimal.ROUND_HALF_UP) + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=RIGHT style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_dExtendedPriceAfterDiscount().setScale(2, BigDecimal.ROUND_HALF_UP) + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sItemCategory() + "</FONT></TD>");
-				pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>" + cInvoice.getDetailByIndex(i).getM_sUnitOfMeasure() + "</FONT></TD>");
-				/*if (cInvoice.getDetailByIndex(i).getM_iReturnToInventory() == 0){
-					pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>NO</FONT></TD>");
-				}else{
-					pwOut.println("<TD ALIGN=CENTER style=\"border-style:none;\"><FONT SIZE=2>YES</FONT></TD>");
-				}*/
+				pwOut.println("<TR CLASS =" + sDetailRowBackgroupColor + ">");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_iLineNumber() +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_sItemNumber() +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_sDesc() +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_dQtyShipped().setScale(2, BigDecimal.ROUND_HALF_UP) +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_dExtendedPriceAfterDiscount().setScale(2, BigDecimal.ROUND_HALF_UP) +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_sItemCategory() +"</TD>\n");
+				pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+cInvoice.getDetailByIndex(i).getM_sUnitOfMeasure() +"</TD>\n");
 				pwOut.println("</TR>");
 			}
 			pwOut.println("</TABLE>");
 			return true;
 		}
 		
-		private String sStyleScripts(){
-			String s = "";
-			String sBorderSize = "0";
-			String sRowHeight = "22px";
-			s += "<style type=\"text/css\">\n";
-
-			//Layout table:
-			s +=
-				"table.innermost {"
-				+ "border-width: " + sBorderSize + "px; "
-				+ "border-spacing: 2px; "
-				//+ "border-style: outset; "
-				+ "border-style: none; "
-				+ "border-color: white; "
-				+ "border-collapse: separate; "
-				+ "width: 100%; "
-				+ "font-size: " + "small" + "; "
-				+ "font-family : Arial; "
-				+ "color: black; "
-				//+ "background-color: white; "
-				+ "}"
-				+ "\n"
-				;
-
-			//s +=
-			//	"table.main th {"
-			//	+ "border-width: " + sBorderSize + "px; "
-			//	+ "padding: 2px; "
-			//	//+ "border-style: inset; "
-			//	+ "border-style: none; "
-			//	+ "border-color: white; "
-			//	+ "background-color: white; "
-			//	+ "color: black; "
-			//	+ "font-family : Arial; "
-			//	+ "vertical-align: text-middle; "
-			//	//+ "height: 50px; "
-			//	+ "}"
-			//	+ "\n"
-			//	;
-
-			//s +=
-			//	"tr.d0 td {"
-			//	+ "background-color: #FFFFFF; "
-			//	+"}"
-			//	;
-			//s +=
-			//	"tr.d1 td {"
-			//	+ "background-color: #EEEEEE; "
-			//	+ "}"
-			//	+ "\n"
-			//	;
-
-			//This is the def for a left aligned field:
-			s +=
-				"td.fieldleftaligned {"
-				+ "height: " + sRowHeight + "; "
-				+ "font-weight: bold; "
-				+ "text-align: left; "
-				+ "}"
-				+ "\n"
-				;
-			
-			//This is the def for a label field:
-			s +=
-				"td.fieldlabel {"
-				+ "height: " + sRowHeight + "; "
-				//+ "border-width: " + sBorderSize + "px; "
-				//+ "padding: 2px; "
-				//+ "border-style: none; "
-				//+ "border-color: white; "
-				//+ "vertical-align: text-middle;"
-				//+ "background-color: black; "
-				+ "font-weight: bold; "
-				+ "text-align: right; "
-				//+ "color: black; "
-				//+ "height: 50px; "
-				+ "}"
-				+ "\n"
-				;
-
-			//This is the def for a control on the screen:
-			s +=
-				"td.fieldcontrol {"
-				+ "height: " + sRowHeight + "; "
-				//+ "border-width: " + sBorderSize + "px; "
-				//+ "padding: 2px; "
-				//+ "border-style: none; "
-				//+ "border-color: white; "
-				//+ "vertical-align: text-middle;"
-				//+ "background-color: black; "
-				+ "text-align: left; "
-				//+ "color: black; "
-				//+ "height: 50px; "
-				+ "}"
-				+ "\n"
-				;
-			
-			//This is the def for an underlined heading on the screen:
-			s +=
-				"td.fieldheading {"
-				+ "height: " + sRowHeight + "; "
-				+ "font-weight: bold; "
-				+ "text-align: left; "
-				+ "text-decoration:underline; "
-				+ "}"
-				+ "\n"
-				;
-			
-			//This is the def for the order lines heading:
-			s +=
-				"th.orderlineheading {"
-				+ "height: " + sRowHeight + "; "
-				//+ "border-width: " + sBorderSize + "px; "
-				//+ "padding: 2px; "
-				//+ "border-style: none; "
-				//+ "border-color: white; "
-				+ "vertical-align: text-bottom;"
-				+ "background-color: #708090; "
-				+ "font-weight: bold; "
-				+ "font-size: small; "
-				+ "text-align: center; "
-				+ "color: white; "
-				+ "}"
-				+ "\n"
-				;
-
-			s += "tbody.scrolling {\n" 
-				+ " height:4em;\n"
-				+ " overflow:scroll;\n"
-				+ "}"
-			;
-				
-			s += "</style>"
-				+ "\n"
-				;
-
-			return s;
-		}
 }

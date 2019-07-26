@@ -2,12 +2,17 @@ package smgl;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTablegltransactionlines;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
@@ -74,13 +79,33 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 
     	//Now get the transaction batch lines:
     	//TODO:
-    	
-    	
+    	String SQL = "SELECT " + SMTableglfiscalperiods.inumberofperiods
+    		+ " FROM " + SMTableglfiscalperiods.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + sFiscalYear + ")" 
+    		+ ")"
+    	;
+    	int iNumberOfPeriods = 0;
     	try {
-
-		} catch (Exception e) {
-			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875614]");
-			smaction.getCurrentSession().setAttribute(GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT, e.getMessage());
+			ResultSet rsFiscalPeriod = ServletUtilities.clsDatabaseFunctions.openResultSet(
+				SQL, 
+				getServletContext(), 
+				smaction.getsDBID(), 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + smaction.getFullUserName()
+			);
+			if (rsFiscalPeriod.next()){
+				iNumberOfPeriods = rsFiscalPeriod.getInt(SMTableglfiscalperiods.inumberofperiods);
+				rsFiscalPeriod.close();
+			}else{
+				rsFiscalPeriod.close();
+			}
+		} catch (SQLException e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1564156142]");
+			smaction.getCurrentSession().setAttribute(
+				GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT, 
+				"Error [1564156143] reading number of periods - " + e1.getMessage()
+			);
 			smaction.redirectAction(
 				"", 
 				"", 
@@ -88,6 +113,43 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 			);
 			return;
 		}
+
+    	SQL = "SELECT"
+    		+ " SUM(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ") AS ACCTTOTAL"
+    		+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+    		+ " FROM " + SMTablegltransactionlines.TableName
+    		+ " LEFT JOIN " + SMTableglaccounts.TableName + " ON "
+    		+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+    		+ " WHERE ("
+    			+ "(" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    		+ ") GROUP BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+    	;
+    	try {
+			ResultSet rsIncomeStatementAcctTotals = ServletUtilities.clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					smaction.getsDBID(), 
+					"MySQL", 
+					this.toString() + ".doPost - user: " + smaction.getFullUserName()
+				);
+			while (rsIncomeStatementAcctTotals.next()){
+				
+			}
+			rsIncomeStatementAcctTotals.close();
+		} catch (SQLException e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875714]");
+			smaction.getCurrentSession().setAttribute(
+				GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT,
+				"Error [1564156616] getting account totals - " + e1.getMessage()
+			);
+			smaction.redirectAction(
+				"", 
+				"", 
+	    		""
+			);
+			return;
+		}
+    	
 		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875615]");
 		smaction.redirectAction(
 			"", 

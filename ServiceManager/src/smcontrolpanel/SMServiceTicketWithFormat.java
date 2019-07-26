@@ -894,8 +894,7 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 			}
 			rsServiceType.close();
 		} catch (SQLException e) {
-			// Don't do anything - we just won't get the data printed:
-			System.out.println("In " + this.toString() + ".printTicketHeader - couldn't read company address");
+			//Don't do anything... the service type will not be displayed
 		}
 
 		s += "<TR>\n<TD>\n<H2 class = \"western\" align=center font-size:9pt;>" + sServiceType + "</H2>" 

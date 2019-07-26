@@ -911,7 +911,7 @@ public class SMGLExport extends java.lang.Object{
 				SMGLExportDetail detail = m_HeaderRecordArray.get(i).getDetailArray().get(j);
 				if (detail.getsTransactionAmount().compareTo(BigDecimal.ZERO) != 0){
 					GLTransactionBatchLine glline = new GLTransactionBatchLine();
-					glline.setAmount(detail.getsTransactionAmount("#########.00"), conn);
+					glline.setAmount(detail.getsTransactionAmount("#########.00"));
 					glline.setsacctid(detail.getAccountID());
 					glline.setsbatchnumber(glentry.getsbatchnumber());
 					glline.setscomment(detail.getComment());

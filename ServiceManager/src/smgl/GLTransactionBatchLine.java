@@ -324,7 +324,7 @@ public class GLTransactionBatchLine {
 			throw new Exception("Error [1555098257] - " + e.getMessage());
 		}
 	}
-	public void setAmount(String sAmount, Connection conn) throws Exception{
+	public void setAmount(String sAmount){
 		//This function determines whether a transaction amount should be recorded as a debit or a credit:
 		//First we have to get the 'normal' balance type:
 		//GLAccount glacct = new GLAccount(getsacctid());

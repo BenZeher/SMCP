@@ -22,6 +22,7 @@ import SMClasses.SMBatchTypes;
 import SMClasses.SMEntryBatch;
 import SMClasses.SMModuleTypes;
 import SMClasses.TRANSACTIONSQLs;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
@@ -102,6 +103,7 @@ public class AREditBatchesEdit extends HttpServlet {
 				+ "\">Return to Batch List</A><BR>");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.AREditBatches) 
 	    		+ "\">Summary</A><BR>");
+	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    
 	    if (request.getParameter("BatchNumber") == null){
 	    	out.println("Invalid batch number passed.");
@@ -335,35 +337,35 @@ public class AREditBatchesEdit extends HttpServlet {
 
         //List out the entries on the screen as links to edit:
         //pwOut.println("<BR>");
-        pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
+        pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 
-    	pwOut.println("<TR>");
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Entry #</B></U>");
+    	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry #");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Doc. Type</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Doc. Type");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Doc. date</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Doc. date");
     	pwOut.println("</TD>");
 
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Doc #</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Doc #");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Customer</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Customer");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Description</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Description");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Original amt.</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+    	pwOut.println("Original amt.");
     	pwOut.println("</TD>");
     	
     	pwOut.println("</TR>");
@@ -381,11 +383,15 @@ public class AREditBatchesEdit extends HttpServlet {
 		        	+ " - "
 		        	+ sUserFullName
 		        		);
-	
+		        int iCount =0;
 		        while(rsEntries.next()){
-		        	pwOut.println("<TR>");
+		        	if(iCount % 2 ==0) {
+		            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		        	}else {
+		            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		        	}
 		        	//Entry number
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	
 		        	String sEditableBatch = "No";
 		        	if(batch.bEditable()){
@@ -439,53 +445,54 @@ public class AREditBatchesEdit extends HttpServlet {
 		        	pwOut.println("</TD>");
 
 		        	//Document type
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(ARDocumentTypes.Get_Document_Type_Label(rsEntries.getInt(SMTableentries.idocumenttype)));
 		        	pwOut.println("</TD>");
 
 		        	//Document date
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(clsDateAndTimeConversions.utilDateToString(rsEntries.getDate(SMTableentries.datdocdate),"MM-dd-yyyy"));
 		        	pwOut.println("</TD>");
 	
 		        	//Doc Number
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(rsEntries.getString(SMTableentries.sdocnumber));
 		        	pwOut.println("</TD>");
 		        	
 		        	//PayeePayor
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(
 		        					rsEntries.getString(SMTableentries.spayeepayor)));
 		        	pwOut.println("</TD>");
 		        	
 		        	//Description
-		        	pwOut.println("<TD>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(
 		        					rsEntries.getString(SMTableentries.sdocdescription)));
 		        	pwOut.println("</TD>");	        	
 		        	
 		        	//Original amount - just display the absolute value, since we don't care about the arithmetic sign here:
-		        	pwOut.println("<TD ALIGN=RIGHT>");
+		           	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsEntries.getBigDecimal(SMTableentries.doriginalamount)));
 		        	pwOut.println("</TD>");
 		    		bdOriginalAmtTotal = bdOriginalAmtTotal.add(rsEntries.getBigDecimal(SMTableentries.doriginalamount));
 		        	
 		        	pwOut.println("</TR>");
+		        	iCount++;
 		        }
 		        rsEntries.close();
 		        //Print the total lines:
-	        	pwOut.println("<TR>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD ALIGN = RIGHT><B>TOTALS:</B></TD>");
-	        	pwOut.println("<TD ALIGN = RIGHT>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOriginalAmtTotal) + "</TD>");
-		        
-				pwOut.println("</TABLE>");
-				pwOut.println("<BR>");
+		        pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+		        pwOut.println("<TD>&nbsp;</TD>");
+		        pwOut.println("<TD>&nbsp;</TD>");
+		        pwOut.println("<TD>&nbsp;</TD>");
+		        pwOut.println("<TD>&nbsp;</TD>");
+		        pwOut.println("<TD>&nbsp;</TD>");
+		        pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">TOTALS:</TD>");
+		        pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdOriginalAmtTotal) + "</TD>");
+		        pwOut.println("</TR>");
+		        pwOut.println("</TABLE>");
+		        pwOut.println("<BR>");
 		        
 			}catch (SQLException ex){
 		    	System.out.println("Error in " + this.toString()+ " class!!");

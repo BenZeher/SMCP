@@ -61,12 +61,14 @@ public class ICOnHandByDescriptionGenerate extends HttpServlet {
     	String sCriteria = "Listing items having quantities on hand with '<B>" + sSearchText + "</B>'"
     		+ " in the item description.";
     	
+    	 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+    	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, "ICOnHandByDescriptionGenerate") 
@@ -85,7 +87,7 @@ public class ICOnHandByDescriptionGenerate extends HttpServlet {
 	    	+ "\">Summary</A>");
 		out.println("</TD></TR></TABLE>");
 		
-		
+		out.println(SMUtilities.getMasterStyleSheetLink());
 
 		//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

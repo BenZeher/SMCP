@@ -11,6 +11,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableicoptions;
@@ -172,19 +173,15 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 		//TODO:
 		//add alternating row colors
 
-		printLayout(out);
-		out.println("<table class=\"main\">");
+		out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 		printRowHeader(out);
 		try{
 			if (bDebugMode){
 				System.out.println("In " + this.toString() + " SQL: " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-			boolean bWhiteRow = true;
+			int iCount = 0;
 			while(rs.next()){
-				bWhiteRow = !bWhiteRow;
-				//Print the line:
-				out.println("<TR>");
 
 				String sLine = "";
 				String sCompanyName = rs.getString(COMPANY_NAME_FIELD);
@@ -202,56 +199,56 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
-				sLine += "<TD><FONT SIZE=2>" + sItemNumberLink + "</FONT></TD>";
+				sLine += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sItemNumberLink + "</TD>";
 
 				//Company:
-				sLine += "<TD><FONT SIZE=2>" 
-					+ sCompanyName + "</FONT></TD>";
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
+					+ sCompanyName + "</TD>";
 
 				//Location:
-				sLine += "<TD><FONT SIZE=2>" 
-					+ rs.getString("LOC") + "</FONT></TD>";
+				sLine += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
+					+ rs.getString("LOC") + "</TD>";
 
 				//Qty
-				sLine += "<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.0000", rs.getBigDecimal("QTYOH")) 
-							+ "</FONT></TD>";
+							+ "</TD>";
 
 				//Qty on sales order:
 				BigDecimal bdQtyOnSalesOrder = rs.getBigDecimal("SumOfQtyOrdered");
 				if (bdQtyOnSalesOrder == null){
 					bdQtyOnSalesOrder = BigDecimal.ZERO;
 				}
-				sLine += "<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.0000", bdQtyOnSalesOrder) 
-							+ "</FONT></TD>";
+							+ "</TD>";
 				
 				//Description:
-				sLine += "<TD><FONT SIZE=2>" 
+				sLine += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					+ rs.getString("ITEMDESC") 
-					+ "</FONT></TD>";
+					+ "</TD>";
 
 				//Avg. unit cost:
-				sLine += "<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.00",
 							(rs.getBigDecimal("TOTALCOST")).divide(
 									rs.getBigDecimal("QTYOH"),BigDecimal.ROUND_HALF_UP
 							)
 					) 
-					+ "</FONT></TD>";
+					+ "</TD>";
 
 				//Unit of measure:
-				sLine += "<TD><FONT SIZE=2>" 
-					+ rs.getString("UOM") + "</FONT></TD>";
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
+					+ rs.getString("UOM") + "</TD>";
 
 				//Total cost
-				sLine += "<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 					+ clsManageBigDecimals.BigDecimalToFormattedString(
 							"###,###,##0.0000", rs.getBigDecimal("TOTALCOST")) 
-							+ "</FONT></TD>";
+							+ "</TD>";
 
 				String sComment1 = rs.getString("COMMENT1");
 				if (sComment1 == null){
@@ -259,21 +256,21 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 				}
 				sComment1 = sComment1.trim().replace("\"", "\"\"");
 
-				sLine += "<TD><FONT SIZE=2>" + sComment1 + "</FONT></TD>";
+				sLine +=  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sComment1 + "</TD>";
 
 				String sComment2 = rs.getString("COMMENT2");
 				if (sComment2 == null){
 					sComment2 = "";
 				}
 				sComment2 = sComment2.trim().replace("\"", "\"\"");
-				sLine += "<TD><FONT SIZE=2>" + sComment2 + "</FONT></TD>";
+				sLine += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ sComment2 + "</TD>";
 
-				if (bWhiteRow){
-					out.println("<TR class=\"d0\">" + sLine + "</TR>");
+				if (iCount %2 ==0){
+					out.println("<TR class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" + sLine + "</TR>");
 				}else{
-					out.println("<TR class=\"d1\">" + sLine + "</TR>");
+					out.println("<TR class=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + sLine + "</TR>");
 				}
-
+				iCount++;
 				out.println("</TR>");
 			}
 			rs.close();
@@ -287,56 +284,7 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 		out.println("Processing time: " + Long.toString((System.currentTimeMillis() - lTimer) / 1000) + " seconds.");
 		return true;
 	}
-	private void printLayout(PrintWriter out){
-		String sBorderSize = "0";
-		String sFontSize = "small";
-		out.println("<style type=\"text/css\">");
-		out.println(
-				"table.main {"
-				+ "border-width: " + sBorderSize + "px; "
-				+ "border-spacing: 2px; "
-				+ "border-style: outset; "
-				+ "border-color: gray; "
-				+ "border-collapse: separate; "
-				+ "font-size: " + sFontSize + "; "
-				//+ "background-color: white; "
-				+ "}"
-		);
 
-		out.println(
-				"table.main th {"
-				+ "border-width: " + sBorderSize + "px; "
-				+ "padding: 2px; "
-				+ "border-style: inset; "
-				+ "border-color: gray; "
-				//+ "background-color: white; "
-				+ "}"
-		);
-
-		out.println(
-				"tr.d0 td {"
-				+ "background-color: #FFFFFF; "
-				+"}"
-		);
-		out.println(
-				"tr.d1 td {"
-				+ "background-color: #EEEEEE; "
-				+ "}"
-		);
-
-		out.println(
-				"table.main td {"
-				+ "border-width: " + sBorderSize + "px; "
-				+ "padding: 2px; "
-				+ "border-style: inset; "
-				+ "border-color: gray; "
-				+ "vertical-align: text-top;"
-				//+ "background-color: #EEEEEE; "
-				+ "}"
-		);
-
-		out.println("</style>");
-	}
 	private void loadSisterCompanyData (
 			Connection conn, 
 			ArrayList<String>arrCompanyNames, 
@@ -369,19 +317,18 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 	private void printRowHeader(
 			PrintWriter out
 	){
-		//out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Item</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Company</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Loc</FONT></B></TH>");
-		out.println("<TH ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Qty&nbsp;OH</FONT></B></TH>");
-		out.println("<TH ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Qty&nbsp;on<BR>Sales&nbsp;Order</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Description</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Avg. unit cost</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>UOM</FONT></B></TH>");
-		out.println("<TH ALIGN=RIGHT VALIGN=BOTTOM><B><FONT SIZE=2>Total cost<BR>on hand</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Comment 1</FONT></B></TH>");
-		out.println("<TH VALIGN=BOTTOM><B><FONT SIZE=2>Comment 2</FONT></B></TH>");
+		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">" );
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Company</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Loc</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;OH</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;on</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Description</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Avg. unit cost</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">UOM</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Total cost<BR>on hand</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Comment 1</TD>");
+		out.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Comment 2</TD>");
 		out.println("</TR>");
 	}
 	public String getErrorMessage (){

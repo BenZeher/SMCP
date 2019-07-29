@@ -15,6 +15,7 @@ import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMModuleTypes;
 import SMClasses.SMOption;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableapbatches;
 import ServletUtilities.clsServletUtilities;
@@ -34,10 +35,6 @@ public class APEditBatchesEdit extends HttpServlet {
 	public static final String BATCH_EDITABLE_PARAMETER_VALUE_TRUE = "Yes";
 	public static final String BUTTON_PRINT_CHECKS_NAME = "BUTTONPRINTCHECKS";
 	public static final String BUTTON_PRINT_CHECKS_LABEL = "Print checks";
-	
-	private static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW";
-	private static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
-	private static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	
 	private static final long serialVersionUID = 1L;
 	/*
@@ -149,6 +146,8 @@ public class APEditBatchesEdit extends HttpServlet {
 				+ e.getMessage()
 				+ " <BR></B></FONT>\n");
 		}
+
+		out.println(SMUtilities.getMasterStyleSheetLink());
 		
     	//If it's a posted batch, we need to add a button for creating a bank rec:
         if (batch.getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.POSTED)) == 0){
@@ -364,67 +363,68 @@ public class APEditBatchesEdit extends HttpServlet {
         
         //List out the entries on the screen as links to edit:
         pwOut.println("<BR><I><B>NOTE:</B> Out-of-balance entry amounts and entry dates outside the posting period are displayed in RED.</I>");
-        pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">\n");
+        pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 
-    	pwOut.println("  <TR>\n");
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Entry #</B></U>");
-    	pwOut.println("</TD>\n");
+        
+    	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry #");
+    	pwOut.println("</TD>");
     	iColumnCount++;
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Entry Type</B></U>");
-    	pwOut.println("</TD>\n");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry Type");
+    	pwOut.println("</TD>");
     	iColumnCount++;
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Entry date</B></U>");
-    	pwOut.println("</TD>\n");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry date");
+    	pwOut.println("</TD>");
     	iColumnCount++;
 
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Vendor</B></U>");
-    	pwOut.println("</TD>\n");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Vendor");
+    	pwOut.println("</TD>");
     	iColumnCount++;
-
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Doc #</B></U>");
-    	pwOut.println("</TD>\n");
+    	
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Doc #");
+    	pwOut.println("</TD>");
     	iColumnCount++;
     	
     	//If it's a payment batch, show the check number:
     	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
-        	pwOut.println("    <TD>");
-        	pwOut.println("<B><U>Check number</B></U>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+        	pwOut.println("Check number");
         	pwOut.println("</TD>\n");
         	iColumnCount++;
     	}
     	
     	//If it's a payment batch, indicate if a check needs to be finalized:
     	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
-        	pwOut.println("    <TD>");
-        	pwOut.println("<B><U>Check finalized?</B></U>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+        	pwOut.println("Check finalized?");
         	pwOut.println("</TD>\n");
         	iColumnCount++;
     	}
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Description</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Description");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Number<BR>of&nbsp;lines</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+    	pwOut.println("Number<BR>of&nbsp;lines");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Entry net amt</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+    	pwOut.println("Entry net amt");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
     	
-    	pwOut.println("    <TD>");
-    	pwOut.println("<B><U>Entry errors?</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("&nbsp;Entry errors?");
     	pwOut.println("</TD>\n");
     	iColumnCount++;
     	
@@ -476,17 +476,14 @@ public class APEditBatchesEdit extends HttpServlet {
     		boolean bOddRow = true;
     		for (int i = 0; i < batch.getBatchEntryArray().size(); i++){
     			APBatchEntry entry = batch.getBatchEntryArray().get(i);
-				String sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
-				if (bOddRow){
-					sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
-				}
-    			pwOut.println("  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
-					+ " onmouseout=\"setRowBackgroundColor(this, '" + sBackgroundColor + "');\""
-					+ " onmousemove=\"setRowBackgroundColor(this, '" + ROW_BACKGROUND_HIGHLIGHT_COLOR + "');\""
-					+ ">\n"
-				);
+
+	        	if(i % 2 ==0) {
+	            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+	        	}else {
+	            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+	        	}
 	        	//Entry number
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	
 	        	String sEditableBatch = "No";
 	        	if(batch.bEditable()){
@@ -516,12 +513,12 @@ public class APEditBatchesEdit extends HttpServlet {
 	        	pwOut.println("</TD>\n");
 
 	        	//Entry type
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(SMTableapbatchentries.getDocumentTypeLabel(Integer.parseInt(entry.getsentrytype())));
 	        	pwOut.println("</TD>\n");
 
 	        	//Entry date
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	String sEntryDate = entry.getsdatentrydate();
 
 	    		try {
@@ -548,18 +545,18 @@ public class APEditBatchesEdit extends HttpServlet {
 	    	    		+ entry.getsvendoracct()
 	    	    		+ "</A>";
 	        	}
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(sVendorLink);
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Doc Number
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(entry.getsdocnumber());
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Check number:
 	        	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
-		        	pwOut.println("    <TD>");
+		        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(entry.getschecknumber());
 		        	pwOut.println("</TD>\n");
 	        	}
@@ -584,23 +581,23 @@ public class APEditBatchesEdit extends HttpServlet {
 	        	}
 	        	
 	        	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
-		        	pwOut.println("    <TD ALIGN=CENTER>");
+		        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(sCheckFinalized);
 		        	pwOut.println("</TD>\n");
 	        	}
 	        	
 	        	//Description
-	        	pwOut.println("    <TD>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entry.getsentrydescription()));
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Number of entries:
-	        	pwOut.println("    <TD ALIGN=RIGHT>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(Integer.toString(entry.getLineArray().size()));
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Entry amount - just display the absolute value, since we don't care about the arithmetic sign here:
-	        	pwOut.println("    <TD ALIGN=RIGHT>");
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	String sEntryAmt = entry.getsentryamount();
 	        	if (!entry.entryIsInBalance(conn)){
 	        		sEntryAmt = "<div style = \" color: red; font-weight: bold; \">" + sEntryAmt + "</div>";
@@ -617,7 +614,7 @@ public class APEditBatchesEdit extends HttpServlet {
 					sCheckLinePostabilityResults = e.getMessage();
 				}
 	    		
-	        	pwOut.println("    <TD>"); 
+	        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 	        	pwOut.println(
 	        		"<div style = \" color: red; font-weight: bold; \">"
 	        		+ sCheckLinePostabilityResults
@@ -630,11 +627,11 @@ public class APEditBatchesEdit extends HttpServlet {
     		}
     		
         	//Print the 'totals' line:
-        	pwOut.println("  <TR>\n"
-        		+ "    <TD ALIGN=RIGHT COLSPAN=" + Integer.toString(iColumnCount - 2) + ">"
-        		+ "<B>BATCH TOTAL:</B>"
+        	pwOut.println("  <TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">\n"
+        		+ "    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=" + Integer.toString(iColumnCount - 2) + ">"
+        		+ "BATCH TOTAL:"
         		+ "    </TD>\n"
-        		+ "    <TD ALIGN=RIGHT >"
+        		+ "    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
         		+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(batch.getBatchTotal())
         		+ "    </TD>\n"
         		+ "    <TD>"

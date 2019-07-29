@@ -23,6 +23,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMBatchStatuses;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableiccosts;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
@@ -148,13 +149,16 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 
     	sCriteria += ", sorted by " + sSortByCriteria;
     	sCriteria += ".<BR>";
+    	String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
+
     	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
 	       "<HTML>" +
 	       "<HEAD><TITLE>" + sReportTitle + " - " + (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME) + "</TITLE></HEAD>\n<BR>" + 
 		   "<BODY BGCOLOR=\"#FFFFFF\">" +
-		   "<TABLE BORDER=0 WIDTH=100%>" +
+		   "<TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">" +
 		   "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 		   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) 
 		   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD></TR>" +
@@ -183,6 +187,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     	out.println("<BR>");
 		out.println("<input type=\"button\" name=\"CheckAll\" value=\"Check All Items\" onClick=\"checkAll()\">");
 		out.println("<input type=\"button\" name=\"UnCheckAll\" value=\"Uncheck All Items\" onClick=\"uncheckAll()\">");
+		out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	try {
     		printList(
@@ -257,14 +262,14 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			sCheckBoxHeading = "Make ACTIVE?";
 		}
 		
-		pwOut.println("<TABLE BORDER=0>");
-		pwOut.println("<TR>" + 
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM ><B><FONT SIZE=2>" + sCheckBoxHeading + "</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM ><B><FONT SIZE=2>Item #</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM ><B><FONT SIZE=2>Description</FONT></B></TD>" +
-		    "<TD ALIGN=LEFT VALIGN=BOTTOM ><B><FONT SIZE=2>Last transaction date</FONT></B></TD>" +
+		pwOut.println("<TABLE WIDTH=100% CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">" + 
+		    "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" + sCheckBoxHeading + "</TD>" +
+		    "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item #</TD>" +
+		    "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Description</TD>" +
+		    "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Last transaction date</TD>" +
 		"</TR>" + 
-   		"<TR><TD COLSPAN=6><HR></TD><TR>");
+   		"<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=6 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD><TR>");
 		
 	}
 	private void printList(
@@ -630,8 +635,12 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		
     		printHeading(pwOut, bIncInactives);
     		while (rs.next()){
-    			pwOut.println("<TR>");
-    			pwOut.println("<TD>" + clsCreateHTMLFormFields.TDCheckBox(
+    			if(lItemsPrinted % 2 == 0) {
+    				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" );
+    			}else {
+    				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" );
+    			}
+    			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsCreateHTMLFormFields.TDCheckBox(
     	    		ITEM_CHECKBOX_NAME + rs.getString("sitemnumber"), false, "") + "</TD>");	
     			
     			//Link to item for authorized users:
@@ -645,11 +654,11 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				}else{
 					sItemNumberLink = sItemNumber;
 				}
-    			pwOut.println("<TD>" + sItemNumberLink + "</TD>");
+    			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sItemNumberLink + "</TD>");
     			
     			
-    			pwOut.println("<TD>" + rs.getString("sitemdescription") + "</TD>");
-    			pwOut.println("<TD>" + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("datlasttransaction")) 
+    			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + rs.getString("sitemdescription") + "</TD>");
+    			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("datlasttransaction")) 
     				+ "</TD>");
     			
     			pwOut.println("</TR>");

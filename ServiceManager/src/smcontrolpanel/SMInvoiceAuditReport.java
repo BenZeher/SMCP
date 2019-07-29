@@ -12,7 +12,6 @@ import javax.servlet.ServletContext;
 
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTablebids;
-import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableinvoicemgrcomments;

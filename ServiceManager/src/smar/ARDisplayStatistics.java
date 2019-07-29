@@ -73,53 +73,55 @@ public class ARDisplayStatistics extends HttpServlet {
 			return false;
 		}
 		
+
+		pwOut.println(SMUtilities.getMasterStyleSheetLink());
 		pwOut.println("<B>Customer name: </B>" + cust.getM_sCustomerName());
 		
 		//Table:
-		pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-		pwOut.println("<TR>");
-		pwOut.println("<TD><B>Balance:</B> "
-				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdcurrentbalance()) + "<BR>");
-		pwOut.println("<TD><B>Last invoice:</B> "
+		pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Balance:</B> "
+				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdcurrentbalance()) + "</TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Last invoice:</B> "
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountoflastinvoice())
 				+ " <B>on</B> " + custstat.getM_datlastinvoice() + "</TD>");
-		pwOut.println("<TD><B>Last credit:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Last credit:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountoflastcredit())
 				+ " <B>on</B> " + custstat.getM_datlastcredit() + "</TD>");
-		pwOut.println("<TD><B>Last payment:</B> "
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Last payment:</B> "
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountoflastpayment())
 				+ " <B>on</B> " + custstat.getM_datlastpayment() + "</TD>");
 
 		pwOut.println("</TR>");
 		
 		//Largest invoice:
-		pwOut.println("<TR>");
-		pwOut.println("<TD><B>Largest invoice:</B> " 
+		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Largest invoice:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountofhighestinvoice()) + "</TD>");
 		//Largest invoice last year:
-		pwOut.println("<TD><B>Largest last year:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Largest last year:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountofhighestinvoicelastyear()) + "</TD>");
 		
 		//largest balance
-		pwOut.println("<TD><B>Highest balance:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Highest balance:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountofhighestbalance()) + "</TD>");
 		
 		//largest balance last year
-		pwOut.println("<TD><B>Highest last year:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Highest last year:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdamountofhighestbalancelastyear()) + "</TD>");
 		pwOut.println("</TR>");
 		
-		pwOut.println("<TR>");
+		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		//total number of paid invoices
-		pwOut.println("<TD><B>Paid invoices:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Paid invoices:</B> " 
 				+ Long.toString(custstat.getM_ltotalnumberofpaidinvoices()) + "</TD>");
 		
 		//total number of open invoices
-		pwOut.println("<TD><B>Open invoices:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Open invoices:</B> " 
 				+ Long.toString(custstat.getM_lnumberofopeninvoices()) + "</TD>");
 		
 		//total number of days to pay
-		pwOut.println("<TD><B>Total days to pay:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Total days to pay:</B> " 
 				+ Long.toString(custstat.getM_ltotalnumberofdaystopay()) + "</TD>");
 
 		//average number of days to pay
@@ -129,15 +131,16 @@ public class ARDisplayStatistics extends HttpServlet {
 		if(bdTotalPaidInvoices.compareTo(BigDecimal.ZERO) > 0){
 			bdAvgDaysToPay = bdTotalDaysToPay.divide(bdTotalPaidInvoices, BigDecimal.ROUND_HALF_UP);
 		}
-		pwOut.println("<TD><B>Avg. days to pay:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Avg. days to pay:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPay) + "</TD>");
 
 		pwOut.println("</TR>");
-		pwOut.println("<TD><B>Retainage balance:</B> " 
+		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Retainage balance:</B> " 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(cust.getCalculatedRetainageBalance(getServletContext(), sDBID)) + "</TD>");
-		pwOut.println("<TD><B>Credit limit:</B> " 
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Credit limit:</B> " 
 				+ cust.getM_dCreditLimit() + "</TD>");
-		
+		pwOut.println("</TR>");
 		pwOut.println("</TABLE>");
 
 		try{
@@ -155,46 +158,51 @@ public class ARDisplayStatistics extends HttpServlet {
 				this.toString() + ".displayStatistics");
 			//Display the monthly statistics:
 			pwOut.println("<B><U>Monthly statistics</U></B>");
-			pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-			pwOut.println("<TR>");
+			pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			//year
-			pwOut.println("<TD><B><U>Year</U></B></TD>");		
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Year</TD>");		
 			//month
-			pwOut.println("<TD><B><U>Month</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Month</TD>");
 			//invoice total
-			pwOut.println("<TD><B><U>Invoice total</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Invoice total</TD>");
 			//credit total
-			pwOut.println("<TD><B><U>Credit total</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Credit total</TD>");
 			//payment total
-			pwOut.println("<TD><B><U>Payment total</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Payment total</TD>");
 			//number of invoices
-			pwOut.println("<TD><B><U>Invoices</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Invoices</TD>");
 			//number of credits
-			pwOut.println("<TD><B><U>Credits</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Credits</TD>");
 			//number of payments
-			pwOut.println("<TD><B><U>Payments</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Payments</TD>");
 			//paid invoices
-			pwOut.println("<TD><B><U>Paid invoices</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Paid invoices</TD>");
 			//total days to pay
-			pwOut.println("<TD><B><U>Total days to pay</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Total days to pay</TD>");
 			//average days to pay
-			pwOut.println("<TD><B><U>Avg days to pay</U></B></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Avg days to pay</TD>");
 			pwOut.println("</TR>");
+			int iCount=0;
 			while (rs.next()){
-				pwOut.println("<TR>");
-				pwOut.println("<TD>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sYear)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sMonth)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" 
+				if(iCount % 2 == 0) {
+					pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sYear)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sMonth)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearmonthlystatistics.sInvoiceTotal)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" 
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearmonthlystatistics.sCreditTotal)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" 
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablearmonthlystatistics.sPaymentTotal)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfInvoices)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfCredits)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPayments)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPaidInvoices)) + "</TD>");
-				pwOut.println("<TD ALIGN=RIGHT>" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sTotalNumberOfDaysToPay)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfInvoices)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfCredits)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPayments)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPaidInvoices)) + "</TD>");
+				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sTotalNumberOfDaysToPay)) + "</TD>");
 
 				bdTotalDaysToPay = new BigDecimal(Long.toString(rs.getLong(SMTablearmonthlystatistics.sTotalNumberOfDaysToPay)));
 				bdTotalPaidInvoices = new BigDecimal(Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPaidInvoices)));
@@ -204,7 +212,7 @@ public class ARDisplayStatistics extends HttpServlet {
 				}
 				pwOut.println("<TD ALIGN=RIGHT>" 
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPay) + "</TD>");
-
+				iCount++;
 				
 				pwOut.println("</TR>");
 			}

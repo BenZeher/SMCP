@@ -203,7 +203,7 @@ public class ARDisplayStatistics extends HttpServlet {
 				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPayments)) + "</TD>");
 				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPaidInvoices)) + "</TD>");
 				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + Long.toString(rs.getLong(SMTablearmonthlystatistics.sTotalNumberOfDaysToPay)) + "</TD>");
-
+				iCount++;
 				bdTotalDaysToPay = new BigDecimal(Long.toString(rs.getLong(SMTablearmonthlystatistics.sTotalNumberOfDaysToPay)));
 				bdTotalPaidInvoices = new BigDecimal(Long.toString(rs.getLong(SMTablearmonthlystatistics.sNumberOfPaidInvoices)));
 				bdAvgDaysToPay = new BigDecimal(0);
@@ -212,7 +212,7 @@ public class ARDisplayStatistics extends HttpServlet {
 				}
 				pwOut.println("<TD ALIGN=RIGHT>" 
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPay) + "</TD>");
-				iCount++;
+
 				
 				pwOut.println("</TR>");
 			}

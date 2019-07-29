@@ -163,11 +163,11 @@ public class SMEditAppointmentGroupsEdit  extends HttpServlet {
 	        String sCheckedOrNot = "";
         	while (rsUsers.next()){
         		sCheckedOrNot = Is_User_In_Group(rsUsers.getString(SMTableusers.lid), rsGroupUsers);
-        		sUserTable.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"" + SMAppointmentCalendarGroup.UPDATE_USER_MARKER + "" 
+        		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"" + SMAppointmentCalendarGroup.UPDATE_USER_MARKER + "" 
         			+  rsUsers.getString(SMTableusers.lid) + "\">" 
         			+ rsUsers.getString(SMTableusers.sUserFirstName) 
         			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
-        			+ "" 
+        			+ "</LABEL>" 
         		);
         	}
         	rsUsers.close();

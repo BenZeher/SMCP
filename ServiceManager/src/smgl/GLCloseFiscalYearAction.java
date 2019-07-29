@@ -1,6 +1,7 @@
 package smgl;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -62,6 +63,28 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 				return;
 		}
     	
+    	String sClosingAccount = "";
+    	GLOptions gloptions = new GLOptions();
+    	if (!gloptions.load(conn)){
+    		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875814]");
+    		String sErrorMessage = "";
+    		for (int i = 0; i < gloptions.getErrorMessages().size(); i++){
+    			if (i == 0){
+    				sErrorMessage += gloptions.getErrorMessages().get(i);
+    			}else{
+    				sErrorMessage += ", " + gloptions.getErrorMessages().get(i);
+    			}
+    		}
+			smaction.getCurrentSession().setAttribute(GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT, (String)sErrorMessage);
+			smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+    	}
+    	sClosingAccount = gloptions.getsClosingAccount();
+    	
     	GLTransactionBatch glbatch = new GLTransactionBatch("-1");
     	glbatch.setlcreatedby(smaction.getUserID());
     	glbatch.setllasteditedby(smaction.getUserID());
@@ -122,8 +145,10 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     		+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
     		+ " WHERE ("
     			+ "(" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    			+ " AND (" + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + " = '" + SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT + "')"
     		+ ") GROUP BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
     	;
+    	BigDecimal bdTotalForRetainedEarnings = new BigDecimal("0.00");
     	try {
 			ResultSet rsIncomeStatementAcctTotals = ServletUtilities.clsDatabaseFunctions.openResultSet(
 					SQL, 
@@ -146,6 +171,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 				line.setstransactiondate(sBatchDate);
 				
 				glentry.addLine(line);
+				bdTotalForRetainedEarnings = bdTotalForRetainedEarnings.add(rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL"));
 			}
 			rsIncomeStatementAcctTotals.close();
 		} catch (SQLException e1) {
@@ -164,6 +190,16 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     	
     	//Now add one balancing entry for the retained earnings account:
     	//TODO
+		GLTransactionBatchLine line = new GLTransactionBatchLine();
+		line.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalForRetainedEarnings).replace(",", ""));
+		line.setsacctid(sClosingAccount);
+		line.setscomment("");
+		line.setsdescription("Last period balance for account");
+		line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
+		line.setssourcetype("JE");
+		line.setstransactiondate(sBatchDate);
+		
+		glentry.addLine(line);
     	
     	glbatch.addBatchEntry(glentry);
     	if (!ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn)){

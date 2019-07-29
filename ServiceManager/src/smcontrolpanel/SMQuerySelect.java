@@ -207,12 +207,12 @@ public class SMQuerySelect  extends HttpServlet {
 			sNoExportChecked = sChecked;
 		}
 		
-		out.println("<input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
-			+ EXPORT_NOEXPORT_VALUE + "\"" + sNoExportChecked + ">" + EXPORT_NOEXPORT_LABEL + "<br>");
-		out.println("<input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
-			+ EXPORT_COMMADELIMITED_VALUE + "\"" + sCommaDelimitedChecked + ">" + EXPORT_COMMADELIMITED_LABEL + "<br>");
-		out.println("<input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
-			+ EXPORT_HTML_VALUE + "\"" + sHTMLChecked + ">" + EXPORT_HTML_LABEL + "<br>");
+		out.println("<LABEL><input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
+			+ EXPORT_NOEXPORT_VALUE + "\"" + sNoExportChecked + ">" + EXPORT_NOEXPORT_LABEL + "</LABEL><br>");
+		out.println("<LABEL><input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
+			+ EXPORT_COMMADELIMITED_VALUE + "\"" + sCommaDelimitedChecked + ">" + EXPORT_COMMADELIMITED_LABEL + "</LABEL><br>");
+		out.println("<LABEL><input type=\"radio\" name=\"" + PARAM_EXPORTOPTIONS + "\" value=\"" 
+			+ EXPORT_HTML_VALUE + "\"" + sHTMLChecked + ">" + EXPORT_HTML_LABEL + "</LABEL><br>");
 
 		out.println("</TD>");
 		out.println("</TR>");
@@ -222,11 +222,11 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Show borders?<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDEBORDER + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_INCLUDEBORDER + "\"");
 		if (bIncludeBorder){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>Display borders around fields in report");
+		out.println("width=0.25>Display borders around fields in report</LABEL>");
 
 		out.println("</TD>");
 		out.println("</TR>");
@@ -235,11 +235,11 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Alternate row colors?<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_ALTERNATEROWCOLORS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_ALTERNATEROWCOLORS + "\"");
 		if (bIncludeBorder){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>Every other row gets a shaded background");
+		out.println("width=0.25>Every other row gets a shaded background</LABEL>");
 
 		out.println("</TD>");
 		out.println("</TR>");
@@ -280,22 +280,22 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Total numeric fields?<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_TOTALNUMERICFIELDS + "\" checked");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_TOTALNUMERICFIELDS + "\" checked");
 		if (bTotalNumericFields){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>Any number fields will be totaled at the bottom");
+		out.println("width=0.25>Any number fields will be totaled at the bottom</LABEL>");
 
 		//Show resulting SQL command?:
 		boolean bShowSQLCommand = (request.getParameter(PARAM_SHOWSQLCOMMAND) != null);
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Show the SQL command?<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_SHOWSQLCOMMAND + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_SHOWSQLCOMMAND + "\"");
 		if (bShowSQLCommand){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>The resulting SQL command will be shown after the results.");
+		out.println("width=0.25>The resulting SQL command will be shown after the results.</LABEL>");
 		
 		out.println("</TD>");
 		out.println("</TR>");
@@ -306,18 +306,18 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Hide header and footer?<B></TD>");
 		out.println("<TD>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_HIDEHEADERFOOTER + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_HIDEHEADERFOOTER + "\"");
 		if (bHideHeaderFooter){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>Only the query results will be displayed.");
+		out.println("width=0.25>Only the query results will be displayed.</LABEL>");
 		
 		out.println("<BR>");
-		out.println("<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_HIDECOLUMNLABELS + "\"");
+		out.println("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_HIDECOLUMNLABELS + "\"");
 		if (bHideColumnLabels){
 			out.println(" CHECKED ");
 		}
-		out.println("width=0.25>Do not show column labels.");
+		out.println("width=0.25>Do not show column labels.</LABEL>");
 		
 		out.println("</TD>");
 		out.println("</TR>");

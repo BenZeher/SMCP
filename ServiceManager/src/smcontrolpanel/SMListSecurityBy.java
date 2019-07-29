@@ -127,44 +127,52 @@ public class SMListSecurityBy extends HttpServlet {
 	        	sField5 = "";
         	}
 	        	
+        	out.println(SMUtilities.getMasterStyleSheetLink());
+        	
 	        // Set up table and headings:
-	    	out.println("<TABLE Border=1><TR>");
-	    	
+	    	out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\"><TR>");
+	    	out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 	    	if (sHeading1.length() !=0){
-	    		out.println("<TD ALIGN=CENTER>" + sHeading1 + "</TD>");
+	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">" + sHeading1 + "</TD>");
 	    	}
 	    	if (sHeading2.length() !=0){
-	    		out.println("<TD ALIGN=CENTER>" + sHeading2 + "</TD>");	
+	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">"  + sHeading2 + "</TD>");	
 	    	}
 	    	if (sHeading3.length() !=0){
-	    		out.println("<TD ALIGN=CENTER>" + sHeading3 + "</TD>");
+	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">" + sHeading3 + "</TD>");
 	    	}
 	    	if (sHeading4.length() !=0){
-	    		out.println("<TD ALIGN=CENTER>" + sHeading4 + "</TD>");	
+	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">"  + sHeading4 + "</TD>");	
 	    	}
 	    	if (sHeading5.length() !=0){
-	    		out.println("<TD ALIGN=CENTER>" + sHeading5 + "</TD>");
+	    		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">" + sHeading5 + "</TD>");
 	    	}
 	    	out.println("</TR>");
 	    	
+	    	int iCount=0;
         	while (rs.next()){
-        		out.println("<TR>");
+        		if(iCount % 2 == 0) {
+        	    	out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        		}else {
+        	    	out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        		}
         		if (sField1.length() !=0 ){
-        			out.println("<TD ALIGN=LEFT>" + rs.getString(sField1) + "</TD>");
+        			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(sField1) + "</TD>");
         		}
         		if (sField2.length() !=0 ){
-        			out.println("<TD ALIGN=LEFT>" + rs.getString(sField2) + "</TD>");
+        			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(sField2) + "</TD>");
         		}
         		if (sField3.length() !=0 ){
-        			out.println("<TD ALIGN=LEFT>" + rs.getString(sField3) + "</TD>");
+        			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(sField3) + "</TD>");
         		}
         		if (sField4.length() !=0 ){
-        			out.println("<TD ALIGN=LEFT>" + rs.getString(sField4) + "</TD>");
+        			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(sField4) + "</TD>");
         		}
         		if (sField5.length() !=0 ){
-        			out.println("<TD ALIGN=LEFT>" + rs.getString(sField5) + "</TD>");
+        			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rs.getString(sField5) + "</TD>");
         		}
         		out.println("</TR>");
+        		iCount++;
         	}
         	rs.close();
 	        out.println ("<BR>");

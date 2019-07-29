@@ -19,6 +19,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMOption;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableapaccountsets;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableapvendorgroups;
@@ -108,6 +109,8 @@ public class APDisplayVendorInformation extends HttpServlet {
         	return;
     	}
 
+    	out.println(SMUtilities.getMasterStyleSheetLink());
+    	
     	if (!displayVendor(
     			conn, 
     			sVendorNumber, 
@@ -596,30 +599,30 @@ public class APDisplayVendorInformation extends HttpServlet {
 					pwOut.println("<BR><a name=\"Statistics\"><TABLE WIDTH=100% BORDER=0><TR>"
 							+ "<TD ALIGN=LEFT><B><U>Statistics</U></B></TD></TR></TABLE>");
 					
-					pwOut.println("<TABLE BORDER=1 WIDTH=100%  bgcolor=\"" + BACKGROUND_COLOR_LIGHT_BLUE + "\" cellspacing=0 cellpadding=1>");
+					pwOut.println("<TABLE WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 
 					//Table heading:
 					pwOut.println(
-						"<TR>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Year</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Month</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Invoices</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Credits</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Debits</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Payments</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Discounts Taken</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Discounts Lost</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Adjustments</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2># of Invoices Paid</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Days to Pay</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Avg Days to Pay</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Invoice Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Credit Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Debit Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Payment Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Discounts Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Discounts Lost Amount</FONT></TD>"
-						+ "<TD CLASS=\"fieldrightheading\"><FONT SIZE=2>Adjustments Amount</FONT></TD>"
+						"<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+						+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Year</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Month</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Invoices</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Credits</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Debits</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Payments</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Discounts Taken</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Discounts Lost</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Adjustments</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"># of Invoices Paid</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Days to Pay</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Avg Days to Pay</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Invoice Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Credit Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Debit Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Payment Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Discounts Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Discounts Lost Amount</TD>"
+						+  "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Adjustments Amount</TD>"
 						+ "</TR>"
 					);
 					int rowCounter = 0;
@@ -639,56 +642,55 @@ public class APDisplayVendorInformation extends HttpServlet {
 					BigDecimal bdDiscountTotal = new BigDecimal("0.00");
 					BigDecimal bdDiscountLostTotal = new BigDecimal("0.00");
 					BigDecimal bdAdjustmentTotal = new BigDecimal("0.00");
-					String sColorClass = "";
 					while (rsVendorStatistics.next()){					
 					
 						if (rowCounter % 2 == 0){
-							sColorClass = "evennumberedtablerow";
+							pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 						}else{
-							sColorClass = "oddnumberedtablerow";
+							pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
 						}
-						pwOut.println("<TR class = \"" + sColorClass + "\">");
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>"
+
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 								+ rsVendorStatistics.getLong(SMTableapvendorstatistics.lyear)
-								+ "</FONT></TD>");
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+								+ "</TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lmonth))
-								+ "</FONT></TD>");
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+								+ "</TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoices))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoInvoinces += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoices);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofcredits))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoCredits += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofcredits);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdebits))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoDebits += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdebits);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofpayments))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoPayments += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofpayments);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdiscountstaken))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoDiscounts += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdiscountstaken);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdiscountslost))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoDiscountsLost += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdiscountslost);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofadjustments))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoAdjustments += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofadjustments);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoicespaid))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoInvoicesPaid += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofinvoicespaid);
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ Long.toString(rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdaystopay))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						lTotalNoDaysToPay += rsVendorStatistics.getLong(SMTableapvendorstatistics.lnumberofdaystopay);
 						
 						//Calculate the avg number of days to pay:
@@ -701,37 +703,37 @@ public class APDisplayVendorInformation extends HttpServlet {
 							sAvgDaysToPay = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdAvgDaysToPay);
 						}
 						
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" 
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 								+ sAvgDaysToPay
-								+ "</FONT></TD>");
+								+ "</TD>");
 						
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofinvoices))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdInvoiceTotal = bdInvoiceTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofinvoices));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofcreditnotes))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdCreditTotal = bdCreditTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofcreditnotes));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdebitnotes))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdDebitTotal = bdDebitTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdebitnotes));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofpayments))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdPaymentTotal = bdPaymentTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofpayments));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdiscounts))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdDiscountTotal = bdDiscountTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdiscounts));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdiscountslost))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdDiscountLostTotal = bdDiscountLostTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofdiscountslost));
-						pwOut.println("<TD CLASS=\"fieldcontrolright\"><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 								rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofadjustments))
-								+ "</FONT></TD>");
+								+ "</TD>");
 						bdAdjustmentTotal = bdAdjustmentTotal.add(rsVendorStatistics.getBigDecimal(SMTableapvendorstatistics.bdamountofadjustments));
 						
 						pwOut.println("</TR>");
@@ -739,9 +741,7 @@ public class APDisplayVendorInformation extends HttpServlet {
 					}
 					rsVendorStatistics.close();
 					if (rowCounter % 2 == 0){
-						sColorClass = "evennumberedtablerow";
 					}else{
-						sColorClass = "oddnumberedtablerow";
 					}
 					
 					//Calculate the average number of days to pay based on ALL the periods:

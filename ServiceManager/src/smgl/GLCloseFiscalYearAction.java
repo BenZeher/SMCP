@@ -12,8 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTableglaccounts;
-import SMDataDefinition.SMTableglfiscalperiods;
-import SMDataDefinition.SMTablegltransactionlines;
+import SMDataDefinition.SMTableglfiscalsets;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
@@ -100,53 +99,32 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     	glentry.setsfiscalyear(sFiscalYear);
     	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
 
-    	//Now get the transaction batch lines:
-    	//TODO:
-    	String SQL = "SELECT " + SMTableglfiscalperiods.inumberofperiods
-    		+ " FROM " + SMTableglfiscalperiods.TableName
-    		+ " WHERE ("
-    			+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + sFiscalYear + ")" 
-    		+ ")"
-    	;
-//    	int iNumberOfPeriods = 0;
-//    	try {
-//			ResultSet rsFiscalPeriod = ServletUtilities.clsDatabaseFunctions.openResultSet(
-//				SQL, 
-//				getServletContext(), 
-//				smaction.getsDBID(), 
-//				"MySQL", 
-//				this.toString() + ".doPost - user: " + smaction.getFullUserName()
-//			);
-//			if (rsFiscalPeriod.next()){
-//				iNumberOfPeriods = rsFiscalPeriod.getInt(SMTableglfiscalperiods.inumberofperiods);
-//				rsFiscalPeriod.close();
-//			}else{
-//				rsFiscalPeriod.close();
-//			}
-//		} catch (SQLException e1) {
-//			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1564156142]");
-//			smaction.getCurrentSession().setAttribute(
-//				GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT, 
-//				"Error [1564156143] reading number of periods - " + e1.getMessage()
-//			);
-//			smaction.redirectAction(
-//				"", 
-//				"", 
-//	    		""
-//			);
-//			return;
-//		}
-
-    	SQL = "SELECT"
-    		+ " SUM(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ") AS ACCTTOTAL"
-    		+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
-    		+ " FROM " + SMTablegltransactionlines.TableName
+    	//Now get the ending balances for all the income statement accounts:
+    	String SQL = "SELECT"
+    		+ " SUM("  
+    		+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdopeningbalance
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod1
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod2
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod3
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod4
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod5
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod6
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod7
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod8
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod9
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod10
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod11
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod12
+    		+ " + " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod13
+    		+ ") AS ACCTTOTAL"
+    		+ ", " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
+    		+ " FROM " + SMTableglfiscalsets.TableName
     		+ " LEFT JOIN " + SMTableglaccounts.TableName + " ON "
-    		+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+    		+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " = " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
     		+ " WHERE ("
-    			+ "(" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+    			+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + sFiscalYear + ")"
     			+ " AND (" + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + " = '" + SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT + "')"
-    		+ ") GROUP BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+    		+ ") GROUP BY " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID
     	;
     	BigDecimal bdTotalForRetainedEarnings = new BigDecimal("0.00");
     	try {
@@ -158,20 +136,23 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 					this.toString() + ".doPost - user: " + smaction.getFullUserName()
 				);
 			while (rsIncomeStatementAcctTotals.next()){
-				GLTransactionBatchLine line = new GLTransactionBatchLine();
-				line.setAmount(
-					ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
-						rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL").negate()).replace(",", "")
-				);
-				line.setsacctid(rsIncomeStatementAcctTotals.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid));
-				line.setscomment("");
-				line.setsdescription("Last period balance for account");
-				line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
-				line.setssourcetype("JE");
-				line.setstransactiondate(sBatchDate);
-				
-				glentry.addLine(line);
-				bdTotalForRetainedEarnings = bdTotalForRetainedEarnings.add(rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL"));
+				//Ignore accounts that have a zero total
+				if (rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL").compareTo(BigDecimal.ZERO) != 0){
+					GLTransactionBatchLine line = new GLTransactionBatchLine();
+					line.setAmount(
+						ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
+							rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL").negate()).replace(",", "")
+					);
+					line.setsacctid(rsIncomeStatementAcctTotals.getString(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID));
+					line.setscomment("");
+					line.setsdescription("Last period balance for account");
+					line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
+					line.setssourcetype("JE");
+					line.setstransactiondate(sBatchDate);
+					
+					glentry.addLine(line);
+					bdTotalForRetainedEarnings = bdTotalForRetainedEarnings.add(rsIncomeStatementAcctTotals.getBigDecimal("ACCTTOTAL"));
+				}
 			}
 			rsIncomeStatementAcctTotals.close();
 		} catch (SQLException e1) {
@@ -222,7 +203,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875714]");
 			smaction.getCurrentSession().setAttribute(
 				GLCloseFiscalYearEdit.GL_CLOSING_SESSION_WARNING_OBJECT,
-				"Error [1564156639] could not save batch."
+				"Error [1564156639] could not save batch - " + e.getMessage()
 			);
 			smaction.redirectAction(
 				"", 
@@ -252,7 +233,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875615]");
 		smaction.redirectAction(
 			"", 
-			"Company with ID '" + "" + "' was successfully pulled into the consolidated company.",
+			"Closing entries were successfully created in batch #" + glbatch.getsbatchnumber() + ".",
     		""
 		);
 		return;

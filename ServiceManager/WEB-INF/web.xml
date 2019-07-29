@@ -3927,7 +3927,7 @@
     
     <servlet>
     	<servlet-name>GLCloseFiscalYearAction</servlet-name>
-        <servlet-class>smgl.GLClearTransactionsAction</servlet-class>
+        <servlet-class>smgl.GLCloseFiscalYearAction</servlet-class>
     </servlet>
     
     <servlet>

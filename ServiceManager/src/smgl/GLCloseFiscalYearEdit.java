@@ -64,6 +64,10 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 		if (sWarning != null){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
+	    String sStatus = ServletUtilities.clsManageRequestParameters.get_Request_Parameter("Status", request);
+		if (sStatus.compareToIgnoreCase("") != 0){
+			out.println("<B>STATUS: " + sStatus + "</B><BR>");
+		}
 	    
 		//Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -104,7 +108,7 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 	    		+ "<BR><BR>"
 	    );
 	    
-    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLCloseFiscalYearEdit\">");
+    	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLCloseFiscalYearAction\">");
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>\n");
 

@@ -287,7 +287,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    	SMTableglfiscalperiods.iactive, 
 			Integer.parseInt(entry.get_siactive()), 
 			"Active?", 
-			"<I>Uncheck to de-activate this fiscal period.</I>"
+			"<I>Uncheck to de-activate this fiscal year.</I>"
 			)
 		;
 
@@ -295,8 +295,8 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockadjustmentperiod, 
 			Integer.parseInt(entry.get_silockadjustmentperiod()), 
-			"Lock adjustments for this period?", 
-			"<I>Check to prevent adjustments to this fiscal period.</I>"
+			"Lock adjustments for this year?", 
+			"<I>Check to prevent adjustments to this fiscal year.</I>"
 			)
 		;
 
@@ -304,8 +304,8 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockclosingperiod, 
 			Integer.parseInt(entry.get_silockclosingperiod()), 
-			"Lock closing for this period?", 
-			"<I>Check to prevent closing to this fiscal period.</I>"
+			"Lock closing for this year?", 
+			"<I>Check to prevent closing to this fiscal year.</I>"
 			)
 		;
 	    

@@ -464,7 +464,7 @@ public class GLTransactionBatchEntry {
 					m_sfiscalperiod, 
 				"Fiscal period", 
 				1L, 
-				13L);
+				15L);
 		} catch (Exception e) {
 			bFiscalPeriodIsValidInt = false;
 			sResult += "  " + e.getMessage() + ".";
@@ -544,6 +544,10 @@ public class GLTransactionBatchEntry {
 					if (period.get_siperiod13locked().compareToIgnoreCase("1") == 0){
 						sResult += "  " + "Fiscal year " + period.get_sifiscalyear() + ", period 13 is locked.";
 					}
+					break;
+
+				case 15:
+					//Period 15 is used for the closing entries - this period should always be allowed...
 					break;
 			}
 		}

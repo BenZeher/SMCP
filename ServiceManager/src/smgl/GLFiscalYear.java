@@ -21,7 +21,7 @@ import smcontrolpanel.SMUtilities;
 
 public class GLFiscalYear extends java.lang.Object{
 
-	public static final String ParamObjectName = "Fiscal period";
+	public static final String ParamObjectName = "Fiscal year";
 	public static final String ParamsNewRecord = "sNewRecord";
 	public static final String ADDING_NEW_RECORD_PARAM_VALUE_TRUE = "T";
 	public static final String ADDING_NEW_RECORD_PARAM_VALUE_FALSE = "F";

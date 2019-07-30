@@ -1056,11 +1056,11 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String buildPrePaymentDetailsTable(boolean bEditable, APBatchEntry entry, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
+		s += "<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		//Header row:
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 		
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 			+ "Line&nbsp;#</TD>\n";
@@ -1400,11 +1400,11 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String buildMiscPaymentDetailsTable(boolean bEditable, APBatchEntry entry, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
+		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		//Header row:
 		if (bEditable){
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "Line&nbsp;#</TD>\n";
@@ -1866,7 +1866,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 		String s = "";
     	s += clsServletUtilities.createHTMLComment("This table contains both the 'open invoices' table and the 'applied' table:");
     	
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100%  class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 				+ ">\n";
     	
 		s += "  <TR>";
@@ -1919,7 +1919,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 		String s = "";
     	s += clsServletUtilities.createHTMLComment("This table contains both the 'unapplied' table and the 'applied' table:");
     	
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 				+ ">\n";
     	
 		s += "  <TR>";
@@ -1948,7 +1948,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 				+ "</TR>\n"
 			;
 		}
-    	s += "    <TD>";
+    	s += "    </TD>";
     	
     	
     	s += "  </TR>";
@@ -2024,7 +2024,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 				+ " - "
 				+ smmastereditentry.getFullUserName()
 					);
-			boolean bOddRow = true;
+			boolean bOddRow = false;
 			while (rs.next()){
 				String sLineText = "";
 				
@@ -2131,11 +2131,11 @@ public class APEditPaymentEdit  extends HttpServlet {
 		String s = "";
 		//Print headings:
 		s += "<B><I><U>UNAPPLIED INVOICES</U></I></B> - <I>(Click on the headings to sort)</I>\n";
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_UNAPPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >\n";
 		
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" style = \"cursor: pointer;\" onclick=\"sortUnappliedTable(0);\" >"
 			+ "Doc<BR>Date</TD>\n";
@@ -2199,7 +2199,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 				+ " - "
 				+ smmastereditentry.getFullUserName()
 					);
-			boolean bOddRow = true;
+			boolean bOddRow = false;
 			while (rs.next()){
 				String sLineText = "";
 				
@@ -2296,7 +2296,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String displayDetailLinesForPayments(APBatchEntry entry, boolean bEditable, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		s += "<B><I><U>APPLIED INVOICES</U></I></B>\n";
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_APPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		
@@ -2342,7 +2342,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 		
 		//Load the lines for the current entry:
 		//System.out.println("[1490927363] entry.getLineArray().size(): " + entry.getLineArray().size());
-		boolean bOddRow = true;
+		boolean bOddRow = false;
 		boolean bAllowLinkToDocument = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.APControlPayments, 
 				smmastereditentry.getUserID(), 
@@ -2561,7 +2561,7 @@ public class APEditPaymentEdit  extends HttpServlet {
 	private String displayDetailLinesForApplyTos(APBatchEntry entry, boolean bEditable, SMMasterEditEntry smmastereditentry) throws Exception{
 		String s = "";
 		s += "<B><I><U>APPLIED INVOICES</U></I></B>\n";
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
+		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\""
 			+ " ID = \"" + TABLE_APPLIED_DOCUMENTS + "\""
 			+ ">\n";
 		

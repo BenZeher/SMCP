@@ -9,6 +9,7 @@ import javax.servlet.ServletContext;
 import SMClasses.MySQLs;
 import SMClasses.SMBatchTypes;
 import SMDataDefinition.SMTableartransactions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearterms;
 import SMDataDefinition.SMTableglaccounts;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -757,44 +758,46 @@ public class ARCreateEntryForm {
 			PrintWriter pwOut,
 			AREntryInput entryInput
 	){
-		pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-		pwOut.println("<TR>");
+
+		pwOut.println(SMUtilities.getMasterStyleSheetLink());
+		pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		
 		//If it's a prepay, we want to show the order number, not the apply to doc:
 		if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING)){
-			pwOut.println("<TD><B><U>Order #</B></U></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Order #</TD>");
 		}else{
-			pwOut.println("<TD><B><U>Apply&nbsp;to<br>Doc #</B></U></TD>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply&nbsp;to<br>Doc #</TD>");
 		}
-		pwOut.println("<TD><B><U>Apply&nbsp;to<br>Doc&nbsp;ID</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply&nbsp;to<br>Doc&nbsp;ID</TD>");
 		
 		if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RECEIPT_STRING)){
 			//Doc Type:
-			pwOut.println("<TD>");
-			pwOut.println("<B><U>Doc<br>type</B></U>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+			pwOut.println("Doc<br>type");
 			pwOut.println("</TD>");
 			//Order number
-			pwOut.println("<TD>");
-			pwOut.println("<B><U>Order<br>number</B></U>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+			pwOut.println("Order<br>number");
 			pwOut.println("</TD>");
 			//Original amount
-			pwOut.println("<TD>");
-			pwOut.println("<B><U>Original<br>amount</B></U>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+			pwOut.println("Original<br>amount");
 			pwOut.println("</TD>");
 			//Current amount
-			pwOut.println("<TD>");
-			pwOut.println("<B><U>Current<br>amount</B></U>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+			pwOut.println("Current<br>amount");
 			pwOut.println("</TD>");
 			//Net amount
-			pwOut.println("<TD>");
-			pwOut.println("<B><U>Net<br>amount</B></U>");
+			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+			pwOut.println("Net<br>amount");
 			pwOut.println("</TD>");
 		}
     	
-		pwOut.println("<TD><B><U>GL&nbsp;Account</B></U></TD>");
-		pwOut.println("<TD><B><U>Amount</B></U></TD>");
-		pwOut.println("<TD><B><U>Description</B></U></TD>");
-		pwOut.println("<TD><B><U>Comment</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">GL&nbsp;Account</TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Amount</TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">&nbsp;Description</TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Comment</TD>");
 		pwOut.println("</TR>");
 
 	}
@@ -810,8 +813,13 @@ public class ARCreateEntryForm {
         for (int i = 0; i < entryInput.getLineCount(); i++){
         	ARLineInput line = entryInput.getLine(i);
         	//Apply to doc #:
-        	pwOut.println("<TR>");
-        	pwOut.println("<TD>");
+        	
+        	if( i % 2 == 0) {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        	}else {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        	}
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
     		//If it's a prepay, we want to show the order number, not the apply to doc:
         	if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.PREPAYMENT_STRING)){
         		if(line.getApplyToOrderNumber().trim().length() > 0){
@@ -847,7 +855,7 @@ public class ARCreateEntryForm {
         	pwOut.println("</TD>");
 
         	//Apply to doc ID:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedToID())));
         	pwOut.println("</TD>");
         	
@@ -861,12 +869,12 @@ public class ARCreateEntryForm {
 					}
 					
 					//Doc Type
-					pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println(ARDocumentTypes.getSourceTypes(trans.getiDocType()));
 					pwOut.println("</TD>");
 					
 					//Order number
-					pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					String sOrderNumber = trans.getOrderNumber();
 					if(sOrderNumber.length() > 0){
 						pwOut.println(
@@ -880,59 +888,59 @@ public class ARCreateEntryForm {
 					}
 					pwOut.println("</TD>");
 					//Original amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdOriginalAmount()));
 					pwOut.println("</TD>");
 					//Current amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount()));
 					pwOut.println("</TD>");
 					//Net amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 					pwOut.println("</TD>");
     			}else{
     				//If it's unapplied:
     				//Document type
-    				pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
     				pwOut.println("N/A");
 					pwOut.println("</TD>");
     				//Order number
-    				pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
     				pwOut.println("&nbsp;");
 					pwOut.println("</TD>");
 					//Original amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println("0.00");
 					pwOut.println("</TD>");
 					//Current amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println("0.00");
 					pwOut.println("</TD>");
 					//Net amount
-					pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 					pwOut.println("0.00");
 					pwOut.println("</TD>");
     			}
     		}
         	
         	//GL Acct:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getLineAcct())));
         	pwOut.println("</TD>");
         	
         	//Amount:
-        	pwOut.println("<TD ALIGN = RIGHT>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(line.getAmount());
         	pwOut.println("</TD>");
         	
         	//Description:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDescription())));
         	pwOut.println("</TD>");
         	
         	//Comment:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getComment())));
         	pwOut.println("</TD>");
         	
@@ -951,7 +959,7 @@ public class ARCreateEntryForm {
 			ServletContext context,
 			String sDBID
 	){
-
+		pwOut.println(SMUtilities.getMasterStyleSheetLink());
 		String m_sApplyToDocNumber = sApplyToDocNumber;
 		String m_sApplyToDocID = sApplyToDocID;
 		
@@ -1035,7 +1043,12 @@ public class ARCreateEntryForm {
             			+ "\" VALUE=\"" + line.getApplyToOrderNumber() + "\">");
         	}
         	
-        	pwOut.println("<TR>");
+        	if( i % 2 == 0) {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        	}else {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        	}
+
 
         	pwOut.println("<TD>");
     		//If it's a prepay, we want to show the order number, not the apply to doc:

@@ -2,6 +2,7 @@ package smar;
 
 import SMClasses.SMBatchTypes;
 import SMClasses.MySQLs;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTableartransactionline;
 import SMDataDefinition.SMTableartransactions;
@@ -832,14 +833,16 @@ public class AREditReversalEntry extends HttpServlet {
 		m_pwOut.println("</TABLE>");
 	}
 	private void Display_Line_Header(PrintWriter m_pwOut){
-		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2>");
-		m_pwOut.println("<TR>");
-		m_pwOut.println("<TD><B><U>Apply to Doc #</B></U></TD>");
-		m_pwOut.println("<TD><B><U>Apply to Doc ID</B></U></TD>");
-		m_pwOut.println("<TD><B><U>GL Account</B></U></TD>");
-		m_pwOut.println("<TD><B><U>Amount</B></U></TD>");
-		m_pwOut.println("<TD><B><U>Description</B></U></TD>");
-		m_pwOut.println("<TD><B><U>Comment</B></U></TD>");
+		m_pwOut.println(SMUtilities.getMasterStyleSheetLink());
+
+		m_pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\"  WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER +"\">");
+		m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply to Doc #</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply to Doc ID</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">GL Account</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Amount</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Comment</TD>");
 		m_pwOut.println("</TR>");
 
 	}
@@ -907,18 +910,23 @@ public class AREditReversalEntry extends HttpServlet {
         			+ ARLineInput.ParamLineApplyToOrderNumber 
         			+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6) 
         			+ "\" VALUE=\"" + line.getApplyToOrderNumber() + "\">");
+        	
+        	if(i%2==0) {
+            	m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        	}else {
+            	m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        	}
 
-        	m_pwOut.println("<TR>");
 
-        	m_pwOut.println("<TD>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(line.getDocAppliedTo()));
         	m_pwOut.println("</TD>");
 
-        	m_pwOut.println("<TD>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(line.getDocAppliedToID());
         	m_pwOut.println("</TD>");
         	
-        	m_pwOut.println("<TD>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	//The user must pick a GL account for misc cash reversals, but any other kind of 
         	//cash reversal always uses the AR account.  Any other type will already have a
         	//GL account in it, but the line GL account for a misc cash reversal will be blank:
@@ -953,12 +961,12 @@ public class AREditReversalEntry extends HttpServlet {
             m_pwOut.println("</TD>");
 
             //Amount:
-            m_pwOut.println("<TD ALIGN = RIGHT>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
             m_pwOut.println(line.getAmount());
             m_pwOut.println("</TD>");
 
         	//Description:
-            m_pwOut.println("<TD>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
             m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineDesc 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
@@ -971,7 +979,7 @@ public class AREditReversalEntry extends HttpServlet {
             m_pwOut.println("</TD>");
 
         	//Comment:
-            m_pwOut.println("<TD>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
             m_pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineComment 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 

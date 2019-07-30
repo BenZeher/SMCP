@@ -1124,11 +1124,11 @@ public class APEditInvoiceEdit  extends HttpServlet {
 		) throws Exception{
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
+		s += "<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		//Header row:
 		if (bEditable){
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "Line&nbsp;#</TD>\n";
@@ -1142,22 +1142,22 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Amount</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
 				+ "Description</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Comment</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ " PO#</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "Receipt #</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Remove?</TD>\n";
 		}else{
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "Line&nbsp;#</TD>\n";
@@ -1171,7 +1171,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "Amount</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >"
 				+ "Description</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
@@ -1252,7 +1252,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 		
 		//Load the lines for the current entry:
 		String sBackgroundColor = "";
-		boolean bOddRow = true;
+		boolean bOddRow = false;
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			APBatchEntryLine line = entry.getLineArray().get(i);
 			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;
@@ -1446,7 +1446,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			sLineText += "</TD>\n";
 			
 			//PO ID:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + APBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", APBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
@@ -1472,7 +1472,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			sLineText += "</TD>\n";
 			
 			// Receipt number:
-			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >";
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >";
 			if (bEditable){
 				sLineText += "<INPUT TYPE=TEXT NAME=\"" + APBatchEntry.LINE_NUMBER_PARAMETER 
 					+ clsStringFunctions.PadLeft(line.getslinenumber().trim(), "0", APBatchEntry.LINE_NUMBER_PADDING_LENGTH) 
@@ -1499,7 +1499,7 @@ public class APEditInvoiceEdit  extends HttpServlet {
 			sLineText += "</TD>\n";
 
 			if (bEditable){
-				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+				sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL + " \" >"
 					+ createRemoveLineButton(line.getslinenumber()) + "</TD>\n";
 			}
 			

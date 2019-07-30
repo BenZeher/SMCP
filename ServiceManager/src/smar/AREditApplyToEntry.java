@@ -42,6 +42,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMBatchTypes;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTableentries;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -565,38 +566,39 @@ public class AREditApplyToEntry extends HttpServlet {
 			PrintWriter pwOut,
 			AREntryInput entryInput
 	){
-		pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
-		pwOut.println("<TR>");
+		pwOut.println(SMUtilities.getMasterStyleSheetLink());
+		pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		//Apply to doc
-		pwOut.println("<TD><B><U>Apply&nbsp;to<br>Doc #</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply&nbsp;to<br>Doc #</TD>");
 		//Apply to doc ID
-		pwOut.println("<TD><B><U>Apply&nbsp;to<br>Doc&nbsp;ID</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply&nbsp;to<br>Doc&nbsp;ID</TD>");
 		//Doc type
-		pwOut.println("<TD>");
-		pwOut.println("<B><U>Doc<br>type</B></U>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+		pwOut.println("Doc<br>type");
 		pwOut.println("</TD>");
 		//Order number
-		pwOut.println("<TD>");
-		pwOut.println("<B><U>Order<br>number</B></U>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+		pwOut.println("Order<br>number");
 		pwOut.println("</TD>");
 		//Original amount
-		pwOut.println("<TD>");
-		pwOut.println("<B><U>Original<br>amount</B></U>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+		pwOut.println("Original<br>amount");
 		pwOut.println("</TD>");
 		//Current amount
-		pwOut.println("<TD>");
-		pwOut.println("<B><U>Current<br>amount</B></U>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+		pwOut.println("Current<br>amount");
 		pwOut.println("</TD>");
 		//Net amount
-		pwOut.println("<TD>");
-		pwOut.println("<B><U>Net<br>amount</B></U>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+		pwOut.println("Net<br>amount");
 		pwOut.println("</TD>");
     	//Line amount
-		pwOut.println("<TD><B><U>Amount</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Amount</TD>");
 		//Line desc
-		pwOut.println("<TD><B><U>Description</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
 		//Line comment
-		pwOut.println("<TD><B><U>Comment</B></U></TD>");
+		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Comment</TD>");
 		pwOut.println("</TR>");
 
 	}
@@ -625,13 +627,18 @@ public class AREditApplyToEntry extends HttpServlet {
     		//Line comment
         	
         	//Apply to doc #:
-        	pwOut.println("<TR>");
-        	pwOut.println("<TD>");
+        	if(i % 2 == 0) {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        	}else {
+            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        	}
+
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
        		pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedTo())));
         	pwOut.println("</TD>");
 
         	//Apply to doc ID:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDocAppliedToID())));
         	pwOut.println("</TD>");
         	
@@ -644,12 +651,12 @@ public class AREditApplyToEntry extends HttpServlet {
 				}
 				
 				//Doc type
-				pwOut.println("<TD>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println(ARDocumentTypes.getSourceTypes(trans.getiDocType()));
 				pwOut.println("</TD>");
 				
 				//Order number
-				pwOut.println("<TD>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				String sOrderNumber = trans.getOrderNumber();
 				if(sOrderNumber.length() > 0){
 					pwOut.println(
@@ -663,46 +670,46 @@ public class AREditApplyToEntry extends HttpServlet {
 				}
 				pwOut.println("</TD>");
 				//Original amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdOriginalAmount()));
 				pwOut.println("</TD>");
 				//Current amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getdCurrentAmount()));
 				pwOut.println("</TD>");
 				//Net amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(trans.getNetAmount(context, sDBID)));
 				pwOut.println("</TD>");
 			}else{
 				pwOut.println("&nbsp;");
 				pwOut.println("</TD>");
 				//Original amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println("0.00");
 				pwOut.println("</TD>");
 				//Current amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println("0.00");
 				pwOut.println("</TD>");
 				//Net amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 				pwOut.println("0.00");
 				pwOut.println("</TD>");
 			}
         	
         	//Amount:
-        	pwOut.println("<TD ALIGN = RIGHT>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(line.getAmount());
         	pwOut.println("</TD>");
         	
         	//Description:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getDescription())));
         	pwOut.println("</TD>");
         	
         	//Comment:
-        	pwOut.println("<TD>");
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.getComment())));
         	pwOut.println("</TD>");
         	

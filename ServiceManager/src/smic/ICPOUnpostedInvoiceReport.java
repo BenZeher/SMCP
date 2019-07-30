@@ -29,7 +29,7 @@ public class ICPOUnpostedInvoiceReport {
 	private String printTableHeading() {
 		String s = "";
 
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
+		s += "<TABLE CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
 
 		return s;
 	}
@@ -38,32 +38,32 @@ public class ICPOUnpostedInvoiceReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+		s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
+		s += "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "PO Invoice #" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Vendor Acct" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Vendor Name" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Vendor Invoice #" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Invoice Entry Date" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Invoice Date" + sHeadingPadding + "</TD>\n"
 				
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Discount Date" + sHeadingPadding + "</TD>\n"
 				
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 				+ "Due Date" + sHeadingPadding + "</TD>\n"
 
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+				+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ " Invoice Total" + sHeadingPadding + "</TD>\n"
 
 		;
@@ -107,13 +107,13 @@ public class ICPOUnpostedInvoiceReport {
 						rs.getLong(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.lid));
 				String sInvoiceIDLink = getLink(sInvoiceID, context, sDBID, sCallingClass);
 				if(alt%2 != 0) {
-					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+					s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
 					alt++;
 				}else {
-					s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+					s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
 					alt++;
 				}
-				s += "    <TD class = \""
+				s += "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 
 						+ sIndent
@@ -121,14 +121,14 @@ public class ICPOUnpostedInvoiceReport {
 						+ "<I>" + sInvoiceIDLink + "</I>" + "</TD>\n"
 
 						// Vendor ID
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ rs.getString(SMTableicpoinvoiceheaders.TableName + "." + SMTableicpoinvoiceheaders.svendor)
 						+ "</I>" + "</TD>\n"
 
 						// Vendor Name
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ rs.getString(
@@ -136,7 +136,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 
 						// Vendor Invoice Number
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ rs.getString(
@@ -144,7 +144,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 
 						// Date Entered
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -154,7 +154,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 
 						// Invoice Date
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -164,7 +164,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 								
 						//Discount Date
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -174,7 +174,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 								
 						//Due Date
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -184,7 +184,7 @@ public class ICPOUnpostedInvoiceReport {
 						+ "</I>" + "</TD>\n"
 
 						// Invoice Total
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(

@@ -29,7 +29,7 @@ public class ICPOUnpostedReceiptsReport {
 	private String printTableHeading(){
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
+		s += "<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
 		
 		return s;
 	}
@@ -37,20 +37,20 @@ public class ICPOUnpostedReceiptsReport {
 		String s = "";
 		String sHeadingPadding = "&nbsp;&nbsp;";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+		s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
+		s += "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Receipt #" + sHeadingPadding
 			+ "</TD>\n"
 			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			+ "    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "PO #" + sHeadingPadding
 			+ "</TD>\n"
 			
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			+"    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Date Received" + sHeadingPadding
 			+ "</TD>\n"
 
-			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			+"    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 			+  "Created by" + sHeadingPadding
 			+ "</TD>\n"
 
@@ -105,25 +105,25 @@ public class ICPOUnpostedReceiptsReport {
 						String sReceiptIDLink = getLinkReceipt(sReceiptID, sPOID, context, sDBID, sCallingClass);
 
 						if(alt%2 == 1) {
-							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
+							s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n";
 							alt++;
 						}else {
-							s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
+							s += "  <TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n";
 							alt++;
 						}
-						s += "    <TD class = \""
+						s += "    <TD CLASS = \""
 								+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 
 						+ sIndent
 						// Receipt Link
 						+ "<I>" + sReceiptIDLink + "</I>" + "</TD>\n"
 						// PO Link
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>" + sPOIDLink + "</I>" + "</TD>\n"
 
 						// Date Received
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>"
 						+ clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -133,7 +133,7 @@ public class ICPOUnpostedReceiptsReport {
 						+ "</I>" + "</TD>\n"
 
 						// Created By
-						+ "    <TD class = \""
+						+ "    <TD CLASS = \""
 						+ SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 						+ "<I>" + rs.getString(SMTableicporeceiptheaders.TableName + "."
 								+ SMTableicporeceiptheaders.screatedbyfullname)

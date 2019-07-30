@@ -37,6 +37,8 @@ public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
+		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+
 		String sParamString = "*CallingClass=" + sCallingClass;
 		
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
@@ -47,7 +49,7 @@ public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 			+ "  </HEAD>\n"
 			+ "<BR>" 
 			+ "  <BODY BGCOLOR=\"#FFFFFF\">\n" 
-			+ "    <TABLE BORDER=0 WIDTH=100%>\n" 
+			+ "    <TABLE BORDER=0 WIDTH=100% BGCOLOR=\"" + sColor + "\">\n" 
 			+ "      <TR>\n"
 			+ "        <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + "</FONT></TD>\n"
 			+ "        <TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME).toString() + "</B></FONT></TD>\n"

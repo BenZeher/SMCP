@@ -97,7 +97,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     	glentry.setsentrynumber("1");
     	glentry.setsfiscalperiod("15");
     	glentry.setsfiscalyear(sFiscalYear);
-    	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
+    	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
 
     	//Now get the ending balances for all the income statement accounts:
     	String SQL = "SELECT"
@@ -146,7 +146,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 					line.setsacctid(rsIncomeStatementAcctTotals.getString(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID));
 					line.setscomment("");
 					line.setsdescription("Last period balance for account");
-					line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
+					line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
 					line.setssourcetype("JE");
 					line.setstransactiondate(sBatchDate);
 					
@@ -176,7 +176,7 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 		line.setsacctid(sClosingAccount);
 		line.setscomment("");
 		line.setsdescription("Last period balance for account");
-		line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY));
+		line.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
 		line.setssourcetype("JE");
 		line.setstransactiondate(sBatchDate);
 		

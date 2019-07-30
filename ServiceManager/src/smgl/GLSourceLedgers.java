@@ -12,7 +12,7 @@ public class GLSourceLedgers {
 	public static final int SOURCE_LEDGER_AP = 0;
 	public static final int SOURCE_LEDGER_AR = 1;
 	public static final int SOURCE_LEDGER_FA = 2;
-	public static final int SOURCE_LEDGER_JOURNAL_ENTRY = 3;
+	public static final int SOURCE_LEDGER_GL = 3;
 	public static final int SOURCE_LEDGER_IC = 4;
 	public static final int SOURCE_LEDGER_PAYROLL = 5;
 	
@@ -27,8 +27,8 @@ public class GLSourceLedgers {
 			return "AR";
 		case SOURCE_LEDGER_AP:
 			return "AP";
-		case SOURCE_LEDGER_JOURNAL_ENTRY:
-			return "JE";
+		case SOURCE_LEDGER_GL:
+			return "GL";
 		case SOURCE_LEDGER_IC:
 			return "IC";
 		case SOURCE_LEDGER_FA:
@@ -62,8 +62,8 @@ public class GLSourceLedgers {
 			arrSourceTypes.add(getSourceLedgerDescription(SOURCE_LEDGER_IC) + SOURCE_LEDGER_AND_TYPE_DELIMITER + ICEntryTypes.getSourceTypes(i));
 		}
 		
-		//JE:
-		arrSourceTypes.add("JE" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE");
+		//GL:
+		arrSourceTypes.add("GL" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE");
 		
 		//PR:
 		arrSourceTypes.add("PR" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "PR");
@@ -101,7 +101,7 @@ public class GLSourceLedgers {
 		}
 
 		//JE
-		arrSourceTypeDescriptions.add("<B>" + "JE" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE" + "</B>"
+		arrSourceTypeDescriptions.add("<B>" + "GL" + SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE" + "</B>"
 			+ " = <I>" + "JE Journal Entries" + "</I>"
 		);
 

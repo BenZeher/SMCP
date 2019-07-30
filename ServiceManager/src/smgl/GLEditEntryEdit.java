@@ -715,7 +715,7 @@ public class GLEditEntryEdit  extends HttpServlet {
  			;
  			
  			//Default the source ledger to Journal Entry, if there isn't one already:
- 			String sSourceLedger = GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_JOURNAL_ENTRY);
+ 			String sSourceLedger = GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL);
  			if (entry.getssourceledger().compareToIgnoreCase("") != 0){
  				sSourceLedger = entry.getssourceledger();
  			}

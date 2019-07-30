@@ -909,6 +909,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					sBatchAndEntry,
 					bdDebit,
 					bdCredit,
+					Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid)),
+					context,
+					sDBID,
 					bOddRow
 				);
 				
@@ -978,6 +981,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			String sBatchAndEntry,
 			BigDecimal bdDebitAmt,
 			BigDecimal bdCreditAmt,
+			String sSubledgerTransactionID,
+			ServletContext context,
+			String sDBID,
 			boolean bOddRow
 			) throws Exception{
 		String s = "";
@@ -1023,11 +1029,13 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "</TD>\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sDebit
+			//+  sDebit
+			+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sDebit)
 			+ "</TD>\n"
 			
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sCredit
+			//+  sCredit
+			+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sCredit)
 			+ "</TD>\n"
 
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"

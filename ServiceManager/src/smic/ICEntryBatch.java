@@ -3266,7 +3266,7 @@ public class ICEntryBatch {
     	        			+ ", LineNumber #: " + ln.sLineNumber()
     	        			+ ", item = " + ln.sItemNumber()
     	        			+ ", location = " + ln.sLocation()
-    	        			+ " Negative cost bucket created, bdQtyDrawn = " + bdQtyDrawn,
+    	        			+ " Negative cost bucket crdrawFromCostBucketeated, bdQtyDrawn = " + bdQtyDrawn,
     	        			"[1376509547]"
     	        	);
     	    	}

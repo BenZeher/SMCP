@@ -335,18 +335,20 @@ public class ICEditShipmentEntry extends HttpServlet {
 		m_pwOut.println("</TABLE>");
 	}
 	private void Display_Line_Header( PrintWriter m_pwOut){
-		m_pwOut.println("<TABLE BORDER=1 CELLSPACING=2>");
-		m_pwOut.println("<TR>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Line #</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Item #</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Item description</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Location</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>U/M</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Qty Shipped/Returned</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Cost</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Price</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Category</B></U></FONT></TD>");
-		m_pwOut.println("<TD VALIGN=TOP><FONT SIZE=2><B><U>Description</B></U></FONT></TD>");
+		m_pwOut.println("<BR>");
+		m_pwOut.println(SMUtilities.getMasterStyleSheetLink());
+		m_pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING +"\">");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Line #</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Item #</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Item description</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Location</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">U/M</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Qty Shipped/Returned</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Cost</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Price</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Category</TD>");
+		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>");
 		m_pwOut.println("</TR>");
 	}
 	private boolean displayLines(ICEntry m_Entry, PrintWriter m_pwOut, boolean bEditable, String sDBID, String sUserID, String sUserFullName){
@@ -355,9 +357,14 @@ public class ICEditShipmentEntry extends HttpServlet {
         for (int i = 0; i < m_Entry.getLineCount(); i++){
         	ICEntryLine line = m_Entry.getLineByIndex(i);
 
+        	if( i % 2 == 0) {
+            	m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+        	}else {
+            	m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+        	}
         	//Line #:
-        	m_pwOut.println("<TR>");
-        	m_pwOut.println("<TD>");
+
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	if (bEditable){
         		m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditShipmentLine" 
        	    		+ "?BatchNumber=" + line.sBatchNumber()
@@ -372,50 +379,50 @@ public class ICEditShipmentEntry extends HttpServlet {
         	m_pwOut.println("</TD>");
         	
         	//Item #:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsStringFunctions.filter(line.sItemNumber())));
         	m_pwOut.println("</FONT></TD>");
 
         	//Get the item detail info:
         	line.getItemDetails(getServletContext(), sDBID, sUserID, sUserFullName);
         	//Description:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(line.sItemDescription());
         	m_pwOut.println("</FONT></TD>");
         	
         	//Location:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(clsStringFunctions.filter(line.sLocation()));
         	m_pwOut.println("</FONT></TD>");
 
         	//U/M:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(line.sUnitOfMeasure());
         	m_pwOut.println("</FONT></TD>");
         	
         	//Qty:
-        	m_pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(line.sQtySTDFormat());
         	m_pwOut.println("</FONT></TD>");
         	
         	//Cost:
-        	m_pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	//Shipments do not show a cost:
        		m_pwOut.println(line.sCostSTDFormat());
         	m_pwOut.println("</FONT></TD>");
         	
         	//Price:
-        	m_pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(line.sPriceSTDFormat());
         	m_pwOut.println("</FONT></TD>");
 
         	//Category:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(clsStringFunctions.filter(line.sCategoryCode()));
         	m_pwOut.println("</FONT></TD>");
 
         	//Description:
-        	m_pwOut.println("<TD><FONT SIZE=2>");
+        	m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
         	m_pwOut.println(clsStringFunctions.filter(line.sDescription()));
         	m_pwOut.println("</FONT></TD>");
 

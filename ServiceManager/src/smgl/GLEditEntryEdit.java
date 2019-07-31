@@ -288,7 +288,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		//Auto reverse
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Auto-reverse?</TD>\n"
  		    ;
-     	if (bEditable){
+     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0)){
      		String sTemp = "";
      		if (entry.getsautoreverse().compareToIgnoreCase("0") != 0){
     			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
@@ -371,7 +371,7 @@ public class GLEditEntryEdit  extends HttpServlet {
     	
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;year/period:&nbsp;</TD>\n";
 		
-		if (bEditable){
+		if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0)){
 			//int iCurrentFiscalYear = 0;
 			//try {
 			//	iCurrentFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
@@ -690,11 +690,18 @@ public class GLEditEntryEdit  extends HttpServlet {
 			
 			sControlHTML += "    </TD>\n";
 		}else{
+			if((entry.getsfiscalperiod().compareToIgnoreCase("15") ==0)) {
+				sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_FISCAL_YEAR_AND_PERIOD + "\""
+			    		+ " VALUE=\"" + entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod() + "\""
+			    		+ ">"
+			    		+ entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER +" Closing Period";
+			}else {
 			sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + PARAM_FISCAL_YEAR_AND_PERIOD + "\""
 	    		+ " VALUE=\"" + entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod() + "\""
 	    		+ ">"
 	    		+ entry.getsfiscalyear() + FISCAL_YEAR_AND_PERIOD_DELIMITER + entry.getsfiscalperiod()
 			;
+			}
 		}
 		
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML 
@@ -704,7 +711,7 @@ public class GLEditEntryEdit  extends HttpServlet {
         //Source Ledger:
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source&nbsp;ledger:&nbsp;</TD>\n"
  		    ;
-     	if (bEditable){
+     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0) ){
  			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ssourceledger + "\" >\n";
  			sControlHTML += "<OPTION"
  				+ " VALUE=\"" 

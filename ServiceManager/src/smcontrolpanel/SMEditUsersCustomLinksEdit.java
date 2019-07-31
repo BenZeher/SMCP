@@ -166,7 +166,7 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 	        	}
 	        	rsUsers.close(); 	
 		        s += "<div style=\"width:" + TABLE_WIDTH + ";\">";
-		        s += "<input type=\"checkbox\" name=\"selectall\" id=\"selectall\" /> select all";
+		        s += "<LABEL><input type=\"checkbox\" name=\"selectall\" id=\"selectall\" /> <B>Select All</B></LABEL>";
 	        	s += SMUtilities.Build_HTML_Table(5, sUserTable, 1,true); 
 		        s += "<BR>" + createSaveButton();
 		        s += "</div>";

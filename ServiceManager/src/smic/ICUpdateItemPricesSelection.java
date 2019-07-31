@@ -403,12 +403,12 @@ public class ICUpdateItemPricesSelection  extends HttpServlet {
     	out.println("<TR><TD ALIGN=RIGHT><B>Update price by:</B></TD>");
     	if(clsManageRequestParameters.get_Request_Parameter(UPDATETYPE_PARAM, request).compareToIgnoreCase("0") == 0){
         	out.println("<TD>" + 
-    				"<INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=1 >Percentage" + 
-					"&nbsp;&nbsp;<INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=0 CHECKED=\"yes\">Fixed amount");    		
+    				"<LABLE><INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=1 >Percentage</LABEL>" + 
+					"&nbsp;&nbsp;<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=0 CHECKED=\"yes\">Fixed amount</LABEL>");    		
     	}else{
         	out.println("<TD>" + 
-    				"<INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=1 CHECKED=\"yes\">Percentage" + 
-					"&nbsp;&nbsp;<INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=0 >Fixed amount");    		
+    				"<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=1 CHECKED=\"yes\">Percentage</LABEL>" + 
+					"&nbsp;&nbsp;<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + UPDATETYPE_PARAM + "\" VALUE=0 >Fixed amount</LABEL>");    		
     	}
 		
 		String sUpdateAmount = clsManageRequestParameters.get_Request_Parameter(UPDATEAMOUNT_PARAM, request);

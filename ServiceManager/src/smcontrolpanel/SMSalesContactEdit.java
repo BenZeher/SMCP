@@ -192,8 +192,8 @@ public class SMSalesContactEdit extends HttpServlet {
 	    		
 	        	//Is Active?
 	        	out.println ("<TR><TD ALIGN=RIGHT>Active?&nbsp;</TD><TD>");
-	        	out.println ("<INPUT TYPE=\"RADIO\" NAME=\"IsInActive\" VALUE=0 CHECKED>Yes<BR>");
-	        	out.println ("<INPUT TYPE=\"RADIO\" NAME=\"IsInActive\" VALUE=1>No<BR>");
+	        	out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"IsInActive\" VALUE=0 CHECKED>Yes</LABEL><BR>");
+	        	out.println ("<LABEL><INPUT TYPE=\"RADIO\" NAME=\"IsInActive\" VALUE=1>No</LABEL><BR>");
 		        out.println ("</TD></TR>");
 		        
 		        //Description

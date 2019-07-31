@@ -81,12 +81,12 @@ public class SMBidTODOCriteriaSelection extends HttpServlet {
             		out.println("<OPTION SELECTED VALUE=\"" + rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + "\">" + 
 		            									    rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
 		            									    rsSalespersons.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
-		            									    rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName)); 
+		            									    rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName) +  ""); 
         		}else{
 	        		out.println("<OPTION VALUE=\"" + rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + "\">" + 
 	        									   rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
 	        									   rsSalespersons.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
-	        									   rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName));
+	        									   rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName) + "");
         		}
         	}
         	out.println("</TD></TR>");
@@ -124,10 +124,10 @@ public class SMBidTODOCriteriaSelection extends HttpServlet {
         	//select in/active
         	out.println("<TR><TD ALIGN=CENTER><H3>" + SMBidEntry.ParamObjectName + " status</H3></TD>");
         	out.println("<TD>" + 
-        				"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1>Successful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1>Unsuccessful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive" + 
+        				"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1>Successful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1>Unsuccessful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive</LABEL>" + 
         				"</TD></TR>");
 
         	out.println ("</TABLE><BR><BR>");

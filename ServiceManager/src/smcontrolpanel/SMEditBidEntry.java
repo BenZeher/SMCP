@@ -686,11 +686,12 @@ public class SMEditBidEntry  extends HttpServlet {
 			}else{
 				sChecked = "";
 			}
-			s += "<INPUT TYPE=\"RADIO\" NAME=\"" + SMBidEntry.Paramsstatus + "\""
+			s += "<LABEL><INPUT TYPE=\"RADIO\" NAME=\"" + SMBidEntry.Paramsstatus + "\""
 				+ " VALUE=" + sValues.get(i) + " " + sChecked
 				+ " id = \"" + SMBidEntry.Paramsstatus + "\""
 				+ " onchange=\"flagDirty();\""
 				+ " >" + sDescriptions.get(i)
+				+ "</LABEL>"
 			;
 		}
 		s += "</TD></TR>";

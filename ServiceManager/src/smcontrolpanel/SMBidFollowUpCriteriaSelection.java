@@ -117,8 +117,8 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
         	c.add(Calendar.MONTH, -1);
         	//Last Contact Date Range
         	out.println("<TR><TD ALIGN=CENTER><H3>Last Contact Date </H3></TD>");
-       		out.println("<TD><INPUT TYPE=CHECKBOX NAME=CheckLastContactDate VALUE=0>"
-        				+ "<B>Use the following range of last contact dates to limit the list</B><HR>");
+       		out.println("<TD><LABEL><INPUT TYPE=CHECKBOX NAME=CheckLastContactDate VALUE=0>"
+        				+ "<B>Use the following range of last contact dates to limit the list</B></LABEL><HR>");
         		
     		out.println("Starting from "
         			+ clsCreateHTMLFormFields.TDTextBox(
@@ -143,8 +143,8 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
         	out.println("</TR>");
         	//Next Contact Date Range
         	out.println("<TR><TD ALIGN=CENTER><H3>Next Contact Date </H3></TD>");
-        		out.println("<TD><INPUT TYPE=CHECKBOX NAME=CheckNextContactDate VALUE=0 CHECKED>"
-        				+ "<B>Use the following range of next contact dates to limit the list</B><HR>");
+        		out.println("<TD><LABEL><INPUT TYPE=CHECKBOX NAME=CheckNextContactDate VALUE=0 CHECKED>"
+        				+ "<B>Use the following range of next contact dates to limit the list</B></LABEL><HR>");
         		
     		out.println("Starting from "
         			+ clsCreateHTMLFormFields.TDTextBox(
@@ -187,10 +187,10 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
         	//Status
         	out.println("<TR><TD ALIGN=CENTER><H3>" + SMBidEntry.ParamObjectName + " Status</H3></TD>");
         	out.println("<TD>" + 
-        				"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1>Successful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1>Unsuccessful&nbsp;&nbsp;" + 
-    					"<INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive" + 
+        				"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusPending\" VALUE=1 CHECKED>Pending&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusSuccessful\" VALUE=1>Successful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusUnsuccessful\" VALUE=1>Unsuccessful&nbsp;&nbsp;</LABEL>" + 
+    					"<LABEL><INPUT TYPE=\"CHECKBOX\" NAME=\"StatusInactive\" VALUE=1>Inactive</LABEL>" + 
         				"</TD></TR>");
 
 	        out.println ("</TABLE><BR><BR>");

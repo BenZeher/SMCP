@@ -375,13 +375,13 @@ public class SMRemindersEdit  extends HttpServlet {
 				+ "</TD>"
 			;
 			s += "<TD>";
-			s	+= "<input type=\"checkbox\" name=\"" + SMReminders.Paramisunday + "\" " + isWeekdayScheduled(entry.getisunday()) + "> Sunday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramimonday + "\" " + isWeekdayScheduled(entry.getimonday()) + "> Monday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramituesday + "\" " + isWeekdayScheduled(entry.getituesday()) + "> Tuesday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramiwednesday+ "\" " + isWeekdayScheduled(entry.getiwednesday()) + "> Wednesday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramithursday + "\" " + isWeekdayScheduled(entry.getithursday()) + "> Thursday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramifriday + "\" " + isWeekdayScheduled(entry.getifriday()) + "> Friday<br>"
-				+ "<input type=\"checkbox\" name=\"" + SMReminders.Paramisaturday + "\" " + isWeekdayScheduled(entry.getisaturday()) + "> Saturday<br>"
+			s	+= "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramisunday + "\" " + isWeekdayScheduled(entry.getisunday()) + "> Sunday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramimonday + "\" " + isWeekdayScheduled(entry.getimonday()) + "> Monday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramituesday + "\" " + isWeekdayScheduled(entry.getituesday()) + "> Tuesday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramiwednesday+ "\" " + isWeekdayScheduled(entry.getiwednesday()) + "> Wednesday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramithursday + "\" " + isWeekdayScheduled(entry.getithursday()) + "> Thursday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramifriday + "\" " + isWeekdayScheduled(entry.getifriday()) + "> Friday</LABEL><br>"
+				+ "<LABEL><input type=\"checkbox\" name=\"" + SMReminders.Paramisaturday + "\" " + isWeekdayScheduled(entry.getisaturday()) + "> Saturday</LABEL><br>"
 			+ "</TD>"
 					;
 			s += "<TD ALIGN=LEFT>"
@@ -443,11 +443,11 @@ public class SMRemindersEdit  extends HttpServlet {
 		        String sCheckedOrNot = "";
 	        	while (rsUsers.next()){
 	        		sCheckedOrNot = isUserScheduled(rsUsers.getString(SMTableusers.lid), rsScheduledUsers);
-	        		sUserTable.add((String) "<INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"" + USER_ID_MARKER  
+	        		sUserTable.add((String) "<LABEL><INPUT TYPE=CHECKBOX " + sCheckedOrNot + " NAME=\"" + USER_ID_MARKER  
 	        			+  rsUsers.getString(SMTableusers.lid) + "\">" 
 	        			+ rsUsers.getString(SMTableusers.sUserFirstName) 
 	        			+ " " + rsUsers.getString(SMTableusers.sUserLastName)
-	        			+ "" 
+	        			+ "</LABEL>" 
 	        		);
 	        	}
 	        	rsUsers.close();
@@ -505,8 +505,8 @@ public class SMRemindersEdit  extends HttpServlet {
 		+ DELETE_BUTTON_LABEL
 		+ "</button>\n";
 		
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
-				+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting";
+		s += "<LABEL><INPUT TYPE='CHECKBOX' NAME='" + CONFIRM_DELETE_CHECKBOX 
+				+ "' VALUE='" + CONFIRM_DELETE_CHECKBOX + "' > Check to confirm before deleting</LABEL>";
 		return s;
 	}
 	

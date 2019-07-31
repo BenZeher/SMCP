@@ -2,6 +2,7 @@ package smgl;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMTableaptransactions;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionLinks {
@@ -32,7 +33,7 @@ public class GLTransactionLinks {
 		switch(iSourceLedgerCode){
 			case GLSourceLedgers.SOURCE_LEDGER_AP:
 				sSubledgerLinkClass = "smap.APViewTransactionInformation";
-				sAdditionalParameters = "&lid=" + sSubledgerTransactionID;
+				sAdditionalParameters = "&" + SMTableaptransactions.lid + "=" + sSubledgerTransactionID;
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_AR:
 				sSubledgerLinkClass = "";
@@ -41,7 +42,8 @@ public class GLTransactionLinks {
 				sSubledgerLinkClass = "";
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_IC:
-				sSubledgerLinkClass = "";
+				sSubledgerLinkClass = "smic.ICTransactionDetailsDisplay";
+				sAdditionalParameters = "&ICTransactionID=" + sSubledgerTransactionID + "&CallingClass=smic.ICTransactionHistory";
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_GL:
 				sSubledgerLinkClass = "";

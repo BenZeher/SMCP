@@ -19,6 +19,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMModuleTypes;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicbatchentries;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsCreateHTMLFormFields;
@@ -332,31 +333,32 @@ public class ICEditBatchesEdit extends HttpServlet {
     	//}
         //List out the entries on the screen as links to edit:
         //pwOut.println("<BR>");
-        pwOut.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">");
+        pwOut.println(SMUtilities.getMasterStyleSheetLink());
+        pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 
-    	pwOut.println("<TR>");
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Entry #</B></U>");
+    	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry #");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Entry Type</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry Type");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Entry date</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Entry date");
     	pwOut.println("</TD>");
 
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Doc #</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Doc #");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Description</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+    	pwOut.println("Description");
     	pwOut.println("</TD>");
     	
-    	pwOut.println("<TD>");
-    	pwOut.println("<B><U>Entry net cost</B></U>");
+    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">");
+    	pwOut.println("Entry net cost");
     	pwOut.println("</TD>");
     	
     	pwOut.println("</TR>");
@@ -378,11 +380,16 @@ public class ICEditBatchesEdit extends HttpServlet {
 		        	+ " - "
 		        	+ sUserFullName
 		        		);
-	
+		        int iCount=0;
 		        while(rsEntries.next()){
-		        	pwOut.println("<TR>");
+		        	if(iCount % 2 == 0) {
+		            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+		        	}else {
+		            	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+		        	}
+
 		        	//Entry number
-		        	pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	
 		        	String sEditableBatch = "No";
 		        	if(batch.bEditable()){
@@ -432,31 +439,31 @@ public class ICEditBatchesEdit extends HttpServlet {
 		        	pwOut.println("</TD>");
 
 		        	//Entry type
-		        	pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(ICEntryTypes.Get_Entry_Type(
 		        		rsEntries.getInt(SMTableicbatchentries.ientrytype)));
 		        	pwOut.println("</TD>");
 
 		        	//Entry date
-		        	pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(clsDateAndTimeConversions.utilDateToString(
 		        		rsEntries.getDate(SMTableicbatchentries.datentrydate),"MM-dd-yyyy"));
 		        	pwOut.println("</TD>");
 	
 		        	//Doc Number
-		        	pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(rsEntries.getString(SMTableicbatchentries.sdocnumber));
 		        	pwOut.println("</TD>");
 		        	
 		        	//Description
-		        	pwOut.println("<TD>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");		        	
 		        	pwOut.println(
 		        			clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(
 		        					rsEntries.getString(SMTableicbatchentries.sentrydescription)));
 		        	pwOut.println("</TD>");	        	
 		        	
 		        	//Entry amount - just display the absolute value, since we don't care about the arithmetic sign here:
-		        	pwOut.println("<TD ALIGN=RIGHT>");
+		        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	//Transfers have an amount stored, but they always net to zero, so we
 		        	//want to show a zero in the list:
 		        	BigDecimal bdEntryCost = rsEntries.getBigDecimal(SMTableicbatchentries.bdentryamount);
@@ -469,16 +476,14 @@ public class ICEditBatchesEdit extends HttpServlet {
 		    		bdCostTotal = bdCostTotal.add(bdEntryCost);
 		        	
 		        	pwOut.println("</TR>");
+		        	iCount++;
 		        }
 		        rsEntries.close();
 		        //Print the total lines:
-	        	pwOut.println("<TR>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD>&nbsp;</TD>");
-	        	pwOut.println("<TD ALIGN = RIGHT><B>TOTALS:</B></TD>");
-	        	pwOut.println("<TD ALIGN = RIGHT>" 
+	        	pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
+	        	pwOut.println("<TD COLSPAN=\"4\">&nbsp;</TD>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">TOTALS:</TD>");
+	        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
 	        		+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCostTotal) + "</TD>");
 		        
 				pwOut.println("</TABLE>");

@@ -60,7 +60,8 @@ public class SMGLExport extends java.lang.Object{
 			String sSourceDescription,
 			String smmddyyyyDocDate,
 			String smmddyyyyEntryDate,
-        	String sEntryDescription
+        	String sEntryDescription,
+        	String sSourceLedgerTransactionID 
 			){
 
 	    SMGLExportHeader header = new SMGLExportHeader(
@@ -73,7 +74,8 @@ public class SMGLExport extends java.lang.Object{
 	        	replaceCriticalStringLiterals(sSourceDescription),
 	           	smmddyyyyDocDate,
 	        	smmddyyyyEntryDate,
-	        	sEntryDescription
+	        	sEntryDescription,
+	        	sSourceLedgerTransactionID
 	        	);
 	    
 	    m_HeaderRecordArray.add(header);
@@ -834,7 +836,8 @@ public class SMGLExport extends java.lang.Object{
 					    		clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
 					    		clsServletUtilities.EMPTY_DATE_VALUE
 					    		),
-					    	replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.sentrydescription))
+					    	replaceCriticalStringLiterals(rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.sentrydescription)),
+					    	rs.getString(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.ssourceledgertransactionid)
 						));
 					lCurrentBatchEntry = rs.getLong(SMTableglexportheaders.TableName + "." + SMTableglexportheaders.lbatchentry);
 				}

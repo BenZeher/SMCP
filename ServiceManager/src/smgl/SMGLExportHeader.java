@@ -14,6 +14,7 @@ public class SMGLExportHeader extends java.lang.Object{
     private String m_sDocDate;
     private String m_sEntryDate;
     private String m_sEntryDescription;
+    private String m_sSourceLedgerTransactionID;
     private ArrayList<SMGLExportDetail> m_ExportDetailArray;
     
     SMGLExportHeader(
@@ -26,7 +27,8 @@ public class SMGLExportHeader extends java.lang.Object{
     	String sHeaderSourceDescription,
     	String smmddyyyyDocDate,
     	String smmddyyyyEntryDate,
-    	String sEntryDescription
+    	String sEntryDescription,
+    	String sSourceLedgerTransactionID
 
     ){
         m_iHeaderRecordType = iHeaderRecordType;
@@ -39,6 +41,7 @@ public class SMGLExportHeader extends java.lang.Object{
         m_sDocDate = smmddyyyyDocDate;
         m_sEntryDate = smmddyyyyEntryDate;
         m_sEntryDescription = sEntryDescription;
+        m_sSourceLedgerTransactionID = sSourceLedgerTransactionID;
         m_ExportDetailArray = new ArrayList<SMGLExportDetail>(0);
     	
     }
@@ -72,6 +75,9 @@ public class SMGLExportHeader extends java.lang.Object{
 	}
 	public String getEntryDescription(){
 		return m_sEntryDescription;
+	}
+	public String getSourceLedgerTransactionID() {
+		return m_sSourceLedgerTransactionID;
 	}
 	public void addDetail(SMGLExportDetail detail){
 		m_ExportDetailArray.add(detail);

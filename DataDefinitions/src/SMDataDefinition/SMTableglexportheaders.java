@@ -16,6 +16,7 @@ public class SMTableglexportheaders {
 	public static final String datdocdate  = "datdocdate";
 	public static final String datentrydate  = "datentrydate";
 	public static final String sentrydescription  = "sentrydescription";
+	public static final String ssourceledgertransactionid = "ssourceledgertransactionid";
 	    
 	//Field lengths:
 	public static final int ssourceledgerlength = 2;

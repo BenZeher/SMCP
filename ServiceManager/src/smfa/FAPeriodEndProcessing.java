@@ -150,7 +150,8 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 					"PROVISIONAL Processing",
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
-					"Monthly Depreciation"
+					"Monthly Depreciation",
+					"0"
 					)){
 				throw new Exception("Error setting export batch file header - " + m_cGLExportBatch.getErrorMessage()); 
 			}
@@ -162,7 +163,9 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 					"Periodic Processing",
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
-					"Monthly Depreciation")){
+					"Monthly Depreciation",
+					"0"
+					)){
 				throw new Exception("Error setting export batch file header - " + m_cGLExportBatch.getErrorMessage()); 
 			}
 			sProvisionalDescription = "Monthly Depreciation";

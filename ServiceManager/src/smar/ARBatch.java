@@ -1771,7 +1771,8 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 								"SMAR",
 								sStdBatchDateString(),
 								sStdBatchDateString(),
-								buildGLTransactionEntryDescription(ARDocumentTypes.PREPAYMENT)
+								buildGLTransactionEntryDescription(ARDocumentTypes.PREPAYMENT),
+								"0"
 						);
 					}
 
@@ -2280,7 +2281,8 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						"SMAR",
 						entry.sStdDocDate(),
 						sStdBatchDateString(),
-						buildGLTransactionEntryDescription(entry.getDocumentType())
+						buildGLTransactionEntryDescription(entry.getDocumentType()),
+						"0"
 				);
 
 				//First, add the entry itself as a GL transaction:

@@ -3917,7 +3917,8 @@ public class ICEntryBatch {
         				"SMIC",
         				entry.sStdEntryDate(),
         				entry.sStdEntryDate(),
-        				"IC " + ICEntryTypes.Get_Entry_Type(Integer.parseInt(entry.sEntryType()))
+        				"IC " + ICEntryTypes.Get_Entry_Type(Integer.parseInt(entry.sEntryType())),
+        				"0"
         		);
         		        		
         		for (int i = 0; i < entry.getLineCount(); i ++){

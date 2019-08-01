@@ -1761,7 +1761,8 @@ public class APBatch {
     			"SMAP",
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
-    			buildGLTransactionEntryDescription(entry)
+    			buildGLTransactionEntryDescription(entry),
+    			"0"
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -2029,7 +2030,8 @@ public class APBatch {
     			"SMAP",
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
-    			buildGLTransactionEntryDescription(entry)
+    			buildGLTransactionEntryDescription(entry),
+    			"0"
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -2280,7 +2282,8 @@ public class APBatch {
     			"SMAP",
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
-    			buildGLTransactionEntryDescription(entry)
+    			buildGLTransactionEntryDescription(entry),
+    			"0"
     		);
     		
 //    		java.sql.Date datEntry = null;

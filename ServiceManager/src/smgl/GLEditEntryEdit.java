@@ -757,7 +757,7 @@ public class GLEditEntryEdit  extends HttpServlet {
  		s += "  <TR>\n";
  		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
  		    ;
-     	if (bEditable){
+     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0)){
      		String sDefaultID = "0";
      		if (entry.getssourceledgertransactionlineid().compareToIgnoreCase("") != 0){
      			sDefaultID = entry.getssourceledgertransactionlineid();

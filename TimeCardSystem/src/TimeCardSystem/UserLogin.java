@@ -213,6 +213,9 @@ public class UserLogin extends HttpServlet {
        		);
 	        
 		    if (rsEmployeeInfo.next()){
+		    	if (rsEmployeeInfo.getInt(Employees.TableName + "." + Employees.iActive) == 0){
+		    		throw new Exception("Error [20192141616325] " + " This user has been set to inactive - contact an administrator for help.");
+		    	}
 		    	String sEmployeeID = rsEmployeeInfo.getString(Employees.TableName + "." + Employees.sEmployeeID);
 		    	CurrentSession.setAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_EID, sEmployeeID);
 		    	CurrentSession.setAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_EID, sEmployeeID);
@@ -254,7 +257,7 @@ public class UserLogin extends HttpServlet {
 		    }
 		    rsEmployeeInfo.close();
 		    
-	    } catch (SQLException ex){
+	    } catch (Exception ex){
 	        // handle any errors
 	        out.println("<BR>Error in UserLogin - " + ex.getMessage());
 	    }

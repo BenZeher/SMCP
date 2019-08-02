@@ -113,6 +113,9 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 			if(rs.next() && sPinNumber.compareToIgnoreCase("") != 0){
+				if (rs.getInt(Employees.TableName + "." + Employees.iActive) == 0){
+					throw new Exception("Error [2019214162329] " + "This user is marked as inactive - contact an administrator for help.");
+				}
 			    sUserID = rs.getString(Employees.sEmployeeID);	
 			}else{
 				out.println("The pin code is not valid. Please try again.");	
@@ -124,8 +127,8 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 					+ "'>");
 				return;
 				}
-		} catch (SQLException e1) {
-			out.println("Failed to log in. Internal error.");	
+		} catch (Exception e1) {
+			out.println("Failed to log in - " + e1.getMessage());	
 			out.println("<META http-equiv='Refresh' content='2;URL=" 
 				+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
 				+ MainLogin.CLASS_NAME
@@ -133,7 +136,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 				+ "&" + MainLogin.MILESTONES_LOGIN_PARAM + "=Y" 
 				+ "'>");
 			return;
-			}
+		}
 		
 	    String sStatus = "";
 		String sWarning = "";

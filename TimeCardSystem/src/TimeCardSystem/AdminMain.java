@@ -140,6 +140,9 @@ public class AdminMain extends HttpServlet {
 			//System.out.println("Get_Employee_Info_By_Pin_SQL = " + sSQL);
 			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 			if (rs.next()){
+				if (rs.getInt(Employees.TableName + "." + Employees.iActive) == 0){
+					throw new Exception("Error [20192141619278] " + " This user is marked inactive - contact an administrator for help.");
+				}
 				String sFullName = rs.getString(Employees.TableName + "." + Employees.sEmployeeFirstName) + " " + rs.getString(Employees.TableName + "." + Employees.sEmployeeLastName);
 				CurrentSession.setAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_EID, rs.getString(Employees.TableName + "." + Employees.sEmployeeID));
 				CurrentSession.setAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_EMPLOYEEFULNAME, sFullName);
@@ -528,7 +531,7 @@ public class AdminMain extends HttpServlet {
 			}
 			rs.close();
 
-		} catch (SQLException ex) {
+		} catch (Exception ex) {
 			// handle any errors
 			out.println("Error in AdminMain class - " + ex.getMessage());
 		} 

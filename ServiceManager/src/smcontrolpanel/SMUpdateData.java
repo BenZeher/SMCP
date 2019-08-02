@@ -14578,7 +14578,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 			//BEGIN CASE:
 			case 1404:
-				//Added by BJA 8/1/2019
+				//Added by BJA 8/2/2019
 				SQL = "ALTER TABLE `gltransactionbatchentries` "
 					+ " ADD ssourceledgertransactionid varchar(24) NOT NULL DEFAULT ''"
 				;

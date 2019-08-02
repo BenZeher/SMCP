@@ -14,7 +14,7 @@ public class SMTablegltransactionbatchentries {
 	public static final String datdocdate = "datdocdate";
 	public static final String ifiscalyear = "ifiscalyear";
 	public static final String ifiscalperiod = "ifiscalperiod";
-	public static final String lsourceledgertransactionlineid = "lsourceledgertransactionlineid";
+	public static final String ssourceledgertransactionlineid = "ssourceledgertransactionlineid";
 	public static final String ssourceledger = "ssourceledger";
 	public static final String iautoreverse = "iautoreverse";
 	

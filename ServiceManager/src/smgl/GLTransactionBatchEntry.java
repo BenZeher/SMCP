@@ -103,7 +103,7 @@ public class GLTransactionBatchEntry {
 		} catch (Exception e) {
 			setsfiscalperiod("0");
 		}
-		setssourceledgertransactionlineid(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.lsourceledgertransactionlineid, req).replace("&quot;", "\""));
+		setssourceledgertransactionlineid(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledgertransactionlineid, req).replace("&quot;", "\""));
 		setssourceledger(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledger, req).replace("&quot;", "\""));
 		if (clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.iautoreverse, req).compareToIgnoreCase("") != 0){
 			setsautoreverse("1");
@@ -288,7 +288,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber
 			+ ", " + SMTablegltransactionbatchentries.lentrynumber
 			+ ", " + SMTablegltransactionbatchentries.llastline
-			+ ", " + SMTablegltransactionbatchentries.lsourceledgertransactionlineid
+			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionlineid
 			+ ", " + SMTablegltransactionbatchentries.sentrydescription
 			+ ", " + SMTablegltransactionbatchentries.ssourceledger
 			+ ")"
@@ -301,7 +301,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + getsbatchnumber()
 			+ ", " + getsentrynumber()
 			+ ", " + getslastline()
-			+ ", " + getssourceledgertransactionlineid()
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 			+ ")"
@@ -315,7 +315,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber()
 			+ ", " + SMTablegltransactionbatchentries.lentrynumber + " = " + getsentrynumber()
 			+ ", " + SMTablegltransactionbatchentries.llastline + " = " + getslastline()
-			+ ", " + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + " = " + getssourceledgertransactionlineid()
+			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + " = " + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.sentrydescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.ssourceledger + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 		;
@@ -707,7 +707,7 @@ public class GLTransactionBatchEntry {
 					rs.getString(SMTablegltransactionbatchentries.datdocdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
 				setsfiscalyear(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalyear)));
 				setsfiscalperiod(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalperiod)));
-				setssourceledgertransactionlineid(Long.toString(rs.getLong(SMTablegltransactionbatchentries.lsourceledgertransactionlineid)));
+				setssourceledgertransactionlineid(rs.getString(SMTablegltransactionbatchentries.ssourceledgertransactionlineid));
 				setssourceledger(rs.getString(SMTablegltransactionbatchentries.ssourceledger));
 				setsautoreverse(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iautoreverse)));
 			}else{
@@ -942,7 +942,7 @@ public class GLTransactionBatchEntry {
 		sQueryString += "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + clsServletUtilities.URLEncode(getsentrynumber());
 		sQueryString += "&" + SMTablegltransactionbatchentries.lid + "=" + clsServletUtilities.URLEncode(getslid());
 		sQueryString += "&" + SMTablegltransactionbatchentries.llastline + "=" + clsServletUtilities.URLEncode(getslastline());
-		sQueryString += "&" + SMTablegltransactionbatchentries.lsourceledgertransactionlineid + "=" + clsServletUtilities.URLEncode(getssourceledgertransactionlineid());
+		sQueryString += "&" + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + "=" + clsServletUtilities.URLEncode(getssourceledgertransactionlineid());
 		sQueryString += "&" + SMTablegltransactionbatchentries.sentrydescription + "=" + clsServletUtilities.URLEncode(getsentrydescription());
 		sQueryString += "&" + SMTablegltransactionbatchentries.ssourceledger + "=" + clsServletUtilities.URLEncode(getssourceledger());
 		return sQueryString;

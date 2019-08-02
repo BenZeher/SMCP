@@ -907,7 +907,7 @@ public class SMGLExport extends java.lang.Object{
 			glentry.setsfiscalperiod(Integer.toString(iFiscalPeriod));
 			glentry.setsfiscalyear(Integer.toString(iFiscalYear));
 			glentry.setssourceledger(m_HeaderRecordArray.get(i).getSourceLedger());
-			glentry.setssourceledgertransactionlineid("0");
+			glentry.setssourceledgertransactionlineid(m_HeaderRecordArray.get(i).getSourceLedgerTransactionID());
 			
 			//Now add the lines:
 			for (int j = 0; j < m_HeaderRecordArray.get(i).getDetailArray().size(); j++){

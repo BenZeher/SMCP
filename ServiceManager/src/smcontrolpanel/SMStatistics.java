@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableartransactions;
@@ -52,6 +53,7 @@ public class SMStatistics extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String title = "System Statistics";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -311,6 +313,10 @@ public class SMStatistics extends HttpServlet {
 	     	rs.close();
 	     	
 	     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080672]");
+
+	     	SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	     	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMWARRANTYSTATUSREPORT, "REPORT", "SMStatistics", "[1564758031]");
+		 	   
 		}catch (SQLException ex){
 	    	System.out.println("Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());

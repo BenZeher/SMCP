@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
+import SMClasses.SMLogEntry;
 import SMDataDefinition.*;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -37,6 +38,7 @@ public class SMListSecurityBy extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sListBy = request.getParameter("ListBy");
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String title = "List Security By " + sListBy;
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
@@ -44,6 +46,10 @@ public class SMListSecurityBy extends HttpServlet {
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
+	    
+		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMLISTSECURITYBY, "REPORT", "SMListSecurityby:" + sListBy, "[1564757440]");
+	    
 	    
 	    // Get the recordset of security information:
 		try{

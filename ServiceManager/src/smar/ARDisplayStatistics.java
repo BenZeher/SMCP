@@ -16,6 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -41,6 +42,7 @@ public class ARDisplayStatistics extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sCustomerCode = (String) request.getParameter(sObjectName);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String title = "";
 		String subtitle = "";
 		title = "View statistics for: " + sCustomerCode;
@@ -55,11 +57,11 @@ public class ARDisplayStatistics extends HttpServlet {
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Accounts Receivable Main Menu</A><BR><BR>");
 
-	    displayStatistics(sCustomerCode, out, sDBID);
+	    displayStatistics(sCustomerCode, out, sDBID, sUserID);
 	    
 		out.println("</BODY></HTML>");
 	}
-	private boolean displayStatistics (String sCustomerCode, PrintWriter pwOut, String sDBID){
+	private boolean displayStatistics (String sCustomerCode, PrintWriter pwOut, String sDBID, String sUserID){
 		
 		ARCustomer cust = new ARCustomer(sCustomerCode);
 		if (!cust.load(getServletContext(), sDBID)){
@@ -217,6 +219,9 @@ public class ARDisplayStatistics extends HttpServlet {
 				pwOut.println("</TR>");
 			}
 			rs.close();
+			
+			   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+		 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARDISPLAYSTATISTICS, "REPORT", "ARDisplayStatistics", "[1564762299]");
 			pwOut.println("</TABLE>");
 		}catch (SQLException e){
 			System.out.println("Error reading monthly statistics - " + e.getMessage());

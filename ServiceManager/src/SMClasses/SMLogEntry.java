@@ -168,6 +168,18 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_GLCLEARFISCALDATA = "GLCLEARFISCALDATA";
 	public final static String LOG_OPERATION_GLTRANSACTIONLISTING = "GLTRANSACTIONLISTING";
 	
+	// TODO make descriptions for these
+	public final static String LOG_OPERATION_SMCHECKCONNECTIONLIST = "SMCHECKCONNECTIONLIST";
+	public final static String LOG_OPERATION_SMEDITUSERSCUSTOMLINKS = "SMEDITUSERSCUSTOMLINKS";
+	public final static String LOG_OPERATION_SMLISTSECURITYBY = "SMLISTSECURITYBY";
+	public final static String LOG_OPERATION_SMDISPLAYLOGOPERATIONS = "SMDISPLAYLOGOPERATIONS";
+	public final static String LOG_OPERATION_SMSALESTAXREPORT = "SMSALESTAXREPORT ";
+	public final static String LOG_OPERATION_ARACTIVITYDISPLAY = "ARACTIVITYDISPLAY ";
+	public final static String LOG_OPERATION_ARDISPLAYSTATISTICS = "ARDISPLAYSTATISTICA ";
+	public final static String LOG_OPERATION_ICQUANTITIESONHAND = "ICQUANTITIESONHAND ";
+	public final static String LOG_OPERATION_ICITEMNUMBERMATCHUP = "ICITEMNUMBERMATCHUP ";
+	public final static String LOG_OPERATION_ICLISTPHYSICALINVENTORIES = "ICLISTPHYSICALINVENTORIES ";
+	
 	private Connection conn;
 	private ServletContext context;
 	private String m_DBID;
@@ -285,7 +297,7 @@ public class SMLogEntry {
     	return true;
     }
     public static ArrayList<String> getOperationDescriptions(String sDelimiter){
-
+    	// TODO Add new logging operations to view the table
     	ArrayList<String> m_arrOperationLabelValues = new ArrayList<String>(0);
     	ArrayList<String> m_arrOperationLabelDescriptions = new ArrayList<String>(0);
 

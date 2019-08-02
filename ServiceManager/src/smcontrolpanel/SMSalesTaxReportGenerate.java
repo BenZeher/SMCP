@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
@@ -202,7 +203,8 @@ public class SMSalesTaxReportGenerate extends HttpServlet {
 				out,
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 			);
-
+			   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+		 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMSALESTAXREPORT, "REPORT", "SMSalesTaxReport", "[1564760298]");
 		} catch (Exception e1) {
 			out.println("<B><FONT COLOR=RED><BR>Error printing report - " + e1.getMessage() + "<BR></FONT></B>");
 		}

@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsDatabaseFunctions;
 
@@ -39,6 +40,7 @@ public class SMCheckConnectionList extends HttpServlet {
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 
 	    
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
@@ -55,7 +57,10 @@ public class SMCheckConnectionList extends HttpServlet {
 		   "</TD></TR></TABLE>");
 	   out.println(SMUtilities.getMasterStyleSheetLink());
 
-    	
+	   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCHECKCONNECTIONLIST, "REPORT", "SMCheckConnectionsList", "[1564758138]");
+
+
 	   out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 	   String sExecutioner = "";
 	   sExecutioner = "" + SMUtilities.getURLLinkBase(getServletContext()) 

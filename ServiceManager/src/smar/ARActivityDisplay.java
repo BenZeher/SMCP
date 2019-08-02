@@ -19,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableartransactions;
@@ -360,6 +361,9 @@ public class ARActivityDisplay extends HttpServlet {
 	        	}
 	        	if (!bHasRecord){
 	        		out.println ("<TR><TD COLSPAN=11><B>No Record Found</B></TD></TR>");
+	        	}else {
+	     		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	     	 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARACTIVITYDISPLAY, "REPORT", "ARActivityDisplay", "[1564762127]");
 	        	}
 	        	rs.close();
 		        out.println ("<BR>");

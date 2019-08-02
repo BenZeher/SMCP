@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -165,7 +166,9 @@ public class ICItemNumberMatchUpGenerate extends HttpServlet {
 	    		);
     		return;	
     	}
-    		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080865]");
-    		out.println("</BODY></HTML>");
+    	SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+    	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICITEMNUMBERMATCHUP, "REPORT", "ICItemNumberMatchup", "[1564757440]");
+    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080865]");
+    	out.println("</BODY></HTML>");
 	}
 }

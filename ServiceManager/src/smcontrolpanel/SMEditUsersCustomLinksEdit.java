@@ -10,8 +10,10 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import SMClasses.MySQLs;
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecustomlinks;
 import SMDataDefinition.SMTableusers;
@@ -41,6 +43,10 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 			throws ServletException, IOException {
 		
 		//SMReminders entry = new SMReminders(request);
+		HttpSession CurrentSession = request.getSession(true);
+		   String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+		    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+		
 		SMMasterEditEntry smedit = new SMMasterEditEntry(
 				request,
 				response,
@@ -72,6 +78,8 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 				smedit.getPWOut(),
 				smedit
 			);
+		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMEDITUSERSCUSTOMLINKS, "REPORT", "SMEditUsersCustomLinks", "[1564757440]");
 	   // smedit.getPWOut().println(sCommandScripts(smedit));
 		} catch (Exception e) {
     		String sError = "Could not create edit page - " + e.getMessage();
@@ -149,6 +157,8 @@ public class SMEditUsersCustomLinksEdit  extends HttpServlet {
 			);
 	
 			s += "</TABLE>";
+			
+			
 			
 			//Display all Users
 			ArrayList<String> sUserTable = new ArrayList<String>(0);

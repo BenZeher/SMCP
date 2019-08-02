@@ -73,7 +73,8 @@ public class SMDisplayLoggingOperations  extends HttpServlet {
 		 	    out.println("</TD></TR></TABLE>");
 			
 		 	    out.println(SMUtilities.getMasterStyleSheetLink());
-			
+		 	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+		 	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYLOGOPERATIONS, "REPORT", "SMDisplayLoggingOperations", "[1564759748]");
 			   
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 		out.println(SMUtilities.getMasterStyleSheetLink());

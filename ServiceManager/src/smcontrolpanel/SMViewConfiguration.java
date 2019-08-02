@@ -73,12 +73,13 @@ public class SMViewConfiguration  extends HttpServlet {
 		//Record the use of this function:
 		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
-			sUserID,
-			SMLogEntry.LOG_OPERATION_SMVIEWSYSTEMCONFIGURATION, 
-			"Viewing system configuration", 
-			sCompanyName, 
-			"[1435785110]"
-		);
+				sUserID,
+				SMLogEntry.LOG_OPERATION_SMVIEWSYSTEMCONFIGURATION, 
+				"REPORT", 
+				"Viewing system configuration for: " + sCompanyName, 
+				"[1564759531]"
+			);
+
 		
 		title = "View System Configuration";
 		String subtitle = "";

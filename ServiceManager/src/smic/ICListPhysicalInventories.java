@@ -18,6 +18,7 @@ import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicphysicalinventories;
 import ServletUtilities.clsDatabaseFunctions;
@@ -46,6 +47,7 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    
 	    //Get the variables for the class:
 	    String title = "Physical inventories.";
@@ -183,7 +185,9 @@ public class ICListPhysicalInventories extends HttpServlet {
 	        System.out.println("SQL: " + ex.getErrorCode());
 			//return false;
 		}
-		
+
+	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICLISTPHYSICALINVENTORIES, "REPORT", "ICListPhysicalInventories", "[1564766140]");
 		out.println("<TABLE BORDER=0 CELLSPACING=2>");
 		
 		//***************************************

@@ -16,6 +16,7 @@ import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
+import SMClasses.SMLogEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -134,6 +135,8 @@ public class ICQuantitiesOnHandReportGenerate extends HttpServlet {
     	)){
     		out.println("Could not print report - " + itemval.getErrorMessage());
     	}
+		   SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+	 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICQUANTITIESONHAND, "REPORT", "ICQuantitiesOnHand", "[1564764057]");
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080960]");
 	    out.println("</BODY></HTML>");
 	}

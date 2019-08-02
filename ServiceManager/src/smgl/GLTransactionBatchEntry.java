@@ -566,11 +566,11 @@ public class GLTransactionBatchEntry {
 			m_sourceledgertransactionlineid = "0";
 		}
 		try {
-			m_sourceledgertransactionlineid = clsValidateFormFields.validateLongIntegerField(
+			m_sourceledgertransactionlineid = clsValidateFormFields.validateStringField(
 					m_sourceledgertransactionlineid, 
-				"Source ledger transaction line ID", 
-				-1L, 
-				clsValidateFormFields.MAX_LONG_VALUE);
+					24, 
+					"Source Transaction Ledger ID ", 
+					false);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}

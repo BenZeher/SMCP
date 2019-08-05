@@ -17,6 +17,7 @@ import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicphysicalcounts;
 import SMDataDefinition.SMTableicphysicalinventories;
 import SMDataDefinition.SMTablelocations;
@@ -422,16 +423,17 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 			String sUser,
 			PrintWriter out){
 		
+		out.println(SMUtilities.getMasterStyleSheetLink());
 		//List entry counts here:
-		out.println(
-			"<TABLE BORDER=1><TR>"
-			+ "<TD><B><FONT SIZE=2>Count #</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>ID</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Created</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Created by</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Description</FONT></B></TD>"
-			+ "</TR>"
-		);
+		out.println("<TABLE WIDTH=100% BGCOLOR = \"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Count #</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">ID</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Created</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Created by</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+		out.println("</TR>");
+
 		
 		//List the physical counts:
 		String SQL = "SELECT * FROM "
@@ -454,7 +456,11 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 			String sCountLink = "";
 			int iCountNumber = 0;
 			while (rs.next()){
-				out.println("<TR>");
+				if(iCountNumber % 2 == 0 ) {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
 				iCountNumber++;
 				sCountLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCount"
 		    		+ "?" + ICPhysicalCountEntry.ParamID + "=" + rs.getLong(SMTableicphysicalcounts.lid)
@@ -462,12 +468,12 @@ public class ICEditPhysicalInventory  extends HttpServlet {
 		    		+ "&" + ICPhysicalCountEntry.ParamPhysicalInventoryID + "=" + sPhysicalInventoryID 
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		    		+ "\">" + iCountNumber + "</A>";
-				out.println("<TD><FONT SIZE=2>" + sCountLink + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getLong(SMTableicphysicalcounts.lid) + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + clsDateAndTimeConversions.resultsetDateStringToString(
-					rs.getString(SMTableicphysicalcounts.datcreated)) + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getString(SMTableicphysicalcounts.screatedbyfullname) + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getString(SMTableicphysicalcounts.sdesc) + "</FONT></TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sCountLink + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getLong(SMTableicphysicalcounts.lid) + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDateAndTimeConversions.resultsetDateStringToString(
+						rs.getString(SMTableicphysicalcounts.datcreated))  + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableicphysicalcounts.screatedbyfullname) + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableicphysicalcounts.sdesc) + "</TD>");
 				out.println("</TR>");
 			}
 			rs.close();

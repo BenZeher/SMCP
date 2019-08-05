@@ -16,6 +16,7 @@ import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTableicphysicalcountlines;
 import SMDataDefinition.SMTableicphysicalcounts;
@@ -318,16 +319,18 @@ public class ICEditPhysicalCount  extends HttpServlet {
 		    		+ "\">Create a new physical count line</A>"
 		    );
 		}
-		out.println(
-			"<TABLE BORDER=1><TR>"
-			+ "<TD><B><FONT SIZE=2>Line #</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Qty</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Item</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Description</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Unit</FONT></B></TD>"
-			+ "<TD><B><FONT SIZE=2>Entered</FONT></B></TD>"
-			+ "</TR>"
-		);
+		
+		out.println(SMUtilities.getMasterStyleSheetLink());
+		out.println("<TABLE WIDTH=100% BGCOLOR = \"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Line #</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Qty</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Item</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Unit</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Entered</TD>");
+		out.println("</TR>");
+
 		
 		//List the physical count lines:
 		String SQL = "SELECT"
@@ -364,7 +367,11 @@ public class ICEditPhysicalCount  extends HttpServlet {
 			String sCountLineLink = "";
 			int iLineNumber = 0;
 			while (rs.next()){
-				out.println("<TR>");
+				if(iLineNumber % 2 == 0) {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
 				iLineNumber++;
 				sCountLineLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalCountLine"
 		    		+ "?" + ICPhysicalCountLineEntry.ParamID + "=" 
@@ -372,19 +379,14 @@ public class ICEditPhysicalCount  extends HttpServlet {
 		    		+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		    		+ "\">" + iLineNumber + "</A>";
-				out.println("<TD><FONT SIZE=2>" + sCountLineLink + "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" 
-					+ clsManageBigDecimals.BigDecimalToFormattedString(
-						"###,###,##0.0000", rs.getBigDecimal(SMTableicphysicalcountlines.bdqty)) 
-							+ "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getString(SMTableicphysicalcountlines.sitemnumber) 
-					+ "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getString(SMTableicitems.sItemDescription) 
-					+ "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + rs.getString(SMTableicphysicalcountlines.sunitofmeasure) 
-						+ "</FONT></TD>");
-				out.println("<TD><FONT SIZE=2>" + clsDateAndTimeConversions.resultsetDateStringToString(
-					rs.getString(SMTableicphysicalcounts.datcreated)) + "</FONT></TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sCountLineLink + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalToFormattedString(
+						"###,###,##0.0000", rs.getBigDecimal(SMTableicphysicalcountlines.bdqty))  + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableicphysicalcountlines.sitemnumber)  + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableicitems.sItemDescription) + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rs.getString(SMTableicphysicalcountlines.sunitofmeasure)  + "</TD>");
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDateAndTimeConversions.resultsetDateStringToString(
+						rs.getString(SMTableicphysicalcounts.datcreated))  + "</TD>");
 				out.println("</TR>");
 			}
 			rs.close();

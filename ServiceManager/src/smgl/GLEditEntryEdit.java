@@ -858,7 +858,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		//Header row:
 		if (bEditable){
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "Line&nbsp;#</TD>\n";

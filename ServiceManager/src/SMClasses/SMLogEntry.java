@@ -167,8 +167,6 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_GLCLEARTRANS = "GLCLEARTRANS";
 	public final static String LOG_OPERATION_GLCLEARFISCALDATA = "GLCLEARFISCALDATA";
 	public final static String LOG_OPERATION_GLTRANSACTIONLISTING = "GLTRANSACTIONLISTING";
-	
-	// TODO make descriptions for these
 	public final static String LOG_OPERATION_SMCHECKCONNECTIONLIST = "SMCHECKCONNECTIONLIST";
 	public final static String LOG_OPERATION_SMEDITUSERSCUSTOMLINKS = "SMEDITUSERSCUSTOMLINKS";
 	public final static String LOG_OPERATION_SMLISTSECURITYBY = "SMLISTSECURITYBY";
@@ -297,7 +295,7 @@ public class SMLogEntry {
     	return true;
     }
     public static ArrayList<String> getOperationDescriptions(String sDelimiter){
-    	// TODO Add new logging operations to view the table
+    	
     	ArrayList<String> m_arrOperationLabelValues = new ArrayList<String>(0);
     	ArrayList<String> m_arrOperationLabelDescriptions = new ArrayList<String>(0);
 
@@ -756,6 +754,36 @@ public class SMLogEntry {
 
     	m_arrOperationLabelValues.add(LOG_OPERATION_GLTRANSACTIONLISTING);
     	m_arrOperationLabelDescriptions.add("Records running of the GL transaction listing");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMCHECKCONNECTIONLIST);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of current database connections");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMEDITUSERSCUSTOMLINKS);
+    	m_arrOperationLabelDescriptions.add("Records the viewing and editing of custom links for all users");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMLISTSECURITYBY);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of security privledges to each user depending on the selection");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMDISPLAYLOGOPERATIONS);
+    	m_arrOperationLabelDescriptions.add("Records running of this current report");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_SMSALESTAXREPORT);
+    	m_arrOperationLabelDescriptions.add("Records running of the Sales Invoice Tax Report");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ARACTIVITYDISPLAY);
+    	m_arrOperationLabelDescriptions.add("Records running of the Customer Activity Report");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ARDISPLAYSTATISTICS);
+    	m_arrOperationLabelDescriptions.add("Records running of the Customer Statistics Report");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICQUANTITIESONHAND);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of Items currently on hand");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICITEMNUMBERMATCHUP);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of item numbers and their corresponding vendor number");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICLISTPHYSICALINVENTORIES);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of items that are physical inventories");
 
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){

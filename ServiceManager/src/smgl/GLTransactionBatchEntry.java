@@ -301,7 +301,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + getsbatchnumber()
 			+ ", " + getsentrynumber()
 			+ ", " + getslastline()
-			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 			+ ")"
@@ -315,7 +315,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber()
 			+ ", " + SMTablegltransactionbatchentries.lentrynumber + " = " + getsentrynumber()
 			+ ", " + SMTablegltransactionbatchentries.llastline + " = " + getslastline()
-			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + " = " + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
+			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlineid()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.sentrydescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.ssourceledger + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 		;

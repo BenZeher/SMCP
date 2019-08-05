@@ -176,7 +176,10 @@ public class SMLogEntry {
 	public final static String LOG_OPERATION_ARDISPLAYSTATISTICS = "ARDISPLAYSTATISTICA ";
 	public final static String LOG_OPERATION_ICQUANTITIESONHAND = "ICQUANTITIESONHAND ";
 	public final static String LOG_OPERATION_ICITEMNUMBERMATCHUP = "ICITEMNUMBERMATCHUP ";
+	public final static String LOG_OPERATION_ICPOUNPOSTEDINVOICES = "ICPOUNPOSTEDINVOICES ";
 	public final static String LOG_OPERATION_ICLISTPHYSICALINVENTORIES = "ICLISTPHYSICALINVENTORIES ";
+	public final static String LOG_OPERATION_ICPOUNPOSTEDRECEIPTS = "ICPOUNPOSTEDRECEIPTS ";
+	
 	
 	private Connection conn;
 	private ServletContext context;
@@ -784,6 +787,12 @@ public class SMLogEntry {
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_ICLISTPHYSICALINVENTORIES);
     	m_arrOperationLabelDescriptions.add("Records running of the list of items that are physical inventories");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICPOUNPOSTEDINVOICES);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of invoices that are not posted");
+    	
+    	m_arrOperationLabelValues.add(LOG_OPERATION_ICPOUNPOSTEDRECEIPTS);
+    	m_arrOperationLabelDescriptions.add("Records running of the list of receipts that are not posted");
 
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){

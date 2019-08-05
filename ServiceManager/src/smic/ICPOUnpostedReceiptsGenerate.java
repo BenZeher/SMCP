@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -33,11 +34,11 @@ public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.APVendorTransactionsReport)){
 	    	return;
 	    }
-	    
-	    HttpSession CurrentSession = request.getSession(true);
-		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 
-		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+	    HttpSession CurrentSession = request.getSession(true);
+	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 
 		String sParamString = "*CallingClass=" + sCallingClass;
 		
@@ -85,6 +86,10 @@ public class ICPOUnpostedReceiptsGenerate extends HttpServlet {
 
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime) / 1000L + " seconds.\n");
+		
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICPOUNPOSTEDRECEIPTS, "REPORT", "ICPOUnpostedReceipts", "[1565012786]");
+		
 		out.println("  </BODY>\n" + "    </HTML>\n");
 		return;
 	}

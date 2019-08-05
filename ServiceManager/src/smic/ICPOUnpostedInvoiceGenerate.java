@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMLogEntry;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -36,7 +37,7 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 	    
 	    HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-
+	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		 String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
 		
 		out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " 
@@ -82,6 +83,10 @@ public class ICPOUnpostedInvoiceGenerate extends HttpServlet {
 
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime) / 1000L + " seconds.\n");
+		
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
+		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ICPOUNPOSTEDINVOICES, "REPORT", "ICPOUnpostedInvoices", "[1565012585]");
+		
 		out.println("  </BODY>\n" + "    </HTML>\n");
 		return;
 	}

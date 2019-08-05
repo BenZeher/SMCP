@@ -762,7 +762,7 @@ public class GLEditEntryEdit  extends HttpServlet {
      		if (entry.getssourceledgertransactionlineid().compareToIgnoreCase("") != 0){
      			sDefaultID = entry.getssourceledgertransactionlineid();
      		}
-     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + "\""
+     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
  	    		+ " VALUE=\"" + clsStringFunctions.filter(sDefaultID) + "\""
  	    		+ " MAXLENGTH=" + "13"
  	    		+ " SIZE = " + "10"
@@ -770,7 +770,7 @@ public class GLEditEntryEdit  extends HttpServlet {
  	    		+ ">"
  	    	;
      	}else{
-     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionlineid + "\""
+     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
  	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlineid()) + "\""
  	    		+ ">"
  	    		+ entry.getssourceledgertransactionlineid()

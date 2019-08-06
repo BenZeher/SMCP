@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsDatabaseFunctions;
@@ -159,126 +160,132 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 				System.out.println("In " + this.toString() + " SQL: " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			int iCount = 0;
 			while(rs.next()){
 				
+				if(iCount % 2 == 0) {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+				}else {
+					out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+				}
 				//Print the line:
-				out.println("<TR>");
+
 							
 				//Price list
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 					+ rs.getString(SMTableicitemprices.TableName + "." 
-					+ SMTableicitemprices.sPriceListCode) + "</FONT></TD>");
+					+ SMTableicitemprices.sPriceListCode) + "");
 
 				//Item
 				String sItem = rs.getString(SMTableicitems.TableName + "." 
 						+ SMTableicitems.sItemNumber);
 				if (bViewItemPermitted){
-					out.println("<TD><FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(context) 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><A HREF=\"" + SMUtilities.getURLLinkBase(context) 
 						+ "smic.ICDisplayItemInformation?ItemNumber=" 
 			    		+ sItem
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 			    		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sItem) + "</A>");
 				}else{
-					out.println("<TD><FONT SIZE=2>" + sItem + "</FONT></TD>");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sItem + "");
 				}
 
 				//Desc
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 					+ rs.getString(SMTableicitems.TableName + "." 
-					+ SMTableicitems.sItemDescription) + "</FONT></TD>");
+					+ SMTableicitems.sItemDescription) + "");
 				
 				//UOM
-				out.println("<TD><FONT SIZE=2>" 
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ rs.getString(SMTableicitems.TableName + "." 
-						+ SMTableicitems.sCostUnitOfMeasure) + "</FONT></TD>");
+						+ SMTableicitems.sCostUnitOfMeasure) + "");
 				
 				//MRC
-				out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+				out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitems.TableName + "." 
 						+ SMTableicitems.bdmostrecentcost)) 
-						+ "</FONT></TD>");
+						+ "");
 				
 				//Level0
 				if (bUpdatePriceLevel0){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdBasePrice)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL0")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 				
 				//Level1
 				if (bUpdatePriceLevel1){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdLevel1Price)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL1")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 
 				//Level2
 				if (bUpdatePriceLevel2){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdLevel2Price)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL2")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 
 				//Level3
 				if (bUpdatePriceLevel3){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdLevel3Price)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL3")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 
 				//Level4
 				if (bUpdatePriceLevel4){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdLevel4Price)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL4")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 
 				//Level5
 				if (bUpdatePriceLevel5){
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal(SMTableicitemprices.TableName + "." 
 						+ SMTableicitemprices.bdLevel5Price)) 
-						+ "</FONT></TD>");
-					out.println("<TD ALIGN=RIGHT><FONT SIZE=2>" 
+						+ "");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						2, rs.getBigDecimal("UPDATEDLEVEL5")) 
-						+ "</FONT></TD>");
+						+ "");
 				}
 				
 				out.println("</TR>");
-				
+				iCount++;
 			}
 			rs.close();
     	}catch (SQLException e){
@@ -299,36 +306,36 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 		boolean IncludePriceLevel4,
 		boolean IncludePriceLevel5
 	){
-		out.println("<TABLE BORDER=0>");
-		out.println("<TR>");
-		out.println("<TD><B><FONT SIZE=2>Price list</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Item</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>Description</FONT></B></TD>");
-		out.println("<TD><B><FONT SIZE=2>UOM</FONT></B></TD>");
-		out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Most<BR>Recent&nbsp;Cost</FONT></B></TD>");
+		out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Price list</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Item</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">UOM</TD>");
+		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Most<BR>Recent&nbsp;Cost</TD>");
 		if (IncludePriceLevel0){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Base</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Base</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Base</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Base</TD>");
 		}
 		if (IncludePriceLevel1){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Level 1</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Level 1</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 1</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 1</TD>");
 		}
 		if (IncludePriceLevel2){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Level 2</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Level 2</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 2</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 2</TD>");
 		}
 		if (IncludePriceLevel3){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Level 3</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Level 3</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 3</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 3</TD>");
 		}
 		if (IncludePriceLevel4){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Level 4</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Level 4</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 4</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 4</TD>");
 		}
 		if (IncludePriceLevel5){
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Current<BR>Level 5</FONT></B></TD>");
-			out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>Proposed<BR>Level 5</FONT></B></TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 5</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 5</TD>");
 		}
 		out.println("</TR>");
 	}

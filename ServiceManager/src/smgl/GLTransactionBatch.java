@@ -877,7 +877,7 @@ public class GLTransactionBatch {
     		newentry.setsfiscalperiod(oldentry.getsfiscalperiod());
     		newentry.setsfiscalyear(oldentry.getsfiscalyear());
     		newentry.setssourceledger(oldentry.getssourceledger());
-    		newentry.setssourceledgertransactionlineid(oldentry.getssourceledgertransactionlineid());
+    		newentry.setssourceledgertransactionid(oldentry.getssourceledgertransactionid());
     		for (int j = 0; j < oldentry.getLineArray().size(); j++){
     			GLTransactionBatchLine oldline = oldentry.getLineArray().get(j);
     			GLTransactionBatchLine newline = new GLTransactionBatchLine();
@@ -1229,7 +1229,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
+        		+ ", " + entry.getssourceledgertransactionid() //lsourceledgertransactionlineid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsdescription()) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
@@ -1337,7 +1337,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", " + entry.getssourceledgertransactionlineid() //lsourceledgertransactionlineid
+        		+ ", " + entry.getssourceledgertransactionid() //lsourceledgertransactionlineid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference

@@ -265,9 +265,9 @@ public class ARAutoCreateCallSheetsSelection extends HttpServlet {
 					arrOrderTypes.add(rs.getString(SMTableservicetypes.sCode));
 				}
 				out.println(
-						"<INPUT TYPE=CHECKBOX NAME=\"" + PARAM_SERVICETYPE
+						"<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + PARAM_SERVICETYPE
 						+ rs.getString(SMTableservicetypes.sCode) + "\" " + sChecked + "width=0.25>" 
-						+ rs.getString(SMTableservicetypes.sName) + "&nbsp;");
+						+ rs.getString(SMTableservicetypes.sName) + "&nbsp;</LABEL>");
 			}
 			rs.close();
 		}catch (SQLException e){

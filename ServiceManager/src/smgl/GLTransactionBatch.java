@@ -331,6 +331,27 @@ public class GLTransactionBatch {
 		*/
 		//Validate the entries:
 		//System.out.println("[1490382128] m_arrBatchEntries.size() = " + m_arrBatchEntries.size());
+		
+		//If there are ANY entries for period 15, we have to make sure that the following fiscal year is built, so that 
+		//we can update opening balances:
+		for (int i = 0; i < m_arrBatchEntries.size(); i++){
+			if (m_arrBatchEntries.get(i).getsfiscalperiod().compareToIgnoreCase("15") == 0){
+				//Then we need to make sure there's a subsequent fiscal year built:
+				GLFiscalYear fyr = new GLFiscalYear();
+				int iFiscalYear = Integer.parseInt(m_arrBatchEntries.get(i).getsfiscalyear());
+				fyr.set_sifiscalyear(Integer.toString(iFiscalYear + 1));
+				try {
+					fyr.load(conn);
+				} catch (Exception e) {
+					throw new Exception("Error [201921815433] " + "Entry #" + m_arrBatchEntries.get(i).getsentrynumber() + " is posting to"
+						+ " fiscal period " + m_arrBatchEntries.get(i).getsfiscalperiod() + ", in fiscal year " + m_arrBatchEntries.get(i).getsfiscalyear()
+						+ " but fiscal year " + Integer.toString(iFiscalYear + 1) + " could not be found.  Before closing a fiscal year,"
+						+ " the subsequent fiscal year must first be built."
+					);
+				}
+			}
+		}
+		
 		for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			GLTransactionBatchEntry entry = m_arrBatchEntries.get(i);
 			entry.setsentrynumber(Integer.toString(i + 1));
@@ -1045,47 +1066,60 @@ public class GLTransactionBatch {
 		
 		//If it's a balance sheet account, then we simply update all the opening balances in any subsequent
 		//fiscal sets:
-		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) != 0){
-			SQL = "UPDATE " + SMTableglfiscalsets.TableName
-					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
-						+ SMTableglfiscalsets.bdopeningbalance + " + " 
-						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
-					+ " WHERE ("
-						+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
-						//Update the opening balances in any subsequent fiscal years:
-						+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
-					+ ")"
-				;
-		}else{
-			//Income statement account changes from the previous year go to Retained Earnings (the 'closing' account).
-			// Retained earnings normally carries a 'credit' balance, as do income accounts.
-			// Expense accounts normally carry a debit balance.
+		
+		//Income statement account changes from the previous year go to Retained Earnings (the 'closing' account).
+		// Retained earnings normally carries a 'credit' balance, as do income accounts.
+		// Expense accounts normally carry a debit balance.
+		String sTargetAccount = sAccount;
+		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
 			GLOptions gloptions = new GLOptions();
 			if (!gloptions.load(conn)){
 				throw new Exception("Error [1556569791] checking GL Options closing account " 
 					+ " - " + gloptions.getErrorMessageString());
 			}
-			SQL = "UPDATE " + SMTableglfiscalsets.TableName
-					+ " SET " + SMTableglfiscalsets.bdopeningbalance + " = " 
-						+ SMTableglfiscalsets.bdopeningbalance + " + " 
-						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
-					+ " WHERE ("
-						+ "(" + SMTableglfiscalsets.sAcctID + " = '" + gloptions.getsClosingAccount() + "')"
-						+ " AND (" + SMTableglfiscalsets.ifiscalyear + " > " + Integer.toString(iFiscalYear) + ")"
-					+ ")"
-				;
+			sTargetAccount = gloptions.getsClosingAccount();
 		}
+		
+		//Determine how many subsequent fiscal years there are, and update the opening balance on each:
+		SQL = "SELECT"
+			+ " " + SMTableglfiscalperiods.ifiscalyear
+			+ " FROM " + SMTableglfiscalperiods.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalperiods.ifiscalyear + " > " + iFiscalYear + ")"
+			+ ")"
+		;
+    	try {
+			ResultSet rsFiscalYears = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsFiscalYears.next()){
+				SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
+					+ SMTableglfiscalsets.bdopeningbalance
+					+ ", " + SMTableglfiscalsets.ifiscalyear
+					+ ", " + SMTableglfiscalsets.sAcctID
+					+ ") VALUES ("
+					+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+					+ ", " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
+					+ ", '" + sTargetAccount + "'"
+					+ ")"
+					+ " ON DUPLICATE KEY UPDATE "
+					+ SMTableglfiscalsets.bdopeningbalance + " = " + SMTableglfiscalsets.bdopeningbalance + " + " 
+						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+				;
 
-		//System.out.println("[155603919] fiscal sets UPDATE statement = '" + SQL + "'.");
-		try {
-			Statement stmt = conn.createStatement();
-			stmt.execute(SQL);
+				//System.out.println("[155603919] fiscal sets UPDATE statement = '" + SQL + "'.");
+				try {
+					Statement stmt = conn.createStatement();
+					stmt.execute(SQL);
+				} catch (Exception e) {
+					throw new Exception(
+						"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
+						+ "', fiscal year " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
+						+ " - " + e.getMessage());
+				}	
+			}
+			rsFiscalYears.close();
 		} catch (Exception e) {
-			throw new Exception(
-				"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
-				+ "', fiscal year " + Integer.toString(iFiscalYear) 
-				+ " - " + e.getMessage());
-		}		
+			throw new Exception("Error [1555958398] reading fiscal years with SQL: '" + SQL + "' - " + e.getMessage());
+		}
 		
 		try {
 			updateFinancialStatementData(
@@ -1469,19 +1503,6 @@ public class GLTransactionBatch {
 				bTwoYearsPreviousWasFound = true;
 			}
 
-			//THESE are the fields in the financial statement data records that we might possibly need to update:
-//			x sacctid = "sacctid";
-//			x ifiscalyear = "ifiscalyear";
-//			x ifiscalperiod = "ifiscalperiod";
-//			x bdnetchangeforperiod = "bdnetchangeforperiod";
-//			x bdnetchangeforperiodpreviousyear = "bdnetchangeforperiodpreviousyear";
-//			x bdtotalyeartodate = "bdtotalyeartodate";
-//			x bdtotalpreviousyeartodate = "bdtotalpreviousyeartodate";
-//			bdopeningbalancepreviousyear = "bdopeningbalancepreviousyear";
-//			bdopeningbalance = "bdopeningbalance";
-//			x bdnetchangeforpreviousperiod = "bdnetchangeforpreviousperiod";
-//			x bdnetchangeforpreviousperiodpreviousyear = "bdnetchangeforpreviousperiodpreviousyear";
-			
 			/*
 			THESE fields are affected for the same fiscal year and period:
 			bdnetchangeforperiod
@@ -1496,19 +1517,6 @@ public class GLTransactionBatch {
 			
 			THESE fields are affected for the subsequent year, previous period:
 			bdnetchangeforpreviousperiodpreviousyear
-			
-			
-			How does a fiscal set update financial statement records?
-			
-			1) The opening balance is the opening balance for all statement records with the same year
-			2) The opening balance is the previous opening balance for the subsequent year. (Income statement accounts are special here...)
-			3) The opening balance of all subsequent years has to be adjusted by the net change amount
-			
-			4) The net change for the period gets added to the net change for that year and period.
-			5) 
-			
-			
-			
 			
 			*/
 			//PERIOD 1:

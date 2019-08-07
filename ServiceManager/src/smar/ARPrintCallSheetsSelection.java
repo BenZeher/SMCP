@@ -19,6 +19,7 @@ import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablecallsheets;
+import SMDataDefinition.SMTablesalesperson;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -42,6 +43,7 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 	public static String ORDERNUMBER_FIELD = "OrderNumber";
 	public static String COLLECTOR_FIELD = "Collector";
 	public static String RESPONSIBILITY_FIELD = "Responsibility";
+	public static String SALESPERSON_FULLNAME = "SalespersonFullName";
 	
 	public static String PRINTWITHNOTES_FIELD = "PrintWithNotes";
 	public static String PRINTWITHNOTES_LABEL = "Print with notes";
@@ -306,12 +308,17 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 		arrResponsibilityDescs.add("** Select ALL Responsible Persons **");
 		if (sResponsibility.compareToIgnoreCase("") == 0){
 			sSQL = "SELECT DISTINCT " + SMTablecallsheets.sResponsibility
-			+ " FROM " + SMTablecallsheets.TableName 
-			+ " WHERE ("
-				+ "(" + SMTablecallsheets.sResponsibility + " != '')"
-			+ ")"
-			+ " ORDER BY " 
-			+ SMTablecallsheets.sResponsibility + " ASC";
+					+ ",  CONCAT(" + SMTablesalesperson.sSalespersonFirstName
+					+ ",  \' \', " + SMTablesalesperson.sSalespersonLastName
+					+ ") AS " + SALESPERSON_FULLNAME
+					+ "  FROM " + SMTablecallsheets.TableName 
+					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " ON " +  SMTablecallsheets.sResponsibility + " =  " +    SMTablesalesperson.sSalespersonCode
+					+ " WHERE ("
+					+ "(" + SMTablecallsheets.sResponsibility + " != '')"
+					+ ")"
+					+ " ORDER BY " 
+					+ SMTablecallsheets.sResponsibility + " ASC";
 			try {
 				rs = clsDatabaseFunctions.openResultSet(
 						sSQL, 
@@ -324,8 +331,8 @@ public class ARPrintCallSheetsSelection extends HttpServlet {
 						);
 
 				while (rs.next()){
-					arrResponsibility.add(rs.getString(SMTablecallsheets.sResponsibility));
-					arrResponsibilityDescs.add(rs.getString(SMTablecallsheets.sResponsibility));
+					arrResponsibility.add(rs.getString(SMTablecallsheets.sResponsibility) );
+					arrResponsibilityDescs.add(rs.getString(SALESPERSON_FULLNAME));
 				}
 				rs.close();
 			} catch (SQLException e) {

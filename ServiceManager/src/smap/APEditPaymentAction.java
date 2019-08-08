@@ -27,6 +27,8 @@ public class APEditPaymentAction extends HttpServlet{
 	    //Read the entry fields from the request object:
 		APBatchEntry entry = new APBatchEntry(request);
 		
+		System.out.println("[20192201740375] " + "number of entry lines: " + entry.getLineArray().size());
+		
 		//System.out.println("[1509034610] - batch entry: " + entry.dumpData());
 
 		//Remove any session object:
@@ -319,11 +321,13 @@ public class APEditPaymentAction extends HttpServlet{
 	    		
 	    		//System.out.println("[1497977634] line disc amt = " + entry.getLineArray().get(0).getsbddiscountappliedamt());
 	    		
+	    		System.out.println("[201922017563] " + "going into updateBatchEntry - number of entry lines: " + entry.getLineArray().size());
 	    		batch.updateBatchEntry(entry, getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName());
 	    		
 	    		//System.out.println("[1497977635] batch line disc amt = " + batch.getBatchEntryArray().get(0).getLineArray().get(0).getsbddiscountappliedamt());
 	    		
 			} catch (Exception e) {
+				System.out.println("[2019220175297] " + "exception caught");
 				smaction.getCurrentSession().setAttribute(APBatchEntry.OBJECT_NAME, entry);
 				smaction.redirectAction(
 					"Error [1537907939] - Could not apply to document number '" + sApplyToDocNumber + "' - " + e.getMessage(), 

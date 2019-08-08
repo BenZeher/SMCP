@@ -419,8 +419,11 @@ public class APBatchEntryLine {
 				+ " ON " + SMTableapbatches.TableName + "." + SMTableapbatches.lbatchnumber + " = " + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber
 				+ " WHERE ("
 				
-					//Ignore this line itself:
-					+ " (" + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lid + " != " + getslid() + ")"
+					//Ignore this batch's entries - we have to check them differently because it's possible that this batch's entry numbers
+					//or line numbers may not match what's on disk.  For example, if we remove an entry, the entry numbers in the batch
+					//AFTER the deleted entry will be one less than the entries on disk, and this check won't work correctly.  This already
+					//happened once, on 8/8/2019, so I (TJR) modified the logic:
+					+ " (" + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber + " != " + getsbatchnumber() + ")"
 					
 					//And only look in UNposted batches:
 					+ " AND (" 
@@ -432,7 +435,7 @@ public class APBatchEntryLine {
 					+ " AND ("  + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lapplytodocid + " = " + getslapplytodocid() + ")"
 				+ ")"
 			;
-			String sListOfConflicts = "";;
+			String sListOfConflicts = "";
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				sListOfConflicts = "";

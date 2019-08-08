@@ -490,13 +490,15 @@ public class APBatchEntry {
 		return;
 	}
 	
-	public void save_without_data_transaction (Connection conn, String sUserID, boolean bBatchIsBeingPosted) throws Exception{
+	public void save_without_data_transaction (Connection conn, String sUserID, APBatch batch, boolean bBatchIsBeingPosted) throws Exception{
 
 		//long lStarttime = System.currentTimeMillis();
 		
+		System.out.println("[201922017833] " + "in APBatchEntry going into validate_fields - " + this.getLineArray().size() + " lines total");
 		try {
-			validate_fields(conn, sUserID, bBatchIsBeingPosted);
+			validate_fields(conn, sUserID, batch, bBatchIsBeingPosted);
 		} catch (Exception e1) {
+			System.out.println("[2019220176543] " + "APBatchEntry validate_fields threw exception: " + e1.getMessage());
 			throw new Exception(e1.getMessage());
 		}
 		
@@ -766,6 +768,7 @@ public class APBatchEntry {
 		//System.out.println("[1543341854] - elapsed time 14 = " + (System.currentTimeMillis() - lStarttime) + " ms");
 		
 		//Finally, save the lines....
+		System.out.println("[201922017832] " + "saving lines - " + this.getLineArray().size() + " lines total");
 		try {
 			saveLines(conn, sUserID, bBatchIsBeingPosted);
 		} catch (Exception e) {
@@ -776,7 +779,7 @@ public class APBatchEntry {
 		
 		return;
 	}
-	public void validate_fields(Connection conn, String sUserID, boolean bBatchIsBeingPosted) throws Exception{
+	public void validate_fields(Connection conn, String sUserID, APBatch batch, boolean bBatchIsBeingPosted) throws Exception{
 		
 		String sResult = "";
 		int iEntryType = Integer.parseInt(getsentrytype());
@@ -1130,6 +1133,12 @@ public class APBatchEntry {
 			} catch (Exception e) {
 				sResult += "  In line " + line.getslinenumber() + " - " + e.getMessage() + ".";
 			}
+		}
+		
+		try {
+			batch.checkForDuplicatedApplyTos();
+		} catch (Exception e) {
+			sResult += e.getMessage();
 		}
 		
 		if (sResult.compareToIgnoreCase("") != 0){

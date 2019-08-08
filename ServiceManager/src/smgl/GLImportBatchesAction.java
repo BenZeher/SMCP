@@ -447,7 +447,7 @@ public class GLImportBatchesAction extends HttpServlet{
 					sLineDebitAmt = sAmount;
 					sLineCreditAmt = "0.00";
 				}
-				sLineSourceType = "JE";
+				sLineSourceType = GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL);
 				
 				String sOutPutLine = 
 					sBatchDate

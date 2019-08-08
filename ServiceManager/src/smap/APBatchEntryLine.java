@@ -437,7 +437,7 @@ public class APBatchEntryLine {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				sListOfConflicts = "";
 				while (rs.next()){
-					//Double check that we're not catching this same entry line - this could happen, even with this query, if the line ID wasn't updated yet:
+					//Double check that we're not catching this same entry - this could happen, even with this query, if the line ID wasn't updated yet:
 					if (
 						(Long.toString(rs.getLong(SMTableapbatchentrylines.lbatchnumber)).compareToIgnoreCase(getsbatchnumber()) == 0)
 						&& (Long.toString(rs.getLong(SMTableapbatchentrylines.lentrynumber)).compareToIgnoreCase(getsentrynumber()) == 0)

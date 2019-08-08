@@ -240,11 +240,11 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					     		+ "</A>"
 					     ;
 					}
-					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
+					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 							+ sConfigureWorkOrderLink
 							+ "</FONT></TD>");
 
-					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER+ "\">" 
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+ "\">" 
 							+ clsDateAndTimeConversions.resultsetDateStringToString(rsOrder.getString(SMTableworkorders.datscheduleddate)) + "</FONT></TD>");
 					
 					//Add work order info here:
@@ -281,14 +281,14 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 							+ "</A>"
 						;
 					}
-					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sWOLink + "&nbsp;" + sViewWOLink + "</FONT></TD>");
+					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWOLink + "&nbsp;" + sViewWOLink + "</FONT></TD>");
 					
 					String sMechFullName = rsOrder.getString(SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName);
 					if (sMechFullName == null){
 						sMechFullName =  rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.smechanicname).trim() 
 						+ " (REMOVED)";
 					}
-					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sMechFullName + "</FONT></TD>");
+					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sMechFullName + "</FONT></TD>");
 					
 					//The 'work description' will include the job cost 'work description' PLUS mechanic's comments, additional work needed, 
 					//and detail sheet text from the work order:
@@ -299,14 +299,14 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mcomments), 
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.madditionalworkcomments),
 						rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.mdetailsheettext)).replaceAll("[^\\x00-\\x7F]", " ");
-					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sWorkDescription + "</FONT></TD>");
-					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWorkDescription + "</FONT></TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdqtyofhoursScale, rsOrder.getBigDecimal(SMTableworkorders.bdqtyofhours))  
 						+ "</FONT></TD>");
-					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdtravelhoursScale, rsOrder.getBigDecimal(SMTableworkorders.bdtravelhours))  
 						+ "</FONT></TD>");
-					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" 
 						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, rsOrder.getBigDecimal(SMTableworkorders.bdbackchargehours))  
 						+ "</FONT></TD>");
 					pwOut.println("</TR>");
@@ -317,10 +317,10 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					bdTotalBackChargeHours = bdTotalBackChargeHours.add(rsOrder.getBigDecimal(SMTableworkorders.bdbackchargehours));
 					bOddRow = ! bOddRow;
 				}
-				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=5 CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER  + "\">Subtotals:</TD>" 
-					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdqtyofhoursScale, bdTotalQtyOfHours) + "</TD>" 
-					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdtravelhoursScale, bdTotalTravelHours) + "</TD>"
-					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, bdTotalBackChargeHours) + "</TD>"
+				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=5 CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">Subtotals:</TD>" 
+					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdqtyofhoursScale, bdTotalQtyOfHours) + "</TD>" 
+					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdtravelhoursScale, bdTotalTravelHours) + "</TD>"
+					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, bdTotalBackChargeHours) + "</TD>"
 					+  "</TR>");
 				pwOut.println("</TABLE>");
 				pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");

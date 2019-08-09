@@ -41,10 +41,10 @@ public class APBatchEntryLine {
 		initializeVariables();
 	}
 	
-	public void save_without_data_transaction (Connection conn, String sUserName, int iEntryType, boolean bBatchIsBeingPosted) throws Exception{
+	public void save_without_data_transaction (Connection conn, String sUserName, int iEntryType, String sEntryID, boolean bBatchIsBeingPosted) throws Exception{
 
 		try {
-			validate_fields(conn, iEntryType, bBatchIsBeingPosted);
+			validate_fields(conn, iEntryType, sEntryID, bBatchIsBeingPosted);
 		} catch (Exception e1) {
 			throw new Exception(e1.getMessage());
 		}
@@ -138,11 +138,11 @@ public class APBatchEntryLine {
 		}
 		return;
 	}
-	public void validate_fields(Connection conn, int iEntryType, boolean bBatchIsBeingPosted) throws Exception{
+	public void validate_fields(Connection conn, int iEntryType, String sEntryID, boolean bBatchIsBeingPosted) throws Exception{
 		
 		String sResult = "";
 		try {
-			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Entry ID", -1, clsValidateFormFields.MAX_LONG_VALUE);
+			m_slid  = clsValidateFormFields.validateLongIntegerField(m_slid, "Line ID", -1, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
 		}
@@ -415,6 +415,13 @@ public class APBatchEntryLine {
 				+ ", " + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lentrynumber
 				+ ", " + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.llinenumber
 				+ " FROM " + SMTableapbatchentrylines.TableName
+				+ " LEFT JOIN " + SMTableapbatchentries.TableName
+				+ " ON ("
+					+ "(" + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber 
+						+ " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lbatchnumber + ")"
+					+ " AND (" + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lentrynumber 
+						+ " = " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lentrynumber + ")"
+					+ ")"
 				+ " LEFT JOIN " + SMTableapbatches.TableName
 				+ " ON " + SMTableapbatches.TableName + "." + SMTableapbatches.lbatchnumber + " = " + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber
 				+ " WHERE ("
@@ -423,7 +430,10 @@ public class APBatchEntryLine {
 					//or line numbers may not match what's on disk.  For example, if we remove an entry, the entry numbers in the batch
 					//AFTER the deleted entry will be one less than the entries on disk, and this check won't work correctly.  This already
 					//happened once, on 8/8/2019, so I (TJR) modified the logic:
-					+ " (" + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber + " != " + getsbatchnumber() + ")"
+				
+					//Ignore this particular entry, but check any others:
+				
+					+ " (" + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lid + " != " + sEntryID + ")"
 					
 					//And only look in UNposted batches:
 					+ " AND (" 
@@ -457,6 +467,9 @@ public class APBatchEntryLine {
 						;
 
 					}
+					//if (sListOfConflicts.compareToIgnoreCase("") != 0){
+					//	break;
+					//}
 				}
 				rs.close();
 			} catch (Exception e) {

@@ -380,61 +380,12 @@ public class APBatch {
 			}
 		}
 		
-		try {
-			checkForDuplicatedApplyTos();
-		} catch (Exception e) {
-			throw new Exception("Error [20192201537392] " + " - " + e.getMessage());
-		}
-		
 		if (sResult.compareToIgnoreCase("") != 0){
 			//We'll surround the actual error message with tags so we can strip it out at the end:
 			throw new Exception(INVALID_ENTRY_ERROR_STARTING_TAG + sResult + INVALID_ENTRY_ERROR_ENDING_TAG);
 		}
 	}
-	public void checkForDuplicatedApplyTos() throws Exception{
-		System.out.println("[20192201724120] " + "going into checkForDuplicatedApplyTos");
-		String sListOfConflicts = "";
-		//Test each entry, but not the last one, because it will have already been tested:
-		System.out.println("[20192201725383] " + "m_arrBatchEntries.size() = " + m_arrBatchEntries.size());
-		for (int iCurrentEntry = 0; iCurrentEntry < m_arrBatchEntries.size() - 1; iCurrentEntry++){
-			APBatchEntry currententry = m_arrBatchEntries.get(iCurrentEntry);
-			for(int iCurrentLine = 0; iCurrentLine < currententry.getLineArray().size(); iCurrentLine ++){
-				System.out.println("[20192201726126] " + "currententry.getLineArray().size() = " + currententry.getLineArray().size());
-				APBatchEntryLine currentline = currententry.getLineArray().get(iCurrentLine);
-				System.out.println("[2019220172964] " + "currentline.getslapplytodocid() = '" + currentline.getslapplytodocid() + "'");
-				if (
-					(currentline.getslapplytodocid().compareToIgnoreCase("-1") != 0)
-					&& (currentline.getslapplytodocid().compareToIgnoreCase("0") != 0)
-				){
-					//If this line includes an applytodocid, then we have to make sure that no line in any other entry points to the same ID:
-					System.out.println("[20192201730368] " + "into test entry loop, iCurrentEntry = " + iCurrentEntry + ", " + " m_arrBatchEntries.size() = " + m_arrBatchEntries.size());
-					for(int iTestEntry = iCurrentEntry + 1; iTestEntry < m_arrBatchEntries.size(); iTestEntry++){
 
-						APBatchEntry testentry = m_arrBatchEntries.get(iTestEntry);
-						System.out.println("[20192201734358] " + "inside iTestEntry loop, testentry.getLineArray().size() = " + testentry.getLineArray().size());
-						for(int iTestLine = 0; iTestLine < testentry.getLineArray().size(); iTestLine++){
-							System.out.println("[20192201734590] " + "inside iTestLine loop");
-							APBatchEntryLine testline = testentry.getLineArray().get(iTestLine);
-							System.out.println("[20192201721242] " + "Current entry " + iCurrentEntry + 1 + ", current line " + iCurrentLine + 1
-								+ ", test entry " + iTestEntry + 1 + ", test line " + iTestLine + 1 + "."
-							);
-							if (testline.getslapplytodocid().compareToIgnoreCase(currentline.getslapplytodocid()) == 0){
-								if (sListOfConflicts.compareToIgnoreCase("") != 0){
-									sListOfConflicts += ", and ";
-								}
-								sListOfConflicts += "Entry number " + currententry.getsentrynumber() + ", line " + currentline.getslinenumber()
-									+ " is being applied to the same document as entry number " + testentry.getsentrynumber() + ", line number "
-									+ testline.getslinenumber();
-							}
-						}
-					}
-				}
-			}
-		}
-		if (sListOfConflicts.compareToIgnoreCase("") != 0){
-			throw new Exception("Error [20192201548223] " + sListOfConflicts);
-		}
-	}
 	public void addBatchEntry (APBatchEntry entry){
 		//entry.setsentrynumber(Integer.toString(m_arrBatchEntries.size() + 1));
 		//entry.setsbatchnumber(getsbatchnumber());
@@ -483,11 +434,9 @@ public class APBatch {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1546998951]");
 			throw new Exception(e3.getMessage());
 		}
-		System.out.println("[2019220175545] " + "going into save_without_data_transaction");
 		try {
 			entry.save_without_data_transaction(conn, sUserID, this, false);
 		} catch (Exception e1) {
-			System.out.println("[2019220176117] " + "save_without_data_transaction threw exception: " + e1.getMessage());
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1546998952]");
 			throw new Exception(e1.getMessage());

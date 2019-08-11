@@ -827,9 +827,12 @@ public class GLImportBatchesAction extends HttpServlet{
 				sField, SMTablegltransactionbatchentries.ssourceledgerLength, "Source Ledger on line #" + Integer.toString(iLineNumber), false);
 			//If it's not a valid source ledger, reject it:
 			boolean bSourceLedgerIsValid = false;
+			System.out.println("[20192231819537] " + "Source Ledger in file = '" + sField + "'.");
 			for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
+				System.out.println("[20192231820461] " + "SL Desc = '" + GLSourceLedgers.getSourceLedgerDescription(i) + "'.");
 				if (GLSourceLedgers.getSourceLedgerDescription(i).compareToIgnoreCase(sField) == 0){
 					bSourceLedgerIsValid = true;
+					System.out.println("[20192231821319] " + " SL is valid");
 					break;
 				}
 			}

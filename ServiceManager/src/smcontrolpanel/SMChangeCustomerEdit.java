@@ -117,7 +117,7 @@ public class SMChangeCustomerEdit  extends HttpServlet {
     	;
         
 		//Link to finder:
-		s += "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID()
 			+ "&ObjectName=Customer"
 			+ "&ResultClass=FinderResults"

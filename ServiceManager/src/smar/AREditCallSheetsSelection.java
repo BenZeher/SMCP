@@ -81,7 +81,7 @@ public class AREditCallSheetsSelection extends HttpServlet {
 			+ " STYLE=\"width: 2.41in; height: 0.25in\">&nbsp;";
 		
 		//Link to finder:
-		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + ARCallSheet.ParamObjectName
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 				+ "&ResultClass=FinderResults"

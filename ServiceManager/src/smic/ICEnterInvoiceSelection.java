@@ -84,7 +84,7 @@ public class ICEnterInvoiceSelection extends HttpServlet {
 			+ " STYLE=\"width: .8in; height: 0.25in\">&nbsp;";
 		
 		//Link to finder:
-		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 			+ "&ObjectName=" + ICPOInvoice.ParamObjectName
 			+ "&ResultClass=FinderResults"

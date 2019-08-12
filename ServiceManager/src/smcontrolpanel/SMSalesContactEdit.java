@@ -151,7 +151,7 @@ public class SMSalesContactEdit extends HttpServlet {
 								""
 								) + "&nbsp;<FONT COLOR=RED>*Requires a valid customer number.</FONT>&nbsp;&nbsp;"
 	    		
-    				    + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+    				    + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 	    				+ "?ObjectName=Customer"
 	    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    				+ "&ResultClass=FinderResults"

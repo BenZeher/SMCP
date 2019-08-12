@@ -45,7 +45,7 @@ public class AREditCallSheetsAction extends HttpServlet{
 		if (request.getParameter(AREditCallSheetsEdit.FIND_CUSTOMER_BUTTON) != null){
 			//Then call the finder to search for customers:
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"

@@ -126,7 +126,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		if (request.getParameter(ARPrintCallSheetsSelection.FIND_STARTING_CUSTOMER_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"
@@ -161,7 +161,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		if (request.getParameter(ARPrintCallSheetsSelection.FIND_ENDING_CUSTOMER_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"
@@ -196,7 +196,7 @@ public class ARPrintCallSheetsGenerate extends HttpServlet{
 		if (request.getParameter(ARPrintCallSheetsSelection.FIND_ID_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=" + ARCallSheet.ParamObjectName
 				+ "&ResultClass=FinderResults"

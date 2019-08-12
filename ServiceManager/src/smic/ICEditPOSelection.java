@@ -80,7 +80,7 @@ public class ICEditPOSelection extends HttpServlet {
 
 	//Link to finders:
 		//Search ALL Purchase Orders
-		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "&ObjectName=" + ICPOHeader.ParamObjectName
 		+ "&ResultClass=FinderResults"
@@ -118,7 +118,7 @@ public class ICEditPOSelection extends HttpServlet {
 		+ "\"> Search ALL purchase orders</A>";
 
 		//Search OPEN Purchase Orders
-		s += "&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "&ObjectName=" + "OPEN " + ICPOHeader.ParamObjectName
 		+ "&ResultClass=FinderResults"
@@ -156,7 +156,7 @@ public class ICEditPOSelection extends HttpServlet {
 		+ "\"> Search OPEN purchase orders</A>";
 		
 		//Search purchase order by Item.
-		s += "&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 		+ "&ObjectName=" + ICPOHeader.ParamObjectName  + " by Item"
 		+ "&ResultClass=FinderResults"

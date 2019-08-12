@@ -83,7 +83,7 @@ public class ICEditItemsSelection extends HttpServlet {
 			+ " STYLE=\"width: 2.41in; height: 0.25in\">&nbsp;";
 		
 		//Link to finder:
-		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ObjectName=Item"
 			+ "&ResultClass=FinderResults"

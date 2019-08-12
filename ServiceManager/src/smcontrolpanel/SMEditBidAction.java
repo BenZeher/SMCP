@@ -102,7 +102,7 @@ public class SMEditBidAction extends HttpServlet{
     	if (clsManageRequestParameters.get_Request_Parameter(
     			"COMMANDFLAG", request).compareToIgnoreCase(SMEditBidEntry.FIND_CUSTOMER_COMMAND_VALUE) == 0){
 			sRedirectString = 
-				SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"
@@ -274,7 +274,7 @@ public class SMEditBidAction extends HttpServlet{
     	if (clsManageRequestParameters.get_Request_Parameter(
     			"COMMANDFLAG", request).compareToIgnoreCase(SMEditBidEntry.FIND_SALES_CONTACT_COMMAND_VALUE) == 0){
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=SalesContact"
 				+ "&ResultClass=FinderResults"

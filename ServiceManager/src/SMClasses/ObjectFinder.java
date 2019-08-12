@@ -28,7 +28,7 @@ public class ObjectFinder extends HttpServlet {
 		/*
 		How to link to the finder class:
 		Add a link to your page that looks like this: 
-		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Customer"
 			+ "&ResultClass=FinderResults"
 			+ "&SearchingClass=smar.AREditCustomers"
@@ -116,7 +116,7 @@ public class ObjectFinder extends HttpServlet {
 	    }
 	    out.println("<FORM NAME='MAINFORM' ACTION='" 
 	    		+ SMUtilities.getURLLinkBase(getServletContext()) 
-	    		+ "smar." + sResultClass + "' METHOD='POST'>");
+	    		+ "SMClasses." + sResultClass + "' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"ObjectName\" VALUE=\"" + sObjectName + "\">");
 	    out.println("<INPUT TYPE=HIDDEN NAME=\"SearchingClass\" VALUE=\"" + sSearchingClass + "\">");

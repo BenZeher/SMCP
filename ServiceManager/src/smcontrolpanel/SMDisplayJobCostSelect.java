@@ -66,7 +66,7 @@ public class SMDisplayJobCostSelect  extends HttpServlet {
 					));
 		
 		//Link to finder:
-		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Order"
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ResultClass=FinderResults"

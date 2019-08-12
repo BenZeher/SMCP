@@ -1400,7 +1400,7 @@ public class APVendor extends clsMasterEntry{
 		}
 		
 		return  
-			SMUtilities.getURLLinkBase(context) + "smar.ObjectFinder"
+			SMUtilities.getURLLinkBase(context) + "SMClasses.ObjectFinder"
 			+ "?"+ "&ObjectName=" + APVendor.ParamObjectName
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ResultClass=FinderResults"

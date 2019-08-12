@@ -105,7 +105,7 @@ public class AREntryUpdate extends HttpServlet{
 			//Then call the finder to search for items:
 			CurrentSession.setAttribute("EntryInput", m_EntryInput);
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=" + "ACTIVE " + GLAccount.Paramobjectname
 				+ "&ResultClass=FinderResults"

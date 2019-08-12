@@ -102,7 +102,7 @@ public class ARSelectDocID extends HttpServlet {
 				);
 	
 		//Link to finder:
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Document"
 			+ "&ResultClass=FinderResults"
 			+ "&SearchingClass=smar.ARSelectDocID"

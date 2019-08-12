@@ -44,7 +44,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 		//If this class has been called from the 'find receipt' button:
 		if (request.getParameter(ICEnterInvoiceEdit.FIND_RECEIPT_BUTTON_NAME) != null){
 			//Then call the finder to search for receipts:
-			String sRedirectString = "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+			String sRedirectString = "" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=" + SMClasses.FinderResults.UNINVOICED_PO_RECEIPT_OBJECT
 				+ "&ResultClass=FinderResults"
@@ -299,7 +299,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 		if (sRecordNumber.compareToIgnoreCase("") != 0){
 			//Then call the finder to search for items:
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=" + "ACTIVE " + GLAccount.Paramobjectname //We only want ACTIVE accounts listed:
 				+ "&ResultClass=FinderResults"

@@ -71,7 +71,7 @@ public class SMWageScaleReportSelect  extends HttpServlet {
 				);
 
 		//Link to finder:
-		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=Order"
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"
@@ -107,7 +107,7 @@ public class SMWageScaleReportSelect  extends HttpServlet {
 
 				//Add EXTENDED order find:
 				+ "&nbsp;&nbsp;"
-				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + FinderResults.OBJECT_ORDER_EXTENDED
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"

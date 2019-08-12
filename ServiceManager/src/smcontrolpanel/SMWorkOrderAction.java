@@ -387,7 +387,7 @@ public class SMWorkOrderAction extends HttpServlet{
 						request).replace("&quot;", "\"");
 	    		
 	    		String sRedirectString = 
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 						+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 						+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
 						+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
@@ -418,9 +418,9 @@ public class SMWorkOrderAction extends HttpServlet{
 	    				
 	    		/*
 				String sRedirectString = 
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-					+ "&ObjectName=" + smar.FinderResults.SEARCH_NONDEDICATEDITEMS
+					+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_NONDEDICATEDITEMS
 					+ "&ResultClass=FinderResults"
 					+ "&SearchingClass=" + smaction.getCallingClass()
 					+ "&ReturnField=" 

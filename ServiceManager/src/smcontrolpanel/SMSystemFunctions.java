@@ -1254,7 +1254,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("IC Find Items With Vendor Item Numbers");
 			arrFunctionIDs.add(ICFindItems);
 			arrFunctionLinks.add(
-					"smar.ObjectFinder?"
+					"SMClasses.ObjectFinder?"
 							+ "ObjectName=Items%20With%20Vendor%20Item Numbers"
 							+ "&ResultClass=FinderResults"
 							+ "&SearchingClass=smic.ICDisplayItemSelection"
@@ -1443,7 +1443,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("IC Find Items Sorted By Most Used");
 			arrFunctionIDs.add(ICFindItemsSortedByMostUsed);
 			arrFunctionLinks.add(
-					"smar.ObjectFinder?"
+					"SMClasses.ObjectFinder?"
 							+ "ObjectName=" + SMClasses.FinderResults.SEARCH_MOSTUSEDITEMS
 							+ "&ResultClass=FinderResults&SearchingClass=smic.ICEditItemsSelection"
 							+ "&ReturnField=%22%22"

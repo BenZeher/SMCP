@@ -127,7 +127,7 @@ public class SMEditOrderDetailAction extends HttpServlet{
     					SMEditOrderDetailEdit.FINDITEMCOMMAND_VALUE) == 0){
     		
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
 				+ "&ObjectName=" + FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS
@@ -171,7 +171,7 @@ public class SMEditOrderDetailAction extends HttpServlet{
     			SMEditOrderDetailEdit.COMMAND_FLAG, request).compareToIgnoreCase(
     					SMEditOrderDetailEdit.FINDNONDEDICATEDITEMCOMMAND_VALUE) == 0){
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&" + SMClasses.ObjectFinder.DO_NOT_SHOW_MENU_LINK + "=True"
 				+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_ITEMS_SHOWING_LOCATION_QTYS

@@ -61,7 +61,7 @@ public class SMPrintInvoiceCriteriaSelection extends HttpServlet {
 							) + "&nbsp;"
 
     					//Link to finder:
-    				    + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+    				    + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 	    				+ "?ObjectName=Invoice"
 	    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    				+ "&ResultClass=FinderResults"

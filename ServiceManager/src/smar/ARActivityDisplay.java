@@ -21,6 +21,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTableartransactions;
 import ServletUtilities.clsDatabaseFunctions;
@@ -172,6 +173,8 @@ public class ARActivityDisplay extends HttpServlet {
 		    	}
 		    }
 		    
+		    
+		    
 		    out.println("<TABLE BORDER=0><TR><TD WIDTH=60%>");
 			    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
@@ -320,16 +323,16 @@ public class ARActivityDisplay extends HttpServlet {
 	        		bHasRecord = true;
 	        		//Start a row:
 	
-	        		if (iLineCounter == 50){
-	        			out.println("</TABLE>");
-	        			out.println("<BR>");
-	        			iLineCounter = 0;
-	        		}
 	        		if (iLineCounter == 0){
-	        			out.println("<TABLE BORDER=1 CELLSPACING=2 WIDTH=100% style=\"font-size:75%\">");
+	        			out.println(SMUtilities.getMasterStyleSheetLink());
+	        			out.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
 	        			printTableHeader(out, sOrderBy, sLinkMain);
 	        		}
-	        		out.println("<TR>");
+	        		if(iLineCounter % 2 == 0) {
+	        			out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
+	        		}else {
+	        			out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
+	        		}
 	        		
 	        		bdOriginalAmt = rs.getBigDecimal(SMTableartransactions.doriginalamt);
 	        		bdTotalOriginalAmt = bdTotalOriginalAmt.add(bdOriginalAmt);
@@ -409,8 +412,8 @@ public class ARActivityDisplay extends HttpServlet {
 			String sDBID
 			){
 
-		pwout.println("<TD>" + sDocDate + "</TD>");
-		pwout.println("<TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sDocDate + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" );
 		//Transaction ID:
 		//Build a link into this field:
 		pwout.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smar.ARDisplayMatchingTransactions" 
@@ -425,7 +428,7 @@ public class ARActivityDisplay extends HttpServlet {
 		pwout.println("</TD>");
 		//Doc number:
 		//Build a link into this field:
-		pwout.println("<TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" );
 		pwout.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smar.ARDisplayMatchingTransactions" 
     		+ "?MatchedTransactionID=" + sTransactionID
     		+ "&CustomerNumber=" + clsServletUtilities.URLEncode(sCustomerNumber)
@@ -442,7 +445,7 @@ public class ARActivityDisplay extends HttpServlet {
 			|| (iDocType == ARDocumentTypes.INVOICE)
 				
 		){
-			pwout.println("<TD>");
+			pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" );
 			pwout.println("<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "" + SMUtilities.lnViewInvoice(sDBID, sDocNumber)
 	    		+ "\">"
 	    		+ "View"
@@ -452,32 +455,33 @@ public class ARActivityDisplay extends HttpServlet {
 			pwout.println("<TD>&nbsp;</TD>");
 		}
 		
-		pwout.println("<TD>" + ARDocumentTypes.Get_Document_Type_Label(iDocType) + "</TD>");
-		pwout.println("<TD>" + sDueDate + "</TD>");
-		pwout.println("<TD ALIGN = RIGHT>" + sOriginalAmt + "</TD>");
-		pwout.println("<TD ALIGN = RIGHT>" + sCurrentAmt + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + ARDocumentTypes.Get_Document_Type_Label(iDocType) + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sDueDate + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sOriginalAmt + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + sCurrentAmt + "</TD>");
 		
 		if(sRetainageFlag.compareToIgnoreCase("0") == 0){
-			pwout.println("<TD>" + "&nbsp;" + "</TD>");
+			pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "&nbsp;" + "</TD>");
 		}else{
-			pwout.println("<TD>" + "YES" + "</TD>");
+			pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + "YES" + "</TD>");
 		}
 		
-		pwout.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
 		+ sOrderNumber 
 		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 		+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sOrderNumber) + "</A></TD>");
 		
-		pwout.println("<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sPONumber) + "</TD>");
-		pwout.println("<TD>" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sPONumber) + "</TD>");
+		pwout.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"  + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(sDocDesc) + "</TD>");
 	}
 	
 	private void printTableHeader(PrintWriter pwOut, String sOrderBy, String sLinkMain){
-		pwOut.println("<TR>");
+		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 	    //out.println("Link = " + sLinkMain + "&OrderBy=" + SMTableartransactions.datdocdate);
 	    if (sOrderBy.compareTo(SMTableartransactions.datdocdate) == 0){
 	    	pwOut.println(
-	    		"<TD><B><A HREF=\"" 
+	    		"<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><B><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.datdocdate 
@@ -485,39 +489,39 @@ public class ARActivityDisplay extends HttpServlet {
 	    	);
 	    }else{
 	    	pwOut.println(
-	    		"<TD><A HREF=\"" 
+	    		"<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.datdocdate 
 	    		+ "\">Doc. Date</A></TD>"
 	    	);
 	    }
-	    pwOut.println("<TD>Doc. ID</TD>");
-	    pwOut.println("<TD>Doc. #</TD>");
-	    pwOut.println("<TD>View?</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Doc. ID</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Doc. #</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">View?</TD>");
 	    if (sOrderBy.compareTo(SMTableartransactions.idoctype) == 0){
-	    	pwOut.println("<TD><B><A HREF=\"" 
+	    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><B><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.idoctype 
 	    		+ "\">Doc. Type</A></B></TD>"
 	    );
 	    }else{
-	    	pwOut.println("<TD><A HREF=\"" 
+	    	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.idoctype 
 	    		+ "\">Doc. Type</A></TD>"
 	    	);
 	    }
-	    	
-	    pwOut.println("<TD>Due Date</TD>");
-	    pwOut.println("<TD>Original Amt.</TD>");
-	    pwOut.println("<TD>Current Amt.</TD>");
-	    pwOut.println("<TD>Retainage ?</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Due Date</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Original Amt.</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current Amt.</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Retainage ?</TD>");
+
 	    if (sOrderBy.compareTo(SMTableartransactions.sordernumber) == 0){
 	    	pwOut.println(
-	    		"<TD><B><A HREF=\"" 
+	    		"<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><B><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.sordernumber 
@@ -525,16 +529,16 @@ public class ARActivityDisplay extends HttpServlet {
 	    	);
 	    }else{
 	    	pwOut.println(
-	    		"<TD><A HREF=\"" 
+	    		"<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><A HREF=\"" 
 	    		+ sLinkMain 
 	    		+ "&OrderBy=" 
 	    		+ SMTableartransactions.sordernumber 
 	    		+ "\">Order #</A></TD>"
 	    	);
 	    }
-	    pwOut.println("<TD>PO Number</TD>");
-	    pwOut.println("<TD>Description</TD>");
-	    
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">PO Number</TD>");
+	    pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
+
 	    pwOut.println("</TR>");
 	}
 	

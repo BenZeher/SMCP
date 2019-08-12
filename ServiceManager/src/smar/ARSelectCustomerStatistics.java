@@ -69,7 +69,7 @@ public class ARSelectCustomerStatistics extends HttpServlet {
 			+ " STYLE=\"width: 2.41in; height: 0.25in\">";
 
 		//Link to finder:
-		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Customer"
 			+ "&ResultClass=FinderResults"
 			+ "&SearchingClass=smar.ARSelectCustomerStatistics"

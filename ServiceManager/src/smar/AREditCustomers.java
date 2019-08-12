@@ -82,7 +82,7 @@ public class AREditCustomers extends HttpServlet {
 			+ " STYLE=\"width: 2.41in; height: 0.25in\">";
 
 		//Link to finder:
-		sOutPut += "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		sOutPut += "&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ObjectName=Customer"
 			+ "&ResultClass=FinderResults"

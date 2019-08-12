@@ -1335,7 +1335,7 @@ public class GLAccount extends java.lang.Object{
 			}
 			
 			return  
-				SMUtilities.getURLLinkBase(context) + "smar.ObjectFinder"
+				SMUtilities.getURLLinkBase(context) + "SMClasses.ObjectFinder"
 				+ "?"+ "&ObjectName=" + GLAccount.Paramobjectname
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"

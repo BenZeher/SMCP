@@ -259,7 +259,7 @@ public class ICEditShipmentLine extends HttpServlet {
     	);
         
 		//Link to finder:
-        m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+        m_pwOut.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ObjectName=ACTIVE Item"
 			+ "&ResultClass=FinderResults"

@@ -71,7 +71,7 @@ public class APDisplayVendorSelection  extends HttpServlet {
 					));
 		
 		//Link to finder:
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Vendor"
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ResultClass=FinderResults"

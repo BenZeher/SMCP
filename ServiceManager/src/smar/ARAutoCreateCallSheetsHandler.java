@@ -98,7 +98,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		if (request.getParameter(ARAutoCreateCallSheetsSelection.FIND_STARTING_CUSTOMER_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"
@@ -133,7 +133,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 		if (request.getParameter(ARAutoCreateCallSheetsSelection.FIND_ENDING_CUSTOMER_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"

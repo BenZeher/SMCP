@@ -65,7 +65,7 @@ public class SMSalesContactSelect extends HttpServlet {
 			    			"<TD ALIGN=CENTER><B>Retrieve existing sales contact by id:</B></TD>\n" +
 			    			"<TD>" + clsCreateHTMLFormFields.TDTextBox("id", clsManageRequestParameters.get_Request_Parameter("SalesContactID", request), 20, 20, "") + "&nbsp;\n" + 
 	    					//Link to finder:
-	    				    "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder" +
+	    				    "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
 		    				"?ObjectName=" + SMTablesalescontacts.OBJECT_NAME +
 		    				"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID +
 		    				"&ResultClass=FinderResults" +

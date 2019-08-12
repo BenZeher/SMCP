@@ -154,7 +154,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				);
 
 		//Link to finder:
-		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		out.println("&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=Order"
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"
@@ -190,7 +190,7 @@ public class SMEditOrderSelection extends HttpServlet {
 
 				//Add EXTENDED order find:
 				+ "&nbsp;&nbsp;"
-				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + FinderResults.OBJECT_ORDER_EXTENDED
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"
@@ -261,7 +261,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				+ "\"> Find order (extended search)</A>\n"
 				//Add order DETAIL find:
 				+ "&nbsp;&nbsp;"
-				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + FinderResults.OBJECT_ORDER_BY_DETAIL
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"
@@ -295,7 +295,7 @@ public class SMEditOrderSelection extends HttpServlet {
 				//+ "&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "\"> Find order (detail search)</A>"
 				//Quote finder:
-				+"&nbsp;&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				+"&nbsp;&nbsp;" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + SMTableorderheaders.getOrderTypeDescriptions(SMTableorderheaders.ORDERTYPE_QUOTE)
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"
@@ -328,7 +328,7 @@ public class SMEditOrderSelection extends HttpServlet {
 		
 				//Proposal finder:
 				+ "&nbsp;&nbsp;"
-				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + SMTableproposals.ObjectName
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ResultClass=FinderResults"

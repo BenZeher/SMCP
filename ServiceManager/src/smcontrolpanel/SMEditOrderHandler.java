@@ -49,7 +49,7 @@ public class SMEditOrderHandler extends HttpServlet{
 		if (request.getParameter(SMEditOrderSelection.FINDCUSTOMER_BUTTON_NAME) != null){
 			//Then call the finder to search for customers:
 			sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&ObjectName=Customer"
 				+ "&ResultClass=FinderResults"

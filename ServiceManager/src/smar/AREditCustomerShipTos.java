@@ -145,7 +145,7 @@ public class AREditCustomerShipTos extends HttpServlet {
 
 		//Link to finder:
 		out.println(
-			"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+			"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?ObjectName=Customer"
 			+ "&ResultClass=FinderResults"
 			+ "&SearchingClass=smar.AREditCustomerShipTos"

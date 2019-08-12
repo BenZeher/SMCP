@@ -68,7 +68,7 @@ public class SMEditBidSelect extends HttpServlet {
 			+ " STYLE=\"width: .75in; height: 0.25in\">&nbsp;";
 		
 		//Link to finder:
-		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder" +
+		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
 				"?ObjectName=" + SMBidEntry.ParamObjectName +
 				"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"&ResultClass=FinderResults" +

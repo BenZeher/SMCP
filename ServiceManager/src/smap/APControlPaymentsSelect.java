@@ -124,7 +124,7 @@ public class APControlPaymentsSelect extends HttpServlet {
 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\" >\n";		
 		
 		//Link to finder:
-		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 			+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID()
 			+ "\""
 			+ " ID=\"" + DOCNUMBER_FINDER_LINK_ID + "\""
@@ -159,7 +159,7 @@ public class APControlPaymentsSelect extends HttpServlet {
 			+ "        var svendor = encodeURIComponent(document.getElementById(\"" + SMTableaptransactions.svendor + "\").value);\n"
 			+ "        docfinderlink.href = '"
 			
-				+ SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder' +\n"
+				+ SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder' +\n"
 				+ " '?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() + "' +\n"
 				+ " '&ObjectName=" + SMTableaptransactions.OBJECT_NAME + "' +\n"
 				+ " '&ResultClass=FinderResults" + "' +\n"

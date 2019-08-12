@@ -4917,12 +4917,12 @@
 
     <servlet-mapping>
         <servlet-name>FinderResults</servlet-name>
-        <url-pattern>/smar.FinderResults</url-pattern>
+        <url-pattern>/SMClasses.FinderResults</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>ObjectFinder</servlet-name>
-        <url-pattern>/smar.ObjectFinder</url-pattern>
+        <url-pattern>/SMClasses.ObjectFinder</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

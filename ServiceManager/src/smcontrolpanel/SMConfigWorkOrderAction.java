@@ -278,7 +278,7 @@ public class SMConfigWorkOrderAction extends HttpServlet{
 			//Then call the finder to search for orders:
 			sRedirectString = 
 				//Link to finder:
-				SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=Order"
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ResultClass=FinderResults"
@@ -333,7 +333,7 @@ public class SMConfigWorkOrderAction extends HttpServlet{
 			//Then call the finder to do the 'extended' search for orders:
 			sRedirectString = 
 				//Link to finder:
-				SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?ObjectName=" + FinderResults.OBJECT_ORDER_EXTENDED
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ResultClass=FinderResults"

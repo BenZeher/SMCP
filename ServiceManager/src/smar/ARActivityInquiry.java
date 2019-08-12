@@ -99,7 +99,7 @@ public class ARActivityInquiry extends HttpServlet {
 			);
 
 		//Link to finder:
-	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 	    	+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			+ "&ObjectName=Customer"
 			+ "&ResultClass=FinderResults"

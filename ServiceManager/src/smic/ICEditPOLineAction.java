@@ -42,7 +42,7 @@ public class ICEditPOLineAction extends HttpServlet{
 		if (request.getParameter(ICEditPOLineEdit.FIND_ITEM_BUTTON) != null){
 			//Then call the finder to search for items:
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=" + FinderResults.SEARCH_ACTIVE_ITEM
 				+ "&ResultClass=FinderResults"
@@ -165,7 +165,7 @@ public class ICEditPOLineAction extends HttpServlet{
 		if (request.getParameter("FINDGLEXPENSEACCT") != null){
 			//Then call the finder to search for items:
 			String sRedirectString = 
-				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ObjectFinder"
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
 				+ "&ObjectName=" + "ACTIVE " + GLAccount.Paramobjectname //We only want ACTIVE accounts listed:
 				+ "&ResultClass=FinderResults"

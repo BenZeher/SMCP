@@ -343,13 +343,13 @@ public class FinderResults extends HttpServlet {
 		}
 		
 		//Now set up the table and header row:
-		out.println("<TABLE BORDER=1 CELLSPACING=2>\n");
+		out.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CELLSPACING=2 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n");
 		//out.println("<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\"" 
 		//	+ " ID=\"" + TABLE_RESULTS_ID + "\""
 		//	+ ">\n");
 
 		//Display the headings:
-		out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n");
+		out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" >\n");
 		//out.println("  <TR>\n");
 		for (int i = 0; i<sDisplayHeadings.size(); i++){
 			out.println("    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \""
@@ -371,7 +371,7 @@ public class FinderResults extends HttpServlet {
 					this.toString() + ".doPost - user: '" + sUserID + " - " + sUserFullName + "', company: '" + sCompanyName + "'");
 			//Now list the records:
 			String sFieldName = "";
-			boolean bOddRow = true;
+			int iCount =0;
 			while(rs.next()){
 				//for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++){
 					//System.out.println("[1491249955]");
@@ -397,6 +397,11 @@ public class FinderResults extends HttpServlet {
 				String sFieldValue = rs.getString(sFieldName);
 				if (sFieldValue == null){
 					sFieldValue = "";
+				}
+				if(iCount % 2 ==0) {
+					out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + " \" >\n");
+				}else {
+					out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + " \" >\n");
 				}
 				if (sReturnField.compareToIgnoreCase("") != 0){
 					out.println("    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
@@ -453,7 +458,7 @@ public class FinderResults extends HttpServlet {
 					out.println("</FONT></TD>\n");
 				}
 				out.println("  </TR>\n");
-				bOddRow = !bOddRow;
+				iCount++;
 			}
 			rs.close();
 		}catch (Exception ex){

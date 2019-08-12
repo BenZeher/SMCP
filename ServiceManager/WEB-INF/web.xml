@@ -950,12 +950,12 @@
 
     <servlet>
         <servlet-name>FinderResults</servlet-name>
-        <servlet-class>smar.FinderResults</servlet-class>
+        <servlet-class>SMClasses.FinderResults</servlet-class>
     </servlet>
 
     <servlet>
         <servlet-name>ObjectFinder</servlet-name>
-        <servlet-class>smar.ObjectFinder</servlet-class>
+        <servlet-class>SMClasses..ObjectFinder</servlet-class>
     </servlet>
 
     <servlet>

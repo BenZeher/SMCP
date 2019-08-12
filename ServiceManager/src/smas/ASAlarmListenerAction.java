@@ -604,7 +604,7 @@ public class ASAlarmListenerAction extends HttpServlet{
 				"(N/A)", 
 				"(N/A)", 
 				"(N/A)", 
-				"Controller started up", 
+				"Controller '" + sControllerName + "' started up. Resetting scheduled devices.", 
 				"[1486252126]", 
 				null
 			);

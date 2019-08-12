@@ -955,7 +955,7 @@
 
     <servlet>
         <servlet-name>ObjectFinder</servlet-name>
-        <servlet-class>SMClasses..ObjectFinder</servlet-class>
+        <servlet-class>SMClasses.ObjectFinder</servlet-class>
     </servlet>
 
     <servlet>

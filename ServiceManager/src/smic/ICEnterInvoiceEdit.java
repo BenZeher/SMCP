@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicpoinvoicelines;
@@ -764,8 +765,9 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 			HttpServletRequest req
 		) throws SQLException{
 		String s = "";
+		s += SMUtilities.getMasterStyleSheetLink();
 		s += "<BR>";
-		s += "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
+		s += "<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">";
 		s += printReceivedLinesHeader();
 
 		boolean bAdditionalLineHeadingPrinted = false;
@@ -842,9 +844,12 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 						sNonStockFlag = "Y";
 					}
 				}
-				
-				s += "<TR>"
-					+ "<TD style=\" text-align:right; \">"
+				if(i % 2 == 0) {
+					s+= "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">";
+				}else {
+					s+= "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">";
+				}
+				s += "<TD style=\" text-align:right; \">"
 					+ sLineNumber
 					+ "</TD>"
 				;
@@ -1091,14 +1096,14 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 		
 		//Add a row to the table to show the totals:
 		if (entry.getM_sexportsequencenumber().compareToIgnoreCase("0") == 0){
-			s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns - 2) + " style=\" text-align:right; \">"
+			s += "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns - 2) + " style=\" text-align:right; \">"
 				+ "<INPUT TYPE=SUBMIT NAME='" + RECALCULATETOTALS_BUTTON_NAME + "'" 
 				+ " VALUE='" + RECALCULATETOTALS_BUTTON_LABEL + "'" 
 				+ " STYLE='height: 0.24in'>"
 				+ "</TD>"
 			;
-		}else{
-			s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns- 2) + " style=\" text-align:right; \">"
+		}else{ 
+			s += "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns- 2) + " style=\" text-align:right; \">"
 				+ "&nbsp;"
 				+ "</TD>"
 			;
@@ -1137,10 +1142,15 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	private String printNewAdditionalLine(ICPOInvoice entry, int sNewLineNumber){
 		
 		String s = "";
-			s += "<TR>"
+		if(sNewLineNumber % 2 == 0) {
+			s+= "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">";
+		}else {
+			s+= "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">";
+		}
+
 		
 			//Line number:
-			+ "<TD style=\" text-align:right; \">&nbsp;</TD>"
+			s+= "<TD style=\" text-align:right; \">&nbsp;</TD>"
 		
 			//Description:
 			+ "<TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns - 5) + " style=\" text-align:left; \">"
@@ -1213,32 +1223,32 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	private String printReceivedLinesHeader(){
 		iNumberOfDetailColumns = 0;
 		String s = 
-			"<TR>"
-			+ "<TD style=\" text-align:right; vertical-align:bottom; font-weight:bold; \">Line&nbsp;#</TD>";
+			"<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING +  "\">"
+			+ "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Line&nbsp;#</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:right; vertical-align:bottom; font-weight:bold; \">Receipt&nbsp;#</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Receipt&nbsp;#</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:right; vertical-align:bottom; font-weight:bold; \">PO&nbsp;#</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">PO&nbsp;#</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Qty recv'd</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Qty recv'd</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Item</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Item</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Description</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Description</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">UOM</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">UOM</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Expense acct</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Expense acct</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Inv. item?</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Inv. item?</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Non-stock?</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">Non-stock?</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:right; vertical-align:bottom; font-weight:bold; \">Recv'd cost</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Recv'd cost</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:center; vertical-align:bottom; font-weight:bold; \">Delete ?</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \">Delete ?</TD>";
 			iNumberOfDetailColumns++;
-			s += "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Invoiced cost</TD>";
+			s += "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Invoiced cost</TD>";
 			iNumberOfDetailColumns++;
 			s += "</TR>"
 		;
@@ -1246,15 +1256,15 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 	}
 	private String printAdditionalLinesHeader(){
 		return
-			"<TR>"
-			+ "<TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns) + " style=\" text-align:left; font-weight:bold; \">ADDITIONAL LINES</TD>"
+			"<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+			+ "<TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns) + " CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \">ADDITIONAL LINES</TD>"
 			+ "</TR>"
-			+ "<TR>"
-			+ "<TD style=\" text-align:right; font-weight:bold; \">Line #</TD>"
+			+ "<TR CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
+			+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Line #</TD>"
 			+ "<TD COLSPAN=" + Integer.toString(iNumberOfDetailColumns - 5) 
-				+ " style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Description</TD>"
-			+ "<TD style=\" text-align:left; vertical-align:bottom; font-weight:bold; \">Expense acct</TD>"
-			+ "<TD COLSPAN=3 style=\" text-align:right; vertical-align:bottom; font-weight:bold; \">Invoiced cost</TD>"
+				+ " CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>"
+			+ "<TD CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Expense acct</TD>"
+			+ "<TD COLSPAN=3 CLASS=\" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \">Invoiced cost</TD>"
 			+ "</TR>"
 		;
 	}

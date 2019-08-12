@@ -280,7 +280,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					try {
 						smopt.load(conn);
 					} catch (Exception e1) {
-						pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
+						pwOut.println("<BR>Error getting SMOptions [1565634531] - " + e1.getMessage() + "<BR>");
 					}
 					String sWODocumentLink = "(No&nbsp;folder)";
 					if (bAllowDocumentView){
@@ -294,20 +294,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 							+ "\">View&nbsp;folder</A>&nbsp;&nbsp;</FONT>\n";
 						}
 					}
-/*					
-					if (rsOrder.getInt(SMTableworkorders.TableName + "." + SMTableworkorders.iposted) == 1){
-						sWODocumentLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWorkOrderAction?"
-							+ SMWorkOrderEdit.COMMAND_FLAG + "=" + SMWorkOrderEdit.PRINTRECEIPTCOMMAND_VALUE
-							+ "&" + SMWorkOrderHeader.Paramlid + "=" + sWorkOrderID
-							+ "&" + SMWorkOrderHeader.Paramstrimmedordernumber + "=" + rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber).trim()
-							+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-							+ "\">" + "View" 
-							+ "</A>"
-						;
-					}
-					
-*/
+
 					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWOLink + "&nbsp;" + sWODocumentLink + "</FONT></TD>");
 					
 					String sMechFullName = rsOrder.getString(SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName);

@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLogEntry;
+import SMClasses.SMOption;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableinvoicedetails;
@@ -220,6 +221,12 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 						getServletContext(), 
 						sDBID,
 						sLicenseModuleLevel);
+				boolean bAllowDocumentView = SMSystemFunctions.isFunctionPermitted(
+						SMSystemFunctions.SMViewWorkOrderDocuments, 
+						sUserID, 
+						conn, 
+						sLicenseModuleLevel); 
+				
 				while (rsOrder.next()){
 					iLineNumber++;
 					if(bOddRow){
@@ -269,9 +276,27 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 						;
 					}
 					//Next a link to VIEW the work order:
-					String sViewWOLink = "(Not posted)";
+					SMOption smopt = new SMOption();
+					try {
+						smopt.load(conn);
+					} catch (Exception e1) {
+						pwOut.println("<BR>Error getting SMOptions [1385390626] - " + e1.getMessage() + "<BR>");
+					}
+					String sWODocumentLink = "(No&nbsp;folder)";
+					if (bAllowDocumentView){
+						//Try to build a link to the Google Docs folder:
+						String sGDocLink = rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.sgdoclink);
+						if (sGDocLink == null){
+							sGDocLink = "";
+						}
+						if (sGDocLink.compareToIgnoreCase("") != 0){
+							sWODocumentLink = "<FONT SIZE=2><A HREF=\"" + sGDocLink 
+							+ "\">View&nbsp;folder</A>&nbsp;&nbsp;</FONT>\n";
+						}
+					}
+/*					
 					if (rsOrder.getInt(SMTableworkorders.TableName + "." + SMTableworkorders.iposted) == 1){
-						sViewWOLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWorkOrderAction?"
+						sWODocumentLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWorkOrderAction?"
 							+ SMWorkOrderEdit.COMMAND_FLAG + "=" + SMWorkOrderEdit.PRINTRECEIPTCOMMAND_VALUE
 							+ "&" + SMWorkOrderHeader.Paramlid + "=" + sWorkOrderID
 							+ "&" + SMWorkOrderHeader.Paramstrimmedordernumber + "=" + rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber).trim()
@@ -281,7 +306,9 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 							+ "</A>"
 						;
 					}
-					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWOLink + "&nbsp;" + sViewWOLink + "</FONT></TD>");
+					
+*/
+					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWOLink + "&nbsp;" + sWODocumentLink + "</FONT></TD>");
 					
 					String sMechFullName = rsOrder.getString(SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName);
 					if (sMechFullName == null){

@@ -18,6 +18,7 @@ import SMClasses.SMEntryBatch;
 import SMClasses.SMLogEntry;
 import SMClasses.SMModuleTypes;
 import SMClasses.SMOption;
+import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableglexportdetails;
 import SMDataDefinition.SMTableicbatchentries;
 import SMDataDefinition.SMTableiccosts;
@@ -3910,6 +3911,8 @@ public class ICEntryBatch {
         			return false;
         		}
         		
+    			String sEntryTransactionID = "";
+ 
         		export.addHeader(
         				sModuleType(), 
         				ICEntryTypes.getSourceTypes(Integer.parseInt(entry.sEntryType())),
@@ -4179,4 +4182,35 @@ public class ICEntryBatch {
 		}
 		return true;
 	}
+	private String getICTransactionID(
+			String sBatchNumber,
+			String sEntryNumber,
+			Connection conn) throws Exception {
+			
+			String sTransactionID = "";
+			
+			String SQL = "SELECT"
+				+ " " + SMTableictransactions.lid
+				+ " FROM " + SMTableictransactions.TableName
+				+ " WHERE ("
+					+ "(" + SMTableictransactions.loriginalbatchnumber + " = " + sBatchNumber + ")"
+					+ " AND (" + SMTableictransactions.loriginalentrynumber + " = " + sEntryNumber + ")"
+				+ ")"
+			;
+			try {
+				ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rs.next()){
+					sTransactionID = Long.toString(rs.getLong(SMTableaptransactions.lid));
+				}
+				rs.close();
+			} catch (Exception e) {
+				throw new Exception("Error [20192271447502] " + "Could not get IC Transaction ID with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+			}
+				
+			if (sTransactionID.compareToIgnoreCase("") == 0){
+				throw new Exception("Error [20192271446647] " + "Could not get IC Transaction ID for entry number " + sEntryNumber + ".");
+			}
+			
+			return sTransactionID;
+		}
 }

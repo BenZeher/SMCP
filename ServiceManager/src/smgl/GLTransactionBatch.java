@@ -1055,7 +1055,7 @@ public class GLTransactionBatch {
 		
 		//Allow for the possibility that this update affects an opening balance in a subsequent fiscal set:
 		//Update the opening balance for any subsequent fiscal years for this account:
-		//TODO - update retained earnings for the year RATHER than the starting balance
+		//Update retained earnings for the year RATHER than the starting balance
 		//if this account is an INCOME statement account.....
 		//TEST THIS!
 		GLAccount glacct = new GLAccount(sAccount);

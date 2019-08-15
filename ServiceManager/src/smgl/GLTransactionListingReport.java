@@ -729,7 +729,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
 		;
 		
-		System.out.println("[1553548501] - SQL = '" + sSQL + "'");
+		//System.out.println("[1553548501] - SQL = '" + sSQL + "'");
 			
 		boolean bOddRow = false;
 		BigDecimal bdGrandDebitTotal = new BigDecimal("0.00");

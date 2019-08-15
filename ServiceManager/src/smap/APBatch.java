@@ -1754,6 +1754,14 @@ public class APBatch {
     	
     	for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			APBatchEntry entry = m_arrBatchEntries.get(i);
+			
+			String sEntryTransactionID = "";
+			try {
+				sEntryTransactionID = getAPTransactionID(m_arrBatchEntries.get(i).getslid(), conn);
+			} catch (Exception e3) {
+				throw new Exception("Error [20192271449261] " + e3.getMessage());
+			}
+			
     		export.addHeader(
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
@@ -1762,7 +1770,7 @@ public class APBatch {
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
     			buildGLTransactionEntryDescription(entry),
-    			"0"
+    			sEntryTransactionID
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -2023,6 +2031,12 @@ public class APBatch {
     	
     	for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			APBatchEntry entry = m_arrBatchEntries.get(i);
+			String sEntryTransactionID = "";
+			try {
+				sEntryTransactionID = getAPTransactionID(m_arrBatchEntries.get(i).getslid(), conn);
+			} catch (Exception e3) {
+				throw new Exception("Error [20192271449262] " + e3.getMessage());
+			}
     		export.addHeader(
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
@@ -2031,16 +2045,8 @@ public class APBatch {
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
     			buildGLTransactionEntryDescription(entry),
-    			"0"
+    			sEntryTransactionID
     		);
-    		
-//    		java.sql.Date datEntry = null;
-//			try {
-//				datEntry = SMUtilities.StringTojavaSQLDate(SMUtilities.DATE_FORMAT_FOR_DISPLAY, entry.getsdatentrydate());
-//			} catch (Exception e) {
-//				throw new Exception("Error [1494535702] - cannot convert entry date '" 
-//					+ entry.getsdatentrydate() + "' to SQL date - " + e.getMessage());
-//			}
 			
     		java.sql.Date datDocDate = null;
 			try {
@@ -2275,6 +2281,12 @@ public class APBatch {
     	
     	for (int i = 0; i < m_arrBatchEntries.size(); i++){
 			APBatchEntry entry = m_arrBatchEntries.get(i);
+			String sEntryTransactionID = "";
+			try {
+				sEntryTransactionID = getAPTransactionID(m_arrBatchEntries.get(i).getslid(), conn);
+			} catch (Exception e3) {
+				throw new Exception("Error [20192271449263] " + e3.getMessage());
+			}
     		export.addHeader(
     			SMModuleTypes.AP, 
     			SMTableapbatches.getBatchSourceTypeLabels(Integer.parseInt(getsbatchtype())),
@@ -2283,7 +2295,7 @@ public class APBatch {
     			entry.getsdatdocdate(),
     			entry.getsdatentrydate(),
     			buildGLTransactionEntryDescription(entry),
-    			"0"
+    			sEntryTransactionID
     		);
     		
 //    		java.sql.Date datEntry = null;
@@ -4319,6 +4331,36 @@ public class APBatch {
 		}
 		
 		return sEntryDescription;
+	}
+	private String getAPTransactionID(
+		String sBatchEntryID,
+		Connection conn) throws Exception {
+		
+		String sTransactionID = "";
+		
+		String SQL = "SELECT"
+			+ " " + SMTableaptransactions.lid
+			+ " FROM " + SMTableaptransactions.TableName
+			+ " WHERE ("
+				+ "(" + SMTableaptransactions.lbatchentryid + " = " + sBatchEntryID + ")"
+			+ ")"
+		;
+		try {
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rs.next()){
+				sTransactionID = Long.toString(rs.getLong(SMTableaptransactions.lid));
+			}
+			rs.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20192271447402] " + "Could not get AP Transaction ID with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+			
+		if (sTransactionID.compareToIgnoreCase("") == 0){
+			throw new Exception("Error [20192271446547] " + "Could not get AP Transaction ID for Entry ID '" + sBatchEntryID + ".");
+		}
+		
+		return sTransactionID;
+		
 	}
 	private void initializeVariables(){
 		m_sbatchnumber = "-1";

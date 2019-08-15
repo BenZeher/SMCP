@@ -426,13 +426,7 @@ public class APBatchEntryLine {
 				+ " ON " + SMTableapbatches.TableName + "." + SMTableapbatches.lbatchnumber + " = " + SMTableapbatchentrylines.TableName + "." + SMTableapbatchentrylines.lbatchnumber
 				+ " WHERE ("
 				
-					//Ignore this batch's entries - we have to check them differently because it's possible that this batch's entry numbers
-					//or line numbers may not match what's on disk.  For example, if we remove an entry, the entry numbers in the batch
-					//AFTER the deleted entry will be one less than the entries on disk, and this check won't work correctly.  This already
-					//happened once, on 8/8/2019, so I (TJR) modified the logic:
-				
 					//Ignore this particular entry, but check any others:
-				
 					+ " (" + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lid + " != " + sEntryID + ")"
 					
 					//And only look in UNposted batches:

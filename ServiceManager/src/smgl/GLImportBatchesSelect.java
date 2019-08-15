@@ -90,7 +90,7 @@ public class GLImportBatchesSelect extends HttpServlet {
 	    	+ "<B>Entry document date</B> (in mm/dd/yyyy format)<BR>\n"
 	    	+ "<B>Entry fiscal year (e.g. 2019)</B><BR>\n"
 	    	+ "<B>Entry fiscal period</B> (e.g. 7)<BR>\n"
-	    	+ "<B>Entry source ledger</B> ('AP', 'AR', 'FA', 'IC', 'JE', or 'PR')<BR>\n"
+	    	+ "<B>Entry source ledger</B> ('AP', 'AR', 'FA', 'IC', 'GL', or 'PR')<BR>\n"
 	    	+ "<B>Entry auto-reverse?</B> (either 'Y' or 'N')<BR>\n"
 	    	+ "<B>Line number</B><BR>\n"
 	    	+ "<B>Line description</B> (up to " + Integer.toString(SMTablegltransactionbatchlines.sdescriptionLength) + " characters)<BR>\n"

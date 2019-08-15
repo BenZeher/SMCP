@@ -420,7 +420,7 @@ public class GLImportBatchesAction extends HttpServlet{
 					+ "/" + fields[11].substring(0, 4);
 				sEntryFiscalYear = fields[5].trim();
 				sEntryFiscalPeriod = fields[6].trim();
-				sEntrySourceLedger = "JE";
+				sEntrySourceLedger= GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL);
 				sEntryAutoReverse = "N";
 				
 			}else{
@@ -827,17 +827,14 @@ public class GLImportBatchesAction extends HttpServlet{
 				sField, SMTablegltransactionbatchentries.ssourceledgerLength, "Source Ledger on line #" + Integer.toString(iLineNumber), false);
 			//If it's not a valid source ledger, reject it:
 			boolean bSourceLedgerIsValid = false;
-			System.out.println("[20192231819537] " + "Source Ledger in file = '" + sField + "'.");
 			for (int i = 0; i < GLSourceLedgers.NO_OF_SOURCELEDGERS; i++){
-				System.out.println("[20192231820461] " + "SL Desc = '" + GLSourceLedgers.getSourceLedgerDescription(i) + "'.");
 				if (GLSourceLedgers.getSourceLedgerDescription(i).compareToIgnoreCase(sField) == 0){
 					bSourceLedgerIsValid = true;
-					System.out.println("[20192231821319] " + " SL is valid");
 					break;
 				}
 			}
 			if (!bSourceLedgerIsValid){
-				throw new Exception("Entry source ledger on line #" + Integer.toString(iLineNumber) + " is not a valid source ledger.");
+				throw new Exception("Entry source ledger '" + sField + "' on line #" + Integer.toString(iLineNumber) + " is not a valid source ledger.");
 			}
 		}		
 		if (iFieldIndex == FIELD_ENTRY_AUTOREVERSE){

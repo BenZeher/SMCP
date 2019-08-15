@@ -706,8 +706,6 @@ public class APBatchEntry {
 			}
 		}
 		
-		//System.out.println("[1543341852] - elapsed time 12 = " + (System.currentTimeMillis() - lStarttime) + " ms");
-		
 		//NOW - if it's a payment, prepay, apply-to, or misc payment, set the doc number using the appropriate prefix, and the ID no:
 		if (
 			(getientrytype() == SMTableapbatchentries.ENTRY_TYPE_PAYMENT_APPLYTO)
@@ -737,8 +735,6 @@ public class APBatchEntry {
 			}
 		}
 		
-		//System.out.println("[1543341853] - elapsed time 13 = " + (System.currentTimeMillis() - lStarttime) + " ms");
-		
 		//If it's a reversal, use the appropriate prefix:
 		if (getientrytype() == SMTableapbatchentries.ENTRY_TYPE_REVERSAL){
 			//And if the doc number is blank at this point (which could be if it's a new entry):
@@ -762,8 +758,6 @@ public class APBatchEntry {
 				setsdocnumber(sDocNumber);
 			}
 		}
-		
-		//System.out.println("[1543341854] - elapsed time 14 = " + (System.currentTimeMillis() - lStarttime) + " ms");
 		
 		//Finally, save the lines....
 		try {
@@ -1120,12 +1114,6 @@ public class APBatchEntry {
 			line.setsentrynumber(getsentrynumber());
 			line.setslinenumber(Integer.toString(i + 1));
 			try {
-				//Debugging:
-				//if (getsvendoracct().compareToIgnoreCase("OHD02") == 0){
-				//	if (line.getsapplytodocnumber().compareToIgnoreCase("4085665") == 0){
-				//		System.out.println("[1509386339]");
-				//	}
-				//}
 				line.validate_fields(conn, iEntryType, this.getslid(), bBatchIsBeingPosted);
 			} catch (Exception e) {
 				sResult += "  In line " + line.getslinenumber() + " - " + e.getMessage() + ".";

@@ -1380,7 +1380,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 			;
 			
 			String ssSourceTypeSelections = "";
-			String sDefaultSourceType = "JE" + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE";
+			String sDefaultSourceType = "GL" + GLSourceLedgers.SOURCE_LEDGER_AND_TYPE_DELIMITER + "JE";
 			for (int j = 0; j < GLSourceLedgers.getSourceTypes().size(); j++){
 				ssSourceTypeSelections += "<OPTION";
 				if (GLSourceLedgers.getSourceTypes().get(j).compareTo(sDefaultSourceType) == 0){

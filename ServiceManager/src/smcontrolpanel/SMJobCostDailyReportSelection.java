@@ -135,6 +135,8 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
     	try{ 
 	        //Mechanic List
 	        String SQL = "SELECT * FROM " + SMTablemechanics.TableName
+	        	+ " WHERE (" + SMTablemechanics.sMechFullName + "  NOT LIKE \'A %\') "
+	        	+ " AND (" + SMTablemechanics.sMechFullName + "  NOT LIKE \'Z %\') "
 	        	+ " ORDER BY " + SMTablemechanics.sMechInitial;
 	        //System.out.println("Item Categories SQL: " + sSQL);
 	        ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(
@@ -241,12 +243,13 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	    	while (rsServiceTypes.next()){
 	   			if(rsServiceTypes.getString(SMTableservicetypes.TableName + "." + SMTableservicetypes.id) != null) {
 	   				alServiceTypes.add("<LABEL><INPUT TYPE=CHECKBOX NAME=ServiceTypeCheckbox" 
-	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sCode) + " VALUE=0 >" 
+	   		   				+ rsServiceTypes.getString(SMTableorderheaders.sServiceTypeCode) + " VALUE=0 >" 
 	   		   				+ rsServiceTypes.getString(SMTableservicetypes.sName)
 	   		   				+ "</LABEL>"
 	   		   				);	
 	   			}		
 	    	}
+	    	System.out.println("[2019228813397] " + alServiceTypes.toString());
 	    	rsServiceTypes.close();
 	    	pwOut.println("<TR><TD>");
 	    	pwOut.println(SMUtilities.Build_HTML_Table(2, alServiceTypes, 0, false));

@@ -1332,7 +1332,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			SMBidEntry entry,
 			boolean bUseGoogleDrivePicker) throws SQLException{
 		String s = "";
-		int iRows = 8;
+		int iRows = 15;
 		int iNumberOfColumns = 2;
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:BidMemos; background-color: "

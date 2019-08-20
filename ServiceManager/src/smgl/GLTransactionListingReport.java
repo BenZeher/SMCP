@@ -121,7 +121,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
-				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
 				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
@@ -909,7 +909,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					sBatchAndEntry,
 					bdDebit,
 					bdCredit,
-					Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lsourceledgertransactionlineid)),
+					rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink),
 					context,
 					sDBID,
 					bOddRow

@@ -877,7 +877,7 @@ public class GLTransactionBatch {
     		newentry.setsfiscalperiod(oldentry.getsfiscalperiod());
     		newentry.setsfiscalyear(oldentry.getsfiscalyear());
     		newentry.setssourceledger(oldentry.getssourceledger());
-    		newentry.setssourceledgertransactionid(oldentry.getssourceledgertransactionid());
+    		newentry.setssourceledgertransactionlink(oldentry.getssourceledgertransactionlink());
     		for (int j = 0; j < oldentry.getLineArray().size(); j++){
     			GLTransactionBatchLine oldline = oldentry.getLineArray().get(j);
     			GLTransactionBatchLine newline = new GLTransactionBatchLine();
@@ -1211,7 +1211,7 @@ public class GLTransactionBatch {
         		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
         		+ ", " + SMTablegltransactionlines.loriginalentrynumber
         		+ ", " + SMTablegltransactionlines.loriginallinenumber
-        		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+        		+ ", " + SMTablegltransactionlines.sSourceledgertransactionlink
         		+ ", " + SMTablegltransactionlines.sacctid
         		+ ", " + SMTablegltransactionlines.sdescription
         		+ ", " + SMTablegltransactionlines.sreference
@@ -1229,7 +1229,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", " + entry.getssourceledgertransactionid() //lsourceledgertransactionlineid
+        		+ ", " + entry.getssourceledgertransactionlink() //lsourceledgertransactionlineid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsdescription()) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference
@@ -1319,7 +1319,7 @@ public class GLTransactionBatch {
         		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
         		+ ", " + SMTablegltransactionlines.loriginalentrynumber
         		+ ", " + SMTablegltransactionlines.loriginallinenumber
-        		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+        		+ ", " + SMTablegltransactionlines.sSourceledgertransactionlink
         		+ ", " + SMTablegltransactionlines.sacctid
         		+ ", " + SMTablegltransactionlines.sdescription
         		+ ", " + SMTablegltransactionlines.sreference
@@ -1337,7 +1337,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", " + entry.getssourceledgertransactionid() //lsourceledgertransactionlineid
+        		+ ", " + entry.getssourceledgertransactionlink() //lsourceledgertransactionlineid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference

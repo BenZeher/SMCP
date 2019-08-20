@@ -9,7 +9,7 @@ public class SMTablegltransactionlines {
 	public static final String loriginalbatchnumber = "loriginalbatchnumber";
 	public static final String loriginalentrynumber = "loriginalentrynumber";
 	public static final String loriginallinenumber = "loriginallinenumber";
-	public static final String lsourceledgertransactionlineid = "lsourceledgertransactionlineid";
+	public static final String sSourceledgertransactionlink = "sSourceledgertransactionlink";
 	public static final String sacctid = "sacctid";
 	public static final String ifiscalyear = "ifiscalyear";
 	public static final String ifiscalperiod = "ifiscalperiod";

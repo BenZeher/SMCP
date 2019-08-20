@@ -759,8 +759,8 @@ public class GLEditEntryEdit  extends HttpServlet {
  		    ;
      	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0)){
      		String sDefaultID = "0";
-     		if (entry.getssourceledgertransactionid().compareToIgnoreCase("") != 0){
-     			sDefaultID = entry.getssourceledgertransactionid();
+     		if (entry.getssourceledgertransactionlink().compareToIgnoreCase("") != 0){
+     			sDefaultID = entry.getssourceledgertransactionlink();
      		}
      		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
  	    		+ " VALUE=\"" + clsStringFunctions.filter(sDefaultID) + "\""
@@ -771,9 +771,9 @@ public class GLEditEntryEdit  extends HttpServlet {
  	    	;
      	}else{
      		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionid()) + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlink()) + "\""
  	    		+ ">"
- 	    		+ entry.getssourceledgertransactionid()
+ 	    		+ entry.getssourceledgertransactionlink()
  	    	;
      	}
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";

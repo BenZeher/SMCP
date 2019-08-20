@@ -1712,7 +1712,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 					+ ", " + SMTablegltransactionlines.loriginalbatchnumber
 					+ ", " + SMTablegltransactionlines.loriginalentrynumber
 					+ ", " + SMTablegltransactionlines.loriginallinenumber
-					+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+					+ ", " + SMTablegltransactionlines.sSourceledgertransactionlink
 					+ ", " + SMTablegltransactionlines.sacctid
 					+ ", " + SMTablegltransactionlines.sdescription
 					+ ", " + SMTablegltransactionlines.sreference
@@ -1735,7 +1735,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			+ ", " + "0" //original batch number
 			+ ", " + "0" //original entry number
 			+ ", " + "0" //original line number
-			+ ", 0" //source transaction line ID
+			//TODO update this to have the actual link
+			+ ", 0" //source transaction link
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLREF").trim()) + "'" //reference

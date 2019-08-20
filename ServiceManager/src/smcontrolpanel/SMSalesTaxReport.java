@@ -33,7 +33,7 @@ public class SMSalesTaxReport {
 	private static final String SUMMARY_TAX_TYPE_TOTALS_BG_COLOR = "#ffe6f2";
 	private static final String SUMMARY_COSTCENTER_TOTALS_BG_COLOR = "#f0f5f5";
 	private static final String COSTCENTER_AND_TAX_SEPARATOR = "&nbsp;&nbsp;&nbsp;";
-	private static final int MAX_LINE_BUFFER_COUNT = 1; //If we're just printing to the PrintWriter, we're not buffering
+	private static final int MAX_LINE_BUFFER_COUNT = 100; //If we're just printing to the PrintWriter, we're not buffering
 		//and we don't need this set to anything but one.  If we want to use it, we'll try it at 50.
 	
 	public void processReport(
@@ -332,7 +332,6 @@ public class SMSalesTaxReport {
 		//s += "SQL = " + SQL;
 		//Insert the line header:
 		s += printInvoiceDetailHeading(bGroupByCostCenters, bShowIndividualInvoiceLines);
-		
 		pwOut.println(s);
 		s = "";
 
@@ -528,11 +527,11 @@ public class SMSalesTaxReport {
 				iLineBufferCount++;
 				if (iLineBufferCount == MAX_LINE_BUFFER_COUNT){
 					s += sTempBuffer;
+					pwOut.println(s);
+					s = "";
 					sTempBuffer = "";
 					iLineBufferCount = 0;
 				}
-				pwOut.println(s);
-				s = "";
 			}
 			rs.close();
 		} catch (Exception e) {

@@ -177,7 +177,7 @@ public class GLExternalPull {
 	    		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
 	    		+ ", " + SMTablegltransactionlines.loriginalentrynumber
 	    		+ ", " + SMTablegltransactionlines.loriginallinenumber
-	    		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+	    		+ ", " + SMTablegltransactionlines.sSourceledgertransactionlink
 	    		+ ", " + SMTablegltransactionlines.sacctid
 	    		+ ", " + SMTablegltransactionlines.sdescription
 	    		+ ", " + SMTablegltransactionlines.sreference
@@ -197,7 +197,7 @@ public class GLExternalPull {
 	    		+ ", " + SMTablegltransactionlines.loriginalbatchnumber
 	    		+ ", " + SMTablegltransactionlines.loriginalentrynumber
 	    		+ ", " + SMTablegltransactionlines.loriginallinenumber
-	    		+ ", " + SMTablegltransactionlines.lsourceledgertransactionlineid
+	    		+ ", " + SMTablegltransactionlines.sSourceledgertransactionlink
 	    		+ ", " + SMTablegltransactionlines.sacctid
 	    		+ ", " + SMTablegltransactionlines.sdescription
 	    		+ ", " + SMTablegltransactionlines.sreference

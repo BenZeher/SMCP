@@ -35,7 +35,7 @@ public class GLTransactionBatchEntry {
 	private String m_sdatdocdate;
 	private String m_sfiscalyear;
 	private String m_sfiscalperiod;
-	private String m_sourceledgertransactionid;
+	private String m_sourceledgertransactionlink;
 	private String m_ssourceledger;
 	private String m_autoreverse;
 
@@ -103,7 +103,7 @@ public class GLTransactionBatchEntry {
 		} catch (Exception e) {
 			setsfiscalperiod("0");
 		}
-		setssourceledgertransactionid(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledgertransactionid, req).replace("&quot;", "\""));
+		setssourceledgertransactionlink(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledgertransactionid, req).replace("&quot;", "\""));
 		setssourceledger(clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.ssourceledger, req).replace("&quot;", "\""));
 		if (clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.iautoreverse, req).compareToIgnoreCase("") != 0){
 			setsautoreverse("1");
@@ -301,7 +301,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + getsbatchnumber()
 			+ ", " + getsentrynumber()
 			+ ", " + getslastline()
-			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionid()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlink()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 			+ ")"
@@ -315,7 +315,7 @@ public class GLTransactionBatchEntry {
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber()
 			+ ", " + SMTablegltransactionbatchentries.lentrynumber + " = " + getsentrynumber()
 			+ ", " + SMTablegltransactionbatchentries.llastline + " = " + getslastline()
-			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionid + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionid()) + "'"
+			+ ", " + SMTablegltransactionbatchentries.ssourceledgertransactionid + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledgertransactionlink()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.sentrydescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsentrydescription()) + "'"
 			+ ", " + SMTablegltransactionbatchentries.ssourceledger + " = '" + clsDatabaseFunctions.FormatSQLStatement(getssourceledger()) + "'"
 		;
@@ -562,12 +562,12 @@ public class GLTransactionBatchEntry {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
-		if (m_sourceledgertransactionid.compareToIgnoreCase("") == 0){
-			m_sourceledgertransactionid = "0";
+		if (m_sourceledgertransactionlink.compareToIgnoreCase("") == 0){
+			m_sourceledgertransactionlink = "0";
 		}
 		try {
-			m_sourceledgertransactionid = clsValidateFormFields.validateStringField(
-					m_sourceledgertransactionid, 
+			m_sourceledgertransactionlink = clsValidateFormFields.validateStringField(
+					m_sourceledgertransactionlink, 
 					24, 
 					"Source Transaction Ledger ID ", 
 					false);
@@ -707,7 +707,7 @@ public class GLTransactionBatchEntry {
 					rs.getString(SMTablegltransactionbatchentries.datdocdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
 				setsfiscalyear(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalyear)));
 				setsfiscalperiod(Long.toString(rs.getLong(SMTablegltransactionbatchentries.ifiscalperiod)));
-				setssourceledgertransactionid(rs.getString(SMTablegltransactionbatchentries.ssourceledgertransactionid));
+				setssourceledgertransactionlink(rs.getString(SMTablegltransactionbatchentries.ssourceledgertransactionid));
 				setssourceledger(rs.getString(SMTablegltransactionbatchentries.ssourceledger));
 				setsautoreverse(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iautoreverse)));
 			}else{
@@ -818,11 +818,11 @@ public class GLTransactionBatchEntry {
 	public void setsfiscalperiod(String sfiscalperiod){
 		m_sfiscalperiod = sfiscalperiod;
 	}
-	public String getssourceledgertransactionid(){
-		return m_sourceledgertransactionid;
+	public String getssourceledgertransactionlink(){
+		return m_sourceledgertransactionlink;
 	}
-	public void setssourceledgertransactionid(String ssourceledgertransactionid){
-		m_sourceledgertransactionid = ssourceledgertransactionid;
+	public void setssourceledgertransactionlink(String ssourceledgertransactionlink){
+		m_sourceledgertransactionlink = ssourceledgertransactionlink;
 	}
 	public String getssourceledger(){
 		return m_ssourceledger;
@@ -868,7 +868,7 @@ public class GLTransactionBatchEntry {
 		newentry.setslastline(getslastline());
 		newentry.setslid(getslid());
 		newentry.setssourceledger(getssourceledger());
-		newentry.setssourceledgertransactionid(getssourceledgertransactionid());
+		newentry.setssourceledgertransactionlink(getssourceledgertransactionlink());
 		
 		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
 			newentry.addLine(m_arrBatchEntryLines.get(i));
@@ -942,7 +942,7 @@ public class GLTransactionBatchEntry {
 		sQueryString += "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + clsServletUtilities.URLEncode(getsentrynumber());
 		sQueryString += "&" + SMTablegltransactionbatchentries.lid + "=" + clsServletUtilities.URLEncode(getslid());
 		sQueryString += "&" + SMTablegltransactionbatchentries.llastline + "=" + clsServletUtilities.URLEncode(getslastline());
-		sQueryString += "&" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "=" + clsServletUtilities.URLEncode(getssourceledgertransactionid());
+		sQueryString += "&" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "=" + clsServletUtilities.URLEncode(getssourceledgertransactionlink());
 		sQueryString += "&" + SMTablegltransactionbatchentries.sentrydescription + "=" + clsServletUtilities.URLEncode(getsentrydescription());
 		sQueryString += "&" + SMTablegltransactionbatchentries.ssourceledger + "=" + clsServletUtilities.URLEncode(getssourceledger());
 		return sQueryString;
@@ -958,7 +958,7 @@ public class GLTransactionBatchEntry {
 		s += "  Fiscal year: " + getsfiscalyear() + "\n";
 		s += "  Entry ID: " + getslid() + "\n";
 		s += "  Last line: " + getslastline() + "\n";
-		s += "  Source ledger transaction line ID: " + getssourceledgertransactionid() + "\n";
+		s += "  Source ledger transaction line ID: " + getssourceledgertransactionlink() + "\n";
 		s += "  Desc: " + getsentrydescription() + "\n";
 		s += "  Source ledger: " + getssourceledger() + "\n";
 		
@@ -981,7 +981,7 @@ public class GLTransactionBatchEntry {
 		m_sdatdocdate = SMUtilities.EMPTY_DATE_VALUE;
 		m_sfiscalyear = "0";
 		m_sfiscalperiod = "0";
-		m_sourceledgertransactionid = "0";
+		m_sourceledgertransactionlink = "0";
 		m_ssourceledger = "";
 		m_autoreverse = "0";
 		m_arrBatchEntryLines = new ArrayList<GLTransactionBatchLine>(0);

@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1405;
+	private static final int m_CurrentDatabaseVersion = 1407;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "8/15/2019";
+	private static final String m_sLastRevisionDate = "8/20/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14581,6 +14581,28 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by BJA 8/2/2019
 				SQL = "ALTER TABLE `gltransactionbatchentries` "
 					+ " ADD ssourceledgertransactionid varchar(24) NOT NULL DEFAULT ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1405:
+				//Added by BJA 8/2/2019
+				SQL = "ALTER TABLE `gltransactionlines` "
+					+ " DROP COLUMN lsourceledgertransactionlineid"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1406:
+				//Added by BJA 8/2/2019
+				SQL = "ALTER TABLE `gltransactionlines` "
+					+ " ADD sSourceledgertransactionlink varchar(24) NOT NULL DEFAULT ''"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

@@ -5,6 +5,7 @@ import java.sql.Date;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -1952,6 +1953,84 @@ public class GLFiscalYear extends java.lang.Object{
 		}else{
 			return false;
 		}
+	}
+	
+	public void NextYear() throws Exception {
+		int periods = Integer.parseInt(get_sinumberofperiods());
+		System.out.println("[20192331515159] periods:" + periods);
+		if(periods>=1) {
+		set_sdatbeginningdateperiod1(addYear(get_sdatbeginningdateperiod1()));
+		set_sdatendingdateperiod1(addYear(get_sdatendingdateperiod1()));
+		}
+		if(periods>=2) {
+		set_sdatbeginningdateperiod2(addYear(get_sdatbeginningdateperiod2()));
+		set_sdatendingdateperiod2(addYear(get_sdatendingdateperiod2()));
+		}
+		if(periods>=3) {
+		set_sdatbeginningdateperiod3(addYear(get_sdatbeginningdateperiod3()));
+		set_sdatendingdateperiod3(addYear(get_sdatendingdateperiod3()));
+		}
+		if(periods>=4) {
+		set_sdatbeginningdateperiod4(addYear(get_sdatbeginningdateperiod4()));
+		set_sdatendingdateperiod4(addYear(get_sdatendingdateperiod4()));
+		}
+		if(periods>=5) {
+		set_sdatbeginningdateperiod5(addYear(get_sdatbeginningdateperiod5()));
+		set_sdatendingdateperiod5(addYear(get_sdatendingdateperiod5()));
+		}
+		if(periods>=6) {
+		set_sdatbeginningdateperiod6(addYear(get_sdatbeginningdateperiod6()));
+		set_sdatendingdateperiod6(addYear(get_sdatendingdateperiod6()));
+		}
+		if(periods>=7) {
+		set_sdatbeginningdateperiod7(addYear(get_sdatbeginningdateperiod7()));
+		set_sdatendingdateperiod7(addYear(get_sdatendingdateperiod7()));
+		}
+		if(periods>=8) {
+		set_sdatbeginningdateperiod8(addYear(get_sdatbeginningdateperiod8()));
+		set_sdatendingdateperiod8(addYear(get_sdatendingdateperiod8()));
+		}
+		if(periods>=9) {
+		set_sdatbeginningdateperiod9(addYear(get_sdatbeginningdateperiod9()));
+		set_sdatendingdateperiod9(addYear(get_sdatendingdateperiod9()));
+		}
+		if(periods>=10) {
+		set_sdatbeginningdateperiod10(addYear(get_sdatbeginningdateperiod10()));
+		set_sdatendingdateperiod10(addYear(get_sdatendingdateperiod10()));
+		}
+		if(periods>=11) {
+		set_sdatbeginningdateperiod11(addYear(get_sdatbeginningdateperiod11()));
+		set_sdatendingdateperiod11(addYear(get_sdatendingdateperiod11()));
+		}
+		if(periods>=12) {
+		set_sdatbeginningdateperiod12(addYear(get_sdatbeginningdateperiod12()));
+		set_sdatendingdateperiod12(addYear(get_sdatendingdateperiod12()));
+		}	
+		if(periods>=13) {
+		set_sdatbeginningdateperiod13(addYear(get_sdatbeginningdateperiod13()));
+		set_sdatendingdateperiod13(addYear(get_sdatendingdateperiod13()));
+		}	
+
+
+	}
+
+	public String addYear(String date) throws Exception {
+		String temp=clsDateAndTimeConversions.convertDateFormat(
+				date, 
+				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+				clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+				clsServletUtilities.EMPTY_SQL_DATE_VALUE);
+		Calendar TempCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
+		TempCalendar.setTime(Date.valueOf(temp));
+		TempCalendar.set(Calendar.YEAR, TempCalendar.get(Calendar.YEAR)+1);
+		java.util.Date convert = TempCalendar.getTime();
+		DateFormat dateFormat = new SimpleDateFormat(clsServletUtilities.DATE_FORMAT_FOR_SQL);
+		temp = clsDateAndTimeConversions.convertDateFormat(
+				dateFormat.format(convert), 
+				clsServletUtilities.DATE_FORMAT_FOR_SQL, 
+				clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, 
+				clsServletUtilities.EMPTY_SQL_DATE_VALUE);
+		return temp;
 	}
 	
 	public void set_sdatbeginningdateperiod1(String sDate) {

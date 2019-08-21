@@ -129,9 +129,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 			//If it's a request to add a NEW fiscal year:
 		    //If coming from Add button of select screen; set as new record and clear ID
 			if(request.getParameter(GLEditFiscalPeriodsSelect.SUBMIT_ADD_BUTTON_NAME) != null){
-				
-				entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
-			  	//Need a connection for the 'delete':
+			  	//Need a connection for the 'load':
 		    	Connection conn = clsDatabaseFunctions.getConnection(
 		    		getServletContext(), 
 		    		smedit.getsDBID(),
@@ -161,6 +159,9 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 					entry.set_sifiscalyear(Integer.toString(maxYear));
 					entry.load( smedit.getsDBID(), getServletContext(), smedit.getUserName());
 					entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
+					entry.NextYear();
+					entry.set_sifiscalyear(Integer.toString(maxYear+1));
+					//WE NOW HAVE THE PREVIOUS YEAR. NOW TO HAVE A FUNCTION TO MODIFY IT BY ADDING A YEAR TO THAT
 				} catch (Exception e) {
 					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1566411638]");
     				response.sendRedirect(
@@ -170,32 +171,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
         				);
     					return;
 				}
-
-				/*Connection conn = clsDatabaseFunctions.getConnection(
-			    		getServletContext(), 
-			    		smedit.getsDBID(),
-			    		"MySQL",
-			    		this.toString() + ".doPost - User: " + smedit.getUserID()
-			    		+ " - "
-			    		+ smedit.getFullUserName()
-			    			);
-				String SQL= "SELECT " + SMTableglfiscalperiods.ifiscalyear + ""
-						+ " FROM "+SMTableglfiscalperiods.TableName
-						+" ORDER BY " + SMTableglfiscalperiods.ifiscalyear
-						+ " LIMIT 1";
-				try {
-					ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-					int maxYear = rs.getInt( SMTableglfiscalperiods.ifiscalyear );
-					entry = new GLFiscalYear(maxYear,conn);
-				} catch (Exception e) {
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1566410347]");
-    				response.sendRedirect(
-    					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl." + CALLING_CLASS
-    					+ "?" + SMTableglfiscalperiods.ifiscalyear + "=" + entry.get_sifiscalyear()
-    					+ "&Warning=Error Loading new " + OBJECT_NAME + " " + entry.get_sifiscalyear() + " - " + e.getMessage()
-    				);
-					return;
-				}*/
+		    	
 			//But if it's NOT in the session, and we're NOT adding a new fiscal year, then try to load it:
 			}else{
 				entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_FALSE);

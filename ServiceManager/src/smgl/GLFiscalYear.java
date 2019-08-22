@@ -2025,9 +2025,7 @@ public class GLFiscalYear extends java.lang.Object{
 		TempCalendar.setTime(Date.valueOf(temp));
 		GregorianCalendar leapYear = new GregorianCalendar();
 		if(TempCalendar.get(Calendar.MONTH)==1 && TempCalendar.get(Calendar.DAY_OF_MONTH) == 29) {
-			System.out.println("[2019234104861] before roll back" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
 			TempCalendar.set(Calendar.DAY_OF_MONTH, 28);
-			System.out.println("[2019234104861] after roll back" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
 		}
 		TempCalendar.set(Calendar.YEAR, TempCalendar.get(Calendar.YEAR)+1);
 		if( 
@@ -2035,9 +2033,7 @@ public class GLFiscalYear extends java.lang.Object{
 				&& (TempCalendar.get(Calendar.MONTH)==1) 
 				&& (TempCalendar.get(Calendar.DAY_OF_MONTH)==28) ) 
 		{
-			System.out.println("[2019234104861] before roll forward" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
 			TempCalendar.set(Calendar.DAY_OF_MONTH, 29);
-			System.out.println("[2019234104861] after roll forward" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
 		}
 		
 		java.util.Date convert = TempCalendar.getTime();

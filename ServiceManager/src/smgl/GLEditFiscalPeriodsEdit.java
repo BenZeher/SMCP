@@ -161,7 +161,10 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 					entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
 					entry.NextYear();
 					entry.set_sifiscalyear(Integer.toString(maxYear+1));
-					//WE NOW HAVE THE PREVIOUS YEAR. NOW TO HAVE A FUNCTION TO MODIFY IT BY ADDING A YEAR TO THAT
+					entry.set_slasteditedbyuserfullname("");
+					entry.set_slasteditedbyuserid("");
+					entry.set_sdattimelastedited("");
+					
 				} catch (Exception e) {
 					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1566411638]");
     				response.sendRedirect(

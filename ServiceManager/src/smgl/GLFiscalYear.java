@@ -9,6 +9,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.GregorianCalendar;
+
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
@@ -1957,7 +1959,6 @@ public class GLFiscalYear extends java.lang.Object{
 	
 	public void NextYear() throws Exception {
 		int periods = Integer.parseInt(get_sinumberofperiods());
-		System.out.println("[20192331515159] periods:" + periods);
 		if(periods>=1) {
 		set_sdatbeginningdateperiod1(addYear(get_sdatbeginningdateperiod1()));
 		set_sdatendingdateperiod1(addYear(get_sdatendingdateperiod1()));
@@ -2022,7 +2023,23 @@ public class GLFiscalYear extends java.lang.Object{
 				clsServletUtilities.EMPTY_SQL_DATE_VALUE);
 		Calendar TempCalendar = Calendar.getInstance(); //Convert Date to Calendar for easy adding of date
 		TempCalendar.setTime(Date.valueOf(temp));
+		GregorianCalendar leapYear = new GregorianCalendar();
+		if(TempCalendar.get(Calendar.MONTH)==1 && TempCalendar.get(Calendar.DAY_OF_MONTH) == 29) {
+			System.out.println("[2019234104861] before roll back" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
+			TempCalendar.set(Calendar.DAY_OF_MONTH, 28);
+			System.out.println("[2019234104861] after roll back" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
+		}
 		TempCalendar.set(Calendar.YEAR, TempCalendar.get(Calendar.YEAR)+1);
+		if( 
+				(leapYear.isLeapYear(TempCalendar.get(Calendar.YEAR)))
+				&& (TempCalendar.get(Calendar.MONTH)==1) 
+				&& (TempCalendar.get(Calendar.DAY_OF_MONTH)==28) ) 
+		{
+			System.out.println("[2019234104861] before roll forward" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
+			TempCalendar.set(Calendar.DAY_OF_MONTH, 29);
+			System.out.println("[2019234104861] after roll forward" + TempCalendar.get(Calendar.MONTH) + " " +TempCalendar.get(Calendar.DAY_OF_MONTH) );
+		}
+		
 		java.util.Date convert = TempCalendar.getTime();
 		DateFormat dateFormat = new SimpleDateFormat(clsServletUtilities.DATE_FORMAT_FOR_SQL);
 		temp = clsDateAndTimeConversions.convertDateFormat(

@@ -81,19 +81,23 @@ public class SMLaborBackchargeSelection extends HttpServlet {
 				"&SearchingClass=" + SMUtilities.getFullClassName(this.toString()) +
 				"&ReturnField=" + SMLaborBackCharge.Paramlid +
 				"&SearchField1=" + SMTablelaborbackcharges.scustomername +
-				"&SearchFieldAlias1=Customer Name" +
+				"&SearchFieldAlias1=Customer%20Name" +
 				"&SearchField2=" + SMTablelaborbackcharges.strimmedordernumber +
-				"&SearchFieldAlias2=Initiated by" +
-				"&SearchField3=" + SMTablelaborbackcharges.strimmedordernumber +
-				"&SearchFieldAlias3=Initiated by" +
+				"&SearchFieldAlias2=Order%20Number" +
+				"&SearchField3=" + SMTablelaborbackcharges.svendoracct +
+				"&SearchFieldAlias3=Vendor%20Acct" +
+				"&SearchField4=" + SMTablelaborbackcharges.sinitiatedbyfullname +
+				"&SearchFieldAlias4=Initiated%20By" +
 				"&ResultListField1="  + SMTablelaborbackcharges.lid +
 				"&ResultHeading1=ID" +
-				"&ResultListField2="  + SMTablelaborbackcharges.scustomername +
-				"&ResultHeading2=Description" +
-				"&ResultListField3="  + SMTablelaborbackcharges.svendoracct +
-				"&ResultHeading3=Initiated" +
-				"&ResultListField4="  + SMTablelaborbackcharges.sinitiatedbyfullname +
-				"&ResultHeading4=Initiated%20By" +
+				"&ResultListField2="  + SMTablelaborbackcharges.strimmedordernumber +
+				"&ResultHeading2=Order%20Number" +
+				"&ResultListField3="  + SMTablelaborbackcharges.scustomername +
+				"&ResultHeading3=Customer%20Name" +
+				"&ResultListField4="  + SMTablelaborbackcharges.svendoracct +
+				"&ResultHeading4=Vendor%20Acct" +
+				"&ResultListField5="  + SMTablelaborbackcharges.sinitiatedbyfullname +
+				"&ResultHeading5=Initiated%20By" +
 				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMLaborBackCharge.ParamObjectName + "</A>";
 		return s;

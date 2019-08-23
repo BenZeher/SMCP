@@ -353,6 +353,9 @@ public class SMUserLogin extends HttpServlet {
 
 		//Edit Labor Types
 		arMenu.add(SMSystemFunctions.SMEditLaborTypes);
+		
+		//Edit or Add Labor Backcharges:
+		arMenu.add(SMSystemFunctions.SMEditLaborBackCharges);
 
 		//Edit Locations
 		arMenu.add(SMSystemFunctions.SMEditLocations);
@@ -422,6 +425,7 @@ public class SMUserLogin extends HttpServlet {
 		
 		//Edit appointment Calendar groups:
 		arMenu.add(SMSystemFunctions.SMEditAppointmentGroups);
+		
 		
 
 		

@@ -1787,14 +1787,19 @@
     <servlet>
         <servlet-name>SMJobCostDailyReportSelection</servlet-name>
         <servlet-class>smcontrolpanel.SMJobCostDailyReportSelection</servlet-class>
-    </servlet>
+    </servlet>	
 
     <servlet>
         <servlet-name>SMLaborBackChargeEdit</servlet-name>
         <servlet-class>smcontrolpanel.SMLaborBackChargeEdit</servlet-class>
     </servlet>
 
- <servlet>
+   <servlet>
+        <servlet-name>SMLaborBachargeSelection</servlet-name>
+        <servlet-class>smcontrolpanel.SMLaborBachargeSelection</servlet-class>
+    </servlet>
+
+   <servlet>
         <servlet-name>SMLaborBackChargeAction</servlet-name>
         <servlet-class>smcontrolpanel.SMLaborBackChargeAction</servlet-class>
     </servlet>
@@ -2473,6 +2478,11 @@
     <servlet>
         <servlet-name>SMRemindersEdit</servlet-name>
         <servlet-class>smcontrolpanel.SMRemindersEdit</servlet-class>
+    </servlet>
+    
+   <servlet>
+        <servlet-name>SMEditLaborbachargesSelection</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditLaborbachargesSelection</servlet-class>
     </servlet>
 
     <!-- smic package declarations: -->
@@ -5766,6 +5776,11 @@
         <servlet-name>SMLaborBackChargeAction</servlet-name>
         <url-pattern>/smcontrolpanel.SMLaborBackChargeAction</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMLaborBachargeSelection</servlet-name>
+        <url-pattern>/smcontrolpanel.SMLaborBachargeSelection</url-pattern>
+    </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>SMListBidDocuments</servlet-name>
@@ -6440,6 +6455,11 @@
     <servlet-mapping>
         <servlet-name>SMRemindersEdit</servlet-name>
         <url-pattern>/smcontrolpanel.SMRemindersEdit</url-pattern>
+    </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>SMEditLaborbachargesSelection</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditLaborbachargesSelection</url-pattern>
     </servlet-mapping>
 
     <!-- smic package mappings: -->

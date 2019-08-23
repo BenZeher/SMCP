@@ -54,6 +54,10 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			return;
 		}
 		
+		if(smedit.getAddingNewEntryFlag()){
+			entry.setlid("-1");
+		}
+		
 		//If this is a 'resubmit', meaning it's being called by the 'Action' class, then
 		//the session will have an entry object in it, and that's what we'll pick up.
 		HttpSession currentSession = smedit.getCurrentSession();

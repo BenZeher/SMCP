@@ -1757,7 +1757,7 @@ public class SMSystemFunctions extends java.lang.Object{
 
 			arrFunctions.add("SM Edit Labor Back Charges"); 
 			arrFunctionIDs.add(SMEditLaborBackCharges); 
-			arrFunctionLinks.add(""); 
+			arrFunctionLinks.add("smcontrolpanel.SMLaborBachargeSelection"); 
 			arrFunctionDescriptions.add("Activates function to add and edit Labor Back Charges");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
@@ -2708,6 +2708,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smgl.GLCloseFiscalYearEdit"); 
 			arrFunctionDescriptions.add("Automatically creates journal entries to close the fiscal year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
 			
 	}
 

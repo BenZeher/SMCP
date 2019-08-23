@@ -1653,6 +1653,9 @@ public class FinderResults extends HttpServlet {
 		if (sObject.equalsIgnoreCase(SMTableaptransactions.OBJECT_NAME)){
 			sTable = SMTableaptransactions.TableName;
 		}
+		if (sObject.equalsIgnoreCase(SMLaborBackCharge.ParamObjectName)){
+			sTable = SMTablelaborbackcharges.TableName;
+		}
 
 		//Add any 'where' clauses needed here:
 		//If we are adding a credit, we need to search for an invoice ONLY, so we need to add that

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import SMClasses.SMLaborBackCharge;
 import SMDataDefinition.SMTablelaborbackcharges;
 
-public class SMLaborBachargeSelection extends HttpServlet {
+public class SMLaborBackchargeSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClassName = "smcontrolpanel.SMLaborBackChargeEdit";
 	public void doPost(HttpServletRequest request,

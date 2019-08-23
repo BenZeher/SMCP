@@ -1757,7 +1757,7 @@ public class SMSystemFunctions extends java.lang.Object{
 
 			arrFunctions.add("SM Edit Labor Back Charges"); 
 			arrFunctionIDs.add(SMEditLaborBackCharges); 
-			arrFunctionLinks.add("smcontrolpanel.SMLaborBachargeSelection"); 
+			arrFunctionLinks.add("smcontrolpanel.SMLaborBackchargeSelection"); 
 			arrFunctionDescriptions.add("Activates function to add and edit Labor Back Charges");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 

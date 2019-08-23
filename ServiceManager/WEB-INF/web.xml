@@ -1795,8 +1795,8 @@
     </servlet>
 
    <servlet>
-        <servlet-name>SMLaborBachargeSelection</servlet-name>
-        <servlet-class>smcontrolpanel.SMLaborBachargeSelection</servlet-class>
+        <servlet-name>SMLaborBackchargeSelection</servlet-name>
+        <servlet-class>smcontrolpanel.SMLaborBackchargeSelection</servlet-class>
     </servlet>
 
    <servlet>
@@ -5778,8 +5778,8 @@
     </servlet-mapping>
     
     <servlet-mapping>
-        <servlet-name>SMLaborBachargeSelection</servlet-name>
-        <url-pattern>/smcontrolpanel.SMLaborBachargeSelection</url-pattern>
+        <servlet-name>SMLaborBackchargeSelection</servlet-name>
+        <url-pattern>/smcontrolpanel.SMLaborBackchargeSelection</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

@@ -201,6 +201,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">ID</B></TD>");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Date</B></TD>");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Work order</B></TD>");
+				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Posted</B></TD>");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Mechanic</B></TD>");
 				pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED+ "\">Job description</B></TD>");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Qty of hours&nbsp;&nbsp;</B></TD>");
@@ -275,14 +276,14 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 							+ "</A>"
 						;
 					}
-					//Next a link to VIEW the work order:
+					//Next a link to VIEW the work order documents:
 					SMOption smopt = new SMOption();
 					try {
 						smopt.load(conn);
 					} catch (Exception e1) {
 						pwOut.println("<BR>Error getting SMOptions [1565634531] - " + e1.getMessage() + "<BR>");
 					}
-					String sWODocumentLink = "(No&nbsp;folder)";
+					String sWODocumentLink = "";
 					if (bAllowDocumentView){
 						//Try to build a link to the Google Docs folder:
 						String sGDocLink = rsOrder.getString(SMTableworkorders.TableName + "." + SMTableworkorders.sgdoclink);
@@ -294,8 +295,24 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 							+ "\">View&nbsp;folder</A>&nbsp;&nbsp;</FONT>\n";
 						}
 					}
-
 					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sWOLink + "&nbsp;" + sWODocumentLink + "</FONT></TD>");
+					
+					//Next a link to VIEW the work order:
+					String sViewWOLink = "(Not posted)";
+					if (rsOrder.getInt(SMTableworkorders.TableName + "." + SMTableworkorders.iposted) == 1){
+						sViewWOLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMWorkOrderAction?"
+							+ SMWorkOrderEdit.COMMAND_FLAG + "=" + SMWorkOrderEdit.PRINTRECEIPTCOMMAND_VALUE
+							+ "&" + SMWorkOrderHeader.Paramlid + "=" + sWorkOrderID
+							+ "&" + SMWorkOrderHeader.Paramstrimmedordernumber + "=" + rsOrder.getString(SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber).trim()
+							+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+							+ "\">" + "View" 
+							+ "</A>"
+						;
+					}
+					pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + sViewWOLink + "</FONT></TD>");
+					
+					
 					
 					String sMechFullName = rsOrder.getString(SMTablemechanics.TableName + "." + SMTablemechanics.sMechFullName);
 					if (sMechFullName == null){
@@ -331,7 +348,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					bdTotalBackChargeHours = bdTotalBackChargeHours.add(rsOrder.getBigDecimal(SMTableworkorders.bdbackchargehours));
 					bOddRow = ! bOddRow;
 				}
-				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=5 CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">Subtotals:</TD>" 
+				pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\"><TD COLSPAN=6 CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP  + "\">Subtotals:</TD>" 
 					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdqtyofhoursScale, bdTotalQtyOfHours) + "</TD>" 
 					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdtravelhoursScale, bdTotalTravelHours) + "</TD>"
 					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, bdTotalBackChargeHours) + "</TD>"

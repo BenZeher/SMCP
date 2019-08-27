@@ -199,7 +199,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		} catch (Exception e) {
 			//This will be handled below
 		}
-	    
+	    //Warnings Occured
 		Error += objICPhysicalInventoryEntry.getErrorMessages();
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
@@ -211,7 +211,6 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			);
 		}		
 		if(!Error.equalsIgnoreCase("")) {
-			//CHOKING HERE
 		CurrentSession.setAttribute(ICPhysicalCountImportSelect.IC_PHYSICAL_IMPORT_SESSION_WARNING_OBJECT, (String)Error);
     	response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
@@ -221,6 +220,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		);
 			return;
 		}else {
+			//No Warnings
     	String sPhysicalCountImportStatus = "Import completed without errors.";
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
@@ -316,15 +316,16 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				objICPhysicalInventoryEntry);
 		} catch (Exception e1) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956216] processing import - " + e1.getMessage());
-			return;
+			throw e1;
 		}
 		
 		try {
 			deleteCurrentTempImportFiles(sTempFilePath);
 		} catch (Exception e) {
 			objICPhysicalInventoryEntry.addErrorMessage(e.getMessage());
-			return;
+			throw e;
 		}
+		System.out.println("[20192391348330] CURRENTTEMPBATHDELETED");
 		return;
 		
 	}
@@ -368,9 +369,9 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems, sDBID, sUserID, sUserFullName, sPhysicalInventoryID,objICPhysicalInventoryEntry);
 		} catch (Exception e1) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956218] validating import file - " + e1.getMessage());
-			return;
+			throw e1;
 		}
-		
+		System.out.println("[20192391348330] THIS IS AFTER VALIDATING FILES GOOD");
 		//Get a connection:
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 
@@ -400,9 +401,9 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		if (!objICPhysicalInventoryEntry.load(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1548956220]");
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
-			return;
+			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
 		}
-		
+		System.out.println("[20192391348330] load physical inventory");
 		try {
 			insertRecords(
 				sTempImportFilePath, 
@@ -419,11 +420,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1538513251] inserting records - " + e.getMessage());
-			return;
+			throw e;
 		}
-		
+		System.out.println("[20192391348330] RECORDS INSERTED");
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1538513252] Could not commit data transaction.");
+			return;
 		}
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080880]");
@@ -449,7 +451,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
 		} catch (Exception e) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956704] inserting count - " + e.getMessage());
-			return;
+			throw e;
 		}
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".insertRecords going into insertCountLines");
@@ -467,7 +469,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				sCountID);
 		} catch (Exception e) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548957068] inserting lines from the count - " + e.getMessage());
-			return;
+			throw e;
 		}
 		
 		return;
@@ -625,6 +627,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			br = new BufferedReader(new FileReader(sFullFileName));
 			String line = null;
 			int iLineCounter = 0;
+			String errors = "";
 			while ((line = br.readLine()) != null) {
 				if (bDebugMode){
 					System.out.println("In " + this.toString() + ".validateFile - at line " + iLineCounter);
@@ -644,7 +647,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					
 					String[] fields = line.split(",");
 					//System.out.println("[1548962801] - line = '" + line + "'");
-					String errors = "";
+
 					for (String sDelimitedField : fields) {
 						
 						//System.out.println("[1548962802] - field = '" + sDelimitedField + "'");
@@ -675,10 +678,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 							iFieldCounter++;
 						} // end else
 					} //End 'for'
-					if(errors.compareToIgnoreCase("")!=0) {
-						objICPhysicalInventoryEntry.addErrorMessage(errors);
-						return;
-					}
+
 					if (iFieldCounter < NUMBER_OF_FIELDS_PER_LINE){
 						br.close();
 						objICPhysicalInventoryEntry.addErrorMessage("Error [1548957349] - Line number " + iLineCounter + " has less than " 
@@ -687,6 +687,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					}
 				}
 			}
+			if(objICPhysicalInventoryEntry.getErrorMessages().compareToIgnoreCase("")!=0) {
+				objICPhysicalInventoryEntry.addErrorMessage(errors);
+				throw new Exception(errors);
+				
+			}
+
 			if (iLineCounter == 0){
 				br.close();
 				objICPhysicalInventoryEntry.addErrorMessage("Error [1548957144] - The file has no lines in it.");
@@ -695,17 +701,17 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		} catch (FileNotFoundException ex) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548957164] - File '" 
 					+ sFullFileName + "' not found - " + ex.getMessage() + ".");
-			return;
+			throw ex;
 		} catch (IOException ex) {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException e) {
 				objICPhysicalInventoryEntry.addErrorMessage("Error [1548957154] IO exception error reading file:= " + e.getMessage() + ".");
-				return;
+				throw e;
 			}
 			objICPhysicalInventoryEntry.addErrorMessage("Error [15489571744] IO exception error reading file '" + sFullFileName + "'- " + ex.getMessage() + ".");
-			return;
+			throw ex;
 		}
 		br.close();
 		return;
@@ -739,6 +745,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				}
 			} catch (Exception e) {
 				objICPhysicalInventoryEntry.addErrorMessage(e.getMessage());
+				throw e;
 			}
 		}
 		if (iFieldIndex == FIELD_ITEM){
@@ -749,7 +756,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				validateItemNumber(iLineNumber, sField, bAddNewItems, sDBID, sUserID, sUserFullName, sPhysicalInventoryID,objICPhysicalInventoryEntry);
 			} catch (Exception e) {
 				objICPhysicalInventoryEntry.addErrorMessage("Error [1548958965] validating - " + e.getMessage());
-				return;
+				throw e;
 			}
 		}
 		return;
@@ -763,7 +770,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			String sUserFullName,
 			String sPhysicalInventoryID,
 			ICPhysicalInventoryEntry objICPhysicalInventoryEntry) throws Exception{
-		
+		//TODO ITS WORKING HERE
 		//Make sure it's in the range for the physical inventory:
 		String SQL = "";
 		if (!bAddNewItems){

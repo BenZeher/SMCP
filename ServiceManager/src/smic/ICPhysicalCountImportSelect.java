@@ -22,6 +22,7 @@ public class ICPhysicalCountImportSelect extends HttpServlet {
 	public static final String PARAM_INCLUDE_NEW_ITEMS = "INCUDENEWITEMS";
 	public static final String PARAM_SUBMIT_BUTTON_NAME = "SubmitFile";
 	public static final String PARAM_SUBMIT_BUTTON_LABEL = "Import File";
+	public static final String IC_PHYSICAL_IMPORT_SESSION_WARNING_OBJECT = "ICPHYSICALIMPORTWARNING";
 	
 	private static final long serialVersionUID = 1L;
 	private static String sCalledClassName = "ICPhysicalCountImportAction";
@@ -50,8 +51,9 @@ public class ICPhysicalCountImportSelect extends HttpServlet {
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    
 		//If there is a warning from trying to input previously, print it here:
-		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-	    if (! sWarning.equalsIgnoreCase("")){
+	    String sWarning = (String)CurrentSession.getAttribute(IC_PHYSICAL_IMPORT_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(IC_PHYSICAL_IMPORT_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 		String sStatus = clsManageRequestParameters.get_Request_Parameter("Status", request);

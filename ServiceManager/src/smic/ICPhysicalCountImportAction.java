@@ -42,7 +42,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static final int FIELD_QTY = 1;
 	
 	private static final String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
-	private static boolean bDebugMode = true;
+	private static boolean bDebugMode = false;
 	@SuppressWarnings("unchecked")
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

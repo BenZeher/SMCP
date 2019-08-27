@@ -253,9 +253,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	        // Create one directory
 	        if (!new File(sTempFileFolder).mkdir()) {
 	        	objICPhysicalInventoryEntry.addErrorMessage("<BR>Error [1548955603] creating temp upload folder.");
+	        	return;
 	        }    
         }catch (Exception e){//Catch exception if any
         	objICPhysicalInventoryEntry.addErrorMessage("<BR>Error [1548955604] creating temp upload folder: " + e.getMessage() + ".");
+        	return;
 	    }
 	    return;
 	}
@@ -352,6 +354,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		} catch (Exception e) {
 			//System.out.println("Error [1548956219]  error on fi.write: " + e.getMessage());
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956218] writing temporary file: " + e.getMessage());
+			return;
 		}
 		
 		if (bDebugMode){
@@ -389,6 +392,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956219] starting data transaction - ");
+			return;
 		}
 		
 		if (bDebugMode){
@@ -401,7 +405,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		if (!objICPhysicalInventoryEntry.load(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1548956220]");
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
-			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages());
+			return;
 		}
 		System.out.println("[20192391348330] load physical inventory");
 		try {
@@ -562,16 +566,20 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			}
 		} catch (FileNotFoundException ex) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956904] - File not found error reading file:= " + ex.getMessage() + ".");
+			return;
 		} catch (IOException ex) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956905] - IO exception error reading file:= " + ex.getMessage() + ".");
+			return;
 		} catch (Exception ex) {
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956906] - " + ex.getMessage());
+			return;
 		} finally {
 			try {
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
 				objICPhysicalInventoryEntry.addErrorMessage("Error [1548956906] IO exception error reading file:= " + ex.getMessage() + ".");
+				return;
 			}
 		}
 		return;
@@ -742,6 +750,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				//Allow zero quantities, but nothing less
 				if (bdqty.compareTo(BigDecimal.ZERO) < 0){
 					objICPhysicalInventoryEntry.addErrorMessage("Error [1548957509] - Invalid qty ('" + sField + "') on line " + iLineNumber + ".");
+					return;
 				}
 			} catch (Exception e) {
 				objICPhysicalInventoryEntry.addErrorMessage(e.getMessage());
@@ -830,6 +839,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			if (!rs.next()){
 				rs.close();
 				objICPhysicalInventoryEntry.addErrorMessage("Error [1344008064] - Invalid item number ('" + sItem + "') on line number " + iLineNumber + ".");
+				return;
 			}
 			rs.close();
 		} catch (SQLException e) {

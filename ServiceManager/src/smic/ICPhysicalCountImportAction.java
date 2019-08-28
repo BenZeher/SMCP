@@ -374,7 +374,6 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956218] validating import file - " + e1.getMessage());
 			throw e1;
 		}
-		System.out.println("[20192391348330] THIS IS AFTER VALIDATING FILES GOOD");
 		//Get a connection:
 		Connection conn = clsDatabaseFunctions.getConnection(
 				getServletContext(), 

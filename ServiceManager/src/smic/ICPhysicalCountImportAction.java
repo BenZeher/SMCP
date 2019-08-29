@@ -450,12 +450,15 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			) throws Exception{
 		
 		String sCountID = "";
+		String insertErrors = "";
 		try {
 			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
 		} catch (Exception e) {
-			conn.rollback();
-			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956704] inserting count - " + e.getMessage());
-			throw e;
+			insertErrors += ("Error [1548956704] inserting following counts " + e.getMessage());
+		}
+		if(insertErrors.compareToIgnoreCase("") !=0) {
+			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956704] inserting following counts " + insertErrors);
+			return;
 		}
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".insertRecords going into insertCountLines");

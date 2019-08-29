@@ -453,6 +453,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		try {
 			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
 		} catch (Exception e) {
+			conn.rollback();
 			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956704] inserting count - " + e.getMessage());
 			throw e;
 		}

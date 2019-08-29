@@ -327,7 +327,6 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			objICPhysicalInventoryEntry.addErrorMessage(e.getMessage());
 			throw e;
 		}
-		System.out.println("[20192391348330] CURRENTTEMPBATHDELETED");
 		return;
 		
 	}
@@ -371,7 +370,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		try {
 			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, bAddNewItems, sDBID, sUserID, sUserFullName, sPhysicalInventoryID,objICPhysicalInventoryEntry);
 		} catch (Exception e1) {
-			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956218] validating import file - " + e1.getMessage());
+			objICPhysicalInventoryEntry.addErrorMessage("Error [1567093727] validating import file - " + e1.getMessage());
 			throw e1;
 		}
 		//Get a connection:
@@ -454,10 +453,10 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		try {
 			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
 		} catch (Exception e) {
-			insertErrors += ("Error [1548956704] inserting following counts " + e.getMessage());
+			insertErrors += ("Error [1567093727] inserting following counts " + e.getMessage());
 		}
 		if(insertErrors.compareToIgnoreCase("") !=0) {
-			objICPhysicalInventoryEntry.addErrorMessage("Error [1548956704] inserting following counts " + insertErrors);
+			objICPhysicalInventoryEntry.addErrorMessage("Error [1567093728] inserting following counts " + insertErrors);
 			return;
 		}
 		if (bDebugMode){
@@ -475,7 +474,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				sPhysicalInventoryID,
 				sCountID);
 		} catch (Exception e) {
-			objICPhysicalInventoryEntry.addErrorMessage("Error [1548957068] inserting lines from the count - " + e.getMessage());
+			objICPhysicalInventoryEntry.addErrorMessage("Error [1567093729] inserting lines from the count - " + e.getMessage());
 			throw e;
 		}
 		
@@ -497,7 +496,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		count.setsPhysicalInventoryID(sPhysicalInventoryID);
 
 		if (!count.save_without_data_transaction(conn, sUserID, sUserFullName)){
-			throw new Exception("Error [1548956615] - Could not save count - " + count.getErrorMessages());
+			throw new Exception("Error [1567093730] - Could not save count - " + count.getErrorMessages());
 		}else{
 			return count.slid();
 		}
@@ -581,7 +580,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				if (br != null)
 					br.close();
 			} catch (IOException ex) {
-				objICPhysicalInventoryEntry.addErrorMessage("Error [1548956906] IO exception error reading file:= " + ex.getMessage() + ".");
+				objICPhysicalInventoryEntry.addErrorMessage("Error [1548956907] IO exception error reading file:= " + ex.getMessage() + ".");
 				return;
 			}
 		}

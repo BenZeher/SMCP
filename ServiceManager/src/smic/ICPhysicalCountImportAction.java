@@ -453,11 +453,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		try {
 			sCountID = insertCount(conn, sDBID, sUserID, sUserFullName, sPhysicalInventoryID, sCountDesc);
 		} catch (Exception e) {
-			insertErrors += ("Error [1567093727] inserting count " + e.getMessage());
+			insertErrors += ("Error [1567093727] failed inserting count " + e.getMessage());
 		}
 		if(insertErrors.compareToIgnoreCase("") !=0) {
-			objICPhysicalInventoryEntry.addErrorMessage("Error [1567093728] inserting following counts " + insertErrors);
-			throw new Exception("Error [1567093728] inserting following counts " + insertErrors) ;
+			objICPhysicalInventoryEntry.addErrorMessage("Error [1567093728] failed inserting following counts " + insertErrors);
+			throw new Exception("Error [1567093728] failed inserting following counts " + insertErrors) ;
 		}
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".insertRecords going into insertCountLines");
@@ -496,7 +496,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		count.setsPhysicalInventoryID(sPhysicalInventoryID);
 
 		if (!count.save_without_data_transaction(conn, sUserID, sUserFullName)){
-			throw new Exception("Error [1567093730] - Could not save count - " + count.getErrorMessages());
+			throw new Exception("Error [1567093730] - Could not save count - " 	+ count.getErrorMessages());
 		}else{
 			return count.slid();
 		}

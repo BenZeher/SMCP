@@ -637,6 +637,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			br = new BufferedReader(new FileReader(sFullFileName));
 			String line = null;
 			int iLineCounter = 0;
+			//Errors collects errors for return back to the user.
 			String errors = "";
 			while ((line = br.readLine()) != null) {
 				if (bDebugMode){
@@ -683,6 +684,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 										objICPhysicalInventoryEntry);
 							} catch (Exception e) {
 								br.close();
+								//if an error occurs, then the message is added to the string.
 								errors += "Error [1548957655] validating import file - " + e.getMessage();
 							}
 							iFieldCounter++;
@@ -697,6 +699,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					}
 				}
 			}
+			//If the errors string is not default it will return with ALL errors that have been collected.
 			if(errors.compareToIgnoreCase("")!=0) {
 				objICPhysicalInventoryEntry.addErrorMessage(errors);
 				return;

@@ -697,9 +697,9 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					}
 				}
 			}
-			if(objICPhysicalInventoryEntry.getErrorMessages().compareToIgnoreCase("")!=0) {
+			if(errors.compareToIgnoreCase("")!=0) {
 				objICPhysicalInventoryEntry.addErrorMessage(errors);
-				throw new Exception(errors);
+				return;
 				
 			}
 

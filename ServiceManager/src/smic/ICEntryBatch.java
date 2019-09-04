@@ -3911,7 +3911,7 @@ public class ICEntryBatch {
         			return false;
         		}
         		
-    			String sEntryTransactionID = "";
+    			//String sEntryTransactionID = "";
  
         		export.addHeader(
         				sModuleType(), 
@@ -4182,8 +4182,8 @@ public class ICEntryBatch {
 		}
 		return true;
 	}
-
-/*	private String getICTransactionID(
+	@SuppressWarnings("unused")
+	private String getICTransactionID(
 			String sBatchNumber,
 			String sEntryNumber,
 			Connection conn) throws Exception {
@@ -4213,5 +4213,5 @@ public class ICEntryBatch {
 			}
 			
 			return sTransactionID;
-		}*/
+		}
 }

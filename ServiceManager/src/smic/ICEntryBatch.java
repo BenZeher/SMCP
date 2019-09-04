@@ -4182,7 +4182,8 @@ public class ICEntryBatch {
 		}
 		return true;
 	}
-	private String getICTransactionID(
+
+/*	private String getICTransactionID(
 			String sBatchNumber,
 			String sEntryNumber,
 			Connection conn) throws Exception {
@@ -4212,5 +4213,5 @@ public class ICEntryBatch {
 			}
 			
 			return sTransactionID;
-		}
+		}*/
 }

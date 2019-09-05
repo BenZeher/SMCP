@@ -38,6 +38,8 @@ public class APEditBatchesAction extends HttpServlet{
     HttpSession CurrentSession = request.getSession(true);
     //Remove any AP Batch object, if there is one:
     CurrentSession.removeAttribute(APBatch.OBJECT_NAME);
+	CurrentSession.removeAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+
     
     String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
     String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
@@ -56,10 +58,10 @@ public class APEditBatchesAction extends HttpServlet{
 				batch.flag_as_deleted(sBatchNumber, getServletContext(), sDBID, sUserFullName);
 			} catch (Exception e) {
 				CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
+				CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT , e.getMessage() );
 				response.sendRedirect(
 					SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&" + "Warning=" + e.getMessage()
 					);
 				return;
 			}
@@ -73,10 +75,10 @@ public class APEditBatchesAction extends HttpServlet{
 		}
 		else{
 			CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
+			CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT , "Warning=You clicked the Delete button, but did not confirm by checking the checkbox." );
 			response.sendRedirect(
 				SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    	    + "&" + "Warning=You clicked the Delete button, but did not confirm by checking the checkbox."
 				);
 			return;
 		}
@@ -88,11 +90,11 @@ public class APEditBatchesAction extends HttpServlet{
 				batch.post_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName, out);
 			} catch (Exception e) {
 				//CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
+				CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT , e.getMessage() );
 				response.sendRedirect(
 					SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 					+ "&" + SMTableapbatches.lbatchnumber + "=" + batch.getsbatchnumber()
-		    	    + "&" + "Warning=" + e.getMessage()
 					);
 			    return;
 			}
@@ -105,11 +107,11 @@ public class APEditBatchesAction extends HttpServlet{
 				return;
 		} else{
 			//CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
+			CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT ,  "Warning="+"You clicked the Post button, but did not confirm by checking the checkbox." );
 			response.sendRedirect(
 				SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ "&" + SMTableapbatches.lbatchnumber + "=" + batch.getsbatchnumber()
-	    	    + "&" + "Warning=" + "You clicked the Post button, but did not confirm by checking the checkbox."
 				);
 		    return;
 		}
@@ -134,10 +136,10 @@ public class APEditBatchesAction extends HttpServlet{
 			batch.save_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName, false);
 		} catch (Exception e) {
 			CurrentSession.setAttribute(APBatch.OBJECT_NAME, batch);
+			CurrentSession.setAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT , e.getMessage() );
 			response.sendRedirect(
 				SMUtilities.getURLLinkBase(getServletContext()) + sCallingClass
 				+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    	    + "&" + "Warning=" + e.getMessage()
 				);
 			return;
 		}

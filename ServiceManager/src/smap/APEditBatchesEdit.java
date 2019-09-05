@@ -35,6 +35,7 @@ public class APEditBatchesEdit extends HttpServlet {
 	public static final String BATCH_EDITABLE_PARAMETER_VALUE_TRUE = "Yes";
 	public static final String BUTTON_PRINT_CHECKS_NAME = "BUTTONPRINTCHECKS";
 	public static final String BUTTON_PRINT_CHECKS_LABEL = "Print checks";
+	public static final String AP_BATCH_POSTING_SESSION_WARNING_OBJECT = "APEDITBATCHWARNING";
 	
 	private static final long serialVersionUID = 1L;
 	/*
@@ -109,12 +110,12 @@ public class APEditBatchesEdit extends HttpServlet {
 		out.println(sCommandScript());
 		
 	    //Display any warnings:
-	    if (request.getParameter("Warning") != null){
-	    	String sWarning = request.getParameter("Warning");
-	    	if (!sWarning.equalsIgnoreCase("")){
-	    		out.println("<BR><B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>\n");
-	    	}
-	    }
+	    String sWarning = (String)CurrentSession.getAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+		}
+
 	    //Display any status messages:
 	    if (request.getParameter("Status") != null){
 	    	String sStatus = request.getParameter("Status");

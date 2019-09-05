@@ -441,7 +441,8 @@ public class SMEditBidAction extends HttpServlet{
 		}else{
 			ord.setM_sBillToFax(saleslead.getsfaxnumber());
 		}
-		if (cus.getM_sPhoneNumber().compareToIgnoreCase("") != 0){
+		if (cus.getM_sPhoneNumber().compareToIgnoreCase("") != 0
+				|| cus.getM_sPhoneNumber().compareToIgnoreCase("1")!=0){
 			ord.setM_sBilltoPhone(cus.getM_sPhoneNumber());
 		}else{
 			ord.setM_sBilltoPhone(saleslead.getsphonenumber());

@@ -39,6 +39,7 @@ public class AREditBatchesEdit extends HttpServlet {
 	 * BatchNumber - batch number
 	 * BatchType - batch type - an integer passed as a string
 	 */
+	public static final String AR_BATCH_POSTING_SESSION_WARNING_OBJECT = "AREDITBATCHWARNING";
 	private static final String sObjectName = "Batch";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -78,12 +79,11 @@ public class AREditBatchesEdit extends HttpServlet {
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 		
 	    //Display any warnings:
-	    if (request.getParameter("Warning") != null){
-	    	String sWarning = request.getParameter("Warning");
-	    	if (!sWarning.equalsIgnoreCase("")){
-	    		out.println("<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>");
-	    	}
-	    }
+	    String sWarning = (String)CurrentSession.getAttribute(AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
+		}
 	    //Display any status messages:
 	    if (request.getParameter("Status") != null){
 	    	String sStatus = request.getParameter("Status");

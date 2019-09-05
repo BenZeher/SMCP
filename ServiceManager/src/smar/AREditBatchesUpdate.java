@@ -52,6 +52,11 @@ public class AREditBatchesUpdate extends HttpServlet{
 
     //Get the session info:
     HttpSession CurrentSession = request.getSession(true);
+	try {
+		CurrentSession.removeAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	} catch (Exception e2) {
+		//If this attribute isn't in the session, just go on without disruption....
+	}
     String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
     String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
     String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
@@ -70,20 +75,20 @@ public class AREditBatchesUpdate extends HttpServlet{
 	if (request.getParameter("Delete") != null){
 		if (request.getParameter("ConfirmDelete") != null){
 			try {
-				batch.flag_as_deleted(getServletContext(), sDBID);
+				batch.flag_as_deleted(getServletContext(), sDBID);			
+				CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,  "Batch " + batch.sBatchNumber() + " was deleted." );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatches" 
 			    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " was deleted."
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 			    return;
 			} catch (Exception e) {
 				m_sWarning = "WARNING: Error deleting batch";
+				CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT , m_sWarning );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatches" 
 			    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + m_sWarning
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 				return;
@@ -91,10 +96,10 @@ public class AREditBatchesUpdate extends HttpServlet{
 		}
 		else{
 			m_sWarning = "WARNING: You clicked the Delete button, but did not confirm by checking the checkbox.";
+			CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT , m_sWarning );
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatches" 
 		    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + m_sWarning
 		    		+ "'>");
 			out.println("</BODY></HTML>");
 		    return;
@@ -106,12 +111,12 @@ public class AREditBatchesUpdate extends HttpServlet{
 				batch.load(getServletContext(), sDBID);
 			} catch (Exception e) {
 				m_sWarning = "WARNING: could not load batch " + sBatchNumber + ": \n" + batch.getErrorMessages();
+				CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,m_sWarning );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + m_sWarning
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 				return;	
@@ -124,25 +129,24 @@ public class AREditBatchesUpdate extends HttpServlet{
 					sUserFullName,
 					out)
 				;
-				
+				CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,"Posting complete." );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + "Posting complete."
 		    		+ "'>")
 		    	;
 				out.println("</BODY></HTML>");
 			    return;
 			} catch (Exception e) {
 				m_sWarning = "WARNING: Error posting batch " + sBatchNumber + ": \n" + e.getMessage();
+				CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,m_sWarning );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + clsServletUtilities.URLEncode(m_sWarning)
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 				return;
@@ -150,12 +154,12 @@ public class AREditBatchesUpdate extends HttpServlet{
 		}
 		else{
 			m_sWarning = "WARNING: You clicked the Post button, but did not confirm by checking the checkbox.";
+			CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,m_sWarning );
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + clsServletUtilities.URLEncode(m_sWarning)
 		    		+ "'>");
 			out.println("</BODY></HTML>");
 		    return;
@@ -167,36 +171,36 @@ public class AREditBatchesUpdate extends HttpServlet{
 		Validate_Batch(batch, request, out);
 	} catch (Exception e) {
     	//Invalid entries:
+		CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,clsServletUtilities.URLEncode(e.getMessage()) );
 		out.println("<META http-equiv='Refresh' content='" + "10" + ";URL=" 
 	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 	    		+ "?BatchNumber=" + batch.sBatchNumber()
 	    		+ "&BatchType=" + batch.sBatchType()
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    		+ "&Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 	    		+ "'>");
 		out.println("</BODY></HTML>");
 	    return;
 	}
 	
 	if (save_batch(batch, getServletContext(), sDBID, sUserID, sUserFullName)){
+		CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT , "Batch " + batch.sBatchNumber() + " saved." );
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " saved."
 		    		+ "'>");
 			out.println("</BODY></HTML>");
 		
 	}else{
 		//If it DIDN'T save:
 		m_sWarning = "WARNING: Error saving batch - " + batch.getErrorMessages();
+		CurrentSession.setAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT ,m_sWarning );
 		out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditBatchesEdit" 
 	    		+ "?BatchNumber=" + batch.sBatchNumber()
 	    		+ "&BatchType=" + batch.sBatchType()
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    		+ "&Warning=" + clsServletUtilities.URLEncode(m_sWarning)
 	    		+ "'>");
 		out.println("</BODY></HTML>");
 	}

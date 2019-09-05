@@ -22,6 +22,7 @@ import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMGoogleMapAPIKey;
 import SMDataDefinition.SMTablecolortable;
 import SMDataDefinition.SMTablecompanyprofile;
+import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTableworkorders;
@@ -80,6 +81,13 @@ public class SMMapDisplay extends HttpServlet {
 		  }
 	    }
 	    Collections.sort(sLocations);
+	    
+	    ArrayList<String> arrLocationAddress = new ArrayList<String>(0);
+	    try {
+			arrLocationAddress = getLocationAddresses(sLocations, sDBID, sUserID, sUserFullName, getServletContext());
+		} catch (SQLException e1) {
+			out.println("<BR>Error reading location addresses - " + e1.getMessage());
+		}
 		
     	//Get the list of selected order types:
     	ArrayList<String> sServiceTypes = new ArrayList<String>(0);
@@ -135,6 +143,7 @@ public class SMMapDisplay extends HttpServlet {
 			out.println("<BR>Error reading schedule entries - " + e.getMessage());
 		}
 		out.println(getMapDisplayScript(
+				arrLocationAddress,
 				sCenterAddress, 
 				arrMechanics,
 				arrGeoCodes, 
@@ -176,6 +185,47 @@ public class SMMapDisplay extends HttpServlet {
 		rs.close();
 		return sCenterAddress;
 	}
+	
+	
+	private ArrayList<String> getLocationAddresses(ArrayList <String> aLocationNames, String sDBID, String sUserID, String sUserFullName, ServletContext context) throws SQLException{
+		
+		 ArrayList<String> sLocationAddress = new ArrayList<String>(0);
+		String SQL = "SELECT * FROM " + SMTablelocations.TableName
+				+ " WHERE (";
+		for (int i = 0; i < aLocationNames.size(); i++) {
+			if(i != 0) {
+				SQL += " AND ";
+			}
+			SQL += "(" + SMTablelocations.sLocation + "=" + "'" + aLocationNames.get(i) + "')";
+		}
+		SQL += ")";
+		
+		System.out.println(SQL);
+		ResultSet rs = clsDatabaseFunctions.openResultSet(
+				SQL, 
+				context, 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".getLocationAddress - user: " 
+				+ sUserID
+				+ " - "
+				+ sUserFullName
+				);
+		while (rs.next()){
+			sLocationAddress.add(rs.getString(SMTablelocations.sAddress1).trim()
+				+ " " + rs.getString(SMTablelocations.sAddress2).trim()
+				+ " " + rs.getString(SMTablelocations.sAddress3).trim()
+				+ " " + rs.getString(SMTablelocations.sAddress4).trim()
+				+ " " + rs.getString(SMTablelocations.sCity).trim()
+				+ " " + rs.getString(SMTablelocations.sState).trim()
+				+ " " + rs.getString(SMTablelocations.sZip).trim()
+				+ " " + rs.getString(SMTablelocations.sCountry).trim());
+			
+		}
+		rs.close();
+		return sLocationAddress;
+	}
+	
 	private void loadScheduleEntries(
 		Connection conn,
 		String sDBID, 
@@ -509,6 +559,7 @@ public class SMMapDisplay extends HttpServlet {
 		}
 	}
 	private String getMapDisplayScript(
+			ArrayList<String>arrLocationAddress,
 			String sCenterAddress, 
 			ArrayList<String>arrMechanics,
 			ArrayList<String>arrGeocodes,
@@ -772,22 +823,30 @@ public class SMMapDisplay extends HttpServlet {
 					    ;
 		    	
 		    	}
-		    	
+				
+			    //If only one location is selected center the map to that location.
+			    //TODO get center point of location addresses in the array. 
+			    if (arrLocationAddress.size() == 1) {
+			    	sCenterAddress= arrLocationAddress.get(0);
+			    }
 			    //set map center
 			    s += "    geocoder = new google.maps.Geocoder();\n"
 				    + "    var latlng = new google.maps.LatLng(38.895496,-77.03008);\n"
-				    + "    var sAddress = \"" + sCenterAddress + "\";\n"
-				    + "    geocoder.geocode( { 'address': sAddress}, function(results, status) {\n"
-				    + "      if (status == google.maps.GeocoderStatus.OK) {\n"
-				    + "        map.setCenter(results[0].geometry.location);\n"
+			        + "    var sAddress = \"" + sCenterAddress + "\";\n"
+			    	+ "    geocoder.geocode( { 'address': sAddress}, function(results, status) {\n"
+				    + "      if (status == google.maps.GeocoderStatus.OK) {"
+				    + "         map.setCenter(results[0].geometry.location);\n"
 				    + "      } else {\n"
-				    + "        alert(\"Geocode was not successful for the following reason: \" + status);\n"
+				    + "        alert(\"Geocoding location was not successful for the following reason: \" + status);\n"
 				    + "      }\n"
-				    + "    });\n"
+				    + "    });\n";
+			    
+				   s += "\n"
+				   
 				    //set map options
-				    + "      var myOptions = {\n"
+				    + "     var myOptions = {\n"
 				    + "        zoom: 10,\n"
-				    //+ "        center: latlng,\n"
+				  //  + "        center: latlng,\n"
 				    + "        mapTypeId: google.maps.MapTypeId.ROADMAP,\n"
 				    + "        mapTypeControlOptions: { \n" 
 				    + "        		style: google.maps.MapTypeControlStyle.DROPDOWN_MENU\n"  

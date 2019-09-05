@@ -79,6 +79,13 @@ public class APEditBatchesSelect extends HttpServlet {
 	    		out.println("\n<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>\n");
 	    	}
 	    }
+	    
+	    String sWarning = (String)CurrentSession.getAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(APEditBatchesEdit.AP_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+		}
+	    
 	    if (request.getParameter("Status") != null){
 	    	String sStatus = request.getParameter("Status");
 	    	if (!sStatus.equalsIgnoreCase("")){

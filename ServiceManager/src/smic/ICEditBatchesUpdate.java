@@ -1,7 +1,6 @@
 package smic;
 
 import SMClasses.*;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 
@@ -45,6 +44,7 @@ public class ICEditBatchesUpdate extends HttpServlet{
 
     //Get the session info:
     HttpSession CurrentSession = request.getSession(true);
+	CurrentSession.removeAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT);
     String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
     String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
     String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
@@ -63,20 +63,20 @@ public class ICEditBatchesUpdate extends HttpServlet{
 	if (request.getParameter("Delete") != null){
 		if (request.getParameter("ConfirmDelete") != null){
 			if (batch.flag_as_deleted(getServletContext(), sDBID)){
+				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT , "Batch " + batch.sBatchNumber() + " was deleted." );
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatches" 
 			    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " was deleted."
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 			    return;
 			}
 			else{
 				m_EditBatchesUpdateWarning = "WARNING: Error deleting batch";
+				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  m_EditBatchesUpdateWarning);
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatches" 
 			    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + m_EditBatchesUpdateWarning
 			    		+ "'>");
 				out.println("</BODY></HTML>");
 				return;
@@ -84,10 +84,10 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		}
 		else{
 			m_EditBatchesUpdateWarning = "WARNING: You clicked the Delete button, but did not confirm by checking the checkbox.";
+			CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  m_EditBatchesUpdateWarning);
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatches" 
 		    		+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + m_EditBatchesUpdateWarning
 		    		+ "'>");
 			out.println("</BODY></HTML>");
 		    return;
@@ -97,11 +97,12 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		if (request.getParameter("ConfirmPost") != null){
 			if (!batch.load(getServletContext(), sDBID)){
 				m_EditBatchesUpdateWarning = "WARNING: could not load batch " + sBatchNumber + ": \n" + batch.getErrorMessages();
+				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  m_EditBatchesUpdateWarning);
 				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
+			    		);
 				return;				
 			}
 			if (batch.post_with_data_transaction(
@@ -110,32 +111,35 @@ public class ICEditBatchesUpdate extends HttpServlet{
 					sUserID,
 					sUserFullName,
 					out)){
+				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  "Posting complete.");
 				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Posting%20complete.");
+			    		);
 			    return;
 			}
 			else{
 				m_EditBatchesUpdateWarning = "WARNING: Error posting batch " + sBatchNumber + ": \n" 
 					+ batch.getErrorMessages();
+				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT , m_EditBatchesUpdateWarning);
 				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
+			    		);
 				return;
 			}
 		}
 		else{
 			m_EditBatchesUpdateWarning = "WARNING: You clicked the Post button, but did not confirm by checking the checkbox.";
+			CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT , m_EditBatchesUpdateWarning);
 			response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + clsServletUtilities.URLEncode(m_EditBatchesUpdateWarning));
-		    return;
+		    		);
+			return;
 		}
 	}
 	
@@ -143,24 +147,24 @@ public class ICEditBatchesUpdate extends HttpServlet{
     try {
     	Validate_Batch(batch, request, out);
     	if (save_batch(batch, getServletContext(), sDBID, sUserFullName, sUserID)){
+			CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  "Batch " + batch.sBatchNumber() + " saved.");
 				out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 			    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 			    		+ "?BatchNumber=" + batch.sBatchNumber()
 			    		+ "&BatchType=" + batch.sBatchType()
 			    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			    		+ "&Warning=" + "Batch " + batch.sBatchNumber() + " saved."
 			    		+ "'>");
 				out.println("</BODY></HTML>");
     		
     	}else{
     		//If it DIDN'T save:
     		m_EditBatchesUpdateWarning = "WARNING: Error saving batch - " + batch.getErrorMessages();
+			CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  m_EditBatchesUpdateWarning);
 			out.println("<META http-equiv='Refresh' content='" + "0" + ";URL=" 
 		    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 		    		+ "?BatchNumber=" + batch.sBatchNumber()
 		    		+ "&BatchType=" + batch.sBatchType()
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "&Warning=" + m_EditBatchesUpdateWarning
 		    		+ "'>");
 			out.println("</BODY></HTML>");
     	}
@@ -168,12 +172,12 @@ public class ICEditBatchesUpdate extends HttpServlet{
     
     }catch (Exception e){
     	//Invalid entries:
+		CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT ,  e.getMessage());
 		out.println("<META http-equiv='Refresh' content='" + "10" + ";URL=" 
 	    		+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 
 	    		+ "?BatchNumber=" + batch.sBatchNumber()
 	    		+ "&BatchType=" + batch.sBatchType()
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-	    		+ "&Warning=" + e.getMessage()
 	    		+ "'>");
 		out.println("</BODY></HTML>");
 	    return;

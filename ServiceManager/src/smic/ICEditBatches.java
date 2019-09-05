@@ -82,6 +82,12 @@ public class ICEditBatches extends HttpServlet {
 	    		out.println("<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>");
 	    	}
 	    }
+	    String sWarning = (String)CurrentSession.getAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+		}
+
 	    if (request.getParameter("Status") != null){
 	    	String sStatus = request.getParameter("Status");
 	    	if (!sStatus.equalsIgnoreCase("")){

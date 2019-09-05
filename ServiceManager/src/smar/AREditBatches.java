@@ -81,6 +81,12 @@ public class AREditBatches extends HttpServlet {
 	    	}
 	    }
 	    
+	    String sWarning = (String)CurrentSession.getAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(AREditBatchesEdit.AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+		}
+	    
 	    //Print a link to the first page after login:
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

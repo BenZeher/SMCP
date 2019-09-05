@@ -696,7 +696,7 @@ public class AREditCustomersEdit extends HttpServlet {
         		ARCustomer.ParamsPhoneNumber + "\" ID=\"" + ARCustomer.ParamsPhoneNumber + "\" ONCHANGE=\"flagDirty();", 
         		cust.getM_sPhoneNumber().replace("\"", "&quot;"), 
         		SMTablearcustomer.sPhoneNumberLength, 
-        		"Phone<B><FONT COLOR=\"RED\">*</FONT></B>:",
+        		"Phone:",
         		"Up to " + SMTablearcustomer.sPhoneNumberLength + " characters.",
         		Integer.toString(SMTablearcustomer.sPhoneNumberLength)
         	)

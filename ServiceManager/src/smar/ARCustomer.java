@@ -1471,10 +1471,6 @@ public class ARCustomer extends Object{
     		bEntriesAreValid = false;
     	}
     	
-    	if (m_sPhoneNumber.trim().compareToIgnoreCase("") == 0){
-    		m_sErrorMessageArray.add("phone number cannot be blank");
-    		bEntriesAreValid = false;
-    	}
     	if (m_sPhoneNumber.length() > SMTablearcustomer.sPhoneNumberLength){
     		m_sErrorMessageArray.add("Phone Number cannot be longer than " 
     			+ SMTablearcustomer.sPhoneNumberLength + " characters.");

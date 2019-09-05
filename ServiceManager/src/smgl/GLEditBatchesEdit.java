@@ -34,6 +34,7 @@ public class GLEditBatchesEdit extends HttpServlet {
 	private static final String ROW_BACKGROUND_HIGHLIGHT_COLOR = "YELLOW";
 	private static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	private static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
+	public static final String GL_BATCH_POSTING_SESSION_WARNING_OBJECT = "GLEDITBATCHWARNING";
 	
 	private static final long serialVersionUID = 1L;
 	/*
@@ -105,12 +106,11 @@ public class GLEditBatchesEdit extends HttpServlet {
 		out.println(sCommandScript());
 		
 	    //Display any warnings:
-	    if (request.getParameter("Warning") != null){
-	    	String sWarning = request.getParameter("Warning");
-	    	if (!sWarning.equalsIgnoreCase("")){
-	    		out.println("<BR><B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>\n");
-	    	}
-	    }
+	    String sWarning = (String)CurrentSession.getAttribute(GL_BATCH_POSTING_SESSION_WARNING_OBJECT);
+	    CurrentSession.removeAttribute(GL_BATCH_POSTING_SESSION_WARNING_OBJECT);
+		if (sWarning != null){
+			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+		}
 	    //Display any status messages:
 	    if (request.getParameter("Status") != null){
 	    	String sStatus = request.getParameter("Status");

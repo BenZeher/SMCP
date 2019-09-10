@@ -439,7 +439,7 @@ public class SMAuthenticate{
 		}
 		
 		// TJR - 12/21/2018 - no longer checking this:
-		//If the session ID does not match the does not match the current session ID stored in the session 
+		//If the session ID does not match the current session ID stored in the session 
 		//if (sParameterSessionID.compareToIgnoreCase("") != 0 ) {
 		//	if (sParameterSessionID.compareToIgnoreCase(sCurrentSessionID) != 0 ) {
 		//		return false;

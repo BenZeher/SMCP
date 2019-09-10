@@ -39,6 +39,7 @@ public class SMTableicvendors {
 	public static final String igenerateseparatepaymentsforeachinvoice = "igenerateseparatepaymentsforeachinvoice";
 	public static final String ivendorgroupid = "ivendorgroupid";
 	public static final String svendoremail = "svendoremail";
+	public static final String mbackchargememo = "mbackchargememo";
 	
 	
 	//Used ONLY to convert the ACCPAC AP data - when that's all done, this field can be removed:

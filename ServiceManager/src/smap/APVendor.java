@@ -70,6 +70,7 @@ public class APVendor extends clsMasterEntry{
 	public static final String Paramitaxidnumbertype = "itaxidnumbertype";
 	public static final String Paramigenerateseparatepaymentsforeachinvoice = "igenerateseparatepaymentsforeachinvoice";
 	public static final String Paramivendorgroupid = "ivendorgroupid";
+	public static final String Parammbackchargememo = "mbackchargememo";
 	
 	////////////////////
 	
@@ -107,6 +108,7 @@ public class APVendor extends clsMasterEntry{
 	private String m_itaxidnumbertype;
 	private String m_igenerateseparatepaymentsforeachinvoice;
 	private String m_ivendorgroupid;
+	private String m_mbackchargememo;
 	
 	public APVendor() {
 		super();
@@ -185,6 +187,7 @@ public class APVendor extends clsMasterEntry{
 			}
 		}	
 		m_ivendorgroupid = clsManageRequestParameters.get_Request_Parameter(Paramivendorgroupid, req).trim();
+		m_mbackchargememo = clsManageRequestParameters.get_Request_Parameter(Parammbackchargememo, req).trim();
 	}
     public boolean load (ServletContext context, String sDBID, String sUserID , String sUserFullname){
     	Connection conn = clsDatabaseFunctions.getConnection(
@@ -267,6 +270,7 @@ public class APVendor extends clsMasterEntry{
 				m_itaxidnumbertype = Integer.toString(rs.getInt(SMTableicvendors.itaxidnumbertype));
 				m_igenerateseparatepaymentsforeachinvoice = Integer.toString(rs.getInt(SMTableicvendors.igenerateseparatepaymentsforeachinvoice));
 				m_ivendorgroupid = Integer.toString(rs.getInt(SMTableicvendors.ivendorgroupid));
+				m_mbackchargememo = rs.getString(SMTableicvendors.mbackchargememo);
 				rs.close();
 			} else {
 				super.addErrorMessage("No " + ParamObjectName + " found for : '" + sVendorAcct
@@ -380,6 +384,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + SMTableicvendors.i1099CPRSid
 			+ ", " + SMTableicvendors.itaxidnumbertype
 			+ ", " + SMTableicvendors.ivendorgroupid
+			+ ", " + SMTableicvendors.mbackchargememo
 			
 			+ ") VALUES ("
 			+ "'" + clsDatabaseFunctions.FormatSQLStatement(m_saddressline1.trim()) + "'"
@@ -417,6 +422,7 @@ public class APVendor extends clsMasterEntry{
 			+ ", " + m_i1099CPRSid
 			+ ", " + m_itaxidnumbertype
 			+ ", " + m_ivendorgroupid
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mbackchargememo.trim()) + "'"
 			+ ")"
 			+ " ON DUPLICATE KEY UPDATE "
 			+ SMTableicvendors.saddressline1
@@ -487,17 +493,19 @@ public class APVendor extends clsMasterEntry{
 				+ " = " + m_itaxidnumbertype
 			+ ", " + SMTableicvendors.ivendorgroupid
 				+ " = " + m_ivendorgroupid
+			+ ", " +  SMTableicvendors.mbackchargememo
+			+ " = '" + m_mbackchargememo + "'"
 			;
-		//System.out.println("[1393267108] SQL = " + SQL);
+		System.out.println("[1393267108] SQL = " + SQL);
 
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 	    		//System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
-	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
+	    		super.addErrorMessage("Error [1568149655] Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}
     	}catch(SQLException ex){
-    	    super.addErrorMessage("Error inserting " + ParamObjectName + ": " + ex.getMessage());
+    	    super.addErrorMessage("Error [1568149654] inserting " + ParamObjectName + " with SQL: '" + SQL + "' - " + ex.getMessage());
     	    return false;
     	}
 
@@ -1110,6 +1118,8 @@ public class APVendor extends clsMasterEntry{
     	sResult += "\nLast edited by: " + getslasteditedby();
     	sResult += "\nActive: " + getsactive();
     	sResult += "\nConfirmation Required: " + getspoconfirmationrequired();
+    	sResult += "\nBackcharge memo: " + getmbackchargememo();
+    	
     	return sResult;
     }
 
@@ -1187,6 +1197,8 @@ public class APVendor extends clsMasterEntry{
 				+ clsServletUtilities.URLEncode(getsgenerateseparatepaymentsforeachinvoice());
 		sQueryString += "&" + Paramivendorgroupid + "=" 
 				+ clsServletUtilities.URLEncode(getsvendorgroupid());
+		sQueryString += "&" + Parammbackchargememo + "=" 
+				+ clsServletUtilities.URLEncode(getmbackchargememo());		
 		return sQueryString;
 	}
 
@@ -1385,6 +1397,13 @@ public class APVendor extends clsMasterEntry{
 	public void setsvendorgroupid(String svendorgroupid) {
 		m_ivendorgroupid = svendorgroupid;
 	}
+	public String getmbackchargememo() {
+		return m_mbackchargememo;
+	}
+	public void setmbackchargememo(String mbackchargememo) {
+		m_mbackchargememo = mbackchargememo;
+	}
+	
 	
 	public static String getFindVendorLink(
 		String sSearchingClassName, 
@@ -1471,6 +1490,7 @@ public class APVendor extends clsMasterEntry{
     	m_itaxidnumbertype = "0";
     	m_igenerateseparatepaymentsforeachinvoice = "0";
     	m_ivendorgroupid = "0";
+    	m_mbackchargememo = "";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
     }

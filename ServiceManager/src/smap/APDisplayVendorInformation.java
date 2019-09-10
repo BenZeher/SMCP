@@ -249,8 +249,6 @@ public class APDisplayVendorInformation extends HttpServlet {
 						+ sVendorEmail.replace("\"", "&quot;") + "\">" 
 					+ sVendorEmail.replace("\"", "&quot;") + "</A>";
 				}
-
-				
 				
 				if (sWebAddress.compareToIgnoreCase("") != 0){
 					sWebLink =  "<A HREF=\"" 
@@ -269,6 +267,10 @@ public class APDisplayVendorInformation extends HttpServlet {
 					;
 				}
 				pwOut.println(sVendorGroupString + "<BR>");
+				
+				//Backcharge memo:
+				pwOut.println("<FONT SIZE=2><B>Backcharge memo:</B> " 
+					+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.mbackchargememo).trim() +  "<BR>");
 				
 				//End the left hand cell:
 				pwOut.println("</TD>");

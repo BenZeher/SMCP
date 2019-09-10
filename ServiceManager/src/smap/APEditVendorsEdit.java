@@ -585,6 +585,18 @@ public class APEditVendorsEdit  extends HttpServlet {
 			"flagDirty();"
 		);		
 		
+		
+		//Backcharge memo:
+		s += clsCreateHTMLTableFormFields.Create_Edit_Form_MultilineText_Input_Row(
+				APVendor.Parammbackchargememo,
+				entry.getmbackchargememo().replace("\"", "&quot;"), 
+				"<B>Backcharge memo:</B>",
+				"Include any notes here relating to backcharging this vendor, such as hourly rates, whether they pay for travel time, etc.",
+				3,
+				80,
+				"flagDirty();"
+		);
+		
 		//Invoicing defaults:
 		s += "<TR style=\"background-color:grey; color:white; \" \"><TD COLSPAN=3>"
 			+ "<B>&nbsp;INVOICING DEFAULTS</B>"

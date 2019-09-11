@@ -329,11 +329,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 		//Start Validation
 		BufferedReader br = null;
-		ArrayList<String> ItemNumbers = new ArrayList<String>();
-		ArrayList<String> Quantities = new ArrayList<String>();
-		ArrayList<String> ItemDesc = new ArrayList<String>();
-		ArrayList<String> UofM = new ArrayList<String>();
-		ArrayList<String> Errors = new ArrayList<String>();
+		ArrayList<String> arrItemNumbers = new ArrayList<String>();
+		ArrayList<String> arrQuantities = new ArrayList<String>();
+		ArrayList<String> arrItemDesc = new ArrayList<String>();
+		ArrayList<String> arrUofM = new ArrayList<String>();
+		ArrayList<String> arrErrors = new ArrayList<String>();
 		//This item extracts the Item #'s and Quantities of each item from the file.
 		try {
 			br = new BufferedReader(new FileReader(sTempImportFilePath + System.getProperty("file.separator") + fileName));
@@ -358,11 +358,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					String[] fields = line.split(",");
 					for (String sDelimitedField : fields) {
 						if (iFieldCounter == FIELD_QTY){
-							Quantities.add( sDelimitedField.trim().replace("\"", ""));
+							arrQuantities.add( sDelimitedField.trim().replace("\"", ""));
 						}
 						if (iFieldCounter == FIELD_ITEM){
 							sItem = sDelimitedField.trim().replace("\"", "");
-							ItemNumbers.add(stripSuffix(sItem));
+							arrItemNumbers.add(stripSuffix(sItem));
 						}
 						iFieldCounter++;
 					}					
@@ -371,7 +371,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 						throw new Exception("Error [1548957349] - Line number " + iLineCounter + " has less than " 
 								+ NUMBER_OF_FIELDS_PER_LINE + " fields in it ('" + line + "').");
 					}
-					Errors.add("");
+					arrErrors.add("");
 				}
 			}
 			if(iLineCounter == 0) {
@@ -397,35 +397,35 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				);
 
 		//This function grabs the Descriptions and Units of Measure for each item within the list. 
-		for(int i = 0 ; i<ItemNumbers.size(); i++) {
-			String temp = ItemNumbers.get(i);
+		for(int i = 0 ; i<arrItemNumbers.size(); i++) {
+			String sItem = arrItemNumbers.get(i);
 			//Try Function to get Desc with Catch adding to Errors list
-			ArrayList<String> UofMAndDesc = new ArrayList<String>();
+			ArrayList<String> arrUofMAndDesc = new ArrayList<String>();
 			try {
-				UofMAndDesc = getUoMAndDesc(temp, conn, sDBID, sUserFullName);
-				if(UofMAndDesc.get(0).compareToIgnoreCase("")==0 || UofMAndDesc.get(1).compareToIgnoreCase("")==0) {
-					UofM.add("");
-					ItemDesc.add("");
-					Errors.set(i, Errors.get(i) + "Item Number is not Valid; ");
+				arrUofMAndDesc = getUoMAndDesc(sItem, conn, sDBID, sUserFullName);
+				if(arrUofMAndDesc.get(0).compareToIgnoreCase("")==0 || arrUofMAndDesc.get(1).compareToIgnoreCase("")==0) {
+					arrUofM.add("");
+					arrItemDesc.add("");
+					arrErrors.set(i, arrErrors.get(i) + "Item Number is not Valid; ");
 				}else {
-					UofM.add(i,UofMAndDesc.get(0));
-					ItemDesc.add(i,UofMAndDesc.get(1));
+					arrUofM.add(i,arrUofMAndDesc.get(0));
+					arrItemDesc.add(i,arrUofMAndDesc.get(1));
 				}
 			}catch (Exception e) {
-				UofM.add("");
-				ItemDesc.add("");
-				Errors.set(i, Errors.get(i) + "Item Number is not Valid; ");
+				arrUofM.add("");
+				arrItemDesc.add("");
+				arrErrors.set(i, arrErrors.get(i) + "Item Number is not Valid; ");
 			}
 		}
 
 
 		//Check to see, if we are not adding items, that all items are contained within the worksheet already.
 		if(!bAddNewItems) {
-			for(int i = 0 ; i < ItemNumbers.size(); i++) {
+			for(int i = 0 ; i < arrItemNumbers.size(); i++) {
 				String SQL = "SELECT"
 						+ " " + SMTableicinventoryworksheet.sitemnumber + " FROM " + SMTableicinventoryworksheet.TableName
 						+ " WHERE (" 
-						+ " " + SMTableicinventoryworksheet.sitemnumber + " = '" + ItemNumbers.get(i) + "'"
+						+ " " + SMTableicinventoryworksheet.sitemnumber + " = '" + arrItemNumbers.get(i) + "'"
 						+ " AND" 
 						+ " " + SMTableicinventoryworksheet.lphysicalinventoryid + " = " + sPhysicalInventoryID
 						+ ")"
@@ -441,41 +441,41 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 					if (!rs.next()){
 						rs.close();
-						Errors.set(i, Errors.get(i) + "This item is not in this physical inventory already;  ");
+						arrErrors.set(i, arrErrors.get(i) + "This item is not in this physical inventory already;  ");
 					}
 					rs.close();
 				} catch (SQLException e) {
-					throw new Exception("Error [1548958827] - SQL Error validating item number ('" + ItemNumbers.get(i) + "') on line number " 
+					throw new Exception("Error [1548958827] - SQL Error validating item number ('" + arrItemNumbers.get(i) + "') on line number " 
 							+ i + " with SQL - " + SQL + " - " + e.getMessage() + ".");
 				}
 			}
 		}
 
 		//Check for valid Quantities
-		for(int i = 0; i < Quantities.size(); i++) {
+		for(int i = 0; i < arrQuantities.size(); i++) {
 			try {
-				Double.parseDouble(Quantities.get(i));
+				Double.parseDouble(arrQuantities.get(i));
 			} catch (Exception e) {
-				Errors.set(i, Errors.get(i) + "The number " + Quantities.get(i) + " is not a valid number;  ");
+				arrErrors.set(i, arrErrors.get(i) + "The quantity " + arrQuantities.get(i) + " is not a valid number;  ");
 			}
 		}
 
-		boolean containsErrors = false;
+		boolean bContainsErrors = false;
 		//Check to see if there are errors at all
-		for(int i = 0; i < ItemNumbers.size(); i++) {
-			if(Errors.get(i).compareToIgnoreCase("")!=0) {
-				containsErrors=true;
+		for(int i = 0; i < arrItemNumbers.size(); i++) {
+			if(arrErrors.get(i).compareToIgnoreCase("")!=0) {
+				bContainsErrors=true;
 			}
 		}
 
-		if(containsErrors==true) {
-			throw new Exception(returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+		if(bContainsErrors==true) {
+			throw new Exception(returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 		
 		//Now after making sure all entries are valid, we now should be inserting them into the physical count.
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
-			throw new Exception("Error [1548956219] starting data transaction - " + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+			throw new Exception("Error [1548956219] starting data transaction - " + returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 
 		//We'll need a physical inventory object to process the file:
@@ -484,7 +484,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		objICPhysicalInventoryEntry.slid(sPhysicalInventoryID);
 		if (!objICPhysicalInventoryEntry.load(conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1548956220]");
-			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages() + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages() + returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 		
 		//Create the Count Entry
@@ -496,38 +496,38 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 		//If errors occur print the error, and the list
 		if(!count.save_without_data_transaction(conn, sUserID, sUserFullName)) {
-			throw new Exception("Error Inserting Count [1568216019] : " + count.getErrorMessages() + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+			throw new Exception("Error Inserting Count [1568216019] : " + count.getErrorMessages() + returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 		
 		//Add each individual Line Entry
-		for(int i = 0; i < ItemNumbers.size(); i++) {
+		for(int i = 0; i < arrItemNumbers.size(); i++) {
 			ICPhysicalCountLineEntry countEntry = new ICPhysicalCountLineEntry();
 			countEntry.setsCountID(count.slid());
-			countEntry.setsItemNumber(ItemNumbers.get(i));
+			countEntry.setsItemNumber(arrItemNumbers.get(i));
 			countEntry.setsPhysicalInventoryID(sPhysicalInventoryID);
-			countEntry.setsQty(Quantities.get(i));
+			countEntry.setsQty(arrQuantities.get(i));
 			if(!countEntry.save_without_data_transaction(conn, bAddNewItems)) {
-				Errors.set(i, Errors.get(i) + "Error saving: " + countEntry.getErrorMessages() + "; ");
+				arrErrors.set(i, arrErrors.get(i) + "Error saving: " + countEntry.getErrorMessages() + "; ");
 			}
 			if (bAddNewItems){
-				objICPhysicalInventoryEntry.addSingleItem(ItemNumbers.get(i), conn);
+				objICPhysicalInventoryEntry.addSingleItem(arrItemNumbers.get(i), conn);
 			}
 		}
 		
 		
-		for(int i = 0; i < ItemNumbers.size(); i++) {
-			if(Errors.get(i).compareToIgnoreCase("")!=0) {
-				containsErrors=true;
+		for(int i = 0; i < arrItemNumbers.size(); i++) {
+			if(arrErrors.get(i).compareToIgnoreCase("")!=0) {
+				bContainsErrors=true;
 			}
 		}
 		
-		if(containsErrors==true) {
+		if(bContainsErrors==true) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
-			throw new Exception(returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+			throw new Exception(returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 		
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
-			throw new Exception("Error [1538513252] Could not commit data transaction." + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
+			throw new Exception("Error [1538513252] Could not commit data transaction." + returnErrors(arrItemNumbers, arrQuantities, arrItemDesc, arrUofM, arrErrors));
 		}
 		
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080880]");

@@ -487,19 +487,19 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			throw new Exception("Error [1538513151] - Could not load physical inventory - " + objICPhysicalInventoryEntry.getErrorMessages() + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
 		}
 		
-		
+		//Create the Count Entry
 		ICPhysicalCountEntry count = new ICPhysicalCountEntry();
 		count.setsCreatedByID(sUserID);
 		count.setsCreatedByFullName(sUserFullName);
 		count.setsDescription(sCountDesc);
 		count.setsPhysicalInventoryID(sPhysicalInventoryID);
 
-		
-		
+		//If errors occur print the error, and the list
 		if(!count.save_without_data_transaction(conn, sUserID, sUserFullName)) {
 			throw new Exception("Error Inserting Count [1568216019] : " + count.getErrorMessages() + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
 		}
 		
+		//Add each individual Line Entry
 		for(int i = 0; i < ItemNumbers.size(); i++) {
 			ICPhysicalCountLineEntry countEntry = new ICPhysicalCountLineEntry();
 			countEntry.setsCountID(count.slid());

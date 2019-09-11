@@ -383,15 +383,6 @@ public class SMSalesTaxReport {
 				}
 				//If the invoice is the same add running totals, Otherwise print totals then clear them.
 				if(sCurrentInvoiceNumber.compareToIgnoreCase(rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber)) == 0){
-					bdInvoicePurchaseCost = bdInvoicePurchaseCost.add(bdExtendedCost);
-					bdInvoiceTaxablePurchases = bdInvoiceTaxablePurchases.add(bdTaxablePurchaseAmount);
-					bdInvoicePriceAfterDiscount = bdInvoicePriceAfterDiscount.add(bdExtendedPriceAfterDiscount);
-					bdInvoiceTaxableSales = bdInvoiceTaxableSales.add(bdTaxableSalesAmount);
-					bdInvoicePurchaseTaxDue = bdInvoicePurchaseTaxDue.add(bdPurchaseTaxDue);
-					bdInvoiceSalesTaxDue = bdInvoiceSalesTaxDue.add(bdRetailSalesTaxDue);
-					bdInvoiceTotalTaxDue = bdInvoiceTotalTaxDue.add(bdTotalTaxDue);
-					bdInvoiceSalesTaxCollected = bdInvoiceSalesTaxCollected.add(bdTotalTaxCollected);
-					bdInvoiceTotalTaxOwed = bdInvoiceTotalTaxOwed.add(bdTotalTaxOwed);
 
 				}else{
 					sTempBuffer += printInvoiceSubTotalsLine(
@@ -413,6 +404,7 @@ public class SMSalesTaxReport {
 							context,
 							iTotalColumnCount
 							);
+					//Since we've moved on to another invoice, reset these variables to zero:
 					bdInvoicePurchaseCost = new BigDecimal("0.00");
 					bdInvoiceTaxablePurchases = new BigDecimal("0.00");
 					bdInvoicePriceAfterDiscount  = new BigDecimal("0.00");
@@ -423,6 +415,18 @@ public class SMSalesTaxReport {
 					bdInvoiceTotalTaxDue = new BigDecimal("0.00");
 					bdInvoiceTotalTaxOwed = new BigDecimal("0.00");
 				}
+				
+				//Now accummulate the values in these variables on every record:
+				bdInvoicePurchaseCost = bdInvoicePurchaseCost.add(bdExtendedCost);
+				bdInvoiceTaxablePurchases = bdInvoiceTaxablePurchases.add(bdTaxablePurchaseAmount);
+				bdInvoicePriceAfterDiscount = bdInvoicePriceAfterDiscount.add(bdExtendedPriceAfterDiscount);
+				bdInvoiceTaxableSales = bdInvoiceTaxableSales.add(bdTaxableSalesAmount);
+				bdInvoicePurchaseTaxDue = bdInvoicePurchaseTaxDue.add(bdPurchaseTaxDue);
+				bdInvoiceSalesTaxDue = bdInvoiceSalesTaxDue.add(bdRetailSalesTaxDue);
+				bdInvoiceTotalTaxDue = bdInvoiceTotalTaxDue.add(bdTotalTaxDue);
+				bdInvoiceSalesTaxCollected = bdInvoiceSalesTaxCollected.add(bdTotalTaxCollected);
+				bdInvoiceTotalTaxOwed = bdInvoiceTotalTaxOwed.add(bdTotalTaxOwed);
+				
 				//Store the current invoice number to compare to the next invoice number.
 				sCurrentInvoiceNumber = rs.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber);
 				sBillToName = rs.getString(SMTableinvoiceheaders.sBillToName);

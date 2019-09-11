@@ -179,7 +179,7 @@ public class SMSalesTaxReport {
 		String sBillToName = "";
 		String sShipToName = "";
 		
-		int iTotalColumnCount = 20;
+		int iTotalColumnCount = 21;
 		if (bGroupByCostCenters){
 			iTotalColumnCount++;
 		}
@@ -209,6 +209,7 @@ public class SMSalesTaxReport {
 			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.iTaxable
 			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sDesc
 			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
+			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemCategory
 			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemNumber
 			+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sUnitOfMeasure
 			+ ", " + SMTableinvoicedetails.TableName  + "." + SMTableinvoicedetails.isuppressdetailoninvoice
@@ -416,7 +417,7 @@ public class SMSalesTaxReport {
 					bdInvoiceTotalTaxOwed = new BigDecimal("0.00");
 				}
 				
-				//Now accummulate the values in these variables on every record:
+				//Now accumulate the values in these variables on every record:
 				bdInvoicePurchaseCost = bdInvoicePurchaseCost.add(bdExtendedCost);
 				bdInvoiceTaxablePurchases = bdInvoiceTaxablePurchases.add(bdTaxablePurchaseAmount);
 				bdInvoicePriceAfterDiscount = bdInvoicePriceAfterDiscount.add(bdExtendedPriceAfterDiscount);
@@ -730,6 +731,9 @@ public class SMSalesTaxReport {
 				+ "<TD class = \" centerjustifiedcell \">"
 				+ sTaxable
 				+ "</TD>"
+				+ "<TD class = \" centerjustifiedcell \">"
+				+ rsInvoiceDetail.getString(SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sItemCategory)
+				+ "</TD>"
 				+ "<TD class = \" rightjustifiedcell \">"
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdExtendedItemCost)
 				+ "</TD>"
@@ -967,6 +971,7 @@ public class SMSalesTaxReport {
 			+ "<TD class = \" leftjustifiedheading \" >" + "NON-STOCK<BR>ITEM?" + "</TD>"
 			+ "<TD class = \" leftjustifiedheading \" >" + "SUPPRESS<BR>ON<BR>INVOICE?" + "</TD>"
 			+ "<TD class = \" leftjustifiedheading \" >" + "TAXABLE?" + "</TD>"
+			+ "<TD class = \" leftjustifiedheading \" >" + "CATEGORY" + "</TD>"
 			+ "<TD class = \" rightjustifiedheading \" >" + "INVENTORY<BR>COST<SUP><a href=\"#inventorycost\"><font color=\"#80ccff\">1</font></a></SUP>" + "</TD>"
 			+ "<TD class = \" rightjustifiedheading \" >" + "TAXABLE<BR>INVENTORY<BR>COST<SUP><a href=\"#taxablecost\"><font color=\"#80ccff\">2</font></a></SUP>" + "</TD>"
 			+ "<TD class = \" rightjustifiedheading \" >" + "SALES<BR>PRICE<SUP><a href=\"#saleprice\"><font color=\"#80ccff\">3</font></a></SUP>" + "</TD>"

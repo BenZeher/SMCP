@@ -468,10 +468,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			}
 		}
 
-		//Build out String to return with throw new Exception
 		if(containsErrors==true) {
 			throw new Exception(returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
 		}
+		
+		//Now after making sure all entries are valid, we now should be inserting them into the physical count.
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
 			throw new Exception("Error [1548956219] starting data transaction - " + returnErrors(ItemNumbers, Quantities, ItemDesc, UofM, Errors));
@@ -600,30 +601,52 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 				error+="<TD>";
 				error +="<font color=\"red\">* " +(i+1) + "</font>";
 				error+="</TD>\n";
+				
+				error+="<TD>";
+				error +="<font color=\"red\"> " +ItemNumbers.get(i) + "</font>";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error +="<font color=\"red\"> " +Quantities.get(i) + "</font>";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error +="<font color=\"red\"> " +ItemDesc.get(i) + "</font>";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error +="<font color=\"red\"> " +UofM.get(i) + "</font>";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error +="<font color=\"red\"> " +Errors.get(i) + "</font>";
+				error+="</TD>\n";
 			}else {
 				error+="<TD>";
 				error +=(i+1) + "";
 				error+="</TD>\n";
+				
+				error+="<TD>";
+				error += ItemNumbers.get(i) + "";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error += Quantities.get(i) + "";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error += ItemDesc.get(i) + "";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error += UofM.get(i) + "";
+				error+="</TD>\n";
+				
+				error+="<TD>";
+				error += Errors.get(i) + "";
+				error+="</TD>\n";
 			}
-			error+="<TD>";
-			error += ItemNumbers.get(i) + "";
-			error+="</TD>\n";
-			
-			error+="<TD>";
-			error += Quantities.get(i) + "";
-			error+="</TD>\n";
-			
-			error+="<TD>";
-			error += ItemDesc.get(i) + "";
-			error+="</TD>\n";
-			
-			error+="<TD>";
-			error += UofM.get(i) + "";
-			error+="</TD>\n";
-			
-			error+="<TD>";
-			error += Errors.get(i) + "";
-			error+="</TD>\n";
+
 			
 			error+="</TR>\n";
 		}

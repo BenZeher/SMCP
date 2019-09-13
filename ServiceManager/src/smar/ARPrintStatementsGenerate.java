@@ -24,6 +24,7 @@ import SMDataDefinition.SMTablearcustomerstatistics;
 import SMDataDefinition.SMTablearmatchingline;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablecompanyprofile;
+import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
@@ -37,7 +38,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
-	throws ServletException, IOException {
+					throws ServletException, IOException {
 
 		response.setContentType("text/html");
 		PrintWriter out = response.getWriter();
@@ -46,17 +47,17 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				response, 
 				getServletContext(), 
 				SMSystemFunctions.ARPrintStatements))
-			{
-				return;
-			}
+		{
+			return;
+		}
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserFullName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
-						+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+				+ (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-				
+
 		//sCallingClass will look like: smar.ARAgedTrialBalanceReport
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sWarning = "";
@@ -65,7 +66,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		if (request.getParameter("OnlyOverCurrent") != null){
 			bPrintOnlyOverCurrent = true;
 		}
-		
+
 		boolean bPrintZeroBalanceStatements = false;
 		if (request.getParameter("PrintZeroBalanceStatements") != null){
 			bPrintZeroBalanceStatements = true;
@@ -75,43 +76,49 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		if (request.getParameter("OnlyRequireStatement") != null){
 			bPrintOnlyRequireStatement = true;
 		}
-		
-		
+
+		boolean bRemitAsNotDefault = false;
+		String sChoice = "";
+		if (request.getParameter(ARPrintStatementsSelection.DBA_INPUT).compareToIgnoreCase(ARPrintStatementsSelection.DBA_DEFAULT) != 0 ){
+			bRemitAsNotDefault = true;
+			sChoice = request.getParameter(ARPrintStatementsSelection.DBA_CHOICE);
+		}
+
 		java.sql.Date datAgeAsOf;
 		java.sql.Date datCutOffDate;
 		try {
 			String sAgeAsOf = request.getParameter("AsOfDate");
-			
+
 			try {
 				datAgeAsOf = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyy", sAgeAsOf);
 			} catch (Exception e) {
 				sWarning = "Error:[1423840379] Invalid 'Age as of' date: '" + sAgeAsOf + "' - " + e.getMessage();
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);			
+								+ "Warning=" + sWarning
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						);			
 				return;
 			}
 
 			//Get the cut off date:
 			String sCutOffDate = request.getParameter("CutOffDate");
-			
+
 			try {
 				datCutOffDate = clsDateAndTimeConversions.StringTojavaSQLDate("MM/dd/yyy", sCutOffDate);
 			} catch (Exception e) {
 				sWarning = "Error:[1423845049] Invalid cut off date. '" + sCutOffDate + "' - " + e.getMessage();
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);			
+								+ "Warning=" + sWarning
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						);			
 				return;
 			}
-			
+
 			String sStartingCustomer = request.getParameter("StartingCustomer");
 			String sEndingCustomer = request.getParameter("EndingCustomer");
-			
+
 			int iCurrent = Integer.parseInt(request.getParameter("Current").trim());
 			int i1st = Integer.parseInt(request.getParameter("1st").trim());
 			int i2nd = Integer.parseInt(request.getParameter("2nd").trim());
@@ -131,7 +138,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					"<HEAD><BODY BGCOLOR=\"#FFFFFF\">" 
 					+ "<STYLE TYPE=\"text/css\">P.breakhere {page-break-before: always}</STYLE>"
 					+ "</HEAD>"
-			);
+					);
 
 			//Retrieve information
 			Connection conn = clsDatabaseFunctions.getConnection(
@@ -139,18 +146,18 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					(String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID),
 					"MySQL",
 					this.toString() + ".doGet - User: " 
-					+ sUserID
-					+ " - "
-					+ sUserFullName
-					
+							+ sUserID
+							+ " - "
+							+ sUserFullName
+
 					);
 			if (conn == null){
 				sWarning = "Unable to get data connection.";
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + sWarning
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);			
+								+ "Warning=" + sWarning
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						);			
 				return;
 			}
 
@@ -169,37 +176,37 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 						sAgedBy,
 						bPrintOnlyOverCurrent,
 						bPrintZeroBalanceStatements,
-						bPrintOnlyRequireStatement,
+						bPrintOnlyRequireStatement,	
 						sTempTableName
-				);
+						);
 			} catch (Exception e1) {
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067570]");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=" + e1.getMessage()
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);			
+								+ "Warning=" + e1.getMessage()
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						);			
 				return;
 			}
 
 			String sSQL = "SELECT * FROM " + sTempTableName
-				+ " WHERE ("
-						+ "(dapplytodoccurrentamt != 0.00)"
-						//Need to pick up any 'zero balance' records, too, if there are any:
-						+ " OR (ldocid = -1)"
+					+ " WHERE ("
+					+ "(dapplytodoccurrentamt != 0.00)"
+					//Need to pick up any 'zero balance' records, too, if there are any:
+					+ " OR (ldocid = -1)"
 					+ ")"
-				+ " ORDER BY scustomer, lappliedto, ssource, datdocdate";
+					+ " ORDER BY scustomer, lappliedto, ssource, datdocdate";
 			ResultSet rsBalanceList = clsDatabaseFunctions.openResultSet(sSQL, conn);
 
 			String sCurrentCustomer = "";
 			BigDecimal bdCreditLimit = new BigDecimal(0);
-			
+
 			BigDecimal dTotalCurrent = new BigDecimal(0);
 			BigDecimal dTotal1st = new BigDecimal(0);
 			BigDecimal dTotal2nd = new BigDecimal(0);
 			BigDecimal dTotal3rd = new BigDecimal(0);
 			BigDecimal dTotalOver = new BigDecimal(0);
-			
+
 			//System.out.println("In " + this.toString() + ".main - looping through rsBalanceList");
 			long lNumberOfRecords = 0;
 			while (rsBalanceList.next()){
@@ -210,18 +217,18 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					if (sCurrentCustomer.compareToIgnoreCase("") != 0){
 						//Print the footer, if the record is for a new customer:
 						printCustomerFooter(
-							out, 
-							rsBalanceList.getBigDecimal("dcreditlimit"),
-							dTotal1st,
-							dTotal2nd,
-							dTotal3rd,
-							dTotalOver,
-							dTotalCurrent,
-							iCurrent,
-							i1st,
-							i2nd,
-							i3rd
-						);
+								out, 
+								rsBalanceList.getBigDecimal("dcreditlimit"),
+								dTotal1st,
+								dTotal2nd,
+								dTotal3rd,
+								dTotalOver,
+								dTotalCurrent,
+								iCurrent,
+								i1st,
+								i2nd,
+								i3rd
+								);
 						//Reset the customer totals:
 						dTotalCurrent = BigDecimal.ZERO;
 						dTotal1st = BigDecimal.ZERO;
@@ -236,17 +243,19 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 								out, 
 								conn, 
 								rsBalanceList.getString("scustomer"),
-								clsDateAndTimeConversions.utilDateToString(datCutOffDate, "MM/dd/yyyy")
-						);
+								clsDateAndTimeConversions.utilDateToString(datCutOffDate, "MM/dd/yyyy"),
+								bRemitAsNotDefault,
+								sChoice
+								);
 					} catch (Exception e) {
 						rsBalanceList.close();
 						clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067571]");
 						sWarning = "Error printing customer information table.";
 						response.sendRedirect(
 								"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-								+ "Warning=" + e.getMessage()
-								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-						);			
+										+ "Warning=" + e.getMessage()
+										+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+								);			
 						return;
 					}
 
@@ -259,13 +268,13 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					out.println(
 
 							"<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=15% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Applied to</FONT></B></TD>"
-							+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=3% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Type</FONT></B></TD>"
-							+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=15% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc #</FONT></B></TD>"
-							+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc ID</FONT></B></TD>"
-							+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc. Date</FONT></B></TD>" 
-							+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Due Date</FONT></B></TD>"
-							+ "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=12% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Amount</FONT></B></TD>"
-					);
+									+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=3% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Type</FONT></B></TD>"
+									+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=15% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc #</FONT></B></TD>"
+									+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=10% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc ID</FONT></B></TD>"
+									+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Doc. Date</FONT></B></TD>" 
+									+ "<TD ALIGN=LEFT VALIGN=BOTTOM WIDTH=8% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Due Date</FONT></B></TD>"
+									+ "<TD ALIGN=RIGHT VALIGN=BOTTOM WIDTH=12% bgcolor=\"black\"><B><FONT SIZE=2 color=\"white\">Amount</FONT></B></TD>"
+							);
 					out.println("</TR>");
 				}
 				//if (iPrintTransactionsIn == 0){
@@ -313,18 +322,18 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			//Print the footer for the last customer, if at least one customer was found:
 			if (sCurrentCustomer.compareToIgnoreCase("") != 0){
 				printCustomerFooter(
-					out, 
-					bdCreditLimit,
-					dTotal1st,
-					dTotal2nd,
-					dTotal3rd,
-					dTotalOver,
-					dTotalCurrent,
-					iCurrent,
-					i1st,
-					i2nd,
-					i3rd
-				);
+						out, 
+						bdCreditLimit,
+						dTotal1st,
+						dTotal2nd,
+						dTotal3rd,
+						dTotalOver,
+						dTotalCurrent,
+						iCurrent,
+						i1st,
+						i2nd,
+						i3rd
+						);
 			}
 
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067572]");
@@ -335,7 +344,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			if (lNumberOfRecords == 0){
 				out.println("(No transactions to be listed in the ranges selected.)<BR>");
 			}
-			
+
 			SMLogEntry log = new SMLogEntry(conn);
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARPRINTSTATEMENT, "REPORT", "AR Print Statements", "[1376509287]");
 
@@ -351,8 +360,10 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			PrintWriter pwOut, 
 			Connection conn, 
 			String sCustomerNumber,
-			String sStatementDate
-	) throws Exception{
+			String sStatementDate,
+			boolean bRemitAsNotDefault,
+			String sChoice
+			) throws Exception{
 
 		pwOut.println("<TABLE BORDER=0 WIDTH=100%>");
 
@@ -371,9 +382,9 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 						rsCompanyProfile.getString(SMTablecompanyprofile.sCompanyName)).trim();
 				pwOut.println(
 						"<SPAN style=\"color:black; font-size:large; font-weight:bolder\">"
-						+ sCompanyName + "<BR>"
-						+ "</SPAN>"		
-				);
+								+ sCompanyName + "<BR>"
+								+ "</SPAN>"		
+						);
 				int LineCounter = 0;
 				String sAddress1 = processStringForNull(
 						rsCompanyProfile.getString(SMTablecompanyprofile.sAddress01)).trim();
@@ -439,7 +450,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				+ "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
 				+ "</SPAN>"
 				+ "</TD>"
-		);
+				);
 
 		//Print the account/date table:
 		pwOut.println("<TD style=\"vertical-align:top; width:33%; test-align:center\">");
@@ -448,7 +459,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				+ "<BR>"
 				+ "<B>STATEMENT DATE:  </B>" + sStatementDate 
 				+ "<BR>"
-		);
+				);
 		pwOut.println("</TD>");
 
 		pwOut.println("</TR>");
@@ -457,7 +468,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 		//Print a table to contain the other tables (COMPANY INFO TABLE):
 		try {
-			printHeaderTable(pwOut, conn, sCustomerNumber, sStatementDate);
+			printHeaderTable(pwOut, conn, sCustomerNumber, sStatementDate,bRemitAsNotDefault, sChoice);
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -468,8 +479,10 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			PrintWriter pwOut,
 			Connection conn,
 			String sCustomerNumber, 
-			String sStatementDate
-	) throws Exception{
+			String sStatementDate,
+			boolean bRemitAsNotDefault,
+			String sChoice
+			) throws Exception{
 
 		//Print the 'header' table - this will contain the SOLD TO and REMIT TO tables within it:
 		pwOut.println("<TABLE style=\" width:100%\">");
@@ -488,11 +501,11 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		//Print the REMIT TO table:
 		pwOut.println("<TD style=\"vertical-align:top; width:50%; text-align=left\">");
 		try {
-			printRemitToTable(pwOut, conn, sCustomerNumber, sStatementDate);
+			printRemitToTable(pwOut, conn, sCustomerNumber, sStatementDate,bRemitAsNotDefault, sChoice);
 		} catch (Exception e) {
 			throw new Exception("Error [1548714306] printing remit-to table - " + e.getMessage());
 		}
-			
+
 		pwOut.println("</TD>");
 		pwOut.println("</TR>");
 		//End the company information table itself (COMPANY INFO TABLE):
@@ -506,13 +519,13 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			Connection conn,
 			String sCustomerNumber, 
 			String sStatementDate
-	) throws Exception{
+			) throws Exception{
 
 		pwOut.println("<B>BILL TO:</B><BR><BR>");
 
 		String SQL = "SELECT * FROM " + SMTablearcustomer.TableName
-		+ " WHERE (" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerNumber + "')"
-		;
+				+ " WHERE (" + SMTablearcustomer.sCustomerNumber + " = '" + sCustomerNumber + "')"
+				;
 
 		try{
 			ResultSet rsCustomer = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -573,71 +586,95 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			PrintWriter pwOut,
 			Connection conn,
 			String sCustomerNumber, 
-			String sStatementDate
-	) throws Exception{
-
+			String sStatementDate,
+			boolean bRemitAsNotDefault,
+			String sChoice
+			) throws Exception{
+		System.out.println("[2019255121523] Chose?: " + bRemitAsNotDefault + " Choice?: " + sChoice );
 		//REMIT TO:
 		//Begin the REMIT TO table:
 		pwOut.println("<B>REMIT TO:</B><BR><BR>");
-		String SQL = "SELECT * FROM " + SMTablecompanyprofile.TableName;
-		try{
-			ResultSet rsCompanyProfile = clsDatabaseFunctions.openResultSet(SQL, conn);
-			if(rsCompanyProfile.next()){
-				String sCompanyName = processStringForNull(
-						rsCompanyProfile.getString(SMTablecompanyprofile.sCompanyName)).trim();
-				pwOut.println("<B>" + sCompanyName + "</B><BR>");
-				int LineCounter = 0;
-				String sAddress1 = processStringForNull(
-						rsCompanyProfile.getString(SMTablecompanyprofile.sAddress01)).trim();
-				if(sAddress1.compareToIgnoreCase("") !=0){
-					pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress01) + "<BR>");
-					LineCounter++;
-				}
-				String sAddress2 = processStringForNull(
-						rsCompanyProfile.getString(SMTablecompanyprofile.sAddress02)).trim();
-				if(sAddress2.compareToIgnoreCase("") !=0){
-					pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress02) + "<BR>");
-					LineCounter++;
-				}
-				String sAddress3 = processStringForNull(
-						rsCompanyProfile.getString(SMTablecompanyprofile.sAddress03)).trim();
-				if(sAddress3.compareToIgnoreCase("") !=0){
-					pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress03) + "<BR>");
-					LineCounter++;
-				}
-				String sAddress4 = processStringForNull(
-						rsCompanyProfile.getString(SMTablecompanyprofile.sAddress04)).trim();
-				if(sAddress4.compareToIgnoreCase("") !=0){
-					pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress04) + "<BR>");
-					LineCounter++;
-				}
-				String sCity = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sCity)).trim();
-				String sState = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sState)).trim();
-				String sZip = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sZipCode)).trim();
-				String sCityStateZip = "";
-				if(sCity.compareToIgnoreCase("") != 0){
-					sCityStateZip = sCity;
-				}
-				if(sState.compareToIgnoreCase("") != 0){
-					sCityStateZip = sCityStateZip + ", " + sState;
-				}
-				if(sZip.compareToIgnoreCase("") != 0){
-					sCityStateZip = sCityStateZip + " " + sZip;
-				}
-				if(sCityStateZip.compareToIgnoreCase("") !=0){
-					pwOut.println(sCityStateZip);
-				}
+		if(bRemitAsNotDefault==false) {
+			String SQL = "SELECT * FROM " + SMTablecompanyprofile.TableName;
+			try{
+				ResultSet rsCompanyProfile = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if(rsCompanyProfile.next()){
+					String sCompanyName = processStringForNull(
+							rsCompanyProfile.getString(SMTablecompanyprofile.sCompanyName)).trim();
+					pwOut.println("<B>" + sCompanyName + "</B><BR>");
+					int LineCounter = 0;
+					String sAddress1 = processStringForNull(
+							rsCompanyProfile.getString(SMTablecompanyprofile.sAddress01)).trim();
+					if(sAddress1.compareToIgnoreCase("") !=0){
+						pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress01) + "<BR>");
+						LineCounter++;
+					}
+					String sAddress2 = processStringForNull(
+							rsCompanyProfile.getString(SMTablecompanyprofile.sAddress02)).trim();
+					if(sAddress2.compareToIgnoreCase("") !=0){
+						pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress02) + "<BR>");
+						LineCounter++;
+					}
+					String sAddress3 = processStringForNull(
+							rsCompanyProfile.getString(SMTablecompanyprofile.sAddress03)).trim();
+					if(sAddress3.compareToIgnoreCase("") !=0){
+						pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress03) + "<BR>");
+						LineCounter++;
+					}
+					String sAddress4 = processStringForNull(
+							rsCompanyProfile.getString(SMTablecompanyprofile.sAddress04)).trim();
+					if(sAddress4.compareToIgnoreCase("") !=0){
+						pwOut.println(rsCompanyProfile.getString(SMTablecompanyprofile.sAddress04) + "<BR>");
+						LineCounter++;
+					}
+					String sCity = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sCity)).trim();
+					String sState = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sState)).trim();
+					String sZip = processStringForNull(rsCompanyProfile.getString(SMTablecompanyprofile.sZipCode)).trim();
+					String sCityStateZip = "";
+					if(sCity.compareToIgnoreCase("") != 0){
+						sCityStateZip = sCity;
+					}
+					if(sState.compareToIgnoreCase("") != 0){
+						sCityStateZip = sCityStateZip + ", " + sState;
+					}
+					if(sZip.compareToIgnoreCase("") != 0){
+						sCityStateZip = sCityStateZip + " " + sZip;
+					}
+					if(sCityStateZip.compareToIgnoreCase("") !=0){
+						pwOut.println(sCityStateZip);
+					}
 
-				for (int i = LineCounter; i<5;i++){
-					pwOut.println("<BR>");
+					for (int i = LineCounter; i<5;i++){
+						pwOut.println("<BR>");
+					}
 				}
+				rsCompanyProfile.close();
+
+			}catch(SQLException e){
+				throw new Exception("Error reading company/customer information - " + e.getMessage());
 			}
-			rsCompanyProfile.close();
+		}else {
+			String SQL = "SELECT * "
+					+ "FROM " + SMTabledoingbusinessasaddresses.TableName 
+					+ " WHERE " +SMTabledoingbusinessasaddresses.TableName + "." + SMTabledoingbusinessasaddresses.lid + " = " + Integer.parseInt(sChoice);
+			try{
+				ResultSet rsDBA = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if(rsDBA.next()){
+					String sAddress = processStringForNull(
+							rsDBA.getString(SMTabledoingbusinessasaddresses.mRemitToAddress)).trim();
+					if(sAddress.compareToIgnoreCase("") !=0){
+						sAddress=sAddress.replaceAll("</div>", "<br>");
+						sAddress=sAddress.replaceAll("<(?!br\\s*\\/?)[^>]+>", "");
+						pwOut.println(sAddress + "<BR>");
+					}
+						pwOut.println("<BR>");
+				} 
+				rsDBA.close();
 
-		}catch(SQLException e){
-			throw new Exception("Error reading company/customer information - " + e.getMessage());
+			}catch(SQLException e){
+				throw new Exception("Error reading company/customer information - " + e.getMessage());
+			}
 		}
-
 		//End the REMIT TO table:
 
 		return;
@@ -674,7 +711,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditLimit)
 				+ "<BR>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 						bdCreditAvailable)
-						+ "</FONT></TD>");
+				+ "</FONT></TD>");
 
 		out.println("<TD ALIGN=RIGHT VALIGN=TOP WIDTH=21%><B><FONT SIZE=2>TOTAL:</FONT></B></TD>");
 		out.println("<TD ALIGN=RIGHT VALIGN=TOP WIDTH=12%><FONT SIZE=2>" 
@@ -735,7 +772,7 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			boolean bIncludeZeroBalanceStatements,
 			boolean bPrintOnlyRequireStatement,
 			String sTempTableName
-	) throws Exception{
+			) throws Exception{
 
 		String SQL;
 
@@ -756,36 +793,36 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				SQL = SQL + " TEMPORARY";
 			}
 			SQL = SQL + " TABLE " + sTempTableName + " ("
-				+ "scustomer varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
-				+ "scustomername varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
-				+ "ldocid int(11) NOT NULL default '0',"
-				+ "idoctype int(11) NOT NULL default '0',"
-				+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
-				+ "datapplytodate datetime NOT NULL default '0000-00-00 00:00:00'," //Date of the apply-to trans
-				+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
-				+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "sordernumber varchar(22) NOT NULL default '',"
-				+ "ssource varchar(7) NOT NULL default '',"
-				+ "lappliedto int(11) NOT NULL default '0',"
-				+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
-				+ "dagingcolumncurrent decimal(17,2) NOT NULL default '0.00',"
-				+ "dagingcolumnfirst decimal(17,2) NOT NULL default '0.00',"
-				+ "dagingcolumnsecond decimal(17,2) NOT NULL default '0.00',"
-				+ "dagingcolumnthird decimal(17,2) NOT NULL default '0.00',"
-				+ "dagingcolumnover decimal(17,2) NOT NULL default '0.00',"
-				+ "dcreditlimit decimal(17,2) NOT NULL default '0.00',"
-				+ "dbalance decimal(17,2) NOT NULL default '0.00',"
-				+ "dretainagebalance decimal(17,2) NOT NULL default '0.00',"
-				+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
-				+ "lparenttransactionid int(11) NOT NULL default '0'"
-				//+ ", KEY customerkey (scustomer)"
-				//+ ", KEY appliedtokey (lappliedto)"
-				//+ ", KEY docnumberkey (sdocnumber)"
-				//+ ", KEY parenttransactionkey (lparenttransactionid)"
-			+ ") " //ENGINE = MyISAM"
-			;
+					+ "scustomer varchar(" + SMTablearcustomer.sCustomerNumberLength + ") NOT NULL default '',"
+					+ "scustomername varchar(" + SMTablearcustomer.sCustomerNameLength + ") NOT NULL default '',"
+					+ "ldocid int(11) NOT NULL default '0',"
+					+ "idoctype int(11) NOT NULL default '0',"
+					+ "sdocnumber varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+					+ "datdocdate datetime NOT NULL default '0000-00-00 00:00:00',"
+					+ "datduedate datetime NOT NULL default '0000-00-00 00:00:00',"
+					+ "datapplytodate datetime NOT NULL default '0000-00-00 00:00:00'," //Date of the apply-to trans
+					+ "doriginalamt decimal(17,2) NOT NULL default '0.00',"
+					+ "dcurrentamt decimal(17,2) NOT NULL default '0.00',"
+					+ "sordernumber varchar(22) NOT NULL default '',"
+					+ "ssource varchar(7) NOT NULL default '',"
+					+ "lappliedto int(11) NOT NULL default '0',"
+					+ "sdocappliedto varchar(" + SMTableartransactions.sdocnumberlength + ") NOT NULL default '',"
+					+ "dagingcolumncurrent decimal(17,2) NOT NULL default '0.00',"
+					+ "dagingcolumnfirst decimal(17,2) NOT NULL default '0.00',"
+					+ "dagingcolumnsecond decimal(17,2) NOT NULL default '0.00',"
+					+ "dagingcolumnthird decimal(17,2) NOT NULL default '0.00',"
+					+ "dagingcolumnover decimal(17,2) NOT NULL default '0.00',"
+					+ "dcreditlimit decimal(17,2) NOT NULL default '0.00',"
+					+ "dbalance decimal(17,2) NOT NULL default '0.00',"
+					+ "dretainagebalance decimal(17,2) NOT NULL default '0.00',"
+					+ "dapplytodoccurrentamt decimal(17,2) NOT NULL default '0.00',"
+					+ "lparenttransactionid int(11) NOT NULL default '0'"
+					//+ ", KEY customerkey (scustomer)"
+					//+ ", KEY appliedtokey (lappliedto)"
+					//+ ", KEY docnumberkey (sdocnumber)"
+					//+ ", KEY parenttransactionkey (lparenttransactionid)"
+					+ ") " //ENGINE = MyISAM"
+					;
 
 
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
@@ -794,31 +831,31 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			}
 			//Insert the transactions:
 			SQL = "INSERT INTO " + sTempTableName + " ("
-				+ "scustomer,"
-				+ " ldocid,"
-				+ " idoctype,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " datapplytodate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " sordernumber,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " scustomername,"
-				+ " dcreditlimit,"
-				+ " dbalance"
-				+ ") SELECT"
-				+ " " + SMTableartransactions.spayeepayor
-				+ ", " + SMTableartransactions.lid
-				+ ", " + SMTableartransactions.idoctype
-				+ ", " + SMTableartransactions.sdocnumber
-				+ ", " + SMTableartransactions.datdocdate
-				+ ", " + SMTableartransactions.datduedate;
+					+ "scustomer,"
+					+ " ldocid,"
+					+ " idoctype,"
+					+ " sdocnumber,"
+					+ " datdocdate,"
+					+ " datduedate,"
+					+ " datapplytodate,"
+					+ " doriginalamt,"
+					+ " dcurrentamt,"
+					+ " sordernumber,"
+					+ " ssource,"
+					+ " lappliedto,"
+					+ " sdocappliedto,"
+					+ " dapplytodoccurrentamt,"
+					+ " lparenttransactionid,"
+					+ " scustomername,"
+					+ " dcreditlimit,"
+					+ " dbalance"
+					+ ") SELECT"
+					+ " " + SMTableartransactions.spayeepayor
+					+ ", " + SMTableartransactions.lid
+					+ ", " + SMTableartransactions.idoctype
+					+ ", " + SMTableartransactions.sdocnumber
+					+ ", " + SMTableartransactions.datdocdate
+					+ ", " + SMTableartransactions.datduedate;
 
 			//sAgedBy: '0' is 'Due Date', '1' is 'Doc date'
 			if(sAgedBy.compareToIgnoreCase("1") == 0){
@@ -827,54 +864,54 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				SQL = SQL + ", " + SMTableartransactions.datduedate;
 			}
 			SQL = SQL + ", " + SMTableartransactions.doriginalamt
-			+ ", " + SMTableartransactions.dcurrentamt
-			+ ", " + SMTableartransactions.sordernumber
-			+ ", 'CONTROL'"
-			+ ", " + SMTableartransactions.lid
-			+ ", " + SMTableartransactions.sdocnumber
-			+ ", " + SMTableartransactions.dcurrentamt
-			+ ", " + SMTableartransactions.lid
-			+ ", " + SMTablearcustomer.sCustomerName
-			+ ", " + SMTablearcustomer.dCreditLimit
-			+ ", " + SMTablearcustomerstatistics.sCurrentBalance
-			+ " FROM " + SMTableartransactions.TableName + ", " 
-			+ SMTablearcustomer.TableName + ", " + SMTablearcustomerstatistics.TableName
-			+ " WHERE ("
-			+ "(" + SMTableartransactions.spayeepayor + ">='" + sStartingCustomer + "')"
-			+ " AND (" + SMTableartransactions.spayeepayor + "<='" + sEndingCustomer + "')";
+					+ ", " + SMTableartransactions.dcurrentamt
+					+ ", " + SMTableartransactions.sordernumber
+					+ ", 'CONTROL'"
+					+ ", " + SMTableartransactions.lid
+					+ ", " + SMTableartransactions.sdocnumber
+					+ ", " + SMTableartransactions.dcurrentamt
+					+ ", " + SMTableartransactions.lid
+					+ ", " + SMTablearcustomer.sCustomerName
+					+ ", " + SMTablearcustomer.dCreditLimit
+					+ ", " + SMTablearcustomerstatistics.sCurrentBalance
+					+ " FROM " + SMTableartransactions.TableName + ", " 
+					+ SMTablearcustomer.TableName + ", " + SMTablearcustomerstatistics.TableName
+					+ " WHERE ("
+					+ "(" + SMTableartransactions.spayeepayor + ">='" + sStartingCustomer + "')"
+					+ " AND (" + SMTableartransactions.spayeepayor + "<='" + sEndingCustomer + "')";
 
 			//If the user chose to print ONLY customers over the current date, qualify that here:
 			if (bPrintOnlyOverCurrent){
 				SQL = SQL + " AND ((TO_DAYS('" + sAgedAsOfDate + "') - TO_DAYS(";
 				if(sAgedBy.compareToIgnoreCase("1") == 0){
 					SQL = SQL + SMTableartransactions.TableName + "." 
-					+ SMTableartransactions.datdocdate;
+							+ SMTableartransactions.datdocdate;
 				}else{
 					SQL = SQL + SMTableartransactions.TableName + "." 
-					+ SMTableartransactions.datduedate;
+							+ SMTableartransactions.datduedate;
 				}
 
 				SQL += ")) > " + sCurrentAgingColumn + ")"
-				;
+						;
 			}
-			
+
 			//If the user chose to print ONLY customers require monthly statement, qualify that here:
 			if (bPrintOnlyRequireStatement){
 				SQL = SQL + " AND (" + SMTablearcustomer.TableName +"." + SMTablearcustomer.irequiresstatements + " = 1)";
 			}
-			
+
 			// Not using retainage as a filter on statements:
 			//if(sRetainageFlag.compareToIgnoreCase("") != 0){
 			//	SQL = SQL + " AND (" + SMTableartransactions.iretainage + "=" + sRetainageFlag + ")";
 			//}
 			SQL = SQL + " AND (" + SMTableartransactions.datdocdate + "<='" + sCutOffDate + " 23:59:59')"
-			+ " AND (" + SMTableartransactions.spayeepayor + " = " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ")"
-			+ " AND (" + SMTableartransactions.spayeepayor + " = " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber + ")";
+					+ " AND (" + SMTableartransactions.spayeepayor + " = " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ")"
+					+ " AND (" + SMTableartransactions.spayeepayor + " = " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber + ")";
 
 			//Not including paid transactions:
 			SQL = SQL + " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)";
 			SQL = SQL + ")"
-			; 			
+					; 			
 
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				throw new Exception("Error inserting transactions into aging table");
@@ -882,23 +919,23 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			//Insert the matching lines:
 			SQL = "INSERT INTO " + sTempTableName + " ("
-				+ "scustomer,"
-				+ " ldocid,"
-				+ " sdocnumber,"
-				+ " datdocdate,"
-				+ " datduedate,"
-				+ " datapplytodate,"
-				+ " doriginalamt,"
-				+ " dcurrentamt,"
-				+ " sordernumber,"
-				+ " ssource,"
-				+ " lappliedto,"
-				+ " sdocappliedto,"
-				+ " dapplytodoccurrentamt,"
-				+ " lparenttransactionid,"
-				+ " scustomername,"
-				+ " dcreditlimit,"
-				+ " dbalance"
+					+ "scustomer,"
+					+ " ldocid,"
+					+ " sdocnumber,"
+					+ " datdocdate,"
+					+ " datduedate,"
+					+ " datapplytodate,"
+					+ " doriginalamt,"
+					+ " dcurrentamt,"
+					+ " sordernumber,"
+					+ " ssource,"
+					+ " lappliedto,"
+					+ " sdocappliedto,"
+					+ " dapplytodoccurrentamt,"
+					+ " lparenttransactionid,"
+					+ " scustomername,"
+					+ " dcreditlimit,"
+					+ " dbalance"
 
 				+ ") SELECT"
 				+ " " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor
@@ -914,31 +951,31 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 			}
 			//Applied amounts have the same sign as the apply-to amount, and so they must be negated:
 			SQL = SQL + ", -1 * " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount
-			+ ", -1 * " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount
-			+ ", ''"
-			+ ", 'DIST'"
-			+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid
-			+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sapplytodoc
-			+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.dcurrentamt
-			+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid
-			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName
-			+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit
-			+ ", " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCurrentBalance
-			+ " FROM " + SMTablearmatchingline.TableName 
-			+ ", " + SMTableartransactions.TableName
-			+ ", " + SMTablearcustomer.TableName
-			+ ", " + SMTablearcustomerstatistics.TableName
-			+ " WHERE ("
-			+ "(" + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + ">='" 
-			+ sStartingCustomer + "')"
-			+ " AND (" + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + "<='" 
-			+ sEndingCustomer + "')";
+					+ ", -1 * " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.damount
+					+ ", ''"
+					+ ", 'DIST'"
+					+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid
+					+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.sapplytodoc
+					+ ", " + SMTableartransactions.TableName + "." + SMTableartransactions.dcurrentamt
+					+ ", " + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.lparenttransactionid
+					+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName
+					+ ", " + SMTablearcustomer.TableName + "." + SMTablearcustomer.dCreditLimit
+					+ ", " + SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCurrentBalance
+					+ " FROM " + SMTablearmatchingline.TableName 
+					+ ", " + SMTableartransactions.TableName
+					+ ", " + SMTablearcustomer.TableName
+					+ ", " + SMTablearcustomerstatistics.TableName
+					+ " WHERE ("
+					+ "(" + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + ">='" 
+					+ sStartingCustomer + "')"
+					+ " AND (" + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + "<='" 
+					+ sEndingCustomer + "')";
 			//Ignoring retainage here:
 			//if(sRetainageFlag.compareToIgnoreCase("") != 0){
 			//	SQL = SQL + " AND (" + SMTableartransactions.TableName + "." 
 			//	+ SMTableartransactions.iretainage + "=" + sRetainageFlag + ")";
 			//}
-			
+
 			//If the user chose to print ONLY customers require monthly statement, qualify that here:
 			if (bPrintOnlyRequireStatement){
 				SQL = SQL + " AND (" + SMTablearcustomer.TableName +"." + SMTablearcustomer.irequiresstatements + " = 1)";
@@ -946,15 +983,15 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 
 			SQL = SQL + " AND (" + SMTablearmatchingline.dattransactiondate + "<='" + sCutOffDate + " 23:59:59')"
 
-			//Link the tables:
-			+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid + "="
-			+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
-			+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor + "="
-			+ SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ")"
-			+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor + "="
-			+ SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber + ")"
-			+ ")"
-			;
+					//Link the tables:
+					+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.ldocappliedtoid + "="
+					+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
+					+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor + "="
+					+ SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ")"
+					+ " AND (" + SMTablearmatchingline.TableName + "." + SMTablearmatchingline.spayeepayor + "="
+					+ SMTablearcustomerstatistics.TableName + "." + SMTablearcustomerstatistics.sCustomerNumber + ")"
+					+ ")"
+					;
 
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error inserting distribution lines into aging table");
@@ -966,10 +1003,10 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 					+ " SET " + sTempTableName + ".idoctype = " 
 					+ SMTableartransactions.TableName + "." + SMTableartransactions.idoctype
 					+ " WHERE ("
-						+ "(" + sTempTableName + ".ssource = 'DIST')"
-						//Link the tables:
-						+ " AND (" + sTempTableName + ".lparenttransactionid = "
-							+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
+					+ "(" + sTempTableName + ".ssource = 'DIST')"
+					//Link the tables:
+					+ " AND (" + sTempTableName + ".lparenttransactionid = "
+					+ SMTableartransactions.TableName + "." + SMTableartransactions.lid + ")"
 					+ ")";
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				//System.out.println("Error updating parent document types into aging table");
@@ -998,27 +1035,27 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 		if (bIncludeZeroBalanceStatements){
 			//First, get a list of customers that are in the range, but have no transactions OR a zero-balance:
 			SQL = "SELECT"
-				+ " DISTINCT " + SMTablearcustomer.sCustomerNumber
-				+ " FROM " + SMTablearcustomer.TableName + " LEFT JOIN " + sTempTableName + " ON"
-				+ " " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + " ="
-				+ " " + sTempTableName + ".scustomer"
-				+ " WHERE ("
+					+ " DISTINCT " + SMTablearcustomer.sCustomerNumber
+					+ " FROM " + SMTablearcustomer.TableName + " LEFT JOIN " + sTempTableName + " ON"
+					+ " " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + " ="
+					+ " " + sTempTableName + ".scustomer"
+					+ " WHERE ("
 					+ "("
-						+ "(" + sTempTableName + ".scustomer IS NULL)"
-						+ " OR (" + sTempTableName + ".dbalance = 0.00)"  
+					+ "(" + sTempTableName + ".scustomer IS NULL)"
+					+ " OR (" + sTempTableName + ".dbalance = 0.00)"  
 					+ ")"
-				+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ">='" 
-				+ sStartingCustomer + "')"
-				+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + "<='" 
-				+ sEndingCustomer + "')";
+					+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + ">='" 
+					+ sStartingCustomer + "')"
+					+ " AND (" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber + "<='" 
+					+ sEndingCustomer + "')";
 
-				//If the user chose to print ONLY customers require monthly statement, qualify that here:
-				if (bPrintOnlyRequireStatement){
-					SQL = SQL + " AND " + SMTablearcustomer.TableName +"." + SMTablearcustomer.irequiresstatements + " = 1";
-				}
-				
-				SQL += ")";
-				
+			//If the user chose to print ONLY customers require monthly statement, qualify that here:
+			if (bPrintOnlyRequireStatement){
+				SQL = SQL + " AND " + SMTablearcustomer.TableName +"." + SMTablearcustomer.irequiresstatements + " = 1";
+			}
+
+			SQL += ")";
+
 			ArrayList <String>arrZeroBalanceCustomers = new ArrayList<String>(0);
 			try {
 				ResultSet rsNulls = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -1036,23 +1073,23 @@ public class ARPrintStatementsGenerate extends HttpServlet {
 				//		+ ".createTemporaryTables - arrZeroCust.get(" + i + ") = " 
 				//		+ arrZeroBalanceCustomers.get(i));
 				SQL = "INSERT INTO " + sTempTableName + "("
-					+ "scustomer,"
-					+ " ldocid,"
-					+ " sdocnumber,"
-					+ " datdocdate,"
-					+ " datduedate,"
-					+ " datapplytodate,"
-					+ " doriginalamt,"
-					+ " dcurrentamt,"
-					+ " sordernumber,"
-					+ " ssource,"
-					+ " lappliedto,"
-					+ " sdocappliedto,"
-					+ " dapplytodoccurrentamt,"
-					+ " lparenttransactionid,"
-					+ " scustomername,"
-					+ " dcreditlimit,"
-					+ " dbalance"
+						+ "scustomer,"
+						+ " ldocid,"
+						+ " sdocnumber,"
+						+ " datdocdate,"
+						+ " datduedate,"
+						+ " datapplytodate,"
+						+ " doriginalamt,"
+						+ " dcurrentamt,"
+						+ " sordernumber,"
+						+ " ssource,"
+						+ " lappliedto,"
+						+ " sdocappliedto,"
+						+ " dapplytodoccurrentamt,"
+						+ " lparenttransactionid,"
+						+ " scustomername,"
+						+ " dcreditlimit,"
+						+ " dbalance"
 
 					+ ") SELECT"
 					+ " " + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerNumber

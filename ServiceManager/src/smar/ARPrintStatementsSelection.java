@@ -17,6 +17,7 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablearcustomer;
+import SMDataDefinition.SMTabledoingbusinessasaddresses;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -26,6 +27,10 @@ import ServletUtilities.clsServletUtilities;
 public class ARPrintStatementsSelection  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	public static final String DBA_INPUT = "DBA_INPUT";
+	public static final String DBA_DEFAULT = "DBA_DEFAULT";
+	public static final String DBA_CHOOSE = "DBA_CHOOSE";
+	public static final String DBA_CHOICE = "DBA_CHOICE";
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -227,8 +232,47 @@ public class ARPrintStatementsSelection  extends HttpServlet {
 		    out.println("</TABLE>");
 		    out.println("</TD></TR>");
 		    
+		    //TODO make the dropdown and radial buttons here for Remit-To as choice. Default to the system's setting and create a dropdown list to choose from 
+		    out.println("<TR><TD ALIGN CENTER WIDTH = 100%>");
+		    out.println("<TABLE BORDER=0 WIDTH=100%>");
+		    sSQL = "SELECT * " +
+		    		" FROM " + SMTabledoingbusinessasaddresses.TableName
+		    		+ " ORDER BY " + SMTabledoingbusinessasaddresses.TableName + "." +SMTabledoingbusinessasaddresses.sDescription + " DESC" ;
+		    ResultSet rsDBA = clsDatabaseFunctions.openResultSet(
+		    		sSQL, 
+		    		getServletContext(), 
+		    		sDBID,
+		    		"MySQL",
+		    		this.toString() + ".doPost (2) - User: " + sUserID
+		    		+ " - "
+		    		+ sUserFullName
+	    			);
+	    	ArrayList <String> saDBAName = new ArrayList<String>();
+	    	ArrayList <String> saDBAID = new ArrayList<String>();
+	    	while (rsDBA.next()){
+	    		if(rsDBA.getString(SMTabledoingbusinessasaddresses.sDescription).compareToIgnoreCase("")!=0 || rsDBA.getString(SMTabledoingbusinessasaddresses.sDescription)!=null) {
+	    			saDBAName.add(rsDBA.getString(SMTabledoingbusinessasaddresses.sDescription));
+	    			saDBAID.add(rsDBA.getString(SMTabledoingbusinessasaddresses.lid));
+	    		}
+	    	}
+	    	rsDBA.close();
+		    out.println("<TR><TD><B>"
+		    		+ "Use Remit-to address from : "
+		    		+ "&nbsp; </B>"
+		    		+ "<INPUT TYPE=\"RADIO\" NAME=\"" + DBA_INPUT + "\" VALUE=\"" + DBA_DEFAULT + "\" ID=\"" +DBA_DEFAULT + "\" CHECKED><LABEL FOR=\""  + DBA_DEFAULT + "\"> Company Profile <B>OR</B>  &nbsp;</LABEL>"
+		    		+ "<INPUT TYPE=\"RADIO\" NAME=\"" + DBA_INPUT + "\" VALUE=\"" + DBA_CHOOSE + "\" ID=\"" + DBA_CHOOSE + "\"><LABEL FOR=\"" + DBA_CHOOSE + "\"> Selected DBA &nbsp;</LABEL>"
+		    		+ "");
+		    out.println("<SELECT NAME=\"" + DBA_CHOICE + "\">");
+		    for(int i = 0; i < saDBAName.size(); i ++) {
+		    	out.println("\t<OPTION VALUE =\"" + saDBAID.get(i) + "\">" + saDBAName.get(i) +"</OPTION>");
+		    }
+		    out.println("</SELECT>");
+		    out.println( "</TD></TR>");
+		    out.println("</TABLE>");
+		    out.println("</TD></TR>");
+		    
 		    //		  document types to show
-		    out.println("<TR><TD><TABLE AIDTH=100% BORDER=0>");
+		    out.println("<TR><TD><TABLE WIDTH=100% BORDER=0>");
 		    out.println("<TR>" +
 							"<TD ALIGN=LEFT WIDTH=15%><B>Document Types: <BR>");
 		    if (!bSelectAllTypes){

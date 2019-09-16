@@ -454,16 +454,15 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	        if (!ord.load(conn)){
 	        	sErrors += "Could not load order number '" + m_strimmedordernumber + "' - " + ord.getErrorMessages() + ".  ";
 	        }
-        }
+        }else {
+        	sErrors += "Order Number is required";
+        }	
         
         m_datdatesent = m_datdatesent.trim();
         if (m_datdatesent.compareToIgnoreCase("") == 0){
         	m_datdatesent = EMPTY_DATE_STRING;
         }
-        //date sent required
-        if(m_datdatesent.compareToIgnoreCase(EMPTY_DATE_STRING) == 0){
-        	sErrors += "Date sent is required.  ";
-        }
+
         if (m_datdatesent.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
         	if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datdatesent)){
         		sErrors += "Date sent is invalid: '" + m_datdatesent + "'.  ";

@@ -169,7 +169,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		;
 		
 		//Category:
-		s += "<TR><TD ALIGN=RIGHT><B>Category<B>:</TD>"
+		s += "<TR><TD ALIGN=RIGHT><B>Category<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
 			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscategorycode + "\""
 			+ " ID =\"" + SMLaborBackCharge.Paramscategorycode + "\""
 			+ " ONCHANGE = \"flagDirty();\""
@@ -290,7 +290,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		//Trimmed order number:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Order number:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Order number:<FONT COLOR=\"RED\">*</FONT>"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramstrimmedordernumber + "\""
 			+ " VALUE=\"" + entry.getstrimmedordernumber().replace("\"", "&quot;") + "\""
 			+ " ONCHANGE = \"flagDirty();\""
@@ -301,23 +301,22 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		;
 		
 		//Customer Name:
-		if(entry.getscustomername().compareToIgnoreCase("") == 0 
-				&& entry.getlid().compareToIgnoreCase("-1") == 0){ 
-			SMOrderHeader orderhead = new SMOrderHeader();
-			orderhead.setM_strimmedordernumber(entry.getstrimmedordernumber());
-			orderhead.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getFullUserName());
-			entry.setscustomername(orderhead.getM_sBillToName());
+		if(!((entry.getstrimmedordernumber().compareToIgnoreCase("")) == 0) 
+				&& !(entry.getstrimmedordernumber().compareToIgnoreCase("-1") == 0)){ 
+		SMOrderHeader orderhead = new SMOrderHeader();
+		orderhead.setM_strimmedordernumber(entry.getstrimmedordernumber());
+		orderhead.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getFullUserName());
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Bill-to Name:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT>"
+			+ " " + orderhead.getM_sBillToName().replace("\"", "&quot;") + "</TD>"
+			+ "</TR>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Ship-to Name:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT>"
+			+ " " + orderhead.getM_sShipToName().replace("\"", "&quot;") + "</TD>"
+			+ "</TR>";
 		}
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Customer Name:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramscustomername + "\""
-			+ " VALUE=\"" + entry.getscustomername().replace("\"", "&quot;") + "\""
-			+ " ONCHANGE = \"flagDirty();\""
-			+ " SIZE=" + "30"
-			+ " MAXLENGTH=" + Integer.toString(SMTablelaborbackcharges.sscustomernamelength)
-			+ "></TD>"
-			+ "</TR>"
-		;
-
+		//TODO change above to Bill to and below add Ship-to make non-editable 
+		
 		//Description:
 		s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Description:</B>"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><TEXTAREA NAME=\"" + SMLaborBackCharge.Paramsdescription + "\""
@@ -414,7 +413,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 
 	
 		//Credit Note Date:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Date of Credit Memo:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Date of Credit Memo:<FONT COLOR=\"RED\">*</FONT>"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramdatcreditnotedate + "\""
 			+ " VALUE=\"" + entry.getdatcreditnotedate().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMLaborBackCharge.Paramdatcreditnotedate + "\""
@@ -460,6 +459,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ "<sup>2</sup>"
 			+ " 'Outstanding Credit' </B> "
 			+ "When the outstanding credit does not equal to <B>0</B> it means the labor back charge is <B>OPEN</B>"
+			+ "<BR><FONT COLOR=\"RED\"><B>*</B> Required Fields</FONT>"
 				;
 		
 		return s;

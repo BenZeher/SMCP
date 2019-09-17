@@ -1764,6 +1764,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 
 					//Add a GL entry here:
 					if (export != null){
+						String sGLSourceTransactionID = sPayeePayor + "," + sPrepayDocNumber;
 						export.addHeader(
 								super.sModuleType(), 
 								ARDocumentTypes.getSourceTypes(ARDocumentTypes.PREPAYMENT),
@@ -1772,7 +1773,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 								sStdBatchDateString(),
 								sStdBatchDateString(),
 								buildGLTransactionEntryDescription(ARDocumentTypes.PREPAYMENT),
-								"0"
+								sGLSourceTransactionID
 						);
 					}
 
@@ -2274,6 +2275,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 					return false;
 				}
 
+				String sGLSourceTransactionID = entry.sCustomerNumber() + "," + entry.sDocNumber();
 				export.addHeader(
 						super.sModuleType(), 
 						ARDocumentTypes.getSourceTypes(entry.getDocumentType()),
@@ -2282,7 +2284,7 @@ private GLTransactionBatch createGLTransactionBatch(Connection conn, String sUse
 						entry.sStdDocDate(),
 						sStdBatchDateString(),
 						buildGLTransactionEntryDescription(entry.getDocumentType()),
-						"0"
+						sGLSourceTransactionID
 				);
 
 				//First, add the entry itself as a GL transaction:

@@ -135,7 +135,7 @@ public class ARSelectForActivityReport  extends HttpServlet {
 	    	//out.println("<TD>" + "<B>Starting with:</B> <BR>" + ARUtilities.TDDateSelection("StartingTranDate", new Date(System.currentTimeMillis()), "") + "</TD>");
 	    	
 	    	out.println(
-	    			"<TD>" + "<B>Starting with:</B> <BR>"
+	    			"<TD>" + "<B>Starting with:</B>"
 	    			+ "<INPUT TYPE=TEXT NAME=\"" + "StartingTranDate" + "\""
 	    			+ " VALUE=\"" + clsDateAndTimeConversions.now("MM/dd/yyyy") + "\""
 	    	        + " SIZE=12"

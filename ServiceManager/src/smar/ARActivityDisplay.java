@@ -150,6 +150,7 @@ public class ARActivityDisplay extends HttpServlet {
 			}
 		    
 			String sOrderNumber = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParamsOrderNumber, request);
+			String sDocNumber = clsManageRequestParameters.get_Request_Parameter(SMTableartransactions.sdocnumber, request);
 			
 		    String title = "Customer activity.";
 		    String subtitle = cust.getM_sCustomerNumber() + " - " + cust.getM_sCustomerName();
@@ -172,8 +173,6 @@ public class ARActivityDisplay extends HttpServlet {
 		    		alDocTypes.add(i);
 		    	}
 		    }
-		    
-		    
 		    
 		    out.println("<TABLE BORDER=0><TR><TD WIDTH=60%>");
 			    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -241,6 +240,10 @@ public class ARActivityDisplay extends HttpServlet {
 		    	out.println("<B>ONLY SHOWING TRANSACTIONS WITH ORDER NUMBER '" + sOrderNumber + "'.<BR>");
 		    }
 		    
+		    if (sDocNumber.compareToIgnoreCase("") != 0){
+		    	out.println("<B>ONLY SHOWING DOCUMENT NUMBER '" + sDocNumber + "'.<BR>");
+		    }
+		    
 		    out.println(
 		    	"Starting with document date <B>" + request.getParameter("StartingDate") + "</B> and ending with document date <B>" 
 		    	+ request.getParameter("EndingDate")
@@ -298,6 +301,13 @@ public class ARActivityDisplay extends HttpServlet {
 	    					sSQL += " AND (" + SMTableartransactions.TableName + "." 
 	    					+ SMTableartransactions.sordernumber + " = '" + sOrderNumber + "')";
 	    				}
+	    				
+	    				//If we are filtering on the document number:
+	    				if (sOrderNumber.compareToIgnoreCase("") != 0){
+	    					sSQL += " AND (" + SMTableartransactions.TableName + "." 
+	    					+ SMTableartransactions.sdocnumber + " = '" + sDocNumber + "')";
+	    				}
+	    				
 	    				
 	    			sSQL += ")"
 	    			+ " ORDER BY " 

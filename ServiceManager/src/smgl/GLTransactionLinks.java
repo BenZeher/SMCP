@@ -3,6 +3,7 @@ package smgl;
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableartransactions;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionLinks {
@@ -36,7 +37,14 @@ public class GLTransactionLinks {
 				sAdditionalParameters = "&" + SMTableaptransactions.lid + "=" + sSubledgerTransactionID;
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_AR:
-				sSubledgerLinkClass = "";
+				sSubledgerLinkClass = "smar.ARActivityDisplay";
+				String sAcctDocConcatenation[] = sSubledgerTransactionID.split(",");
+				sAdditionalParameters = 
+					"&" + "CustomerNumber" + "=" + ServletUtilities.clsServletUtilities.URLEncode(sAcctDocConcatenation[0])
+					+ "&" + "StartingDate=1/1/1990"
+					+ "&" + "EndingDate=12/31/2099"
+					+ "&" + "OrderBy=datdocdate"
+					+ "&" + SMTableartransactions.sdocnumber + "=" + ServletUtilities.clsServletUtilities.URLEncode(sAcctDocConcatenation[1]);
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_FA:
 				sSubledgerLinkClass = "";

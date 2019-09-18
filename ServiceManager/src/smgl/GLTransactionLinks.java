@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableartransactions;
+import smar.ARDocumentTypes;
 import smcontrolpanel.SMUtilities;
 
 public class GLTransactionLinks {
@@ -45,6 +46,10 @@ public class GLTransactionLinks {
 					+ "&" + "EndingDate=12/31/2099"
 					+ "&" + "OrderBy=datdocdate"
 					+ "&" + SMTableartransactions.sdocnumber + "=" + ServletUtilities.clsServletUtilities.URLEncode(sAcctDocConcatenation[1]);
+				// The ARActivityDisplay class needs any possible document types passed in as well:
+				for (int i = 0; i < ARDocumentTypes.NUMBER_OF_AR_DOCUMENT_TYPES; i++){
+					sAdditionalParameters += "&" + ARDocumentTypes.Get_Document_Type_Label(i) + "=Y";
+				}
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_FA:
 				sSubledgerLinkClass = "";

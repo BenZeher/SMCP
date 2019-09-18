@@ -17,6 +17,7 @@ import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smap.APVendor;
 
 public class SMLaborBackChargeEdit  extends HttpServlet {
 
@@ -300,7 +301,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		
-		//Customer Name:
+		//Bill-to/Ship-to:
 		if(!((entry.getstrimmedordernumber().compareToIgnoreCase("")) == 0) 
 				&& !(entry.getstrimmedordernumber().compareToIgnoreCase("-1") == 0)){ 
 		SMOrderHeader orderhead = new SMOrderHeader();
@@ -315,7 +316,18 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ " " + orderhead.getM_sShipToName().replace("\"", "&quot;") + "</TD>"
 			+ "</TR>";
 		}
-		//TODO change above to Bill to and below add Ship-to make non-editable 
+		
+		// Vendor Back-Charge Notes
+		if(entry.getsvendor().compareToIgnoreCase("")!=0 || entry.getsvendor().compareToIgnoreCase(null)!=0) {
+			APVendor vendor = new APVendor();
+			vendor.setsvendoracct(entry.getsvendor());
+			vendor.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getUserName());
+			s += "<TR><TD ALIGN=RIGHT><B>" + "Back Charge Vendor Notes:"  + " </B></TD>";
+			s += "<TD ALIGN=LEFT>"
+				+ " " + vendor.getmbackchargememo().replace("\"", "&quot;") + "</TD>"
+				+ "</TR>";
+		}
+		
 		
 		//Description:
 		s += "<TR><TD ALIGN=RIGHT><B>" + "<B>Description:</B>"  + " </B></TD>";

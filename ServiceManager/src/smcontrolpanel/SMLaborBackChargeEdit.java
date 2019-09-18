@@ -225,7 +225,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
  		;
 		
 		//Vendor:
-		s += "<TR><TD ALIGN=RIGHT><B>Vendor<B>:</TD>"
+		s += "<TR><TD ALIGN=RIGHT><B>Vendor<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
 			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramsvendoracct + "\""
 			+ " ID =\"" + SMLaborBackCharge.Paramsvendoracct + "\""
 			+ " ONCHANGE = \"flagDirty();\""

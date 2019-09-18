@@ -300,7 +300,7 @@ public class ARCreateEntryForm {
 
         //Entry amount:
 		//If it's a reversal, the amount CANNOT be edited, because we need to reverse the full amount:
-		pwOut.println("<TD>");
+		pwOut.println("<TD ALIGN=\"RIGHT\">");
 		if (entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.REVERSAL_STRING)){
 			pwOut.println("Entry&nbsp;amt:&nbsp;" + entryInput.getsOriginalAmount());
 		}else{
@@ -495,7 +495,7 @@ public class ARCreateEntryForm {
         }
         
         //Display the out-of-balance amount:
-        pwOut.println("<TD>");
+        pwOut.println("<TD ALIGN=\"RIGHT\">");
         pwOut.println("Out&nbsp;of&nbsp;Balance:");
         pwOut.println(entryInput.getsUndistributedAmount());
         pwOut.println("</TD>");
@@ -1124,15 +1124,15 @@ public class ARCreateEntryForm {
 				}
 				pwOut.println("</TD>");
 				//Original amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println(sOriginalAmount);
 				pwOut.println("</TD>");
 				//Current amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println(sCurrentAmount);
 				pwOut.println("</TD>");
 				//Net amount
-				pwOut.println("<TD ALIGN=RIGHT>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println(sNetAmount);
 				pwOut.println("</TD>");
 			}
@@ -1172,7 +1172,7 @@ public class ARCreateEntryForm {
 	        pwOut.println("</TD>");
             
         	//Amount:
-	        pwOut.println("<TD ALIGN = RIGHT>");
+	        pwOut.println("<TD ALIGN =\"RIGHT\">");
         	if(entryInput.getsDocumentType().equalsIgnoreCase(ARDocumentTypes.RETAINAGE_STRING)){
             	pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" 
             			+ ARLineInput.ParamLineAmt 
@@ -1309,15 +1309,15 @@ public class ARCreateEntryForm {
 				pwOut.println("&nbsp;");
 				pwOut.println("</TD>");
 				//Original amount
-				pwOut.println("<TD>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println("&nbsp;");
 				pwOut.println("</TD>");
 				//Current amount
-				pwOut.println("<TD>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println("&nbsp;");
 				pwOut.println("</TD>");
 				//Net amount
-				pwOut.println("<TD>");
+				pwOut.println("<TD ALIGN=\"RIGHT\">");
 				pwOut.println("&nbsp;");
 				pwOut.println("</TD>");
 			}
@@ -1358,7 +1358,7 @@ public class ARCreateEntryForm {
             pwOut.println("</TD>");
             
         	//Amount:
-            pwOut.println("<TD>");
+            pwOut.println("<TD ALIGN=\"RIGHT\">");
             pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineAmt 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
@@ -1533,7 +1533,7 @@ public class ARCreateEntryForm {
 				        pwOut.println("</TD>");
 			            
 			        	//Amount:
-			            pwOut.println("<TD>");
+			            pwOut.println("<TD ALIGN=\"RIGHT\">");
 			            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 			        			ARLineInput.ParamLineAmt 
 			        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 

@@ -82,7 +82,7 @@ public class AREditBatchesEdit extends HttpServlet {
 	    String sWarning = (String)CurrentSession.getAttribute(AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
 	    CurrentSession.removeAttribute(AR_BATCH_POSTING_SESSION_WARNING_OBJECT);
 		if (sWarning != null){
-			out.println("<B><FONT COLOR=\"RED\"" + sWarning + "</FONT></B><BR>");
+			out.println("<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>");
 		}
 	    //Display any status messages:
 	    if (request.getParameter("Status") != null){

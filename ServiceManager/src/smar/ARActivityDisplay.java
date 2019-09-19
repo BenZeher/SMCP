@@ -237,11 +237,11 @@ public class ARActivityDisplay extends HttpServlet {
 		    }
 		    
 		    if (sOrderNumber.compareToIgnoreCase("") != 0){
-		    	out.println("<B>ONLY SHOWING TRANSACTIONS WITH ORDER NUMBER '" + sOrderNumber + "'.<BR>");
+		    	out.println("<B><I>ONLY SHOWING TRANSACTIONS WITH ORDER NUMBER '" + sOrderNumber + "'</I></B>.<BR>");
 		    }
 		    
 		    if (sDocNumber.compareToIgnoreCase("") != 0){
-		    	out.println("<B>ONLY SHOWING DOCUMENT NUMBER '" + sDocNumber + "'.<BR>");
+		    	out.println("<B><I>ONLY SHOWING DOCUMENT NUMBER '" + sDocNumber + "'</I></B>.<BR>");
 		    }
 		    
 		    out.println(
@@ -303,7 +303,7 @@ public class ARActivityDisplay extends HttpServlet {
 	    				}
 	    				
 	    				//If we are filtering on the document number:
-	    				if (sOrderNumber.compareToIgnoreCase("") != 0){
+	    				if (sDocNumber.compareToIgnoreCase("") != 0){
 	    					sSQL += " AND (" + SMTableartransactions.TableName + "." 
 	    					+ SMTableartransactions.sdocnumber + " = '" + sDocNumber + "')";
 	    				}

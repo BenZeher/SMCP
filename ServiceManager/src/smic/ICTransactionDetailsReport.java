@@ -30,6 +30,8 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 	public boolean processReport(
 			Connection conn,
 			String sTransactionID,
+			String sOriginalBatchNumber,
+			String sOriginalEntryNumber,
 			String sDBID,
 			String sUserID,
 			PrintWriter out,
@@ -49,9 +51,20 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			+ " ON " + SMTableictransactions.TableName + "." + SMTableictransactions.lid
 			+ " = " + SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ltransactionid
 			+ " WHERE ("
-				+ "(" + SMTableictransactions.TableName + "." 
-				+ SMTableictransactions.lid + " = " + sTransactionID
-				+ ")"
+			;
+		
+			if (
+				(sOriginalBatchNumber.compareToIgnoreCase("") != 0) && (sOriginalEntryNumber.compareToIgnoreCase("") != 0)
+			){
+				SQL += "(" + SMTableictransactions.TableName + "." + SMTableictransactions.loriginalbatchnumber + " = " + sOriginalBatchNumber + ")"
+					+ " AND " + SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber + " = " + sOriginalEntryNumber + ")"
+				;
+			}else{
+				SQL += "(" + SMTableictransactions.TableName + "." 
+					+ SMTableictransactions.lid + " = " + sTransactionID
+				;
+			}
+			SQL += ")"
 			+ ")"
 			+ " ORDER BY"
 			+ " " + SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ldetailnumber

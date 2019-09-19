@@ -4,6 +4,7 @@ import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableartransactions;
+import SMDataDefinition.SMTableictransactions;
 import smar.ARDocumentTypes;
 import smcontrolpanel.SMUtilities;
 
@@ -45,6 +46,7 @@ public class GLTransactionLinks {
 					+ "&" + "StartingDate=1/1/1990"
 					+ "&" + "EndingDate=12/31/2099"
 					+ "&" + "OrderBy=datdocdate"
+					+ "&" + "OpenTransactionsOnly=false"
 					+ "&" + SMTableartransactions.sdocnumber + "=" + ServletUtilities.clsServletUtilities.URLEncode(sAcctDocConcatenation[1]);
 				// The ARActivityDisplay class needs any possible document types passed in as well:
 				for (int i = 0; i < ARDocumentTypes.NUMBER_OF_AR_DOCUMENT_TYPES; i++){
@@ -56,7 +58,10 @@ public class GLTransactionLinks {
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_IC:
 				sSubledgerLinkClass = "smic.ICTransactionDetailsDisplay";
-				sAdditionalParameters = "&ICTransactionID=" + sSubledgerTransactionID + "&CallingClass=smic.ICTransactionHistory";
+				String sBatchAndEntry[] = sSubledgerTransactionID.split(",");
+				sAdditionalParameters = "&" + SMTableictransactions.loriginalbatchnumber + "=" + sBatchAndEntry[0]
+					+ "&" + SMTableictransactions.loriginalentrynumber + "=" + sBatchAndEntry[1]
+					+ "&CallingClass=smic.ICTransactionHistory";
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_GL:
 				sSubledgerLinkClass = "";

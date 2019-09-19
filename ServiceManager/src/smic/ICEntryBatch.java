@@ -3911,7 +3911,7 @@ public class ICEntryBatch {
         			return false;
         		}
         		
-    			//String sEntryTransactionID = "";
+    			String sEntryTransactionID = entry.sBatchNumber() + "," + entry.sEntryNumber();
  
         		export.addHeader(
         				sModuleType(), 
@@ -3921,7 +3921,7 @@ public class ICEntryBatch {
         				entry.sStdEntryDate(),
         				entry.sStdEntryDate(),
         				"IC " + ICEntryTypes.Get_Entry_Type(Integer.parseInt(entry.sEntryType())),
-        				"0"
+        				sEntryTransactionID
         		);
         		        		
         		for (int i = 0; i < entry.getLineCount(); i ++){

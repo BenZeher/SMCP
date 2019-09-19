@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMDataDefinition.SMTableictransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMUtilities;
@@ -50,6 +51,8 @@ public class ICTransactionDetailsDisplay extends HttpServlet {
 	    
 	    String sTransactionID = "";
 	    sTransactionID = request.getParameter("ICTransactionID");
+	    String sOriginalBatchNumber = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMTableictransactions.loriginalbatchnumber, request);
+	    String sOriginalEntryNumber = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMTableictransactions.loriginalentrynumber, request);
 
 	    String sReportTitle = "IC Transaction Cost Details";
     	String sCriteria = "Transaction ID <B>" + sTransactionID + "</B><BR>";
@@ -98,7 +101,9 @@ public class ICTransactionDetailsDisplay extends HttpServlet {
     	ICTransactionDetailsReport ictdr = new ICTransactionDetailsReport();
     	if (!ictdr.processReport(
     			conn, 
-    			sTransactionID, 
+    			sTransactionID,
+    			sOriginalBatchNumber,
+    			sOriginalEntryNumber,
     			sDBID,
     			sUserID,
     			out,

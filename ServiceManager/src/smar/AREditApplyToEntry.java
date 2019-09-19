@@ -833,7 +833,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			pwOut.println("</TD>");
             
         	//Amount:
-	        pwOut.println("<TD ALIGN = RIGHT>");
+	        pwOut.println("<TD ALIGN=\"RIGHT\">");
             pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamLineAmt 
 	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
@@ -941,7 +941,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			pwOut.println("</TD>");
 			            
         	//Amount:
-            pwOut.println("<TD>");
+            pwOut.println("<TD ALIGN=\"RIGHT\">");
             pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
         			ARLineInput.ParamLineAmt 
         				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 
@@ -1096,7 +1096,7 @@ public class AREditApplyToEntry extends HttpServlet {
 					pwOut.println("</TD>");
 					
 		        	//Amount:
-		            pwOut.println("<TD>");
+		            pwOut.println("<TD ALIGN=\"RIGHT\">");
 		            pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 		        			ARLineInput.ParamLineAmt 
 		        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 

@@ -14441,9 +14441,9 @@ public class SMUpdateData extends java.lang.Object{
 			//BEGIN CASE:
 			case 1393:
 				//Added by BJA 6/26/2019
-				SQL = "UPDATE `icitems` "
+				/*SQL = "UPDATE `icitems` "
 						+ " SET sCommonPartNumber = sReportGroup5"
-						;
+						;*/
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

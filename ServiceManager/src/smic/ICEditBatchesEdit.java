@@ -80,7 +80,7 @@ public class ICEditBatchesEdit extends HttpServlet {
 	    String sWarning = (String)CurrentSession.getAttribute(IC_BATCH_POSTING_SESSION_WARNING_OBJECT);
 	    CurrentSession.removeAttribute(IC_BATCH_POSTING_SESSION_WARNING_OBJECT);
 		if (sWarning != null){
-			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+			out.println("<B><FONT COLOR=\"RED\">" + sWarning + "</FONT></B><BR>");
 		}
 
 	    //Display any status messages:

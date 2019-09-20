@@ -209,7 +209,7 @@ public class APViewTransactionInformation  extends HttpServlet {
 		String s = "";
 		String sAcquiredTransactionID = "0";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n";
 		
 		String SQL = "SELECT " + SMTableaptransactions.TableName + ".*"
 			+ ", " + SMTableapbatchentries.TableName + "." + SMTableapbatchentries.lid

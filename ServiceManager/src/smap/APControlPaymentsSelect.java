@@ -71,7 +71,7 @@ public class APControlPaymentsSelect extends HttpServlet {
 	    String sVendorCode = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.svendor, req);
 	    String sDocNumber = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.sdocnumber, req);
 	    
-	    s += "<TABLE class=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">\n";
+	    s += "<TABLE class=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n";
 	    s += "  <TR>\n";
 	    s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\" >"
 	    	+ "Enter vendor number:"

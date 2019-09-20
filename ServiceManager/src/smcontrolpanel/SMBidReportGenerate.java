@@ -316,7 +316,7 @@ public class SMBidReportGenerate extends HttpServlet {
 			if (rs != null){
 
 				//print out column headers
-				out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+				out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 				int iCount=0;
 				while (rs.next()){
 

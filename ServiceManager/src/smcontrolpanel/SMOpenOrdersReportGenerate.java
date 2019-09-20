@@ -120,7 +120,7 @@ public class SMOpenOrdersReportGenerate extends HttpServlet {
 
 		    ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    
-			out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		    String sCurrentLocation = "";
 		    String sCurrentServiceType = "";
 		    int iCount = 0;

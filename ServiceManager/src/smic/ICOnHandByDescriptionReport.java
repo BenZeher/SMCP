@@ -173,7 +173,7 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 		//TODO:
 		//add alternating row colors
 
-		out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		printRowHeader(out);
 		try{
 			if (bDebugMode){

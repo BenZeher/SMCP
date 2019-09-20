@@ -233,7 +233,7 @@ public class ARViewChronLogGenerate extends HttpServlet {
 			;
 		}
 		//System.out.println("In " + this.toString() + ".processReport SQL = " + SQL);
-		pwOut.println("<TABLE WIDTH = 100% CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TABLE WIDTH = 100% CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		printHeading(pwOut);
 		int count = 0;
 		try{

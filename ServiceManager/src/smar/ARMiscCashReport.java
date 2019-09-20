@@ -53,7 +53,7 @@ public class ARMiscCashReport extends java.lang.Object{
     	}
     	out.println(SMUtilities.getMasterStyleSheetLink());
     	//print out the column headers.
-    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">"); 
+    	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">"); 
     	int iPrintTransactionsIn = 0;
     	if (iPrintTransactionsIn == 0){
     		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"  + 
@@ -110,7 +110,7 @@ public class ARMiscCashReport extends java.lang.Object{
 		    out.println("</TABLE>");
 		    
 		    //Print the legends:
-		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		    out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
 		    for (int i = 0;i <= 4; i++){
 		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></TD>");

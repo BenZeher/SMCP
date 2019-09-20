@@ -76,7 +76,7 @@ public class SMAverageMUReport extends java.lang.Object{
 
 		//print out the column headers.
 		//Salesperson, date, job#, customer, amount, MU, truck days, avg MU/TD
-		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
+		out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">" );
 		if(!bSummaryOnly){
 
 			out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");

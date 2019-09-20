@@ -632,7 +632,7 @@ public class APAgedPayablesReport  extends java.lang.Object{
 	private String printTableHeading(){
 		String s = "";
 		
-		s += "<TABLE WIDTH = 100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
+		s += "<TABLE WIDTH = 100% class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		return s;
 	}

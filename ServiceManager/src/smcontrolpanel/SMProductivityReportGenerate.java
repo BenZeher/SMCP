@@ -232,7 +232,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    BigDecimal bdMechanicTotal = BigDecimal.ZERO;
 		    
 		    int iCount = 0;
-		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" );
+		    out.println("<TABLE WIDTH = 100% CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">" );
 		    
 		    while (rs.next()){	    
 		    	bHasRecord = true;

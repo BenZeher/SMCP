@@ -61,7 +61,7 @@ public class SMCheckConnectionList extends HttpServlet {
 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMCHECKCONNECTIONLIST, "REPORT", "SMCheckConnectionsList", "[1564758138]");
 
 
-	   out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+	   out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 	   String sExecutioner = "";
 	   sExecutioner = "" + SMUtilities.getURLLinkBase(getServletContext()) 
 				  	+ "smcontrolpanel.SMExecuteLockedDBConnection?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID			   

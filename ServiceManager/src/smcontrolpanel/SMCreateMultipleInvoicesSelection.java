@@ -323,7 +323,7 @@ public class SMCreateMultipleInvoicesSelection extends HttpServlet {
 				int iCounter = 0;
 				boolean bOddRow = true;
 				int iColumnCounter = 10;
-				out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=75%><TABLE CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\"  WIDTH=100%>");
+				out.println("<TD ALIGN=CENTER VALIGN=TOP WIDTH=75%><TABLE CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\"  WIDTH=100%>");
 				out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
 					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">&nbsp;</TD>" 
 					+ "<TD CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Order#</TD>" 

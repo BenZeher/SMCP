@@ -156,7 +156,7 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 					sDBID, 
 					"MySQL", 
 					"smcontrolpanel.SMCustomPartsOnHandNotOnSalesOrderGenerate");
-		  	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		  	out.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 
 			boolean bList = true;
 			int iCount = 0;

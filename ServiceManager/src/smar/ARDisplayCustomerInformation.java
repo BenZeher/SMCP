@@ -39,6 +39,7 @@ import ServletUtilities.clsStringFunctions;
 public class ARDisplayCustomerInformation extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
+	private static final String sParamDisplayOpenOrders = "DisplayOpenOrders";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -172,7 +173,11 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 								conn, 
 								sLicenseModuleLevel
 						); 
-				
+				 boolean bDisplayOpenOrders = 
+						 clsManageRequestParameters.get_Request_Parameter(
+								 sParamDisplayOpenOrders, req)
+						 		.compareToIgnoreCase("") != 0;
+				 
 				SMOption smopt = new SMOption();
 				try {
 					smopt.load(conn);
@@ -257,7 +262,16 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 							+ "&" + ARPrintCallSheetsSelection.PRINT_BUTTON_NAME + "Y"
 							+ "\">List&nbsp;call&nbsp;sheets</A>&nbsp;&nbsp;</FONT>";
 				}
-	
+				if(!bDisplayOpenOrders) {
+					sLinks = sLinks
+							+ "&nbsp;&nbsp;<FONT SIZE=2><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+							+ "smar.ARDisplayCustomerInformation?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+							+ "&CallingClass=smcontrolpanel.ARDisplayCustomerInformation"
+							+ "&CustomerNumber=" + sCustomerNum
+							+ "&" + ARDisplayCustomerInformation.sParamDisplayOpenOrders + "=Y"
+							+ "\">List&nbsp;open&nbsp;orders</A>&nbsp;&nbsp;</FONT>";
+				}
+				
 				pwOut.println("<BR>" + sLinks + "<BR>"); 
 				
 				pwOut.print("<FONT SIZE=2><BR><B>Customer code:</B> " 
@@ -512,7 +526,13 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 						+ "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsCustomer, SMTablearcustomer.sgdoclink) + "</A><BR>"
 				);
 
+				//Row and color variables
+				int iOrderCount = 0;
+				int iRowCount = 1;
+				String sRowColor = "#FFF";
+				
 				//View open orders
+				if(bDisplayOpenOrders) {
 				pwOut.println("<BR><BR><FONT SIZE=2><B><U>Open Orders</U>:</B><BR><BR>" );
 				SQL = "SELECT"
 					+ " 'ARDisplayCustomerInformationSQL' AS REPORTNAME"
@@ -546,9 +566,8 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 		 		;
 				
 				ResultSet rsOpenOrders = clsDatabaseFunctions.openResultSet(SQL, conn);
-				int iOrderCount = 0;
-				int iRowCount = 1;
-				String sRowColor = "#FFF";
+
+
 				
 					
 				if (iOrderCount < 1){
@@ -586,7 +605,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				}
 				pwOut.println("</TABLE>");
 				rsOpenOrders.close();
-				
+				}
 				//View tax certificates
 				pwOut.println("<BR><BR><FONT SIZE=2><B><U>Tax Certificates</U>:</B><BR><BR>" );
 				SQL = "SELECT * "

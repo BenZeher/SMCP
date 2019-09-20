@@ -79,10 +79,19 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			conn,
 			sLicenseModuleLevel);
 		
+		//Check permissions for viewing batches:
+		boolean bBatchViewingPermitted = SMSystemFunctions.isFunctionPermitted(
+			SMSystemFunctions.ICEditBatches,
+			sUserID,
+			conn,
+			sLicenseModuleLevel);
+		
 		BigDecimal bdTotalCost = new BigDecimal(0);
 		BigDecimal bdTotalQty = new BigDecimal(0);
 		BigDecimal bdQty = new BigDecimal(0);
 		BigDecimal bdCost = new BigDecimal(0);
+		BigDecimal bdTotalTransactionNetCost = new BigDecimal(0);
+		BigDecimal bdTotalTransactionNetQty = new BigDecimal(0);
 		long lLastTransactionID = 0L;
 		boolean bOddRow = true;
 		
@@ -92,16 +101,26 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 				
 				if (rs.getLong(SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ltransactionid) != lLastTransactionID){
 					//Print the transaction (header) information:
-					//If there was a previous transaction, then end the transaction details table:
+					//If there was a previous transaction...
 					if (lLastTransactionID != 0L){
-						out.println("</TABLE>");
+						// ...then print a 'totals' line for the transaction:
+						printTransactionTotals(out, bdTotalTransactionNetCost, bdTotalTransactionNetQty, bOddRow);
+						bdTotalTransactionNetCost = BigDecimal.ZERO;
+						bdTotalTransactionNetQty = BigDecimal.ZERO;
+						// ...then end the transaction details table:
+						out.println(ServletUtilities.clsServletUtilities.createHTMLComment("End transaction info table") + "\n" + "</TABLE>" + "\n");
+						// ..and then end the 'enclosing' table for the transaction:
+						out.println(ServletUtilities.clsServletUtilities.createHTMLComment("End enclosing table") + "\n" + "</TABLE>" + "\n");
 					}
 					
 					//Change the background color for the transaction and its details:
 					bOddRow = !bOddRow;
 					
+					//Begin the enclosing table:
+					out.println("<TABLE NAME = 'ENCLOSINGTABLE' WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">" + "\n");
+					
 					try {
-						printTransactionSection(rs, out, bViewItemPermitted, context, sDBID, bOddRow);
+						printTransactionSection(rs, out, bViewItemPermitted, context, sDBID, bOddRow, bBatchViewingPermitted);
 					} catch (SQLException e) {
 						throw new Exception("Error [1568988489] reading transaction info - " + e.getMessage());
 					}
@@ -118,6 +137,8 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 				}
 				
 				//Accumulate the cost and qty for this transaction:
+				bdTotalTransactionNetCost = bdTotalTransactionNetCost.add(bdCost);
+				bdTotalTransactionNetQty = bdTotalTransactionNetQty.add(bdQty);
 				bdTotalCost = bdTotalCost.add(bdCost);
 				bdTotalQty = bdTotalQty.add(bdQty);
 				
@@ -130,21 +151,17 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 
     	//If there were any records, close the last transaction details table:
     	if (lLastTransactionID != 0L){
-    		out.println("</TABLE>");
+    		// ...print the last transaction detail totals:
+    		printTransactionTotals(out, bdTotalTransactionNetCost, bdTotalTransactionNetQty, bOddRow);
+    		//Close the transaction table:
+    		out.println("</TABLE>" + "\n");
     	}
     	
     	//Now print the totals line:
-    	out.println("<TR><TD ALIGN=RIGHT COLSPAN=7>&nbsp;TOTALS:</B></TD>");
-    	out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>" 
-    		+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
-    		SMTableictransactiondetails.bdqtychangeScale, bdTotalQty) + "</FONT></TD>");
-    	out.println("<TD ALIGN=RIGHT><B><FONT SIZE=2>" 
-       		+ clsManageBigDecimals.BigDecimalToScaledFormattedString(
-       		SMTableictransactiondetails.bdcostchangeScale, bdTotalCost) + "</FONT></TD>");
-    	out.println("</TD></TR>");
+    	printTotalsSection(out, bdTotalCost);
     	
     	//End the table:
-    	out.println("</TABLE>");
+    	out.println("</TABLE>" + "\n");
 		return;
 	}
 	private void printTransactionSection(
@@ -153,7 +170,8 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			boolean bViewItemPermitted,
 			ServletContext context,
 			String sDBID,
-			boolean bOddRow) throws SQLException{
+			boolean bOddRow,
+			boolean bBatchViewingPermitted) throws SQLException{
 				
 		printTransactionHeader(out, bOddRow);
 		
@@ -250,15 +268,46 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			+ rs.getString(SMTableictransactions.TableName + "." + SMTableictransactions.slinedescription)
 			+ "</TD>" + "\n");
 
-		
-		//Original batch number:
+		//Original batch and entry:
+		String sBatchEntryLink = 
+				Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalbatchnumber))
+				+ " - "
+				+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber));
+		if (bBatchViewingPermitted){
+    	    //Set the name of the class which will handle the processing of the entry, depending on the doc type:
+    	    String sEntryViewingClass = "";
+    	    if (rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype) 
+    	    		== ICEntryTypes.ADJUSTMENT_ENTRY){
+    	    	sEntryViewingClass = "ICEditAdjustmentEntry";
+    	    }
+    	    if (rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype) 
+    	    		== ICEntryTypes.RECEIPT_ENTRY){
+    	    	sEntryViewingClass = "ICEditReceiptEntry";
+    	    }
+    	    if (rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype) 
+    	    		== ICEntryTypes.SHIPMENT_ENTRY){
+    	    	sEntryViewingClass = "ICEditShipmentEntry";
+    	    }
+    	    if (rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype) 
+    	    		== ICEntryTypes.TRANSFER_ENTRY){
+    	    	sEntryViewingClass = "ICEditTransferEntry";
+    	    }
+    	    if (rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype) 
+    	    		== ICEntryTypes.PHYSICALCOUNT_ENTRY){
+    	    	sEntryViewingClass = "ICEditPhysicalCountEntry";
+    	    }
+			sBatchEntryLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smic." + sEntryViewingClass + "?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&BatchNumber=" + Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalbatchnumber))
+				+ "&EntryNumber=" + Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber))
+				+ "&Editable=No"
+				+ "&BatchType=" + Integer.toString(ICEntryTypes.getBatchType(rs.getInt(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype)))
+				+ "&EntryType=" + Integer.toString(rs.getInt(SMTableictransactions.TableName + "." + SMTableictransactions.ientrytype))
+				+ "\">" + sBatchEntryLink + "</A>\n"
+			;
+		}
 		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
-			+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalbatchnumber))
-			+ "</TD>" + "\n");
-
-		//Original entry number:
-		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
-			+ Long.toString(rs.getLong(SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber))
+			+ sBatchEntryLink
 			+ "</TD>" + "\n");
 		
 		//Original line number:
@@ -379,7 +428,39 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 
 		out.println("</TR>");
 	}
+	private void printTransactionTotals(
+		PrintWriter out,
+		BigDecimal bdTotalTransactionNetCost,
+		BigDecimal bdTotalTransactionNetQty,
+		boolean bOddRow
+		) throws Exception{
+	
+	if (bOddRow){
+		out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
+	}else{
+		out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" + "\n");
+	}
+	
+
+	//Label:
+	out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" COLSPAN=7>" 
+		+ "Transaction Totals:"
+		+ "</TD>" + "\n");
+
+	//Qty change:
+	out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" 
+		+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdqtychangeScale, bdTotalTransactionNetQty)
+		+ "</TD>" + "\n");
+
+	//Cost change:
+	out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">" 
+		+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostchangeScale, bdTotalTransactionNetCost)
+		+ "</TD>" + "\n");
+
+	out.println("</TR>");
+	}
 	private void printTransactionHeader(PrintWriter out, boolean bOddRow){
+		out.println(ServletUtilities.clsServletUtilities.createHTMLComment("Begin table for transaction info"));
 		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
 		if (bOddRow){
 			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
@@ -395,8 +476,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Type</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Entry Desc.</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Line Desc.</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Batch</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Entry</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Batch/Entry</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Line</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Posted by</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Unit</TD>" + "\n");
@@ -405,7 +485,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		out.println("  </TR>");
 	}
 	private void printDetailsHeader(PrintWriter out, boolean bOddRow){
-
+		out.println(ServletUtilities.clsServletUtilities.createHTMLComment("Begin table for transaction details"));
 		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
 		if (bOddRow){
 			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
@@ -422,5 +502,16 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;change</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;change</TD>" + "\n");
 		out.println("  </TR>");
+	}
+	private void printTotalsSection(PrintWriter out, BigDecimal bdTotalCost){
+		out.println("<TABLE WIDTH = 100% align=right CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
+		out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \" >\n");
+		out.println("    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" >"
+			+ " TOTAL CHANGE IN COST:&nbsp;"
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostchangeScale, bdTotalCost)
+			+ "</TD>\n"
+		);
+		out.println("  </TR>");
+		out.println("</TABLE>");
 	}
 }

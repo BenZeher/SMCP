@@ -165,7 +165,7 @@ table.basic {
 table.basicwithoutborder {
   border-width: 0px;
   border-spacing: 0px;
-  border-style: solid !important;
+  border-style: none !important;
   border-color: black !important;
   border-collapse: separate !important;
   font-size: small;

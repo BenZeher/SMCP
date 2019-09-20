@@ -80,7 +80,7 @@ public class ARDisplayStatistics extends HttpServlet {
 		pwOut.println("<B>Customer name: </B>" + cust.getM_sCustomerName());
 		
 		//Table:
-		pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_FOOTER + "\">");
 		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Balance:</B> "
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(custstat.getM_bdcurrentbalance()) + "</TD>");
@@ -160,7 +160,7 @@ public class ARDisplayStatistics extends HttpServlet {
 				this.toString() + ".displayStatistics");
 			//Display the monthly statistics:
 			pwOut.println("<B><U>Monthly statistics</U></B>");
-			pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			pwOut.println("<TR CLASS =\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			//year
 			pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Year</TD>");		

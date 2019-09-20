@@ -9,12 +9,14 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMClasses.FinderResults;
 import SMClasses.SMLaborBackCharge;
 import SMDataDefinition.SMTablelaborbackcharges;
 
 public class SMLaborBackchargeSelection extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	private static final String sCalledClassName = "smcontrolpanel.SMLaborBackChargeEdit";
+	public static final String sTrimmedOrderNumberLaborBackCharge = "sTrimmedOrderNumberLaborBackCharge";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -74,32 +76,41 @@ public class SMLaborBackchargeSelection extends HttpServlet {
 			+ " STYLE=\"width: .75in; height: 0.25in\">&nbsp;\n";
 		
 		//Link to finder:
-		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
-				"?ObjectName=" + SMLaborBackCharge.ParamObjectName +
-				"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
-				"&ResultClass=FinderResults" +
-				"&SearchingClass=" + SMUtilities.getFullClassName(this.toString()) +
-				"&ReturnField=" + SMLaborBackCharge.Paramlid +
-				"&SearchField1=" + SMTablelaborbackcharges.scustomername +
-				"&SearchFieldAlias1=Customer%20Name" +
-				"&SearchField2=" + SMTablelaborbackcharges.strimmedordernumber +
-				"&SearchFieldAlias2=Order%20Number" +
-				"&SearchField3=" + SMTablelaborbackcharges.svendoracct +
-				"&SearchFieldAlias3=Vendor%20Acct" +
-				"&SearchField4=" + SMTablelaborbackcharges.sinitiatedbyfullname +
-				"&SearchFieldAlias4=Initiated%20By" +
-				"&ResultListField1="  + SMTablelaborbackcharges.lid +
-				"&ResultHeading1=ID" +
-				"&ResultListField2="  + SMTablelaborbackcharges.strimmedordernumber +
-				"&ResultHeading2=Order%20Number" +
-				"&ResultListField3="  + SMTablelaborbackcharges.scustomername +
-				"&ResultHeading3=Customer%20Name" +
-				"&ResultListField4="  + SMTablelaborbackcharges.svendoracct +
-				"&ResultHeading4=Vendor%20Acct" +
-				"&ResultListField5="  + SMTablelaborbackcharges.sinitiatedbyfullname +
-				"&ResultHeading5=Initiated%20By" +
-				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
-				"\"> Find " + SMLaborBackCharge.ParamObjectName + "</A>";
+		 s+="<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
+			"?ObjectName=" + SMLaborBackCharge.ParamObjectName +
+			"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
+			"&ResultClass=FinderResults" +
+			"&SearchingClass=" + SMUtilities.getFullClassName(this.toString()) +
+			"&ReturnField=" + SMLaborBackCharge.Paramlid +
+			"&SearchField1=" + SMTablelaborbackcharges.scustomername +
+			"&SearchFieldAlias1=Customer%20Name" +
+			"&SearchField2=" +  SMTablelaborbackcharges.strimmedordernumber +
+			"&SearchFieldAlias2=Order%20Number" +
+			"&SearchField3=" + SMTablelaborbackcharges.svendoracct +
+			"&SearchFieldAlias3=Vendor%20Acct" +
+			"&SearchField4=" + SMTablelaborbackcharges.sinitiatedbyfullname +
+			"&SearchFieldAlias4=Initiated%20By" +
+			"&SearchField5=" + FinderResults.BILL_TO_NAME +
+			"&SearchFieldAlias5=Bill-to%20Name" +
+			"&SearchField6=" + FinderResults.SHIP_TO_NAME +
+			"&SearchFieldAlias6=Ship-To%20Name" +
+			"&ResultListField1="  + SMTablelaborbackcharges.lid +
+			"&ResultHeading1=ID" +
+			"&ResultListField2="  + SMTablelaborbackcharges.strimmedordernumber +
+			"&ResultHeading2=Order%20Number" +
+			"&ResultListField3="  + SMTablelaborbackcharges.scustomername +
+			"&ResultHeading3=Customer%20Name" +
+			"&ResultListField4="  + SMTablelaborbackcharges.svendoracct +
+			"&ResultHeading4=Vendor%20Acct" +
+			"&ResultListField5="  + SMTablelaborbackcharges.sinitiatedbyfullname +
+			"&ResultHeading5=Initiated%20By" +
+			"&ResultListField6="  + FinderResults.BILL_TO_NAME +
+			"&ResultHeading6=Billed-To%20Name" +
+			"&ResultListField7="  + FinderResults.SHIP_TO_NAME +
+			"&ResultHeading7=Shipped-To%20Name" +
+			//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
+			"\"> Find " + SMLaborBackCharge.ParamObjectName + "</A>";
+	
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

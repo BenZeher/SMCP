@@ -345,7 +345,7 @@ public class APPreCheckRegisterReport  extends java.lang.Object{
 	private String printTableHeading(){
 		String s = "";
 		
-		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\" >\n";
+		s += "<TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\" >\n";
 		
 		return s;
 	}

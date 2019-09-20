@@ -163,7 +163,7 @@ table.basic {
  
  /* basic table definition without border */
 table.basicwithoutborder {
-  border-width: 1px;
+  border-width: 0px;
   border-spacing: 0px;
   border-style: solid !important;
   border-color: black !important;

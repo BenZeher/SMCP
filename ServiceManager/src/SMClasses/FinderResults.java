@@ -52,7 +52,9 @@ public class FinderResults extends HttpServlet {
 	public static final String UNINVOICED_PO_RECEIPT_OBJECT = "Uninvoiced PO Receipt";
 	public static final String ITEMS_WITH_VENDOR_ITEMS = "Items With Vendor Item Numbers";
 	public static final String ASSET = "Asset";
-	
+	public static final String BILL_TO_NAME = "BillToName";
+	public static final String SHIP_TO_NAME = "ShipToName";
+	public static final String ORDERHEADER_FOR_LABOR_BACKCHARGES = "OrderHeader";
 	//These are reserved field names, which are used as aliases for more complex field calculations:
 	public static final String ITEM_LOCATION_QTY_OH = "ITEMLOCATIONQTYONHAND";
 	public static final String ITEM_NON_STOCK_FLAG = "ITEMNONSTOCKFLAG";
@@ -266,6 +268,18 @@ public class FinderResults extends HttpServlet {
 			bUsedSpecialSQL = true;
 		}
 		
+		if(sObjectName.equalsIgnoreCase(SMLaborBackCharge.ParamObjectName)) {
+			sSearchText = sSearchText.trim();
+			sSQL = buildItemsWithLocationQtysSQLStatement(
+					sResultListFields,
+					sSearchType,
+					sSearchField,
+					sSearchText,
+					clsManageRequestParameters.get_Request_Parameter(FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER, request)
+					);
+			bUsedSpecialSQL = true;
+		}
+		
 		if (sObjectName.equalsIgnoreCase(SMTableproposals.ObjectName)){
 			sSearchText = sSearchText.trim();
 			if (sSearchText.compareToIgnoreCase("") == 0){
@@ -314,6 +328,15 @@ public class FinderResults extends HttpServlet {
 				clsManageRequestParameters.get_Request_Parameter(FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER, request)
 			);
 			bUsedSpecialSQL = true;
+		}
+		
+		if(sObjectName.equalsIgnoreCase(SMLaborBackCharge.ParamObjectName)) {
+			sSQL = buildLaborBackChargeWithBillToShipTo(
+					sResultListFields,
+					sSearchType,
+					sSearchField,
+					sSearchText		
+			);
 		}
 		
 		if (!bUsedSpecialSQL){
@@ -1578,6 +1601,53 @@ public class FinderResults extends HttpServlet {
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".buildSMExtendedOrderSQLStatement - SQL = " + sSQL);
 		}
+		return sSQL;
+	}
+	
+	//TODO
+	private String buildLaborBackChargeWithBillToShipTo(
+			ArrayList<String> sResultListFields, 
+			String sSearchType,
+			String sSearchField, 
+			String sSearchText
+			) {
+		String sSQL = "";
+		
+		//Construct the SQL statement to be used for the search:
+		sSQL = " SELECT ";
+		//We assume there is always at least one field:
+		sSQL += sResultListFields.get(0);
+		for (int i = 1; i < sResultListFields.size(); i++){
+			//If there are no special fields in the result fields, then just add the field:
+			sSQL += ", " + sResultListFields.get(i);
+		}
+		
+		sSQL += " FROM " + SMTablelaborbackcharges.TableName 
+				
+				+ " LEFT JOIN (SELECT " +SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber + " AS " + ORDERHEADER_FOR_LABOR_BACKCHARGES + " , "
+						+ " " +SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName + " AS  "+ BILL_TO_NAME +", "
+						+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName + "  AS "+ SHIP_TO_NAME  + " "
+						+ "FROM " + SMTableorderheaders.TableName 
+				+ ") AS MatchedOrders ON MatchedOrders." + ORDERHEADER_FOR_LABOR_BACKCHARGES
+				+ " = " +SMTablelaborbackcharges.TableName + "." + SMTablelaborbackcharges.strimmedordernumber
+				+ " WHERE(";
+
+		if (sSearchType.compareToIgnoreCase("Beginning with") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Containing") == 0){
+			sSQL += "(" + sSearchField + " LIKE " 
+			+ "'%" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "%')";
+		}
+		if (sSearchType.compareToIgnoreCase("Exactly matching") == 0){
+			sSQL += "(" + sSearchField + " = " 
+			+ "'" + clsDatabaseFunctions.FormatSQLStatement(sSearchText) + "')";
+		}
+		sSQL += ")";
+		
+		sSQL += " ORDER BY " + SMTablelaborbackcharges.TableName + "." + SMTablelaborbackcharges.datinitiated;
+		System.out.println("[2019262141474] " + sSQL);
 		return sSQL;
 	}
 

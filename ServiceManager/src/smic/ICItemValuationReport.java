@@ -387,7 +387,7 @@ public class ICItemValuationReport extends java.lang.Object{
 		}
 		
 		out.println(
-				"<TABLE WIDTH = 100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">"
+				"<TABLE WIDTH = 100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">"
 				+ "<TR CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_HEADING +"\">"
 				+ "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + "\">"
 				+ "<B>Item number:</B>&nbsp;" + sItemNumberLink 

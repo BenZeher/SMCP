@@ -780,7 +780,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			out.println("</TABLE>");
 
 			//Print the legends:
-			out.println("<TABLE WIDTH = 100%  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			out.println("<TABLE WIDTH = 100%  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
 			for (int i = 0;i <= 9; i++){
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></TD>");

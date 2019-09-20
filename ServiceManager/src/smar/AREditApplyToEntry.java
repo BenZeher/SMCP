@@ -567,7 +567,7 @@ public class AREditApplyToEntry extends HttpServlet {
 			AREntryInput entryInput
 	){
 		pwOut.println(SMUtilities.getMasterStyleSheetLink());
-		pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		pwOut.println("<TABLE WIDTH=100% BGCOLOR=\"#FFFFFF\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		//Apply to doc
 		pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply&nbsp;to<br>Doc #</TD>");
@@ -832,8 +832,8 @@ public class AREditApplyToEntry extends HttpServlet {
 			pwOut.println(sNetAmount);
 			pwOut.println("</TD>");
             
+			pwOut.println("<TD ALIGN=RIGHT>");
         	//Amount:
-	        pwOut.println("<TD ALIGN=\"RIGHT\">");
             pwOut.println(clsCreateHTMLFormFields.Create_Edit_Form_Text_Input_Field(
 	        			ARLineInput.ParamLineAmt 
 	        				+ clsStringFunctions.PadLeft(Integer.toString(iLineIndex), "0", 6), 

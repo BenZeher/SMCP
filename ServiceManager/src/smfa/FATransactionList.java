@@ -149,7 +149,7 @@ public class FATransactionList extends java.lang.Object{
         		conn,
         		sLicenseModuleLevel);
         //print table header
-   	 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+   	 out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
         
         try{
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

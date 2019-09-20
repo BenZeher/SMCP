@@ -190,7 +190,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			pwOut.println(
 			"<a name=\"OrderDetails\"><P STYLE = \"font-family:arial;\"><B><U>Order Details</U></B></P>");
 			pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 
 			//pwOut.println("<a name=\"OrderDetails\"><TABLE BORDER=0 WIDTH=100% cellspacing=0 cellpadding=1>");
 			pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
@@ -341,7 +341,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			pwOut.println(
 			"<a name=\"ChangeOrders\"><P STYLE = \"font-family:arial;\"><B><U>Change Orders</U></B></P>");
 			pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			
 			pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Date</TD>");
@@ -435,7 +435,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			ResultSet rsCriticalDates = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printCriticalDates [1332178466]");
 
 			pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			
 			pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">ID</TD>");
@@ -502,7 +502,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			ResultSet rsJobCost = clsDatabaseFunctions.openResultSet(SQL, context, sDBID, "MySQL", this.toString() + ".printJobCost [1332178467]");
 
 			pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			
 			pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Date/time</TD>");
@@ -590,7 +590,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 				if (lWorkOrderID > 0){
 					pwOut.println("<TR><TD COLSPAN=" + Integer.toString(iNumberofColumns) + ">");
 					pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 
 					if(bOddRow){
 						pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">");
@@ -706,7 +706,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 			"<A NAME=\"BILLINGSUMMARY\"><P STYLE = \"font-family:arial;\"><B><U>Billing Summary</U></B></P></A>");
 			
 			pwOut.println(
-			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+			"<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 			
 			pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 			pwOut.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Invoice date</TD>");

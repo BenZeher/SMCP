@@ -345,7 +345,7 @@ public class GLAccountStructureEdit extends HttpServlet {
 	
 	private String buildContainerTableForUsedAndUnusedTables (SMMasterEditEntry smedit, GLAccountStructure entry) throws Exception{
 		String s = "";
-        s += "      <TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + " \""
+        s += "      <TABLE class = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + " \""
         	+ " style = \" width:100%; \""
         	+ " >\n";
         

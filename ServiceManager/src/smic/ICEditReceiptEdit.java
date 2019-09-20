@@ -350,7 +350,7 @@ public class ICEditReceiptEdit  extends HttpServlet {
 				sDBID,
 				sLicenseModuleLevel);
 		s+=SMUtilities.getMasterStyleSheetLink();
-		s+="<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">\n";
+		s+="<TABLE BGCOLOR=\"#FFFFFF\" WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">\n";
 		s+="<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">\n";
 		s+="<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">PO Line #</TD>\n\n";
 		s+="<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Location on<BR>PO line</TD>\n\n";

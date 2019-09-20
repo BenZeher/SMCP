@@ -835,7 +835,7 @@ public class AREditReversalEntry extends HttpServlet {
 	private void Display_Line_Header(PrintWriter m_pwOut){
 		m_pwOut.println(SMUtilities.getMasterStyleSheetLink());
 
-		m_pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\"  WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER +"\">");
+		m_pwOut.println("<TABLE BGCOLOR=\"#FFFFFF\"  WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER +"\">");
 		m_pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply to Doc #</TD>");
 		m_pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Apply to Doc ID</TD>");

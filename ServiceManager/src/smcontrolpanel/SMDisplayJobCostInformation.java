@@ -196,7 +196,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 
 				pwOut.println(SMUtilities.getMasterStyleSheetLink());
 				//headers
-				pwOut.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+				pwOut.println("<TABLE WIDTH=100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 				pwOut.println("<TR CLASS=\""+ SMMasterStyleSheetDefinitions.TABLE_HEADING +  "\">");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">ID</B></TD>");
 				pwOut.println("<TD CLASS=\"" +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Date</B></TD>");
@@ -354,7 +354,7 @@ public class SMDisplayJobCostInformation extends HttpServlet {
 					+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">" + clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableworkorders.bdbackchargehoursScale, bdTotalBackChargeHours) + "</TD>"
 					+  "</TR>");
 				pwOut.println("</TABLE>");
-				pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+				pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 					pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + "\">");
 					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" WIDTH=80%>TOTAL HOURS BID:</TD>");
 					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" WIDTH=20%>" +  clsManageBigDecimals.BigDecimalToScaledFormattedString(2, bdTotalHoursBid) + "</TD>");

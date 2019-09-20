@@ -353,7 +353,7 @@ public class ICTransactionHistory extends java.lang.Object{
 			String sLocation,
 			PrintWriter out
 	){
-		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >");
 		out.println("<TD COLSPAN=\"14\" CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\" ><U>Location: " + sLocation + "</U></TD>");
 		out.println("</TR>");

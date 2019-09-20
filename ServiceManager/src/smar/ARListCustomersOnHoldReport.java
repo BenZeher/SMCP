@@ -106,7 +106,7 @@ public class ARListCustomersOnHoldReport extends java.lang.Object{
 					"</TR>"
 					);
 		}else {
-			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER  + "\">");
+			out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");
 			out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING  + "\">" + 
 					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Acct #</B></TD>" +
 					"<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD  + "\"><B>Name</B></TD>" +

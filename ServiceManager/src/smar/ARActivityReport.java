@@ -85,7 +85,7 @@ public class ARActivityReport extends java.lang.Object{
     			+ " ORDER BY " + sCustomer +", "+ sDocAppliedTo + ", " + sSource + ",  " + datDocDate + "";
     	int iLinesPrinted = 1;
     	out.println(SMUtilities.getMasterStyleSheetLink());
-    	out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+    	out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){
@@ -195,7 +195,7 @@ public class ARActivityReport extends java.lang.Object{
 		    out.println("</TABLE>");
 		    
 		    //Print the legends:
-		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">");
+		    out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		    out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_HIGHLIGHT + "\">");
 		    for (int i = 0;i <= 8; i++){
 		    	out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_FIELDCONTROL_CENTER_JUSTIFIED + "\"><I>" + ARDocumentTypes.Get_Document_Type_Label(i) + " = " + getDocumentTypeLabel(i) + "</I></TD>");

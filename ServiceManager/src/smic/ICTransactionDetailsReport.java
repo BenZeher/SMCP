@@ -56,15 +56,14 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 				(sOriginalBatchNumber.compareToIgnoreCase("") != 0) && (sOriginalEntryNumber.compareToIgnoreCase("") != 0)
 			){
 				SQL += "(" + SMTableictransactions.TableName + "." + SMTableictransactions.loriginalbatchnumber + " = " + sOriginalBatchNumber + ")"
-					+ " AND " + SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber + " = " + sOriginalEntryNumber + ")"
+					+ " AND (" + SMTableictransactions.TableName + "." + SMTableictransactions.loriginalentrynumber + " = " + sOriginalEntryNumber + ")"
 				;
 			}else{
 				SQL += "(" + SMTableictransactions.TableName + "." 
-					+ SMTableictransactions.lid + " = " + sTransactionID
+					+ SMTableictransactions.lid + " = " + sTransactionID + ")"
 				;
 			}
 			SQL += ")"
-			+ ")"
 			+ " ORDER BY"
 			+ " " + SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ltransactionid
 			+ ", " + SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ldetailnumber
@@ -98,13 +97,15 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 						out.println("</TABLE>");
 					}
 					
+					//Change the background color for the transaction and its details:
+					bOddRow = !bOddRow;
+					
 					try {
 						printTransactionSection(rs, out, bViewItemPermitted, context, sDBID, bOddRow);
 					} catch (SQLException e) {
 						throw new Exception("Error [1568988489] reading transaction info - " + e.getMessage());
 					}
-					printDetailsHeader(out);
-					bOddRow = !bOddRow;
+					printDetailsHeader(out, bOddRow);
 				}
 					
 				//Now print each of the transaction details:
@@ -124,7 +125,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			}
 			rs.close();
     	}catch (SQLException e){
-    		throw new Exception("Error [2019263105022] " + "reading resultset - " + e.getMessage());
+    		throw new Exception("Error [2019263105022] " + "reading resultset with SQL: '" + SQL + "' - " + e.getMessage());
     	}
 
     	//If there were any records, close the last transaction details table:
@@ -154,7 +155,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			String sDBID,
 			boolean bOddRow) throws SQLException{
 				
-		printTransactionHeader(out);
+		printTransactionHeader(out, bOddRow);
 		
 		//Print the transaction header line:
 		if (bOddRow){
@@ -307,24 +308,19 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		}
 		
 		//Cost bucket ID:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + Long.toString(
-			rs.getLong(
-			SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.lcostbucketid)));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ Long.toString(rs.getLong(SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.lcostbucketid))
+			+ "</TD>" + "\n");
 		
 		//Creation date:
-		out.println("<TD>");
-		out.println("<FONT SIZE=2>" + clsDateAndTimeConversions.resultsetDateStringToString(
-			rs.getString(SMTableictransactiondetails.TableName 
-			+ "." + SMTableictransactiondetails.dattimecostbucketcreation)));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsDateAndTimeConversions.resultsetDateStringToString(
+				rs.getString(SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.dattimecostbucketcreation))
+			+ "</TD>" + "\n");
 		
 		//Remark:
-		out.println("<TD>");
-		out.println("<FONT SIZE=2>" + rs.getString(SMTableictransactiondetails.TableName 
-			+ "." + SMTableictransactiondetails.scostbucketremark));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ rs.getString(SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.scostbucketremark) + "</TD>" + "\n");
 		
 		BigDecimal bdQtyBeforeTransaction = new BigDecimal(0);
 		BigDecimal bdCostBeforeTransaction = new BigDecimal(0);
@@ -352,51 +348,45 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		bdCostAfterTransaction = bdCostBeforeTransaction.add(bdCost);
 		
 		//Qty before transaction:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-			SMTableictransactiondetails.bdcostbucketqtybeforetransScale, 
-			bdQtyBeforeTransaction));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostbucketqtybeforetransScale, bdQtyBeforeTransaction) 
+			+ "</TD>" + "\n");
 		
 		//Cost before transaction:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-				SMTableictransactiondetails.bdcostbucketcostbeforetransScale, 
-				bdCostBeforeTransaction));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostbucketcostbeforetransScale, bdCostBeforeTransaction)
+			+ "</TD>" + "\n");
 		
 		//Qty after transaction:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-			SMTableictransactiondetails.bdcostbucketqtybeforetransScale, 
-			bdQtyAfterTransaction));
-		out.println("</FONT></TD>");
-		
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostbucketqtybeforetransScale, bdQtyAfterTransaction)
+			+ "</TD>" + "\n");
+
 		//Cost after transaction:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-				SMTableictransactiondetails.bdcostbucketcostbeforetransScale, 
-				bdCostAfterTransaction));
-		out.println("</FONT></TD>");
-		
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostbucketcostbeforetransScale, bdCostAfterTransaction)
+			+ "</TD>" + "\n");
+
 		//Qty change:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-				SMTableictransactiondetails.bdqtychangeScale, 
-				bdQty));
-		out.println("</FONT></TD>");
-		
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdqtychangeScale, bdQty)
+			+ "</TD>" + "\n");
+
 		//Cost change:
-		out.println("<TD ALIGN=RIGHT>");
-		out.println("<FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
-				SMTableictransactiondetails.bdcostchangeScale, 
-				bdCost));
-		out.println("</FONT></TD>");
+		out.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+			+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableictransactiondetails.bdcostchangeScale, bdCost)
+			+ "</TD>" + "\n");
+
 		out.println("</TR>");
 	}
-	private void printTransactionHeader(PrintWriter out){
+	private void printTransactionHeader(PrintWriter out, boolean bOddRow){
 		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
-		out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">" + "\n");
+		if (bOddRow){
+			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
+		}else{
+			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" + "\n");
+		}
+		
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Date</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Location</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Item</TD>" + "\n");
@@ -414,19 +404,23 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost</TD>" + "\n");
 		out.println("  </TR>");
 	}
-	private void printDetailsHeader(PrintWriter out){
+	private void printDetailsHeader(PrintWriter out, boolean bOddRow){
 
 		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
-		out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">" + "\n");
+		if (bOddRow){
+			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
+		}else{
+			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">" + "\n");
+		}
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;bucket&nbsp;ID</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Created</TD>" + "\n");
 		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Remark</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;before&nbsp;transaction</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;before&nbsp;transaction</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;after&nbsp;transaction</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;after&nbsp;transaction</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;change</TD>" + "\n");
-		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;change</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;before&nbsp;transaction</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;before&nbsp;transaction</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;after&nbsp;transaction</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;after&nbsp;transaction</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Qty&nbsp;change</TD>" + "\n");
+		out.println("    <TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">Cost&nbsp;change</TD>" + "\n");
 		out.println("  </TR>");
 	}
 }

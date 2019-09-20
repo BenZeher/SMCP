@@ -79,6 +79,8 @@ public class ICTransactionDetailsDisplay extends HttpServlet {
 				+ "\">Return to Inventory Control Main Menu</A><BR>");
     	
 		out.println("</TD></TR></TABLE>");
+		
+		out.println(SMUtilities.getMasterStyleSheetLink());
     	
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(

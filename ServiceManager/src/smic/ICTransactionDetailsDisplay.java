@@ -99,18 +99,21 @@ public class ICTransactionDetailsDisplay extends HttpServlet {
     	}
     	
     	ICTransactionDetailsReport ictdr = new ICTransactionDetailsReport();
-    	if (!ictdr.processReport(
-    			conn, 
-    			sTransactionID,
-    			sOriginalBatchNumber,
-    			sOriginalEntryNumber,
-    			sDBID,
-    			sUserID,
-    			out,
-    			getServletContext(),
-    			(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-    		out.println("Could not print report - " + ictdr.getErrorMessage());
-    	}
+    	try {
+			ictdr.processReport(
+				conn, 
+				sTransactionID,
+				sOriginalBatchNumber,
+				sOriginalEntryNumber,
+				sDBID,
+				sUserID,
+				out,
+				getServletContext(),
+				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
+			;
+		} catch (Exception e) {
+			out.println("<B><FONT COLOR=RED>" + e.getMessage() + "</FONT></B>");
+		}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080992]");
 	    out.println("</BODY></HTML>");
 	    return;

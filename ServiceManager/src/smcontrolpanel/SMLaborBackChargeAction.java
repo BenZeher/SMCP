@@ -6,7 +6,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import ConnectionPool.WebContextParameters;
 import SMClasses.SMLaborBackCharge;
+import SMClasses.SMOption;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsManageRequestParameters;
 
@@ -75,6 +79,51 @@ public class SMLaborBackChargeAction extends HttpServlet{
 	    	}
 	    }
 		
+	    //Process if Drive Folder was Created
+	    if(clsManageRequestParameters.get_Request_Parameter(
+	    		SMLaborBackChargeEdit.COMMAND_FLAG, request).compareToIgnoreCase(SMLaborBackChargeEdit.CREATE_UPLOAD_FOLDER_COMMAND_VALUE) == 0){  
+			SMOption smopt = new SMOption();
+			try {
+				smopt.load(smaction.getsDBID(), getServletContext(), smaction.getUserName());
+			} catch (Exception e) {
+				response.sendRedirect(
+						"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomersEdit"
+						+ "?" + entry.getQueryString()
+						+ "&Warning=Error loading SMOption: " + entry.getErrorMessages()
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID());
+				return;
+			}
+			
+			String sNewFolderName = smopt.getgdrivelaborbackchargefolderprefix() + entry.getlid() + smopt.getgdrivelaborbackchargefoldersuffix();
+        	//Parameters for upload folder web-app
+        	//parentfolderid
+        	//foldername
+        	//returnURL
+        	//recordtype
+        	//keyvalue
+       	
+			try {
+				String sRedirectString = smopt.getgdriveuploadfileurl()
+		         		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + smopt.getgdrivelaborbackchargeparentfolderid()
+		   				+ "&" + SMCreateGoogleDriveFolderParamDefinitions.foldername + "=" + sNewFolderName
+		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.recordtype + "=" + SMCreateGoogleDriveFolderParamDefinitions.SM_LABOR_BACKCHARGE_PARAM_VALUE
+		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.keyvalue + "=" + entry.getlid()
+		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
+		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)
+		             	;
+				redirectProcess(sRedirectString, response);
+			} catch (Exception e) {
+				response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomersEdit"
+					+ "?" + entry.getQueryString()
+					+ "&Warning=Could not create folder or upload files: " + e.getMessage()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				);
+				return;
+			}
+			return;
+    	}
+	    
 		//If it's an Update, process that:
 	    if(clsManageRequestParameters.get_Request_Parameter(
 	    		SMLaborBackChargeEdit.COMMAND_FLAG, request).compareToIgnoreCase(
@@ -110,6 +159,33 @@ public class SMLaborBackChargeAction extends HttpServlet{
 	    
 		return;
 	}
+	
+	private String getCreateGDriveReturnURL(HttpServletRequest req)throws Exception{
+		String sTemp;
+		try {
+			sTemp = clsServletUtilities.getServerURL(req, getServletContext());
+		} catch (Exception e) {
+			throw new Exception(" Error [1542747893]"+e.getMessage());
+		}
+		sTemp += "/" + WebContextParameters.getInitWebAppName(getServletContext()) + "/";
+		sTemp += "smcontrolpanel.SMCreateGDriveFolder";
+		return sTemp;
+	}
+	
+	private void redirectProcess(String sRedirectString, HttpServletResponse res ) throws Exception{
+		try {
+			res.sendRedirect(sRedirectString);
+		} catch (IOException e1) {
+			throw new Exception("Error [1440626558] In " + SMUtilities.getFullClassName(this.toString()) 
+					+ ".redirectAction - IOException error redirecting with string: "
+					+ sRedirectString + " - " + e1.getMessage());
+		} catch (IllegalStateException e1) {
+			throw new Exception("Error [1440626559] In " + SMUtilities.getFullClassName(this.toString()) 
+					+ ".redirectAction - IllegalStateException error redirecting with string: "
+					+ sRedirectString + " - " + e1.getMessage());
+		}
+	}
+	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

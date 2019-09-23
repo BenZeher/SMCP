@@ -26,4 +26,5 @@ public class SMCreateGoogleDriveFolderParamDefinitions {
 	public static final String AR_DISPLAYED_CUSTOMER_TYPE_PARAM_VALUE = "displayed customer";
 	public static final String AP_VENDOR_RECORD_TYPE_PARAM_VALUE = "vendor";
 	public static final String AP_DISPLAY_VENDOR_TYPE_PARAM_VALUE = "display vendor";
+	public static final String SM_LABOR_BACKCHARGE_PARAM_VALUE = "labor backcharge";
 }

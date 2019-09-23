@@ -12,11 +12,13 @@ import javax.servlet.http.HttpSession;
 
 import SMClasses.SMLaborBackCharge;
 import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import smap.APVendor;
 
 public class SMLaborBackChargeEdit  extends HttpServlet {
@@ -32,6 +34,10 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 	public static final String RECORDWASCHANGED_FLAG = "RECORDWASCHANGEDFLAG";
 	public static final String RECORDWASCHANGED_FLAG_VALUE = "RECORDWASCHANGED";
+	
+	public static final String LABOR_BACKCHARGE_ID_FIELD = "LABORBACKCHARGEID";
+	public static final String CREATE_UPLOAD_FOLDER_BUTTON_LABEL = "Create folder/Upload to Google Drive";
+	public static final String CREATE_UPLOAD_FOLDER_COMMAND_VALUE = "CREATEUPLOADFOLDER";
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -126,7 +132,25 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 	}
 	private String getEditHTML(SMMasterEditEntry sm, SMLaborBackCharge entry) throws SQLException{
 
-		String s = "<TABLE BORDER=1>";
+		String s = "";
+		  boolean bUseGoogleDrivePicker = false;
+			String sPickerScript = "";
+				try {
+				 sPickerScript = clsServletUtilities.getDrivePickerJSIncludeString(
+							SMCreateGoogleDriveFolderParamDefinitions.SM_LABOR_BACKCHARGE_PARAM_VALUE,
+							entry.getlid().replace("\"", "&quot;"),
+							getServletContext(),
+							sm.getsDBID());
+				} catch (Exception e) {
+					System.out.println("[1554818420] - Failed to load drivepicker.js - " + e.getMessage());
+				}
+		
+				if(sPickerScript.compareToIgnoreCase("") != 0) {
+					 s += sPickerScript;
+					bUseGoogleDrivePicker = true;
+				} 
+		
+		s += "<TABLE BORDER=1>";
 		String sID = "";
 		if (
 			//If we are NOT adding a new labor backcharge:
@@ -281,7 +305,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
  		;
 		
 		//Vendor Item Number
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Vendor Item Number:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Vendor Item Number:<FONT COLOR=\"RED\">*</FONT>"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramsvendoritemnumber + "\""
 			+ " VALUE=\"" + entry.getsvendoritemnumber().replace("\"", "&quot;") + "\""
 			+ " ONCHANGE = \"flagDirty();\""
@@ -297,7 +321,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ " ONCHANGE = \"flagDirty();\""
 			+ " SIZE=" + "12"
 			+ " MAXLENGTH=" + Integer.toString(SMTablelaborbackcharges.strimmedordernumberlength)
-			+ " readonly></TD>"
+			+ " ></TD>"
 			+ "</TR>"
 		;
 		
@@ -318,7 +342,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		}
 		
 		// Vendor Back-Charge Notes
-		if(entry.getsvendor().compareToIgnoreCase("")!=0 || entry.getsvendor().compareToIgnoreCase(null)!=0) {
+		if(entry.getsvendor().compareToIgnoreCase("")!=0 || entry.getsvendor().isEmpty()) {
 			APVendor vendor = new APVendor();
 			vendor.setsvendoracct(entry.getsvendor());
 			vendor.load(getServletContext(), sm.getsDBID(), sm.getUserID(), sm.getUserName());
@@ -457,7 +481,25 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		s += "</TABLE>";
 		
 		//TODO Add in the Button/Link to the Linked Google Drive Folder
-		
+       /* String sCreateAndUploadButton = "";
+		if (
+			SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMCreateGDriveARFolders, 
+				sm.getUserID(), 
+				getServletContext(), 
+				sm.getsDBID(),
+				sm.getLicenseModuleLevel()
+			)
+			&& (entry.getlid().compareToIgnoreCase("-1") != 0)
+		){
+			sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
+		}
+		s+= sCreateAndUploadButton;
+		s+= "<BR><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramsgdoclink + "\""
+				+ " VALUE=\"" + entry.getsgdoclink().replace("\"", "&quot;") + "\""
+				+ "SIZE=" + "125"
+				+ " MAXLENGTH=" + SMTablelaborbackcharges.sgdoclinklength
+				+ "<BR>";*/
 		return s;
 	}
 	
@@ -588,9 +630,31 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 				+ "}\n"
 			;
 
+			s += "function createanduploadfolder(){\n"
+					+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+						+ CREATE_UPLOAD_FOLDER_COMMAND_VALUE + "\";\n"
+					+ "    document.forms[\"MAINFORM\"].submit();\n"
+					+ "}\n";
+			
 			s += "</script>\n";
 			return s;
 		}
+	
+	private String createAndUploadFolderButton(boolean bUseGoogleDrivePicker){
+		String sOnClickFunction = "createanduploadfolder()";
+		if(bUseGoogleDrivePicker) {
+			sOnClickFunction = "loadPicker()";
+		}
+		//TODO
+		return "<button type=\"button\""
+			+ " value=\"" + CREATE_UPLOAD_FOLDER_COMMAND_VALUE + "\""
+			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
+			+ " onClick=\"" + sOnClickFunction + "\">"
+			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
+	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

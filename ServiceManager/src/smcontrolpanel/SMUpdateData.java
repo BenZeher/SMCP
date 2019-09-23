@@ -14624,7 +14624,7 @@ public class SMUpdateData extends java.lang.Object{
 			case 1408:
 				//Added by BJA 9/20/2019
 				SQL = "ALTER TABLE `laborbackcharges` "
-					+ " ADD sgdoclink text"
+					+ " ADD sgdoclink text NOT NULL"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

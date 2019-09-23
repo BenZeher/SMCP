@@ -40,6 +40,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	public static final String Paramscategorycode = "scategorycode";
 	public static final String Parambdcreditdenied = "bdcreditdenied";
 	public static final String Paramsvendoritemnumber = "svendoritemnumber";
+	public static final String Paramsgdoclink = "sgdoclink";
 	
 
 	private String m_lid;
@@ -62,6 +63,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	private String m_scategorycode;
 	private String m_bdcreditdenied;
 	private String m_svendoritemnumber;
+	private String m_sgdoclink;
 	
 	private String m_sNewRecord;
 	
@@ -130,6 +132,8 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				SMTablelaborbackcharges.bdcreditdenied, req).trim().replace("&quot;", "\"");
 		m_svendoritemnumber = clsManageRequestParameters.get_Request_Parameter(
 				SMTablelaborbackcharges.svendoritemnumber, req).trim().replace("&quot;", "\"");
+		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(
+				SMTablelaborbackcharges.sgdoclink, req).trim().replace("&quot;", "\"");
 
 		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
@@ -196,6 +200,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablelaborbackcharges.datcreditnotedate));
 				m_strimmedordernumber = rs.getString(SMTablelaborbackcharges.strimmedordernumber).trim();
 				m_svendoritemnumber = rs.getString(SMTablelaborbackcharges.svendoritemnumber).trim();
+				m_sgdoclink = rs.getString(SMTablelaborbackcharges.sgdoclink).trim();
 				rs.close();
 			} else {
 				rs.close();
@@ -278,6 +283,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", " + SMTablelaborbackcharges.datcreditnotedate
 				+ ", " + SMTablelaborbackcharges.bdcreditdenied
 				+ ", " + SMTablelaborbackcharges.svendoritemnumber
+				+ ", " + SMTablelaborbackcharges.sgdoclink
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlinitiatedbyid().trim()) + ""
@@ -297,6 +303,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate()) + "'"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditdenied().trim())
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoritemnumber().trim()) + "'"
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsgdoclink().trim()) + "'"
 				+ ")"
 			;
 
@@ -319,6 +326,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", " + SMTablelaborbackcharges.scategorycode + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscategorycode().trim()) + "'"
 				+ ", " + SMTablelaborbackcharges.bdcreditdenied + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditdenied().trim())
 				+ ", " + SMTablelaborbackcharges.svendoritemnumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoritemnumber().trim()) + "'"
+				+ ", " + SMTablelaborbackcharges.sgdoclink + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsgdoclink().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablelaborbackcharges.lid + " = " + getlid() + ")"
 				+ ")"
@@ -644,6 +652,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		sQueryString += "&" + Paramscategorycode + "=" + clsServletUtilities.URLEncode(getscategorycode());
 		sQueryString += "&" + Parambdcreditdenied + "=" + clsServletUtilities.URLEncode(getbdcreditdenied());
 		sQueryString += "&" + Paramsvendoritemnumber + "=" + clsServletUtilities.URLEncode(getsvendoritemnumber());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
 		return sQueryString;
 	}
 
@@ -773,6 +782,13 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	public void setsvendoritemnumber(String svendoritemnumber) {
 		m_svendoritemnumber = svendoritemnumber;
 	}
+	public String getsgdoclink() {
+		return m_sgdoclink;
+	}
+	public void setsgdocklink(String sgdoclink) {
+		m_svendoritemnumber = sgdoclink;
+	}
+
 	public String getObjectName(){
 		return ParamObjectName;
 	}

@@ -25,6 +25,7 @@ public class SMTablelaborbackcharges {
 	public static final String scategorycode = "scategorycode";
 	public static final String bdcreditdenied = "bdcreditdenied";
 	public static final String svendoritemnumber = "svendoritemnumber";
+	public static final String sgdoclink = "sgdoclink";
 		
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
@@ -43,6 +44,7 @@ public class SMTablelaborbackcharges {
 	public static final int bdcreditrequestedscale = 2;
 	public static final int bdcreditdeniedscale = 2;
 	public static final int svendoritemnumberlength = 24;
+	public static final int sgdoclinklength = 65535;
 
 }
 

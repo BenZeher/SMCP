@@ -95,11 +95,7 @@ public class SMLaborBackChargeAction extends HttpServlet{
 				);
 				return;
 			}
-	    	//TODO Generate a Critical date here
 	    	
-			//If the save succeeded, force the called function to reload it by NOT
-			//putting the entry object in the current session, but by passing it
-			//the lid instead:
 			if (smaction.getOriginalURL().trim().compareToIgnoreCase("") != 0){
 				smaction.returnToOriginalURL();
 			}else{

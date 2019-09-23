@@ -563,6 +563,29 @@ public class SMEditSMOptions extends HttpServlet {
 				m_pwOut.println("<TD>If you want a short suffix at the end of the created work order folder name, enter it here.</TD></TR>");
 
 				
+				//GDrive Labor Back-Charges parent folder ID:
+				m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Google Drive LABOR BACKCHARGE parent folder ID</B>:</TD>");
+				m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+						+ SMOptionInput.Paramsgdrivelaborbackchargeparentfolderid + "\""
+						+ " VALUE=\"" + optionInput.getgdrivelaborbackchargeparentfolderid() + "\""
+						+ "SIZE=40"
+						+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.gdrivelaborbackchargeparentfolderidlength)
+						+ ">"
+						+ "</TD>");
+				m_pwOut.println("<TD>This is the Google Drive 'ID' of the PARENT folder in which new labor backcharge folders will be created.</TD></TR>");
+				
+				//GDrive labor backcharges folder prefix:
+				m_pwOut.println("<TR><TD ALIGN=RIGHT><B>LABOR BACKCHARGE folder prefix</B>:</TD>");
+				m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 
+						+ SMOptionInput.Paramsgdrivelaborbackchargeprefix + "\""
+						+ " VALUE=\"" + optionInput.getgdrivelaborbackchargefolderprefix() + "\""
+						+ "SIZE=40"
+						+ "; MAXLENGTH=" + Integer.toString(SMTablesmoptions.gdrivelaborbackchargefolderprefixlength)
+						+ ">"
+						+ "</TD>");
+				m_pwOut.println("<TD>If you want a short prefix in front of the created labor backcharge folder name, enter it here.</TD></TR>");
+								
+				
 		//Create upload file URL
 		m_pwOut.println("<TR><TD ALIGN=RIGHT><B>Create folder/Upload file web app URL</B>:</TD>");
 		m_pwOut.println("<TD><INPUT TYPE=TEXT NAME=\"" 

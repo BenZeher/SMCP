@@ -59,6 +59,9 @@ public class SMOption {
 	private String m_sgdriveworkorderparentfolderid;
 	private String m_sgdriveworkorderfolderprefix;
 	private String m_sgdriveworkorderfoldersuffix;
+	private String m_sgdrivelaborbackchargeparentfolderid;
+	private String m_sgdrivelaborbackchargefolderprefix;
+	private String m_sgdrivelaborbackchargefoldersuffix;
 	private String m_sgdriveuploadfileurl;
 	private String m_icopysalesleadfolderurltoorder;
 	private String m_sgdriverenamefolderurl;
@@ -115,6 +118,9 @@ public class SMOption {
 		m_sgdriveworkorderparentfolderid = "";
 		m_sgdriveworkorderfolderprefix = "";
 		m_sgdriveworkorderfoldersuffix = "";
+		m_sgdrivelaborbackchargeparentfolderid = "";
+		m_sgdrivelaborbackchargefolderprefix = "";
+		m_sgdrivelaborbackchargefoldersuffix = "";
 		m_sgdriveuploadfileurl = "";
 		m_icopysalesleadfolderurltoorder = "0";
 		m_sgdriverenamefolderurl = "";
@@ -176,6 +182,9 @@ public class SMOption {
     			m_sgdriveworkorderparentfolderid = rs.getString(SMTablesmoptions.gdriveworkorderparentfolderid);
     			m_sgdriveworkorderfolderprefix = rs.getString(SMTablesmoptions.gdriveworkorderfolderprefix);
     			m_sgdriveworkorderfoldersuffix = rs.getString(SMTablesmoptions.gdriveworkorderfoldersuffix);
+    			 m_sgdrivelaborbackchargeparentfolderid = rs.getString(SMTablesmoptions.gdrivelaborbackchargeparentfolderid);
+    			 m_sgdrivelaborbackchargefolderprefix = rs.getString(SMTablesmoptions.gdrivelaborbackchargefolderprefix);
+    			 m_sgdrivelaborbackchargefoldersuffix = rs.getString(SMTablesmoptions.gdrivelaborbackchargefoldersuffix);
     			//m_sgdrivecreatenewfolderurl = rs.getString(SMTablesmoptions.gdrivecreatenewfolderurl);
     			m_sgdriveuploadfileurl = rs.getString(SMTablesmoptions.gdriveuploadfileurl);
     			m_icopysalesleadfolderurltoorder = rs.getString(SMTablesmoptions.icopysalesleadfolderurltoorder);
@@ -291,6 +300,9 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.gdriveworkorderparentfolderid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderparentfolderid) + "'"
 		+ ", " + SMTablesmoptions.gdriveworkorderfolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderfolderprefix) + "'"
 		+ ", " + SMTablesmoptions.gdriveworkorderfoldersuffix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderfoldersuffix) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargeparentfolderid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargeparentfolderid) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargefolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargefolderprefix) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargefoldersuffix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargefoldersuffix) + "'"
 		//+ ", " + SMTablesmoptions.gdrivecreatenewfolderurl + " = '" + SMUtilities.FormatSQLStatement(m_sgdrivecreatenewfolderurl) + "'"
 		+ ", " + SMTablesmoptions.gdriveuploadfileurl + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveuploadfileurl) + "'"
 		+ ", " + SMTablesmoptions.icopysalesleadfolderurltoorder + " = " + clsDatabaseFunctions.FormatSQLStatement(m_icopysalesleadfolderurltoorder)
@@ -364,6 +376,9 @@ public class SMOption {
 		+ ", " + SMTablesmoptions.gdriveworkorderparentfolderid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderparentfolderid) + "'"
 		+ ", " + SMTablesmoptions.gdriveworkorderfolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderfolderprefix) + "'"
 		+ ", " + SMTablesmoptions.gdriveworkorderfoldersuffix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveworkorderfoldersuffix) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargeparentfolderid + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargeparentfolderid) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargefolderprefix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargefolderprefix) + "'"
+		+ ", " + SMTablesmoptions.gdrivelaborbackchargefoldersuffix + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdrivelaborbackchargefoldersuffix) + "'"
 		//+ ", " + SMTablesmoptions.gdrivecreatenewfolderurl + " = '" + SMUtilities.FormatSQLStatement(m_sgdrivecreatenewfolderurl) + "'"
 		+ ", " + SMTablesmoptions.gdriveuploadfileurl + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdriveuploadfileurl) + "'"
 		+ ", " + SMTablesmoptions.icopysalesleadfolderurltoorder + " = " + clsDatabaseFunctions.FormatSQLStatement(m_icopysalesleadfolderurltoorder)
@@ -859,6 +874,24 @@ public class SMOption {
     }
     public void setgdriveworkorderfoldersuffix(String sgdriveworkorderfoldersuffix){
     	m_sgdriveworkorderfoldersuffix = sgdriveworkorderfoldersuffix;
+    }
+    public String getgdrivelaborbackchargeparentfolderid(){
+    	return m_sgdrivelaborbackchargeparentfolderid;
+    }
+    public void setgdrivelaborbackchargeparentfolderid(String sgdrivelaborbackchargeparentfolderid){
+    	m_sgdrivelaborbackchargeparentfolderid = sgdrivelaborbackchargeparentfolderid;
+    }
+    public String getgdrivelaborbackchargefolderprefix(){
+    	return m_sgdrivelaborbackchargefolderprefix;
+    }
+    public void setgdrivelaborbackchargefolderprefix(String sgdrivelaborbackchargefolderprefix){
+    	m_sgdrivelaborbackchargefolderprefix = sgdrivelaborbackchargefolderprefix;
+    }
+    public String getgdrivelaborbackchargefoldersuffix(){
+    	return m_sgdrivelaborbackchargefoldersuffix;
+    }
+    public void setgdrivelaborbackchargefoldersuffix(String sgdrivelaborbackchargefoldersuffix){
+    	m_sgdrivelaborbackchargefoldersuffix = sgdrivelaborbackchargefoldersuffix;
     }
     //public String getgdrivecreatenewfolderurl(){
     //	return m_sgdrivecreatenewfolderurl;

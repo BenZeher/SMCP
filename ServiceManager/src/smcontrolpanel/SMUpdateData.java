@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1408;
+	private static final int m_CurrentDatabaseVersion = 1412;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "9/20/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14614,6 +14614,50 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 9/10/2019
 				SQL = "ALTER TABLE `icvendors` "
 					+ " ADD mbackchargememo MEDIUMTEXT NOT NULL"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1408:
+				//Added by BJA 9/20/2019
+				SQL = "ALTER TABLE `laborbackcharges` "
+					+ " ADD sgdoclink text"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1409:
+				//Added by BJA 9/20/2019
+				SQL = "ALTER TABLE `smoptions` "
+					+ " ADD gdrivelaborbackchargeparentfolderid varchar(72) NOT NULL DEFAULT ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1410:
+				//Added by BJA 9/20/2019
+				SQL = "ALTER TABLE `smoptions` "
+					+ " ADD gdrivelaborbackchargefolderprefix varchar(32) NOT NULL DEFAULT ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1411:
+				//Added by BJA 9/20/2019
+				SQL = "ALTER TABLE `smoptions` "
+					+ " ADD gdrivelaborbackchargefoldersuffix varchar(32) NOT NULL DEFAULT ''"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

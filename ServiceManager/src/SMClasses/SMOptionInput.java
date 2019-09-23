@@ -66,6 +66,11 @@ public class SMOptionInput extends java.lang.Object{
 	public static final String Paramsgdriveworkorderfolderprefix = "gdriveworkorderfolderprefix";
 	public static final String Paramsgdriveworkorderfoldersuffix = "gdriveworkorderfoldersuffix";
 	
+	//Fields for creating new Labor Back-Charge folders in Google Drive:
+	public static final String Paramsgdrivelaborbackchargeparentfolderid = "gdrivelaborbackchargeparentfolderid";
+	public static final String Paramsgdrivelaborbackchargeprefix = "gdrivelaborbackchargefolderprefix";
+	public static final String Paramsgdrivelaborbackchargesuffix = "gdrivelaborbackchargefoldersuffix";
+	
 	public static final String Paramsgdriveuploadfileurl = "gdriveuploadfileurl";
 	public static final String Paramsgdriverenamefolderurl = "gdriverenamefolderurl";
 	public static final String Paramicopysalesleadfolderurltoorder = "icopysalesleadfolderurltoorder";
@@ -113,6 +118,9 @@ public class SMOptionInput extends java.lang.Object{
 	private String m_sgdriveworkorderparentfolderid;
 	private String m_sgdriveworkorderfolderprefix;
 	private String m_sgdriveworkorderfoldersuffix;
+	private String m_sgdrivelaborbackchargeparentfolderid;
+	private String m_sgdrivelaborbackchargefolderprefix;
+	private String m_sgdrivelaborbackchargefoldersuffix;
 	private String m_sgdriveuploadfileurl;
 	private String m_sgdriverenamefolderurl;
 	private String m_icopysalesleadfolderurltoorder;
@@ -168,6 +176,9 @@ public class SMOptionInput extends java.lang.Object{
 		m_sgdriveworkorderparentfolderid = "";
 		m_sgdriveworkorderfolderprefix = "";
 		m_sgdriveworkorderfoldersuffix = "";
+		m_sgdrivelaborbackchargeparentfolderid = "";
+		m_sgdrivelaborbackchargefolderprefix = "";
+		m_sgdrivelaborbackchargefoldersuffix = "";
 		m_sgdriveuploadfileurl = "";
 		m_sgdriverenamefolderurl = "";
 		m_icopysalesleadfolderurltoorder = "0";
@@ -234,6 +245,9 @@ public class SMOptionInput extends java.lang.Object{
 		m_sgdriveworkorderparentfolderid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdriveworkorderparentfolderid, req).trim();
 		m_sgdriveworkorderfolderprefix = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdriveworkorderfolderprefix, req).trim();
 		m_sgdriveworkorderfoldersuffix = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdriveworkorderfoldersuffix, req).trim();
+		m_sgdrivelaborbackchargeparentfolderid = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdrivelaborbackchargeparentfolderid, req).trim();
+		m_sgdrivelaborbackchargefolderprefix = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdrivelaborbackchargeprefix, req).trim();
+		m_sgdrivelaborbackchargefoldersuffix = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdrivelaborbackchargesuffix, req).trim();
 		//m_sgdrivecreatenewfolderurl = SMUtilities.get_Request_Parameter(SMOptionInput.Paramsgdrivecreatenewfolderurl, req).trim();
 		m_sgdriveuploadfileurl = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdriveuploadfileurl, req).trim();
 		m_sgdriverenamefolderurl = clsManageRequestParameters.get_Request_Parameter(SMOptionInput.Paramsgdriverenamefolderurl, req).trim();
@@ -398,6 +412,9 @@ public class SMOptionInput extends java.lang.Object{
 		smoption.setgdriveworkorderparentfolderid(m_sgdriveworkorderparentfolderid);
 		smoption.setgdriveworkorderfolderprefix(m_sgdriveworkorderfolderprefix);
 		smoption.setgdriveworkorderfoldersuffix(m_sgdriveworkorderfoldersuffix);
+		smoption.setgdrivelaborbackchargeparentfolderid(m_sgdrivelaborbackchargeparentfolderid);
+		smoption.setgdrivelaborbackchargefolderprefix(m_sgdrivelaborbackchargefolderprefix);
+		smoption.setgdrivelaborbackchargefoldersuffix(m_sgdrivelaborbackchargefoldersuffix);
 		//smoption.setgdrivecreatenewfolderurl(m_sgdrivecreatenewfolderurl);
 		smoption.setgdriveuploadfileurl(m_sgdriveuploadfileurl);
 		smoption.setgdriverenamefolderurl(m_sgdriverenamefolderurl);
@@ -447,6 +464,9 @@ public class SMOptionInput extends java.lang.Object{
 		m_sgdriveworkorderparentfolderid = smoption.getgdriveworkorderparentfolderid();
 		m_sgdriveworkorderfolderprefix = smoption.getgdriveworkorderfolderprefix();
 		m_sgdriveworkorderfoldersuffix = smoption.getgdriveworkorderfoldersuffix();
+		m_sgdrivelaborbackchargeparentfolderid = smoption.getgdrivelaborbackchargeparentfolderid();
+		m_sgdrivelaborbackchargefolderprefix = smoption.getgdrivelaborbackchargefolderprefix();
+		m_sgdrivelaborbackchargefoldersuffix = smoption.getgdriveworkorderfoldersuffix();
 		//m_sgdrivecreatenewfolderurl = smoption.getgdrivecreatenewfolderurl();
 		m_sgdriveuploadfileurl = smoption.getgdriveuploadfileurl();
 		m_sgdriverenamefolderurl = smoption.getgdriverenamefolderurl();
@@ -697,6 +717,24 @@ public class SMOptionInput extends java.lang.Object{
     public void setgdriveworkorderfoldersuffix(String sgdriveworkorderfoldersuffix){
     	m_sgdriveworkorderfoldersuffix = sgdriveworkorderfoldersuffix;
     }
+    public String getgdrivelaborbackchargeparentfolderid(){
+    	return m_sgdrivelaborbackchargeparentfolderid;
+    }
+    public void setgdrivelaborbackchargeparentfolderid(String sgdrivelaborbackchargeparentfolderid){
+    	m_sgdrivelaborbackchargeparentfolderid = sgdrivelaborbackchargeparentfolderid;
+    }
+    public String getgdrivelaborbackchargefolderprefix(){
+    	return m_sgdrivelaborbackchargefolderprefix;
+    }
+    public void setgdrivelaborbackchargefolderprefix(String sgdrivelaborbackchargefolderprefix){
+    	m_sgdrivelaborbackchargefolderprefix = sgdrivelaborbackchargefolderprefix;
+    }
+    public String getgdrivelaborbackchargefoldersuffix(){
+    	return m_sgdrivelaborbackchargefoldersuffix;
+    }
+    public void setgdrivelaborbackchargefoldersuffix(String sgdrivelaborbackchargefoldersuffix){
+    	m_sgdrivelaborbackchargefoldersuffix = sgdrivelaborbackchargefoldersuffix;
+    }
     //public String getgdrivecreatenewfolderurl(){
     //	return m_sgdrivecreatenewfolderurl;
     //}
@@ -800,6 +838,9 @@ public class SMOptionInput extends java.lang.Object{
 		sQueryString += "&" + Paramsgdriveworkorderparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdriveworkorderparentfolderid);
 		sQueryString += "&" + Paramsgdriveworkorderfolderprefix + "=" + clsServletUtilities.URLEncode(m_sgdriveworkorderfolderprefix);
 		sQueryString += "&" + Paramsgdriveworkorderfoldersuffix + "=" + clsServletUtilities.URLEncode(m_sgdriveworkorderfoldersuffix);
+		sQueryString += "&" + Paramsgdrivelaborbackchargeparentfolderid + "=" + clsServletUtilities.URLEncode(m_sgdrivelaborbackchargeparentfolderid);
+		sQueryString += "&" + Paramsgdrivelaborbackchargeprefix + "=" + clsServletUtilities.URLEncode(m_sgdrivelaborbackchargefolderprefix);
+		sQueryString += "&" + Paramsgdrivelaborbackchargesuffix + "=" + clsServletUtilities.URLEncode(m_sgdrivelaborbackchargefoldersuffix);
 		//sQueryString += "&" + Paramsgdrivecreatenewfolderurl + "=" + ServletUtilities.URLEncode(m_sgdrivecreatenewfolderurl);
 		sQueryString += "&" + Paramsgdriveuploadfileurl + "=" + clsServletUtilities.URLEncode(m_sgdriveuploadfileurl);
 		sQueryString += "&" + Paramicopysalesleadfolderurltoorder + "=" + clsServletUtilities.URLEncode(m_icopysalesleadfolderurltoorder);

@@ -69,6 +69,11 @@ public class SMTablesmoptions {
 	public static String gdriveworkorderfolderprefix = "gdriveworkorderfolderprefix";
 	public static String gdriveworkorderfoldersuffix = "gdriveworkorderfoldersuffix";
 	
+	//Fields for creating new Labor Back Charge folders in Google Drive:
+	public static String gdrivelaborbackchargeparentfolderid = "gdrivelaborbackchargeparentfolderid";
+	public static String gdrivelaborbackchargefolderprefix = "gdrivelaborbackchargefolderprefix";
+	public static String gdrivelaborbackchargefoldersuffix = "gdrivelaborbackchargefoldersuffix";
+	
 	//Field for URL to upload files to Google Drive:
 	public static String gdriveuploadfileurl = "gdriveuploadfileurl";
 	
@@ -125,6 +130,9 @@ public class SMTablesmoptions {
 	public static int gdriveworkorderparentfolderidlength = 72;
 	public static int gdriveworkorderfolderprefixlength = 32;
 	public static int gdriveworkorderfoldersuffixlength = 32;
+	public static int gdrivelaborbackchargeparentfolderidlength = 72;
+	public static int gdrivelaborbackchargefolderprefixlength = 32;
+	public static int gdrivelaborbackchargefoldersuffixlength = 32;
 	public static int gdriveuploadfileurllength = 128;
 	public static int gdriverenamefolderurllength = 128;
 	public static int isignatureboxwidthlength = 11;

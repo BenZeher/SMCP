@@ -227,7 +227,17 @@ public class GLEditEntryEdit  extends HttpServlet {
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + LINE_NUMBER_TO_DELETE_PARAM + "\" VALUE=\"" + "" + "\""
 		+ " id=\"" + LINE_NUMBER_TO_DELETE_PARAM + "\""
 		+ "\">";
-				
+
+		//Store the source transaction ID:
+        //Source document transaction ID:
+ 		s += 
+ 			"\n"
+ 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
+ 			+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlink()) + "\""
+ 			+ ">"
+ 			+ "\n"
+ 		;
+		
 		s += "<BR><TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
 		
 		s += "  <TR>\n";
@@ -752,37 +762,6 @@ public class GLEditEntryEdit  extends HttpServlet {
      	
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
  		s += "  </TR>\n";
-     	
-        //Source document transaction ID:
- 		s += "  <TR>\n";
- 		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source document ID:&nbsp;</TD>\n"
- 		    ;
-     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase("15") !=0)){
-     		String sDefaultID = "0";
-     		if (entry.getssourceledgertransactionlink().compareToIgnoreCase("") != 0){
-     			sDefaultID = entry.getssourceledgertransactionlink();
-     		}
-     		sControlHTML = "<INPUT TYPE=TEXT NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(sDefaultID) + "\""
- 	    		+ " MAXLENGTH=" + "13"
- 	    		+ " SIZE = " + "10"
- 	    		+ " onchange=\"flagDirty();\""
- 	    		+ ">"
- 	    	;
-     	}else{
-     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.ssourceledgertransactionid + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getssourceledgertransactionlink()) + "\""
- 	    		+ ">"
- 	    		+ entry.getssourceledgertransactionlink()
- 	    	;
-     	}
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
-     	
-     	s += "    <TD>&nbsp;</TD>\n"
-     		+ "    <TD>&nbsp;</TD>"
-     	;
-     	
-     	s += "  </TR>\n";
      	
         //Description:
     	s += "  <TR>\n";

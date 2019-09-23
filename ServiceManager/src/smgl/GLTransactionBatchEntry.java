@@ -565,6 +565,10 @@ public class GLTransactionBatchEntry {
 		if (m_sourceledgertransactionlink.compareToIgnoreCase("") == 0){
 			m_sourceledgertransactionlink = "0";
 		}
+		//If this is a journal entry, then the source ledger transaction ID is just the batch/entry number:
+		if (getssourceledger().compareToIgnoreCase(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL)) == 0){
+			m_sourceledgertransactionlink = getsbatchnumber() + "," + getsentrynumber();
+		}
 		try {
 			m_sourceledgertransactionlink = clsValidateFormFields.validateStringField(
 					m_sourceledgertransactionlink, 

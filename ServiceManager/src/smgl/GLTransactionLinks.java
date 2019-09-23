@@ -4,6 +4,8 @@ import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableartransactions;
+import SMDataDefinition.SMTablegltransactionbatchentries;
+import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTableictransactions;
 import smar.ARDocumentTypes;
 import smcontrolpanel.SMUtilities;
@@ -64,7 +66,12 @@ public class GLTransactionLinks {
 					+ "&CallingClass=smic.ICTransactionHistory";
 				break;
 			case GLSourceLedgers.SOURCE_LEDGER_GL:
-				sSubledgerLinkClass = "";
+				sSubledgerLinkClass = "smgl.GLEditEntryEdit";
+				String sGLBatchAndEntry[] = sSubledgerTransactionID.split(",");
+				sAdditionalParameters = "&" + SMTablegltransactionbatchentries.lbatchnumber + "=" + sGLBatchAndEntry[0]
+					+ "&" + SMTablegltransactionbatchentries.lentrynumber + "=" + sGLBatchAndEntry[1]
+					+ "&Editable=No"
+					+ "&CallingClass=smgl.GLEditBatchesEdit";
 				break;
 			default:
 				throw new Exception("Error [20192111519544] " + "Cannot build link for subledger " + Integer.toString(iSourceLedgerCode) + ".");

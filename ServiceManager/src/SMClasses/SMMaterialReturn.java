@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMDataDefinition.SMTablematerialreturns;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsMasterEntry;
 import smap.APVendor;
@@ -37,6 +38,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramiponumber = "iponumber";
 	public static final String Paramitobereturned = "itobereturned";
 	public static final String Paramsvendoracct = "svendoracct";
+	public static final String Paramladjustedbatchnumber = "ladjustedbatchnumber";
+	public static final String Paramlentrynumber = "lentrynumber";
+	public static final String Parambdentryamount = "bdentryamount";
+	public static final String Paramdatcreditnotedate = "datcreditnotedate";
+	public static final String Paramscreditmemonumber = "screditmemonumber";
+	public static final String Parambdcreditamt = "bdcreditamt";
+	public static final String Parammfollowupnotes = "mfollowupnotes";
 	
 	
 	private String m_slid;
@@ -57,6 +65,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_sponumber;
 	private String m_itobereturned;
 	private String m_svendoracct;
+	private String m_ladjustedbatchnumber;
+	private String m_lentrynumber;
+	private String m_bdentryamount;
+	private String m_datcreditnotedate;
+	private String m_screditmemonumber;
+	private String m_bdcreditamt;
+	private String m_mfollowupnotes;
 	
 	private boolean bDebugMode = false;
 	
@@ -123,6 +138,20 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}
 		m_svendoracct = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramsvendoracct, req).trim().replace("&quot;", "\"");
+		m_ladjustedbatchnumber = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramladjustedbatchnumber, req).trim().replace("&quot;", "\"");
+		m_lentrynumber = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramlentrynumber, req).trim().replace("&quot;", "\"");
+		m_bdentryamount = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parambdentryamount, req).trim().replace("&quot;", "\"");
+		m_datcreditnotedate = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramdatcreditnotedate, req).trim().replace("&quot;", "\"");
+		m_screditmemonumber = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramscreditmemonumber, req).trim().replace("&quot;", "\"");
+		m_bdcreditamt = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parambdcreditamt, req).trim().replace("&quot;", "\"");
+		m_mfollowupnotes = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parammfollowupnotes, req).trim().replace("&quot;", "\"");
 		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
@@ -192,6 +221,14 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_strimmedordernumber = rs.getString(SMTablematerialreturns.strimmedordernumber).trim();
 				m_itobereturned = Long.toString(rs.getLong(SMTablematerialreturns.itobereturned));
 				m_svendoracct = rs.getString(SMTablematerialreturns.svendoracct).trim();
+				
+				m_ladjustedbatchnumber = Long.toString(rs.getLong(SMTablematerialreturns.ladjustedbatchnumber));
+				m_lentrynumber = Long.toString(rs.getLong(SMTablematerialreturns.lentrynumber));
+				m_bdentryamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdentryamount));
+				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
+				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
+				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
+				m_mfollowupnotes = rs.getString(SMTablematerialreturns.mfollowupnotes).trim();
 				rs.close();
 			} else {
 				rs.close();
@@ -314,6 +351,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.icreditstatus
 				+ ", " + SMTablematerialreturns.iponumber
 				+ ", " + SMTablematerialreturns.svendoracct
+				+ ", " + SMTablematerialreturns.ladjustedbatchnumber
+				+ ", " + SMTablematerialreturns.lentrynumber
+				+ ", " + SMTablematerialreturns.bdentryamount
+				+ ", " + SMTablematerialreturns.datcreditnotedate
+				+ ", " + SMTablematerialreturns.screditmemonumber
+				+ ", " + SMTablematerialreturns.bdcreditamt
+				+ ", " + SMTablematerialreturns.mfollowupnotes
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -325,18 +369,25 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SQL += ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getsdatresolved()) + "'";
 			}
 			SQL += ", " + getsresolved()
-				+ ", " + getstobereturned()
-				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid()) + ""
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
-				+ ", " + sWorkOrderID
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
-				+ ", " + sCreditStatus
-				+ ", " + sPONumber
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
-				+ ")"
+			+ ", " + getstobereturned()
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid()) + ""
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
+			+ ", " + sWorkOrderID
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
+			+ ", " + sCreditStatus
+			+ ", " + sPONumber
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
+			+ ")"
 			;
     	}else{
 			SQL = " UPDATE " + SMTablematerialreturns.TableName + " SET "
@@ -347,17 +398,24 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SQL += " " + SMTablematerialreturns.datresolved + " = '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getsdatresolved()) + "'";
 			}
 			SQL += ", " + SMTablematerialreturns.iresolved + " = " + getsresolved()
-				+ ", " + SMTablematerialreturns.itobereturned + " = " + getstobereturned()
-				+ ", " + SMTablematerialreturns.mcomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
-				+ ", " + SMTablematerialreturns.sdescription  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
-				+ ", " + SMTablematerialreturns.mresolutioncomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
-				+ ", " + SMTablematerialreturns.lresolvedbyid  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid().trim()) + ""
-				+ ", " + SMTablematerialreturns.sresolvedbyfullname  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
-				+ ", " + SMTablematerialreturns.iworkorderid + " = " + sWorkOrderID
-				+ ", " + SMTablematerialreturns.strimmedordernumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
-				+ ", " + SMTablematerialreturns.icreditstatus + " = " + sCreditStatus
-				+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
-				+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
+			+ ", " + SMTablematerialreturns.itobereturned + " = " + getstobereturned()
+			+ ", " + SMTablematerialreturns.mcomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
+			+ ", " + SMTablematerialreturns.sdescription  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
+			+ ", " + SMTablematerialreturns.mresolutioncomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
+			+ ", " + SMTablematerialreturns.lresolvedbyid  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid().trim()) + ""
+			+ ", " + SMTablematerialreturns.sresolvedbyfullname  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
+			+ ", " + SMTablematerialreturns.iworkorderid + " = " + sWorkOrderID
+			+ ", " + SMTablematerialreturns.strimmedordernumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
+			+ ", " + SMTablematerialreturns.icreditstatus + " = " + sCreditStatus
+			+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
+			+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
+			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + "'"
+			+ ", " + SMTablematerialreturns.lentrynumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + "'"
+			+ ", " + SMTablematerialreturns.bdentryamount  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + "'"
+			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
+			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
+			+ ", " + SMTablematerialreturns.bdcreditamt  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + "'"
+			+ ", " + SMTablematerialreturns.mfollowupnotes  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
@@ -685,6 +743,48 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setsvendoracct(String sVendorAcct) {
 		m_svendoracct = sVendorAcct;
 	}
+	public String getladjustedbatchnumber() {
+		return m_ladjustedbatchnumber;
+	}
+	public void setladjustedbatchnumber(String ladjustedbatchnumber) {
+		m_ladjustedbatchnumber = ladjustedbatchnumber;
+	}
+	public String getlentrynumber() {
+		return m_lentrynumber;
+	}
+	public void setlentrynumber(String lentrynumber) {
+		m_lentrynumber = lentrynumber;
+	}
+	public String getbdentryamount() {
+		return m_bdentryamount;
+	}
+	public void setbdentryamount(String bdentryamount) {
+		m_bdentryamount = bdentryamount;
+	}
+	public String getdatcreditnotedate() {
+		return m_datcreditnotedate;
+	}
+	public void setdatcreditnotedate(String datcreditnotedate) {
+		m_datcreditnotedate = datcreditnotedate;
+	}
+	public String getscreditmemonumber() {
+		return m_screditmemonumber;
+	}
+	public void setscreditmemonumber(String screditmemonumber) {
+		m_screditmemonumber = screditmemonumber;
+	}
+	public String getbdcreditamt() {
+		return m_bdcreditamt;
+	}
+	public void setbdcreditamt(String bdcreditamt) {
+		m_bdcreditamt = bdcreditamt;
+	}
+	public String getmfollowupnotes() {
+		return m_mfollowupnotes;
+	}
+	public void setmfollowupnotes(String mfollowupnotes) {
+		m_mfollowupnotes = mfollowupnotes;
+	}
 	
 	public String getObjectName(){
 		return ParamObjectName;
@@ -725,5 +825,12 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_sponumber = "0";
     	m_itobereturned = "0";
     	m_svendoracct = "";
+    	 m_ladjustedbatchnumber ="0";
+    	 m_lentrynumber ="0";
+    	 m_bdentryamount ="0";
+    	 m_datcreditnotedate = EMPTY_DATE_STRING;
+    	 m_screditmemonumber = "";
+    	 m_bdcreditamt = "0";
+    	 m_mfollowupnotes = "";
 	}
 }

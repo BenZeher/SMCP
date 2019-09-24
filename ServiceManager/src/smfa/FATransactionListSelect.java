@@ -26,6 +26,11 @@ public class FATransactionListSelect extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
 	public static final String LOCATION_PARAMETER = "LOCATION";
+	public static final String SHOWALLLOCATIONS_PARAMETER = "SHOWALLLOCATIONS";
+	public static final String GROUPBY_PARAMETER = "GROUPBY";
+	public static final String GROUPBY_VALUE_CLASS = "GROUPBYCLASS";
+	public static final String GROUPBY_VALUE_GL = "GROUPBYGL";
+	
 	private static final String CHECKBOX_LABEL = "CHECKBOXLABEL";
 	//private static String sObjectName = "Asset";
 	
@@ -126,6 +131,8 @@ public class FATransactionListSelect extends HttpServlet {
         ArrayList<String> sPeriodDescriptions = new ArrayList<String>();
         Calendar c = Calendar.getInstance();
         c.setTimeInMillis(System.currentTimeMillis());
+        
+        pwOut.println("\n" + "<INPUT TYPE=HIDDEN NAME='" + SHOWALLLOCATIONS_PARAMETER + "' VALUE = 'N' >" + "\n");
         
 	    try{
 		    //Fiscal year:
@@ -239,6 +246,18 @@ public class FATransactionListSelect extends HttpServlet {
         		+ clsServletUtilities.CHECKBOX_UNCHECKED_STRING
         		+ " STYLE=\"height: 0.25in\""
         		+ "></TD>"
+        		+ "<TD ALIGN=LEFT>&nbsp;</TD>"
+        		+ "</TR>"
+        		);
+        
+        //Group by asset class OR by GL account:
+        pwOut.println(
+        		"<TR>"
+    	        + "<TD ALIGN=RIGHT><B>Group by:</B> </TD>"
+    	        + "<TD ALIGN=LEFT>"
+        		+ "<LABEL>Asset Class <INPUT TYPE=RADIO NAME= '" + GROUPBY_PARAMETER + "' VALUE = '" + GROUPBY_VALUE_CLASS + "' CHECKED ></LABEL>"
+    	        + "&nbsp;&nbsp;&nbsp;&nbsp;<LABEL>GL Account <INPUT TYPE=RADIO NAME= '" + GROUPBY_PARAMETER + "' VALUE = '" + GROUPBY_VALUE_GL + "' ></LABEL>"
+        		+ "</TD>"
         		+ "<TD ALIGN=LEFT>&nbsp;</TD>"
         		+ "</TR>"
         		);

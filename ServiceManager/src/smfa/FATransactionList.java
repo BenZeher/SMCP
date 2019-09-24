@@ -33,6 +33,7 @@ public class FATransactionList extends java.lang.Object{
 			String sStartingFP,
 			String sEndingFY,
 			String sEndingFP,
+			String sGroupBy,
 			boolean bPrintProvisional,
 			boolean bPrintAdjustments,
 			boolean bPrintActual,
@@ -40,7 +41,8 @@ public class FATransactionList extends java.lang.Object{
 			PrintWriter out,
 			ServletContext context,
 			String sLicenseModuleLevel,
-			ArrayList<String>arrLocations
+			ArrayList<String>arrLocations,
+			boolean bShowAllLocations
 			){
 
 		String sCurrentClass = "";
@@ -50,91 +52,195 @@ public class FATransactionList extends java.lang.Object{
 	    String sCombinedStartingFiscalPeriod = String.valueOf((Long.parseLong(sStartingFY) * 100) + Long.parseLong(sStartingFP));
 	    String sCombinedEndingFiscalPeriod = String.valueOf((Long.parseLong(sEndingFY) * 100) +Long.parseLong(sEndingFP));
 	    
-	    String SQL = "SELECT"
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datTransactionDate + "," 
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + "," 
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + ","
-	    				+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100) + " 
-	    					+ SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " AS COMBINEDYEARANDPERIOD" + "," 
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.dAmountDepreciated + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datPostingDate + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAccumulatedDepreciationGLAcct + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransComment + ","
-	    				+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransDepreciationGLAcct + ","
-	    				+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sDescription + ","
-	    				+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass
-	    				+ ", " + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation
+	    String SQL = "";
+	    if (sGroupBy.compareToIgnoreCase(FATransactionListSelect.GROUPBY_VALUE_CLASS) == 0){
 	    
-	    			+ " FROM"
-	    				+ " " + SMTablefatransactions.TableName + "," 
-	    				+ " " + SMTablefamaster.TableName
-	    
-	    			+ " WHERE ("
-	    				+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + " ="
-	    				+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + ")"
-	    				+ " AND"
-	    				+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
-	    				+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " >= "
-	    				+ 	  sCombinedStartingFiscalPeriod + ")"
-	    				+ " AND"
-	    				+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
-	    				+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " <= "
-	    				+ 	  sCombinedEndingFiscalPeriod + ")";
-	    
-	        //Lay out all the possible combinations of the user-selected checkboxes:
-	        if (!bPrintProvisional && !bPrintAdjustments && !bPrintActual){
-	            //Nothing will print in this case:
-	            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> 'FA-ADJ')" 
-	            	+ " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
-	            
-	        }else if (!bPrintProvisional && !bPrintAdjustments && bPrintActual){
-	        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
-         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
-	        	
-	        }else if (!bPrintProvisional && bPrintAdjustments && bPrintActual){
-	        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)";
-	        	
-	        }else if (!bPrintProvisional && bPrintAdjustments && !bPrintActual){
-	        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
-         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
-	        	
-	        }else if (bPrintProvisional && !bPrintAdjustments && !bPrintActual){
-	            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1)"
-                	   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
-	        }else if (bPrintProvisional && !bPrintAdjustments && bPrintActual){
-  	   		    SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
-  	   		    
-	        }else if (bPrintProvisional && bPrintAdjustments && bPrintActual){
-	            //Don't need any qualifier here, because every type can print
-	            
-	        }else if (bPrintProvisional && bPrintAdjustments && !bPrintActual){
-  	   		    SQL += " AND " 
-			    		+ "(" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1"
-			    		+ " OR " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "'"
-			    		+ ")";
-	        }
-	        
-  	   		//Qualify by location:
-  	   		SQL += " AND (";
-  	   		for (int i = 0; i < arrLocations.size(); i++){
-  	   			if (i > 0){
-  	   				SQL += " OR ";
-  	   			}
-  	   			SQL += "(" + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " = '" + arrLocations.get(i) + "')";
-  	   		}
-	        SQL += ")";
-  	   		
-	    //End WHERE clause . . .
-  	   	SQL += ")";
-  	   		
-	    SQL += " ORDER BY"
-	    	+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + ","
-	    	+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + "," 
-	    	+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + ","
-	    	+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber;
+		    SQL = "SELECT"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datTransactionDate + " AS TRANSACTIONDATE," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " AS FISCALPERIOD," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " AS FISCALYEAR,"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100) + " 
+						+ SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " AS COMBINEDYEARANDPERIOD" + "," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.dAmountDepreciated + " AS AMTDEPRECIATED,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datPostingDate + " AS POSTINGDATE,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + " AS PROVISIONALPOSTING,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAccumulatedDepreciationGLAcct + " AS ACCUMDEPACCT,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + " AS TRANSACTIONTYPE,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + " AS ASSETNUMBER,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransComment + " AS COMMENT,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransDepreciationGLAcct + " AS DEPACCT,"
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sDescription + " AS DESCRIPTION,"
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + " AS CLASS"
+					+ ", " + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " AS LOCATION"
+	
+				+ " FROM"
+					+ " " + SMTablefatransactions.TableName + "," 
+					+ " " + SMTablefamaster.TableName
+	
+				+ " WHERE ("
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + " ="
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + ")"
+					+ " AND"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
+					+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " >= "
+					+ 	  sCombinedStartingFiscalPeriod + ")"
+					+ " AND"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
+					+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " <= "
+					+ 	  sCombinedEndingFiscalPeriod + ")";
+	
+		        //Lay out all the possible combinations of the user-selected checkboxes:
+		        if (!bPrintProvisional && !bPrintAdjustments && !bPrintActual){
+		            //Nothing will print in this case:
+		            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> 'FA-ADJ')" 
+		            	+ " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+		            
+		        }else if (!bPrintProvisional && !bPrintAdjustments && bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
+	         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+		        	
+		        }else if (!bPrintProvisional && bPrintAdjustments && bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)";
+		        	
+		        }else if (!bPrintProvisional && bPrintAdjustments && !bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
+	         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
+		        	
+		        }else if (bPrintProvisional && !bPrintAdjustments && !bPrintActual){
+		            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1)"
+	                	   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
+		        }else if (bPrintProvisional && !bPrintAdjustments && bPrintActual){
+	  	   		    SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+	  	   		    
+		        }else if (bPrintProvisional && bPrintAdjustments && bPrintActual){
+		            //Don't need any qualifier here, because every type can print
+		            
+		        }else if (bPrintProvisional && bPrintAdjustments && !bPrintActual){
+	  	   		    SQL += " AND " 
+				    		+ "(" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1"
+				    		+ " OR " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "'"
+				    		+ ")";
+		        }
+		        
+	  	   		//Qualify by location:
+		        if (!bShowAllLocations){
+		  	   		SQL += " AND (";
+		  	   		for (int i = 0; i < arrLocations.size(); i++){
+		  	   			if (i > 0){
+		  	   				SQL += " OR ";
+		  	   			}
+		  	   			SQL += "(" + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " = '" + arrLocations.get(i) + "')";
+		  	   		}
+			        SQL += ")";
+		        }
+	  	   		
+		    //End WHERE clause . . .
+	  	   	SQL += ")";
+	  	   		
+		    SQL += " ORDER BY"
+		    	+ " " + "FISCALYEAR" + ","
+		    	+ " " + "FISCALPERIOD" + "," 
+		    	+ " " + "CLASS" + ","
+		    	+ " " + "ASSETNUMBER";
+		    	/*
+		    	SQL += " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + ","
+		    	    + " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + "," 
+		    	    + " " + SMTablefatransactions.TableName + "." + SMTablefatransactions. + ","
+		    	    + " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber;
+		    */
+	    }else{
+	    	//If we are grouping by GL Acct, then we need a UNION:
+		    SQL = "SELECT"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datTransactionDate + " AS TRANSACTIONDATE," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " AS FISCALPERIOD," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " AS FISCALYEAR,"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100) + " 
+						+ SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " AS COMBINEDYEARANDPERIOD" + "," 
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.dAmountDepreciated + " AS AMTDEPRECIATED,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.datPostingDate + " AS POSTINGDATE,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + " AS PROVISIONALPOSTING,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAccumulatedDepreciationGLAcct + " AS ACCUMDEPACCT,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + " AS TRANSACTIONTYPE,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + " AS ASSETNUMBER,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransComment + " AS COMMENT,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransDepreciationGLAcct + " AS DEPACCT,"
+					+ " 0.00 AS DEBITAMT"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.dAmountDepreciated + " AS CREDITAMT,"
+					+ " " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAccumulatedDepreciationGLAcct + " AS GLACCT,"
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sDescription + " AS DESCRIPTION,"
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + " AS CLASS"
+					+ ", " + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " AS LOCATION"
+	
+				+ " FROM"
+					+ " " + SMTablefatransactions.TableName + "," 
+					+ " " + SMTablefamaster.TableName
+	
+				+ " WHERE ("
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransAssetNumber + " ="
+					+ " " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + ")"
+					+ " AND"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
+					+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " >= "
+					+ 	  sCombinedStartingFiscalPeriod + ")"
+					+ " AND"
+					+ " (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalYear + " * 100 + " 
+					+ 	  SMTablefatransactions.TableName + "." + SMTablefatransactions.iFiscalPeriod + " <= "
+					+ 	  sCombinedEndingFiscalPeriod + ")";
+	
+		        //Lay out all the possible combinations of the user-selected checkboxes:
+		        if (!bPrintProvisional && !bPrintAdjustments && !bPrintActual){
+		            //Nothing will print in this case:
+		            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> 'FA-ADJ')" 
+		            	+ " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+		            
+		        }else if (!bPrintProvisional && !bPrintAdjustments && bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
+	         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+		        	
+		        }else if (!bPrintProvisional && bPrintAdjustments && bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)";
+		        	
+		        }else if (!bPrintProvisional && bPrintAdjustments && !bPrintActual){
+		        	SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=0)"
+	         	   		   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
+		        	
+		        }else if (bPrintProvisional && !bPrintAdjustments && !bPrintActual){
+		            SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1)"
+	                	   + " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "<> '" + SMTablefatransactions.ADJUSTMENT_FLAG + "')";
+		        }else if (bPrintProvisional && !bPrintAdjustments && bPrintActual){
+	  	   		    SQL += " AND (" + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.DEPRECIATION_FLAG + "')";
+	  	   		    
+		        }else if (bPrintProvisional && bPrintAdjustments && bPrintActual){
+		            //Don't need any qualifier here, because every type can print
+		            
+		        }else if (bPrintProvisional && bPrintAdjustments && !bPrintActual){
+	  	   		    SQL += " AND " 
+				    		+ "(" + SMTablefatransactions.TableName + "." + SMTablefatransactions.iProvisionalPosting + "=1"
+				    		+ " OR " + SMTablefatransactions.TableName + "." + SMTablefatransactions.sTransactionType + "= '" + SMTablefatransactions.ADJUSTMENT_FLAG + "'"
+				    		+ ")";
+		        }
+		        
+	  	   		//Qualify by location:
+		        if (!bShowAllLocations){
+		  	   		SQL += " AND (";
+		  	   		for (int i = 0; i < arrLocations.size(); i++){
+		  	   			if (i > 0){
+		  	   				SQL += " OR ";
+		  	   			}
+		  	   			SQL += "(" + SMTablefamaster.TableName + "." + SMTablefamaster.sLocation + " = '" + arrLocations.get(i) + "')";
+		  	   		}
+			        SQL += ")";
+		        }
+	  	   		
+		    //End WHERE clause . . .
+	  	   	SQL += ")";
+	  	   		
+		    SQL += " ORDER BY"
+		    	+ " " + "FISCALYEAR" + ","
+		    	+ " " + "FISCALPERIOD" + "," 
+		    	+ " " + "GLACCT" + ","
+		    	+ " " + "ASSETNUMBER";
+	    }
         
 	    System.out.println("[1548976073] - SQL = '" + SQL + "'");
 
@@ -158,22 +264,22 @@ public class FATransactionList extends java.lang.Object{
 	        while(rs.next()){
 	        	iHasRecord = true;
 	        	if (iCurrentPeriod < 0){
-	        		iCurrentYear = rs.getInt(SMTablefatransactions.iFiscalYear);
-	        		iCurrentPeriod = rs.getInt(SMTablefatransactions.iFiscalPeriod);
+	        		iCurrentYear = rs.getInt("FISCALYEAR");
+	        		iCurrentPeriod = rs.getInt("FISCALPERIOD");
 	        		Print_Period_Header(iCurrentYear,
 	        							iCurrentPeriod,
 	        						    out);
 	        	}
 	        	if (sCurrentClass.length() == 0){
-	        		sCurrentClass = rs.getString(SMTablefamaster.sClass);
+	        		sCurrentClass = rs.getString("CLASS");
 	        		Print_Class_Header(sCurrentClass, 
-	        						   rs.getString(SMTablefamaster.sClass),
+	        						   rs.getString("CLASS"),
 	        						   out);
 	        	}
 	        	
 	        	//check period
-	        	if (rs.getInt(SMTablefatransactions.iFiscalYear)!= iCurrentYear || 
-					rs.getInt(SMTablefatransactions.iFiscalPeriod) != iCurrentPeriod){
+	        	if (rs.getInt("FISCALYEAR")!= iCurrentYear || 
+					rs.getInt("FISCALPERIOD") != iCurrentPeriod){
 	        		Print_Class_Totals(bdClassAmount,
 			 						   sCurrentClass,
 			 						   out);
@@ -184,48 +290,48 @@ public class FATransactionList extends java.lang.Object{
 
 	                bdClassAmount = BigDecimal.ZERO;
 	                bdFPAmount = BigDecimal.ZERO;
-		        	sCurrentClass = rs.getString(SMTablefamaster.sClass);
-		        	iCurrentYear = rs.getInt(SMTablefatransactions.iFiscalYear );
-		        	iCurrentPeriod = rs.getInt(SMTablefatransactions.iFiscalPeriod);
+		        	sCurrentClass = rs.getString("CLASS");
+		        	iCurrentYear = rs.getInt("FISCALYEAR");
+		        	iCurrentPeriod = rs.getInt("FISCALPERIOD");
 
 		        	if (bShowDetail){
 		        		Print_Column_Header(out);
 		        	}
-		        	Print_Period_Header(rs.getInt(SMTablefatransactions.iFiscalYear),
-										rs.getInt(SMTablefatransactions.iFiscalPeriod),
+		        	Print_Period_Header(rs.getInt("FISCALYEAR"),
+										rs.getInt("FISCALPERIOD"),
 									    out);
 		        	
 	        		Print_Class_Header(sCurrentClass, 
-			 						   rs.getString(SMTablefamaster.sClass),
+			 						   rs.getString("CLASS"),
 			 						   out);
-	        	}else if (rs.getString(SMTablefamaster.sClass).compareTo(sCurrentClass) != 0){
+	        	}else if (rs.getString("CLASS").compareTo(sCurrentClass) != 0){
 		        		Print_Class_Totals(bdClassAmount,
 		        						   sCurrentClass,
 		        						   out);
 
 		                bdClassAmount = BigDecimal.ZERO;
-			        	sCurrentClass = rs.getString(SMTablefamaster.sClass);
+			        	sCurrentClass = rs.getString("CLASS");
 
 			        	if (bShowDetail){
 			        		Print_Column_Header(out);
 			        	}
 		        		Print_Class_Header(sCurrentClass, 
-	 						   rs.getString(SMTablefamaster.sClass),
+	 						   rs.getString("CLASS"),
 	 						   out);
 		        		iCount = 0;
 		        	}
 	        	
 	        	if (bShowDetail){
-		        	Print_Transaction_Info(rs.getDate(SMTablefatransactions.datTransactionDate),
-			        			   		   rs.getString(SMTablefatransactions.sTransAssetNumber),
-			        			   		   rs.getString(SMTablefamaster.sDescription),
-			        			   		   rs.getString(SMTablefatransactions.sTransactionType),
-			        			   		   rs.getString(SMTablefatransactions.sTransDepreciationGLAcct),
-			        			   		   rs.getString(SMTablefatransactions.sTransAccumulatedDepreciationGLAcct),
-			        			   		   rs.getString(SMTablefatransactions.sTransComment),
-			        			   		   rs.getString(SMTablefamaster.sLocation),
-			        			   		   rs.getInt(SMTablefatransactions.iProvisionalPosting),
-			        			   		   rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated),
+		        	Print_Transaction_Info(rs.getDate("TRANSACTIONDATE"),
+			        			   		   rs.getString("ASSETNUMBER"),
+			        			   		   rs.getString("DESCRIPTION"),
+			        			   		   rs.getString("TRANSACTIONTYPE"),
+			        			   		   rs.getString("DEPACCT"),
+			        			   		   rs.getString("ACCUMDEPACCT"),
+			        			   		   rs.getString("COMMENT"),
+			        			   		   rs.getString("LOCATION"),
+			        			   		   rs.getInt("PROVISIONALPOSTING"),
+			        			   		   rs.getBigDecimal("AMTDEPRECIATED"),
 			        			   		   bAllowAssetEditing,
 			        			   		   out,
 			        			   		   context,
@@ -234,9 +340,9 @@ public class FATransactionList extends java.lang.Object{
 			        			   		   );
 	        	}
 
-	        	bdClassAmount = bdClassAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
-	        	bdFPAmount = bdFPAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
-	        	bdGrandAmount = bdGrandAmount.add(rs.getBigDecimal(SMTablefatransactions.dAmountDepreciated));
+	        	bdClassAmount = bdClassAmount.add(rs.getBigDecimal("AMTDEPRECIATED"));
+	        	bdFPAmount = bdFPAmount.add(rs.getBigDecimal("AMTDEPRECIATED"));
+	        	bdGrandAmount = bdGrandAmount.add(rs.getBigDecimal("AMTDEPRECIATED"));
 	        	iCount++;
 	        }
 			rs.close();

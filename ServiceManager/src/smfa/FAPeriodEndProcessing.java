@@ -103,6 +103,9 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 		rsAssetCount.close();
 		Delete_Provisional_Postings(conn);
 		
+		//Get a list of all the 'eligible' assets, meaning the ones with NO transactions in this period ('TRANSQUERY'), 
+		// and having a current value still greater than the salvage value, and finally having no date sold
+		// (i.e., not having been sold off)
 		sSQL = "SELECT"
 			+ " " + SMTablefamaster.sAssetNumber
 			+ " FROM"
@@ -143,6 +146,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 		long lNumberOfAssetsDepreciated = 0;
 		ServletUtilities.clsDBServerTime clsCurrentTime = new ServletUtilities.clsDBServerTime(conn);
 		
+		//Create a GL export batch for the transactions:
 		if (m_bProvisional){
 			if (!m_cGLExportBatch.addHeader(SMModuleTypes.FA, 
 					"SS",
@@ -171,6 +175,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 			sProvisionalDescription = "Monthly Depreciation";
 		}
 
+		//Now calculate the depreciation amount for each eligible asset:
 		while (rsAssets.next()){
 			FAAsset asset = null;
 			try{

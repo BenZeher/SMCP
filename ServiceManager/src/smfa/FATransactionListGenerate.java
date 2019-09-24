@@ -55,11 +55,13 @@ public class FATransactionListGenerate extends HttpServlet {
 		boolean bPrintAdjustmentTransactions = false;
 		boolean bPrintActualTransactions = false;
 		boolean bShowDetails = false;
+		boolean bShowAllLocations = false;
 
 		String sStartingFY = "";
 		String sStartingFP = "";
 		String sEndingFY = "";
 		String sEndingFP = "";
+		String sGroupBy = "";
 
 
 		if (request.getParameter("PRINTPROVISIONALTRANSACTION") != null){
@@ -79,7 +81,10 @@ public class FATransactionListGenerate extends HttpServlet {
 		sStartingFP = clsManageRequestParameters.get_Request_Parameter("STARTFISCALPERIOD", request);
 		sEndingFY = clsManageRequestParameters.get_Request_Parameter("ENDFISCALYEAR", request);
 		sEndingFP = clsManageRequestParameters.get_Request_Parameter("ENDFISCALPERIOD", request);
-
+		sGroupBy =  clsManageRequestParameters.get_Request_Parameter(FATransactionListSelect.GROUPBY_PARAMETER, request);
+		bShowAllLocations = 
+			clsManageRequestParameters.get_Request_Parameter(FATransactionListSelect.SHOWALLLOCATIONS_PARAMETER, request).compareToIgnoreCase("Y") == 0;
+		
 		ArrayList<String> arrLocations = new ArrayList<String>(0);
 	    Enumeration<String> paramLocationNames = request.getParameterNames();
 	    String sParamLocationName = "";
@@ -156,6 +161,7 @@ public class FATransactionListGenerate extends HttpServlet {
 				sStartingFP,
 				sEndingFY,
 				sEndingFP,
+				sGroupBy,
 				bPrintProvisionalTransactions,
 				bPrintAdjustmentTransactions,
 				bPrintActualTransactions,
@@ -163,7 +169,8 @@ public class FATransactionListGenerate extends HttpServlet {
 				out,
 				getServletContext(),
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL),
-				arrLocations)){
+				arrLocations,
+				bShowAllLocations)){
 			out.println("Could not print report - " + list.getErrorMessageString());
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067480]");

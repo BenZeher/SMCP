@@ -77,11 +77,16 @@ public class GLTransactionLinks {
 				throw new Exception("Error [20192111519544] " + "Cannot build link for subledger " + Integer.toString(iSourceLedgerCode) + ".");
 		}
 		
-		s += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + sSubledgerLinkClass + "?" 
-			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-			+ sAdditionalParameters
-			+ "\">" + sLabel + "</A>\n"
-		;
+		if (sSubledgerLinkClass.compareToIgnoreCase("") == 0){
+			s += sLabel;
+		}else{
+			s += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + sSubledgerLinkClass + "?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ sAdditionalParameters
+				+ "\">" + sLabel + "</A>\n"
+			;
+		}
+
 		return s;
 	}
 }

@@ -481,6 +481,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		s += "</TABLE>";
 		
 		//TODO Add in the Button/Link to the Linked Google Drive Folder
+		//Also Uncomment this to add back the Button and the Text Box                
        /* String sCreateAndUploadButton = "";
 		if (
 			SMSystemFunctions.isFunctionPermitted(

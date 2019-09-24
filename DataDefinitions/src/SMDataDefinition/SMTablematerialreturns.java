@@ -21,6 +21,14 @@ public class SMTablematerialreturns {
 	// TJR - Added these two fields 2/22/2019:
 	public static final String itobereturned = "itobereturned";
 	public static final String svendoracct = "svendoracct";
+	// TJR - Added these fields 9/26/2019:
+	public static final String ladjustedbatchnumber = "ladjustedbatchnumber";
+	public static final String lentrynumber = "lentrynumber";
+	public static final String bdentryamount = "bdentryamount";
+	public static final String datcreditnotedate = "datcreditnotedate";
+	public static final String screditmemonumber = "screditmemonumber";
+	public static final String bdcreditamt = "bdcreditamt";
+	public static final String mfollowupnotes = "mfollowupnotes";
 	
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
@@ -30,6 +38,11 @@ public class SMTablematerialreturns {
 	public static final int sdescriptionlength = 254;
 	public static final int strimmedordernumberlength = 22;
 	public static final int svendoracctlength = 12;  //Same as icvendors.svendoracctLength
+	public static final int ladjustedbatchnumberlength = 11;
+	public static final int lentrynumberlength = 11;
+	public static final int bdentryamountlength = 19;
+	public static final int screditmemonumberlength = 24;
+	public static final int bdcreditamtlength = 19;
 	
 	public static int STATUS_CREDITNOTEXPECTED = 1;
 	public static int STATUS_CREDITANTICIPATED = 2;

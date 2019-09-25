@@ -127,7 +127,19 @@ public class FATransactionListGenerate extends HttpServlet {
 		out.println("<TR><TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAMainMenu?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to Fixed Assets Main Menu</A></TD></TR><BR>");
+		
+		String sGroupByLabel = "GL ACCOUNT";
+		if (sGroupBy.compareToIgnoreCase(FATransactionListSelect.GROUPBY_VALUE_CLASS) == 0){
+			sGroupByLabel = "ASSET CLASS";
+		}
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>");
+		out.println("<B><I>NOTE: This report is grouped and totaled by " + sGroupByLabel + "</I></B>" + "\n");
+		out.println("<TD>" + "\n");
+		out.println("  <TR>" + "\n");
+		
 		out.println("</TABLE>\n");
+		
 		//log usage of this report
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_FAFIXEDASSETS, "REPORT", "FATransactionList", "[1376509371]");

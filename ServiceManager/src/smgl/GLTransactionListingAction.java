@@ -41,6 +41,7 @@ public class GLTransactionListingAction extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
+		CurrentSession.removeAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
@@ -57,8 +58,6 @@ public class GLTransactionListingAction extends HttpServlet {
 		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTransactionListingSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 		String sExternalPull = request.getParameter(GLTransactionListingSelect.PARAM_EXTERNAL_PULL);
 		String sSelectBy = request.getParameter(GLTransactionListingSelect.PARAM_SELECT_BY);
-
-		
 
 		//Get the starting and ending segment values:
 		ArrayList<String>alStartingSegmentNames = new ArrayList<String>(0);
@@ -158,10 +157,10 @@ public class GLTransactionListingAction extends HttpServlet {
 		String s = "";
 		if(sExternalPull.compareToIgnoreCase("-1")==0) {
 			if(sSelectBy.compareToIgnoreCase("EXTERNAL")==0) {
+				CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, "External pull chosen, but default value still selected.");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=External pull chosen, but default value still selected "
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ sParamString);
 			}
 		}
@@ -169,10 +168,10 @@ public class GLTransactionListingAction extends HttpServlet {
 		//If an External Pull is Chosen Display only that Info
 		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
 			if(sSelectBy.compareToIgnoreCase("SEGMENT")==0) {
+				CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, "Segment chosen but External Pull was selected - leave default.");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-						+ "Warning=Segment chosen but External Pull was selected - leave default "
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+						+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 						+ sParamString);
 			}else {
 			s += "  <TR>\n"
@@ -289,10 +288,10 @@ public class GLTransactionListingAction extends HttpServlet {
 					this.toString() + ".doGet - UserID: " + sUserID
 			);
 		} catch (Exception e1) {
+			CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, e1.getMessage());
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + e1.getMessage()
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ sParamString.replace("*", "&")
 			);			
 			return;
@@ -325,10 +324,10 @@ public class GLTransactionListingAction extends HttpServlet {
 			);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn,"[1553715863]");
+			CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, e.getMessage());
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + e.getMessage()
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				+ sParamString
 			);			
 			return;

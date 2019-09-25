@@ -43,6 +43,7 @@ public class GLTransactionListingSelect extends HttpServlet {
 	public static String DEFAULT_LAST_ENDING_VALUE = "ZZZZZZ";
 	public static String PARAM_EXTERNAL_PULL = "EXTERNALPULLS";		
 	public static String PARAM_SELECT_BY = "SELECTBY";
+	public static String WARNING_SESSION_OBJECT = "GLTRANSACTIONLISTINGERRORSESSIONOBJECT";
 	
 	
 	public void doPost(HttpServletRequest request,
@@ -55,6 +56,8 @@ public class GLTransactionListingSelect extends HttpServlet {
 	    }
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
+		String sWarning = (String) CurrentSession.getAttribute(WARNING_SESSION_OBJECT);
+		CurrentSession.removeAttribute(WARNING_SESSION_OBJECT);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
@@ -65,8 +68,8 @@ public class GLTransactionListingSelect extends HttpServlet {
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
 
-		if (clsManageRequestParameters.get_Request_Parameter("Warning", request).compareToIgnoreCase("") != 0){
-			out.println("<BR><FONT COLOR=RED><B>WARNING: " + clsManageRequestParameters.get_Request_Parameter("Warning", request) + "</B></FONT><BR>");
+		if (sWarning.compareToIgnoreCase("") != 0){
+			out.println("<BR><FONT COLOR=RED><B>WARNING: " + sWarning + "</B></FONT><BR>");
 		}
 		if (clsManageRequestParameters.get_Request_Parameter("Status", request).compareToIgnoreCase("") != 0){
 			out.println("<BR><B>NOTE: " + clsManageRequestParameters.get_Request_Parameter("Status", request) + "</B><BR>");

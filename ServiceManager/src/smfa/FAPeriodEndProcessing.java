@@ -168,7 +168,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
 					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
 					"Monthly Depreciation",
-					"0"
+					m_sFiscalYear + "," + m_sFiscalPeriod
 					)){
 				throw new Exception("Error setting export batch file header - " + m_cGLExportBatch.getErrorMessage()); 
 			}

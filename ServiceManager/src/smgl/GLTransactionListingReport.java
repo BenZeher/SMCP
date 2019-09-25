@@ -929,7 +929,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			}
 			rs.close();
 		} catch (Exception e1) {
-			throw new Exception("Error [1553381089] reading GL transactions with SQL - " + e1.getMessage() + ".");
+			throw new Exception("Error [1553381289] reading GL transactions with SQL: '" + sSQL + "' - " + e1.getMessage() + ".");
 		}
 		
 		//System.out.println("[20191981532437] " + "002");
@@ -988,66 +988,70 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			) throws Exception{
 		String s = "";
 		
-		if (bOddRow){
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
-		}else{
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
-		}
-		
-		String sDebit = "&nbsp;";
-		if (bdDebitAmt.compareTo(BigDecimal.ZERO) != 0){
-			sDebit = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitAmt);
-		}
-		
-		String sCredit = "&nbsp;";
-		if (bdCreditAmt.compareTo(BigDecimal.ZERO) != 0){
-			sCredit = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditAmt);
-		}
-		
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sAccount
-			+ "</TD>\n"
+		try {
+			if (bOddRow){
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+			}else{
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+			}
+			
+			String sDebit = "&nbsp;";
+			if (bdDebitAmt.compareTo(BigDecimal.ZERO) != 0){
+				sDebit = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdDebitAmt);
+			}
+			
+			String sCredit = "&nbsp;";
+			if (bdCreditAmt.compareTo(BigDecimal.ZERO) != 0){
+				sCredit = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdCreditAmt);
+			}
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  sAccount
+				+ "</TD>\n"
+					
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  Integer.toString(iFiscalYear) + " - " + Integer.toString(iFiscalPeriod)
+				+ "</TD>\n"
 				
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  Integer.toString(iFiscalYear) + " - " + Integer.toString(iFiscalPeriod)
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sSourceLedger + "-" + sSourceType
-			+ "</TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  sSourceLedger + "-" + sSourceType
+				+ "</TD>\n"
 
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sDocumentDate
-			+ "</TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  sDocumentDate
+				+ "</TD>\n"
 
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sDescription + "<BR>" + sReference
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  sBatchAndEntry
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			//+  sDebit
-			+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sDebit)
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			//+  sCredit
-			+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sCredit)
-			+ "</TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  sDescription + "<BR>" + sReference
+				+ "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  sBatchAndEntry
+				+ "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				//+  sDebit
+				+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sDebit)
+				+ "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				//+  sCredit
+				+ GLTransactionLinks.getSubledgerTransactionLink(sSourceLedger, sSubledgerTransactionID, context, sDBID, sCredit)
+				+ "</TD>\n"
 
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  "&nbsp;"
-			+ "</TD>\n"
-			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  "&nbsp;"
-			+ "</TD>\n"
-			
-			+ "  </TR>\n"
-		;
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  "&nbsp;"
+				+ "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  "&nbsp;"
+				+ "</TD>\n"
+				
+				+ "  </TR>\n"
+			;
+		} catch (Exception e) {
+			throw new Exception("Error [2019268151146] " + e.getMessage());
+		}
 		
 		return s;
 	}
@@ -1060,22 +1064,26 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			) throws Exception{
 		String s = "";
 		
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
-		
-		s += "    <TD COLSPAN = 8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  "<B>Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
-			+ "</TD>\n"
-							
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange)
-			+ "</TD>\n"
+		try {
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
 			
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-			+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance)
-			+ "</TD>\n"
-			
-			+ "  </TR>\n"
-		;
+			s += "    <TD COLSPAN = 8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  "<B>Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
+				+ "</TD>\n"
+								
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange)
+				+ "</TD>\n"
+				
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance)
+				+ "</TD>\n"
+				
+				+ "  </TR>\n"
+			;
+		} catch (Exception e) {
+			throw new Exception("Error [20192681459572] " + e.getMessage());
+		}
 		
 		return s;
 	}

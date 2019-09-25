@@ -442,8 +442,8 @@ public class FATransactionList extends java.lang.Object{
 		        			sCurrentGroupDescription		
 		        		);
 	        	}else if (
-	        			(rs.getString("CLASS").compareTo(sCurrentClass) != 0)
-	        			|| (rs.getString("GLACCT").compareTo(sCurrentGLAcct) != 0)
+	        			((rs.getString("CLASS").compareTo(sCurrentClass) != 0) && (sGroupBy.compareToIgnoreCase(FATransactionListSelect.GROUPBY_VALUE_CLASS) == 0))
+	        			|| ((rs.getString("GLACCT").compareTo(sCurrentGLAcct) != 0) && (sGroupBy.compareToIgnoreCase(FATransactionListSelect.GROUPBY_VALUE_GL) == 0))
 	        	){
 	        		Print_Group_Totals(
 		        			bdGroupAmount,

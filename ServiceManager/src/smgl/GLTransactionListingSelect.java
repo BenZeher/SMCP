@@ -57,6 +57,9 @@ public class GLTransactionListingSelect extends HttpServlet {
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
 		String sWarning = (String) CurrentSession.getAttribute(WARNING_SESSION_OBJECT);
+		if (sWarning == null){
+			sWarning = "";
+		}
 		CurrentSession.removeAttribute(WARNING_SESSION_OBJECT);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);

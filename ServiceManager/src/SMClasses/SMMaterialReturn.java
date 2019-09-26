@@ -140,16 +140,32 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramsvendoracct, req).trim().replace("&quot;", "\"");
 		m_ladjustedbatchnumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramladjustedbatchnumber, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramladjustedbatchnumber, req).compareToIgnoreCase("") == 0){
+			m_ladjustedbatchnumber = "0";
+		}
 		m_lentrynumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramlentrynumber, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlentrynumber, req).compareToIgnoreCase("") == 0){
+			m_lentrynumber = "0";
+		}
 		m_bdentryamount = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parambdentryamount, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdentryamount, req).compareToIgnoreCase("") == 0){
+			m_bdentryamount = "0.00";
+		}
 		m_datcreditnotedate = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramdatcreditnotedate, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramdatcreditnotedate, req).compareToIgnoreCase("") == 0){
+			m_datcreditnotedate = "0000-00-00";
+		}
 		m_screditmemonumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramscreditmemonumber, req).trim().replace("&quot;", "\"");
+		
 		m_bdcreditamt = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parambdcreditamt, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdcreditamt, req).compareToIgnoreCase("") == 0){
+			m_bdcreditamt = "0.00";
+		}
 		m_mfollowupnotes = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parammfollowupnotes, req).trim().replace("&quot;", "\"");
 		
@@ -223,7 +239,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_svendoracct = rs.getString(SMTablematerialreturns.svendoracct).trim();
 				
 				m_ladjustedbatchnumber = Long.toString(rs.getLong(SMTablematerialreturns.ladjustedbatchnumber));
+				if(m_ladjustedbatchnumber.compareToIgnoreCase("")== 0) {
+				m_ladjustedbatchnumber = "0";
+				}
 				m_lentrynumber = Long.toString(rs.getLong(SMTablematerialreturns.lentrynumber));
+				if(m_lentrynumber.compareToIgnoreCase("")== 0) {
+					m_lentrynumber = "0";
+					}
 				m_bdentryamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdentryamount));
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
@@ -380,13 +402,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + sCreditStatus
 			+ ", " + sPONumber
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
-			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + "'"
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
+			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
+			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
+			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
 			+ ")"
 			;
     	}else{
@@ -409,12 +431,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.icreditstatus + " = " + sCreditStatus
 			+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
 			+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
-			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + "'"
-			+ ", " + SMTablematerialreturns.lentrynumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + "'"
-			+ ", " + SMTablematerialreturns.bdentryamount  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + "'"
-			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
+			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
+			+ ", " + SMTablematerialreturns.lentrynumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
+			+ ", " + SMTablematerialreturns.bdentryamount  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
+			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
-			+ ", " + SMTablematerialreturns.bdcreditamt  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + "'"
+			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", " + SMTablematerialreturns.mfollowupnotes  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
@@ -827,10 +849,10 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_svendoracct = "";
     	 m_ladjustedbatchnumber ="0";
     	 m_lentrynumber ="0";
-    	 m_bdentryamount ="0";
+    	 m_bdentryamount ="0.00";
     	 m_datcreditnotedate = EMPTY_DATE_STRING;
     	 m_screditmemonumber = "";
-    	 m_bdcreditamt = "0";
+    	 m_bdcreditamt = "0.00";
     	 m_mfollowupnotes = "";
 	}
 }

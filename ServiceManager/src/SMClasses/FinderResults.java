@@ -1210,10 +1210,14 @@ public class FinderResults extends HttpServlet {
 			sSQL += ", " + sResultListFields.get(i);
 		}
 
-		sSQL += " FROM " + SMTableicitems.TableName + " LEFT JOIN"
-			+ " " + SMTableicitemlocations.TableName + " ON "
-			+ SMTableicitems.TableName + "." + SMTableicitems.sItemNumber + " = "
-			+ SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sItemNumber
+		sSQL += " FROM " + SMTableicitems.TableName 
+			+ " LEFT JOIN " + SMTablelocations.TableName
+			+ " ON (1 = 1)"
+			+ " LEFT JOIN " + SMTableicitemlocations.TableName + " ON "
+				+ "(" + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber + " = "
+					+ SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sItemNumber + ")"
+				+ " AND (" + SMTablelocations.TableName + "." + SMTablelocations.sLocation + " = " 
+					+ SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + ")"
 			+ " WHERE ("
 			;
 		if (sSearchType.compareToIgnoreCase("Beginning with") == 0){
@@ -1236,7 +1240,8 @@ public class FinderResults extends HttpServlet {
 
 		sSQL += ")";
 		
-		sSQL += " ORDER BY " + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber 
+		sSQL += " ORDER BY " + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
+			+ ", " + SMTablelocations.TableName + "." + SMTablelocations.sLocation
 		+ " ASC";
 		
 		if (bDebugMode){

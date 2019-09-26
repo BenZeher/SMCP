@@ -138,9 +138,7 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		String sSQL = "";
 		String sStartingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_VENDOR, request);
 		String sEndingVendorNumber = clsManageRequestParameters.get_Request_Parameter(PARAM_ENDING_VENDOR, request);
-		String sStartingVendorGroup = clsManageRequestParameters.get_Request_Parameter(PARAM_STARTING_GROUP, request);
-		String sEndingVendorGroup = clsManageRequestParameters.get_Request_Parameter(PARAM_ENDING_GROUP, request);
-		ResultSet rsVendors = null;
+		ResultSet rsVendorGroups = null;
 		if (sStartingVendorNumber.compareToIgnoreCase("") == 0){
 			sSQL = "SELECT " 
 				+ SMTableicvendors.svendoracct 
@@ -148,7 +146,7 @@ public class APVendorTransactionsSelect extends HttpServlet {
 				+ " FROM " + SMTableicvendors.TableName
 				+ " ORDER BY " + SMTableicvendors.svendoracct + " ASC LIMIT 1";
 			try {
-				rsVendors = clsDatabaseFunctions.openResultSet(
+				rsVendorGroups = clsDatabaseFunctions.openResultSet(
 					sSQL, 
 					getServletContext(), 
 					sDBID,
@@ -158,10 +156,10 @@ public class APVendorTransactionsSelect extends HttpServlet {
 					+ sUserFullName
 						);
 
-				if (rsVendors.next()){
-					sStartingVendorNumber = rsVendors.getString(SMTableicvendors.svendoracct);
+				if (rsVendorGroups.next()){
+					sStartingVendorNumber = rsVendorGroups.getString(SMTableicvendors.svendoracct);
 				}
-				rsVendors.close();
+				rsVendorGroups.close();
 			} catch (SQLException e) {
 				out.println("Error [1502469178] loading starting vendor - " + e.getMessage());
 			}
@@ -173,7 +171,7 @@ public class APVendorTransactionsSelect extends HttpServlet {
 				+ " FROM " + SMTableicvendors.TableName
 				+ " ORDER BY " + SMTableicvendors.svendoracct + " DESC LIMIT 1";
 			try {
-				rsVendors = clsDatabaseFunctions.openResultSet(
+				rsVendorGroups = clsDatabaseFunctions.openResultSet(
 					sSQL, 
 					getServletContext(), 
 					sDBID,
@@ -182,10 +180,10 @@ public class APVendorTransactionsSelect extends HttpServlet {
 					+ " - "
 					+ sUserFullName
 						);
-				if (rsVendors.next()){
-					sEndingVendorNumber = rsVendors.getString(SMTableicvendors.svendoracct);
+				if (rsVendorGroups.next()){
+					sEndingVendorNumber = rsVendorGroups.getString(SMTableicvendors.svendoracct);
 				}
-				rsVendors.close();
+				rsVendorGroups.close();
 			} catch (SQLException e) {
 				out.println("Error [1502469179] loading ending vendor - " + e.getMessage());
 			}
@@ -233,34 +231,31 @@ public class APVendorTransactionsSelect extends HttpServlet {
 		ArrayList<String> sVendorGroups = new ArrayList<String>(0);
 		ArrayList<String> sVendorGroupNumbers = new ArrayList<String>(0);
 		
-		if ((sStartingVendorGroup.compareToIgnoreCase("") == 0) || (sEndingVendorGroup.compareToIgnoreCase("") == 0 )){
-			sSQL = "SELECT " 
-				+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
-				+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid
-				+ " FROM " + SMTableapvendorgroups.TableName	
-				+ " ORDER BY " + SMTableapvendorgroups.sgroupid + " ASC ";
-			try {
-				rsVendors = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sDBID,
-					"MySQL",
-					this.toString() + ".doPost (2) - User: " + sUserID
-					+ " - "
-					+ sUserFullName
-						);
-				while (rsVendors.next()){
-					String sId = rsVendors.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid);
-					String sDescription = rsVendors.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription);
-					sVendorGroupNumbers.add(sId);
-					sVendorGroups.add(sId + " - " + sDescription);
-							}
-				rsVendors.close();
-			} catch (SQLException e) {
-				out.println("Error [1561378774] loading ending vendor - " + e.getMessage());
-			}
+		sSQL = "SELECT " 
+			+ SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription
+			+ ", " + SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid
+			+ " FROM " + SMTableapvendorgroups.TableName	
+			+ " ORDER BY " + SMTableapvendorgroups.sgroupid + " ASC ";
+		try {
+			rsVendorGroups = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".doPost (2) - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+					);
+			while (rsVendorGroups.next()){
+				String sId = rsVendorGroups.getString(SMTableapvendorgroups.TableName + "." + SMTableapvendorgroups.sgroupid);
+				String sDescription = rsVendorGroups.getString(SMTableapvendorgroups.TableName  + "." + SMTableapvendorgroups.sdescription);
+				sVendorGroupNumbers.add(sId);
+				sVendorGroups.add(sId + " - " + sDescription);
+						}
+			rsVendorGroups.close();
+		} catch (SQLException e) {
+			out.println("Error [1561378774] loading ending vendor - " + e.getMessage());
 		}
-		
 		
 		String sStartingGroupSelected = sVendorGroupNumbers.get(0);
 		String sEndingGroupSelected = sVendorGroupNumbers.get(sVendorGroupNumbers.size()-1);

@@ -90,14 +90,17 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    ArrayList<String> alStatus = new ArrayList<String>(0);
     	ArrayList<String> alSelectedUsers = new ArrayList<String>(0);
     	ArrayList<String> arrSalesGroupCodes = new ArrayList<String>(0);
+    	ArrayList<String> arrSalesLeadStatusCodes = new ArrayList<String>(0);
     	ArrayList<String> arrFullUserNames = new ArrayList<String>(0);
 	    Enumeration<String> paramNames = request.getParameterNames();
 	    String sUsersMarker = SMCriticalDateReportCriteriaSelection.UserMarker;
 	    String sTypesMarker = SMCriticalDateReportCriteriaSelection.TypeMarker;
 	    String sStatusMarker = SMCriticalDateReportCriteriaSelection.StatusMarker;
 	    String sSalesGroupMarker = SMCriticalDateReportCriteriaSelection.SALESGROUP_PARAM;
+	    String sSalesLeadStatusMarker = SMCriticalDateReportCriteriaSelection.SALESLEADSTATUS_PARAM;
 	    
 	    boolean bUserChoseToPrintOrderTypes = false;
+	    boolean bUserChoseToPrintSalesLeadTypes = false;
 	    while(paramNames.hasMoreElements()) {
 	      String sParamName = paramNames.nextElement();
 		  if (sParamName.contains(sUsersMarker)){
@@ -113,12 +116,19 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 			  if (Integer.parseInt(alTypes.get(alTypes.size() - 1)) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE){
 				  bUserChoseToPrintOrderTypes = true;
 			  }
+			  //If the user chose to print SALES LEAD critical dates, note that:
+			  if (Integer.parseInt(alTypes.get(alTypes.size() - 1)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE){
+				  bUserChoseToPrintSalesLeadTypes = true;
+			  }
 		  }
 		  if (sParamName.contains(sStatusMarker)){
 			  alStatus.add(sParamName.substring(sParamName.indexOf(sStatusMarker) + sStatusMarker.length()));
 		  }
 		  if (sParamName.contains(sSalesGroupMarker)){
 			  arrSalesGroupCodes.add(sParamName.substring(sParamName.indexOf(sSalesGroupMarker) + sSalesGroupMarker.length()));
+		  }
+		  if (sParamName.contains(sSalesLeadStatusMarker)){
+			  arrSalesLeadStatusCodes.add(sParamName.substring(sParamName.indexOf(sSalesLeadStatusMarker) + sSalesLeadStatusMarker.length()));
 		  }
 	    }
 	    if (alSelectedUsers.size() == 0 || alTypes.size() == 0 || alStatus.size() == 0 ){
@@ -138,9 +148,15 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 		    		sWarning += "You must select at least one sales group. ";
 		    	}
 	    	}
+	    	if (bUserChoseToPrintSalesLeadTypes){
+		    	if (arrSalesLeadStatusCodes.size() == 0){
+		    		sWarning += "You must select at least one sales lead status. ";
+		    	}
+	    	}
     	}
 	    Collections.sort(alSelectedUsers);
 	    Collections.sort(arrSalesGroupCodes);
+	    Collections.sort(arrSalesLeadStatusCodes);
 	    Collections.sort(arrFullUserNames);
 	    
     	//save URL History
@@ -190,12 +206,23 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
    				
    		//Show the sales groups, if any:
    		if (bUserChoseToPrintOrderTypes){
-   			sCriteria += "<BR>For sales groups: ";
+   			sCriteria += "<BR>For order sales groups: ";
    			for (int i = 0; i < arrSalesGroupCodes.size(); i++){
    				if (i == 0){
    					sCriteria += "<B>" + arrSalesGroupCodes.get(i) + "</B>";
    				}else{
    					sCriteria += ", <B>" + arrSalesGroupCodes.get(i) + "</B>";
+   				}
+   			}
+   		}
+   		
+   		if (bUserChoseToPrintSalesLeadTypes){
+   			sCriteria += "<BR>For sales lead status: ";
+   			for (int i = 0; i < arrSalesLeadStatusCodes.size(); i++){
+   				if (i == 0){
+   					sCriteria += "<B>" + arrSalesLeadStatusCodes.get(i) + "</B>";
+   				}else{
+   					sCriteria += ", <B>" + arrSalesLeadStatusCodes.get(i) + "</B>";
    				}
    			}
    		}
@@ -262,6 +289,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
     			alTypes,
     			alStatus,		
     			arrSalesGroupCodes,
+    			arrSalesLeadStatusCodes,
     			sSelectedSortOrder,
     			sAssignedBy,
     			sCurrentURL,

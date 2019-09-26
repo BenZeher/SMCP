@@ -37,6 +37,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 			ArrayList <String> alTypes,
 			ArrayList <String> alStatus,
 			ArrayList <String>arrSalesGroupCodes,
+			ArrayList <String>arrSalesLeadStatusCodes,
 			String sOrderBy,
 			String sAssignedBy,
 			String sCurrentURL,
@@ -53,6 +54,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 				alTypes,
 				alStatus,
 				arrSalesGroupCodes,
+				arrSalesLeadStatusCodes,
 				sAssignedBy,
 				sOrderBy);
 		//end SQL statement
@@ -346,10 +348,13 @@ public class SMCriticalDateReport extends java.lang.Object{
 						}
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
-							out.println("<b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
+							out.println("<b>Salesperson: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.ssalespersoncode).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Project Type: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.iprojecttype).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Contact: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Phone: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
+							String sPhoneNumber = rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim();
+							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</a>"); 
 							out.println("<br><b>Sales Lead: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMEditBidEntry?lid=" 
@@ -403,6 +408,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 			ArrayList <String> alTypes,
 			ArrayList <String> alStatus,
 			ArrayList <String> arrSalesGroupCodes,
+			ArrayList <String> arrSalesLeadStatusCodes,
 			String sAssignedBy,
 			String sOrderBy){
 
@@ -451,6 +457,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sphonenumber  
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.lid  
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sprojectname
+						+ ", " + SMTablebids.TableName + "." + SMTablebids.iprojecttype
+						+ ", " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername;
 				}	
 			
@@ -475,7 +483,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ " = " + SMTablesalesgroups.iSalesGroupId
 					+ " LEFT JOIN " + SMTablesalesperson.TableName
 					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-					+ " = " + SMTablesalesperson.sSalespersonCode
+					+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
 					;
 			}	
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
@@ -553,6 +561,17 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ " (" +  SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " IS NULL)";
 				for (int j = 0; j < arrSalesGroupCodes.size(); j++){
 					SQL += " OR (" + SMTablesalesgroups.TableName + "." + SMTablesalesgroups.sSalesGroupCode + " = '" + arrSalesGroupCodes.get(j) + "')";
+				}
+				SQL += ")";  //End the 'AND' clause
+				break;
+			}
+			
+			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
+				SQL += " AND ("
+					//We have to add this because if the user selects sales lead AND purchase orders, for example, then any purchase order records won't have a sales group code - it will be null instead:
+					+ " (" +  SMTablebids.TableName + "." + SMTablebids.sstatus + " IS NULL)";
+				for (int j = 0; j < arrSalesLeadStatusCodes.size(); j++){
+					SQL += " OR (" + SMTablebids.TableName + "." + SMTablebids.sstatus + " = '" + arrSalesLeadStatusCodes.get(j) + "')";
 				}
 				SQL += ")";  //End the 'AND' clause
 				break;

@@ -1,5 +1,7 @@
 package SMDataDefinition;
 
+import java.util.ArrayList;
+
 public class SMTablebids {
 	//Table Name
 	public static final String TableName = "bids";
@@ -89,4 +91,6 @@ public class SMTablebids {
 	public static final String STATUS_SUCCESSFUL = "S";
 	public static final String STATUS_UNSUCCESSFUL = "U";
 	public static final String STATUS_INACTIVE = "I";
+	
+	
 }

@@ -21,6 +21,7 @@ import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
 import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderheaders;
 import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorderdetailsheets;
@@ -399,14 +400,13 @@ public class SMWorkOrderAction extends HttpServlet{
 						+ SMWorkOrderDetail.Paramsitemnumber
 						
 						+ SMFinderFunctions.getStdITEMWithQtysSearchAndResultString(sLineLocation)
-
-						+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=(" 
-							+ "(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " = '" + sLineLocation + "')"
-							+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
-						+ ")"
+						
+						+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=" 
+						+ "(" + SMTablelocations.TableName + "." + SMTablelocations.sLocation + " = '" + sLineLocation + "')"
 						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
+						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.iActive + " = 1)"
 						+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.icannotbesold + " = 0)"
-						+ " &" + FinderResults.FINDER_BOX_TITLE + "=NON-DEDICATED items <I>showing qtys for location : '" + sLineLocation + "'</I>. +\n"
+						+ " &" + FinderResults.FINDER_BOX_TITLE + "=NON-DEDICATED, ACTIVE items <I>showing qtys for location : '" + sLineLocation + "'</I>. +\n"
 						
 						+ "&ParameterString="
 						+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
@@ -414,29 +414,7 @@ public class SMWorkOrderAction extends HttpServlet{
 						+ "*" + SMWorkOrderEdit.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
 						+ "*" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request) 				
 		    	;
-		    				
 	    				
-	    		/*
-				String sRedirectString = 
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder"
-					+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-					+ "&ObjectName=" + SMClasses.FinderResults.SEARCH_NONDEDICATEDITEMS
-					+ "&ResultClass=FinderResults"
-					+ "&SearchingClass=" + smaction.getCallingClass()
-					+ "&ReturnField=" 
-					+ SMWorkOrderHeader.WORK_ORDER_ITEMLINE_MARKER 
-					+ sLineNumber 
-					+  SMWorkOrderDetail.Paramsitemnumber
-					
-					+ SMFinderFunctions.getStdITEMSearchAndResultString()
-
-					+ "&ParameterString="
-					+ "*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
-					+ "*" + SMWorkOrderHeader.Paramlid + "=" + workorder.getlid()
-					+ "*" + SMWorkOrderEdit.RECORDWASCHANGED_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
-					+ "*" + SMWorkOrderEdit.VIEW_PRICING_FLAG + "=" + clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.VIEW_PRICING_FLAG, request)
-				;
-				*/
 				smaction.getCurrentSession().setAttribute(SMTableworkorders.ObjectName, workorder);
 				redirectProcess(sRedirectString, response);
 				return;

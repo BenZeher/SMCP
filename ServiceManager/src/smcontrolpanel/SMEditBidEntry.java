@@ -1537,6 +1537,21 @@ public class SMEditBidEntry  extends HttpServlet {
 			s += "<BR><FONT COLOR=RED>WARNING - could not read appointments associated with sales lead - " + e.getMessage() + ".</FONT>";
 		}
      
+        //list critical dates
+        /*
+        s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfColumns) + ">"
+                + SMCriticalDateEntry.listCriticalDates(
+				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
+				entry.getlid(),
+				"1100px",
+				"#F2C3FA",
+				getServletContext(), 
+				sm.getsDBID(), 
+				sm.getUserID(),
+				true
+				)
+             + "</TD></TR>";
+        */
 		s += "</TABLE style=\" title:ENDBidMemos; \">\n";
 		return s;
 	}

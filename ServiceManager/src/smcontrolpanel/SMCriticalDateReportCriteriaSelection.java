@@ -183,6 +183,7 @@ import java.util.ArrayList;
 	    		//out.println("</TR>");
 	    		
 	    		//Sales Lead Status
+	    		/*
 	    		//We only show these when 'Sales lead' is selected as one of the Critical Date types.
 	    		out.println("<div style= \"display: none;\" class=\"SALESLEADSTATUSOPTIONS\">");
 	    		
@@ -228,7 +229,7 @@ import java.util.ArrayList;
 	    		
 	    		out.println(SMUtilities.Build_HTML_Table(5, arrSalesLeadStatusControls, 100, 0, true ,true));
 	    		out.println("</div>");
-	    		
+	    		*/
 	    		out.println("</TD>");
 	    		out.println("</TR>");
 	        	
@@ -446,6 +447,7 @@ import java.util.ArrayList;
 					+ "     // Now set the function that happens when the 'ORDERS' checkbox is clicked:\n"
 					+ "		$('#" + ParamOrders + "').click(function(event) {\n" 
 					+ "  			$('.SALESGROUPOPTIONS').slideToggle('fast');\n" 
+				/*
 					+ "		});\n"
 					+ "     // If the 'SALES LEAD' checkbox is set, then show the 'Sales Lead Status' list:\n"
 					+ "  	if ($(" + ParamSalesLeads + ").is(':checked')){\n" 
@@ -456,7 +458,8 @@ import java.util.ArrayList;
 					+ "		$('#" + ParamSalesLeads + "').click(function(event) {\n" 
 					+ "  			$('.SALESLEADSTATUSOPTIONS').slideToggle('fast');\n" 
 					+ "		});\n"
-					+ "\n"
+					+ "\n" 
+					*/
 					+ "});\n"
 					+ "\n"
 					

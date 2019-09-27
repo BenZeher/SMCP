@@ -346,7 +346,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ clsDatabaseFunctions.getRecordsetIntegerValue(rs, SMTablesalescontacts.TableName + "." + SMTablebids.lid).replace("`", "")
 								+ "</A>");	
 						}
-						
+				/*		
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 							out.println("<b>Salesperson: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.ssalespersoncode).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Project Type: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.iprojecttype).replace("`", "")).trim() + ""); 
@@ -366,7 +366,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 								+ SMTablebids.lid).replace("`", "")))  
 								+ "</A>");	
 						}
-						
+				*/		
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
 							out.println("<b>Vendor Name: </b> " + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Vendor Number: </b> " + rs.getString((SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor).replace("`", "")).trim() + ""); 
@@ -451,7 +451,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ ", MAXINVOICEDATETABLE.MAXDATE AS LASTINVOICEDATE"
 					+ ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername;
 			}	
-			
+	/*		
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += ", " + SMTablebids.TableName + "." + SMTablebids.scontactname
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sphonenumber  
@@ -461,7 +461,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername;
 				}	
-			
+	*/	
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
 				SQL += ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
 					+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lid
@@ -498,11 +498,13 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ " GROUP BY " + SMTableartransactions.TableName + "." + SMTableartransactions.spayeepayor + ") as MAXINVOICEDATETABLE"
 				+ " ON MAXINVOICEDATETABLE.CUSTOMER = " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomernumber;
 		}
+			/*
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTablebids.TableName
 					+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
 					+ "CAST(" + SMTablebids.TableName + "." + SMTablebids.lid + " as char(11))";
 			}
+			*/
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
 				SQL += " LEFT JOIN " + SMTableicpoheaders.TableName
 				+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
@@ -565,7 +567,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 				SQL += ")";  //End the 'AND' clause
 				break;
 			}
-			
+	/*		
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 				SQL += " AND ("
 					//We have to add this because if the user selects sales lead AND purchase orders, for example, then any purchase order records won't have a sales group code - it will be null instead:
@@ -576,6 +578,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 				SQL += ")";  //End the 'AND' clause
 				break;
 			}
+*/
 		}
 		
 		SQL += ")"; //End the 'WHERE' clause

@@ -37,10 +37,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	public static final String Parambdmisccost = "bdMiscCost";
 	public static final String Parambdcreditrequested = "bdcreditrequested";
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
-	public static final String Paramscostcentercode = "scostcenter";
+	public static final String Paramscategorycode = "scategorycode";
 	public static final String Parambdcreditdenied = "bdcreditdenied";
 	public static final String Paramsvendoritemnumber = "svendoritemnumber";
 	public static final String Paramsgdoclink = "sgdoclink";
+	public static final String Paramlcostcenterid = "lcostcenterid";
 	
 
 	private String m_lid;
@@ -60,10 +61,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	private String m_bdmisccost;
 	private String m_bdcreditrequested;
 	private String m_datcreditnotedate;
-	private String m_scostcentercode;
+	private String m_scategorycode;
 	private String m_bdcreditdenied;
 	private String m_svendoritemnumber;
 	private String m_sgdoclink;
+	private String m_lcostcenterid;
 	
 	private String m_sNewRecord;
 	
@@ -103,8 +105,8 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		if(m_datcreditnotedate.compareToIgnoreCase("") == 0){
 			m_datcreditnotedate = EMPTY_DATE_STRING;
 			}
-		m_scostcentercode = clsManageRequestParameters.get_Request_Parameter(
-				SMTablelaborbackcharges.scostcentercode, req).trim().replace("&quot;", "\"");
+		m_scategorycode = clsManageRequestParameters.get_Request_Parameter(
+				SMTablelaborbackcharges.scategorycode, req).trim().replace("&quot;", "\"");
 		m_sdescription = clsManageRequestParameters.get_Request_Parameter(
 				SMTablelaborbackcharges.sdescription, req).trim().replace("&quot;", "\"");
 		
@@ -134,6 +136,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				SMTablelaborbackcharges.svendoritemnumber, req).trim().replace("&quot;", "\"");
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(
 				SMTablelaborbackcharges.sgdoclink, req).trim().replace("&quot;", "\"");
+		m_lcostcenterid = clsManageRequestParameters.get_Request_Parameter(
+				SMTablelaborbackcharges.lcostcenterid, req).trim();
+		/*if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramladjustedbatchnumber, req).compareToIgnoreCase("") == 0){
+			m_lcostcenterid = "0";
+		}*/
 
 		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
@@ -196,11 +203,15 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				m_bdcreditrequested = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablelaborbackcharges.bdcreditrequestedscale, rs.getBigDecimal(SMTablelaborbackcharges.bdcreditrequested));
 				m_bdcreditdenied  = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablelaborbackcharges.bdcreditdeniedscale, rs.getBigDecimal(SMTablelaborbackcharges.bdcreditdenied));
 				m_bdhours = clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTablelaborbackcharges.bdhoursscale, rs.getBigDecimal(SMTablelaborbackcharges.bdhours));
-				m_scostcentercode = rs.getString(SMTablelaborbackcharges.scostcentercode).trim();
+				m_scategorycode = rs.getString(SMTablelaborbackcharges.scategorycode).trim();
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablelaborbackcharges.datcreditnotedate));
 				m_strimmedordernumber = rs.getString(SMTablelaborbackcharges.strimmedordernumber).trim();
 				m_svendoritemnumber = rs.getString(SMTablelaborbackcharges.svendoritemnumber).trim();
 				m_sgdoclink = rs.getString(SMTablelaborbackcharges.sgdoclink).trim();
+				m_lcostcenterid = Long.toString(rs.getLong(SMTablelaborbackcharges.lcostcenterid));
+				/*if(m_lcostcenterid.compareToIgnoreCase("")== 0) {
+					m_lcostcenterid = "0";
+				}*/
 				rs.close();
 			} else {
 				rs.close();
@@ -279,11 +290,12 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", " + SMTablelaborbackcharges.bdlaborrate
 				+ ", " + SMTablelaborbackcharges.bdmisccost
 				+ ", " + SMTablelaborbackcharges.bdcreditrequested	
-				+ ", " + SMTablelaborbackcharges.scostcentercode//20
+				+ ", " + SMTablelaborbackcharges.scategorycode//20
 				+ ", " + SMTablelaborbackcharges.datcreditnotedate
 				+ ", " + SMTablelaborbackcharges.bdcreditdenied
 				+ ", " + SMTablelaborbackcharges.svendoritemnumber
 				+ ", " + SMTablelaborbackcharges.sgdoclink
+				+ ", " + SMTablelaborbackcharges.lcostcenterid
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlinitiatedbyid().trim()) + ""
@@ -299,11 +311,12 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getbdlaborrate().trim())
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getbdmisccost().trim())
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditrequested().trim())
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getscostcentercode().trim()) + "'"//20
+				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getscategorycode().trim()) + "'"//20
 				+ ", '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate()) + "'"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditdenied().trim())
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoritemnumber().trim()) + "'"
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsgdoclink().trim()) + "'"
+				+ ", " + clsDatabaseFunctions.FormatSQLStatement(getlcostcenterid().trim()) + ""
 				+ ")"
 			;
 
@@ -323,10 +336,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				+ ", " + SMTablelaborbackcharges.bdmisccost + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdmisccost().trim()) 
 				+ ", " + SMTablelaborbackcharges.bdcreditrequested + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditrequested().trim())
 				+ ", " + SMTablelaborbackcharges.datcreditnotedate + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
-				+ ", " + SMTablelaborbackcharges.scostcentercode + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscostcentercode().trim()) + "'"
+				+ ", " + SMTablelaborbackcharges.scategorycode + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscategorycode().trim()) + "'"
 				+ ", " + SMTablelaborbackcharges.bdcreditdenied + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditdenied().trim())
 				+ ", " + SMTablelaborbackcharges.svendoritemnumber + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoritemnumber().trim()) + "'"
 				+ ", " + SMTablelaborbackcharges.sgdoclink + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsgdoclink().trim()) + "'"
+				+ ", " + SMTablelaborbackcharges.lcostcenterid + " = " + clsDatabaseFunctions.FormatSQLStatement(getlcostcenterid().trim()) + ""
 				+ " WHERE ("
 					+ "(" + SMTablelaborbackcharges.lid + " = " + getlid() + ")"
 				+ ")"
@@ -362,7 +376,9 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		}
     }
 
-    public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
+
+
+	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
@@ -494,11 +510,16 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		  sErrors += " Invalid vendor '" + getsvendor() + "'.  " + ven.getErrorMessages() + "  ";
 	  }
 	  
-	  m_scostcentercode = m_scostcentercode.trim();
-	  if (m_scostcentercode.length() > SMTablelaborbackcharges.scostcentercodelength){
-	      sErrors += "Cost Center cannot be more than " + Integer.toString(SMTablelaborbackcharges.scostcentercodelength) + " characters.  ";
+	  m_scategorycode = m_scategorycode.trim();
+	  if (m_scategorycode.length() > SMTablelaborbackcharges.scategorycodelength){
+	      sErrors += "Category cannot be more than " + Integer.toString(SMTablelaborbackcharges.scategorycodelength) + " characters.  ";
 	    }
-	  if (m_scostcentercode.compareToIgnoreCase("") == 0){
+	  
+	  m_lcostcenterid = m_lcostcenterid.trim();
+	  if (m_lcostcenterid.length() > SMTablelaborbackcharges.lcostcenteridlength){
+	      sErrors += "Cost Center cannot be more than " + Integer.toString(SMTablelaborbackcharges.lcostcenteridlength) + " characters.  ";
+	    }
+	  if (m_lcostcenterid.compareToIgnoreCase("") == 0 || m_lcostcenterid.compareToIgnoreCase("0") == 0){
 		  sErrors += "Cost Center is required.  ";
 	  }
 	  
@@ -559,6 +580,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
         m_bdlaborrate = m_bdlaborrate.trim().replace(",", "");
         m_bdmisccost = m_bdmisccost.trim().replace(",", "");
         m_bdcreditrequested = m_bdcreditrequested.trim().replace(",", "");
+        
         
         try{
             BigDecimal bdcreditreceived = new BigDecimal(m_bdcreditreceived);
@@ -649,10 +671,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		sQueryString += "&" + Parambdmisccost + "=" + clsServletUtilities.URLEncode(getbdmisccost());
 		sQueryString += "&" + Parambdcreditrequested + "=" + clsServletUtilities.URLEncode(getbdcreditrequested());
 		sQueryString += "&" + Paramdatcreditnotedate + "=" + clsServletUtilities.URLEncode(getdatcreditnotedate());
-		sQueryString += "&" + Paramscostcentercode + "=" + clsServletUtilities.URLEncode(getscostcentercode());
+		sQueryString += "&" + Paramscategorycode + "=" + clsServletUtilities.URLEncode(getscategorycode());
 		sQueryString += "&" + Parambdcreditdenied + "=" + clsServletUtilities.URLEncode(getbdcreditdenied());
 		sQueryString += "&" + Paramsvendoritemnumber + "=" + clsServletUtilities.URLEncode(getsvendoritemnumber());
 		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramlcostcenterid + "=" + clsServletUtilities.URLEncode(getlcostcenterid());
 		return sQueryString;
 	}
 
@@ -764,11 +787,11 @@ public class SMLaborBackCharge extends clsMasterEntry{
 	public void setbdcreditdenied(String bdcreditdenied) {
 		m_bdcreditdenied = bdcreditdenied;
 	}
-	public String getscostcentercode() {
-		return m_scostcentercode;
+	public String getscategorycode() {
+		return m_scategorycode;
 	}
-	public void setscostcentercode(String scostcentercode) {
-		m_scostcentercode = scostcentercode;
+	public void setscategorycode(String scategorycode) {
+		m_scategorycode = scategorycode;
 	}
 	public String getdatcreditnotedate() {
 		return m_datcreditnotedate;
@@ -786,8 +809,15 @@ public class SMLaborBackCharge extends clsMasterEntry{
 		return m_sgdoclink;
 	}
 	public void setsgdocklink(String sgdoclink) {
-		m_svendoritemnumber = sgdoclink;
+		m_sgdoclink = sgdoclink;
 	}
+	public String getlcostcenterid() {
+		return m_lcostcenterid;
+	}
+	public void setlcostcenterid(String lcostcenterid) {
+		m_lcostcenterid = lcostcenterid;
+	}
+	
 
 	public String getObjectName(){
 		return ParamObjectName;
@@ -813,7 +843,8 @@ public class SMLaborBackCharge extends clsMasterEntry{
     	m_bdcreditrequested = "0.00";
     	m_bdcreditdenied = "0.00";
     	m_datcreditnotedate = EMPTY_DATE_STRING;
-        m_scostcentercode = ""; 
+        m_scategorycode = ""; 
         m_svendoritemnumber = "";
+        m_lcostcenterid = "0";
 	}
 }

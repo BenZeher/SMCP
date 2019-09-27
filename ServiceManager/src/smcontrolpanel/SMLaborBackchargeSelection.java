@@ -20,7 +20,7 @@ public class SMLaborBackchargeSelection extends HttpServlet {
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
-
+		
 		SMLaborBackCharge entry = new SMLaborBackCharge();
 		SMMasterEditSelect smeditselect = new SMMasterEditSelect(
 				request,

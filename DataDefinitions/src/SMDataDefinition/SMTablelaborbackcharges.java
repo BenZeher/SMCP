@@ -22,10 +22,11 @@ public class SMTablelaborbackcharges {
 	public static final String bdmisccost = "bdMiscCost";
 	public static final String bdcreditrequested = "bdcreditrequested";
 	public static final String datcreditnotedate = "datcreditnotedate";
-	public static final String scostcentercode = "scategorycode";
+	public static final String scategorycode = "scategorycode";
 	public static final String bdcreditdenied = "bdcreditdenied";
 	public static final String svendoritemnumber = "svendoritemnumber";
-	public static final String sgdoclink = "sgdoclink";
+	public static final String sgdoclink = "sgdoclink";	
+	public static final String lcostcenterid = "lcostcenterid";
 		
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
@@ -35,7 +36,7 @@ public class SMTablelaborbackcharges {
 	public static final int scommentslength = 16777215;
 	public static final int svendoracctlength = 12;
 	public static final int sscustomernamelength = 60;
-	public static final int scostcentercodelength = 6;
+	public static final int scategorycodelength = 6;
 	public static final int bdcreditreceivedscale = 2;
 	public static final int bdoutstandingcreditsscale = 2;
 	public static final int bdhoursscale = 4;
@@ -45,6 +46,7 @@ public class SMTablelaborbackcharges {
 	public static final int bdcreditdeniedscale = 2;
 	public static final int svendoritemnumberlength = 24;
 	public static final int sgdoclinklength = 65535;
+	public static final int lcostcenteridlength = 11;
 
 }
 

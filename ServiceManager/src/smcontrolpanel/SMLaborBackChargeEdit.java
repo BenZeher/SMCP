@@ -14,7 +14,6 @@ import SMClasses.SMLaborBackCharge;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablecostcenters;
-import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
@@ -195,12 +194,57 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		;
 		
 		//Category:
+		/*
 		s += "<TR><TD ALIGN=RIGHT><B>Category<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
-			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscostcentercode + "\""
-			+ " ID =\"" + SMLaborBackCharge.Paramscostcentercode + "\""
+			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscategorycode + "\""
+			+ " ID =\"" + SMLaborBackCharge.Paramscategorycode + "\""
 			+ " ONCHANGE = \"flagDirty();\""
 			+ ">"
 			+ "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT CATEGORY ***</OPTION>";
+		String SQL = "SELECT * "
+				  + " FROM " + SMTableiccategories.TableName
+				  + " WHERE ("
+				  	+ "(" + SMTableiccategories.iActive + " = 1)"
+				  + ")"
+				  + " ORDER BY " + SMTableiccategories.sDescription
+				;
+		try {
+			ResultSet rsCategory = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					sm.getsDBID(), 
+					"MySQL", 
+					this.toString() + " [1447961188] SQL: " + SQL);
+			while (rsCategory.next()){
+				String sCategoryCode = rsCategory.getString(SMTableiccategories.sCategoryCode);
+				s += "<OPTION";
+				
+				String sCurrentCategoryInfo = entry.getscategorycode();
+				
+				if (sCurrentCategoryInfo.compareToIgnoreCase(sCategoryCode) == 0){
+					s += " selected=YES ";
+				}
+				s += " VALUE=\"" + sCategoryCode + "\">" 
+				+ rsCategory.getString(SMTableiccategories.sCategoryCode)
+				+ " - " + rsCategory.getString(SMTableiccategories.sDescription)
+				+ "</OPTION>";
+			}
+			rsCategory.close();
+		} catch (SQLException e) {
+			throw new SQLException("Error loading category codes - " + e.getMessage());
+		}
+		s += "</SELECT>";
+		s +=  "</TD>"
+		+ "</TR>"
+ 		;
+		*/
+		//Cost Center:
+		s += "<TR><TD ALIGN=RIGHT><B>Cost Center<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
+			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramlcostcenterid + "\""
+			+ " ID =\"" + SMLaborBackCharge.Paramlcostcenterid + "\""
+			+ " ONCHANGE = \"flagDirty();\""
+			+ ">"
+			+ "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT COST CENTER ***</OPTION>";
 		String SQL = "SELECT * "
 				  + " FROM " + SMTablecostcenters.TableName
 				  + " WHERE ("
@@ -216,12 +260,13 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 					"MySQL", 
 					this.toString() + " [1447961188] SQL: " + SQL);
 			while (rsCostCenter.next()){
-				String sCostCenter = rsCostCenter.getString(SMTablecostcenters.lid);
+				String sCostCenter = Long.toString(rsCostCenter.getLong(SMTablecostcenters.lid));
 				s += "<OPTION";
 				
-				String sCurrentCategoryInfo = entry.getscostcentercode();
-				
-				if (sCurrentCategoryInfo.compareToIgnoreCase(sCostCenter) == 0){
+				String sCostCenterInfo = entry.getlcostcenterid();
+				System.out.println("[2019270126544] " + sCostCenterInfo);
+				System.out.println("[201927012734] " + sCostCenter);
+				if (sCostCenterInfo.compareToIgnoreCase(sCostCenter) == 0){
 					s += " selected=YES ";
 				}
 				s += " VALUE=\"" + sCostCenter + "\">" 
@@ -231,7 +276,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			}
 			rsCostCenter.close();
 		} catch (SQLException e) {
-			throw new SQLException("Error loading category codes - " + e.getMessage());
+			throw new SQLException("Error loading cost centers codes - " + e.getMessage());
 		}
 		s += "</SELECT>";
 		s +=  "</TD>"

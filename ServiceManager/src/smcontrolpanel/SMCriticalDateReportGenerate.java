@@ -97,7 +97,7 @@ public class SMCriticalDateReportGenerate extends HttpServlet {
 	    String sTypesMarker = SMCriticalDateReportCriteriaSelection.TypeMarker;
 	    String sStatusMarker = SMCriticalDateReportCriteriaSelection.StatusMarker;
 	    String sSalesGroupMarker = SMCriticalDateReportCriteriaSelection.SALESGROUP_PARAM;
-	    String sSalesLeadStatusMarker = SMCriticalDateReportCriteriaSelection.SALESLEADSTATUS_PARAM;
+	    String sSalesLeadStatusMarker = SMCriticalDateReportCriteriaSelection.SALESLEADSTATE_PARAM;
 	    
 	    boolean bUserChoseToPrintOrderTypes = false;
 	    boolean bUserChoseToPrintSalesLeadTypes = false;

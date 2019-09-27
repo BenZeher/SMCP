@@ -35,7 +35,7 @@ import java.util.ArrayList;
 		public static final String FULL_NAME_PARAMETER_BASE = "FULLUSERNAME";
 		
 		public static final String SALESGROUP_PARAM = "SALESGROUPCODE";
-		public static final String SALESLEADSTATUS_PARAM = "SALESLEADSTATUS";
+		public static final String SALESLEADSTATE_PARAM = "SALESLEADSTATE";
 		public static final String SALESGROUP_PARAM_SEPARATOR = ",";
 		
 		public void doGet(HttpServletRequest request,
@@ -110,12 +110,12 @@ import java.util.ArrayList;
     					+ "CHECKED /> Sales Contact "
     					+ "</LABEL>");
 	        	
-	        	/*
+	        	
 	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
     					+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) + "\" "
     					+ "ID=\"" + ParamSalesLeads + "\" "
     					+ "CHECKED/> Sales Lead ");
-	        	*/
+	        	
 	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) + "\" "
 	        				+ "ID=\"" + ParamOrders + "\" "
@@ -183,7 +183,7 @@ import java.util.ArrayList;
 	    		//out.println("</TR>");
 	    		
 	    		//Sales Lead Status
-	    		/*
+	   
 	    		//We only show these when 'Sales lead' is selected as one of the Critical Date types.
 	    		out.println("<div style= \"display: none;\" class=\"SALESLEADSTATUSOPTIONS\">");
 	    		
@@ -196,7 +196,7 @@ import java.util.ArrayList;
 
 	    		arrSalesLeadStatusControls.add(
     						"<LABEL>"
-	    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATUS_PARAM
+	    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATE_PARAM
 	    						+ SMTablebids.STATUS_PENDING
 	    						+ "\" CHECKED width=0.25>" 
 	    						+ "Pending"
@@ -204,7 +204,7 @@ import java.util.ArrayList;
 	    				);
 	    		arrSalesLeadStatusControls.add(
 						"<LABEL>"
-    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATUS_PARAM
+    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATE_PARAM
     						+ SMTablebids.STATUS_SUCCESSFUL
     						+ "\" CHECKED width=0.25>" 
     						+ "Successful"
@@ -212,7 +212,7 @@ import java.util.ArrayList;
     				);
 	    		arrSalesLeadStatusControls.add(
 						"<LABEL>"
-    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATUS_PARAM
+    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATE_PARAM
     						+ SMTablebids.STATUS_UNSUCCESSFUL
     						+ "\" CHECKED width=0.25>" 
     						+ "Unsuccessful"
@@ -220,7 +220,7 @@ import java.util.ArrayList;
     				);
 	    		arrSalesLeadStatusControls.add(
 						"<LABEL>"
-    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATUS_PARAM
+    						+  "<INPUT TYPE=CHECKBOX NAME=\"" + SALESLEADSTATE_PARAM
     						+ SMTablebids.STATUS_INACTIVE
     						+ "\" CHECKED width=0.25>" 
     						+ "Inactive"
@@ -229,7 +229,7 @@ import java.util.ArrayList;
 	    		
 	    		out.println(SMUtilities.Build_HTML_Table(5, arrSalesLeadStatusControls, 100, 0, true ,true));
 	    		out.println("</div>");
-	    		*/
+	    		
 	    		out.println("</TD>");
 	    		out.println("</TR>");
 	        	
@@ -447,7 +447,6 @@ import java.util.ArrayList;
 					+ "     // Now set the function that happens when the 'ORDERS' checkbox is clicked:\n"
 					+ "		$('#" + ParamOrders + "').click(function(event) {\n" 
 					+ "  			$('.SALESGROUPOPTIONS').slideToggle('fast');\n" 
-				/*
 					+ "		});\n"
 					+ "     // If the 'SALES LEAD' checkbox is set, then show the 'Sales Lead Status' list:\n"
 					+ "  	if ($(" + ParamSalesLeads + ").is(':checked')){\n" 
@@ -459,7 +458,7 @@ import java.util.ArrayList;
 					+ "  			$('.SALESLEADSTATUSOPTIONS').slideToggle('fast');\n" 
 					+ "		});\n"
 					+ "\n" 
-					*/
+					
 					+ "});\n"
 					+ "\n"
 					

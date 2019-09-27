@@ -195,8 +195,8 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		
 		//Category:
 		s += "<TR><TD ALIGN=RIGHT><B>Category<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
-			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscategorycode + "\""
-			+ " ID =\"" + SMLaborBackCharge.Paramscategorycode + "\""
+			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscostcentercode + "\""
+			+ " ID =\"" + SMLaborBackCharge.Paramscostcentercode + "\""
 			+ " ONCHANGE = \"flagDirty();\""
 			+ ">"
 			+ "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT CATEGORY ***</OPTION>";
@@ -218,7 +218,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 				String sCategoryCode = rsCategory.getString(SMTableiccategories.sCategoryCode);
 				s += "<OPTION";
 				
-				String sCurrentCategoryInfo = entry.getscategorycode();
+				String sCurrentCategoryInfo = entry.getscostcentercode();
 				
 				if (sCurrentCategoryInfo.compareToIgnoreCase(sCategoryCode) == 0){
 					s += " selected=YES ";

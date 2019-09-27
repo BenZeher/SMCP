@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMLaborBackCharge;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableiccategories;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
@@ -201,34 +202,34 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ ">"
 			+ "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT CATEGORY ***</OPTION>";
 		String SQL = "SELECT * "
-				  + " FROM " + SMTableiccategories.TableName
+				  + " FROM " + SMTablecostcenters.TableName
 				  + " WHERE ("
-				  	+ "(" + SMTableiccategories.iActive + " = 1)"
+				  	+ "(" + SMTablecostcenters.iactive + " = 1)"
 				  + ")"
-				  + " ORDER BY " + SMTableiccategories.sDescription
+				  + " ORDER BY " + SMTablecostcenters.lid
 				;
 		try {
-			ResultSet rsCategory = clsDatabaseFunctions.openResultSet(
+			ResultSet rsCostCenter = clsDatabaseFunctions.openResultSet(
 					SQL, 
 					getServletContext(), 
 					sm.getsDBID(), 
 					"MySQL", 
 					this.toString() + " [1447961188] SQL: " + SQL);
-			while (rsCategory.next()){
-				String sCategoryCode = rsCategory.getString(SMTableiccategories.sCategoryCode);
+			while (rsCostCenter.next()){
+				String sCostCenter = rsCostCenter.getString(SMTablecostcenters.lid);
 				s += "<OPTION";
 				
 				String sCurrentCategoryInfo = entry.getscostcentercode();
 				
-				if (sCurrentCategoryInfo.compareToIgnoreCase(sCategoryCode) == 0){
+				if (sCurrentCategoryInfo.compareToIgnoreCase(sCostCenter) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + sCategoryCode + "\">" 
-				+ rsCategory.getString(SMTableiccategories.sCategoryCode)
-				+ " - " + rsCategory.getString(SMTableiccategories.sDescription)
+				s += " VALUE=\"" + sCostCenter + "\">" 
+				+ rsCostCenter.getString(SMTablecostcenters.lid)
+				+ " - " + rsCostCenter.getString(SMTablecostcenters.scostcentername)
 				+ "</OPTION>";
 			}
-			rsCategory.close();
+			rsCostCenter.close();
 		} catch (SQLException e) {
 			throw new SQLException("Error loading category codes - " + e.getMessage());
 		}

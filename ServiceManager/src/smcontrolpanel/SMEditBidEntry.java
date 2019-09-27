@@ -1538,6 +1538,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		}
      
         //list critical dates
+        /*
         s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfColumns) + ">"
                 + SMCriticalDateEntry.listCriticalDates(
 				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
@@ -1550,6 +1551,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				true
 				)
              + "</TD></TR>";
+        */
 		s += "</TABLE style=\" title:ENDBidMemos; \">\n";
 		return s;
 	}

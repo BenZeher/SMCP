@@ -110,11 +110,12 @@ import java.util.ArrayList;
     					+ "CHECKED /> Sales Contact "
     					+ "</LABEL>");
 	        	
+	        	/*
 	        	out.println("<INPUT TYPE=\"CHECKBOX\" "
     					+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) + "\" "
     					+ "ID=\"" + ParamSalesLeads + "\" "
     					+ "CHECKED/> Sales Lead ");
-	        	
+	        	*/
 	        	out.println("<LABEL><INPUT TYPE=\"CHECKBOX\" "
 	        				+ "NAME=\"" + TypeMarker + Integer.toString(SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) + "\" "
 	        				+ "ID=\"" + ParamOrders + "\" "

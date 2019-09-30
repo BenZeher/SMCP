@@ -13,7 +13,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMLaborBackCharge;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
-import SMDataDefinition.SMTableiccategories;
+import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
 import ServletUtilities.clsDatabaseFunctions;
@@ -194,6 +194,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		;
 		
 		//Category:
+		/*
 		s += "<TR><TD ALIGN=RIGHT><B>Category<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
 			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramscategorycode + "\""
 			+ " ID =\"" + SMLaborBackCharge.Paramscategorycode + "\""
@@ -231,6 +232,51 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			rsCategory.close();
 		} catch (SQLException e) {
 			throw new SQLException("Error loading category codes - " + e.getMessage());
+		}
+		s += "</SELECT>";
+		s +=  "</TD>"
+		+ "</TR>"
+ 		;
+		*/
+		//Cost Center:
+		s += "<TR><TD ALIGN=RIGHT><B>Cost Center<B>:<FONT COLOR=\"RED\">*</FONT></TD>"
+			+ "<TD ALIGN=LEFT><SELECT NAME=\"" + SMLaborBackCharge.Paramlcostcenterid + "\""
+			+ " ID =\"" + SMLaborBackCharge.Paramlcostcenterid + "\""
+			+ " ONCHANGE = \"flagDirty();\""
+			+ ">"
+			+ "<OPTION VALUE=\"" + "" + "\">" + "*** SELECT COST CENTER ***</OPTION>";
+		String SQL = "SELECT * "
+				  + " FROM " + SMTablecostcenters.TableName
+				  + " WHERE ("
+				  	+ "(" + SMTablecostcenters.iactive + " = 1)"
+				  + ")"
+				  + " ORDER BY " + SMTablecostcenters.lid
+				;
+		try {
+			ResultSet rsCostCenter = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					sm.getsDBID(), 
+					"MySQL", 
+					this.toString() + " [1447961188] SQL: " + SQL);
+			while (rsCostCenter.next()){
+				String sCostCenter = Long.toString(rsCostCenter.getLong(SMTablecostcenters.lid));
+				s += "<OPTION";
+				
+				String sCostCenterInfo = entry.getlcostcenterid();
+				System.out.println("[2019270126544] " + sCostCenterInfo);
+				System.out.println("[201927012734] " + sCostCenter);
+				if (sCostCenterInfo.compareToIgnoreCase(sCostCenter) == 0){
+					s += " selected=YES ";
+				}
+				s += " VALUE=\"" + sCostCenter + "\">" 
+				+ rsCostCenter.getString(SMTablecostcenters.lid)
+				+ " - " + rsCostCenter.getString(SMTablecostcenters.scostcentername)
+				+ "</OPTION>";
+			}
+			rsCostCenter.close();
+		} catch (SQLException e) {
+			throw new SQLException("Error loading cost centers codes - " + e.getMessage());
 		}
 		s += "</SELECT>";
 		s +=  "</TD>"

@@ -1,0 +1,139 @@
+There are (mainly) THREE tables involved in the posting logic.  Fiscal, financial statement, and transactional
+data are created or updated when a GL Transaction Batch is posted.  That is the ONLY event that can touch any
+of these tables.
+
+First, when a batch is posted, each line of the batch entry(s) becomes a new record in the gltransactionlines table.
+This table is the 'history' of GL transactions, and is the data source used to produce the GL Transaction
+Listing report.  These records are only inserted, at the time of the batch posting, and they are never updated.
+
+Second - when a batch is posted, the 'fiscal set' data (including things like the opening balance for the year, and 
+the net change for each period) gets updated.  This table is ONLY modified at the time of a posting.  If there is
+no fiscal set record for the account and fiscal year at the time of posting, the program does an INSERT.  If
+there already IS a current record for the account and fiscal year, then the program UPDATES that record. This
+is the only time a fiscal set record is INSERTed or UPDATed.  Also - if there are subsequent FISCAL YEARS in the 
+data, then the program will insert/update the appropriate glfiscalset records for those subsequent years.
+
+Third, when the fiscal set records are inserted/updated, the affected financial statement records (glfinancialstatementdata)
+are updated.  
+
+
+
+THINGS TO CHECK:
+
+1) Post transactions to a previous year for a balance sheet AND an income/expense account, then check how
+it affected opening balances for the subsequent year(s).  Income/expense accounts should go to Retained Earnings.
+
+2) Check closing the fiscal year.  How does it affect opening balances for the subsequent year?  What happens if there 
+is NO following year built yet?  Does the retained earnings account opening balance for the following year seem correct?
+
+3) 
+
+
+
+
+GLFINANCIALSTATEMENTDATA:
+This table gets updated by reading the glfiscalsets table.  Given a selected fiscal year and acct, the program needs
+to read all the fiscal sets for that account, and that fiscal year AND the subsequent fiscal years.  (A posting can
+affect the same fiscal year as the posting, but can also potentially affect any glfinancialstatement data for
+subsequent years as well.
+
+Using the fiscal sets for the posting transaction's account and fiscal year and years thereafter, the
+glfinancialstatement data gets inserted/updated like this:
+
+glfinancialstatementdata fields:
+sacctid: passed in
+ifiscalyear: passed in
+ifiscalperiod: we have to read ALL the fiscal periods included in the affected fiscal years, so iterate through these
+bdnetchangeforperiod: read the amount in the corresponding fiscal set record for this period
+bdnetchangeforperiodpreviousyear: get the record from the previous fiscal set for this period
+bdtotalyeartodate: get the total for the periods to date in this fiscal year from the glfiscalset record for this year
+bdtotalpreviousyeartodate:  get the total for the periods to date in the previous fiscal year from the glfiscalset record
+   for the previous year
+bdopeningbalancepreviousyear: get the opening balance for the previous fiscal year
+bdopeningbalance: get the opening balance from the corresponding fiscal year
+bdnetchangeforpreviousperiod: get the net change from the previous period from the fiscal set OR from the last net change
+    in the previous year's fiscal set, if we are working with period 1
+bdnetchangeforpreviousperiodpreviousyear: get the next change from the previous period of the previous year fiscal set OR
+    if we are working with period 1, then get the last net change from the last period TWO years previous
+    
+    
+    
+    
+    
+    
+
+
+
+Third, when a batch is posted, the 'financial statement' data gets updated - there are several fields in this
+table that can be affected.
+
+How these tables are each affected by a posting is detailed below:
+
+Assume there is a batch being posted - it has ONE entry and ONE entry line.  Here's what can potentially be 
+affected:
+
+(QUESTION - when should fiscalsets and financial statement data records get created?)
+
+GLTRANSACTIONLINES:
+When the batch is posted, a new gltransactionline record is inserted into the database.  The gltransactionlines
+table is only touched at this one point - its records are never updated.
+
+GLFISCALSETS:
+This table is keyed to the fiscal year and GL account.  Aside from that, it carries an opening balance, and
+the net changed for each period.  So when this sample batch posts this happens:
+
+1) If there is NOT a glfiscalset record already, then one is inserted, using the fiscal year and GL account of the
+ transaction.  The 'opening balance' is read from the CLOSING balance of the previous year's fiscal set for
+ that same GL account.
+ 
+2) The transaction amount gets ADDED to the current 'net change' value in the appropriate field.  So if the
+transaction is in period 4, the 'bdnetchangeperiod4' gets the amount of the transaction added to it.
+
+3) If there are any subsequent year fiscal sets in the data already, then each of their opening balances, for
+this same GL account have to be increased/decreased by the amount of this transaction.  EACH OF THESE UPDATES
+MUST TRIGGER UPDATED IN THE GLFINANCIALSTATEMENTDATA table as detailed below:
+
+(QUESTION: how does this work for income/expense accounts that were cleared in the year end closing?  Does this
+increase/decrease happen to the retained earnings account instead?)
+
+GLFINANCIALSTATEMENTDATA:
+Several fields in this table, as well as several records, can be affected by posting.  We'll update them in this
+way: Since they can ONLY change when a fiscal set is modified, we'll 'trigger' updates to the 
+glfinancialstatementdata IF AND ONLY IF a fiscal set record gets updated.  And here's the logic for that:
+
+1) The changes to the glfiscalset data will update the glfinancialstatementdata table in this way:
+If there's no glfinancialstatementdata record for the relevant fiscal year, period, and GL account, it will be inserted.
+
+A) The glfinancialstatementdata.bdnetchangeforperiod' will be set to the bdnetchangeperiod value in glfiscalsets for this period.
+B) If the record is being INSERTED, then the glfinancialstatementdata.bdnetchangeforperiodpreviousyear will be read from the 
+glfiscalset data from the previous year.
+C) (QUESTION) The glfinancialstatementdata.bdtotalyeartodate will be increased/decreased by the transaction amount.
+D) If the record is being inserted, then the glfinancialstatementdata.bdtotalpreviousyeartodate value will be calculated 
+and set from the glfiscalsets record from the previous year.
+E) The glfinancialstatementdata.bdopeningbalancepreviousyear will be set from the glfiscalset record of the previous year.
+F) The glfinancialstatementdata.bdopeningbalance will be set to the glfiscalset.bdopeningbalance.
+
+G) The glfinancialstatement.bdnetchangeforpreviousperiod will be read from the glfiscalset of the previous year.
+H) The glfinancialstatement.bdnetchangeforpreviousperiodpreviousyear will be read from the glfiscalset of
+the previous year.
+
+
+2) The glfinancialstatementdata for any subsequent fiscal years and or periods get updated as follows:
+A) The glfinancialstatementdata.bdnetchangeforperiodpreviousyear gets increased/decreased FROM glfiscalsets for records
+ with the same period, but the following year.
+B) The glfinancialstatementdata.bdtotalpreviousyeartodate gets increased/decreased FROM glfiscalsets for records
+ with the same period, but the following year.
+C) 
+
+******************************************
+Updating glfinancialstatementdata:
+
+gltransactionlines and glfiscalsets are updated during a post.  glfinancialstatementdata is updated, per account, per period, in this way:
+
+1) ALL glfinancialstatementdata records for the GL account, and ANY period EQUAL TO or LATER THAN the period being modified is first DELETED.
+
+2) ALL of the subsequent records, starting with the modified fiscal year and period, all the way to the last period of the last fiscal set, are reconstructed.
+
+
+
+

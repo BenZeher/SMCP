@@ -1030,17 +1030,56 @@ public class GLTransactionBatch {
 		
 		//System.out.println("[1556038818] sAccount = '" + sAccount + "', net change field = '" + sNetChangeField + "'.");
 		
-		//The fiscal set should ALWAYS exist:
-		//if (bFiscalSetExistsAlready){
-		//Just update the appropriate fields:
-		
-		String SQL = "UPDATE " + SMTableglfiscalsets.TableName
-			+ " SET " + sNetChangeField + " = " + sNetChangeField + " + (" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt) + ")"
+		//The fiscal set record gets created or updated here:
+		BigDecimal bdPreviousYearClosingBalance = new BigDecimal("0.00");
+		String SQL = "SELECT "
+			+ SMTableglfiscalsets.bdopeningbalance
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod1
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod2
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod3
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod4
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod5
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod6
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod7
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod8
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod9
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod10
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod11
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod12
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod13
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod14
+			+ " + " + SMTableglfiscalsets.bdnetchangeperiod15
+			+ " AS CLOSINGBALANCE"
+			+ " FROM " + SMTableglfiscalsets.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Integer.toString(iFiscalYear - 1) + ")"
 				+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
 			+ ")"
 		;
+		try {
+			ResultSet rsPreviousFiscalSet = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsPreviousFiscalSet.next()){
+				bdPreviousYearClosingBalance = rsPreviousFiscalSet.getBigDecimal("CLOSINGBALANCE"); 
+			}
+			rsPreviousFiscalSet.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [201927396449] " + "reading previous fiscal set with SQL: '" + SQL + "' - " + e1.getMessage());
+		}
+		
+		SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
+			+ sNetChangeField
+			+ ", " + SMTableglfiscalsets.bdopeningbalance
+			+ ", " + SMTableglfiscalsets.ifiscalyear
+			+ ", " + SMTableglfiscalsets.sAcctID
+			+ ") VALUES ("
+			+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+			+ ", " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
+			+ ", " + Integer.toString(iFiscalYear)
+			+ ", '" + sAccount + "'"
+			+ ") ON DUPLICATE KEY UPDATE "
+			+ sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+		;
+		
 		//System.out.println("[1556038820] UPDATE statement = '" + SQL + "'.");
 		try {
 			Statement stmt = conn.createStatement();
@@ -1050,8 +1089,11 @@ public class GLTransactionBatch {
 				"Error [1555962542] updating GL fiscal set for account '" + sAccount 
 				+ "', fiscal year " + Integer.toString(iFiscalYear) 
 				+ ", period " + Integer.toString(iFiscalPeriod) 
+				+ " with SQL: '" + SQL + "'"
 				+ " - " + e.getMessage());
 		}
+		
+		//TODO - update future fiscal sets:
 		
 		//Allow for the possibility that this update affects an opening balance in a subsequent fiscal set:
 		//Update the opening balance for any subsequent fiscal years for this account:
@@ -1091,6 +1133,7 @@ public class GLTransactionBatch {
     	try {
 			ResultSet rsFiscalYears = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsFiscalYears.next()){
+				//FUTURE Fiscal set records get inserted or updated as needed:
 				SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
 					+ SMTableglfiscalsets.bdopeningbalance
 					+ ", " + SMTableglfiscalsets.ifiscalyear

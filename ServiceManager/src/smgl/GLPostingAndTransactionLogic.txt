@@ -35,7 +35,7 @@ GLFINANCIALSTATEMENTDATA:
 This table gets updated by reading the glfiscalsets table.  Given a selected fiscal year and acct, the program needs
 to read all the fiscal sets for that account, and that fiscal year AND the subsequent fiscal years.  (A posting can
 affect the same fiscal year as the posting, but can also potentially affect any glfinancialstatement data for
-subsequent years as well.
+subsequent years as well.)
 
 Using the fiscal sets for the posting transaction's account and fiscal year and years thereafter, the
 glfinancialstatement data gets inserted/updated like this:
@@ -56,84 +56,3 @@ bdnetchangeforpreviousperiod: get the net change from the previous period from t
 bdnetchangeforpreviousperiodpreviousyear: get the next change from the previous period of the previous year fiscal set OR
     if we are working with period 1, then get the last net change from the last period TWO years previous
     
-    
-    
-    
-    
-    
-
-
-
-Third, when a batch is posted, the 'financial statement' data gets updated - there are several fields in this
-table that can be affected.
-
-How these tables are each affected by a posting is detailed below:
-
-Assume there is a batch being posted - it has ONE entry and ONE entry line.  Here's what can potentially be 
-affected:
-
-(QUESTION - when should fiscalsets and financial statement data records get created?)
-
-GLTRANSACTIONLINES:
-When the batch is posted, a new gltransactionline record is inserted into the database.  The gltransactionlines
-table is only touched at this one point - its records are never updated.
-
-GLFISCALSETS:
-This table is keyed to the fiscal year and GL account.  Aside from that, it carries an opening balance, and
-the net changed for each period.  So when this sample batch posts this happens:
-
-1) If there is NOT a glfiscalset record already, then one is inserted, using the fiscal year and GL account of the
- transaction.  The 'opening balance' is read from the CLOSING balance of the previous year's fiscal set for
- that same GL account.
- 
-2) The transaction amount gets ADDED to the current 'net change' value in the appropriate field.  So if the
-transaction is in period 4, the 'bdnetchangeperiod4' gets the amount of the transaction added to it.
-
-3) If there are any subsequent year fiscal sets in the data already, then each of their opening balances, for
-this same GL account have to be increased/decreased by the amount of this transaction.  EACH OF THESE UPDATES
-MUST TRIGGER UPDATED IN THE GLFINANCIALSTATEMENTDATA table as detailed below:
-
-(QUESTION: how does this work for income/expense accounts that were cleared in the year end closing?  Does this
-increase/decrease happen to the retained earnings account instead?)
-
-GLFINANCIALSTATEMENTDATA:
-Several fields in this table, as well as several records, can be affected by posting.  We'll update them in this
-way: Since they can ONLY change when a fiscal set is modified, we'll 'trigger' updates to the 
-glfinancialstatementdata IF AND ONLY IF a fiscal set record gets updated.  And here's the logic for that:
-
-1) The changes to the glfiscalset data will update the glfinancialstatementdata table in this way:
-If there's no glfinancialstatementdata record for the relevant fiscal year, period, and GL account, it will be inserted.
-
-A) The glfinancialstatementdata.bdnetchangeforperiod' will be set to the bdnetchangeperiod value in glfiscalsets for this period.
-B) If the record is being INSERTED, then the glfinancialstatementdata.bdnetchangeforperiodpreviousyear will be read from the 
-glfiscalset data from the previous year.
-C) (QUESTION) The glfinancialstatementdata.bdtotalyeartodate will be increased/decreased by the transaction amount.
-D) If the record is being inserted, then the glfinancialstatementdata.bdtotalpreviousyeartodate value will be calculated 
-and set from the glfiscalsets record from the previous year.
-E) The glfinancialstatementdata.bdopeningbalancepreviousyear will be set from the glfiscalset record of the previous year.
-F) The glfinancialstatementdata.bdopeningbalance will be set to the glfiscalset.bdopeningbalance.
-
-G) The glfinancialstatement.bdnetchangeforpreviousperiod will be read from the glfiscalset of the previous year.
-H) The glfinancialstatement.bdnetchangeforpreviousperiodpreviousyear will be read from the glfiscalset of
-the previous year.
-
-
-2) The glfinancialstatementdata for any subsequent fiscal years and or periods get updated as follows:
-A) The glfinancialstatementdata.bdnetchangeforperiodpreviousyear gets increased/decreased FROM glfiscalsets for records
- with the same period, but the following year.
-B) The glfinancialstatementdata.bdtotalpreviousyeartodate gets increased/decreased FROM glfiscalsets for records
- with the same period, but the following year.
-C) 
-
-******************************************
-Updating glfinancialstatementdata:
-
-gltransactionlines and glfiscalsets are updated during a post.  glfinancialstatementdata is updated, per account, per period, in this way:
-
-1) ALL glfinancialstatementdata records for the GL account, and ANY period EQUAL TO or LATER THAN the period being modified is first DELETED.
-
-2) ALL of the subsequent records, starting with the modified fiscal year and period, all the way to the last period of the last fiscal set, are reconstructed.
-
-
-
-

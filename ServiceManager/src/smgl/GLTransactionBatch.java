@@ -1466,7 +1466,9 @@ public class GLTransactionBatch {
 		
     	return;
     }
-    private static void updateFinancialStatementData(
+    
+   /*
+    private static void updateFinancialStatementDataOLD(
     	String sAccount,
     	int iFiscalYear,
     	Connection conn
@@ -1546,22 +1548,21 @@ public class GLTransactionBatch {
 				bTwoYearsPreviousWasFound = true;
 			}
 
-			/*
-			THESE fields are affected for the same fiscal year and period:
-			bdnetchangeforperiod
-			bdtotalyeartodate
+//			THESE fields are affected for the same fiscal year and period:
+//			bdnetchangeforperiod
+//			bdtotalyeartodate
+//			
+//			THESE fields are affected for the subsequent fiscal period:
+//			bdnetchangeforpreviousperiod
+//			
+//			THESE fields are affected for the subsequent year, same period:
+//			bdnetchangeforperiodpreviousyear
+//			bdtotalpreviousyeartodate
+//			
+//			THESE fields are affected for the subsequent year, previous period:
+//			bdnetchangeforpreviousperiodpreviousyear
 			
-			THESE fields are affected for the subsequent fiscal period:
-			bdnetchangeforpreviousperiod
 			
-			THESE fields are affected for the subsequent year, same period:
-			bdnetchangeforperiodpreviousyear
-			bdtotalpreviousyeartodate
-			
-			THESE fields are affected for the subsequent year, previous period:
-			bdnetchangeforpreviousperiodpreviousyear
-			
-			*/
 			//PERIOD 1:
 			String sPeriod = "1";
 			BigDecimal bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1);
@@ -2608,7 +2609,8 @@ public class GLTransactionBatch {
 		
 		return;
     }
-    private static void updateFinancialStatementDataNEW(
+    */
+    private static void updateFinancialStatementData(
         	String sAccount,
         	int iFiscalYear,
         	Connection conn

@@ -305,9 +305,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 						out.println("<TD NOWRAP CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP+" \">");
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_ORDER_RECORD_TYPE) { 
-							String sSalespersonName = clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", ""));
+							String sSalespersonName = clsDatabaseFunctions.getRecordsetStringValue(rs,("OrderSalespersonsTable" + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", ""));
 							sSalespersonName += " ";
-							sSalespersonName += clsDatabaseFunctions.getRecordsetStringValue(rs,(SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", ""));
+							sSalespersonName += clsDatabaseFunctions.getRecordsetStringValue(rs,("OrderSalespersonsTable" + "." + SMTablesalesperson.sSalespersonLastName).replace("`", ""));
 							out.println("<b>Salesperson Name: </b>" + sSalespersonName + "");
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "");
@@ -349,8 +349,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 						}
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
-							out.println("<b>Salesperson: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() 
-												         + " " + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim()); 
+							out.println("<b>Salesperson: </b>" + rs.getString(("SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() 
+												         + " " + rs.getString(("SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim()); 
 							
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
@@ -457,8 +457,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToPhone
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sOrderNumber
 						+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
-						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName;
+						+ ", " + "OrderSalespersonsTable" + "." + SMTablesalesperson.sSalespersonFirstName
+						+ ", " + "OrderSalespersonsTable" + "." + SMTablesalesperson.sSalespersonLastName;
 			}
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
 				SQL += ", " + SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname
@@ -478,8 +478,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sstatus
-						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
-						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+						+ ", " + "SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonFirstName
+						+ ", " + "SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonLastName
 						+ ", " + SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc
 						;
 				}	
@@ -503,9 +503,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 					+ " LEFT JOIN " + SMTablesalesgroups.TableName
 					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iSalesGroup
 					+ " = " + SMTablesalesgroups.iSalesGroupId
-					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " LEFT JOIN " + SMTablesalesperson.TableName + " AS OrderSalespersonsTable"
 					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson
-					+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+					+ " = " + "OrderSalespersonsTable" + "." + SMTablesalesperson.sSalespersonCode
 					;
 			}	
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE) {
@@ -525,9 +525,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 					SQL += " LEFT JOIN " + SMTablebids.TableName
 					+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
 					+ "CAST(" + SMTablebids.TableName + "." + SMTablebids.lid + " as char(11))"
-					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " LEFT JOIN " + SMTablesalesperson.TableName + " AS SalesLeadSalespersonsTable"
 					+ " ON " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
-					+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+					+ " = " + "SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonCode
 					+ " LEFT JOIN " + SMTableprojecttypes.TableName
 					+ " ON " + SMTablebids.TableName + "." + SMTablebids.iprojecttype
 					+ " = " + SMTableprojecttypes.TableName + "." + SMTableprojecttypes.iTypeId

@@ -980,6 +980,13 @@ public class clsServletUtilities {
 								throw new Exception("Error reading parent folder from AROptions.");	
 							}
 							break;
+							
+						case SMCreateGoogleDriveFolderParamDefinitions.SM_LABOR_BACKCHARGE_PARAM_VALUE:
+							sFolderName = rs.getString(SMTablesmoptions.gdrivelaborbackchargefolderprefix) 
+							+ sKeyValue + rs.getString(SMTablesmoptions.gdrivelaborbackchargefoldersuffix);
+							sParentFolder = rs.getString(SMTablesmoptions.gdrivelaborbackchargeparentfolderid);
+							break;
+							
 						default:
 							break;
 					}

@@ -17,7 +17,29 @@ import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 
 public class GLCloseFiscalYearAction extends HttpServlet{
+
+	/*
+	GL Year End Closing Logic:
 	
+	1) The GL 'Closing Account' is determined.
+	
+	2) A new GL batch is created with ONE entry in it. The fiscal year is the year being closed, and the period for the entry is 15
+	 (which is the special, 'hidden' period, used only for closing).
+	
+	3) Then we get a list of the ending balances for ALL of the income/expense accounts.
+	
+	4) Next we go through each of the accounts on that list: if the ending balance is zero, we ignore it.
+	
+	5) For each account, we add a line to the GL batch entry: the AMOUNT is the ending balance for that account, NEGATED (multiplied by -1).
+	
+	6) After a line has been added (to the batch) for all of the income/expense accounts with ending balances,
+	 we add one more line for the Retained Earnings account.  The amount of the line is the total from the income/expense accounts. 
+	 This number is NOT reversed, because we already reversed each of the lines above.
+	
+	This creates a batch that should set all the income/expense accounts ending balances (as of period 15) to zero, and it also
+	 ADDS that total amount to the Retained Earnings account. 
+	
+	*/
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)

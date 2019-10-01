@@ -494,7 +494,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 
 	
 		//Credit Note Date:
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Date of Credit Memo:<FONT COLOR=\"RED\">*</FONT>"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Date of Credit Memo:	"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramdatcreditnotedate + "\""
 			+ " VALUE=\"" + entry.getdatcreditnotedate().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMLaborBackCharge.Paramdatcreditnotedate + "\""

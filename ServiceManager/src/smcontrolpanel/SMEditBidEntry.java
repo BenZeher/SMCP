@@ -1236,7 +1236,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ ">"
 		;
 		s += "</TD></TR>";
-
+/*
 		//Last contact date:
         sValues.clear();
         sDescriptions.clear();
@@ -1321,8 +1321,9 @@ public class SMEditBidEntry  extends HttpServlet {
 					+ " >" + sDescriptions.get(i)
 				;
 			}
+			
 			s += "</TD></TR>";
-		
+	*/
 		//Close the table:
 		s += "</TABLE style=\" title:ENDActualdates; \">\n";
 		return s;
@@ -1341,7 +1342,6 @@ public class SMEditBidEntry  extends HttpServlet {
 		//Description:
 		s += "<TR>";
 		s += "<TD class=\" fieldheading \" ><B>Description</B>&nbsp;</TD>";
-		s += "<TD class=\" fieldheading \" ><B>Follow up notes</B>&nbsp;</TD>";
 		s += "</TR>";
 		
 		s += "<TR>";
@@ -1354,20 +1354,6 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ " onchange=\"flagDirty();\""
 			+ ">"
 			+ entry.getmdescription().replace("\"", "&quot;")
-			+ "</TEXTAREA>"
-			+ "</TD>"
-		;
-		
-		//Follow up notes
-		s += "<TD class=\" fieldcontrol \" WIDTH=50%>"
-			+ "<TEXTAREA NAME=\"" + SMBidEntry.Parammfollowupnotes + "\""
-			+ " ID=\"" + SMBidEntry.Parammfollowupnotes + "\""
-			+ " rows=\"" + Integer.toString(iRows) + "\""
-			//+ " cols=\"" + Integer.toString(iCols) + "\""
-			+ " style = \" width: 100%; \""
-			+ " onchange=\"flagDirty();\""
-			+ ">"
-			+ entry.getmfollowupnotes().replace("\"", "&quot;")
 			+ "</TEXTAREA>"
 			+ "</TD>"
 		;
@@ -1538,7 +1524,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		}
      
         //list critical dates
-        /*
+        
         s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfColumns) + ">"
                 + SMCriticalDateEntry.listCriticalDates(
 				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
@@ -1551,7 +1537,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				true
 				)
              + "</TD></TR>";
-        */
+        
 		s += "</TABLE style=\" title:ENDBidMemos; \">\n";
 		return s;
 	}

@@ -14,6 +14,7 @@ import SMDataDefinition.SMTablebids;
 import SMDataDefinition.SMTablecriticaldates;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTableprojecttypes;
 import SMDataDefinition.SMTablesalescontacts;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
@@ -348,13 +349,29 @@ public class SMCriticalDateReport extends java.lang.Object{
 						}
 						
 						if( rs.getInt(SMTablecriticaldates.TableName + "." + SMTablecriticaldates.itype) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
-							out.println("<b>Salesperson: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.ssalespersoncode).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Project Type: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.iprojecttype).replace("`", "")).trim() + ""); 
+							out.println("<b>Salesperson: </b>" + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() 
+												         + " " + rs.getString((SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim()); 
+							
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
 							String sPhoneNumber = rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim();
 							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</a>"); 
+							out.println("<br><b>Project Type: </b>" + rs.getString((SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc).replace("`", "")).trim() + ""); 
+							String sStatus = rs.getString((SMTablebids.TableName + "." + SMTablebids.sstatus).replace("`", "")).trim();
+							if(sStatus.compareToIgnoreCase("P") == 0) {
+								sStatus = "Pending";
+							}
+							if(sStatus.compareToIgnoreCase("S") == 0) {
+								sStatus = "Successful";
+							}
+							if(sStatus.compareToIgnoreCase("U") == 0) {
+								sStatus = "Unsuccessful";
+							}
+							if(sStatus.compareToIgnoreCase("I") == 0) {
+								sStatus = "Inactive";
+							}
+							out.println("<br><b>Status: </b>" + sStatus + ""); 
 							out.println("<br><b>Sales Lead: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
 								+ "smcontrolpanel.SMEditBidEntry?lid=" 
@@ -459,7 +476,12 @@ public class SMCriticalDateReport extends java.lang.Object{
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.sprojectname
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.iprojecttype
 						+ ", " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
-						+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername;
+						+ ", " + SMTablebids.TableName + "." + SMTablebids.scustomername
+						+ ", " + SMTablebids.TableName + "." + SMTablebids.sstatus
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+						+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+						+ ", " + SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc
+						;
 				}	
 		
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {
@@ -502,7 +524,15 @@ public class SMCriticalDateReport extends java.lang.Object{
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.SALES_LEAD_RECORD_TYPE) {
 					SQL += " LEFT JOIN " + SMTablebids.TableName
 					+ " ON "  + SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sdocnumber + " = " 
-					+ "CAST(" + SMTablebids.TableName + "." + SMTablebids.lid + " as char(11))";
+					+ "CAST(" + SMTablebids.TableName + "." + SMTablebids.lid + " as char(11))"
+					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " ON " + SMTablebids.TableName + "." + SMTablebids.ssalespersoncode
+					+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+					+ " LEFT JOIN " + SMTableprojecttypes.TableName
+					+ " ON " + SMTablebids.TableName + "." + SMTablebids.iprojecttype
+					+ " = " + SMTableprojecttypes.TableName + "." + SMTableprojecttypes.iTypeId
+					
+					;
 			}
 			
 			if (Integer.parseInt(alTypes.get(i)) == SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE) {

@@ -133,6 +133,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 	private String getEditHTML(SMMasterEditEntry sm, SMLaborBackCharge entry) throws SQLException{
 
 		String s = "";
+		s +=clsServletUtilities.getJQueryIncludeString();
 		  boolean bUseGoogleDrivePicker = false;
 			String sPickerScript = "";
 				try {
@@ -264,8 +265,6 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 				s += "<OPTION";
 				
 				String sCostCenterInfo = entry.getlcostcenterid();
-				System.out.println("[2019270126544] " + sCostCenterInfo);
-				System.out.println("[201927012734] " + sCostCenter);
 				if (sCostCenterInfo.compareToIgnoreCase(sCostCenter) == 0){
 					s += " selected=YES ";
 				}
@@ -527,21 +526,19 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		s += "</TABLE>";
 		
 		//TODO Add in the Button/Link to the Linked Google Drive Folder
-		//Also Uncomment this to add back the Button and the Text Box                
-       /* String sCreateAndUploadButton = "";
-		if (
-			SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMCreateGDriveARFolders, 
+		/*String sCreateAndUploadButton = "";
+
+		if (SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.SMCreateGDriveOrderFolders, 
 				sm.getUserID(), 
 				getServletContext(), 
 				sm.getsDBID(),
-				sm.getLicenseModuleLevel()
-			)
-			&& (entry.getlid().compareToIgnoreCase("-1") != 0)
-		){
+				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
+			&& !sm.getAddingNewEntryFlag()){
+			
 			sCreateAndUploadButton = createAndUploadFolderButton(bUseGoogleDrivePicker);
+			s+=sCreateAndUploadButton;
 		}
-		s+= sCreateAndUploadButton;
 		s+= "<BR><INPUT TYPE=TEXT NAME=\"" + SMLaborBackCharge.Paramsgdoclink + "\""
 				+ " VALUE=\"" + entry.getsgdoclink().replace("\"", "&quot;") + "\""
 				+ "SIZE=" + "125"
@@ -692,11 +689,11 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		if(bUseGoogleDrivePicker) {
 			sOnClickFunction = "loadPicker()";
 		}
-		//TODO
+		
 		return "<button type=\"button\""
-			+ " value=\"" + CREATE_UPLOAD_FOLDER_COMMAND_VALUE + "\""
+			+ " value=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
 			+ " name=\"" + CREATE_UPLOAD_FOLDER_BUTTON_LABEL + "\""
-			+ " onClick=\"" + sOnClickFunction + "\">"
+			+ " onClick=\"" + sOnClickFunction + "\">\n"
 			+ CREATE_UPLOAD_FOLDER_BUTTON_LABEL
 			+ "</button>\n"
 			;

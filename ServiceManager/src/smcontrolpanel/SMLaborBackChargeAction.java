@@ -101,7 +101,8 @@ public class SMLaborBackChargeAction extends HttpServlet{
         	//returnURL
         	//recordtype
         	//keyvalue
-       	
+			
+			System.out.println("[2019273114179] " + "Pre Create Drive");
 			try {
 				String sRedirectString = smopt.getgdriveuploadfileurl()
 		         		+ "?" + SMCreateGoogleDriveFolderParamDefinitions.parentfolderid + "=" + smopt.getgdrivelaborbackchargeparentfolderid()
@@ -111,10 +112,11 @@ public class SMLaborBackChargeAction extends HttpServlet{
 		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.backgroundcolor + "=" + smopt.getBackGroundColor()
 		         		+ "&" + SMCreateGoogleDriveFolderParamDefinitions.returnURL + "=" + getCreateGDriveReturnURL(request)
 		             	;
+				System.out.println("[2019273110186] " + sRedirectString);
 				redirectProcess(sRedirectString, response);
 			} catch (Exception e) {
 				response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.AREditCustomersEdit"
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMLaborBackChargeEdit"
 					+ "?" + entry.getQueryString()
 					+ "&Warning=Could not create folder or upload files: " + e.getMessage()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()

@@ -168,10 +168,12 @@ function buildPicker() {
 	//Setup the docs view.
 	var view = new google.picker.DocsView(google.picker.ViewId.DOCS);
 	view.setParent(folderID).setIncludeFolders(true);
+	view.setEnableDrives(true);
 	
 	//Setup the upload view
 	var uploadView = new google.picker.DocsUploadView();
 	uploadView.setParent(folderID);
+	uploadView.setEnableDrives(true);
 	
 	//Create the google drive picker
 	picker = new google.picker.PickerBuilder()
@@ -185,6 +187,7 @@ function buildPicker() {
 			.setCallback(pickerCallback)
 			.build();
 	
+	picker.enableFeature(google.picker.Feature.SUPPORT_DRIVES);
 	//Display the google drive picker
 	picker.setVisible(true);	
 }
@@ -200,7 +203,7 @@ function pickerCallback(data) {
 		}
 	}
 	
-	//If the user picked a files then display it.
+	//If the user picked a file then display it.
 	if ((data.action == google.picker.Action.PICKED) && (!data.docs[0].isNew)) {
 		var fileId = data.docs[0].id;
 		picker.setVisible(true);

@@ -1735,7 +1735,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 			+ ", " + "0" //original batch number
 			+ ", " + "0" //original entry number
 			+ ", " + "0" //original line number
-			//TODO update this to have the actual link
 			+ ", 0" //source transaction link
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription

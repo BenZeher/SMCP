@@ -85,8 +85,12 @@ public class GLConvertACCPAC extends HttpServlet {
 	    
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    
-	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-		if (! sWarning.equalsIgnoreCase("")){
+	    String sWarning = (String)CurrentSession.getAttribute(GLConvertACCPACAction.SESSION_ATTRIBUTE_WARNING);
+	    CurrentSession.removeAttribute(GLConvertACCPACAction.SESSION_ATTRIBUTE_WARNING);
+	    if (sWarning == null){
+	    	sWarning = "";
+	    }
+		if (sWarning.compareToIgnoreCase("") != 0){
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 		
@@ -96,13 +100,13 @@ public class GLConvertACCPAC extends HttpServlet {
 		}
 	    
 		String sResult = (String)CurrentSession.getAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
+		CurrentSession.removeAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
 		if (sResult == null){
 			sResult = "";
 		}
 		if (sResult.compareToIgnoreCase("") != 0){
 			out.println("<B>***** RESULTS:<BR>" + sResult + "</B><BR>");
 		}
-		CurrentSession.removeAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
 		
 		//Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 

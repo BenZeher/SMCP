@@ -22,7 +22,8 @@ import smcontrolpanel.SMUtilities;
 
 public class GLConvertACCPACAction extends HttpServlet {
 
-	public static final String SESSION_ATTRIBUTE_RESULT = "SESSIONATTRIBUTERESULT";
+	public static final String SESSION_ATTRIBUTE_RESULT = "GLCONVERTSESSIONATTRIBUTERESULT";
+	public static final String SESSION_ATTRIBUTE_WARNING = "GLCONVERTSESSIONATTRIBUTEWARNING";
 	private static final long serialVersionUID = 1L;
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -44,6 +45,7 @@ public class GLConvertACCPACAction extends HttpServlet {
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    CurrentSession.removeAttribute(SESSION_ATTRIBUTE_RESULT);
+	    CurrentSession.removeAttribute(SESSION_ATTRIBUTE_WARNING);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
@@ -52,7 +54,6 @@ public class GLConvertACCPACAction extends HttpServlet {
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    String sWarning = "";
 	    /**************Get Parameters**************/
 
     	//Customized title
@@ -69,11 +70,10 @@ public class GLConvertACCPACAction extends HttpServlet {
 
     	//If the user didn't CONFIRM, then we can just drop out here:
     	if (request.getParameter(GLConvertACCPAC.CONFIRM_CONVERSION_CHECKBOX_NAME) == null){
-    		sWarning = "You did not check the checkbox to CONFIRM.";
+    		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "You did not check the checkbox to CONFIRM.");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-    				+ "&" + "Warning=" + sWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -100,11 +100,10 @@ public class GLConvertACCPACAction extends HttpServlet {
 			if (rsOptions.first()){
 				if (rsOptions.getInt(SMTablegloptions.iusessmcpgl) == 1){
 					rsOptions.close();
-					sWarning = "You cannot convert the ACCPAC data into SMCP once you've begun using SMCP GL.";
+					CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "You cannot convert the ACCPAC data into SMCP once you've begun using SMCP GL.");
 		    		response.sendRedirect(
 		    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 		    				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-		    				+ "&" + "Warning=" + sWarning
 		    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		    		);			
 		        	return;
@@ -116,22 +115,20 @@ public class GLConvertACCPACAction extends HttpServlet {
 			    iACCPACDatabaseType = rsOptions.getInt(SMTablegloptions.iaccpacdatabasetype);
 			}else{
 				rsOptions.close();
-		   		sWarning = "Unable to open GL Options table - function cannot run.";
+		   		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Unable to open GL Options table - function cannot run.");
 	    		response.sendRedirect(
 	    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 	    				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-	    				+ "&" + "Warning=" + sWarning
 	    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 	    		);			
 	        	return;
 			}
 		} catch (SQLException e) {
 			//Redirect back to calling class:
-	   		sWarning = "Unable to read GL Options table - " + e.getMessage();
+			CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Unable to read GL Options table - " + e.getMessage());
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-    				+ "&" + "Warning=" + sWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -146,11 +143,10 @@ public class GLConvertACCPACAction extends HttpServlet {
  				"MySQL", 
  				SMUtilities.getFullClassName(this.toString()) + ".doGet - user: " + sUserName);
  		} catch (Exception e) {
- 	   		sWarning = "Unable to get SMCP connection - " + e.getMessage();
+ 	   		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Unable to get SMCP connection - " + e.getMessage());
      		response.sendRedirect(
      				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
      				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-     				+ "&" + "Warning=" + sWarning
      				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
      		);			
          	return;
@@ -166,11 +162,10 @@ public class GLConvertACCPACAction extends HttpServlet {
 					sACCPACDatabasepw);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080728]");
-	   		sWarning = "Unable to get ACCPAC connection - " + e.getMessage();
+	   		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Unable to get ACCPAC connection - " + e.getMessage());
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + clsManageRequestParameters.get_Request_Parameter(GLConvertACCPAC.RADIO_FIELD_NAME, request)
-    				+ "&" + "Warning=" + sWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -182,13 +177,12 @@ public class GLConvertACCPACAction extends HttpServlet {
     	try {
 			iFunctionValue = Integer.parseInt(sFunctionValue);
 		} catch (NumberFormatException e2) {
-    		sWarning = "Invalid function value '" + sFunctionValue + "'.";
+    		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Invalid function value '" + sFunctionValue + "'.");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080729]");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080730]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
-    				+ "&" + "Warning=" + sWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
@@ -210,13 +204,12 @@ public class GLConvertACCPACAction extends HttpServlet {
     			cnACCPAC,
     			sACCPACDatabasename);
 		} catch (Exception e2) {
-    		sWarning = e2.getMessage() + ".";
+    		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, e2.getMessage() + ".");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080731]");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080732]");
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
-    				+ "&" + "Warning=" + sWarning
     				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;

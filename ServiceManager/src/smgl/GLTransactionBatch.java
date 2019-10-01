@@ -832,9 +832,9 @@ public class GLTransactionBatch {
     	}
     	
     	//TEST - remove later!
-    	//throw new Exception("TEST EXCEPTION - REMOVE THIS LINE!");
+    	throw new Exception("[1569958563] TEST EXCEPTION - REMOVE THIS LINE!");
     	
-    	return;
+    	//return;
     }
 
     public String reverse_batch (
@@ -1128,6 +1128,7 @@ public class GLTransactionBatch {
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
 				+ "(" + SMTableglfiscalperiods.ifiscalyear + " > " + iFiscalYear + ")"
+				+ " AND (" + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.ilockadjustmentperiod + " = 0)"
 			+ ")"
 		;
     	try {
@@ -2858,6 +2859,9 @@ public class GLTransactionBatch {
         				+ ", " + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalPreviousYearToDate)
         				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate + " = " + clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTotalYearToDate)
         			;
+        			
+        			System.out.println("[2019274142530] " + "UPDATE FINANCIAL DATA SQL: '" + SQLInsert);
+        			
         			try {
         				Statement stmtInsert = conn.createStatement();
         				stmtInsert.execute(SQLInsert);

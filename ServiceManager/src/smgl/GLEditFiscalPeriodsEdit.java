@@ -341,7 +341,8 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    	SMTableglfiscalperiods.ilockadjustmentperiod, 
 			Integer.parseInt(entry.get_silockadjustmentperiod()), 
 			"Lock adjustments for this year?", 
-			"<I>Check to prevent adjustments to this fiscal year.</I>"
+			"<I>Check to prevent adjustments to this fiscal year.  If checked, no updates - including updates to the opening balances"
+				+ " - will be posted to this year when previous year postings occur.</I>"
 			)
 		;
 

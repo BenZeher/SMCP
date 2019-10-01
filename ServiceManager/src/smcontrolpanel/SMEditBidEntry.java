@@ -1236,94 +1236,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			+ ">"
 		;
 		s += "</TD></TR>";
-/*
-		//Last contact date:
-        sValues.clear();
-        sDescriptions.clear();
-        sValues.add("0");
-        sValues.add("1");
-        sDescriptions.add("N/A&nbsp;&nbsp;");
-        if (entry.getdatlastcontactdate().replace("\"", "&quot;").compareToIgnoreCase(
-        		SMBidEntry.EMPTY_DATE_STRING) == 0){
-        	sDefaultDate = clsDateAndTimeConversions.now("M/d/yyyy");
-        }else{
-        	sDefaultDate = entry.getdatlastcontactdate().replace("\"", "&quot;");
-        }
-        sDescriptions.add(Create_Edit_Form_Date_Input_Field(
-				SMBidEntry.Paramdatlastcontactdate, 
-				sDefaultDate,
-				getServletContext())
-        );
-        sDefaultValue = "";
-        //If it HAS a date, then indicate that and display the date:
-		if (entry.getdatlastcontactdate().startsWith(SMBidEntry.EMPTY_DATE_STRING)){
-			sDefaultValue = "0";
-		}else{
-			sDefaultValue = "1";		
-		}   
-		s += "<TR>"	+ "<TD class=\" fieldlabel \">Last contact date:</TD>"
-				+ "<TD class=\" fieldcontrol \" COLSPAN=" 
-				+ Integer.toString(iNumberOfColumns -1) + ">";
-			sChecked = "";
-			for (int i = 0; i < sValues.size(); i ++){
-				if (sValues.get(i).compareToIgnoreCase(sDefaultValue) == 0){
-					sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
-				}else{
-					sChecked = "";
-				}
-				s += "<INPUT TYPE=\"RADIO\" NAME=\"" + SMBidEntry.ParamHasLastContactDate + "\""
-					+ " VALUE=" + sValues.get(i) + " " + sChecked
-					+ " id = \"" + SMBidEntry.ParamHasLastContactDate + "\""
-					+ " onchange=\"flagDirty();\""
-					+ " >" + sDescriptions.get(i)
-				;
-			}
-			s += "</TD></TR>";
 
-			//Next contact date:
-	        sValues.clear();
-	        sDescriptions.clear();
-	        sValues.add("0");
-	        sValues.add("1");
-	        sDescriptions.add("N/A&nbsp;&nbsp;");
-	        if (entry.getdatnextcontactdate().replace("\"", "&quot;").compareToIgnoreCase(
-	        		SMBidEntry.EMPTY_DATE_STRING) == 0){
-	        	sDefaultDate = clsDateAndTimeConversions.now("M/d/yyyy");
-	        }else{
-	        	sDefaultDate = entry.getdatnextcontactdate().replace("\"", "&quot;");
-	        }
-	        sDescriptions.add(Create_Edit_Form_Date_Input_Field(
-					SMBidEntry.Paramdatnextcontactdate, 
-					sDefaultDate,
-					getServletContext())
-	        );
-	        sDefaultValue = "";
-	        //If it HAS a date, then indicate that and display the date:
-			if (entry.getdatnextcontactdate().startsWith(SMBidEntry.EMPTY_DATE_STRING)){
-				sDefaultValue = "0";
-			}else{
-				sDefaultValue = "1";		
-			}   
-			s += "<TR>"	+ "<TD class=\" fieldlabel \">Next contact date:</TD>"
-				+ "<TD class=\" fieldcontrol \" COLSPAN=" 
-				+ Integer.toString(iNumberOfColumns -1) + ">";
-			sChecked = "";
-			for (int i = 0; i < sValues.size(); i ++){
-				if (sValues.get(i).compareToIgnoreCase(sDefaultValue) == 0){
-					sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
-				}else{
-					sChecked = "";
-				}
-				s += "<INPUT TYPE=\"RADIO\" NAME=\"" + SMBidEntry.ParamHasNextContactDate + "\""
-					+ " VALUE=" + sValues.get(i) + " " + sChecked
-					+ " id = \"" + SMBidEntry.ParamHasNextContactDate + "\""
-					+ " onchange=\"flagDirty();\""
-					+ " >" + sDescriptions.get(i)
-				;
-			}
-			
-			s += "</TD></TR>";
-	*/
 		//Close the table:
 		s += "</TABLE style=\" title:ENDActualdates; \">\n";
 		return s;
@@ -1333,7 +1246,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			SMBidEntry entry,
 			boolean bUseGoogleDrivePicker) throws SQLException{
 		String s = "";
-		int iRows = 15;
+		int iRows = 4;
 		int iNumberOfColumns = 2;
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:BidMemos; background-color: "
@@ -1536,6 +1449,12 @@ public class SMEditBidEntry  extends HttpServlet {
 				sm.getUserID(),
 				true
 				)
+                + "<BR>" 
+				+ SMCriticalDateEntry.addNewCriticalDateLink(Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE)
+                		, entry.getlid(), 
+                		sm.getUserID(), 
+                		getServletContext(), 
+                		sm.getsDBID())
              + "</TD></TR>";
         
 		s += "</TABLE style=\" title:ENDBidMemos; \">\n";
@@ -1990,7 +1909,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				+ "}\n"
 			;
 		
-		//Create Appointment
+		//Create critical date
 		s += "function addcriticaldate(){\n"
 				+ "prompttosave;\n"
 				+ "window.open(\""

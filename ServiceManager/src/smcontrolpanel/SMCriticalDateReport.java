@@ -352,8 +352,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<b>Salesperson: </b>" + rs.getString(("SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonFirstName).replace("`", "")).trim() 
 												         + " " + rs.getString(("SalesLeadSalespersonsTable" + "." + SMTablesalesperson.sSalespersonLastName).replace("`", "")).trim()); 
 							
-							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
 							String sPhoneNumber = rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim();
 							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</a>"); 

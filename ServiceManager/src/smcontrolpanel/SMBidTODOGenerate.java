@@ -34,7 +34,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 				request, 
 				response, 
 				getServletContext(), 
-				SMSystemFunctions.SMBidFollowUpReport))
+				SMSystemFunctions.SMPendingBidsReport))
 			{
 				return;
 			}

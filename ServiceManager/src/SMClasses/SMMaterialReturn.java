@@ -247,7 +247,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 					m_lentrynumber = "0";
 					}
 				m_bdentryamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdentryamount));
-				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
+				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
 				m_mfollowupnotes = rs.getString(SMTablematerialreturns.mfollowupnotes).trim();
@@ -434,7 +434,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
 			+ ", " + SMTablematerialreturns.lentrynumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
 			+ ", " + SMTablematerialreturns.bdentryamount  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
-			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeString(getdatcreditnotedate().trim()) + "'"
+			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", " + SMTablematerialreturns.mfollowupnotes  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"

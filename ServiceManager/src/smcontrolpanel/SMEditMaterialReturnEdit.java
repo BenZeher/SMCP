@@ -242,7 +242,9 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		    s+= "</TD>\n"
 		    	+ "</TR>\n"
 		    ;
-		    		
+
+			//Status Options
+		    
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
@@ -286,6 +288,85 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "SIZE=" + "13"
 			+ "MAXLENGTH= 10"
 			+ "></TD>\n"
+			+ "</TR>\n"
+		;
+		
+		//Adjustment Batch Number
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Batch Number:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
+			+ " VALUE=\"" + entry.getladjustedbatchnumber().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
+			+ " SIZE=" + "13"
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.ladjustedbatchnumberlength)
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
+		//Entry Number
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Entry Number:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramlentrynumber + "\""
+			+ " VALUE=\"" + entry.getlentrynumber().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramlentrynumber + "\""
+			+ " SIZE=" + "13"
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.lentrynumberlength)
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
+		//Entry Amount
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Entry Amount:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdentryamount + "\""
+			+ " VALUE=\"" + entry.getbdentryamount().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Parambdentryamount + "\""
+			+ " SIZE=" + "13"
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdentryamountlength)
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
+		//Credit Memo Number
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Memo Number:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramscreditmemonumber + "\""
+			+ " VALUE=\"" + entry.getscreditmemonumber().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramscreditmemonumber + "\""
+			+ " SIZE=" + "13"
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.screditmemonumberlength)
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
+		//Date of Credit Memo:
+		s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
+			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
+			+ " VALUE=\"" + entry.getdatcreditnotedate().replace("\"", "&quot;") + "\""
+			+ " SIZE=" + "13"
+			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatcreditnotedate, getServletContext()) + "</TD>"
+			+ "</TR>"
+ 		;
+		
+		
+		//Credit Amount
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Amount:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
+			+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""
+			+ " SIZE=" + "13"
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdentryamountlength)
+			+ "></TD>"
+			+ "</TR>"
+		;
+		
+		//Follow up notes
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Follow up notes</B>:</TD>\n";
+		s += "<TD>\n"
+			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammfollowupnotes + "\""
+			+ " rows=\"" + "3" + "\""
+			+ " style = \" width: 100%; \""
+			+ ">"
+			+ entry.getmfollowupnotes().replace("\"", "&quot;")
+			+ "</TEXTAREA>"
+			+ "</TD>\n"
 			+ "</TR>\n"
 		;
 		

@@ -1437,25 +1437,27 @@ public class SMEditBidEntry  extends HttpServlet {
 		}
      
         //list critical dates
-        
-        s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfColumns) + ">"
-                + SMCriticalDateEntry.listCriticalDates(
-				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
-				entry.getlid(),
-				"1100px",
-				"#F2C3FA",
-				getServletContext(), 
-				sm.getsDBID(), 
-				sm.getUserID(),
-				true
-				)
-                + "<BR>" 
-				+ SMCriticalDateEntry.addNewCriticalDateLink(Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE)
-                		, entry.getlid(), 
-                		sm.getUserID(), 
-                		getServletContext(), 
-                		sm.getsDBID())
-             + "</TD></TR>";
+        if (entry.slid().compareToIgnoreCase("-1") != 0){
+            s += "<TR><TD COLSPAN=" + Integer.toString(iNumberOfColumns) + ">"
+                    + SMCriticalDateEntry.listCriticalDates(
+    				SMTablecriticaldates.SALES_LEAD_RECORD_TYPE,
+    				entry.getlid(),
+    				"1100px",
+    				"#F2C3FA",
+    				getServletContext(), 
+    				sm.getsDBID(), 
+    				sm.getUserID(),
+    				true
+    				)
+                    + "<BR>" 
+    				+ SMCriticalDateEntry.addNewCriticalDateLink(Integer.toString(SMTablecriticaldates.SALES_LEAD_RECORD_TYPE)
+                    		, entry.getlid(), 
+                    		sm.getUserID(), 
+                    		getServletContext(), 
+                    		sm.getsDBID())
+                 + "</TD></TR>";
+        }
+
         
 		s += "</TABLE style=\" title:ENDBidMemos; \">\n";
 		return s;
@@ -1764,7 +1766,9 @@ public class SMEditBidEntry  extends HttpServlet {
 		;
 		s += "<script type=\"text/javascript\">\n";
 		
+		
 		s += "window.onbeforeunload = prompttosave;\n";
+		
 		s += "function prompttosave(){\n"
 			
 			//First check to see if the date fields were changed, and if so, flag the record was changed field:
@@ -1797,11 +1801,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				+ "document.getElementById(\"" + SMBidEntry.Paramdattimeactualbiddate + "\").value){\n"
 			+ "        flagDirty();\n"
 			+ "    }\n"
-			
-			+ "    if (document.getElementById(\"" + SMBidEntry.Paramlastsaveddatnextcontactdate + "\").value != " 
-				+ "document.getElementById(\"" + SMBidEntry.Paramdatnextcontactdate + "\").value){\n"
-			+ "        flagDirty();\n"
-			+ "    }\n"
+
 
 			//Don't prompt on updates, sales contact finds, or customer finds:
 			+ "    if (document.getElementById(\"" + COMMAND_FLAG + "\").value == \"" + UPDATE_COMMAND_VALUE + "\" ){\n"
@@ -1883,7 +1883,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Create Appointment
 		s += "function createappointment(){\n"
-				+ "prompttosave;\n"
+				+ "prompttosave();\n"
 				+ "window.open(\""
 					+ SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditAppointmentEdit?" 
 					+ SMAppointment.Paramlid + "=-1"
@@ -1911,7 +1911,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Create critical date
 		s += "function addcriticaldate(){\n"
-				+ "prompttosave;\n"
+				+ "prompttosave();\n"
 				+ "window.open(\""
 					+ SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMCriticalDateEdit?" 
 					+ SMCriticalDateEntry.ParamID + "=-1"
@@ -2077,10 +2077,12 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "\n";
 		
 		s += "window.onload = function(){\n"
-			//+ "    document.forms.MAINFORM." + SMOrderDetail.ParamsItemDesc + ".focus();\n"
 			+ "    initShortcuts();\n"
 			+ "}\n\n"
 		;
+		
+
+		
 		s += "</script>\n";
 		return s;
 	}

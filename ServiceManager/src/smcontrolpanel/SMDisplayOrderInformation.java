@@ -9,12 +9,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
 import smar.ARPrintCallSheetsSelection;
 import SMClasses.SMAppointment;
 import SMClasses.SMDeliveryTicket;
@@ -952,7 +952,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		//Print order details:
 		try {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080464]");
-			pwOut.println(printOrderDetails(order, conn, sLinks, sUserID, bAllowOrderDetailViewing, bAllowItemViewing, sDBID));
+			pwOut.println(printOrderDetails(order, conn, sLinks, sUserID, bAllowOrderDetailViewing, bAllowItemViewing, bAllowOrderEditing, getServletContext(), sDBID));
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
 		}
@@ -1044,7 +1044,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		//Print Items left on order:
 		try {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080465]");
-			pwOut.println(ItemsLeftOnOrder(order, conn, sLinks,sUserID,bAllowOrderDetailViewing, bAllowItemViewing,  sDBID));
+			pwOut.println(ItemsLeftOnOrder(order, conn, sLinks,sUserID,bAllowOrderDetailViewing, bAllowItemViewing, bAllowOrderEditing , getServletContext() ,sDBID));
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
 		}
@@ -1072,6 +1072,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sUserID,
 			boolean bAllowOrderDetailViewing,
 			boolean bAllowItemViewing,
+			boolean bAllowOrderEditing,
+			ServletContext context,
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
@@ -1183,10 +1185,26 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "\">" + sItemNumber + "</A>";
 				}	
 				
+				//Line number
+				String sLineNumberLink = clsStringFunctions.PadLeft(Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber)), "0", 4);
+				if (bAllowOrderEditing){
+					sLineNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context)
+						+ "smcontrolpanel.SMEditOrderDetailEdit"
+						+ "?" + SMOrderDetail.ParamiDetailNumber + "=" + Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iDetailNumber))
+						+ "&" + SMOrderDetail.Paramstrimmedordernumber + "=" + rsDetails.getString(SMTableorderdetails.TableName +"." + SMTableorderdetails.strimmedordernumber)
+						+ "&" + SMOrderDetail.ParamiLineNumber + "=" + Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber))
+						+ "&" + SMOrderDetail.ParamdUniqueOrderID + "=" + Long.toString(rsDetails.getLong(SMTableorderdetails.TableName +"." + SMTableorderdetails.dUniqueOrderID))
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+						+ "\">"
+						+ sLineNumberLink
+						+ "</A>"
+					;
+				}
+				
+				
 				s += "<TR bgcolor =" + sBackgroundColor + ">";
 				s += "<TD class = \"rightjustifiedcell\" style = \" vertical-align: text-top; \" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
-					+ clsStringFunctions.PadLeft(Integer.toString(
-					rsDetails.getInt(SMTableorderdetails.iLineNumber)),"0", 4) + "</B></TD>";
+					+ sLineNumberLink + "</B></TD>";
 				s += "<TD class = \"rightjustifiedcell\">" 
 					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, 
 						rsDetails.getBigDecimal(SMTableorderdetails.dQtyOrdered)) + "</TD>";
@@ -1269,6 +1287,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sUserID,
 			boolean bAllowOrderDetailViewing,
 			boolean bAllowItemViewing,
+			boolean bAllowOrderEditing,
+			ServletContext context,
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
@@ -1354,10 +1374,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "\">" + sItemNumber + "</A>";
 				}
 				
+				String sLineNumberLink = clsStringFunctions.PadLeft(Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber)), "0", 4);
+				if (bAllowOrderEditing){
+					sLineNumberLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(context)
+						+ "smcontrolpanel.SMEditOrderDetailEdit"
+						+ "?" + SMOrderDetail.ParamiDetailNumber + "=" + Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iDetailNumber))
+						+ "&" + SMOrderDetail.Paramstrimmedordernumber + "=" + rsDetails.getString(SMTableorderdetails.TableName +"." + SMTableorderdetails.strimmedordernumber)
+						+ "&" + SMOrderDetail.ParamiLineNumber + "=" + Integer.toString(rsDetails.getInt(SMTableorderdetails.TableName + "." + SMTableorderdetails.iLineNumber))
+						+ "&" + SMOrderDetail.ParamdUniqueOrderID + "=" + Long.toString(rsDetails.getLong(SMTableorderdetails.TableName +"." + SMTableorderdetails.dUniqueOrderID))
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+						+ "\">"
+						+ sLineNumberLink
+						+ "</A>"
+					;
+				}
+				
 				s += "<TR bgcolor =" + sBackgroundColor + ">";
 				s += "<TD class = \"rightjustifiedcell\" style = \" vertical-align: text-top; \" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
-					+ clsStringFunctions.PadLeft(Integer.toString(
-					rsDetails.getInt(SMTableorderdetails.iLineNumber)),"0", 4) + "</B></TD>";
+					+ sLineNumberLink + "</B></TD>";
 				s += "<TD class = \"rightjustifiedcell\">" 
 					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, 
 					rsDetails.getBigDecimal(SMTableorderdetails.dQtyOrdered)) + "</TD>";

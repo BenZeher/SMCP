@@ -186,13 +186,6 @@ public class SMEditBidEntry  extends HttpServlet {
 			smedit.getPWOut().println(sPlacesAPIIncludeString);
 		}
 		
-	    //Add a link to return to the original URL:
-	    if (smedit.getOriginalURL().trim().compareToIgnoreCase("") !=0 ){
-		    smedit.getPWOut().println(
-		    		"<A HREF=\"" + smedit.getOriginalURL().replace("*", "&") + "\">" 
-		    		+ "Back to report" + "</A>");
-	    }
-	    
 	    //If it's NOT a 'NEW' sales lead, add a link to view any sales lead documents:
 		if (entry.slid().compareToIgnoreCase("-1") != 0){
 			Connection conn = clsDatabaseFunctions.getConnection(
@@ -214,6 +207,11 @@ public class SMEditBidEntry  extends HttpServlet {
 					+ "smcontrolpanel.SMEditOrderSelection?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
 					+ smedit.getsDBID() + "\">Manage orders</A><BR>");
 			}
+			
+			smedit.addToURLHistory("Edit Sales Lead " + entry.slid());
+			smedit.getPWOut().println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMURLHistoryList?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" 
+					+ smedit.getsDBID() + "\">\nReturn to...</A><BR>");
+			
 			if (conn != null){
 				bAllowBidView = 
 					SMSystemFunctions.isFunctionPermitted(

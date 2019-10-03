@@ -46,10 +46,7 @@ public class SMBidTODOCriteriaSelection extends HttpServlet {
 	    String subtitle = "select criteria";
 	    
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
-/*
-    	String sCurrentURL;
-    	sCurrentURL = SMUtilities.URLEncode(request.getRequestURI().toString() + "?" + request.getQueryString());
-*/
+
 		//Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

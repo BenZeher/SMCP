@@ -55,6 +55,13 @@ public class SMBidTODOGenerate extends HttpServlet {
     	sCurrentURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() + "?" 
     			+ request.getQueryString());
     	
+	    CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_URLHISTORY,
+				SMUtilities.updateURLHistory("Pending Sales Lead report", 
+						sCurrentURL.replace("&", "*"), 
+						CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_URLHISTORY),
+					CurrentSession.getAttribute("URLMaxSize"))
+		);
+    	
     	String title = "";
     	String subtitle = "";
     	String sSQL = "";
@@ -235,7 +242,6 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">"
 					    	+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry"
 					    	+ "?" + SMBidEntry.ParamID + "=" + rs.getInt(SMTablebids.lid) 
-					    	+ "&OriginalURL=" + sCurrentURL 
 					    	+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 					    	+ "\">" 
 					    	+ rs.getInt(SMTablebids.TableName + "." + SMTablebids.lid) + "</A></TD>");

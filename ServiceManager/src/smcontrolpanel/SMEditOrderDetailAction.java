@@ -180,10 +180,8 @@ public class SMEditOrderDetailAction extends HttpServlet{
 
 				+ SMFinderFunctions.getStdITEMWithQtysSearchAndResultString(detail.getM_sLocationCode())
 
-				+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=(" 
-					+ "(" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " = '" + detail.getM_sLocationCode() + "')"
-					+ " OR (" + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sLocation + " IS NULL)"
-				+ ")"
+				+ " &" + FinderResults.ADDITIONAL_WHERE_CLAUSE_PARAMETER + "=" 
+				+ "(" + SMTablelocations.TableName + "." + SMTablelocations.sLocation + " = '" + detail.getM_sLocationCode() + "')"
 				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.sDedicatedToOrderNumber + " = '')"
 				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.iActive + " = 1)"
 				+ " AND (" + SMTableicitems.TableName + "." + SMTableicitems.icannotbesold + " = 0)"

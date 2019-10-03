@@ -409,7 +409,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		
 		//Explanations of the functions:
 		s += "<span style= \" font-size:small; \" >";
-		s += "<B>CLONING</B> initializes a new bid, with the same email address, sales contact ID, phone, alternate phone,"
+		s += "<B>CLONING</B> initializes a new sales lead, with the same email address, sales contact ID, phone, alternate phone,"
 			+ " fax, contact, bill-to name, and salesperson as the current " + SMBidEntry.ParamObjectName.toLowerCase() + ".";
 		s += "<BR><B>CREATING A NEW ORDER/QUOTE</B> initializes a new order (or quote) with the same salesperson, order source,"
 			+ " second (alternate) phone number, and ship to address information."

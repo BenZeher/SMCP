@@ -29,7 +29,7 @@ import smic.ICPOReceiptHeader;
 
 public class FinderResults extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private boolean bDebugMode = true;
+	private boolean bDebugMode = false;
 	
 	public static final String FINDER_OBJECT_NAME_PARAM = "ObjectName";
 	public static final String FINDER_RESULT_CLASS_PARAM = "ResultClass";

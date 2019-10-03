@@ -26,7 +26,6 @@ public class ICPOReceivingReport extends java.lang.Object{
 	}
 	public String processReport(
 			Connection conn,
-			boolean bShowItemsFullyReceived,
 			ArrayList<String>sLocations,
 			String sStartingPODate,
 			String sEndingPODate,
@@ -98,22 +97,16 @@ public class ICPOReceivingReport extends java.lang.Object{
             	+ " AND (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor + " >=	'"
             		+ sStartingVendor + "')"
                	+ " AND (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor + " <=	'"
-            		+ sEndingVendor + "')";
+            		+ sEndingVendor + "')"
 	            
-	        	if(bShowItemsFullyReceived){
-					SQL += 	 " AND( "
-							+""+SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered
-							+ " = "+SMTableicpolines.TableName +"."+SMTableicpolines.bdqtyreceived
-							+ " )";
-				}else{
-					SQL += 	 " AND( "
-							+""+SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered
-							+ " != "+SMTableicpolines.TableName +"."+SMTableicpolines.bdqtyreceived
-							+ " )";
-				}
+	            //Only partially received lines:
+				+ " AND( "
+					+ "" + SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered
+					+ " != "+SMTableicpolines.TableName +"."+SMTableicpolines.bdqtyreceived
+				+ " )"
 	 
 				//Is NOT complete:
-				SQL += " AND (" 
+				+ " AND (" 
 					+ "(" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus
 					+ " = " + SMTableicpoheaders.STATUS_ENTERED + ")"
 					+ " OR (" + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.lstatus

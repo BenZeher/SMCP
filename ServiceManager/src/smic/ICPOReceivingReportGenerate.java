@@ -79,11 +79,6 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
 
 	    String sStartingPODate = null;
 	    
-	    boolean bShowItemsFullyReceived = false;
-	    if(request.getParameter("itemfullyreceived") != null){
-	    	bShowItemsFullyReceived = true;
-	    }
-	    
 		try {
 			sStartingPODate = clsDateAndTimeConversions.utilDateToString(clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sStartPODate),"yyyy-MM-dd");
 		} catch (ParseException e) {
@@ -259,7 +254,6 @@ public class ICPOReceivingReportGenerate extends HttpServlet {
     	try {
     		sReportBody = rpt.processReport(
 					conn, 
-					bShowItemsFullyReceived,
 					sLocations,
 					sStartingPODate,
 					sEndingPODate,

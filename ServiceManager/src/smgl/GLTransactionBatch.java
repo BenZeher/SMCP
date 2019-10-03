@@ -832,7 +832,7 @@ public class GLTransactionBatch {
     	}
     	
     	//TEST - remove later!
-    	throw new Exception("[1569958563] TEST EXCEPTION - REMOVE THIS LINE!");
+    	//throw new Exception("[1569958563] TEST EXCEPTION - REMOVE THIS LINE!");
     	
     	//return;
     }
@@ -2652,7 +2652,7 @@ public class GLTransactionBatch {
     				;
     				ResultSet rsRecentFiscalPeriods = clsDatabaseFunctions.openResultSet(SQLFiscalPeriods, conn);
     				if (rsRecentFiscalPeriods.next()){
-    					//This is the PREVIOUS fiscal year:
+    					//This is the CURRENT fiscal year:
     					iLastPeriodOfCurrentYear = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
     				}
     				
@@ -2713,55 +2713,70 @@ public class GLTransactionBatch {
     			
     			BigDecimal bdTotalPreviousYearToDate = new BigDecimal("0.00");
     			BigDecimal bdTotalYearToDate = new BigDecimal("0.00");
-    			for (int iPeriod = 1; iPeriod <= iLastPeriodOfCurrentYear; iPeriod++){
+    			for (int iPeriod = 1; iPeriod <= 15; iPeriod++){
         			String sPeriod = Integer.toString(iPeriod);
         			String sFiscalSetNetChangeField = "";
         			String sFiscalSetNetChangePreviousPeriodField = "";
         			switch(iPeriod){
         			case 1:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod1;
+        				break;
         			case 2:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod2;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod1;
+        				break;
         			case 3:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod3;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod2;
+        				break;
         			case 4:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod4;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod3;
+        				break;
         			case 5:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod5;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod4;
+        				break;
         			case 6:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod6;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod5;
+        				break;
         			case 7:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod7;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod6;
+        				break;
         			case 8:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod8;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod7;
+        				break;
         			case 9:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod9;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod8;
+        				break;
         			case 10:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod10;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod9;
+        				break;
         			case 11:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod11;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod10;
+        				break;
         			case 12:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod12;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod11;
+        				break;
         			case 13:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod13;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod12;
+        				break;
         			case 14:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod14;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod13;
+        				break;
         			case 15:
         				sFiscalSetNetChangeField = SMTableglfiscalsets.bdnetchangeperiod15;
         				sFiscalSetNetChangePreviousPeriodField = SMTableglfiscalsets.bdnetchangeperiod14;
+        				break;
         			}
         			
         			BigDecimal bdNetChangeForPeriod = rsFiscalSets.getBigDecimal(sFiscalSetNetChangeField);
@@ -2822,7 +2837,7 @@ public class GLTransactionBatch {
         				bdTotalPreviousYearToDate = bdTotalPreviousYearToDate.add(rsPreviousYearFiscalSet.getBigDecimal(sFiscalSetNetChangeField));
         			}
         			
-        			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod1));
+        			bdTotalYearToDate = bdTotalYearToDate.add(rsFiscalSets.getBigDecimal(sFiscalSetNetChangeField));
 
         			SQLInsert = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
         				+ "("

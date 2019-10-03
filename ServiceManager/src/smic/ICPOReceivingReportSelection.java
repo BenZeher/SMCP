@@ -122,9 +122,6 @@ public class ICPOReceivingReportSelection  extends HttpServlet {
 		out.println("</TD>");
 		out.println("</TR>");
 		
-		out.println("<TR>");
-		out.println("<TD ALIGN=RIGHT><B>Show Items that are fully received</B></TD>");
-		out.println("<TD><INPUT TYPE = CHECKBOX NAME = \"itemfullyreceived\" id = \"itemfullyreceived\"></INPUT></TD>");
     	out.println("<TR><TD ALIGN=RIGHT><B>With PO date: </B></TD>");
 		out.println("<TD>");
 		

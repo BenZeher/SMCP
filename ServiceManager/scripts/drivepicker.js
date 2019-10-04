@@ -168,12 +168,11 @@ function buildPicker() {
 	//Setup the docs view.
 	var view = new google.picker.DocsView(google.picker.ViewId.DOCS);
 	view.setParent(folderID).setIncludeFolders(true);
-	view.setEnableDrives(true);
 	
 	//Setup the upload view
 	var uploadView = new google.picker.DocsUploadView();
 	uploadView.setParent(folderID);
-	uploadView.setEnableDrives(true);
+
 	
 	//Create the google drive picker
 	picker = new google.picker.PickerBuilder()

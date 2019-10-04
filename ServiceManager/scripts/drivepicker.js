@@ -186,7 +186,6 @@ function buildPicker() {
 			.setCallback(pickerCallback)
 			.build();
 	
-	picker.enableFeature(google.picker.Feature.SUPPORT_DRIVES);
 	//Display the google drive picker
 	picker.setVisible(true);	
 }

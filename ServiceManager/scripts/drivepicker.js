@@ -92,7 +92,9 @@ function createPicker() {
 		gapi.client.drive.files.list({
 			'q' : "name='" + folderName + "' " +
 				  "and parents= '" + parentfolderid + "' " +
-				  "and trashed=false"  
+				  "and trashed=false",
+			'supportsAllDrives' : true,
+			'includeItemsFromAllDrives' : true
 		}).then(function(response) {
 			console.log(response);
 			var files = response.result.files;
@@ -117,18 +119,19 @@ function createPicker() {
 						'owners' : '',
 						'parents' : [ parentfolderid ],
 						'description' : 'Created from SMCP google drive picker.'
+					    
 					};
 					gapi.client.drive.files.create({
 						resource : fileMetadata,
+						'supportsAllDrives' : true
 					}).then(function(response) {
 						switch (response.status) {
 						case 200:
 							var file = response.result;
 							folderID = file.id;
 							console.log('Created Folder Id: ' + folderID);
-	
 							transferOwnership(folderID, domainaccount);
-							
+
 							    //Update folder url in database.
 							    console.log('Updateing SMCP data with URL.');
 							    var sgdoclinkElement = document.getElementsByName("sgdoclink")[0];
@@ -157,10 +160,16 @@ function transferOwnership(fileId, domainaccount) {
 	  var request = gapi.client.drive.permissions.create({
 	    'fileId': fileId,
 	    'transferOwnership' : true,
+	    'supportsAllDrives' : true,
 	    'resource': body
 	  });
 	  request.execute(function(resp) {
-		  console.log('Transfered ownsership to ' + domainaccount + ' response: ' + resp);   
+		  if(resp.code == '403'){
+			  console.log(resp.message);
+		  }else{
+			  console.log('Transfered ownsership to ' + domainaccount + ' response: ' + resp);     
+		  }
+		  
 	  });
 }
 
@@ -168,6 +177,7 @@ function buildPicker() {
 	//Setup the docs view.
 	var view = new google.picker.DocsView(google.picker.ViewId.DOCS);
 	view.setParent(folderID).setIncludeFolders(true);
+	view.setEnableDrives(true);
 	
 	//Setup the upload view
 	var uploadView = new google.picker.DocsUploadView();
@@ -176,6 +186,7 @@ function buildPicker() {
 	
 	//Create the google drive picker
 	picker = new google.picker.PickerBuilder()
+			.enableFeature(google.picker.Feature.SUPPORT_DRIVES)
 			.enableFeature(google.picker.Feature.MULTISELECT_ENABLED)
 			.setAppId(appId)
 			.setOAuthToken(oauthToken)

@@ -526,7 +526,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		s += "</TABLE>";
 		
 		//TODO Add in the Button/Link to the Linked Google Drive Folder
-		/*String sCreateAndUploadButton = "";
+		String sCreateAndUploadButton = "";
 
 		if (SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMCreateGDriveOrderFolders, 
@@ -543,7 +543,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 				+ " VALUE=\"" + entry.getsgdoclink().replace("\"", "&quot;") + "\""
 				+ "SIZE=" + "125"
 				+ " MAXLENGTH=" + SMTablelaborbackcharges.sgdoclinklength
-				+ "<BR>";*/
+				+ "<BR>";
 		return s;
 	}
 	

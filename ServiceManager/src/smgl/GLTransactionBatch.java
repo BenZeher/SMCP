@@ -2632,7 +2632,6 @@ public class GLTransactionBatch {
     		String SQLInsert = "";
     		String sPreviousYearSQL = "";
     		long lLastFiscalYear = 0L;
-    		int iLastPeriodOfCurrentYear = 0;
     		int iLastPeriodOfPreviousYear = 0;
     		int iLastPeriodOfTwoYearsPrevious = 0;
     		
@@ -2652,8 +2651,8 @@ public class GLTransactionBatch {
     				;
     				ResultSet rsRecentFiscalPeriods = clsDatabaseFunctions.openResultSet(SQLFiscalPeriods, conn);
     				if (rsRecentFiscalPeriods.next()){
-    					//This is the CURRENT fiscal year:
-    					iLastPeriodOfCurrentYear = rsRecentFiscalPeriods.getInt(SMTableglfiscalperiods.inumberofperiods);
+    					//This is the fiscal year of the posting:
+    					//We're just iterating past the first record in the recordset here...
     				}
     				
     				if (rsRecentFiscalPeriods.next()){

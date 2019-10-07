@@ -398,8 +398,6 @@ public class SMCriticalDateEdit  extends HttpServlet {
 
 		//Select list:
 		//First, add a blank to make sure the user selects one:
-		sValues.add("");
-		sDescriptions.add("-- Select a user --");
 
 		try{
 			ResultSet rsUsers = clsDatabaseFunctions.openResultSet(

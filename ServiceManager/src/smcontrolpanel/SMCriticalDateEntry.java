@@ -353,14 +353,79 @@ public class SMCriticalDateEntry extends clsMasterEntry{
     		bEntriesAreValid = false;
     	}
     	
-      
         //Document number
-    	//TODO validate document number exists based on type.
+    	
+    	m_sdocnumber.trim();
         if (m_sdocnumber.compareToIgnoreCase("") == 0){
         	super.addErrorMessage("Document number connot be blank.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
         }
+
+       //validate document number exists based on type.
+        int iDocumentNumber = 0;
+        int iType = 0;
+		try {
+			iDocumentNumber = Integer.parseInt(getdocnumber());
+		} catch (NumberFormatException e) {
+			super.addErrorMessage("Invalid document number: '" + getdocnumber() + "'.");
+			bEntriesAreValid = false;
+			return bEntriesAreValid;
+		}
+		if (iDocumentNumber <= 0){
+			super.addErrorMessage("Invalid document number: '" + getdocnumber() + "'.");
+			bEntriesAreValid = false;
+		}
+		try {
+			iType = Integer.parseInt(getitype());
+		} catch (NumberFormatException e) {
+			super.addErrorMessage("Invalid type: '" + getitype() + "'.");
+			bEntriesAreValid = false;
+			return bEntriesAreValid;
+		}
+		if (iType <= 0){
+			super.addErrorMessage("Invalid type: '" + getitype() + "'.");
+			bEntriesAreValid = false;
+		}
+		String SQL = "";
+		switch(iType) {
+		case SMTablecriticaldates.SALES_ORDER_RECORD_TYPE:
+			SQL = "SELECT * FROM " + SMTableorderheaders.TableName 
+			+ " WHERE (" + SMTableorderheaders.strimmedordernumber + "='" + Integer.toString(iDocumentNumber) + "')";
+			break;
+		case SMTablecriticaldates.SALES_LEAD_RECORD_TYPE:
+			SQL = "SELECT * FROM " + SMTablebids.TableName 
+			+ " WHERE (" + SMTablebids.lid + "= " + iDocumentNumber + ")";
+			break;
+		case SMTablecriticaldates.SALES_CONTACT_RECORD_TYPE:
+			SQL = "SELECT * FROM " + SMTablesalescontacts.TableName 
+			+ " WHERE (" + SMTablesalescontacts.id + "=" + iDocumentNumber + ")";
+			break;
+		case SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE:
+			SQL = "SELECT * FROM " + SMTableicpoheaders.TableName 
+			+ " WHERE (" + SMTableicpoheaders.lid + "=" + iDocumentNumber + ")";
+			break;
+		case SMTablecriticaldates.AR_CALL_SHEET_RECORD_TYPE:
+			SQL = "SELECT * FROM " + SMTablecallsheets.TableName 
+			+ " WHERE (" + SMTablecallsheets.sID + "='" + Integer.toString(iDocumentNumber) + "')";
+			break;
+		default:
+			super.addErrorMessage("document could not be validated with type: '" + Integer.toString(iType) 
+			+ "' and document number '" + Integer.toString(iDocumentNumber)+ ".");
+			return bEntriesAreValid;
+		}
+		try {
+			ResultSet rsDocument = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (!rsDocument.next()){
+				super.addErrorMessage("document" + getdocnumber() + " could not be found.");
+				bEntriesAreValid = false;
+			}
+			rsDocument.close();
+		} catch (SQLException e) {
+			super.addErrorMessage("Error [1396967234] validating document ID - " + e.getMessage());
+			bEntriesAreValid = false;
+		}
+		
         
         //Critical date:
         //REQUIRED FIELD - can't be a blank:
@@ -409,6 +474,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
         }
+        
         
 		m_sassignedbyuserfullname = m_sassignedbyuserfullname.trim();
         if (m_sassignedbyuserfullname.compareToIgnoreCase("") == 0){

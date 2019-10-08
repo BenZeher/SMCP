@@ -346,6 +346,22 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         	return bEntriesAreValid;
     	}
 
+    	//Type
+    	m_itype = m_itype.trim();
+    	if(m_itype.compareToIgnoreCase("0") == 0 || m_itype.compareToIgnoreCase("") == 0) {
+    		super.addErrorMessage("Critical date '" + m_itype + "' is invalid.  ");
+    		bEntriesAreValid = false;
+    	}
+    	
+      
+        //Document number
+    	//TODO validate document number exists based on type.
+        if (m_sdocnumber.compareToIgnoreCase("") == 0){
+        	super.addErrorMessage("Document number connot be blank.");
+        	bEntriesAreValid = false;
+        	return bEntriesAreValid;
+        }
+        
         //Critical date:
         //REQUIRED FIELD - can't be a blank:
         if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datcriticaldate)){
@@ -357,7 +373,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         //REQUIRED FIELD:
         m_sdocnumber = m_sdocnumber.trim();
         if (m_sdocnumber.length() > SMTablecriticaldates.sDocNumberLength){
-        	super.addErrorMessage("Order number is too long.");
+        	super.addErrorMessage("Document number is too long.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
         }
@@ -365,9 +381,10 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         //Comment
         m_scomments = m_scomments.trim();
         
+        
 		//Responsible
 		m_lresponsibleuserid = m_lresponsibleuserid.trim();
-        if (m_lresponsibleuserid.compareToIgnoreCase("") == 0){
+        if (m_lresponsibleuserid.compareToIgnoreCase("") == 0 || m_lresponsibleuserid.compareToIgnoreCase("0") == 0){
         	super.addErrorMessage("Responsible user id cannot be empty.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
@@ -378,7 +395,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         	return bEntriesAreValid;
         }
 		m_sresponsibleuserfullname = m_sresponsibleuserfullname.trim();
-        if (m_sresponsibleuserfullname.compareToIgnoreCase("") == 0){
+        if (m_sresponsibleuserfullname.compareToIgnoreCase("") == 0 ){
         	super.addErrorMessage("Responsible user full name cannot be empty.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;
@@ -391,7 +408,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 
 		//Assigned by
 		m_lassignedbyuserid = m_lassignedbyuserid.trim();
-        if (m_lassignedbyuserid.compareToIgnoreCase("") == 0){
+        if (m_lassignedbyuserid.compareToIgnoreCase("") == 0 || m_lassignedbyuserid.compareToIgnoreCase("0") == 0){
         	super.addErrorMessage("Assigned by user id cannot be empty.");
         	bEntriesAreValid = false;
         	return bEntriesAreValid;

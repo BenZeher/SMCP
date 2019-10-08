@@ -102,7 +102,7 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 			return;
 	    }
 	    
-	    out.println("<BR>This function will automatically create journal entries for the elected fiscal year"
+	    out.println("<BR>This function will automatically create journal entries for the selected fiscal year"
 	    		+ " to move current balances from all the income statement accounts into the single 'retained earnings'"
 	    		+ " account (GL account " + glopt.getsClosingAccount() + ")."
 	    		+ "<BR><BR>"

@@ -368,15 +368,6 @@ public class SMCriticalDateEntry extends clsMasterEntry{
         	super.addErrorMessage("Critical date '" + m_datcriticaldate + "' is invalid.  ");
         	bEntriesAreValid = false;
         }
-
-        //Job number
-        //REQUIRED FIELD:
-        m_sdocnumber = m_sdocnumber.trim();
-        if (m_sdocnumber.length() > SMTablecriticaldates.sDocNumberLength){
-        	super.addErrorMessage("Document number is too long.");
-        	bEntriesAreValid = false;
-        	return bEntriesAreValid;
-        }
         
         //Comment
         m_scomments = m_scomments.trim();

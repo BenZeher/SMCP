@@ -19,6 +19,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsServletUtilities;
 import smar.AROptions;
+import smcontrolpanel.SMUtilities;
 import smgl.GLTransactionBatch;
 import smgl.SMGLExport;
 
@@ -60,6 +61,11 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 		String sSQL = "";
 		String sInfo = "";
 
+		//Check date:
+		if(!clsDateAndTimeConversions.IsValidDateString(SMUtilities.DATE_FORMAT_FOR_DISPLAY, m_sTransactionDate)){
+			throw new Exception("Error [2019283130247] " + "Transaction date '" + m_sTransactionDate + "' is not valid.");
+		}
+		
 		//Make sure that this fiscal year and period have NOT already been run:
 		sSQL = "SELECT * FROM " + SMTablefatransactions.TableName
 			+ " WHERE ("
@@ -144,7 +150,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
     	}
 		lRecordNumber = 0;
 		long lNumberOfAssetsDepreciated = 0;
-		ServletUtilities.clsDBServerTime clsCurrentTime = new ServletUtilities.clsDBServerTime(conn);
+		//ServletUtilities.clsDBServerTime clsCurrentTime = new ServletUtilities.clsDBServerTime(conn);
 		
 		//Create a GL export batch for the transactions:
 		if (m_bProvisional){
@@ -152,8 +158,8 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 					"SS",
 					"PROVISIONAL Depreciation",
 					"PROVISIONAL Processing",
-					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
-					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					m_sTransactionDate,
+					m_sTransactionDate,
 					"Monthly Depreciation",
 					"0"
 					)){
@@ -165,8 +171,8 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 					"SS",
 					"Periodic Depreciation",
 					"Periodic Processing",
-					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
-					clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY),
+					m_sTransactionDate,
+					m_sTransactionDate,
 					"Monthly Depreciation",
 					m_sFiscalYear + "," + m_sFiscalPeriod
 					)){
@@ -305,7 +311,7 @@ public class FAPeriodEndProcessing extends java.lang.Object{
 						conn, 
 						sUserID, 
 						sUserID, 
-						clsCurrentTime.getCurrentDateTimeInSelectedFormat(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY), 
+						m_sTransactionDate, 
 						"FA Periodic Depreciation Batch #" + sBatchNumber
 					);
 

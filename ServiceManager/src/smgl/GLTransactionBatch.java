@@ -2681,13 +2681,13 @@ public class GLTransactionBatch {
     			}
     			
     			//Get the fiscal set from TWO YEARS PREVIOUS, if there is one:
-    			sPreviousYearSQL = "SELECT * from " + SMTableglfiscalsets.TableName
+    			String sTwoPreviousYearsSQL = "SELECT * from " + SMTableglfiscalsets.TableName
     				+ " WHERE ("
     					+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + Long.toString(rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) - 2) + ")"
     					+ " AND (" + SMTableglfiscalsets.sAcctID + " = '" + rsFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "')"
     				+ ")"
     			;
-    			ResultSet rsTwoYearsPreviousFiscalSet = clsDatabaseFunctions.openResultSet(sPreviousYearSQL, conn);
+    			ResultSet rsTwoYearsPreviousFiscalSet = clsDatabaseFunctions.openResultSet(sTwoPreviousYearsSQL, conn);
     			boolean bTwoYearsPreviousWasFound = false;
     			if(rsTwoYearsPreviousFiscalSet.next()){
     				bTwoYearsPreviousWasFound = true;

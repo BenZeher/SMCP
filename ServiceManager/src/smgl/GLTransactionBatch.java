@@ -1101,6 +1101,11 @@ public class GLTransactionBatch {
 		//if this account is an INCOME statement account.....
 		//TEST THIS!
 		GLAccount glacct = new GLAccount(sAccount);
+		//This flag will remember for us whether an income/expense account was involved here.  If it was, we'll
+		//need to update the financial statement data for the closing account, as well as the income/expense account.
+		//That may be done more than once if we loop through here more than once - but that's simpler in the logic,
+		//even if it means that we spend a few redundant iterations....
+		boolean bIncomeOrExpenseAccountIsInvolved = false;
 		if(!glacct.load(conn)){
 			throw new Exception("Error [1556569790] checking normal balance type for GL account '" 
 				+ sAccount + "' - " + glacct.getErrorMessageString());
@@ -1113,13 +1118,16 @@ public class GLTransactionBatch {
 		// Retained earnings normally carries a 'credit' balance, as do income accounts.
 		// Expense accounts normally carry a debit balance.
 		String sTargetAccount = sAccount;
+		String sClosingAccount = "";
 		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
+			bIncomeOrExpenseAccountIsInvolved = true;
 			GLOptions gloptions = new GLOptions();
 			if (!gloptions.load(conn)){
 				throw new Exception("Error [1556569791] checking GL Options closing account " 
 					+ " - " + gloptions.getErrorMessageString());
 			}
 			sTargetAccount = gloptions.getsClosingAccount();
+			sClosingAccount = gloptions.getsClosingAccount();
 		}
 		
 		//Determine how many subsequent fiscal years there are, and update the opening balance on each:
@@ -1173,6 +1181,19 @@ public class GLTransactionBatch {
 			   );
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
+		}
+		
+		//
+		if(bIncomeOrExpenseAccountIsInvolved){
+			try {
+				updateFinancialStatementData(
+					sClosingAccount,
+				    iFiscalYear,
+				    conn
+				   );
+			} catch (Exception e) {
+				throw new Exception(e.getMessage());
+			}	
 		}
 		return;
 	}
@@ -2611,7 +2632,7 @@ public class GLTransactionBatch {
 		return;
     }
     */
-    private static void updateFinancialStatementData(
+    public static void updateFinancialStatementData(
         	String sAccount,
         	int iFiscalYear,
         	Connection conn

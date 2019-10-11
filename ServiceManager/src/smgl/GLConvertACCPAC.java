@@ -47,7 +47,9 @@ public class GLConvertACCPAC extends HttpServlet {
 	public static final String PROCESS_GL_FISCAL_CALENDAR_LABEL = Integer.toString(PROCESS_GL_FISCAL_CALENDAR_VALUE) + ") Convert GL Fiscal Calendar";
 	public static final int PROCESS_GL_FISCAL_SETS_VALUE = 8;
 	public static final String PROCESS_GL_FISCAL_SETS_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Fiscal Sets";
-	public static final int PROCESS_GL_POSTEDTRANSACTIONS_VALUE = 9;
+	public static final int PROCESS_GL_FINANCIALDATA_VALUE = 9;
+	public static final String PROCESS_GL_FINANCIALDATA_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Financial Statement Data";
+	public static final int PROCESS_GL_POSTEDTRANSACTIONS_VALUE = 10;
 	public static final String PROCESS_GL_POSTEDTRANSACTIONS_LABEL = Integer.toString(PROCESS_GL_POSTEDTRANSACTIONS_VALUE) + ") Convert GL Posted Transactions";
 
 	
@@ -160,6 +162,10 @@ public class GLConvertACCPAC extends HttpServlet {
     	
     	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE));
     	arrConversionPhaseNames.add(PROCESS_GL_FISCAL_SETS_LABEL);
+    	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
+    	
+    	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_FINANCIALDATA_VALUE));
+    	arrConversionPhaseNames.add(PROCESS_GL_FINANCIALDATA_LABEL);
     	arrConfirmingLabels.add("<LABEL><INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_CONVERSION_CHECKBOX_NAME + "\"> <B><I>Confirm</B></I></LABEL>");
     	
     	arrConversionPhaseValues.add(Integer.toString(PROCESS_GL_POSTEDTRANSACTIONS_VALUE));

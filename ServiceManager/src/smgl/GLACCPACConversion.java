@@ -534,6 +534,64 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 	}
 	
+	public String processGLFinancialData(Connection cnSMCP, String sUser) throws Exception{
+		
+		String sStatus = "";
+		long lStartingTime = System.currentTimeMillis();
+		
+		//First delete any GL financial statement data that may have been added by a previous conversion:
+		String sTablename = SMTableglfinancialstatementdata.TableName;
+		String SQL = "DELETE FROM " + sTablename
+		;
+		try {
+			Statement stmtDelete = cnSMCP.createStatement();
+			stmtDelete.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [1570825887] - could not delete GL financial statement data using SQL '" + SQL + "' - " + e.getMessage());
+		}	
+				
+		//Next, iterate through the fiscal set data:
+		SQL = "SELECT * from " + SMTableglfiscalsets.TableName
+			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + " ASC";
+		ResultSet rsFiscalSets = clsDatabaseFunctions.openResultSet(SQL, cnSMCP);
+		long lCounter = 0;
+		try {
+			while (rsFiscalSets.next()){
+				//Now update the GL fiscalstatementdata table:
+				GLTransactionBatch.updateFinancialStatementData(
+					rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
+					rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear), 
+					cnSMCP
+				);
+				lCounter++;
+			}
+			rsFiscalSets.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20192841638464] " + "looping through fiscal sets, updating GL financial data records - " + e.getMessage());
+		}
+		
+		//Get the count of financial statement records:
+		SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
+		long lCount;
+		try {
+			ResultSet rsCount = clsDatabaseFunctions.openResultSet(SQL, cnSMCP);
+			lCount = 0L;
+			if (rsCount.next()){
+				lCount = rsCount.getLong("RECORDCOUNT");
+			}
+			rsCount.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20192841639353] " + "reading record count from " + SMTableglfinancialstatementdata.TableName + " - " + e.getMessage());
+		}
+		
+		long lElapsedTimeInMS = System.currentTimeMillis() - lStartingTime;
+		
+		sStatus +=  "<BR>Processed " + Long.toString(lCounter) + " GL fiscal sets into " + Long.toString(lCount) + " financial statement records"
+			+ " in " + Long.toString(lElapsedTimeInMS) + " seconds.<BR>";
+		return sStatus;
+		
+	}
+	
 	public String processGLFiscalSets(
 			Connection cnSMCP, 
 			Connection cnACCPAC, 
@@ -542,7 +600,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		String sStatus = "";
 		
-		//First delete any GL financial statement data that may have been added by a previous conversion:
+		//First delete any GL fiscal sets that may have been added by a previous conversion:
 		String sTablename = SMTableglfiscalsets.TableName;
 		String SQL = "DELETE FROM " + SMTableglfiscalsets.TableName
 		;
@@ -612,18 +670,27 @@ public class GLACCPACConversion  extends java.lang.Object{
 
 		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL financial statement records into " + sTablename + ".<BR>";
 		
-		//Now update the GL fiscalstatementdata table:
+		
+		/*
+		
 		SQL = "SELECT * from " + SMTableglfiscalsets.TableName
 			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + " DESC";
 		ResultSet rsFiscalSets = clsDatabaseFunctions.openResultSet(SQL, cnSMCP);
-		String SQLInsert = "";
-		String sPreviousYearSQL = "";
-		long lLastFiscalYear = 0L;
+		//String SQLInsert = "";
+		//String sPreviousYearSQL = "";
+		//long lLastFiscalYear = 0L;
 		//String sLastFiscalPeriodDateOfPreviousYear = "0000-00-00";
 		//String sLastFiscalPeriodDateOfTwoYearsPrevious = "0000-00-00";
-		int iLastPeriodOfPreviousYear = 0;
-		int iLastPeriodOfTwoYearsPrevious = 0;
+		//int iLastPeriodOfPreviousYear = 0;
+		//int iLastPeriodOfTwoYearsPrevious = 0;
 		while(rsFiscalSets.next()){
+			//Now update the GL fiscalstatementdata table:
+			GLTransactionBatch.updateFinancialStatementData(
+				rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
+				rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear), 
+				cnSMCP
+			);
+			
 			
 			//IF we've moved to a new fiscal year, then we have to determine the LAST period of the two previous fiscal years:
 			if (rsFiscalSets.getLong(SMTableglfiscalsets.ifiscalyear) != lLastFiscalYear){
@@ -1599,7 +1666,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		rsFiscalSets.close();
 		sStatus += "  Fiscal sets converted to financial statement data.<BR>";
-		
+		*/
 		return sStatus;
 		
 	}

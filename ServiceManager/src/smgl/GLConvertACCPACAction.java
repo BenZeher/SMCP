@@ -269,6 +269,8 @@ public class GLConvertACCPACAction extends HttpServlet {
     		return conv.processGLFiscalCalendar(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser, sUserID, sUserFullName);
     	case GLConvertACCPAC.PROCESS_GL_FISCAL_SETS_VALUE:
     		return conv.processGLFiscalSets(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser);
+    	case GLConvertACCPAC.PROCESS_GL_FINANCIALDATA_VALUE:
+    		return conv.processGLFinancialData(cnSMCP, sUser);
     	case GLConvertACCPAC.PROCESS_GL_POSTEDTRANSACTIONS_VALUE:
     		return conv.processGLTransactions(cnSMCP, cnACCPAC, iACCPACDatabaseType, sUser, sUserID, sUserFullName);
     	default:

@@ -38,15 +38,18 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			+ " (1 = 1)";
 		
 		if (sAccount.compareToIgnoreCase("") != 0){
-			SQL += " AND (" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')";
+			SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')";
 		}
 		
 		if (sStartingFiscalYear.compareToIgnoreCase("") != 0){
-			SQL += " AND (" + SMTableglfiscalsets.ifiscalyear + " >= " + sStartingFiscalYear + ")";
+			//We'll get fiscal sets going back two years previous, because we'll need that history for some of the
+			// glfinancialstatementdata fields:
+			SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= (" + sStartingFiscalYear + " - 2))";
 		}
 		
 		SQL += ")"
-			+ " ORDER BY " + SMTableglfiscalsets.sAcctID + ", " + SMTableglfiscalsets.ifiscalyear
+			+ " ORDER BY " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + ", " 
+				+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear
 		;
 		
 		try {
@@ -81,19 +84,19 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 
 		for(int i = 0; i < arrFiscalSets.size(); i++){
-			sMessages += checkSingleFiscalSet(arrFiscalSets.get(i), conn, arrFiscalSets);
+			sMessages += checkSingleFiscalSet(arrFiscalSets.get(i), conn, sStartingFiscalYear, arrFiscalSets);
 		}
 		return sMessages;
 	}
 
-	private String checkSingleFiscalSet(clsFiscalSet objFiscalSet, Connection conn, ArrayList<clsFiscalSet>arrFiscalSets) throws Exception{
+	private String checkSingleFiscalSet(clsFiscalSet objFiscalSet, Connection conn, String sStartingFiscalYear, ArrayList<clsFiscalSet>arrFiscalSets) throws Exception{
 		String sMessages = "";
 
 		//Get all the financial statement data that could be affected by this fiscal set:
 		String SQL = "";
 		SQL = "SELECT * FROM " + SMTableglfinancialstatementdata.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " >= " + Integer.toString(objFiscalSet.m_ifiscalyear) + ")"
+				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " >= " + sStartingFiscalYear + ")"
 				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + objFiscalSet.m_sAcctID + "')"
 			+ ") ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + ", " + SMTableglfinancialstatementdata.ifiscalperiod
 		;
@@ -101,6 +104,10 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			ResultSet rsFinancials = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rsFinancials.next()){
 				sMessages += checkSingleFinancialRecord(rsFinancials, arrFiscalSets);
+				//TODO - take this out later:
+				System.out.println("Checked account '" + objFiscalSet.m_sAcctID + "', year " 
+					+ rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalyear)
+					+ ", period " + rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalperiod));
 			}
 			rsFinancials.close();
 		} catch (Exception e) {

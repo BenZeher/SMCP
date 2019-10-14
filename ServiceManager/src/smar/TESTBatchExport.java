@@ -4,6 +4,7 @@ import java.sql.DriverManager;
 import javax.servlet.http.HttpServlet;
 
 import ServletUtilities.clsDatabaseFunctions;
+import smgl.GLFinancialDataCheck;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -168,6 +169,13 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
+		//Test financial statement integrity:
+		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
+		try {
+			System.out.println(objFinCheck.checkRecords("10101073", "2018", conn));
+		} catch (Exception e1) {
+			System.out.println(e1.getMessage());
+		}
 		
 		//Test GL Transaction Batch posting:
 		clsDatabaseFunctions.start_data_transaction(conn);

@@ -151,7 +151,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 					bUseGoogleDrivePicker = true;
 				} 
 		
-		s += "<TABLE BORDER=1>";
+		s += "<TABLE WIDTH=40% BORDER=1>";
 		String sID = "";
 		if (
 			//If we are NOT adding a new labor backcharge:
@@ -525,7 +525,6 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 		;
 		s += "</TABLE>";
 		
-		//TODO Add in the Button/Link to the Linked Google Drive Folder
 		String sCreateAndUploadButton = "";
 
 		if (SMSystemFunctions.isFunctionPermitted(

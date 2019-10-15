@@ -53,6 +53,7 @@ public class SMSalesContactEdit extends HttpServlet {
 		title = "Edit Sales Contact:";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 		out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
+		Script(out);
 	    //Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
@@ -208,6 +209,7 @@ public class SMSalesContactEdit extends HttpServlet {
 	    	}
 	    }else{
 	    	//modify existing sales contact record
+	    	//TODO make the boxes into editable fields and not just text
 	    	try{
 	    		String sSQL = "SELECT * FROM " + SMTablesalescontacts.TableName + 
 	    				" WHERE" + 
@@ -223,42 +225,41 @@ public class SMSalesContactEdit extends HttpServlet {
 		    		sSQL = MySQLs.Get_Salesperson_By_Salescode(rs.getString(SMTablesalescontacts.salespersoncode));
 		    		ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD>"); 
-	    			while (rsSalesperson.next()){
-		    			out.print(rsSalesperson.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
-							      rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName));
-	    			}
-	    			rsSalesperson.close();
-	    			out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedSalesperson\" VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\">");
-		    		out.println("</TD></TR>");
+		    		out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedSalesperson\" VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\">");
 		    		
+		    		while (rsSalesperson.next()){
+		    			out.print(rsSalesperson.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
+		    					rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
+		    					rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName));
+		    		}
+		    		rsSalesperson.close();
+		    		out.println("</TD></TR>");
+
 		    		//Customer Number and name
-					boolean bAllowCustomerView = 
-						SMSystemFunctions.isFunctionPermitted(
-							SMSystemFunctions.ARDisplayCustomerInformation, 
-							sUserID, 
-							getServletContext(), 
-							sDBID,
-							(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-						);
+		    		boolean bAllowCustomerView = 
+		    				SMSystemFunctions.isFunctionPermitted(
+		    						SMSystemFunctions.ARDisplayCustomerInformation, 
+		    						sUserID, 
+		    						getServletContext(), 
+		    						sDBID,
+		    						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+		    						);
 		    		
 		    		String sCustomerNumber = rs.getString(SMTablesalescontacts.scustomernumber).toUpperCase();
 		    		String sCustomerInfoLink = sCustomerNumber;
 					if (bAllowCustomerView){
 						sCustomerInfoLink = 
-							"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARDisplayCustomerInformation?CustomerNumber=" 
+							"<A ID=\"CustomerLink\" HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smar.ARDisplayCustomerInformation?CustomerNumber=" 
 							+ sCustomerNumber + "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
-							+ sCustomerNumber + "</A>"
+							+ rs.getString(SMTablesalescontacts.scustomername) + "</A>"
 						;
 					}
-		    		out.println("<TR><TD ALIGN=RIGHT>Customer Account #:&nbsp;</TD><TD>" 
-		    				+ sCustomerInfoLink 
-		    				+ " - " + rs.getString(SMTablesalescontacts.scustomername) + "</TR>");
-		    		out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedCustomer\" VALUE=\"" + rs.getString(SMTablesalescontacts.scustomernumber) + "\">");
+		    		out.println("<TR><TD ALIGN=RIGHT>Customer Account #:&nbsp;</TD	>" );
+		    		out.println("<TD><INPUT TYPE=TEXT ONCHANGE=\"customer()\" NAME=\"SelectedCustomer\" VALUE=\"" + rs.getString(SMTablesalescontacts.scustomernumber) + "\">&nbsp;" + sCustomerInfoLink + "</TD></TR>");
 		    		
 		    		//customer contact information
-		    		out.println("<TR><TD ALIGN=RIGHT>Contact Name:&nbsp;</TD><TD>&nbsp;" + rs.getString(SMTablesalescontacts.scontactname) + "</TD></TR>");
-		    		out.println("<INPUT TYPE=HIDDEN NAME=\"ContactName\" VALUE=\"" + rs.getString(SMTablesalescontacts.scontactname) + "\">");
+		    		out.println("<TR><TD ALIGN=RIGHT>Contact Name:&nbsp;</TD><TD>");
+		    		out.println("<INPUT TYPE=TEXT NAME=\"ContactName\" VALUE=\"" + rs.getString(SMTablesalescontacts.scontactname) + "\">"+ "</TD></TR>");
 		    		
 		    		out.println("<TR><TD ALIGN=RIGHT>Phone Number:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"" + rs.getString(SMTablesalescontacts.sphonenumber) + "\"></TD></TR>");
 		    		out.println("<TR><TD ALIGN=RIGHT>Email Address:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"EmailAddress\" VALUE=\"" + rs.getString(SMTablesalescontacts.semailaddress) + "\"></TD></TR>");
@@ -580,13 +581,13 @@ public class SMSalesContactEdit extends HttpServlet {
 			String sUserID, 
 			ServletContext servletContext,
 			String sDBID) {
-		 //Create redirect string for appointment
+		//Create redirect string for appointment
 		String s = ""; 
-		 String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry?"
+		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditBidEntry?"
 				+ SMBidEntry.ParamID + "=-1"
-			+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y" 
-			+ "&" + SMBidEntry.Paramisalescontactid + "=" + request.getParameter("id")
-   			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y" 
+				+ "&" + SMBidEntry.Paramisalescontactid + "=" + request.getParameter("id")
+				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				;
 
 		if (SMSystemFunctions.isFunctionPermitted(
@@ -595,9 +596,9 @@ public class SMSalesContactEdit extends HttpServlet {
 				getServletContext(), 
 				sDBID,
 				(String) request.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-  			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/>Add new sales lead</A></FONT>";
-  			}
-		
+			s+="&nbsp;<FONT size=2><A HREF=\"" + sRedirectString + "\"/>Add new sales lead</A></FONT>";
+		}
+
 		return s;
 	}
 
@@ -688,6 +689,14 @@ public class SMSalesContactEdit extends HttpServlet {
        			}
 		}
 		return s;
+	}
+	
+	public void Script(PrintWriter out) {
+		 out.println("<script>\n"
+		 		+ "function customer(){\n"
+		 		+ "\tdocument.getElementById(\"CustomerLink\").style.visibility = \"hidden\";\n"
+		 		+ "}\n"
+				 +"</script>");
 	}
 
 	public void doGet(HttpServletRequest request,

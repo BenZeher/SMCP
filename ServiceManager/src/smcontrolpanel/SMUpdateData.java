@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1417;
+	private static final int m_CurrentDatabaseVersion = 1418;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "10/15/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14719,6 +14719,17 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 10/15/2019
 				SQL = "ALTER TABLE `gltransactionbatchentries` "
 					+ " CHANGE ssourceledgertransactionid ssourceledgertransactionid VARCHAR(48) NOT NULL DEFAULT ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1417:
+				//Added by BJA 10/15/2019
+				SQL = "ALTER TABLE `salescontacts` "
+					+ " ADD sSalespersonName VARCHAR(75) NOT NULL DEFAULT ''"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

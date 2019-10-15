@@ -21,4 +21,5 @@ public class SMTablegltransactionbatchentries {
 	//Field lengths:
 	public static final int sentrydescriptionLength = 128;
 	public static final int ssourceledgerLength = 2;
+	public static final int ssourceledgertransactionidLength = 48;
 }

@@ -83,7 +83,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 
-		for(int i = 0; i < arrFiscalSets.size(); i++){
+		//We start at the THIRD fiscal year, because we went back two extra years only to have the history:
+		for(int i = 2; i < arrFiscalSets.size(); i++){
 			sMessages += checkSingleFiscalSet(arrFiscalSets.get(i), conn, sStartingFiscalYear, arrFiscalSets);
 		}
 		return sMessages;

@@ -176,6 +176,7 @@ public class TESTBatchExport extends HttpServlet{
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}
+		System.out.println("DONE");
 		
 		//Test GL Transaction Batch posting:
 		clsDatabaseFunctions.start_data_transaction(conn);

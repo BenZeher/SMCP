@@ -172,7 +172,7 @@ public class TESTBatchExport extends HttpServlet{
 		//Test financial statement integrity:
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
-			System.out.println(objFinCheck.checkRecords("10101073", "2018", conn));
+			System.out.println(objFinCheck.checkRecords("", "2013", conn)); // "10101073"
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}

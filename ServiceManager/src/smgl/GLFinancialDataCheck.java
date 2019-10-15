@@ -77,20 +77,22 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					rsFiscalYears.getInt(SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.inumberofperiods)
 				);
 				arrFiscalSets.add(objFiscal);
+				
 			}
 			rsFiscalYears.close();
 		} catch (Exception e) {
 			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 
-		//We start at the THIRD fiscal year, because we went back two extra years only to have the history:
-		for(int i = 2; i < arrFiscalSets.size(); i++){
-			sMessages += checkSingleFiscalSet(arrFiscalSets.get(i), conn, sStartingFiscalYear, arrFiscalSets);
+		//Read the financial records for each GL account that was read:
+		ArrayList<String>arrListOfUniqueGLAccounts = getUniqueGLAccounts(arrFiscalSets);
+		for (int i = 0; i < arrListOfUniqueGLAccounts.size(); i++){
+			sMessages += checkSingleFiscalSet(arrListOfUniqueGLAccounts.get(i), conn, sStartingFiscalYear, arrFiscalSets);
 		}
 		return sMessages;
 	}
 
-	private String checkSingleFiscalSet(clsFiscalSet objFiscalSet, Connection conn, String sStartingFiscalYear, ArrayList<clsFiscalSet>arrFiscalSets) throws Exception{
+	private String checkSingleFiscalSet(String sAccount, Connection conn, String sStartingFiscalYear, ArrayList<clsFiscalSet>arrFiscalSets) throws Exception{
 		String sMessages = "";
 
 		//Get all the financial statement data that could be affected by this fiscal set:
@@ -98,7 +100,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		SQL = "SELECT * FROM " + SMTableglfinancialstatementdata.TableName
 			+ " WHERE ("
 				+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " >= " + sStartingFiscalYear + ")"
-				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + objFiscalSet.m_sAcctID + "')"
+				+ " AND (" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
 			+ ") ORDER BY " + SMTableglfinancialstatementdata.ifiscalyear + ", " + SMTableglfinancialstatementdata.ifiscalperiod
 		;
 		try {
@@ -106,7 +108,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			while(rsFinancials.next()){
 				sMessages += checkSingleFinancialRecord(rsFinancials, arrFiscalSets);
 				//TODO - take this out later:
-				System.out.println("Checked account '" + objFiscalSet.m_sAcctID + "', year " 
+				System.out.println("Checked account '" + sAccount + "', year " 
 					+ rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalyear)
 					+ ", period " + rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalperiod));
 			}
@@ -124,7 +126,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//Now check all the related financial statement records:
 		
 		//First, the opening balance:
-		//Get the current matching fiscal set:
+		//Get the values from the current financial record that we're checking:
 		String sAccount = rsFinancialData.getString(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid);
 		int iFiscalYear = rsFinancialData.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear);
 		int iFiscalPeriod = rsFinancialData.getInt(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod);
@@ -303,7 +305,19 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		throw new Exception("Error [20192871120523] " + "Could not find loaded fiscal set for account '" 
 			+ sAccount + "', fiscal year '" + Integer.toString(iFiscalYear) + ".");
 	}
-
+	private ArrayList<String>getUniqueGLAccounts(ArrayList<clsFiscalSet> arrFiscalSets){
+		ArrayList<String>arrUniqueAccounts = new ArrayList<String>(0);
+		String sLastAccountRead = "";
+		for (int i = 0; i < arrFiscalSets.size(); i++){
+			if (arrFiscalSets.get(i).m_sAcctID.compareToIgnoreCase(sLastAccountRead) != 0){
+				arrUniqueAccounts.add(arrFiscalSets.get(i).m_sAcctID);
+			}
+			sLastAccountRead = arrFiscalSets.get(i).m_sAcctID;
+		}
+		
+		return arrUniqueAccounts;
+	}
+	
 	private class clsFiscalSet extends Object{
 		
 		public String m_sAcctID;

@@ -70,13 +70,21 @@ function onAuthApiLoad() {
 
 function handleAuthResult(authResult) {
 	if (authResult) {
-		if(authResult.error === 'immediate_failed'){
-			//If immediate login fails, prompt to sign in.
-			window.gapi.auth.authorize({
-				'client_id' : clientId,
-				'scope' : scope,
-				'hosted_domain' : domain
-			}, handleAuthResult);
+		console.log(authResult);
+		if(authResult.error){
+			if(authResult.error.includes('immediate_failed')){
+				//If immediate login fails, prompt to sign in.
+				window.gapi.auth.authorize({
+					'client_id' : clientId,
+					'scope' : scope,
+					'hosted_domain' : domain,
+					'prompt':'select_account'
+				}, handleAuthResult);
+			}else if (authResult.error.includes('access_denied')){
+				alert('You do not have access to this parent folder.');
+			}else{
+
+			}
 		}else{
 			oauthToken = authResult.access_token;
 			loadClientDrive();

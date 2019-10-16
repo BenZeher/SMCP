@@ -28,6 +28,10 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 	    //Read the entry fields from the request object:
 		String sFiscalYear = request.getParameter(GLFinancialDataCheckSelect.PARAM_FISCAL_YEAR_SELECTION);
 		String sGLAccount = request.getParameter(GLFinancialDataCheckSelect.PARAM_GL_ACCOUNTS);
+		boolean bUpdateRecords = false;
+		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_RECORDS) != null){
+			bUpdateRecords = true;
+		}
 		
 		if (request.getParameter(GLFinancialDataCheckSelect.CONFIRM_PROCESS) == null){
 			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
@@ -62,9 +66,9 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	//System.out.println("[2019289938156] " + "sGLAccount = '" + sGLAccount + "'");
     	//System.out.println("[2019289938346] " + "sFiscalYear = '" + sFiscalYear + "'");
     	
-    	boolean bCheckRecordsOnly = true;
+    	long lStartingTimeInMS = System.currentTimeMillis();
     	try {
-			sResults = dc.processFinancialRecords(sGLAccount, sFiscalYear, conn, bCheckRecordsOnly);
+			sResults = dc.processFinancialRecords(sGLAccount, sFiscalYear, conn, bUpdateRecords);
 		} catch (Exception e) {
 			
 			//System.out.println("[2019289941251] " + "financial check error: '" + e.getMessage() + "'.");
@@ -77,9 +81,11 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 				return;
 		}
     	
+    	
     	//return after successful processing:
     	//System.out.println("[2019289940487] " + "sResults = '" + sResults + "'.");
-		smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_RESULTS_OBJECT, sResults);
+		sResults += "<B>" + Long.toString((System.currentTimeMillis() - lStartingTimeInMS)/1000L) + "</B> seconds elapsed.<BR>";
+    	smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_RESULTS_OBJECT, sResults);
 		smaction.redirectAction(
 				"", 
 				"", 

@@ -27,6 +27,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_YEAR_SELECTION = "FISCALYEARSELECTION";
 	public static String PARAM_GL_ACCOUNTS = "GLACCOUNTS";
+	public static String PARAM_UPDATE_RECORDS = "UPDATERECORDS";
 	public static String GL_SELECT_ALL_VALUE = "";
 	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
 	public static final String SESSION_WARNING_OBJECT = "GLCHECKFINANCIALWARNING";
@@ -166,6 +167,8 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		}
 		out.println("</SELECT>");
     	
+		out.println("<BR>Check to UPDATE all the financial statement records: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_UPDATE_RECORDS + "\"><BR>");
+		
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
     	out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");

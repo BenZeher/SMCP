@@ -3,7 +3,7 @@ package SMDataDefinition;
 public class SMTableglfiscalperiods {
 	public static String TableName = "glfiscalperiods";
 	
-	public static final int MAX_NUMBER_OF_PERIODS = 13;
+	public static final int MAX_NUMBER_OF_EDITABLE_USER_PERIODS = 13;
 	
 	//Field names:
 	public static String ifiscalyear = "ifiscalyear";

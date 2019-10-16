@@ -231,7 +231,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		out.println("&nbsp;FROM:&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
 			+ " ID = \"" + PARAM_NET_EARNINGS_STARTING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
-		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
+		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS; i++){
 			if (Integer.toString(i).compareToIgnoreCase(sLastUnlockedPeriod) == 0){
 				out.println("<OPTION selected=yes VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
 			}else{
@@ -244,7 +244,7 @@ public class GLTrialBalanceSelect extends HttpServlet {
 		out.println("&nbsp;TO:&nbsp;<SELECT NAME=\"" + PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION + "\"" 
 			+ " ID = \"" + PARAM_NET_EARNINGS_ENDING_FISCAL_PERIOD_SELECTION + "\""
 			+ "\">");
-		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS; i++){
+		for (int i = 1; i <= SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS; i++){
 			if (Integer.toString(i).compareToIgnoreCase(sLastUnlockedPeriod) == 0){
 				out.println("<OPTION selected=yes VALUE=\"" + Integer.toString(i) + "\"> " + Integer.toString(i));
 			}else{

@@ -1312,8 +1312,8 @@ public class GLFiscalYear extends java.lang.Object{
 		}
     	
     	//Next make sure that all the dates are in order:
-    	ArrayList <String>arrBeginningDates = new ArrayList<String>(SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS);
-    	ArrayList <String>arrEndingDates = new ArrayList<String>(SMTableglfiscalperiods.MAX_NUMBER_OF_PERIODS);
+    	ArrayList <String>arrBeginningDates = new ArrayList<String>(SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS);
+    	ArrayList <String>arrEndingDates = new ArrayList<String>(SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS);
     	
     	//Load all the dates:
     	

@@ -1,7 +1,5 @@
 package SMDataDefinition;
 
-import java.util.ArrayList;
-
 public class SMTablebids {
 	//Table Name
 	public static final String TableName = "bids";

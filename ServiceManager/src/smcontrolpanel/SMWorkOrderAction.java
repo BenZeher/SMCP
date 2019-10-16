@@ -19,7 +19,6 @@ import SMClasses.SMWorkOrderDetail;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMTablecompanyprofile;
-import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderheaders;

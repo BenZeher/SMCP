@@ -5,7 +5,6 @@ import javax.servlet.ServletContext;
 import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableartransactions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
-import SMDataDefinition.SMTablegltransactionbatches;
 import SMDataDefinition.SMTableictransactions;
 import smar.ARDocumentTypes;
 import smcontrolpanel.SMUtilities;

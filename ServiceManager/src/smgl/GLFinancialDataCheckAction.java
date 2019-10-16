@@ -61,8 +61,10 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	String sResults = "";
     	//System.out.println("[2019289938156] " + "sGLAccount = '" + sGLAccount + "'");
     	//System.out.println("[2019289938346] " + "sFiscalYear = '" + sFiscalYear + "'");
+    	
+    	boolean bCheckRecordsOnly = true;
     	try {
-			sResults = dc.checkRecords(sGLAccount, sFiscalYear, conn);
+			sResults = dc.processFinancialRecords(sGLAccount, sFiscalYear, conn, bCheckRecordsOnly);
 		} catch (Exception e) {
 			
 			//System.out.println("[2019289941251] " + "financial check error: '" + e.getMessage() + "'.");

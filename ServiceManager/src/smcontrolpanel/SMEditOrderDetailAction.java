@@ -13,7 +13,6 @@ import SMClasses.FinderResults;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMTableicitemlocations;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelocations;
 import SMDataDefinition.SMTableorderdetails;

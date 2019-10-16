@@ -1173,12 +1173,15 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1555958398] reading fiscal years with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 		
+    	
+    	GLFinancialDataCheck dc = new GLFinancialDataCheck();
 		try {
-			updateFinancialStatementData(
-			    sAccount,
-			    iFiscalYear,
-			    conn
-			   );
+			dc.processFinancialRecords(sAccount, Integer.toString(iFiscalYear), conn, true);
+			//updateFinancialStatementData(
+			//    sAccount,
+			//   iFiscalYear,
+			//    conn
+			//   );
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
@@ -1186,11 +1189,12 @@ public class GLTransactionBatch {
 		//
 		if(bIncomeOrExpenseAccountIsInvolved){
 			try {
-				updateFinancialStatementData(
-					sClosingAccount,
-				    iFiscalYear,
-				    conn
-				   );
+				dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true);
+				//updateFinancialStatementData(
+				//	sClosingAccount,
+				//    iFiscalYear,
+				//    conn
+				//   );
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
 			}	
@@ -1465,7 +1469,7 @@ public class GLTransactionBatch {
 		
     	return;
     }
-    
+    /* - Replaced with GLFinancialDataCheck - TJR - 10/16/2019
     public static void updateFinancialStatementData(
         	String sAccount,
         	int iFiscalYear,
@@ -1548,22 +1552,20 @@ public class GLTransactionBatch {
     				bTwoYearsPreviousWasFound = true;
     			}
 
-    			/*
-    			THESE fields are affected for the same fiscal year and period:
-    			bdnetchangeforperiod
-    			bdtotalyeartodate
+//    			THESE fields are affected for the same fiscal year and period:
+//    			bdnetchangeforperiod
+//    			bdtotalyeartodate
+//    			
+//    			THESE fields are affected for the subsequent fiscal period:
+//    			bdnetchangeforpreviousperiod
+//    			
+//    			THESE fields are affected for the subsequent year, same period:
+//    			bdnetchangeforperiodpreviousyear
+//    			bdtotalpreviousyeartodate
+//    			
+//    			THESE fields are affected for the subsequent year, previous period:
+//    			bdnetchangeforpreviousperiodpreviousyear
     			
-    			THESE fields are affected for the subsequent fiscal period:
-    			bdnetchangeforpreviousperiod
-    			
-    			THESE fields are affected for the subsequent year, same period:
-    			bdnetchangeforperiodpreviousyear
-    			bdtotalpreviousyeartodate
-    			
-    			THESE fields are affected for the subsequent year, previous period:
-    			bdnetchangeforpreviousperiodpreviousyear
-    			
-    			*/
     			
     			BigDecimal bdTotalPreviousYearToDate = new BigDecimal("0.00");
     			BigDecimal bdTotalYearToDate = new BigDecimal("0.00");
@@ -1750,7 +1752,7 @@ public class GLTransactionBatch {
     		
     		return;
         }
-
+*/
     private void setPostingFlag(Connection conn, String sUserID) throws Exception{
     	//First check to make sure no one else is posting:
     	try{

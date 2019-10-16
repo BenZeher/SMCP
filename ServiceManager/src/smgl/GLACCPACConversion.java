@@ -557,11 +557,18 @@ public class GLACCPACConversion  extends java.lang.Object{
 		try {
 			while (rsFiscalSets.next()){
 				//Now update the GL fiscalstatementdata table:
-				GLTransactionBatch.updateFinancialStatementData(
+				GLFinancialDataCheck dc = new GLFinancialDataCheck();
+				dc.processFinancialRecords(
 					rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
-					rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear), 
-					cnSMCP
+					Integer.toString(rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear)),
+					cnSMCP,
+					true
 				);
+				//GLTransactionBatch.updateFinancialStatementData(
+				//	rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
+				//	rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear), 
+				//	cnSMCP
+				//);
 				lCounter++;
 			}
 			rsFiscalSets.close();

@@ -4036,6 +4036,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLFinancialDataCheckAction</servlet-name>
+        <servlet-class>smgl.GLFinancialDataCheckAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLFinancialDataCheckSelect</servlet-name>
+        <servlet-class>smgl.GLFinancialDataCheckSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLImportBatchesSelect</servlet-name>
         <servlet-class>smgl.GLImportBatchesSelect</servlet-class>
     </servlet>
@@ -8008,6 +8018,16 @@
     <servlet-mapping>
         <servlet-name>GLEditGLOptions</servlet-name>
         <url-pattern>/smgl.GLEditGLOptions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLFinancialDataCheckAction</servlet-name>
+        <url-pattern>/smgl.GLFinancialDataCheckAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLFinancialDataCheckSelect</servlet-name>
+        <url-pattern>/smgl.GLFinancialDataCheckSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

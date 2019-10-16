@@ -181,6 +181,7 @@ public class GLMainMenu extends HttpServlet {
 		arMenu.add(SMSystemFunctions.GLManageExternalCompanies);
 		arMenu.add(SMSystemFunctions.GLPullExternalDataIntoConsolidation);
 		arMenu.add(SMSystemFunctions.GLCloseFiscalYear);
+		arMenu.add(SMSystemFunctions.GLCheckFinancialData);
 		
 		//Make this one last:
 		arMenu.add(SMSystemFunctions.GLConvertACCPACData);

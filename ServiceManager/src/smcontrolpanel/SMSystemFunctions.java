@@ -335,6 +335,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLManageExternalCompanies = 1242;
 	public static long GLListPreviousExternalCompanyPulls = 1243;
 	public static long GLCloseFiscalYear = 1244;
+	public static long GLCheckFinancialData = 1245;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2709,6 +2710,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Automatically creates journal entries to close the fiscal year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
+			arrFunctions.add("GL Check Financial Data"); 
+			arrFunctionIDs.add(GLCheckFinancialData); 
+			arrFunctionLinks.add("smgl.GLFinancialDataCheckSelect"); 
+			arrFunctionDescriptions.add("Checks all the financial data records starting with a selected fiscal year"
+				+ " to make sure that it matches the fiscal set data for every GL account.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}
 

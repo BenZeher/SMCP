@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1418;
+	private static final int m_CurrentDatabaseVersion = 1419;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "10/16/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14736,6 +14736,19 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
+			//BEGIN CASE:
+			case 1418:
+				//Added by BJA 10/16/2019
+				SQL = "UPDATE `salescontacts`" + 
+						"			 LEFT JOIN" + 
+						"			 `salesperson`" + 
+						"			 ON salesperson.sSalespersonCode = salescontacts.salespersoncode" + 
+						"			 SET salescontacts.sSalespersonName = CONCAT(salesperson.sSalespersonFirstName , \" \", salesperson.sSalespersonLastName) WHERE CONCAT(salesperson.sSalespersonFirstName , \" \", salesperson.sSalespersonLastName) IS NOT NULL"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
 			
 			//End switch:
 		}

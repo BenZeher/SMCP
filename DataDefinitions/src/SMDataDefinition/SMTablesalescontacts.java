@@ -36,6 +36,7 @@ public class SMTablesalescontacts {
 	public static String mnotes = "mnotes";
 	public static String binactive = "binactive";
 	public static String sdescription = "sdescription";
+	public static String sSalespersonName = "sSalespersonName";
 	
 	public static int scustomernumberlength = 12;
 	public static int salespersoncodelength = 8;

@@ -222,17 +222,16 @@ public class SMSalesContactEdit extends HttpServlet {
 		    			+ request.getParameter("id") + "</B></TD></TR>");
 		    		
 		    		//Salesperson
-		    		sSQL = MySQLs.Get_Salesperson_By_Salescode(rs.getString(SMTablesalescontacts.salespersoncode));
-		    		ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD>"); 
-		    		out.println("<INPUT TYPE=HIDDEN NAME=\"SelectedSalesperson\" VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\">");
-		    		
-		    		while (rsSalesperson.next()){
-		    			out.print(rsSalesperson.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
-		    					rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
-		    					rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName));
+		    		out.println("<TR><TD ALIGN=RIGHT>Salesperson:&nbsp;</TD><TD><SELECT NAME=\"SelectedSalesperson\">"); 
+		    		out.println("<OPTION SELECTED VALUE=\"" + rs.getString(SMTablesalescontacts.salespersoncode) + "\"> " + rs.getString(SMTablesalescontacts.salespersoncode) +" - " + rs.getString(SMTablesalescontacts.sSalespersonName));
+		    		sSQL = MySQLs.Get_Salesperson_List_SQL();
+		    		ResultSet rsSalespersons = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
+		    		while(rsSalespersons.next()) {
+		    		out.println("<OPTION VALUE=\"" + rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + "\">" + 
+							   rsSalespersons.getString(SMTablesalesperson.sSalespersonCode) + " - " + 
+							   rsSalespersons.getString(SMTablesalesperson.sSalespersonFirstName) + " " + 
+							   rsSalespersons.getString(SMTablesalesperson.sSalespersonLastName));
 		    		}
-		    		rsSalesperson.close();
 		    		out.println("</TD></TR>");
 
 		    		//Customer Number and name

@@ -17,6 +17,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.MySQLs;
+
 public class SMSalesContactAction extends HttpServlet{
 	private static final long serialVersionUID = 1L;
 	public void doPost(HttpServletRequest request,
@@ -90,9 +92,30 @@ public class SMSalesContactAction extends HttpServlet{
 				    	+ ", " + SMTablesalescontacts.sdescription + " = '" + clsDatabaseFunctions.FormatSQLStatement(
 				    		clsManageRequestParameters.get_Request_Parameter("Description", request)) + "'"
 				    	+ ", " + SMTablesalescontacts.mnotes + " = '" + clsDatabaseFunctions.FormatSQLStatement(
-					    		clsManageRequestParameters.get_Request_Parameter("Note", request)) + "'"
-		    					
-		    			 + " WHERE (" 
+					    		clsManageRequestParameters.get_Request_Parameter("Note", request)) + "'";
+					    		
+		    			String SQL = "SELECT * FROM " + SMTablesalescontacts.TableName
+		    					+ " WHERE " +  SMTablesalescontacts.id + " = " + Integer.parseInt(request.getParameter("id")) +"";
+		    			ResultSet rsSalesContact = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+		    			if(rsSalesContact.next()) {
+		    				if(clsManageRequestParameters.get_Request_Parameter("SelectedSalesperson", request).compareToIgnoreCase(rsSalesContact.getString(SMTablesalescontacts.salespersoncode))==0) {
+		    					sSQL += ", " + SMTablesalescontacts.sSalespersonName + " = '" + clsDatabaseFunctions.FormatSQLStatement(
+		    							rsSalesContact.getString(SMTablesalescontacts.sSalespersonName)) + "'";
+		    				}else {
+		    					SQL = MySQLs.Get_Salesperson_By_Salescode(clsManageRequestParameters.get_Request_Parameter("SelectedSalesperson", request));
+		    					ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+		    					String SalespersonName = "";
+		    					while(rsSalesperson.next()){
+		    						SalespersonName = rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName);	
+		    					}
+		    					rsSalesperson.close();
+		    					sSQL += ", " + SMTablesalescontacts.sSalespersonName + " = '" + clsDatabaseFunctions.FormatSQLStatement(
+		    							SalespersonName) + "'";
+		    				}
+		    			}
+		    			rsSalesContact.close();
+					    		
+		    			 sSQL += " WHERE (" 
 		    			 	+ SMTablesalescontacts.id + " = " + clsManageRequestParameters.get_Request_Parameter("id", request)
 		    			 + ")";
 		    			
@@ -188,7 +211,8 @@ public class SMSalesContactAction extends HttpServlet{
 				    					" " + SMTablesalescontacts.semailaddress + "," +
 				    					" " + SMTablesalescontacts.binactive + "," +
 				    					" " + SMTablesalescontacts.sdescription + "," +
-				    					" " + SMTablesalescontacts.mnotes + ")" +
+				    					" " + SMTablesalescontacts.mnotes + "," +
+				    					" " + SMTablesalescontacts.sSalespersonName + ")" +
 				    				" VALUES (" +
 				    					" '" + request.getParameter("SelectedSalesperson") + "'," + 
 				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("SelectedCustomer")) + "'," + 
@@ -198,8 +222,16 @@ public class SMSalesContactAction extends HttpServlet{
 				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("EmailAddress")) + "'," + 
 				    					" " + Integer.parseInt(request.getParameter("IsInActive")) + "," + 
 				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("Description")) + "'," + 
-				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("Note")) + "')"; 
-				    				
+				    					" '" + clsDatabaseFunctions.FormatSQLStatement(request.getParameter("Note"))  + "',";
+				    					
+				    					String SQL = MySQLs.Get_Salesperson_By_Salescode(clsManageRequestParameters.get_Request_Parameter("SelectedSalesperson", request));
+				    					ResultSet rsSalesperson = clsDatabaseFunctions.openResultSet(SQL, getServletContext(), sDBID);
+				    					String SalespersonName = "";
+				    					while(rsSalesperson.next()){
+				    						SalespersonName = rsSalesperson.getString(SMTablesalesperson.sSalespersonFirstName) + " " + rsSalesperson.getString(SMTablesalesperson.sSalespersonLastName);	
+				    					}
+				    					rsSalesperson.close();
+				    					sSQL += " '" + clsDatabaseFunctions.FormatSQLStatement(SalespersonName) + "')";   				
 	
 						    	if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID) == false){
 						    		out.println("Failed to update sales contact record.<BR><BR><BR>" + 

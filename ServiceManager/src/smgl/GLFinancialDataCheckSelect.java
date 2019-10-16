@@ -12,10 +12,8 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
-import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableglexternalcompanies;
-import SMDataDefinition.SMTableglfinancialstatementdata;
-import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -26,13 +24,11 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String CONFIRM_PROCESS = "ConfirmProcess";
-	public static final String ADD_GL_ACCOUNTS = "AddGLAccounts";
-	public static final String RADIO_BUTTONS_NAME = "RadioButtonSelect";
-	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
-	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_VALUE_DELIMITER = " - ";
-	public static String PARAM_FISCAL_YEAR_SELECTION = "FISCALPERIODSELECTION";
-	public static String PARAM_BATCH_DATE = "BATCHDATE";
+	public static String PARAM_FISCAL_YEAR_SELECTION = "FISCALYEARSELECTION";
+	public static String PARAM_GL_ACCOUNTS = "GLACCOUNTS";
+	public static String GL_SELECT_ALL_VALUE = "";
+	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
 	public static final String SESSION_WARNING_OBJECT = "GLCHECKFINANCIALWARNING";
 	public static final String SESSION_RESULTS_OBJECT = "GLCHECKFINANCIALRESULTS";
 	
@@ -46,7 +42,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 				request, 
 				response, 
 				getServletContext(), 
-				SMSystemFunctions.GLPullExternalDataIntoConsolidation))
+				SMSystemFunctions.GLCheckFinancialData))
 		{
 			return;
 		}
@@ -74,8 +70,8 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	    
 	    String sResults = (String)CurrentSession.getAttribute(SESSION_RESULTS_OBJECT);
 	    CurrentSession.removeAttribute(SESSION_RESULTS_OBJECT);
-		if (sWarning != null){
-			out.println("<B>RESULTS:<BR>" + sResults + "</B><BR>");
+		if (sResults != null){
+			out.println("<B>RESULTS:</B><BR>" + sResults + "<BR>");
 		}
 		
 		//Print a link to the first page after login:
@@ -98,17 +94,50 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>\n");
 
-    	out.println("<U><B>Select a GL account to check, or choose to 'Check ALL accounts':<B></U><BR>");
+    	out.println("<B>Select a GL account to check, or choose to '" + GL_SELECT_ALL_LABEL + "': <B>");
     	
-    	
-    	
-		//Get a drop down of the available fiscal years:
     	ArrayList<String> alValues = new ArrayList<String>(0);
+    	ArrayList<String> alOptions = new ArrayList<String>(0);
+		//Account number range:
 		alValues.clear();
-
-		String sSQL = "SELECT"
-			+ " " + SMTableglfiscalperiods.ifiscalyear + " FROM " + SMTableglfiscalperiods.TableName
-			+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
+		alOptions.clear();
+		String sSQL = "SELECT "
+			+ SMTableglaccounts.sAcctID
+			+ ", " + SMTableglaccounts.sDesc
+			+ " FROM " + SMTableglaccounts.TableName
+			+ " ORDER BY " + SMTableglaccounts.sAcctID
+		;
+		try {
+			ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sDBID,
+				"MySQL",
+				this.toString() + ".getting account groups - User: " + sUserID
+				+ " - "
+				+ sUserFullName
+			);
+			while(rsGLAccounts.next()){
+				alValues.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID));
+				alOptions.add(rsGLAccounts.getString(SMTableglaccounts.sAcctID) + PARAM_VALUE_DELIMITER + rsGLAccounts.getString(SMTableglaccounts.sDesc));
+			}
+			rsGLAccounts.close();
+		} catch (Exception e1) {
+			out.println("<BR><FONT COLOR=RED><B>Error [1571228837] getting GL accounts - " + e1.getMessage() + "</B></FONT><BR>");
+		}
+		out.println("<SELECT NAME=\"" + PARAM_GL_ACCOUNTS + "\">");
+		out.println("<OPTION VALUE=\"" + GL_SELECT_ALL_VALUE + "\"> " + GL_SELECT_ALL_LABEL);
+		for (int i=0;i<alValues.size();i++){
+			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alOptions.get(i));
+		}
+		out.println("</SELECT>");
+		out.println("<BR>");
+		
+		//Get a drop down of the available fiscal years:
+		alValues.clear();
+		sSQL = "SELECT"
+			+ " DISTINCT " + SMTableglfiscalsets.ifiscalyear + " FROM " + SMTableglfiscalsets.TableName
+			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
 		;
 		try {
 			ResultSet rsFiscalYears = clsDatabaseFunctions.openResultSet(
@@ -121,13 +150,13 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 				+ sUserFullName
 			);
 			while(rsFiscalYears.next()){
-				alValues.add(rsFiscalYears.getString(SMTableglfiscalperiods.ifiscalyear));
+				alValues.add(rsFiscalYears.getString(SMTableglfiscalsets.ifiscalyear));
 			}
 			rsFiscalYears.close();
 		} catch (Exception e1) {
 			out.println("<BR><FONT COLOR=RED><B>Error [1571228192] getting fiscal year selections - " + e1.getMessage() + "</B></FONT><BR>");
 		}
-		out.println("<BR>Start the check beginning with this fiscal year:&nbsp;");
+		out.println("Start the check beginning with this fiscal year:&nbsp;");
 		
 		out.println("<SELECT NAME=\"" + PARAM_FISCAL_YEAR_SELECTION + "\"" 
 			+ " ID = \"" + 	PARAM_FISCAL_YEAR_SELECTION + "\""
@@ -137,7 +166,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		}
 		out.println("</SELECT>");
     	
-    	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Pull transactions----\">");
+    	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
     	out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");
 	    out.println("</BODY></HTML>");

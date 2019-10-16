@@ -24,7 +24,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		) throws Exception{
 		
 		ArrayList<clsFiscalSet>arrFiscalSets = new ArrayList<clsFiscalSet>(0);
-		String sMessages = "";
+		String sErrorMessages = "";
+		String sStatusMessages = "";
 		
 		//Get an array list of the selected fiscal sets:
 		String SQL = "SELECT"
@@ -87,9 +88,15 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//Read the financial records for each GL account that was read:
 		ArrayList<String>arrListOfUniqueGLAccounts = getUniqueGLAccounts(arrFiscalSets);
 		for (int i = 0; i < arrListOfUniqueGLAccounts.size(); i++){
-			sMessages += checkSingleFiscalSet(arrListOfUniqueGLAccounts.get(i), conn, sStartingFiscalYear, arrFiscalSets);
+			sErrorMessages += checkSingleFiscalSet(arrListOfUniqueGLAccounts.get(i), conn, sStartingFiscalYear, arrFiscalSets);
+			sStatusMessages += "<BR><I>" + "Checking GL Account " + arrListOfUniqueGLAccounts.get(i) + "...</I>";
+			//System.out.println("[2019289952298] " + "Finished checking GL Account " + arrListOfUniqueGLAccounts.get(i) + ".");
 		}
-		return sMessages;
+		
+		if (sErrorMessages.compareToIgnoreCase("") != 0){
+			throw new Exception(sErrorMessages);
+		}
+		return sStatusMessages += "<BR><BR<B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
 	}
 
 	private String checkSingleFiscalSet(String sAccount, Connection conn, String sStartingFiscalYear, ArrayList<clsFiscalSet>arrFiscalSets) throws Exception{
@@ -107,10 +114,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			ResultSet rsFinancials = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rsFinancials.next()){
 				sMessages += checkSingleFinancialRecord(rsFinancials, arrFiscalSets);
-				//TODO - take this out later:
-				System.out.println("Checked account '" + sAccount + "', year " 
-					+ rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalyear)
-					+ ", period " + rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalperiod));
+				//System.out.println("Checked account '" + sAccount + "', year " 
+				//	+ rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalyear)
+				//	+ ", period " + rsFinancials.getInt(SMTableglfinancialstatementdata.ifiscalperiod));
 			}
 			rsFinancials.close();
 		} catch (Exception e) {

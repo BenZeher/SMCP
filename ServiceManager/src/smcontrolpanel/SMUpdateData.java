@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1419;
+	private static final int m_CurrentDatabaseVersion = 1420;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "10/16/2019";
+	private static final String m_sLastRevisionDate = "10/17/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14744,6 +14744,38 @@ public class SMUpdateData extends java.lang.Object{
 						"			 `salesperson`" + 
 						"			 ON salesperson.sSalespersonCode = salescontacts.salespersoncode" + 
 						"			 SET salescontacts.sSalespersonName = CONCAT(salesperson.sSalespersonFirstName , \" \", salesperson.sSalespersonLastName) WHERE CONCAT(salesperson.sSalespersonFirstName , \" \", salesperson.sSalespersonLastName) IS NOT NULL"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1419:
+				//Added by BJZ 10/17/2019
+				SQL = "INSERT INTO criticaldates " 
+						+ "( sdocnumber,"  
+						+ " datcriticaldate,"  
+						+ " iresolved,"  
+						+ " itype,"  
+						+ " lassignedbyuserid," 
+						+ " sassignedbyuserfullname," 
+						+ " lresponsibleuserid," 
+						+ " sresponsibleuserfullname," 
+						+ " Comments)" 
+						+ " SELECT TRIM(bids.id)," 
+						+ " NOW()," 
+						+ " 1," 
+						+ " 2,"  
+						+ " users.lid," 
+						+ " IF(users.sUserFirstName IS NULL, CONCAT(salesperson.sSalespersonFirstName, ' ', salesperson.sSalespersonLastName), CONCAT(users.sUserFirstName, ' ', users.sUserLastName)),"  
+						+ " users.lid," 
+						+ " IF(users.sUserFirstName IS NULL, CONCAT(salesperson.sSalespersonFirstName, ' ', salesperson.sSalespersonLastName), CONCAT(users.sUserFirstName, ' ', users.sUserLastName)),"  
+						+ " mfollwupnotes"  
+						+ " FROM bids" 
+						+ " LEFT JOIN salesperson ON salesperson.sSalespersonCode = bids.ssalespersoncode"  
+						+ " LEFT JOIN users ON salesperson.lSalespersonUserID = users.lid"
+						+ " WHERE mfollwupnotes != ''"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

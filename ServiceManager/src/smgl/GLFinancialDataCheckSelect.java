@@ -32,6 +32,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
 	public static final String SESSION_WARNING_OBJECT = "GLCHECKFINANCIALWARNING";
 	public static final String SESSION_RESULTS_OBJECT = "GLCHECKFINANCIALRESULTS";
+	private static final String PROCESS_STATUS_LABEL = "PROCESSSTATUSLABEL";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -69,6 +70,17 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
+		//out.println("<BR><B><div id=\"" + PROCESS_STATUS_LABEL + "\">" + "\n");
+		//if (sStatus.compareToIgnoreCase("") != 0){
+		//	out.println("" + sStatus + "");
+		//}		
+		//out.println("</div></B>" + "\n");
+		
+		String sMessage = request.getParameter("MESSAGE");
+		if (sMessage != null){
+			out.println("<BR> **** MESSAGE: " + sMessage + " ****");
+		}
+		
 	    String sResults = (String)CurrentSession.getAttribute(SESSION_RESULTS_OBJECT);
 	    CurrentSession.removeAttribute(SESSION_RESULTS_OBJECT);
 		if (sResults != null){

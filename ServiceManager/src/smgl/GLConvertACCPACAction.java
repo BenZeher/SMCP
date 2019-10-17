@@ -215,10 +215,10 @@ public class GLConvertACCPACAction extends HttpServlet {
         	return;
 		}
 
-    	//If the function returns successfully, then we can update the next function value:
     	sProcessingResult += "<BR><I> - Time elapsed " + Long.toString((System.currentTimeMillis() - lStartingTime)/1000L) 
     		+ " seconds.</I><BR>";
     	
+    	//If the function returns successfully, then we can update the next function value:
     	String sNextFunctionValue = "";
     	if (iFunctionValue == GLConvertACCPAC.LAST_FUNCTION_IN_SEQUENCE){
     		sNextFunctionValue = Integer.toString(GLConvertACCPAC.ROLLBACK_OPTION_VALUE);

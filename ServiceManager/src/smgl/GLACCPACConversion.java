@@ -674,7 +674,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		rsGLFiscalSets.close();
 
-		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL financial statement records into " + sTablename + ".<BR>";
+		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL fiscal set records into " + sTablename + ".<BR>";
 		
 		
 

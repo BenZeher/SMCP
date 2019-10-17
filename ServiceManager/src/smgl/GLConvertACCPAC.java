@@ -13,7 +13,6 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsManageRequestParameters;
-import smap.APConvertACCPACAction;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -101,8 +100,8 @@ public class GLConvertACCPAC extends HttpServlet {
 			out.println("<B>***** NOTE: " + sStatus + "</B><BR>");
 		}
 	    
-		String sResult = (String)CurrentSession.getAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
-		CurrentSession.removeAttribute(APConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
+		String sResult = (String)CurrentSession.getAttribute(GLConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
+		CurrentSession.removeAttribute(GLConvertACCPACAction.SESSION_ATTRIBUTE_RESULT);
 		if (sResult == null){
 			sResult = "";
 		}

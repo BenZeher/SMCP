@@ -42,6 +42,12 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 				);
 				return;
 		}
+		smaction.redirectAction(
+				"", 
+				"", 
+	    		"MESSAGE=Test message."
+			);
+		
 		
     	Connection conn = null;
     	try {
@@ -65,6 +71,9 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	String sResults = "";
     	//System.out.println("[2019289938156] " + "sGLAccount = '" + sGLAccount + "'");
     	//System.out.println("[2019289938346] " + "sFiscalYear = '" + sFiscalYear + "'");
+    	
+    	//Try sending a message back to the calling page here:
+    	
     	
     	long lStartingTimeInMS = System.currentTimeMillis();
     	try {

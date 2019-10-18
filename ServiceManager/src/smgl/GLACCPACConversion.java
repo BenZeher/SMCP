@@ -565,7 +565,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 			"", 
 			sStartingFiscalYear,
 			cnSMCP,
-			true
+			true,
+			false,
+			null
 		);
 
 		//Get the count of financial statement records:

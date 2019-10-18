@@ -2,13 +2,20 @@ package smgl;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import SMDataDefinition.SMTablegloptions;
+import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class GLFinancialDataCheckAction extends HttpServlet{
 	
@@ -32,6 +39,10 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_RECORDS) != null){
 			bUpdateRecords = true;
 		}
+		boolean bCheckAgainstACCPAC = false;
+		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_CHECK_AGAINST_ACCPAC) != null){
+			bCheckAgainstACCPAC = true;
+		}
 		
 		if (request.getParameter(GLFinancialDataCheckSelect.CONFIRM_PROCESS) == null){
 			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
@@ -42,13 +53,11 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 				);
 				return;
 		}
-		smaction.redirectAction(
-				"", 
-				"", 
-	    		"MESSAGE=Test message."
-			);
-		
-		
+
+	    String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+	    String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    				+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
     	Connection conn = null;
     	try {
 			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
@@ -72,15 +81,91 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	//System.out.println("[2019289938156] " + "sGLAccount = '" + sGLAccount + "'");
     	//System.out.println("[2019289938346] " + "sFiscalYear = '" + sFiscalYear + "'");
     	
-    	//Try sending a message back to the calling page here:
-    	
+    	//If the user chose to check against ACCPAC, get an ACCPAC connection here:
+    	Connection cnACCPAC = null;
+    	if (bCheckAgainstACCPAC){
+            String sACCPACDatabaseURL = "";
+            String sACCPACDatabasename = "";
+            String sACCPACDatabaseuser = "";
+            String sACCPACDatabasepw = "";
+            int iACCPACDatabaseType = 0;
+            
+            String SQL = "SELECT * FROM " + SMTablegloptions.TableName;
+            try {
+    			ResultSet rsOptions = clsDatabaseFunctions.openResultSet(
+    					SQL, 
+    					getServletContext(), 
+    					sDBID, 
+    					"MySQL", 
+    					SMUtilities.getFullClassName(this.toString()) + ".doGet - user: " + sUserID
+    					+ " - "
+    					+ sUserFullName
+    					);
+    			if (rsOptions.first()){
+    			    sACCPACDatabaseURL = rsOptions.getString(SMTablegloptions.saccpacdatabaseurl);
+    			    sACCPACDatabasename = rsOptions.getString(SMTablegloptions.saccpacdatabasename);
+    			    sACCPACDatabaseuser = rsOptions.getString(SMTablegloptions.saccpacdatabaseuser);
+    			    sACCPACDatabasepw = rsOptions.getString(SMTablegloptions.saccpacdatabaseuserpw);
+    			    iACCPACDatabaseType = rsOptions.getInt(SMTablegloptions.iaccpacdatabasetype);
+    			}else{
+    				rsOptions.close();
+    				ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426615]");
+    				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to open GL Options table - function cannot run.");
+    				smaction.redirectAction(
+    						"", 
+    						"", 
+    			    		""
+    					);
+    					return;    			}
+    		} catch (SQLException e) {
+    			//Redirect back to calling class:
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426616]");
+				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to open GL Options table - function cannot run.");
+				smaction.redirectAction(
+						"", 
+						"", 
+			    		""
+					);
+					return;  
+    		}
+            
+    		try {
+    			cnACCPAC = getACCPACConnection(
+    					iACCPACDatabaseType,
+    					sACCPACDatabaseURL,
+    					sACCPACDatabasename,
+    					sACCPACDatabaseuser,
+    					sACCPACDatabasepw);
+    		} catch (Exception e) {
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426617]");
+				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to get ACCPAC connection - " + e.getMessage());
+				smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+    		}
+    	}
     	
     	long lStartingTimeInMS = System.currentTimeMillis();
     	try {
-			sResults = dc.processFinancialRecords(sGLAccount, sFiscalYear, conn, bUpdateRecords);
+			sResults = dc.processFinancialRecords(
+				sGLAccount, 
+				sFiscalYear, 
+				conn, 
+				bUpdateRecords, 
+				bCheckAgainstACCPAC,
+				cnACCPAC);
 		} catch (Exception e) {
-			
-			//System.out.println("[2019289941251] " + "financial check error: '" + e.getMessage() + "'.");
+			if (cnACCPAC != null){
+				try {
+					cnACCPAC.close();
+				} catch (SQLException e1) {
+					//Don't need to do anything here....
+				}
+			}
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
 			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
 			smaction.redirectAction(
 					"", 
@@ -93,7 +178,15 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	
     	//return after successful processing:
     	//System.out.println("[2019289940487] " + "sResults = '" + sResults + "'.");
-		sResults += "<B>" + Long.toString((System.currentTimeMillis() - lStartingTimeInMS)/1000L) + "</B> seconds elapsed.<BR>";
+		sResults += "<BR><B>" + Long.toString((System.currentTimeMillis() - lStartingTimeInMS)/1000L) + "</B> seconds elapsed.<BR>";
+		if (cnACCPAC != null){
+			try {
+				cnACCPAC.close();
+			} catch (SQLException e1) {
+				//Don't need to do anything here....
+			}
+		}
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426619]");
     	smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_RESULTS_OBJECT, sResults);
 		smaction.redirectAction(
 				"", 
@@ -102,7 +195,70 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 			);
 		return;
 	}
-
+	private Connection getACCPACConnection(
+			int iACCPACDatabaseType,
+			String sACCPACDatabaseURL,
+			String sACCPACDatabaseName,
+			String sACCPACUserName,
+			String sACCPACPassword
+			) throws Exception{
+		Connection cnACCPAC = null;
+		
+		//If we're reading a Pervasive DB:
+		if (iACCPACDatabaseType == SMTablegloptions.ACCPAC_DATABASE_VERSION_TYPE_PERVASIVE){
+		//Pervasive connection
+			try
+				{
+				cnACCPAC = DriverManager.getConnection("jdbc:pervasive://" + sACCPACDatabaseURL + ":1583/" + sACCPACDatabaseName + "", sACCPACUserName, sACCPACPassword);
+			}catch (Exception localException2) {
+				try {
+					Class.forName("com.pervasive.jdbc.v2.Driver").newInstance();
+					cnACCPAC = DriverManager.getConnection("jdbc:pervasive://" + sACCPACDatabaseURL + ":1583/" + sACCPACDatabaseName + "", sACCPACUserName, sACCPACPassword);
+				} catch (InstantiationException e) {
+					throw new Exception("InstantiationException getting ACCPAC Pervasive connection - " + e.getMessage());
+				} catch (IllegalAccessException e) {
+					throw new Exception("IllegalAccessException getting ACCPAC Pervasive connection - " + e.getMessage());
+				} catch (ClassNotFoundException e) {
+					throw new Exception("ClassNotFoundException getting ACCPAC Pervasive connection - " + e.getMessage());
+				} catch (SQLException e) {
+					throw new Exception("SQLException getting ACCPAC Pervasive connection - " + e.getMessage());
+				}
+			}
+			
+			if (cnACCPAC == null){
+				throw new Exception("Could not get Pervasive connection");
+			}
+		//If we're reading an MS SQL DB:
+		}else{
+			try
+			{
+				cnACCPAC = DriverManager.getConnection("jdbc:microsoft:sqlserver://" + sACCPACDatabaseURL + ":1433;DatabaseName=" + sACCPACDatabaseName, sACCPACUserName, sACCPACPassword);
+			}
+			catch (Exception localException2) {
+				try {
+					//Class.forName("com.microsoft.jdbc.sqlserver.SQLServerDriver").newInstance();
+					//Class.forName("com.microsoft.jdbc.sqlserver.sqlserverdriver").newInstance();
+					Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver").newInstance();
+					//cnGL = DriverManager.getConnection("jdbc:microsoft:sqlserver://" + sGLDatabaseURL + ":1433;DatabaseName=" + sGLDatabaseName, sGLUserName, sGLPassword);
+					cnACCPAC = DriverManager.getConnection("jdbc:sqlserver://" + sACCPACDatabaseURL + ":1433;DatabaseName=" + sACCPACDatabaseName, sACCPACUserName, sACCPACPassword);
+					//String Url = "jdbc:sqlserver://localhost:1433;databaseName=movies";
+			        //Connection connection = DriverManager.getConnection(Url,"sa", "xxxxxxx);
+				} catch (InstantiationException e) {
+					throw new Exception("InstantiationException getting ACCPAC MS SQL connection - " + e.getMessage());
+				} catch (IllegalAccessException e) {
+					throw new Exception("IllegalAccessException getting ACCPAC MS SQL connection - " + e.getMessage());
+				} catch (ClassNotFoundException e) {
+					throw new Exception("ClassNotFoundException getting ACCPAC MS SQL connection - " + e.getMessage());
+				} catch (SQLException e) {
+					throw new Exception("SQLException getting ACCPAC MS SQL connection - " + e.getMessage());
+				}
+			}
+			if (cnACCPAC == null){
+				throw new Exception("Could not get MS SQL connection");
+			}
+		}
+		return cnACCPAC;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

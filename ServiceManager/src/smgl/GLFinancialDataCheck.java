@@ -22,7 +22,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String sAccount,
 		String sStartingFiscalYear,
 		Connection conn,
-		boolean bUpdateRecords
+		boolean bUpdateRecords,
+		boolean bCheckAgainstACCPAC,
+		Connection cnACCPAC
 		) throws Exception{
 		
 		ArrayList<clsFiscalSet>arrFiscalSets = new ArrayList<clsFiscalSet>(0);
@@ -45,9 +47,13 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		
 		if (sStartingFiscalYear.compareToIgnoreCase("") != 0){
-			//We'll get fiscal sets going back two years previous, because we'll need that history for some of the
+			//Unless we're checking against ACCPAC, we'll get fiscal sets going back two years previous, because we'll need that history for some of the
 			// glfinancialstatementdata fields:
-			SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= (" + sStartingFiscalYear + " - 2))";
+			if (bCheckAgainstACCPAC){
+				SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= " + sStartingFiscalYear + ")";
+			}else{
+				SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= (" + sStartingFiscalYear + " - 2))";
+			}
 		}
 		
 		SQL += ")"
@@ -87,6 +93,12 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 
+		//If we are checking against ACCPAC, then do that now, and exit after:
+		if (bCheckAgainstACCPAC){
+			sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC);
+			return sStatusMessages;
+		}
+		
 		//If we are UPDATING records as well as checking, then first make sure we have financial statement records that correspond to ALL the
 		//fiscal sets:
 		if (bUpdateRecords){
@@ -111,6 +123,165 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		return sStatusMessages += "<BR><BR><B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
 	}
 
+	private String checkAgainstACCPAC(
+		ArrayList<clsFiscalSet>arrFiscalSets, 
+		String sStartingFiscalYear, 
+		String sGLAccount,
+		Connection cnSMCP, 
+		Connection cnACCPAC) throws Exception{
+		String sMessages = "";
+		
+		ArrayList<clsFiscalSet>arrACCPACFiscalSets = new ArrayList<clsFiscalSet>(0);
+		
+		//First, load the ACCPAC fiscal sets into the Array:
+		String SQL = "SELECT * FROM GLAFS WHERE ("
+			+ "(FSCSYR >= " + sStartingFiscalYear + ")"
+			;
+			if (sGLAccount.compareToIgnoreCase("") !=0 ){
+				SQL += "AND (ACCTID = '" + sGLAccount + "')";
+			}
+			SQL += ")"
+			+ " ORDER BY ACCTID, FSCSYR";
+		Statement stmtACCPAC = cnACCPAC.createStatement();
+		ResultSet rsACCPACFiscalSets = stmtACCPAC.executeQuery(SQL);
+		try {
+			while (rsACCPACFiscalSets.next()){
+				clsFiscalSet objACCPACFiscal = new clsFiscalSet(
+						rsACCPACFiscalSets.getString("ACCTID").trim(),
+						rsACCPACFiscalSets.getInt("FSCSYR"),
+						rsACCPACFiscalSets.getBigDecimal("OPENBAL"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD1"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD2"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD3"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD4"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD5"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD6"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD7"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD8"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD9"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD10"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD11"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD12"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD13"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD14"),
+						rsACCPACFiscalSets.getBigDecimal("NETPERD15"),
+						0
+					);
+					arrACCPACFiscalSets.add(objACCPACFiscal);
+				
+			}
+			rsACCPACFiscalSets.close();
+		} catch (Exception e) {
+			throw new Exception("Error [2019291154385] " + "reading ACCPAC fiscal sets with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		//Next check it against the SMCP array:
+		//First, see if either array has records that the other doesn't:
+		for (int i = 0; i < arrACCPACFiscalSets.size(); i++){
+			try {
+				@SuppressWarnings("unused")
+				clsFiscalSet fs = getFiscalSetByAccountAndYear(arrACCPACFiscalSets.get(i).m_sAcctID, arrACCPACFiscalSets.get(i).m_ifiscalyear, arrFiscalSets);
+			} catch (Exception e) {
+				sMessages += "<BR>" + e.getMessage() + " - ACCPAC has a fiscal set for account '" + arrACCPACFiscalSets.get(i).m_sAcctID + ", fiscal year " 
+					+ Integer.toString(arrACCPACFiscalSets.get(i).m_ifiscalyear) + " , but SMCP does not.";
+			}
+		}
+		
+		//Now check in the other direction: are there any fiscal sets in SMCP that are not in ACCPAC?
+		for (int i = 0; i < arrFiscalSets.size(); i++){
+			try {
+				@SuppressWarnings("unused")
+				clsFiscalSet fs = getFiscalSetByAccountAndYear(arrFiscalSets.get(i).m_sAcctID, arrFiscalSets.get(i).m_ifiscalyear, arrACCPACFiscalSets);
+			} catch (Exception e) {
+				sMessages += "<BR>" + e.getMessage() + " - SMCP has a fiscal set for account '" + arrFiscalSets.get(i).m_sAcctID + ", fiscal year " 
+					+ Integer.toString(arrFiscalSets.get(i).m_ifiscalyear) + " , but ACCPAC does not.";
+			}
+		}
+		
+		//Now check each matching fiscal set:
+		for (int i = 0; i < arrACCPACFiscalSets.size(); i++){
+			clsFiscalSet fsACCPAC = arrACCPACFiscalSets.get(i);
+			try {
+				@SuppressWarnings("unused")
+				clsFiscalSet fsSMCP = getFiscalSetByAccountAndYear(fsACCPAC.m_sAcctID, fsACCPAC.m_ifiscalyear, arrFiscalSets);
+				
+				//Check each big decimal value:
+				if (fsACCPAC.m_bdnetchangeperiod1.compareTo(fsSMCP.m_bdnetchangeperiod1) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 1 = " + fsACCPAC.m_bdnetchangeperiod1 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod1 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod2.compareTo(fsSMCP.m_bdnetchangeperiod2) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 2 = " + fsACCPAC.m_bdnetchangeperiod2 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod2 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod3.compareTo(fsSMCP.m_bdnetchangeperiod3) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 3 = " + fsACCPAC.m_bdnetchangeperiod3 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod3 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod4.compareTo(fsSMCP.m_bdnetchangeperiod4) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 4 = " + fsACCPAC.m_bdnetchangeperiod4 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod4 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod5.compareTo(fsSMCP.m_bdnetchangeperiod5) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 5 = " + fsACCPAC.m_bdnetchangeperiod5 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod5 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod6.compareTo(fsSMCP.m_bdnetchangeperiod6) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 6 = " + fsACCPAC.m_bdnetchangeperiod6 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod6 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod7.compareTo(fsSMCP.m_bdnetchangeperiod7) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 7 = " + fsACCPAC.m_bdnetchangeperiod7 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod7 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod8.compareTo(fsSMCP.m_bdnetchangeperiod8) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 8 = " + fsACCPAC.m_bdnetchangeperiod8 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod8 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod9.compareTo(fsSMCP.m_bdnetchangeperiod9) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 9 = " + fsACCPAC.m_bdnetchangeperiod9 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod9 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod10.compareTo(fsSMCP.m_bdnetchangeperiod10) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 10 = " + fsACCPAC.m_bdnetchangeperiod10 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod10 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod11.compareTo(fsSMCP.m_bdnetchangeperiod11) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 11 = " + fsACCPAC.m_bdnetchangeperiod11 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod11 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod12.compareTo(fsSMCP.m_bdnetchangeperiod12) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 12 = " + fsACCPAC.m_bdnetchangeperiod12 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod12 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod13.compareTo(fsSMCP.m_bdnetchangeperiod13) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 13 = " + fsACCPAC.m_bdnetchangeperiod13 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod13 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod14.compareTo(fsSMCP.m_bdnetchangeperiod14) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 14 = " + fsACCPAC.m_bdnetchangeperiod14 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod14 + ".";
+				}
+				if (fsACCPAC.m_bdnetchangeperiod15.compareTo(fsSMCP.m_bdnetchangeperiod15) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, period 15 = " + fsACCPAC.m_bdnetchangeperiod15 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod15 + ".";
+				}
+				
+				if (fsACCPAC.m_bdopeningbalance.compareTo(fsSMCP.m_bdopeningbalance) != 0){
+					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + ". fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					+ " net change, opening balance = " + fsACCPAC.m_bdopeningbalance + ", but SMCP has " + fsSMCP.m_bdopeningbalance + ".";
+				}
+			} catch (Exception e) {
+				sMessages += "<BR>" + "[1571430144]" + e.getMessage() + " - Could not read SMCP fiscal set for account '" + arrACCPACFiscalSets.get(i).m_sAcctID + ", fiscal year " 
+					+ Integer.toString(arrACCPACFiscalSets.get(i).m_ifiscalyear) + ".";
+			}
+		}
+		
+		if (sMessages.compareToIgnoreCase("") == 0){
+			sMessages = "<BR>ACCPAC and SMCP fiscal data match.";
+		}
+		return sMessages;
+	}
 	private String insertMissingFinancialRecords(ArrayList<clsFiscalSet>arrFiscalSets, String sStartingFiscalYear, Connection conn) throws Exception{
 		String SQL = "";
 		long lStartingNumberOfRecords = 0L;
@@ -595,6 +766,10 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		public BigDecimal m_bdnetchangeperiod14;
 		public BigDecimal m_bdnetchangeperiod15;
 		public int m_numberofperiods;
+		
+		private clsFiscalSet(){
+			
+		}
 		
 		private clsFiscalSet(
 			String sAccount,

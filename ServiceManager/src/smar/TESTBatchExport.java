@@ -21,6 +21,14 @@ public class TESTBatchExport extends HttpServlet{
 		String sUser = "smuser7sT559";//"smuser7sT559";
 		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
 		
+		//MADG server settings:
+//		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
+//		String sDBID = "servmgrgdr"; //servmgr1 - default
+//		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
+//		String sUser = "smuser7sT559";//"smuser7sT559";
+//		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
+		
+		
 		//OHD Tampa settings:
 		/*
 		sURL = "23.111.150.171";

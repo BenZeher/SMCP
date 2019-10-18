@@ -32,7 +32,6 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
 	public static final String SESSION_WARNING_OBJECT = "GLCHECKFINANCIALWARNING";
 	public static final String SESSION_RESULTS_OBJECT = "GLCHECKFINANCIALRESULTS";
-	private static final String PROCESS_STATUS_LABEL = "PROCESSSTATUSLABEL";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)

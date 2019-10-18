@@ -14,7 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
-import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
@@ -25,7 +24,6 @@ import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDBServerTime;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
-import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
@@ -1406,7 +1404,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(entry.getssourceledgertransactionlink()) + "'" //lsourceledgertransactionlineid
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(entry.getssourceledgertransactionlink()) + "'" //sSourceledgertransactionlink
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference

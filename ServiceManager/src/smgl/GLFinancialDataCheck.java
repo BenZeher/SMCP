@@ -115,6 +115,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String SQL = "";
 		long lStartingNumberOfRecords = 0L;
 		long lEndingNumberOfRecords = 0L;
+		int iBufferSize = 0;
+		final int MAX_BUFFER = 100;
 		
 		try {
 			SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
@@ -128,53 +130,81 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				+ SQL + "'.");
 		}
 		
+		String sInsertBuffer = "";
 		try {
 			for (int iFiscalSetCounter = 0; iFiscalSetCounter < arrFiscalSets.size(); iFiscalSetCounter++){
 				//We only need the fiscal sets from our selected 'starting fiscal year' forward, not the historical ones we
 				//added to the array:
 				if (arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear >= Integer.parseInt(sStartingFiscalYear)){
 					for (int iPeriodCounter = 1; iPeriodCounter < SMTableglfiscalperiods.MAX_NUMBER_OF_EDITABLE_USER_PERIODS; iPeriodCounter++){
+						if (sInsertBuffer.compareToIgnoreCase("") != 0){
+							sInsertBuffer += ",";
+						}
+						sInsertBuffer += "(" 
+							+ Integer.toString(iPeriodCounter)
+							+ ", " + Integer.toString(arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear)
+							+ ", '" + arrFiscalSets.get(iFiscalSetCounter).m_sAcctID + "'"
+							+ ")"
+						;
+
+					}
+					//Add one more for the 'closing period' (period 15):
+					if (sInsertBuffer.compareToIgnoreCase("") != 0){
+						sInsertBuffer += ",";
+					}
+					sInsertBuffer += "(" 
+							+ Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)
+							+ ", " + Integer.toString(arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear)
+							+ ", '" + arrFiscalSets.get(iFiscalSetCounter).m_sAcctID + "'"
+							+ ")"
+						;
+					
+					if (iBufferSize >= MAX_BUFFER){
 						SQL = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 							+ " ("
 							+ SMTableglfinancialstatementdata.ifiscalperiod
 							+ ", " + SMTableglfinancialstatementdata.ifiscalyear
 							+ ", " + SMTableglfinancialstatementdata.sacctid
-							+ ") VALUES ("
-							+ Integer.toString(iPeriodCounter)
-							+ ", " + Integer.toString(arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear)
-							+ ", '" + arrFiscalSets.get(iFiscalSetCounter).m_sAcctID + "'"
-							+ ") ON DUPLICATE KEY UPDATE " + SMTableglfinancialstatementdata.sacctid + " = " + SMTableglfinancialstatementdata.sacctid
+							+ ") VALUES "
+							+ sInsertBuffer
+							+ " ON DUPLICATE KEY UPDATE " + SMTableglfinancialstatementdata.sacctid + " = " + SMTableglfinancialstatementdata.sacctid
 						;
 						try {
 							Statement stmt = conn.createStatement();
 							stmt.execute(SQL);
 						} catch (Exception e) {
-							throw new Exception("Error [2019289127428] " + "Error inserting financial statement record with SQL: '" + SQL + "' - " + e.getMessage());
+							throw new Exception("Error [2019289127429] " + "Error inserting"
+								+ " financial statement record with SQL: '" 
+								+ SQL + "' - " + e.getMessage());
 						}
+						iBufferSize = 0;
+						sInsertBuffer = "";
 					}
-					//Add one more for the 'closing period' (period 15):
-					SQL = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
+					iBufferSize++;
+				}
+			}
+			
+			//If there's anything left in the buffer, so the SQL command for it now:
+			if (iBufferSize > 0){
+				SQL = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 						+ " ("
 						+ SMTableglfinancialstatementdata.ifiscalperiod
 						+ ", " + SMTableglfinancialstatementdata.ifiscalyear
 						+ ", " + SMTableglfinancialstatementdata.sacctid
-						+ ") VALUES ("
-						+ Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)
-						+ ", " + Integer.toString(arrFiscalSets.get(iFiscalSetCounter).m_ifiscalyear)
-						+ ", '" + arrFiscalSets.get(iFiscalSetCounter).m_sAcctID + "'"
-						+ ") ON DUPLICATE KEY UPDATE " + SMTableglfinancialstatementdata.sacctid + " = " + SMTableglfinancialstatementdata.sacctid
+						+ ") VALUES "
+						+ sInsertBuffer
+						+ " ON DUPLICATE KEY UPDATE " + SMTableglfinancialstatementdata.sacctid + " = " + SMTableglfinancialstatementdata.sacctid
 					;
 					try {
 						Statement stmt = conn.createStatement();
 						stmt.execute(SQL);
 					} catch (Exception e) {
-						throw new Exception("Error [2019289127429] " + "Error inserting period "
-							+ Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)
+						throw new Exception("Error [2019289127430] " + "Error inserting"
 							+ " financial statement record with SQL: '" 
 							+ SQL + "' - " + e.getMessage());
 					}
-				}
 			}
+			
 		} catch (Exception e) {
 			throw new Exception("Error [2019289129599] " + "Error inserting financial statement records - " + e.getMessage());
 		}

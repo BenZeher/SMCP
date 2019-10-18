@@ -536,7 +536,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 	public String processGLFinancialData(Connection cnSMCP, String sUser) throws Exception{
 		
 		String sStatus = "";
-		long lStartingTime = System.currentTimeMillis();
 		
 		//First delete any GL financial statement data that may have been added by a previous conversion:
 		String sTablename = SMTableglfinancialstatementdata.TableName;
@@ -549,33 +548,26 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1570825887] - could not delete GL financial statement data using SQL '" + SQL + "' - " + e.getMessage());
 		}	
 				
-		//Next, iterate through the fiscal set data:
-		SQL = "SELECT * from " + SMTableglfiscalsets.TableName
+		//Next, get the earliest year in the fiscal set data:
+		String sStartingFiscalYear = "";
+		SQL = "SELECT"
+			+ " " + SMTableglfiscalsets.ifiscalyear 
+			+ " FROM  " + SMTableglfiscalsets.TableName
 			+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + " ASC";
 		ResultSet rsFiscalSets = clsDatabaseFunctions.openResultSet(SQL, cnSMCP);
-		long lCounter = 0;
-		try {
-			while (rsFiscalSets.next()){
-				//Now update the GL fiscalstatementdata table:
-				GLFinancialDataCheck dc = new GLFinancialDataCheck();
-				dc.processFinancialRecords(
-					rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
-					Integer.toString(rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear)),
-					cnSMCP,
-					true
-				);
-				//GLTransactionBatch.updateFinancialStatementData(
-				//	rsFiscalSets.getString(SMTableglfiscalsets.sAcctID), 
-				//	rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear), 
-				//	cnSMCP
-				//);
-				lCounter++;
-			}
-			rsFiscalSets.close();
-		} catch (Exception e) {
-			throw new Exception("Error [20192841638464] " + "looping through fiscal sets, updating GL financial data records - " + e.getMessage());
+		if (rsFiscalSets.next()){
+			sStartingFiscalYear = Long.toString(rsFiscalSets.getInt(SMTableglfiscalsets.ifiscalyear));
 		}
+		rsFiscalSets.close();
 		
+		GLFinancialDataCheck dc = new GLFinancialDataCheck();
+		dc.processFinancialRecords(
+			"", 
+			sStartingFiscalYear,
+			cnSMCP,
+			true
+		);
+
 		//Get the count of financial statement records:
 		SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
 		long lCount;
@@ -590,10 +582,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [20192841639353] " + "reading record count from " + SMTableglfinancialstatementdata.TableName + " - " + e.getMessage());
 		}
 		
-		long lElapsedTimeInMS = System.currentTimeMillis() - lStartingTime;
-		
-		sStatus +=  "<BR>Processed " + Long.toString(lCounter) + " GL fiscal sets into " + Long.toString(lCount) + " financial statement records"
-			+ " in " + Long.toString(lElapsedTimeInMS) + " seconds.<BR>";
+		sStatus +=  "<BR>Processed GL fiscal sets into " 
+			+ Long.toString(lCount) + " financial statement records.";
 		return sStatus;
 		
 	}

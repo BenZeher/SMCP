@@ -1406,7 +1406,7 @@ public class GLTransactionBatch {
            		+ ", " + line.getsbatchnumber() //loriginalbatchnumber
         		+ ", " + line.getsentrynumber() //loriginalentrynumber
         		+ ", " + line.getslinenumber() //loriginallinenumber
-        		+ ", " + entry.getssourceledgertransactionlink() //lsourceledgertransactionlineid
+        		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(entry.getssourceledgertransactionlink()) + "'" //lsourceledgertransactionlineid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsacctid()) + "'" //sacctid
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(sDescription) + "'" //sdescription
         		+ ", '" + ServletUtilities.clsDatabaseFunctions.FormatSQLStatement(line.getsreference()) + "'" //sreference

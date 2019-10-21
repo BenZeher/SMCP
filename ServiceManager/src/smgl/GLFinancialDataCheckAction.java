@@ -44,15 +44,15 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 			bCheckAgainstACCPAC = true;
 		}
 		
-		if (request.getParameter(GLFinancialDataCheckSelect.CONFIRM_PROCESS) == null){
-			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
-			smaction.redirectAction(
-					"", 
-					"", 
-		    		""
-				);
-				return;
-		}
+//		if (request.getParameter(GLFinancialDataCheckSelect.CONFIRM_PROCESS) == null){
+//			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
+//			smaction.redirectAction(
+//					"", 
+//					"", 
+//		    		""
+//				);
+//				return;
+//		}
 
 	    String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
@@ -156,7 +156,10 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 				conn, 
 				bUpdateRecords, 
 				bCheckAgainstACCPAC,
-				cnACCPAC);
+				cnACCPAC,
+				getServletContext(),
+				smaction.getsDBID()
+				);
 		} catch (Exception e) {
 			if (cnACCPAC != null){
 				try {

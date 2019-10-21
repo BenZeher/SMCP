@@ -1174,7 +1174,7 @@ public class GLTransactionBatch {
     	
     	GLFinancialDataCheck dc = new GLFinancialDataCheck();
 		try {
-			dc.processFinancialRecords(sAccount, Integer.toString(iFiscalYear), conn, true, false, null);
+			dc.processFinancialRecords(sAccount, Integer.toString(iFiscalYear), conn, true, false, null, null, null);
 			//updateFinancialStatementData(
 			//    sAccount,
 			//   iFiscalYear,
@@ -1187,7 +1187,7 @@ public class GLTransactionBatch {
 		//
 		if(bIncomeOrExpenseAccountIsInvolved){
 			try {
-				dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true, false, null);
+				dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true, false, null, null, null);
 				//updateFinancialStatementData(
 				//	sClosingAccount,
 				//    iFiscalYear,

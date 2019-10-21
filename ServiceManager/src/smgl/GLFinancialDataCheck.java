@@ -6,10 +6,13 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import javax.servlet.ServletContext;
+
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class GLFinancialDataCheck extends java.lang.Object{
 	
@@ -24,7 +27,11 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		Connection conn,
 		boolean bUpdateRecords,
 		boolean bCheckAgainstACCPAC,
-		Connection cnACCPAC
+		//The next three are only needed for checking against ACCPAC
+		// - they can be all nulls if we're not doing that.
+		Connection cnACCPAC,
+		ServletContext context,
+		String sDBID
 		) throws Exception{
 		
 		ArrayList<clsFiscalSet>arrFiscalSets = new ArrayList<clsFiscalSet>(0);
@@ -95,7 +102,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 
 		//If we are checking against ACCPAC, then do that now, and exit after:
 		if (bCheckAgainstACCPAC){
-			sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC);
+			sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC, context, sDBID);
 			return sStatusMessages;
 		}
 		
@@ -128,7 +135,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String sStartingFiscalYear, 
 		String sGLAccount,
 		Connection cnSMCP, 
-		Connection cnACCPAC) throws Exception{
+		Connection cnACCPAC,
+		ServletContext context,
+		String sDBID) throws Exception{
 		String sMessages = "";
 		
 		ArrayList<clsFiscalSet>arrACCPACFiscalSets = new ArrayList<clsFiscalSet>(0);
@@ -199,15 +208,27 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		
 		//Now check each matching fiscal set:
+		
+		String sLinkBase = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLCheckTransactionLinesAgainstACCPAC" + "?" 
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				//+ sAdditionalParameters
+				//+ "\">" + sLabel + "</A>\n"
+			;
+		
 		for (int i = 0; i < arrACCPACFiscalSets.size(); i++){
 			clsFiscalSet fsACCPAC = arrACCPACFiscalSets.get(i);
 			try {
-				@SuppressWarnings("unused")
 				clsFiscalSet fsSMCP = getFiscalSetByAccountAndYear(fsACCPAC.m_sAcctID, fsACCPAC.m_ifiscalyear, arrFiscalSets);
 				
 				//Check each big decimal value:
 				if (fsACCPAC.m_bdnetchangeperiod1.compareTo(fsSMCP.m_bdnetchangeperiod1) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=1" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 1 = " + fsACCPAC.m_bdnetchangeperiod1 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod1 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod2.compareTo(fsSMCP.m_bdnetchangeperiod2) != 0){
@@ -243,7 +264,13 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					+ " net change, period 9 = " + fsACCPAC.m_bdnetchangeperiod9 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod9 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod10.compareTo(fsSMCP.m_bdnetchangeperiod10) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" +GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=10" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+						+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 10 = " + fsACCPAC.m_bdnetchangeperiod10 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod10 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod11.compareTo(fsSMCP.m_bdnetchangeperiod11) != 0){

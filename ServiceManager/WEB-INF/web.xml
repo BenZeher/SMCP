@@ -3906,6 +3906,11 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLCheckTransactionLinesAgainstACCPAC</servlet-name>
+        <servlet-class>smgl.GLCheckTransactionLinesAgainstACCPAC</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLClearFiscalDataAction</servlet-name>
         <servlet-class>smgl.GLClearFiscalDataAction</servlet-class>
     </servlet>
@@ -7887,6 +7892,11 @@
    <servlet-mapping>
         <servlet-name>GLAcctSegmentValueSelect</servlet-name>
         <url-pattern>/smgl.GLAcctSegmentValueSelect</url-pattern>
+    </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>GLCheckTransactionLinesAgainstACCPAC</servlet-name>
+        <url-pattern>/smgl.GLCheckTransactionLinesAgainstACCPAC</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

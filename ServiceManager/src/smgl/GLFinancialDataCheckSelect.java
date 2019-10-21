@@ -23,7 +23,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
 	
-	public static final String CONFIRM_PROCESS = "ConfirmProcess";
+	//public static final String CONFIRM_PROCESS = "ConfirmProcess";
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_YEAR_SELECTION = "FISCALYEARSELECTION";
 	public static String PARAM_GL_ACCOUNTS = "GLACCOUNTS";
@@ -184,7 +184,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("<BR>Check to reconcile against ACCPAC fiscal sets: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_CHECK_AGAINST_ACCPAC + "\"><BR>");
 		
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
-    	out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
+    	//out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");
 	    out.println("</BODY></HTML>");
 	}

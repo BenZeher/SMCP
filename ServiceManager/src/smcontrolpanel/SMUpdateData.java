@@ -14709,7 +14709,7 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE `salescontacts` "
 					+ " DROP  INDEX `cus_sal_cont`;"
 				;
-				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

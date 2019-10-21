@@ -106,7 +106,7 @@ public class SMEditBidEntry  extends HttpServlet {
 				request,
 				response,
 				getServletContext(),
-				entry.getObjectName(),
+				entry.getObjectName() + ": " + entry.getlid(),
 				SMUtilities.getFullClassName(this.toString()),
 				"smcontrolpanel.SMEditBidAction",
 				"smcontrolpanel.SMUserLogin",

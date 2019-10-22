@@ -290,17 +290,22 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TD>\n"
 			+ "</TR>\n"
 		;
+		String PO = entry.getsponumber().replace("\"", "&quot;");
 		
 		//Purchase order number:
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>\n";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
-			+ " VALUE=\"" + entry.getsponumber().replace("\"", "&quot;") + "\""
-			+ "SIZE=" + "13"
-			+ "MAXLENGTH= 10"
-			+ "></TD>\n"
-			+ "</TR>\n"
-		;
-		
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"POEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
+				+ " VALUE=\"" + PO + "\""
+				+ "SIZE=" + "13"
+				+ "MAXLENGTH= 10"
+				+ ">";
+		if(PO.compareToIgnoreCase("")!=0) {
+			s+= "&nbsp;<A ID=\"POLink\"  HREF=\"/sm/smic.ICEditPOEdit?lid=" + PO + "&db=" + sm.getsDBID() +"\">View Purchase Order</A>";
+		}
+		s+= "";
+		s+= "</TD>\n"
+				+ "</TR>\n";
+
 		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
 		String sEntryNumber = entry.getlentrynumber().replace("\"", "&quot;");
 		
@@ -420,11 +425,11 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s +=( "function BatchEntry(){\n"
 				+ "\tdocument.getElementById(\"BatchEntryLink\").style.visibility = \"hidden\";\n"
 				+ "}\n");
-		if(sWarning.compareToIgnoreCase("")!=0) {
-			s+= "if (/Warning/.test(window.location.href)) {\n" + 
-					"	document.getElementById('BatchEntryLink').display = 'none';\n" + 
-					"}\n";
-		}
+		
+		s +=( "function POEntry(){\n"
+				+ "\tdocument.getElementById(\"POLink\").style.visibility = \"hidden\";\n"
+				+ "}\n");
+
 		s+="</script>";
 		 
 		 return s;

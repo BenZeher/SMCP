@@ -60,7 +60,7 @@ public class ICEntry extends java.lang.Object {
 	private long m_lTempID;
 	private boolean bDebugMode = false;
 
-	ICEntry(String sBatchNumber, String sEntryNumber) {
+	public ICEntry(String sBatchNumber, String sEntryNumber) {
 		m_lid = -1;
 		sBatchNumber(sBatchNumber);
 		sEntryNumber(sEntryNumber);
@@ -92,7 +92,7 @@ public class ICEntry extends java.lang.Object {
 		LineArray = new ArrayList<ICEntryLine>(0);
 	}
 
-	ICEntry() {
+	public ICEntry() {
 		m_lid = -1;
 		m_lBatchNumber = -1;
 		m_lEntryNumber = -1;

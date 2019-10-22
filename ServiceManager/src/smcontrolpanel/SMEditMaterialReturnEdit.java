@@ -12,7 +12,9 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMMaterialReturn;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablematerialreturns;
+import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsStringFunctions;
 import smap.APVendor;
 
 public class SMEditMaterialReturnEdit  extends HttpServlet {
@@ -69,7 +71,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 	    if (ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0){
 	    	entry.setsvendoracct(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request));
 	    }
-	    
+	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 	    smedit.printHeaderTable();
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    //smedit.getPWOut().println(getJavascript());
@@ -83,8 +85,10 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 	    
 		smedit.getPWOut().println("<BR>");
 		
+		
+		
 	    try {
-			smedit.createEditPage(getEditHTML(smedit, entry), "");
+			smedit.createEditPage(getEditHTML(smedit, entry, sWarning), "");
 		} catch (SQLException e) {
     		String sError = "Could not create edit page - " + e.getMessage();
     		smedit.redirectAction(sError, "", SMMaterialReturn.Paramlid + "=" + entry.getslid());
@@ -92,9 +96,10 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 	    return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, SMMaterialReturn entry) throws SQLException{
-
-		String s = "<TABLE BORDER=1>";
+	private String getEditHTML(SMMasterEditEntry sm, SMMaterialReturn entry, String sWarning) throws SQLException{
+		String s =  "";
+		s = Script(s, sWarning);
+		s += "<TABLE BORDER=1>";
 		String sID = "";
 		if (
 			//If we are NOT adding a new return:
@@ -248,6 +253,10 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
+		
+		//TODO Make Is Credit Not Expected and make further changes. 
+		
+		//To Be Returned
 		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
@@ -259,6 +268,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>\n"
 		;
 		
+		//Vendor
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramsvendoracct + "\""
 			+ " VALUE=\"" + entry.getsvendoracct().replace("\"", "&quot;") + "\""
@@ -291,10 +301,13 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>\n"
 		;
 		
+		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
+		String sEntryNumber = entry.getlentrynumber().replace("\"", "&quot;");
+		
 		//Adjustment Batch Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Batch Number:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
-			+ " VALUE=\"" + entry.getladjustedbatchnumber().replace("\"", "&quot;") + "\""
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
+			+ " VALUE=\"" + sBatchNumber + "\""
 			+ " ID =\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
 			+ " SIZE=" + "13"
 			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.ladjustedbatchnumberlength)
@@ -302,19 +315,25 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		
-		//Entry Number
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Entry Number:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramlentrynumber + "\""
-			+ " VALUE=\"" + entry.getlentrynumber().replace("\"", "&quot;") + "\""
-			+ " ID =\"" + SMMaterialReturn.Paramlentrynumber + "\""
-			+ " SIZE=" + "13"
-			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.lentrynumberlength)
-			+ "></TD>"
-			+ "</TR>"
-		;
-		
-		//Entry Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Entry Amount:"  + " </B></TD>";
+		//TODO add link and Javascript to make link disappear... also make the link
+		//Adjustment Entry Number
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Entry Number:"  + " </B></TD>";
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramlentrynumber + "\""
+				+ " VALUE=\"" + sEntryNumber + "\""
+				+ " ID =\"" + SMMaterialReturn.Paramlentrynumber + "\""
+				+ " SIZE=" + "13"
+				+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.lentrynumberlength) + ">";
+		sBatchNumber = clsStringFunctions.checkStringForNull(sBatchNumber);
+		sEntryNumber = clsStringFunctions.checkStringForNull(sEntryNumber);
+		if((sBatchNumber.compareToIgnoreCase("")!=0) && (sEntryNumber.compareToIgnoreCase("")!=0) && (sBatchNumber.compareToIgnoreCase("0")!=0) && (sEntryNumber.compareToIgnoreCase("0")!=0)) {
+			s+= "&nbsp;<A ID=\"BatchEntryLink\"  HREF=\"/sm/smic.ICEditReceiptEntry?BatchNumber=" + sBatchNumber + "&EntryNumber=" + sEntryNumber + "&db=" + sm.getsDBID() +"\">View Adjusted Batch Entry</A>";
+		}
+		s += "</TD>"
+				+ "</TR>";
+
+		//TODO Change field name in DB
+		//Expected Credit Amount
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Expected Credit Amount:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdentryamount + "\""
 			+ " VALUE=\"" + entry.getbdentryamount().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdentryamount + "\""
@@ -347,7 +366,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 		
 		//Credit Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Amount:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Actual Credit Amount:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
 			+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""
@@ -358,7 +377,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		;
 		
 		//Follow up notes
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Follow up notes</B>:</TD>\n";
+	/*	s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Follow up notes</B>:</TD>\n";
 		s += "<TD>\n"
 			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammfollowupnotes + "\""
 			+ " rows=\"" + "3" + "\""
@@ -368,7 +387,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TEXTAREA>"
 			+ "</TD>\n"
 			+ "</TR>\n"
-		;
+		;*/
 		
 		s += "</TABLE>";
 		return s;
@@ -395,6 +414,22 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		return s;
 	}
 	*/
+	
+	public String Script(String s, String sWarning) {
+		s+= "<script>\n";
+		s +=( "function BatchEntry(){\n"
+				+ "\tdocument.getElementById(\"BatchEntryLink\").style.visibility = \"hidden\";\n"
+				+ "}\n");
+		if(sWarning.compareToIgnoreCase("")!=0) {
+			s+= "if (/Warning/.test(window.location.href)) {\n" + 
+					"	document.getElementById('BatchEntryLink').display = 'none';\n" + 
+					"}\n";
+		}
+		s+="</script>";
+		 
+		 return s;
+	}
+	
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

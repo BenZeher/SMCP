@@ -15,6 +15,7 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsMasterEntry;
 import smap.APVendor;
 import smcontrolpanel.SMMasterEditSelect;
+import smic.ICEntry;
 import smic.ICPOHeader;
 
 public class SMMaterialReturn extends clsMasterEntry{
@@ -263,11 +264,11 @@ public class SMMaterialReturn extends clsMasterEntry{
 		return true;
     }
     
-    public void save_without_data_transaction (ServletContext context, String sDBIB,  String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (ServletContext context, String sDBID,  String sUserID, String sUserFullName) throws Exception{
 
        	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
-    			sDBIB, 
+    			sDBID, 
     			"MySQL", 
     			this.toString() + " - user: " + sUserID + " - "+ sUserFullName
     			);
@@ -277,7 +278,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	}
     	
     	try {
-			save_without_data_transaction (conn, sUserID, sUserFullName);
+			save_without_data_transaction (conn, sUserID, sUserFullName, sDBID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067710]");
 			throw new Exception(e.getMessage());
@@ -285,10 +286,10 @@ public class SMMaterialReturn extends clsMasterEntry{
     	clsDatabaseFunctions.freeConnection(context, conn, "[1547067711]");
     	
     }
-    public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName) throws Exception{
+    public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName, String sDBID) throws Exception{
 
     	try {
-			validate_entry_fields(conn);
+			validate_entry_fields(conn, sDBID);
 		} catch (Exception e1) {
 			throw new Exception (e1.getMessage());
 		}
@@ -525,7 +526,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 		initEntryVariables();
     }
 
-    public void validate_entry_fields (Connection conn) throws Exception{
+    public void validate_entry_fields (Connection conn, String sDBID) throws Exception{
         //Validate the entries here:
     	String sErrors = "";
     	m_slid = m_slid.trim();
@@ -634,16 +635,34 @@ public class SMMaterialReturn extends clsMasterEntry{
         	}
         }
         
-        //Validate the vendor:
-        if (m_svendoracct.compareToIgnoreCase("") != 0){
-        	if (m_svendoracct.compareToIgnoreCase("0") != 0){
-        		APVendor vendor = new APVendor();
-        		vendor.setsvendoracct(m_svendoracct);;
-        		if (!vendor.load(conn)){
-        			sErrors += "Could not load vendor '" + m_svendoracct + "' - " + vendor.getErrorMessages() + ".  ";
-        		}
+        if((m_ladjustedbatchnumber.compareToIgnoreCase("0") == 0 &&  m_lentrynumber.compareToIgnoreCase("0") != 0) || (m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_lentrynumber.compareToIgnoreCase("0") == 0)) {
+        	sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + ".  ";
+        }
+        
+        try {
+        if(m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_lentrynumber.compareToIgnoreCase("0") != 0) {
+        	ICEntry ent = new ICEntry(m_ladjustedbatchnumber,m_lentrynumber);
+        	System.out.println("[2019295133351] " + " Batch# " + m_ladjustedbatchnumber + " Entry #: " +m_lentrynumber );
+        	if(!ent.load(conn)) {
+    			sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + " - " + ent.getErrorMessage() + ".  ";
         	}
         }
+        }catch( Exception e){
+        	throw new Exception( sErrors + " Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + ".  ");
+        }
+        
+        //Validate the vendor:
+
+        	if (m_svendoracct.compareToIgnoreCase("") != 0){
+        		if (m_svendoracct.compareToIgnoreCase("0") != 0){
+        			APVendor vendor = new APVendor();
+        			vendor.setsvendoracct(m_svendoracct);;
+        			if (!vendor.load(conn)){
+        				sErrors += "Could not load vendor '" + m_svendoracct + "' - " + vendor.getErrorMessages() + ".  ";
+        			}
+        		}
+        	}
+
  
         if (
         		(m_itobereturned.compareToIgnoreCase("0") != 0)

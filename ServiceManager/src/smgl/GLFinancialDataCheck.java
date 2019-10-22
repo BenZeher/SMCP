@@ -16,7 +16,6 @@ import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
-import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMUtilities;
 
 public class GLFinancialDataCheck extends java.lang.Object{
@@ -237,35 +236,83 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					+ " net change, period 1 = " + fsACCPAC.m_bdnetchangeperiod1 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod1 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod2.compareTo(fsSMCP.m_bdnetchangeperiod2) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=2" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 2 = " + fsACCPAC.m_bdnetchangeperiod2 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod2 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod3.compareTo(fsSMCP.m_bdnetchangeperiod3) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=3" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 3 = " + fsACCPAC.m_bdnetchangeperiod3 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod3 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod4.compareTo(fsSMCP.m_bdnetchangeperiod4) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=4" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 4 = " + fsACCPAC.m_bdnetchangeperiod4 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod4 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod5.compareTo(fsSMCP.m_bdnetchangeperiod5) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=5" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 5 = " + fsACCPAC.m_bdnetchangeperiod5 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod5 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod6.compareTo(fsSMCP.m_bdnetchangeperiod6) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=6" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 6 = " + fsACCPAC.m_bdnetchangeperiod6 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod6 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod7.compareTo(fsSMCP.m_bdnetchangeperiod7) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=7" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 7 = " + fsACCPAC.m_bdnetchangeperiod7 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod7 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod8.compareTo(fsSMCP.m_bdnetchangeperiod8) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=8" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 8 = " + fsACCPAC.m_bdnetchangeperiod8 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod8 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod9.compareTo(fsSMCP.m_bdnetchangeperiod9) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=9" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 9 = " + fsACCPAC.m_bdnetchangeperiod9 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod9 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod10.compareTo(fsSMCP.m_bdnetchangeperiod10) != 0){
@@ -279,29 +326,59 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					+ " net change, period 10 = " + fsACCPAC.m_bdnetchangeperiod10 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod10 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod11.compareTo(fsSMCP.m_bdnetchangeperiod11) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=11" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 11 = " + fsACCPAC.m_bdnetchangeperiod11 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod11 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod12.compareTo(fsSMCP.m_bdnetchangeperiod12) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=12" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 12 = " + fsACCPAC.m_bdnetchangeperiod12 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod12 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod13.compareTo(fsSMCP.m_bdnetchangeperiod13) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=13" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 13 = " + fsACCPAC.m_bdnetchangeperiod13 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod13 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod14.compareTo(fsSMCP.m_bdnetchangeperiod14) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=14" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 14 = " + fsACCPAC.m_bdnetchangeperiod14 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod14 + ".";
 				}
 				if (fsACCPAC.m_bdnetchangeperiod15.compareTo(fsSMCP.m_bdnetchangeperiod15) != 0){
-					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
+					sMessages += "<BR>" + "ACCPAC account '" 
+							+  sLinkBase 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=15" 
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(fsACCPAC.m_ifiscalyear)
+							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
+							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
+					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
 					+ " net change, period 15 = " + fsACCPAC.m_bdnetchangeperiod15 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod15 + ".";
 				}
 				
 				if (fsACCPAC.m_bdopeningbalance.compareTo(fsSMCP.m_bdopeningbalance) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + ". fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, opening balance = " + fsACCPAC.m_bdopeningbalance + ", but SMCP has " + fsSMCP.m_bdopeningbalance + ".";
+					+ " opening balance = " + fsACCPAC.m_bdopeningbalance + ", but SMCP has " + fsSMCP.m_bdopeningbalance + ".";
 				}
 			} catch (Exception e) {
 				sMessages += "<BR>" + "[1571430144]" + e.getMessage() + " - Could not read SMCP fiscal set for account '" + arrACCPACFiscalSets.get(i).m_sAcctID + ", fiscal year " 
@@ -985,15 +1062,18 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//Now, try to match up the lines, and send them to be printed:
 			
 			//First, start the overall table:
-			out.println("<TABLE WIDTH=100 BORDER=1 >" + "\n");
+			out.println("<TABLE WIDTH=100 style = \""
+				+ " border: 1px solid black; border-collapse:collapse; font-size:small; font-family:Arial; color:black;"
+				+ " \" >" + "\n");
+			
 			out.println("  <TR>" + "\n");
-			out.println("    <TD ALIGN=CENTER COLSPAN=10>" + " <B>ACCPAC TRANSACTIONS</B>"+ "</TD>" + "\n");
-			out.println("    <TD ALIGN=CENTER COLSPAN=9>" + " <B>SMCP TRANSACTIONS</B>"+ "</TD>" + "\n");
+			out.println("    <TD ALIGN=CENTER COLSPAN=9 style = \" color:white; background-color:black; \" >" + " <B>ACCPAC TRANSACTIONS</B>"+ "</TD>" + "\n");
+			out.println("    <TD ALIGN=CENTER COLSPAN=8 style = \" color:white; background-color:black; \" >" + " <B>SMCP TRANSACTIONS</B>"+ "</TD>" + "\n");
 			out.println("  </TR>" + "\n");
 			
 			//Headings:
 			String s = "";
-			s += "  <TR>" + "\n";
+			s += "  <TR style = \" background-color: #C2E0FF; \" >" + "\n";
 
 			s += "    <TD ALIGN=RIGHT>" + "<B>Row</B>" + "</TD>" + "\n";
 			
@@ -1004,8 +1084,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
 			s += "    <TD >" + "<B>Trans Date</B>" + "</TD>" + "\n";
 			s += "    <TD >" + "<B>Post Date</B>" + "</TD>" + "\n";
-			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "<B>Amt</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" border-right-style: solid; padding: 4px; \">" + "<B>Amt</B>" + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + "<B>Batch</B>" + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + "<B>Entry</B>" + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + "<B>Line</B>" + "</TD>" + "\n";
@@ -1013,7 +1092,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
 			s += "    <TD >" + "<B>Trans Date</B>" + "</TD>" + "\n";
 			s += "    <TD >" + "<B>Post Date</B>" + "</TD>" + "\n";
-			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + "<B>Amt</B>" + "</TD>" + "\n";
 			
 			s += "  </TR>" + "\n";
@@ -1021,97 +1099,117 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			
 			displayTransactionLines(arrACCPACLines, arrSMCPLines, out);
 			
+			//Display totals:
+			BigDecimal bdACCPACTotal = new BigDecimal("0.00");
+			BigDecimal bdSMCPTotal = new BigDecimal("0.00");
+			
+			for (int i = 0; i < arrACCPACLines.size(); i++){
+				bdACCPACTotal = bdACCPACTotal.add(arrACCPACLines.get(i).m_bdamt);
+			}
+			for (int i = 0; i < arrSMCPLines.size(); i++){
+				bdSMCPTotal = bdSMCPTotal.add(arrSMCPLines.get(i).m_bdamt);
+			}
+			
+			s = "";
+			s += "  <TR style = \" background-color: #C2E0FF; \" >" + "\n";
+			s += "    <TD ALIGN=RIGHT COLSPAN=9 style = \" border-right-style: solid; padding: 4px; \">" + "<B>"
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdACCPACTotal) + "</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT COLSPAN=8>" + "<B>"
+				+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdSMCPTotal) + "</B>" + "</TD>" + "\n";
+			s += "  </TR>" + "\n";
+			out.println(s);
+			
 			//Close the parent table:
-			out.println("  </TR>" + "\n");
 			out.println("</TABLE>" + "\n");
 			
 			return;
 			
 		}
+
 	private void displayTransactionLines(ArrayList<clsTransactionLine>arrACCPAC, ArrayList<clsTransactionLine>arrSMCP, PrintWriter out) throws Exception{
 		
+		int iACCPACCounter = 0;
+		int iSMCPCounter = 0;
 		int iRowCounter = 0;
-		for (int iACCPACCounter = 0; iACCPACCounter < arrACCPAC.size(); iACCPACCounter++){
-			///Get the next ACCPAC line:
-			clsTransactionLine objACCPACLine = arrACCPAC.get(iACCPACCounter);
-			if (objACCPACLine.bLineIsAlreadyDisplayed){
-				continue;
-			}
-			
-			//Until we've printed this ACCPAC line, keep looping:
-			boolean bThisACCPACLineHasBeenPrinted = false;
-			
-			while(!bThisACCPACLineHasBeenPrinted){
-				//Get the next UNDISPLAYED SMCP line:
-				boolean bAllSMCPLinesHaveBeenPrinted = true;
-				for (int iSMCPCounter = 0; iSMCPCounter < arrSMCP.size(); iSMCPCounter++){
-					clsTransactionLine objSMCPLine = arrSMCP.get(iSMCPCounter);
-					if (objSMCPLine.bLineIsAlreadyDisplayed){
-						continue;
-					}else{
-						bAllSMCPLinesHaveBeenPrinted = false;
-						//Compare the lines:
-						//If the amts are equal, then print both lines:
-						if (objACCPACLine.m_bdamt.compareTo(objSMCPLine.m_bdamt) == 0){
-							iRowCounter++;
-							printPairedLines(objACCPACLine, objSMCPLine, out, iRowCounter);
-							objACCPACLine.bLineIsAlreadyDisplayed = true;
-							objSMCPLine.bLineIsAlreadyDisplayed = true;
-							bThisACCPACLineHasBeenPrinted = true;
-						}
-						
-						//If the ACCPAC line is less, print it and NO SMCP  line:
-						if (objACCPACLine.m_bdamt.compareTo(objSMCPLine.m_bdamt) < 0){
-							iRowCounter++;
-							printPairedLines(objACCPACLine, null, out, iRowCounter);
-							objACCPACLine.bLineIsAlreadyDisplayed = true;
-							bThisACCPACLineHasBeenPrinted = true;
-						}
-						
-						//If the SMCP line is less, print it and NO ACCPAC line:
-						if (objSMCPLine.m_bdamt.compareTo(objACCPACLine.m_bdamt) < 0){
-							iRowCounter++;
-							printPairedLines(null, objSMCPLine, out, iRowCounter);
-							objSMCPLine.bLineIsAlreadyDisplayed = true;
-						}
-					}
-				}
-				
-				//If ALL of the SMCP lines have been printed, then just print this ACCPAC line:
-				if (bAllSMCPLinesHaveBeenPrinted){
-					iRowCounter++;
-					printPairedLines(objACCPACLine, null, out, iRowCounter);
-					objACCPACLine.bLineIsAlreadyDisplayed = true;
-					bThisACCPACLineHasBeenPrinted = true;
-				}
-			}
-		}
-		//If there are any SMCP lines that are not yet displayed, print them now:
-		for (int iSMCPCounter = 0; iSMCPCounter < arrSMCP.size(); iSMCPCounter++){
-			clsTransactionLine objSMCPLine = arrSMCP.get(iSMCPCounter);
-			if (!objSMCPLine.bLineIsAlreadyDisplayed){
-				iRowCounter++;
-				printPairedLines(null, objSMCPLine, out, iRowCounter);
-			}
-		}
 		
+		//Print the line with the lowest amount, then move to the next.
+		//If the two lines match, then print both:
+		while (true){
+			
+			//If we've printed all the ACCPAC lines, then print any remaining SMCP lines:
+			if (iACCPACCounter >= arrACCPAC.size()){
+				iRowCounter++;
+				if(iSMCPCounter < arrSMCP.size()){
+					printPairedLines(null, arrSMCP.get(iSMCPCounter), out, iRowCounter);
+					iSMCPCounter++;
+					continue;
+				}else{
+					break;
+				}
+			}
+			
+			//If we've printed all the SMCP lines, then print any remaining ACCPAC lines:
+			if (iSMCPCounter >= arrSMCP.size()){
+				iRowCounter++;
+				if (iACCPACCounter < arrACCPAC.size()){
+					printPairedLines(arrACCPAC.get(iACCPACCounter), null, out, iRowCounter);
+					iACCPACCounter++;
+					continue;
+				}else{
+					break;
+				}
+			}
+			if ((iACCPACCounter >= arrACCPAC.size()) && (iSMCPCounter >= arrSMCP.size())){
+				break;
+			}
+			
+			//But if we still have ACCPAC lines AND SMCP lines left, work through them:
+			clsTransactionLine lineACCPAC = arrACCPAC.get(iACCPACCounter);
+			clsTransactionLine lineSMCP = arrSMCP.get(iSMCPCounter);
+			
+			//If the lines are equal, print both:
+			if (lineACCPAC.m_bdamt.compareTo(lineSMCP.m_bdamt) == 0){
+				iRowCounter++;
+				printPairedLines(lineACCPAC, lineSMCP, out, iRowCounter);
+				iACCPACCounter++;
+				iSMCPCounter++;
+			}
+			//If the ACCPAC line is less than the SMCP line, print it:
+			if (lineACCPAC.m_bdamt.compareTo(lineSMCP.m_bdamt) < 0){
+				iRowCounter++;
+				printPairedLines(lineACCPAC, null, out, iRowCounter);
+				iACCPACCounter++;
+			}
+			//If the SMCP line is less than the ACCPAC line, print it:
+			if (lineSMCP.m_bdamt.compareTo(lineACCPAC.m_bdamt) < 0){
+				iRowCounter++;
+				printPairedLines(null, lineSMCP, out, iRowCounter);
+				iSMCPCounter++;
+			}
+			if ((iACCPACCounter >= arrACCPAC.size()) && (iSMCPCounter >= arrSMCP.size())){
+				break;
+			}
+		}
 	}
 	
 	private void printPairedLines(clsTransactionLine ACCPACLine, clsTransactionLine SMCPLine, PrintWriter out, int iRowNumber){
 		String s = "";
-		s += "  <TR>" + "\n";
+		String sBackgroundColor = "#DCDCDC";
+		if ((iRowNumber % 2) == 0){
+			sBackgroundColor = "#FFFFFF";
+		}
+		s += "  <TR style = \" background-color:" + sBackgroundColor + "; \" >" + "\n";
 		
 		if (ACCPACLine == null){
-			s += "    <TD ALIGN=RIGHT>" + Integer.toString(iRowNumber) + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;" + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT >" + Integer.toString(iRowNumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \"  >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; border-right-style: solid; padding: 4px; \" >" + "&nbsp;"  + "</TD>" + "\n";
 		}else{
 			s += "    <TD ALIGN=RIGHT>" + Integer.toString(iRowNumber) + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + Long.toString(ACCPACLine.m_loriginalbatchnumber) + "</TD>" + "\n";
@@ -1121,20 +1219,18 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "    <TD >" + ACCPACLine.m_sdescription + "</TD>" + "\n";
 			s += "    <TD >" + ACCPACLine.m_stransactiondate + "</TD>" + "\n";
 			s += "    <TD >" + ACCPACLine.m_spostingdate + "</TD>" + "\n";
-			s += "    <TD >" + ACCPACLine.m_sdescription + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ACCPACLine.m_bdamt) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" border-right-style: solid; padding: 4px; \" >" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ACCPACLine.m_bdamt) + "</TD>" + "\n";
 		}
 		
 		if (SMCPLine == null){
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;" + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
 		}else{
 			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalbatchnumber) + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalentrynumber) + "</TD>" + "\n";
@@ -1143,7 +1239,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "    <TD >" + SMCPLine.m_sdescription + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_stransactiondate + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_spostingdate + "</TD>" + "\n";
-			s += "    <TD >" + SMCPLine.m_sdescription + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt) + "</TD>" + "\n";
 		}
 		
@@ -1169,7 +1264,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		public BigDecimal m_bdamt;
 		public String m_sdescription;
 		public String m_spostingdate;
-		public boolean bLineIsAlreadyDisplayed;
 		
 		private clsTransactionLine(){
 			
@@ -1200,7 +1294,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			m_bdamt = bdAmount;
 			m_sdescription = sDescription;
 			m_spostingdate = sPostingDate;
-			bLineIsAlreadyDisplayed = false;
 		}
 
 	}

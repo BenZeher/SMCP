@@ -54,8 +54,8 @@ public class GLCheckTransactionLinesAgainstACCPAC extends HttpServlet{
 	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    
-	    smaction.getPwOut().println("GL Transactions for GL account '<B>" + sGLAccount 
-	    	+ "</B>', fiscal year <B>" + sFiscalYear + "</B>, period <B>" + sFiscalPeriod + "</B>.");
+	    smaction.getPwOut().println("<BR><I>Listing GL Transactions for GL account '<B>" + sGLAccount 
+	    	+ "</B>', fiscal year <B>" + sFiscalYear + "</B>, period <B>" + sFiscalPeriod + "</B>.</I><BR><BR>");
 	    
     	Connection conn = null;
     	try {

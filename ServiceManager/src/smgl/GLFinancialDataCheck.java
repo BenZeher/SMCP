@@ -1,17 +1,22 @@
 package smgl;
 
+import java.io.PrintWriter;
 import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.ServletContext;
 
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
+import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMUtilities;
 
 public class GLFinancialDataCheck extends java.lang.Object{
@@ -896,5 +901,349 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			default: throw new Exception("Error [20192871143238] " + "no fiscal set field for period " + Integer.toString(iPeriod));
 			}
 		}
+	}
+	
+	public void readMatchingRecordsets(
+			Connection conn, 
+			Connection cnACCPAC, 
+			String sFiscalYear, 
+			String sFiscalPeriod, 
+			String sAccount,
+			PrintWriter out
+			) throws Exception{
+			
+			ArrayList<clsTransactionLine>arrACCPACLines = new ArrayList<clsTransactionLine>(0);
+			ArrayList<clsTransactionLine>arrSMCPLines = new ArrayList<clsTransactionLine>(0);
+			
+			//Load the ACCPAC array:
+			String sACCPACSQL = "SELECT * FROM GLPOST"
+				+ " WHERE ("
+					+ "(ACCTID = '" + sAccount + "')"
+					+ " AND (FISCALYR = " + sFiscalYear + ")"
+					+ " AND (FISCALPERD = " + sFiscalPeriod + ")"
+				+ ")"
+				+ " ORDER BY TRANSAMT, DOCDATE"
+			;
+			try {
+				Statement stmtACCPAC = cnACCPAC.createStatement();
+				ResultSet rsACCPAC = stmtACCPAC.executeQuery(sACCPACSQL);
+				while (rsACCPAC.next()){
+					clsTransactionLine tl = new clsTransactionLine(
+						rsACCPAC.getString("ACCTID").trim(),
+						rsACCPAC.getInt("FISCALYR"),
+						rsACCPAC.getInt("FISCALPERD"),
+						rsACCPAC.getInt("BATCHNBR"),
+						rsACCPAC.getInt("ENTRYNBR"),
+						rsACCPAC.getInt("TRANSNBR"),
+						convertACCPACLongDateToString(rsACCPAC.getLong("DOCDATE"), false),
+						FormatSQLStatement(rsACCPAC.getString("SRCELEDGER").trim()),
+						rsACCPAC.getBigDecimal("TRANSAMT"),
+						FormatSQLStatement(rsACCPAC.getString("JNLDTLDESC").trim()),
+						convertACCPACLongDateToString(rsACCPAC.getLong("JRNLDATE"), false)
+					);
+					arrACCPACLines.add(tl);
+				}
+				rsACCPAC.close();
+			} catch (Exception e) {
+				throw new Exception("Error [20192941534413] " + "Error reading ACCPAC records with SQL: '" + sACCPACSQL + "' - " + e.getMessage() + ".");
+			}
+				
+			//Next load the SMCP array:
+			String sSMCPSQL = "SELECT * FROM " + SMTablegltransactionlines.TableName
+				+ " WHERE ("
+					+ "(" + SMTablegltransactionlines.sacctid + " = '" + sAccount + "')"
+					+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
+					+ " AND (" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
+				+ ")"
+				+ " ORDER BY " + SMTablegltransactionlines.bdamount + ", " + SMTablegltransactionlines.dattransactiondate 
+			;
+			try {
+				ResultSet rsSMCP = ServletUtilities.clsDatabaseFunctions.openResultSet(sSMCPSQL, conn);
+				while (rsSMCP.next()){
+					clsTransactionLine tl = new clsTransactionLine(
+						FormatSQLStatement(rsSMCP.getString(SMTablegltransactionlines.sacctid)),
+						rsSMCP.getInt(SMTablegltransactionlines.ifiscalyear),
+						rsSMCP.getInt(SMTablegltransactionlines.ifiscalperiod),
+						rsSMCP.getLong(SMTablegltransactionlines.loriginalbatchnumber),
+						rsSMCP.getLong(SMTablegltransactionlines.loriginalentrynumber),
+						rsSMCP.getLong(SMTablegltransactionlines.loriginallinenumber),
+						ServletUtilities.clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+							rsSMCP.getString(SMTablegltransactionlines.dattransactiondate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, "00/00/0000"),
+						FormatSQLStatement(rsSMCP.getString(SMTablegltransactionlines.ssourceledger)),
+						rsSMCP.getBigDecimal(SMTablegltransactionlines.bdamount),
+						FormatSQLStatement(rsSMCP.getString(SMTablegltransactionlines.sdescription)),
+						ServletUtilities.clsDateAndTimeConversions.resultsetDateStringToFormattedString(
+							rsSMCP.getString(SMTablegltransactionlines.datpostingdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, "00/00/0000")
+					);
+					arrSMCPLines.add(tl);
+				}
+				rsSMCP.close();
+			} catch (Exception e) {
+				throw new Exception("Error [20192941534414] " + "Error reading SMCP records with SQL: '" + sSMCPSQL + "' - " + e.getMessage() + ".");
+			}
+			
+			//Now, try to match up the lines, and send them to be printed:
+			
+			//First, start the overall table:
+			out.println("<TABLE WIDTH=100 BORDER=1 >" + "\n");
+			out.println("  <TR>" + "\n");
+			out.println("    <TD ALIGN=CENTER COLSPAN=10>" + " <B>ACCPAC TRANSACTIONS</B>"+ "</TD>" + "\n");
+			out.println("    <TD ALIGN=CENTER COLSPAN=9>" + " <B>SMCP TRANSACTIONS</B>"+ "</TD>" + "\n");
+			out.println("  </TR>" + "\n");
+			
+			//Headings:
+			String s = "";
+			s += "  <TR>" + "\n";
+
+			s += "    <TD ALIGN=RIGHT>" + "<B>Row</B>" + "</TD>" + "\n";
+			
+			s += "    <TD ALIGN=RIGHT>" + "<B>Batch</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Entry</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Line</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Src Ledger</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Trans Date</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Post Date</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Amt</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Batch</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Entry</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Line</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Src Ledger</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Trans Date</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Post Date</B>" + "</TD>" + "\n";
+			s += "    <TD >" + "<B>Description</B>" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "<B>Amt</B>" + "</TD>" + "\n";
+			
+			s += "  </TR>" + "\n";
+			out.println(s);
+			
+			displayTransactionLines(arrACCPACLines, arrSMCPLines, out);
+			
+			//Close the parent table:
+			out.println("  </TR>" + "\n");
+			out.println("</TABLE>" + "\n");
+			
+			return;
+			
+		}
+	private void displayTransactionLines(ArrayList<clsTransactionLine>arrACCPAC, ArrayList<clsTransactionLine>arrSMCP, PrintWriter out) throws Exception{
+		
+		int iRowCounter = 0;
+		for (int iACCPACCounter = 0; iACCPACCounter < arrACCPAC.size(); iACCPACCounter++){
+			///Get the next ACCPAC line:
+			clsTransactionLine objACCPACLine = arrACCPAC.get(iACCPACCounter);
+			if (objACCPACLine.bLineIsAlreadyDisplayed){
+				continue;
+			}
+			
+			//Until we've printed this ACCPAC line, keep looping:
+			boolean bThisACCPACLineHasBeenPrinted = false;
+			
+			while(!bThisACCPACLineHasBeenPrinted){
+				//Get the next UNDISPLAYED SMCP line:
+				boolean bAllSMCPLinesHaveBeenPrinted = true;
+				for (int iSMCPCounter = 0; iSMCPCounter < arrSMCP.size(); iSMCPCounter++){
+					clsTransactionLine objSMCPLine = arrSMCP.get(iSMCPCounter);
+					if (objSMCPLine.bLineIsAlreadyDisplayed){
+						continue;
+					}else{
+						bAllSMCPLinesHaveBeenPrinted = false;
+						//Compare the lines:
+						//If the amts are equal, then print both lines:
+						if (objACCPACLine.m_bdamt.compareTo(objSMCPLine.m_bdamt) == 0){
+							iRowCounter++;
+							printPairedLines(objACCPACLine, objSMCPLine, out, iRowCounter);
+							objACCPACLine.bLineIsAlreadyDisplayed = true;
+							objSMCPLine.bLineIsAlreadyDisplayed = true;
+							bThisACCPACLineHasBeenPrinted = true;
+						}
+						
+						//If the ACCPAC line is less, print it and NO SMCP  line:
+						if (objACCPACLine.m_bdamt.compareTo(objSMCPLine.m_bdamt) < 0){
+							iRowCounter++;
+							printPairedLines(objACCPACLine, null, out, iRowCounter);
+							objACCPACLine.bLineIsAlreadyDisplayed = true;
+							bThisACCPACLineHasBeenPrinted = true;
+						}
+						
+						//If the SMCP line is less, print it and NO ACCPAC line:
+						if (objSMCPLine.m_bdamt.compareTo(objACCPACLine.m_bdamt) < 0){
+							iRowCounter++;
+							printPairedLines(null, objSMCPLine, out, iRowCounter);
+							objSMCPLine.bLineIsAlreadyDisplayed = true;
+						}
+					}
+				}
+				
+				//If ALL of the SMCP lines have been printed, then just print this ACCPAC line:
+				if (bAllSMCPLinesHaveBeenPrinted){
+					iRowCounter++;
+					printPairedLines(objACCPACLine, null, out, iRowCounter);
+					objACCPACLine.bLineIsAlreadyDisplayed = true;
+					bThisACCPACLineHasBeenPrinted = true;
+				}
+			}
+		}
+		//If there are any SMCP lines that are not yet displayed, print them now:
+		for (int iSMCPCounter = 0; iSMCPCounter < arrSMCP.size(); iSMCPCounter++){
+			clsTransactionLine objSMCPLine = arrSMCP.get(iSMCPCounter);
+			if (!objSMCPLine.bLineIsAlreadyDisplayed){
+				iRowCounter++;
+				printPairedLines(null, objSMCPLine, out, iRowCounter);
+			}
+		}
+		
+	}
+	
+	private void printPairedLines(clsTransactionLine ACCPACLine, clsTransactionLine SMCPLine, PrintWriter out, int iRowNumber){
+		String s = "";
+		s += "  <TR>" + "\n";
+		
+		if (ACCPACLine == null){
+			s += "    <TD ALIGN=RIGHT>" + Integer.toString(iRowNumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+		}else{
+			s += "    <TD ALIGN=RIGHT>" + Integer.toString(iRowNumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(ACCPACLine.m_loriginalbatchnumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(ACCPACLine.m_loriginalentrynumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(ACCPACLine.m_loriginallinenumber) + "</TD>" + "\n";
+			s += "    <TD >" + ACCPACLine.m_ssourceledger + "</TD>" + "\n";
+			s += "    <TD >" + ACCPACLine.m_sdescription + "</TD>" + "\n";
+			s += "    <TD >" + ACCPACLine.m_stransactiondate + "</TD>" + "\n";
+			s += "    <TD >" + ACCPACLine.m_spostingdate + "</TD>" + "\n";
+			s += "    <TD >" + ACCPACLine.m_sdescription + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(ACCPACLine.m_bdamt) + "</TD>" + "\n";
+		}
+		
+		if (SMCPLine == null){
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;" + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD >" + "&nbsp;"  + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + "&nbsp;"  + "</TD>" + "\n";
+		}else{
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalbatchnumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalentrynumber) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginallinenumber) + "</TD>" + "\n";
+			s += "    <TD >" + SMCPLine.m_ssourceledger + "</TD>" + "\n";
+			s += "    <TD >" + SMCPLine.m_sdescription + "</TD>" + "\n";
+			s += "    <TD >" + SMCPLine.m_stransactiondate + "</TD>" + "\n";
+			s += "    <TD >" + SMCPLine.m_spostingdate + "</TD>" + "\n";
+			s += "    <TD >" + SMCPLine.m_sdescription + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt) + "</TD>" + "\n";
+		}
+		
+		s += "  </TR>" + "\n";
+		out.println(s);
+		
+		
+	}
+	
+	private class clsTransactionLine extends Object{
+		
+		@SuppressWarnings("unused")
+		public String m_sAcctID;
+		@SuppressWarnings("unused")
+		public int m_ifiscalyear;
+		@SuppressWarnings("unused")
+		public int m_ifiscalperiod;
+		public long m_loriginalbatchnumber;
+		public long m_loriginalentrynumber;
+		public long m_loriginallinenumber;
+		public String m_stransactiondate;
+		public String m_ssourceledger;
+		public BigDecimal m_bdamt;
+		public String m_sdescription;
+		public String m_spostingdate;
+		public boolean bLineIsAlreadyDisplayed;
+		
+		private clsTransactionLine(){
+			
+		}
+		
+		private clsTransactionLine(
+			String sAccount,
+			int iFiscalYear,
+			int iFiscalPeriod,
+			long lOriginalBatchNumber,
+			long lOriginalEntryNumber,
+			long lOriginalLineNumber,
+			String sTransactionDate,
+			String sSourceLedger,
+			BigDecimal bdAmount,
+			String sDescription,
+			String sPostingDate
+			){
+			
+			m_sAcctID = sAccount;
+			m_ifiscalyear = iFiscalYear;
+			m_ifiscalperiod = iFiscalPeriod;
+			m_loriginalbatchnumber = lOriginalBatchNumber;
+			m_loriginalentrynumber = lOriginalEntryNumber;
+			m_loriginallinenumber = lOriginalLineNumber;
+			m_stransactiondate = sTransactionDate;
+			m_ssourceledger = sSourceLedger;
+			m_bdamt = bdAmount;
+			m_sdescription = sDescription;
+			m_spostingdate = sPostingDate;
+			bLineIsAlreadyDisplayed = false;
+		}
+
+	}
+	private static String convertACCPACLongDateToString(long lDate, boolean bUseNowForNulls){
+
+		if (lDate == 0L){
+			if (bUseNowForNulls){
+				return now("MM/dd/yyyy");
+			}else{
+				return "00/00/0000";
+			}
+		}
+
+		String sDate = Long.toString(lDate);
+		return sDate.substring(4, 6) + "/" + sDate.substring(6, 8) + "/" + sDate.substring(0, 4);
+	}
+	public static String FormatSQLStatement(String s) {
+
+		if (s != null){
+			s = s.replace("'", "''");
+			s = s.replace("\\", "\\\\");
+			//s = s.replace("\"", "\"\"");
+		}
+
+		return s;
+	}
+	public static String now(String sDateFormat) {
+		Calendar cal = Calendar.getInstance();
+		SimpleDateFormat sdf = new SimpleDateFormat(sDateFormat);
+		return sdf.format(cal.getTime());
+
+		/*
+		 Samples:
+		 System.out.println(DateUtils.now("dd MMMMM yyyy"));
+		 System.out.println(DateUtils.now("yyyyMMdd"));
+		 System.out.println(DateUtils.now("dd.MM.yy"));
+		 System.out.println(DateUtils.now("MM/dd/yy"));
+		 System.out.println(DateUtils.now("yyyy.MM.dd G 'at' hh:mm:ss z"));
+		 System.out.println(DateUtils.now("EEE, MMM d, ''yy"));
+		 System.out.println(DateUtils.now("h:mm a"));
+		 System.out.println(DateUtils.now("H:mm:ss:SSS"));
+		 System.out.println(DateUtils.now("K:mm a,z"));
+		 System.out.println(DateUtils.now("yyyy.MMMMM.dd GGG hh:mm aaa"));
+		 */
 	}
 }

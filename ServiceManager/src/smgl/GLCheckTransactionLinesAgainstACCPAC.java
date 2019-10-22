@@ -2,11 +2,15 @@ package smgl;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -49,6 +53,10 @@ public class GLCheckTransactionLinesAgainstACCPAC extends HttpServlet{
 	    String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    
+	    smaction.getPwOut().println("GL Transactions for GL account '<B>" + sGLAccount 
+	    	+ "</B>', fiscal year <B>" + sFiscalYear + "</B>, period <B>" + sFiscalPeriod + "</B>.");
+	    
     	Connection conn = null;
     	try {
 			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
@@ -116,7 +124,8 @@ public class GLCheckTransactionLinesAgainstACCPAC extends HttpServlet{
  
     	//Read the two recordets here and display them:
     	try {
-			readMatchingRecordsets(conn, cnACCPAC, sFiscalYear, sFiscalPeriod, sGLAccount, smaction);
+    		GLFinancialDataCheck dc = new GLFinancialDataCheck();
+			dc.readMatchingRecordsets(conn, cnACCPAC, sFiscalYear, sFiscalPeriod, sGLAccount, smaction.getPwOut());
 		} catch (Exception e) {
 			smaction.getPwOut().println("<BR><B>Error comparing ACCPAC transactions to SMCP transactions - " + e.getMessage());
 		}
@@ -198,113 +207,9 @@ public class GLCheckTransactionLinesAgainstACCPAC extends HttpServlet{
 		return cnACCPAC;
 	}
 	
-	private void readMatchingRecordsets(
-		Connection conn, 
-		Connection cnACCPAC, 
-		String sFiscalYear, 
-		String sFiscalPeriod, 
-		String sAccount,
-		SMMasterEditAction sm
-		) throws Exception{
-		
-		//First, start the overall table:
-		sm.getPwOut().println("<TABLE WIDTH=100>" + "\n");
-		sm.getPwOut().println("  <TR>" + "\n");
-		
-		//Start the ACCPAC table:
-		sm.getPwOut().println("    <TD>" + "\n");
-		sm.getPwOut().println("      <TABLE WIDTH=100>" + "\n");
-		sm.getPwOut().println("        <TR>" + "\n");
-		sm.getPwOut().println("          <TD>" + " ACCPAC TRANSACTIONS"+ "</TD>" + "\n");
-		
-		//Display the ACCPAC table here:
-		String sACCPACSQL = "SELECT * FROM GLPOST"
-				+ " WHERE ("
-					+ "(ACCTID = '" + sAccount + "')"
-					+ " AND (FISCALYR = " + sFiscalYear + ")"
-					+ " AND (FISCALPERD = " + sFiscalPeriod + ")"
-				+ ")"
-				+ " ORDER BY DOCDATE, TRANSAMT"
-			;
-			try {
-				Statement stmtACCPAC = cnACCPAC.createStatement();
-				ResultSet rsACCPAC = stmtACCPAC.executeQuery(sACCPACSQL);
-				while (rsACCPAC.next()){
-					displayACCPACTransactions(rsACCPAC, sm.getPwOut());
-				}
-				rsACCPAC.close();
-			} catch (Exception e) {
-				throw new Exception("Error [20192941534413] " + "Error reading ACCPAC records with SQL: '" + sACCPACSQL + "' - " + e.getMessage() + ".");
-			}
 
-		//Close the ACCPAC table:
-		sm.getPwOut().println("        </TR>" + "\n");
-		sm.getPwOut().println("      </TABLE>" + "\n");
-		sm.getPwOut().println("    </TD>" + "\n");
-		
-		//Start the SMCP table here:
-		sm.getPwOut().println("    <TD>" + "\n");
-		sm.getPwOut().println("      <TABLE WIDTH=100>" + "\n");
-		sm.getPwOut().println("        <TR>" + "\n");
-		sm.getPwOut().println("          <TD>" + " SMCP TRANSACTIONS"+ "</TD>" + "\n");
-		
-		//Display the SMCP table here:
-		//TODO:
-		String sSMCPSQL = "SELECT * FROM " + SMTablegltransactionlines.TableName
-				+ " WHERE ("
-					+ "(" + SMTablegltransactionlines.sacctid + " = '" + sAccount + "')"
-					+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
-					+ " AND (" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
-				+ ")"
-				+ " ORDER BY " + SMTablegltransactionlines.dattransactiondate + ", " + SMTablegltransactionlines.bdamount
-			;
-			try {
-				ResultSet rsSMCP = ServletUtilities.clsDatabaseFunctions.openResultSet(sSMCPSQL, conn);
-				while (rsSMCP.next()){
-					displaySMCPTransactions(rsSMCP, sm.getPwOut());
-				}
-				rsSMCP.close();
-			} catch (Exception e) {
-				throw new Exception("Error [20192941534414] " + "Error reading SMCP records with SQL: '" + sSMCPSQL + "' - " + e.getMessage() + ".");
-			}
-		
-		//Close the ACCPAC table:
-		sm.getPwOut().println("        </TR>" + "\n");
-		sm.getPwOut().println("      </TABLE>" + "\n");
-		sm.getPwOut().println("    </TD>" + "\n");
-		
-		//Close the parent table:
-		sm.getPwOut().println("  </TR>" + "\n");
-		sm.getPwOut().println("</TABLE>" + "\n");
-		
-		return;
-		
-	}
 	
-	private void displayACCPACTransactions(ResultSet rsACCPAC, PrintWriter out) throws Exception{
-		
-		String s = "";
-		//Print a line in the table with the ACCPAC transaction info:
-		s += "        <TR>" + "\n";
-		
-		s += "          <TD>" + rsACCPAC.getString("ACCTID").trim() + "</TD>";
-		
-		s += "        </TR>" + "\n";
-		out.println(s);
-	}
-	
-	private void displaySMCPTransactions(ResultSet rsSMCP, PrintWriter out) throws Exception{
-		
-		String s = "";
-		//Print a line in the table with the ACCPAC transaction info:
-		s += "        <TR>" + "\n";
-		
-		s += "          <TD>" + rsSMCP.getString(SMTablegltransactionlines.sacctid) + "</TD>";
-		
-		s += "        </TR>" + "\n";
-		out.println(s);
-	}
-	
+
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

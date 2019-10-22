@@ -1,4 +1,5 @@
 package smar;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -72,12 +73,11 @@ public class TESTBatchExport extends HttpServlet{
 		}
 
 		
-		/*********************************************
-
+		/*
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;
 		String sAPDatabaseURL = "madg01.com";
-		String sAPDatabaseName = "comp3";
+		String sAPDatabaseName = "comp1";
 		String sAPUserName = "jdbc";
 		String sAPPassword = "TScb15^%!";
 		try
@@ -146,7 +146,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get MS SQL connection");
 			return;
 		}
-		//*/
+		
 		/*
 		//Test GL Pull:
 		GLExternalPull pull = new GLExternalPull();
@@ -181,6 +181,16 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//Test financial statement integrity:
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
+		try {
+			PrintWriter out = new PrintWriter(System.out);
+			objFinCheck.readMatchingRecordsets(conn, cnAP, "2019", "10", "10101073", out);
+		} catch (Exception e1) {
+			System.out.println(e1.getMessage());
+		}
+		System.out.println("DONE");
+		
+		
+		
 		try {
 			System.out.println(objFinCheck.processFinancialRecords("10101073", "2016", conn, false, true, cnAP, null, null)); // "10101073"
 		} catch (Exception e1) {

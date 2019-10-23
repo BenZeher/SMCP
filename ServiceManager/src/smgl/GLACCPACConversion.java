@@ -149,6 +149,24 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		s+= "GL transactions that were added from ACCPAC have been removed.<BR>";
 		
+		//Here we'll try to add the unique key to the gltransactionlines table JUST IN CASE that hasn't been done yet.
+		//But if it fails, we're not going to hold up the show over it:
+		String sAddingKeyMessage = "Unique key successfully added to " + SMTablegltransactionlines.TableName + ".";
+		SQL = "ALTER TABLE " + SMTablegltransactionlines.TableName + " add unique key batchentrylinekey ("
+			+ SMTablegltransactionlines.loriginalbatchnumber
+			+ ", " + SMTablegltransactionlines.loriginalentrynumber
+			+ ", " + SMTablegltransactionlines.loriginallinenumber
+			+ ")"
+		;
+		try {
+			Statement stmt = cnSMCP.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			//We don't react to this error, since the key might already be on there....
+			sAddingKeyMessage = "Could not add key to " + SMTablegltransactionlines.TableName + " - " + e.getMessage();
+		}
+		s+= sAddingKeyMessage + ".<BR>";
+		
 		//System.out.println("[1553200509] - removed GL transactions.");
 		
 		//Remove any GL transaction batches that we might have been testing:

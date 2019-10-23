@@ -16,7 +16,7 @@ public class SMTablematerialreturns {
 	public static final String mresolutioncomments = "mresolutioncomments";
 	public static final String iworkorderid = "iworkorderid";
 	public static final String strimmedordernumber = "strimmedordernumber";
-	public static final String icreditstatus = "icreditstatus";
+	public static final String icreditnotexpected = "icreditnotexpected";
 	public static final String iponumber = "iponumber";
 	// TJR - Added these two fields 2/22/2019:
 	public static final String itobereturned = "itobereturned";
@@ -44,6 +44,5 @@ public class SMTablematerialreturns {
 	public static final int bdcreditamtlength = 19;
 	
 	public static int STATUS_CREDITNOTEXPECTED = 1;
-	public static int STATUS_CREDITANTICIPATED = 2;
-	public static int STATUS_CREDITRECEIVED = 3;
+
 }

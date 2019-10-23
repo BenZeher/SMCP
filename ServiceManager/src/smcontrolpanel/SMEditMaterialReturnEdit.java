@@ -12,6 +12,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMMaterialReturn;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablematerialreturns;
+import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
@@ -236,34 +237,19 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
-		//TODO Make Is Credit Not Expected and make further changes. 
-		//Status Options
-				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>\n";
+		//TODO NOTES ON CREDIT STATUS
+		//Credit Not Expected
+		//Credit to be expected with have a Expected Credit Amount
+		//Credit received will have Credit Memo Number and Date of Credit Memo
+				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Not Expected?</B></TD>\n";
 				s += "<TD>\n";
 				String sChecked = "";
-				if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITNOTEXPECTED)) == 0){
+				if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
 					sChecked = " checked ";
 				}else{
 					sChecked = "";
 				}
-				s += "<LABEL><INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " >Credit Not Expected</LABEL><BR>";
-				/*if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITANTICIPATED)) == 0){
-					sChecked = " checked ";
-				}else{
-					sChecked = "";
-				}
-				s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITANTICIPATED + sChecked + " >Credit Anticipated<BR>";
-				if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITRECEIVED)) == 0){
-					sChecked = " checked ";
-				}else{
-					sChecked = "";
-				}
-				s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
-				
-				    s+= "</TD>\n"
-				    	+ "</TR>\n"
-				    ;*/
-		
+				s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
 
 		
 		//To Be Returned
@@ -368,6 +354,16 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		
+		if(entry.getdatcreditnotedate().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
+			s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
+					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
+					+ " ID =\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
+					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatcreditnotedate().replace("\"", "&quot;")) + "\""
+					+ " SIZE=" + "13"
+					+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatcreditnotedate, getServletContext()) + "</TD>"
+					+ "</TR>"
+		 		;
+		}else {
 		//Date of Credit Memo:
 		s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
 			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
@@ -377,7 +373,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatcreditnotedate, getServletContext()) + "</TD>"
 			+ "</TR>"
  		;
-		
+		}
 		
 		//Credit Amount
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Actual Credit Amount:"  + " </B></TD>";

@@ -13,6 +13,7 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsMasterEntry;
+import ServletUtilities.clsServletUtilities;
 import smap.APVendor;
 import smcontrolpanel.SMMasterEditSelect;
 import smic.ICEntry;
@@ -35,7 +36,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Parammresolutioncomments = "mresolutioncomments";
 	public static final String Paramiworkorderid = "iworkorderid";
 	public static final String Paramstrimmedordernumber = "strimmedordernumber";
-	public static final String Paramicreditstatus = "icreditstatus";
+	public static final String Paramicreditnotexpected = "icreditnotexpected";
 	public static final String Paramiponumber = "iponumber";
 	public static final String Paramitobereturned = "itobereturned";
 	public static final String Paramsvendoracct = "svendoracct";
@@ -61,7 +62,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_sworkorderid;
 	private String m_strimmedordernumber;
 	private String m_sNewRecord;
-	private String m_screditstatus;
+	private String m_screditnotexpected;
 	private String m_sponumber;
 	private String m_itobereturned;
 	private String m_svendoracct;
@@ -125,8 +126,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramiworkorderid, req).trim();
 		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramstrimmedordernumber, req).trim().replace("&quot;", "\"");
-		m_screditstatus = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramicreditstatus, req).trim().replace("&quot;", "\"");
+		m_screditnotexpected = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramicreditnotexpected, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 			SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
 		
@@ -226,7 +227,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				if (Long.parseLong(m_sworkorderid) < 1){
 					m_sworkorderid = "";
 				}
-				m_screditstatus = Long.toString(rs.getLong(SMTablematerialreturns.icreditstatus));
+				m_screditnotexpected = Long.toString(rs.getLong(SMTablematerialreturns.icreditnotexpected));
 				m_sponumber = Long.toString(rs.getLong(SMTablematerialreturns.iponumber));
 				if (Long.parseLong(m_sponumber) < 1){
 					m_sponumber = "";
@@ -345,7 +346,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	if (sPONumber.compareToIgnoreCase("") == 0){
     		sPONumber = "0";
     	}
-    	String sCreditStatus = getscreditstatus();
+    	String sCreditStatus = getscreditnotexpected();
     	if (sCreditStatus.compareToIgnoreCase("") == 0){
     		sCreditStatus = "0";
     	}
@@ -366,7 +367,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.sdescription
 				+ ", " + SMTablematerialreturns.iworkorderid
 				+ ", " + SMTablematerialreturns.strimmedordernumber
-				+ ", " + SMTablematerialreturns.icreditstatus
+				+ ", " + SMTablematerialreturns.icreditnotexpected
 				+ ", " + SMTablematerialreturns.iponumber
 				+ ", " + SMTablematerialreturns.svendoracct
 				+ ", " + SMTablematerialreturns.ladjustedbatchnumber
@@ -422,7 +423,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.sresolvedbyfullname  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
 			+ ", " + SMTablematerialreturns.iworkorderid + " = " + sWorkOrderID
 			+ ", " + SMTablematerialreturns.strimmedordernumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getstrimmedordernumber().trim()) + "'"
-			+ ", " + SMTablematerialreturns.icreditstatus + " = " + sCreditStatus
+			+ ", " + SMTablematerialreturns.icreditnotexpected + " = " + sCreditStatus
 			+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
 			+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
@@ -655,7 +656,25 @@ public class SMMaterialReturn extends clsMasterEntry{
         		}
         	}
 
+        	m_datcreditnotedate=m_datcreditnotedate.trim();
+            if (m_datcreditnotedate.compareToIgnoreCase("") == 0){
+            	m_datcreditnotedate = EMPTY_DATE_STRING;
+            }
+            
+            if (m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
+            	if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datcreditnotedate)){
+            		sErrors += "Date sent is invalid: '" + m_datcreditnotedate + "'.  ";
+            	}
+            }
+            
+
+        	if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)!=0) && (m_screditmemonumber.compareToIgnoreCase("")==0 )) {
+        		sErrors += "Credit Memo Number needs to be filled out";
+        	}else if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)==0) && (m_screditmemonumber.compareToIgnoreCase("")!=0 )) {
+        		sErrors += "Date of Credit Memo needs to be filled out";
+        	}
  
+        	
         if (
         		(m_itobereturned.compareToIgnoreCase("0") != 0)
         		&& (m_itobereturned.compareToIgnoreCase("1") != 0)
@@ -752,11 +771,11 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setstrimmedordernumber(String strimmedordernumber) {
 		m_strimmedordernumber = strimmedordernumber;
 	}
-	public String getscreditstatus() {
-		return m_screditstatus;
+	public String getscreditnotexpected() {
+		return m_screditnotexpected;
 	}
-	public void setscreditstatus(String screditstatus) {
-		m_screditstatus = screditstatus;
+	public void setscreditnotexpected(String screditnotexpected) {
+		m_screditnotexpected = screditnotexpected;
 	}
 	public String getsponumber() {
 		return m_sponumber;
@@ -848,7 +867,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_sworkorderid = "";
     	m_strimmedordernumber = "";
     	m_sNewRecord = "1";
-    	m_screditstatus = "0";
+    	m_screditnotexpected = "0";
     	m_sponumber = "0";
     	m_itobereturned = "0";
     	m_svendoracct = "";

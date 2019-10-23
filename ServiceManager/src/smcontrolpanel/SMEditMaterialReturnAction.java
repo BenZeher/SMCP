@@ -85,7 +85,7 @@ public class SMEditMaterialReturnAction extends HttpServlet{
 			} catch (Exception e) {
 				smaction.getCurrentSession().setAttribute(SMMaterialReturn.ParamObjectName, entry);
 				smaction.redirectAction(
-					"Could not save: " + e.getMessage() + " [1571767615]", 
+					"[1571767615] Could not save: " + e.getMessage(), 
 					"  ", 
 					SMMaterialReturn.Paramlid + "=" + entry.getslid()
 				);

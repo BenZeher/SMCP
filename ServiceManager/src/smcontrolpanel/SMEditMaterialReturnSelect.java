@@ -87,14 +87,16 @@ public class SMEditMaterialReturnSelect extends HttpServlet {
 				"&SearchFieldAlias2=Initiated by" +
 				"&ResultListField1="  + SMTablematerialreturns.lid +
 				"&ResultHeading1=ID" +
-				"&ResultListField2="  + SMTablematerialreturns.sdescription +
-				"&ResultHeading2=Description" +
-				"&ResultListField3="  + SMTablematerialreturns.datinitiated +
-				"&ResultHeading3=Initiated" +
-				"&ResultListField4="  + SMTablematerialreturns.sinitiatedbyfullname +
-				"&ResultHeading4=Initiated%20By" +
-				"&ResultListField5="  + SMTablematerialreturns.iresolved +
-				"&ResultHeading5=Resolved?" +
+				"&ResultListField2="  + SMTablematerialreturns.strimmedordernumber +
+				"&ResultHeading2=Order Number" +
+				"&ResultListField3="  + SMTablematerialreturns.sdescription +
+				"&ResultHeading3=Description" +
+				"&ResultListField4="  + SMTablematerialreturns.datinitiated +
+				"&ResultHeading4=Initiated" +
+				"&ResultListField5="  + SMTablematerialreturns.sinitiatedbyfullname +
+				"&ResultHeading5=Initiated%20By" +
+				"&ResultListField6="  + SMTablematerialreturns.iresolved +
+				"&ResultHeading6=Resolved?" +
 				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>";
 		return s;

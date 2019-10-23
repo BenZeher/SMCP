@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1420;
+	private static final int m_CurrentDatabaseVersion = 1421;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "10/22/2019";
+	private static final String m_sLastRevisionDate = "10/23/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14776,6 +14776,17 @@ public class SMUpdateData extends java.lang.Object{
 						+ " LEFT JOIN salesperson ON salesperson.sSalespersonCode = bids.ssalespersoncode"  
 						+ " LEFT JOIN users ON salesperson.lSalespersonUserID = users.lid"
 						+ " WHERE mfollwupnotes != ''"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1420:
+				//Added by BJA 10/07/2019
+				SQL = "ALTER TABLE `materialreturns` "
+					+ " DROP  mfollowupnotes"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

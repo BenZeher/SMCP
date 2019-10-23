@@ -14803,17 +14803,7 @@ public class SMUpdateData extends java.lang.Object{
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE
-			
-			//BEGIN CASE:
-			case 1422:
-				//Added by BJA 10/23/2019
-				SQL = "ALTER TABLE materialreturns " + 
-						"ADD datcreditnotedate Date NOT NULL DEFAULT '0000-00-00'";
-				;
-				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
-				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
-			break;	
-			//END CASE
+
 			
 			
 			

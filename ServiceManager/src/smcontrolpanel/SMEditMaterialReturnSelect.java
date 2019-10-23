@@ -85,18 +85,24 @@ public class SMEditMaterialReturnSelect extends HttpServlet {
 				"&SearchFieldAlias1=Description" +
 				"&SearchField2=" + SMTablematerialreturns.sinitiatedbyfullname +
 				"&SearchFieldAlias2=Initiated by" +
+				"&SearchField3=" + SMTablematerialreturns.iponumber +
+				"&SearchFieldAlias3=P.O. Number" +
+				"&SearchField4=" + SMTablematerialreturns.strimmedordernumber +
+				"&SearchFieldAlias4=Order Number" +
 				"&ResultListField1="  + SMTablematerialreturns.lid +
 				"&ResultHeading1=ID" +
-				"&ResultListField2="  + SMTablematerialreturns.strimmedordernumber +
-				"&ResultHeading2=Order Number" +
-				"&ResultListField3="  + SMTablematerialreturns.sdescription +
-				"&ResultHeading3=Description" +
-				"&ResultListField4="  + SMTablematerialreturns.datinitiated +
-				"&ResultHeading4=Initiated" +
-				"&ResultListField5="  + SMTablematerialreturns.sinitiatedbyfullname +
-				"&ResultHeading5=Initiated%20By" +
-				"&ResultListField6="  + SMTablematerialreturns.iresolved +
-				"&ResultHeading6=Resolved?" +
+				"&ResultListField2="  + SMTablematerialreturns.iponumber +
+				"&ResultHeading2=P.O. Number" +
+				"&ResultListField3="  + SMTablematerialreturns.strimmedordernumber +
+				"&ResultHeading3=Order Number" +
+				"&ResultListField4="  + SMTablematerialreturns.sdescription +
+				"&ResultHeading4=Description" +
+				"&ResultListField5="  + SMTablematerialreturns.datinitiated +
+				"&ResultHeading5=Initiated" +
+				"&ResultListField6="  + SMTablematerialreturns.sinitiatedbyfullname +
+				"&ResultHeading6=Initiated%20By" +
+				"&ResultListField7="  + SMTablematerialreturns.iresolved +
+				"&ResultHeading7=Resolved?" +
 				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>";
 		return s;

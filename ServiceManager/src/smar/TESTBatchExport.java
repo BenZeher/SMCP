@@ -26,7 +26,7 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//MADG server settings:
 //		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
-//		String sDBID = "servmgrgdr"; //servmgr1 - default
+//		String sDBID = "servmgr1"; //servmgr1 - default
 //		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
 //		String sUser = "smuser7sT559";//"smuser7sT559";
 //		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
@@ -183,7 +183,7 @@ public class TESTBatchExport extends HttpServlet{
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
 			PrintWriter out = new PrintWriter(System.out);
-			objFinCheck.readMatchingRecordsets(conn, cnAP, "2019", "10", "95100073", out);
+			objFinCheck.readMatchingRecordsets(conn, cnAP, "2019", "10", "7790007304C", out);
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}

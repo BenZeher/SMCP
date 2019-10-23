@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1422;
+	private static final int m_CurrentDatabaseVersion = 1423;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "10/23/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14804,7 +14804,17 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 
-			
+			//BEGIN CASE:
+			case 1422:
+				//Added by TJR 10/23/2019
+				SQL = "alter table gltransactionlines add unique key batchentrylinekey (loriginalbatchnumber, loriginalentrynumber, loriginallinenumber)";
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){
+					//Don't return here - this may fail if this key has already been put on the table manually.
+				}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
 			
 			
 			//End switch:

@@ -757,6 +757,22 @@ public class GLACCPACConversion  extends java.lang.Object{
 		
 		//System.out.println("[1553458951] - ACCPAC GL Transaction count = " + Long.toString(lNumberOfACCPACGLTransactions) + ".");
 		
+		//Now get the highest batchnumber from the table:
+		long lHighestBatchNumber = 0L;
+		ResultSet rsBatchNumbers;
+		try {
+			SQL = "SELECT BATCHNBR FROM GLPOST ORDER BY BATCHNBR DESC";
+			Statement stmtBatchNumbers = cnACCPAC.createStatement();
+			rsBatchNumbers = stmtBatchNumbers.executeQuery(SQL);
+			if (rsBatchNumbers.next()){
+				lHighestBatchNumber = rsBatchNumbers.getLong("BATCHNBR");
+			}
+			rsBatchNumbers.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [1523042193] - reading highest batch nuber from ACCPAC - " + e1.getMessage());
+		}
+		
+		
 		ResultSet rsPostedTransactions;
 		try {
 			SQL = "SELECT * FROM GLPOST";
@@ -773,6 +789,18 @@ public class GLACCPACConversion  extends java.lang.Object{
 		//System.out.println("[1553458952] - going into while loop.");
 		
 		while (rsPostedTransactions.next()){
+			//The batch, entry, and line number combination must be unique - so we need to
+			// make sure that each record gets a unique combination, just in case some
+			// of the ACCPAC records come in with ZEROES for these numbers:
+			
+			//We'll make the batch numbers negative so they'll never conflict with any new records as
+			// users add new batches in the future;
+			long lACCPACBatchNumber = rsPostedTransactions.getLong("BATCHNBR") * -1;
+			
+			if (lACCPACBatchNumber == 0L){
+				lHighestBatchNumber++;
+				lACCPACBatchNumber = lHighestBatchNumber * -1;
+			}
 			if (lInsertCounter == 0){
 				SQLInsert = "INSERT INTO " + sTablename + "("
 					+ SMTablegltransactionlines.bdamount
@@ -804,9 +832,9 @@ public class GLACCPACConversion  extends java.lang.Object{
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("CONSOLIDAT")) //consolidated posting
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALPERD")) //fiscal period
 			+ ", " + Integer.toString(rsPostedTransactions.getInt("FISCALYR")) //fiscal year
-			+ ", " + "0" //original batch number
-			+ ", " + "0" //original entry number
-			+ ", " + "0" //original line number
+			+ ", " + Long.toString(lACCPACBatchNumber) //original batch number
+			+ ", " + Long.toString(rsPostedTransactions.getLong("ENTRYNBR")) //original entry number
+			+ ", " + Long.toString(rsPostedTransactions.getLong("TRANSNBR")) //original line number
 			+ ", 0" //source transaction link
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("ACCTID").trim()) + "'" //sacctid
 			+ ", '" + FormatSQLStatement(rsPostedTransactions.getString("JNLDTLDESC").trim()) + "'" //sdescription

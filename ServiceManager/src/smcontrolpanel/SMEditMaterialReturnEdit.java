@@ -76,6 +76,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 	    smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    //smedit.getPWOut().println(getJavascript());
 	    
+	    
 	    //Add a link to return to the original URL:
 	    if (smedit.getOriginalURL().trim().compareToIgnoreCase("") !=0 ){
 		    smedit.getPWOut().println(
@@ -88,17 +89,24 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 		
 	    try {
-			smedit.createEditPage(getEditHTML(smedit, entry, sWarning), "");
+			smedit.createEditPage(getEditHTML(smedit, entry), "");
 		} catch (SQLException e) {
     		String sError = "Could not create edit page - " + e.getMessage();
     		smedit.redirectAction(sError, "", SMMaterialReturn.Paramlid + "=" + entry.getslid());
 			return;
 		}
+	    if(sWarning.compareToIgnoreCase("")!=0) {
+	    	smedit.getPWOut().println("  <script type=\"text/javascript\">\n" + 
+	    			"    BatchEntry();\n" + 
+	    			"    POEntry();\n" +
+	    			"  </script>\n" + 
+	    			"</body>");
+	    }
 	    return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm, SMMaterialReturn entry, String sWarning) throws SQLException{
+	private String getEditHTML(SMMasterEditEntry sm, SMMaterialReturn entry) throws SQLException{
 		String s =  "";
-		s = Script(s, sWarning);
+		s = Script(s);
 		s += "<TABLE BORDER=1>";
 		String sID = "";
 		if (
@@ -221,40 +229,42 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TD>\n"
 			+ "</TR>\n"
 		;
-		//Status Options
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>\n";
-		s += "<TD>\n";
-		String sChecked = "";
-		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITNOTEXPECTED)) == 0){
-			sChecked = " checked ";
-		}else{
-			sChecked = "";
-		}
-		s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " >Credit Not Expected<BR>";
-		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITANTICIPATED)) == 0){
-			sChecked = " checked ";
-		}else{
-			sChecked = "";
-		}
-		s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITANTICIPATED + sChecked + " >Credit Anticipated<BR>";
-		if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITRECEIVED)) == 0){
-			sChecked = " checked ";
-		}else{
-			sChecked = "";
-		}
-		s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
 		
-		    s+= "</TD>\n"
-		    	+ "</TR>\n"
-		    ;
 
 			//Status Options
 		    
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
-		
 		//TODO Make Is Credit Not Expected and make further changes. 
+		//Status Options
+				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Status:</B></TD>\n";
+				s += "<TD>\n";
+				String sChecked = "";
+				if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITNOTEXPECTED)) == 0){
+					sChecked = " checked ";
+				}else{
+					sChecked = "";
+				}
+				s += "<LABEL><INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " >Credit Not Expected</LABEL><BR>";
+				/*if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITANTICIPATED)) == 0){
+					sChecked = " checked ";
+				}else{
+					sChecked = "";
+				}
+				s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITANTICIPATED + sChecked + " >Credit Anticipated<BR>";
+				if (entry.getscreditstatus().compareToIgnoreCase(Integer.toString(SMTablematerialreturns.STATUS_CREDITRECEIVED)) == 0){
+					sChecked = " checked ";
+				}else{
+					sChecked = "";
+				}
+				s += "<INPUT TYPE='RADIO' NAME='" + SMMaterialReturn.Paramicreditstatus + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITRECEIVED + sChecked + " >Credit Received<BR>";
+				
+				    s+= "</TD>\n"
+				    	+ "</TR>\n"
+				    ;*/
+		
+
 		
 		//To Be Returned
 		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
@@ -286,7 +296,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				sm.getsDBID()
 			)
 			+ "\"> Find vendor</A>"
-			
 			+ "</TD>\n"
 			+ "</TR>\n"
 		;
@@ -296,8 +305,8 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"POEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
 				+ " VALUE=\"" + PO + "\""
-				+ "SIZE=" + "13"
-				+ "MAXLENGTH= 10"
+				+ " SIZE=" + "13"
+				+ " MAXLENGTH=10"
 				+ ">";
 		if(PO.compareToIgnoreCase("")!=0) {
 			s+= "&nbsp;<A ID=\"POLink\"  HREF=\"/sm/smic.ICEditPOEdit?lid=" + PO + "&db=" + sm.getsDBID() +"\">View Purchase Order</A>";
@@ -420,7 +429,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 	}
 	*/
 	
-	public String Script(String s, String sWarning) {
+	public String Script(String s) {
 		s+= "<script>\n";
 		s +=( "function BatchEntry(){\n"
 				+ "\tdocument.getElementById(\"BatchEntryLink\").style.visibility = \"hidden\";\n"

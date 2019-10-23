@@ -45,7 +45,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
 	public static final String Paramscreditmemonumber = "screditmemonumber";
 	public static final String Parambdcreditamt = "bdcreditamt";
-	public static final String Parammfollowupnotes = "mfollowupnotes";
 	
 	
 	private String m_slid;
@@ -72,7 +71,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_datcreditnotedate;
 	private String m_screditmemonumber;
 	private String m_bdcreditamt;
-	private String m_mfollowupnotes;
 	
 	private boolean bDebugMode = false;
 	
@@ -167,8 +165,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdcreditamt, req).compareToIgnoreCase("") == 0){
 			m_bdcreditamt = "0.00";
 		}
-		m_mfollowupnotes = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Parammfollowupnotes, req).trim().replace("&quot;", "\"");
 		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
@@ -251,7 +247,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
-				m_mfollowupnotes = rs.getString(SMTablematerialreturns.mfollowupnotes).trim();
 				rs.close();
 			} else {
 				rs.close();
@@ -380,7 +375,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.datcreditnotedate
 				+ ", " + SMTablematerialreturns.screditmemonumber
 				+ ", " + SMTablematerialreturns.bdcreditamt
-				+ ", " + SMTablematerialreturns.mfollowupnotes
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -409,7 +403,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
-			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
 			+ ")"
 			;
     	}else{
@@ -438,7 +431,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
-			+ ", " + SMTablematerialreturns.mfollowupnotes  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmfollowupnotes().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
@@ -820,12 +812,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setbdcreditamt(String bdcreditamt) {
 		m_bdcreditamt = bdcreditamt;
 	}
-	public String getmfollowupnotes() {
-		return m_mfollowupnotes;
-	}
-	public void setmfollowupnotes(String mfollowupnotes) {
-		m_mfollowupnotes = mfollowupnotes;
-	}
 	
 	public String getObjectName(){
 		return ParamObjectName;
@@ -872,6 +858,5 @@ public class SMMaterialReturn extends clsMasterEntry{
     	 m_datcreditnotedate = EMPTY_DATE_STRING;
     	 m_screditmemonumber = "";
     	 m_bdcreditamt = "0.00";
-    	 m_mfollowupnotes = "";
 	}
 }

@@ -28,7 +28,6 @@ public class SMTablematerialreturns {
 	public static final String datcreditnotedate = "datcreditnotedate";
 	public static final String screditmemonumber = "screditmemonumber";
 	public static final String bdcreditamt = "bdcreditamt";
-	public static final String mfollowupnotes = "mfollowupnotes";
 	
 	//Lengths
 	public static final int linitiatedbyidlength = 11;

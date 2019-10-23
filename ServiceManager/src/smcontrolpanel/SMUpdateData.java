@@ -14784,7 +14784,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 			//BEGIN CASE:
 			case 1420:
-				//Added by BJA 10/07/2019
+				//Added by BJA 10/23/2019
 				SQL = "ALTER TABLE `materialreturns` "
 					+ " DROP  mfollowupnotes"
 				;
@@ -14795,7 +14795,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 			//BEGIN CASE:
 			case 1421:
-				//Added by BJA 10/07/2019
+				//Added by BJA 10/23/2019
 				SQL = "ALTER TABLE materialreturns " + 
 					" Change icreditstatus icreditnotexpected int(11) "
 				;
@@ -14806,7 +14806,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 			//BEGIN CASE:
 			case 1422:
-				//Added by BJA 10/07/2019
+				//Added by BJA 10/23/2019
 				SQL = "ALTER TABLE materialreturns " + 
 						"ADD datcreditnotedate Date NOT NULL DEFAULT '0000-00-00'";
 				;

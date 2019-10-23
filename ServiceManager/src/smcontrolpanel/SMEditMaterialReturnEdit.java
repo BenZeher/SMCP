@@ -237,7 +237,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
-		//TODO NOTES ON CREDIT STATUS
 		//Credit Not Expected
 		//Credit to be expected with have a Expected Credit Amount
 		//Credit received will have Credit Memo Number and Date of Credit Memo
@@ -315,7 +314,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		
-		//TODO add link and Javascript to make link disappear... also make the link
 		//Adjustment Entry Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Entry Number:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramlentrynumber + "\""

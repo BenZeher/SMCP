@@ -156,7 +156,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_datcreditnotedate = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramdatcreditnotedate, req).trim().replace("&quot;", "\"");
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramdatcreditnotedate, req).compareToIgnoreCase("") == 0){
-			m_datcreditnotedate = "0000-00-00";
+			m_datcreditnotedate = clsServletUtilities.EMPTY_DATE_VALUE;
 		}
 		m_screditmemonumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramscreditmemonumber, req).trim().replace("&quot;", "\"");
@@ -662,8 +662,8 @@ public class SMMaterialReturn extends clsMasterEntry{
             }
             
             if (m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
-            	if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy", m_datcreditnotedate)){
-            		sErrors += "Date sent is invalid: '" + m_datcreditnotedate + "'.  ";
+            	if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datcreditnotedate)){
+            		sErrors += "Date of Credit Memo is invalid: '" + m_datcreditnotedate + "'.  ";
             	}
             }
             

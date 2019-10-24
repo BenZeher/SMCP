@@ -327,7 +327,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		sBatchNumber = clsStringFunctions.checkStringForNull(sBatchNumber);
 		sEntryNumber = clsStringFunctions.checkStringForNull(sEntryNumber);
 		if((sBatchNumber.compareToIgnoreCase("")!=0) && (sEntryNumber.compareToIgnoreCase("")!=0) && (sBatchNumber.compareToIgnoreCase("0")!=0) && (sEntryNumber.compareToIgnoreCase("0")!=0)) {
-			s+= "&nbsp;<A ID=\"BatchEntryLink\"  HREF=\"/sm/smic.ICEditReceiptEntry?BatchNumber=" + sBatchNumber + "&EntryNumber=" + sEntryNumber + "&db=" + sm.getsDBID() +"\">View Adjustment Entry</A>";
+			s+= "&nbsp;<A ID=\"BatchEntryLink\"  HREF=\"/sm/smic.ICEditReceiptEntry?BatchNumber=" + sBatchNumber + "&EntryNumber=" + sEntryNumber + "&db=" + sm.getsDBID() +"\">View Adjustment Entry	</A>";
 		}
 		s += "</TD>"
 				+ "</TR>";

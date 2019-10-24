@@ -332,9 +332,9 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TD>"
 				+ "</TR>";
 
-		//Date Return Sent
+		//Date Returned
 		if(entry.getdatreturnsentt().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
-			s += "<TR><TD ALIGN=RIGHT><B>Date of Return Sent::<B></TD>"
+			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsentt().replace("\"", "&quot;")) + "\""
@@ -343,7 +343,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 					+ "</TR>"
 		 		;
 		}else {
-		s += "<TR><TD ALIGN=RIGHT><B>Date Return Sent:<B></TD>"
+		s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
 			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 			+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 			+ " VALUE=\"" + entry.getdatreturnsentt().replace("\"", "&quot;") + "\""

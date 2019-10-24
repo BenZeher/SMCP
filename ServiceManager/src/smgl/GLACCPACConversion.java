@@ -152,10 +152,12 @@ public class GLACCPACConversion  extends java.lang.Object{
 		//Here we'll try to add the unique key to the gltransactionlines table JUST IN CASE that hasn't been done yet.
 		//But if it fails, we're not going to hold up the show over it:
 		String sAddingKeyMessage = "Unique key successfully added to " + SMTablegltransactionlines.TableName + ".";
-		SQL = "ALTER TABLE " + SMTablegltransactionlines.TableName + " add unique key batchentrylinekey ("
+		SQL = "ALTER TABLE " + SMTablegltransactionlines.TableName + " add unique key uniquetransactionkey ("
 			+ SMTablegltransactionlines.loriginalbatchnumber
 			+ ", " + SMTablegltransactionlines.loriginalentrynumber
 			+ ", " + SMTablegltransactionlines.loriginallinenumber
+			+ ", " + SMTablegltransactionlines.ifiscalyear
+			+ ", " + SMTablegltransactionlines.ifiscalperiod
 			+ ")"
 		;
 		try {
@@ -629,6 +631,14 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1528221318] - could not delete GL financial statement data using SQL '" + SQL + "' - " + e.getMessage());
 		}
 		
+		Statement stmtCommit;
+		try {
+			stmtCommit = cnSMCP.createStatement();
+			stmtCommit.execute("SET autocommit=0");
+		} catch (Exception e1) {
+			throw new Exception("Error [20192971431473] " + "setting AUTOCOMMIT to ZERO to insert GL fiscal sets - " + e1.getMessage());
+		}
+		
 		SQL = "SELECT * FROM GLAFS"
 		;
 		Statement stmtACCPAC = cnACCPAC.createStatement();
@@ -685,10 +695,14 @@ public class GLACCPACConversion  extends java.lang.Object{
 			}
 		}
 		rsGLFiscalSets.close();
+		
+		try {
+			stmtCommit.execute("COMMIT");
+		} catch (Exception e) {
+			throw new Exception("Error [20192971432371] " + "commiting GL Fiscal Set Inserts - " + e.getMessage());
+		}
 
 		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL fiscal set records into " + sTablename + ".<BR>";
-		
-		
 
 		return sStatus;
 		
@@ -806,6 +820,15 @@ public class GLACCPACConversion  extends java.lang.Object{
 		String SQLInsert = "";
 		//System.out.println("[1553458952] - going into while loop.");
 		
+		//We turn this off to get faster inserts:
+		Statement stmtCommit;
+		try {
+			stmtCommit = cnSMCP.createStatement();
+			stmtCommit.execute("SET autocommit=0");
+		} catch (Exception e1) {
+			throw new Exception("Error [20192971431453] " + "setting AUTOCOMMIT to ZERO to insert gltransactionlines - " + e1.getMessage());
+		}
+		
 		while (rsPostedTransactions.next()){
 			//The batch, entry, and line number combination must be unique - so we need to
 			// make sure that each record gets a unique combination, just in case some
@@ -876,15 +899,23 @@ public class GLACCPACConversion  extends java.lang.Object{
 				lInsertCounter = 0;
 			}
 			
-			//if ((lCounter % 1000L) == 0){
-			//	System.out.println("[1553459657] - at " + lCounter + " inserts, at " + iNumberOfQueriesPerInsert 
-			//		+ " queries per insert, inserts are taking " + (System.currentTimeMillis() - lStartingTime) + "ms per 1000.");
-			//	lStartingTime = System.currentTimeMillis();
-			//}
+//			if ((lCounter % 1000L) == 0){
+//				System.out.println("[1553459657] - at " + lCounter + " inserts, at " + iNumberOfQueriesPerInsert 
+//					+ " queries per insert, inserts are taking " + (System.currentTimeMillis() - lStartingTime) + "ms per 1000.");
+//				lStartingTime = System.currentTimeMillis();
+//			}
 			
 			lCounter++;
 		}
 		rsPostedTransactions.close();
+		
+		//System.out.println("[2019297133028] " + "Inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
+		try {
+			stmtCommit.execute("COMMIT");
+		} catch (Exception e) {
+			throw new Exception("Error [20192971432321] " + "commiting GL transaction Inserts - " + e.getMessage());
+		}
+		//System.out.println("[2019297133029] " + "Including COMMIT, inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
 
 		sStatus +=  "<BR>ACCPAC has " + Long.toString(lNumberOfACCPACGLTransactions) 
 			+ " posted GL transactions, added " + Long.toString(lCounter) + " GL posted transactions to " + sTablename + "<BR>";

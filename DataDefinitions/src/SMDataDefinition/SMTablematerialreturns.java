@@ -22,12 +22,13 @@ public class SMTablematerialreturns {
 	public static final String itobereturned = "itobereturned";
 	public static final String svendoracct = "svendoracct";
 	// TJR - Added these fields 9/26/2019:
-	public static final String ladjustedbatchnumber = "ladjustedbatchnumber";
-	public static final String lentrynumber = "lentrynumber";
-	public static final String bdentryamount = "bdentryamount";
+	public static final String ladjustedbatchnumber = "ladjustedbatchnumber"; //AdjustedBatch#
+	public static final String lentrynumber = "lentrynumber"; //Adjusted Entry Number 
+	public static final String bdentryamount = "bdentryamount"; //Expected Credit Amount
 	public static final String datcreditnotedate = "datcreditnotedate";
 	public static final String screditmemonumber = "screditmemonumber";
-	public static final String bdcreditamt = "bdcreditamt";
+	public static final String bdcreditamt = "bdcreditamt"; //Actual Credit Amount
+	public static final String datreturnsent = "datreturnsent";
 	
 	//Lengths
 	public static final int linitiatedbyidlength = 11;

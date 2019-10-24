@@ -46,6 +46,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
 	public static final String Paramscreditmemonumber = "screditmemonumber";
 	public static final String Parambdcreditamt = "bdcreditamt";
+	public static final String Paramdatreturnsent = "datreturnsent";
 	
 	
 	private String m_slid;
@@ -72,6 +73,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_datcreditnotedate;
 	private String m_screditmemonumber;
 	private String m_bdcreditamt;
+	private String m_datreturnsent;
 	
 	private boolean bDebugMode = false;
 	
@@ -167,6 +169,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 			m_bdcreditamt = "0.00";
 		}
 		
+		m_datreturnsent = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramdatreturnsent, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramdatreturnsent, req).compareToIgnoreCase("") == 0){
+			m_datreturnsent = clsServletUtilities.EMPTY_DATE_VALUE;
+		}
+		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
     }
     public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
@@ -248,6 +256,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
+				m_datreturnsent = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datreturnsent));
 				rs.close();
 			} else {
 				rs.close();
@@ -376,6 +385,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.datcreditnotedate
 				+ ", " + SMTablematerialreturns.screditmemonumber
 				+ ", " + SMTablematerialreturns.bdcreditamt
+				+ ", " + SMTablematerialreturns.datreturnsent
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -404,6 +414,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
+			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatreturnsentt().trim()) + "'"
 			+ ")"
 			;
     	}else{
@@ -432,6 +443,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
+			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsentt().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
@@ -467,7 +479,9 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}
     }
 
-    public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
+
+
+	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	
     	Connection conn = clsDatabaseFunctions.getConnection(
     			context, 
@@ -667,6 +681,17 @@ public class SMMaterialReturn extends clsMasterEntry{
             	}
             }
             
+            m_datreturnsent=m_datreturnsent.trim();
+            if (m_datreturnsent.compareToIgnoreCase("") == 0){
+            	m_datreturnsent = EMPTY_DATE_STRING;
+            }
+            
+            if (m_datreturnsent.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
+            	if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datreturnsent)){
+            		sErrors += "Date of Return Sent is invalid: '" + m_datreturnsent + "'.  ";
+            	}
+            }
+            
 
         	if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)!=0) && (m_screditmemonumber.compareToIgnoreCase("")==0 )) {
         		sErrors += "Credit Memo Number needs to be filled out";
@@ -832,6 +857,14 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_bdcreditamt = bdcreditamt;
 	}
 	
+	public String getdatreturnsentt() {
+		return m_datreturnsent;
+	}
+	public void setdatreturnsent(String datreturnsent) {
+		m_datreturnsent = datreturnsent;
+	}
+    
+	
 	public String getObjectName(){
 		return ParamObjectName;
 	}
@@ -877,5 +910,6 @@ public class SMMaterialReturn extends clsMasterEntry{
     	 m_datcreditnotedate = EMPTY_DATE_STRING;
     	 m_screditmemonumber = "";
     	 m_bdcreditamt = "0.00";
+    	 m_datreturnsent = EMPTY_DATE_STRING;
 	}
 }

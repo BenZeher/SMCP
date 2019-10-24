@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1423;
+	private static final int m_CurrentDatabaseVersion = 1424;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "10/23/2019";
+	private static final String m_sLastRevisionDate = "10/24/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14812,6 +14812,17 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){
 					//Don't return here - this may fail if this key has already been put on the table manually.
 				}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1423:
+				//Added by BJA 10/24/2019
+				SQL = "ALTER TABLE `materialreturns` "
+						+ " ADD datreturnsent Date NOT NULL DEFAULT '0000-00-00'"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

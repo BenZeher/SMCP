@@ -299,7 +299,10 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s+= "";
 		s+= "</TD>\n"
 				+ "</TR>\n";
+		
+		
 
+		
 		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
 		String sEntryNumber = entry.getlentrynumber().replace("\"", "&quot;");
 		
@@ -329,6 +332,27 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TD>"
 				+ "</TR>";
 
+		//Date Return Sent
+		if(entry.getdatreturnsentt().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
+			s += "<TR><TD ALIGN=RIGHT><B>Date of Return Sent::<B></TD>"
+					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsentt().replace("\"", "&quot;")) + "\""
+					+ " SIZE=" + "13"
+					+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
+					+ "</TR>"
+		 		;
+		}else {
+		s += "<TR><TD ALIGN=RIGHT><B>Date Return Sent:<B></TD>"
+			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+			+ " VALUE=\"" + entry.getdatreturnsentt().replace("\"", "&quot;") + "\""
+			+ " SIZE=" + "13"
+			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
+			+ "</TR>"
+ 		;
+		}
+		
 		//TODO Change field name in DB
 		//Expected Credit Amount
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Expected Credit Amount:"  + " </B></TD>";
@@ -352,6 +376,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "</TR>"
 		;
 		
+		//Date of Credit Memo:
 		if(entry.getdatcreditnotedate().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
 			s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
@@ -362,7 +387,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 					+ "</TR>"
 		 		;
 		}else {
-		//Date of Credit Memo:
 		s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
 			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
 			+ " ID =\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
@@ -374,7 +398,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		
 		//Credit Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Actual Credit Amount:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Amount:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
 			+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""

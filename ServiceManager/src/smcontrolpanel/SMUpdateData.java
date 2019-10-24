@@ -14843,9 +14843,7 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "alter table gltransactionlines add unique key uniquetransactionkey ("
 					+ "loriginalbatchnumber, loriginalentrynumber, loriginallinenumber, ifiscalyear, ifiscalperiod)";
 				;
-				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){
-					//Don't return here - this may fail if this key has already been put on the table manually.
-				}
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

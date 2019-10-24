@@ -1,16 +1,10 @@
 package smgl;
 
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -18,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTablegloptions;
-import SMDataDefinition.SMTablegltransactionlines;
 import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
@@ -125,7 +118,16 @@ public class GLCheckTransactionLinesAgainstACCPAC extends HttpServlet{
     	//Read the two recordets here and display them:
     	try {
     		GLFinancialDataCheck dc = new GLFinancialDataCheck();
-			dc.readMatchingRecordsets(conn, cnACCPAC, sFiscalYear, sFiscalPeriod, sGLAccount, smaction.getPwOut());
+			dc.readMatchingRecordsets(
+				conn, 
+				cnACCPAC, 
+				sFiscalYear, 
+				sFiscalPeriod, 
+				sGLAccount, 
+				smaction.getPwOut(),
+				getServletContext(),
+				sDBID
+			);
 		} catch (Exception e) {
 			smaction.getPwOut().println("<BR><B>Error comparing ACCPAC transactions to SMCP transactions - " + e.getMessage());
 		}

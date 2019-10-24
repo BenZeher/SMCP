@@ -1002,7 +1002,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			String sFiscalYear, 
 			String sFiscalPeriod, 
 			String sAccount,
-			PrintWriter out
+			PrintWriter out,
+			ServletContext context,
+			String sDBID
 			) throws Exception{
 			
 			ArrayList<clsTransactionLine>arrACCPACLines = new ArrayList<clsTransactionLine>(0);
@@ -1032,7 +1034,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						FormatSQLStatement(rsACCPAC.getString("SRCELEDGER").trim()),
 						rsACCPAC.getBigDecimal("TRANSAMT"),
 						FormatSQLStatement(rsACCPAC.getString("JNLDTLDESC").trim()),
-						convertACCPACLongDateToString(rsACCPAC.getLong("JRNLDATE"), false)
+						convertACCPACLongDateToString(rsACCPAC.getLong("JRNLDATE"), false),
+						""
 					);
 					arrACCPACLines.add(tl);
 				}
@@ -1066,7 +1069,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						rsSMCP.getBigDecimal(SMTablegltransactionlines.bdamount),
 						FormatSQLStatement(rsSMCP.getString(SMTablegltransactionlines.sdescription)),
 						ServletUtilities.clsDateAndTimeConversions.resultsetDateStringToFormattedString(
-							rsSMCP.getString(SMTablegltransactionlines.datpostingdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, "00/00/0000")
+							rsSMCP.getString(SMTablegltransactionlines.datpostingdate), SMUtilities.DATE_FORMAT_FOR_DISPLAY, "00/00/0000"),
+						FormatSQLStatement(rsSMCP.getString(SMTablegltransactionlines.sSourceledgertransactionlink))
 					);
 					arrSMCPLines.add(tl);
 				}
@@ -1113,7 +1117,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "  </TR>" + "\n";
 			out.println(s);
 			
-			displayTransactionLines(arrACCPACLines, arrSMCPLines, out);
+			displayTransactionLines(arrACCPACLines, arrSMCPLines, out, context, sDBID);
 			
 			//Display totals:
 			BigDecimal bdACCPACTotal = new BigDecimal("0.00");
@@ -1142,7 +1146,13 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			
 		}
 
-	private void displayTransactionLines(ArrayList<clsTransactionLine>arrACCPAC, ArrayList<clsTransactionLine>arrSMCP, PrintWriter out) throws Exception{
+	private void displayTransactionLines(
+		ArrayList<clsTransactionLine>arrACCPAC
+		, ArrayList<clsTransactionLine>arrSMCP
+		, PrintWriter out
+		, ServletContext context
+		, String sDBID
+		) throws Exception{
 		
 		int iACCPACCounter = 0;
 		int iSMCPCounter = 0;
@@ -1156,7 +1166,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			if (iACCPACCounter >= arrACCPAC.size()){
 				iRowCounter++;
 				if(iSMCPCounter < arrSMCP.size()){
-					printPairedLines(null, arrSMCP.get(iSMCPCounter), out, iRowCounter);
+					printPairedLines(null, arrSMCP.get(iSMCPCounter), out, iRowCounter, context, sDBID);
 					iSMCPCounter++;
 					continue;
 				}else{
@@ -1168,7 +1178,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			if (iSMCPCounter >= arrSMCP.size()){
 				iRowCounter++;
 				if (iACCPACCounter < arrACCPAC.size()){
-					printPairedLines(arrACCPAC.get(iACCPACCounter), null, out, iRowCounter);
+					printPairedLines(arrACCPAC.get(iACCPACCounter), null, out, iRowCounter, context, sDBID);
 					iACCPACCounter++;
 					continue;
 				}else{
@@ -1186,20 +1196,20 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//If the lines are equal, print both:
 			if (lineACCPAC.m_bdamt.compareTo(lineSMCP.m_bdamt) == 0){
 				iRowCounter++;
-				printPairedLines(lineACCPAC, lineSMCP, out, iRowCounter);
+				printPairedLines(lineACCPAC, lineSMCP, out, iRowCounter, context, sDBID);
 				iACCPACCounter++;
 				iSMCPCounter++;
 			}
 			//If the ACCPAC line is less than the SMCP line, print it:
 			if (lineACCPAC.m_bdamt.compareTo(lineSMCP.m_bdamt) < 0){
 				iRowCounter++;
-				printPairedLines(lineACCPAC, null, out, iRowCounter);
+				printPairedLines(lineACCPAC, null, out, iRowCounter, context, sDBID);
 				iACCPACCounter++;
 			}
 			//If the SMCP line is less than the ACCPAC line, print it:
 			if (lineSMCP.m_bdamt.compareTo(lineACCPAC.m_bdamt) < 0){
 				iRowCounter++;
-				printPairedLines(null, lineSMCP, out, iRowCounter);
+				printPairedLines(null, lineSMCP, out, iRowCounter, context, sDBID);
 				iSMCPCounter++;
 			}
 			if ((iACCPACCounter >= arrACCPAC.size()) && (iSMCPCounter >= arrSMCP.size())){
@@ -1208,7 +1218,14 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 	}
 	
-	private void printPairedLines(clsTransactionLine ACCPACLine, clsTransactionLine SMCPLine, PrintWriter out, int iRowNumber){
+	private void printPairedLines(
+		clsTransactionLine ACCPACLine
+		, clsTransactionLine SMCPLine
+		, PrintWriter out
+		, int iRowNumber
+		, ServletContext context
+		, String sDBID
+		){
 		String s = "";
 		String sBackgroundColor = "#DCDCDC";
 		if ((iRowNumber % 2) == 0){
@@ -1248,14 +1265,36 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			s += "    <TD style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
 			s += "    <TD ALIGN=RIGHT style = \" background-color:red; \" >" + "&nbsp;"  + "</TD>" + "\n";
 		}else{
-			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalbatchnumber) + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginalentrynumber) + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + Long.toString(SMCPLine.m_loriginallinenumber) + "</TD>" + "\n";
+			String sTransactionLink;
+			try {
+				sTransactionLink = GLTransactionLinks.getSubledgerTransactionLink(
+					SMCPLine.m_ssourceledger, 
+					SMCPLine.m_ssourceledgertransactionID, 
+					context, 
+					sDBID, 
+					ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt)
+				);
+			} catch (Exception e) {
+				//Just skip the link in case of error:
+				sTransactionLink = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt);
+			}
+			String sBatchnumber = Long.toString(SMCPLine.m_loriginalbatchnumber);
+			String sEntrynumber = Long.toString(SMCPLine.m_loriginalentrynumber);
+			String sLinenumber = Long.toString(SMCPLine.m_loriginallinenumber);
+			if (SMCPLine.m_loriginalbatchnumber < 0L){
+				sBatchnumber = "0";
+				sEntrynumber = "0";
+				sLinenumber = "0";
+				sTransactionLink = ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt);
+			}
+			s += "    <TD ALIGN=RIGHT>" + sBatchnumber + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + sEntrynumber + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + sLinenumber + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_ssourceledger + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_sdescription + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_stransactiondate + "</TD>" + "\n";
 			s += "    <TD >" + SMCPLine.m_spostingdate + "</TD>" + "\n";
-			s += "    <TD ALIGN=RIGHT>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(SMCPLine.m_bdamt) + "</TD>" + "\n";
+			s += "    <TD ALIGN=RIGHT>" + sTransactionLink + "</TD>" + "\n";
 		}
 		
 		s += "  </TR>" + "\n";
@@ -1280,6 +1319,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		public BigDecimal m_bdamt;
 		public String m_sdescription;
 		public String m_spostingdate;
+		public String m_ssourceledgertransactionID;
 		
 		private clsTransactionLine(){
 			
@@ -1296,7 +1336,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			String sSourceLedger,
 			BigDecimal bdAmount,
 			String sDescription,
-			String sPostingDate
+			String sPostingDate,
+			String sSourceLedgerTransactionID
 			){
 			
 			m_sAcctID = sAccount;
@@ -1310,6 +1351,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			m_bdamt = bdAmount;
 			m_sdescription = sDescription;
 			m_spostingdate = sPostingDate;
+			m_ssourceledgertransactionID = sSourceLedgerTransactionID;
 		}
 
 	}

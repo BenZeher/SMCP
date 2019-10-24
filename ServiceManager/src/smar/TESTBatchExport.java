@@ -183,7 +183,7 @@ public class TESTBatchExport extends HttpServlet{
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
 			PrintWriter out = new PrintWriter(System.out);
-			objFinCheck.readMatchingRecordsets(conn, cnAP, "2019", "10", "7790007304C", out);
+			objFinCheck.readMatchingRecordsets(conn, cnAP, "2019", "10", "7790007304C", out, null, "servmgr1");
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}

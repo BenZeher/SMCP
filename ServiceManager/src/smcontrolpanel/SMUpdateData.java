@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1424;
+	private static final int m_CurrentDatabaseVersion = 1426;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "10/24/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
@@ -14823,6 +14823,29 @@ public class SMUpdateData extends java.lang.Object{
 						+ " ADD datreturnsent Date NOT NULL DEFAULT '0000-00-00'"
 						;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1424:
+				//Added by TJR 10/24/2019
+				SQL = "ALTER TABLE `gltransactionlines` DROP KEY batchentrylinekey"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1425:
+				//Added by TJR 10/24/2019
+				SQL = "alter table gltransactionlines add unique key uniquetransactionkey ("
+					+ "loriginalbatchnumber, loriginalentrynumber, loriginallinenumber, ifiscalyear, ifiscalperiod)";
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){
+					//Don't return here - this may fail if this key has already been put on the table manually.
+				}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
 			//END CASE

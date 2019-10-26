@@ -411,13 +411,13 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		
 		//We turn this off to get faster inserts:
-		Statement stmtCommit;
-		try {
-			stmtCommit = conn.createStatement();
-			stmtCommit.execute("SET autocommit=0");
-		} catch (Exception e1) {
-			throw new Exception("Error [20192971431463] " + "setting AUTOCOMMIT to ZERO to insert glfinancial statement data - " + e1.getMessage());
-		}
+//		Statement stmtCommit;
+//		try {
+//			stmtCommit = conn.createStatement();
+//			stmtCommit.execute("SET autocommit=0");
+//		} catch (Exception e1) {
+//			throw new Exception("Error [20192971431463] " + "setting AUTOCOMMIT to ZERO to insert glfinancial statement data - " + e1.getMessage());
+//		}
 		
 		String sInsertBuffer = "";
 		try {
@@ -462,6 +462,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							Statement stmt = conn.createStatement();
 							stmt.execute(SQL);
 						} catch (Exception e) {
+							//stmtCommit.execute("SET AUTOCOMMIT=1");
 							throw new Exception("Error [2019289127429] " + "Error inserting"
 								+ " financial statement record with SQL: '" 
 								+ SQL + "' - " + e.getMessage());
@@ -488,6 +489,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						Statement stmt = conn.createStatement();
 						stmt.execute(SQL);
 					} catch (Exception e) {
+						//stmtCommit.execute("SET AUTOCOMMIT=1");
 						throw new Exception("Error [2019289127430] " + "Error inserting"
 							+ " financial statement record with SQL: '" 
 							+ SQL + "' - " + e.getMessage());
@@ -495,14 +497,15 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			}
 			
 		} catch (Exception e) {
+			//stmtCommit.execute("SET AUTOCOMMIT=1");
 			throw new Exception("Error [2019289129599] " + "Error inserting financial statement records - " + e.getMessage());
 		}
 		
-		try {
-			stmtCommit.execute("COMMIT");
-		} catch (Exception e) {
-			throw new Exception("Error [20192971432361] " + "commiting glfinancialstatementdata Inserts - " + e.getMessage());
-		}
+//		try {
+//			stmtCommit.execute("COMMIT");
+//		} catch (Exception e) {
+//			throw new Exception("Error [20192971432361] " + "commiting glfinancialstatementdata Inserts - " + e.getMessage());
+//		}
 		
 		try {
 			SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;

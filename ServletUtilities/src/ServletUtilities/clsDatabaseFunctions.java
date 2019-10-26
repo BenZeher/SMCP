@@ -159,6 +159,11 @@ public class clsDatabaseFunctions {
 			  context)
 		;
 	}
+	public static void executeSQLWithException(
+			String sSQL, Connection conn) throws Exception{
+			
+			PoolUtilities.executeSQLCommand(sSQL, conn);
+		}
 	public static void executeSQL(String SQLStatement, String sDBID, String DBType, String CallingClass, ServletContext context) throws Exception{
 		PoolUtilities.executeSQL(SQLStatement, sDBID, DBType, CallingClass, context);
 	}

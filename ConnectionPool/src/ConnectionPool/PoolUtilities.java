@@ -296,6 +296,23 @@ public class PoolUtilities {
 				throw new SQLException(ex.getMessage());
 			}
 	  }
+	  
+	  public static void executeSQLCommand(String SQLStatement, Connection conn) throws Exception{
+		  
+			try{
+				
+			    Statement stmt = conn.createStatement();
+			    stmt.executeUpdate(SQLStatement);
+			    return;
+			}catch (SQLException ex) {
+				// handle any errors
+				if (bDebugMode){
+					System.out.println("[1398284682] Error executing SQL: " + ex.toString() + "  *-*  " + ex.getMessage());
+				}
+				throw new Exception("Error [1398284682] executing SQL: '" + SQLStatement + "' - " + ex.getMessage());
+			}
+	  }
+
 	  public static boolean executeSQL(
 			  String SQLStatement, 
 			  ServletContext context,

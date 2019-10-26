@@ -707,7 +707,7 @@ public class GLTransactionBatch {
 	    		unsetPostingFlag(conn);
 	    	} catch (Exception e1) {
 	    		clsDatabaseFunctions.freeConnection(context, conn, "[1555956131]");
-	    		throw new Exception("Error [1555956132] UNsetting GL posting flag - " + e1.getMessage());
+	    		throw new Exception("Error [1555956132] UNsetting GL posting flag - " + e1.getMessage() + " post failed: " + e.getMessage());
 	    	}
 	    	clsDatabaseFunctions.freeConnection(context, conn, "[1555956133]");
 			throw new Exception("Error [1555956134] posting - " + e.getMessage());
@@ -1781,13 +1781,9 @@ public class GLTransactionBatch {
        			+ ", " + SMTablegloptions.luserid 
     				+ " = " + sUserID
     		;
-    		if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-    			throw new Exception("Error [1555349631] setting posting flag in GL Options");
-        		
-    		}
+			clsDatabaseFunctions.executeSQL(SQL, conn);
     	}catch (SQLException e){
     		throw new Exception("Error [1555349632] setting posting flag in GL Options - " + e.getMessage());
-    		
     	}
     }
     private void unsetPostingFlag(Connection conn) throws Exception{

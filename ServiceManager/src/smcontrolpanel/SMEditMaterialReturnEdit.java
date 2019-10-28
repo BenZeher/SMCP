@@ -333,11 +333,11 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ "</TR>";
 
 		//Date Returned
-		if(entry.getdatreturnsentt().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
+		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
 			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsentt().replace("\"", "&quot;")) + "\""
+					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsent().replace("\"", "&quot;")) + "\""
 					+ " SIZE=" + "13"
 					+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
 					+ "</TR>"
@@ -346,7 +346,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
 			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 			+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-			+ " VALUE=\"" + entry.getdatreturnsentt().replace("\"", "&quot;") + "\""
+			+ " VALUE=\"" + entry.getdatreturnsent().replace("\"", "&quot;") + "\""
 			+ " SIZE=" + "13"
 			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
 			+ "</TR>"

@@ -411,10 +411,10 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
-			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatcreditnotedate().trim()) + "'"
+			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
-			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getdatreturnsentt().trim()) + "'"
+			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ")"
 			;
     	}else{
@@ -443,12 +443,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
-			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsentt().trim()) + "'"
+			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
 			;
     	}
+    	System.out.println("[20193011047489] " + SQL);
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		}
@@ -456,7 +457,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 		    Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-			throw new Exception ("Error [1408649180] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
+			throw new Exception ("Error [1572032662] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
 		}
 		//Update the ID if it's an insert:
 		if (getsNewRecord().compareToIgnoreCase("1") == 0){
@@ -857,7 +858,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_bdcreditamt = bdcreditamt;
 	}
 	
-	public String getdatreturnsentt() {
+	public String getdatreturnsent() {
 		return m_datreturnsent;
 	}
 	public void setdatreturnsent(String datreturnsent) {

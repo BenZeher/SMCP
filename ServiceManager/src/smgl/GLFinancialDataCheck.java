@@ -474,7 +474,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				}
 			}
 			
-			//If there's anything left in the buffer, so the SQL command for it now:
+			//If there's anything left in the buffer, do the SQL command for it now:
 			if (iBufferSize > 0){
 				SQL = "INSERT INTO " + SMTableglfinancialstatementdata.TableName
 						+ " ("

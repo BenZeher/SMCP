@@ -29,6 +29,11 @@ import smcontrolpanel.SMUtilities;
 public class GLEditBatchesSelect extends HttpServlet {
 
 	public static final String NUMBER_OF_BATCHES_TO_DISPLAY = "25";
+	public static final String POSTING_CHECKBOX_SUFFIX = "GLPOSTINGCHECKBOX";
+	public static final String BUTTON_POST_SELECTED_BATCHES = "GLPOSTSELECTEDBATCHES";
+	public static final String LABEL_POST_SELECTED_BATCHES = "Post selected batches";
+	public static final String BUTTON_POST_ALL_BATCHES = "GLPOSTALLBATCHES";
+	public static final String LABEL_POST_ALL_BATCHES = "Post ALL batches";
 	
 	private static final long serialVersionUID = 1L;
 	/*
@@ -78,11 +83,10 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    	}
 	    }
 	    
-	    
 	    String sWarning = (String)CurrentSession.getAttribute(GLEditBatchesEdit.GL_BATCH_POSTING_SESSION_WARNING_OBJECT);
 	    CurrentSession.removeAttribute(GLEditBatchesEdit.GL_BATCH_POSTING_SESSION_WARNING_OBJECT);
 		if (sWarning != null){
-			out.println("<B><FONT COLOR=\"RED\">: " + sWarning + "</FONT></B><BR>");
+			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
 	    if (request.getParameter("Status") != null){
@@ -101,7 +105,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 				+ "\">Return to General Ledger Main Menu</A><BR>\n");
 	    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.GLEditBatches) 
 	    		+ "\">Summary</A><BR><BR>\n");
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesEdit' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLEditBatchesAction' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
 	    //Add links to create new batches:
 	    out.println("<TABLE BORDER=1 CELLSPACING=2 style=\"font-size:75%\">\n");
@@ -125,6 +129,13 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    	+ "\">Import transaction batch</A>");
 	    }
 	    
+	    //Buttons for posting batches:
+	    out.println("&nbsp;<INPUT TYPE=SUBMIT NAME='" + BUTTON_POST_SELECTED_BATCHES 
+	    	+ "' VALUE='" + LABEL_POST_SELECTED_BATCHES + "' STYLE='height: 0.24in'>");
+	    
+	    out.println("&nbsp;<INPUT TYPE=SUBMIT NAME='" + BUTTON_POST_ALL_BATCHES 
+		    	+ "' VALUE='" + LABEL_POST_ALL_BATCHES + "' STYLE='height: 0.24in'>");
+	    
 	    out.println("</TD>\n");
 	    
 	    out.println("  </TR>\n");
@@ -142,6 +153,7 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    
 	    //Headings:
 	    out.println("  <TR>\n");
+	    out.println("    <TH class=\"headingleft\" >Post?</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Batch #</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Date</TH>\n");
 	    out.println("    <TH class=\"headingleft\" >Status</TH>\n");
@@ -153,8 +165,6 @@ public class GLEditBatchesSelect extends HttpServlet {
 	    out.println("    <TH class=\"headingright\" >Net batch total</TH>\n");
 	    out.println("  </TR>\n");
 
-	    //TO-DO - finish from here:
-	    
 	    String SQL = "";
 	    try{
 	    	SQL = "SELECT" 
@@ -286,7 +296,36 @@ public class GLEditBatchesSelect extends HttpServlet {
 			String sDBID
 			){
 
-		String sOutPut = "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
+		String sOutPut = "";
+		
+		//Show a checkbox for batches that can be posted:
+		sOutPut += "    <TD class=\"fieldleftaligned" 
+				+ SMBatchStatuses.Get_Transaction_Status(iBatchStatus) 
+				+ "\" >";
+		
+		if (
+			(iBatchStatus == SMBatchStatuses.ENTERED)
+			|| (iBatchStatus == SMBatchStatuses.IMPORTED)
+		){
+			sOutPut += "<LABEL NAME=CHKBOX>"
+					+ "&nbsp;"
+					+ "<INPUT TYPE=\"CHECKBOX\" NAME=\"" + POSTING_CHECKBOX_SUFFIX + sBatchNumber.trim() 
+						+ "\" >" 
+					+ "&nbsp;"
+					+ "</LABEL>"
+					+ "</TD>\n"
+				;
+		}else{
+			sOutPut += "<LABEL NAME=CHKBOX>"
+					+ "&nbsp;"
+					+ "&nbsp;"
+					+ "&nbsp;"
+					+ "</LABEL>"
+					+ "</TD>\n"
+				;
+		}
+		
+		sOutPut += "    <TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
 		sOutPut += "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLEditBatchesEdit" 
 	    		+ "?" + SMTablegltransactionbatches.lbatchnumber + "=" + sBatchNumber
 	    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

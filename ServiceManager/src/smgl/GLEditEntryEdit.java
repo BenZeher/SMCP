@@ -119,7 +119,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 	    		try {
 	    			Long lStartingTime = System.currentTimeMillis();
 					entry.load(getServletContext(), smedit.getsDBID(), smedit.getUserName());
-					System.out.println("[2019196149222] " + "Loading time: " + (System.currentTimeMillis() - lStartingTime)/1000);
+					//System.out.println("[2019196149222] " + "Loading time: " + (System.currentTimeMillis() - lStartingTime)/1000);
 				} catch (Exception e) {
 					response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + smedit.getCallingClass()
@@ -1215,7 +1215,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		s += s2ndBufferLineText;
 		s += s1stBufferLineText;
 		
-		System.out.println("[20191961415398] " + " Time to display = " + (System.currentTimeMillis() - lStartingTime)/1000);
+		//System.out.println("[20191961415398] " + " Time to display = " + (System.currentTimeMillis() - lStartingTime)/1000);
 		
 		if (bEditable){
 			//Add one blank line so the user can add lines:

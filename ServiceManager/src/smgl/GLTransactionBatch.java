@@ -682,8 +682,8 @@ public class GLTransactionBatch {
     		ServletContext context,
     		String sDBID,
     		String sUserID,
-    		String sUserFullName,
-    		PrintWriter out
+    		String sUserFullName
+    		//PrintWriter out
     		) throws Exception{
 
     	Connection conn;

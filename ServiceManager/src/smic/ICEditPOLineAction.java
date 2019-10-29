@@ -2,24 +2,27 @@ package smic;
 
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import smgl.GLAccount;
-import smcontrolpanel.SMMasterEditAction;
-import smcontrolpanel.SMMasterEditSelect;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import SMClasses.FinderResults;
 import SMClasses.SMFinderFunctions;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableicpolines;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smcontrolpanel.SMMasterEditAction;
+import smcontrolpanel.SMMasterEditSelect;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
+import smgl.GLAccount;
 
 public class ICEditPOLineAction extends HttpServlet{
 
@@ -366,6 +369,84 @@ public class ICEditPOLineAction extends HttpServlet{
 					SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOLineEdit"
 					+ "?" + ICPOLine.Paramlpoheaderid + "=" + entry.getspoheaderid()
 					+ "&" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=TRUE" //Set this to indicate it's an 'add'
+					+ "&CallingClass=" + "ICEditPOEdit"
+					+ "&" + ICPOHeader.Paramlid + "=" + entry.getspoheaderid()
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()
+				);
+				return;
+			}
+	    }
+	    
+		//If it's an 'UPDATE AND GO TO NEXT LINE', process that:
+	    if (request.getParameter(ICEditPOLineEdit.UPDATEANDGOTONEXT_BUTTON) != null){
+			if(!entry.save_without_data_transaction(
+					getServletContext(), 
+					smaction.getsDBID(), 
+					smaction.getUserName(),
+					smaction.getUserID(),
+					smaction.getFullUserName())){
+				smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
+				smaction.redirectAction(
+					"Could not save: " + entry.getErrorMessages(), 
+					"", 
+					ICPOLine.Paramlid + "=" + entry.getsID()
+	    				+ "&" + ICPOLine.Paramlpoheaderid + "=" + entry.getspoheaderid()
+					);
+				return;
+			}else{
+				//If the save succeeded, in this case, go to edit the next PO line:
+				smaction.getCurrentSession().removeAttribute(ICPOLine.ParamObjectName);
+				
+				int iNextLineNumber = Integer.parseInt(entry.getslinenumber()) + 1;
+				//Get the line ID of the next line if there is one:
+				String sNextLineID = "0";
+				String SQL = "SELECT"
+					+ " " + SMTableicpolines.lid
+					+ " FROM " + SMTableicpolines.TableName
+					+ " WHERE ("
+						+ "(" + SMTableicpolines.lpoheaderid + " = " + entry.getspoheaderid() + ")"
+						+ " AND (" + SMTableicpolines.llinenumber + " = " + Integer.toString(iNextLineNumber) + ")"
+					+ ")"
+				;
+				try {
+					ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
+						SQL, 
+						getServletContext(), 
+						smaction.getsDBID(), 
+						"MySQL", 
+						this.toString() + ", reading next PO line number - user: " + smaction.getFullUserName()
+					);
+					if (rs.next()){
+						sNextLineID = Long.toString(rs.getLong(SMTableicpolines.lid));
+					}
+					rs.close();
+				} catch (SQLException e) {
+					//Error reading the next line:
+					smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
+					smaction.redirectAction(
+						"Error [1572379067] reading next PO line ID - " + e.getMessage(), 
+						"", 
+						ICPOLine.Paramlid + "=" + entry.getsID()
+		    				+ "&" + ICPOLine.Paramlpoheaderid + "=" + entry.getspoheaderid()
+						);
+					return;
+				}
+				
+				if (sNextLineID.compareToIgnoreCase("0") == 0){
+					smaction.getCurrentSession().setAttribute(ICPOLine.ParamObjectName, entry);
+					smaction.redirectAction(
+						"The line was saved, but there is no next line to edit", 
+						"", 
+						ICPOLine.Paramlid + "=" + entry.getsID()
+		    				+ "&" + ICPOLine.Paramlpoheaderid + "=" + entry.getspoheaderid()
+						);
+					return;
+				}
+				
+				response.sendRedirect(
+					SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOLineEdit"
+					+ "?" + ICPOLine.Paramlpoheaderid + "=" + entry.getspoheaderid()
+					+ "&" + ICPOLine.Paramlid + "=" + sNextLineID
 					+ "&CallingClass=" + "ICEditPOEdit"
 					+ "&" + ICPOHeader.Paramlid + "=" + entry.getspoheaderid()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smaction.getsDBID()

@@ -40,6 +40,8 @@ public class ICEditPOLineEdit  extends HttpServlet {
 	public static final String ADD_ITEM_TO_ORDER_BUTTON_LABEL = "Add item to order";
 	public static final String UPDATEANDADD_BUTTON = "UPDATEANDADD";
 	public static final String UPDATEANDADD_LABEL = "Save line and add another";
+	public static final String UPDATEANDGOTONEXT_BUTTON = "UPDATEANDGOTONEXTLINE";
+	public static final String UPDATEANDGOTONEXT_LABEL = "Save line and go to the next";
 	public static final String UPDATE_LABEL = "Save line";
 	
 	public void doPost(HttpServletRequest request,
@@ -66,6 +68,8 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			smedit.getPWOut().println("Error in process session: " + smedit.getErrorMessages());
 			return;
 		}
+		
+		smedit.getPWOut().println(SMUtilities.getShortcutJSIncludeString(getServletContext()));
 		
 		//If this is a 'resubmit', meaning it's being called by an 'Action' class, then
 		//the session will have an entry object in it, and that's what we'll pick up.
@@ -229,38 +233,39 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			ArrayList<String> m_sLocationDescriptions) throws SQLException{
 		String s = "";
 
-	    s = "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">";
+		s += getCommandScript();
+	    s += "<TABLE style=\" border-style:solid; border-color:black; font-size:small; \">" + "\n";
 		
 		//Store the ID so it can be passed back and forth:
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramlid + "\" VALUE=\"" + entry.getsID() + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramlpoheaderid + "\" VALUE=\"" + entry.getspoheaderid() + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramllinenumber + "\" VALUE=\"" + entry.getslinenumber() + "\">";
-		//s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Paramsponumber + "\" VALUE=\"" + sPONumber + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paraminoninventoryitem + "\" VALUE=\"" + entry.getsnoninventoryitem() + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Parambdqtyreceived + "\" VALUE=\"" + entry.getsqtyreceived() + "\">";
-		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Parambdextendedreceivedcost + "\" VALUE=\"" + entry.getsextendedreceivedcost() + "\">";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramlid + "\" VALUE=\"" + entry.getsID() + "\">" + "\n";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramlpoheaderid + "\" VALUE=\"" + entry.getspoheaderid() + "\">" + "\n";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paramllinenumber + "\" VALUE=\"" + entry.getslinenumber() + "\">" + "\n";
+		//s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Paramsponumber + "\" VALUE=\"" + sPONumber + "\">" + "\n";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Paraminoninventoryitem + "\" VALUE=\"" + entry.getsnoninventoryitem() + "\">" + "\n";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Parambdqtyreceived + "\" VALUE=\"" + entry.getsqtyreceived() + "\">" + "\n";
+		s += "<INPUT TYPE=HIDDEN NAME=\"" + ICPOLine.Parambdextendedreceivedcost + "\" VALUE=\"" + entry.getsextendedreceivedcost() + "\">" + "\n" + "\n";
 		
 		//New Row:
-		s += "<TR>";
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Purchase order #:</TD>";
-		s += "<TD>"
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Purchase order #:</TD>" + "\n";
+		s += "    <TD>"
 			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
 			+ "?" + ICPOHeader.Paramlid + "=" + entry.getspoheaderid()
 			+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() + "\">" + entry.getspoheaderid() + "</A>"
-			+ "</TD>"
+			+ "</TD>" + "\n"
 		;
-		s += "<TD>&nbsp;</TD>";
+		s += "    <TD>&nbsp;</TD>" + "\n";
 		
 		//Line number
 		String sLineNumber = entry.getslinenumber().trim();
 		if (sLineNumber.compareToIgnoreCase("-1") == 0){
 			sLineNumber = "NEW";
 		}
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Line #:</TD>";
-		s += "<TD>"
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Line #:</TD>" + "\n";
+		s += "    <TD>"
 			+ sLineNumber
-			+ "</TD>"
-			+ "</TR>"
+			+ "</TD>" + "\n"
+			+ "  </TR>" + "\n"
 		;
 		
 		//New Row:
@@ -287,29 +292,29 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		} catch (SQLException e) {
 			// Don't do anything - user will just have to pick a location
 		}
-		s += "<TR><TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Location:</TD>";
-		s += "<TD>";
+		s += "  <TR>"  + "\n" + "<TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Location:</TD>" + "\n";
+		s += "    <TD>";
 		if (
 				(entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
 				|| (entry.getstatus() == SMTableicpolines.STATUS_PARTIALLY_RECEIVED)
 			){		
-			s += "<SELECT NAME=\"" + ICPOLine.Paramslocation + "\"" + ">";
+			s += "      <SELECT NAME=\"" + ICPOLine.Paramslocation + "\"" + ">";
 			//Add one for the 'Other':
 			for (int i = 0; i < m_sLocationValues.size(); i++){
-				s += "<OPTION";
+				s += "        <OPTION";
 				if (m_sLocationValues.get(i).compareToIgnoreCase(entry.getslocation()) == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"" + m_sLocationValues.get(i).toString() + "\">" + m_sLocationDescriptions.get(i).toString();
+				s += " VALUE=\"" + m_sLocationValues.get(i).toString() + "\">" + m_sLocationDescriptions.get(i).toString() + "\n";
 			}
-        	s += "</SELECT>";
+        	s += "      </SELECT>" + "\n";
 		}else{
 			s += entry.getslocation().replace("\"", "&quot;")
 			+ "<INPUT TYPE=HIDDEN NAME=\"" 
 			+ ICPOLine.Paramslocation
 			+ "\" VALUE=\"" + entry.getslocation() + "\">";
 		}
-        	s += "</TD>";
+        	s += "</TD>" + "\n";
 		
 		String sNonInventoryItem = "NO";
 		String sToggleButtonLabel = TOGGLE_TO_NONINVENTORY_LABEL;
@@ -317,8 +322,8 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			sNonInventoryItem = "YES";
 			sToggleButtonLabel = TOGGLE_TO_INVENTORY_LABEL;
 		}
-		s += "<TD style=\" text-align:right; font-weight:bold; \">NON-Inventory item?</TD>";
-		s += "<TD>"
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">NON-Inventory item?</TD>" + "\n";
+		s += "    <TD>"
 			+ "&nbsp;" + sNonInventoryItem
 			;
 		
@@ -331,14 +336,14 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ " STYLE='height: 0.24in'>"
 			;
 		}
-		s += "</TD>";
-		s += "</TR>";
+		s += "</TD>" + "\n";
+		s += "  </TR>" + "\n";
 		
 		//New Row:
 		//Item
-		s += "<TR>";
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Item #: <FONT COLOR=RED>*Required*</FONT></TD>";
-		s += "<TD>";
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Item #: <FONT COLOR=RED>*Required*</FONT></TD>" + "\n";
+		s += "    <TD>";
 		if (entry.getstatus() == SMTableicpolines.STATUS_ENTERED){
 			s += "<INPUT TYPE=TEXT NAME=\"" + ICPOLine.Paramsitemnumber + "\""
 			+ " VALUE=\"" + entry.getsitemnumber().replace("\"", "&quot;") + "\""
@@ -372,11 +377,11 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Paramsitemnumber 
 			+ "\" VALUE=\"" + entry.getsitemnumber() + "\">";
 		}
-		s += "</TD>";
+		s += "</TD>" + "\n";
 
 		//Description
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Description:</TD>";
-		s += "<TD>";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Description:</TD>" + "\n";
+		s += "    <TD>";
 		if (entry.getstatus() == SMTableicpolines.STATUS_ENTERED){
 			s += "<INPUT TYPE=TEXT NAME=\"" + ICPOLine.Paramsitemdescription + "\""
 			+ " VALUE=\"" + entry.getsitemdescription().replace("\"", "&quot;") + "\""
@@ -390,14 +395,14 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ "\" VALUE=\"" + entry.getsitemdescription() + "\">";
 		}
 			
-		s += "</TD>";
-		s += "</TR>";
+		s += "</TD>" + "\n";
+		s += "</TR>" + "\n";
 		
 		//New Row:
-		s += "<TR>";
+		s += "  <TR>" + "\n";
 		//Unit of measure:
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Unit of measure:</TD>";
-		s += "<TD>";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Unit of measure:</TD>" + "\n";
+		s += "    <TD>" + "\n";
 		if (
 			(entry.getsnoninventoryitem().compareToIgnoreCase("1") == 0)
 			&& (entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
@@ -414,11 +419,11 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Paramsunitofmeasure
 			+ "\" VALUE=\"" + entry.getsunitofmeasure() + "\">";
 		}
-		s += "</TD>";
+		s += "</TD>" + "\n";
 
 		//Vendor's item number:
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Vendor's item #:</TD>";
-		s += "<TD>";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Vendor's item #:</TD>" + "\n";
+		s += "    <TD>";
 		if (entry.getstatus() == SMTableicpolines.STATUS_ENTERED){
 			s += "<INPUT TYPE=TEXT NAME=\"" + ICPOLine.Paramsvendorsitemnumber + "\""
 			+ " VALUE=\"" + entry.getsvendorsitemnumber().replace("\"", "&quot;") + "\""
@@ -439,14 +444,14 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Paramsvendorsitemnumber
 			+ "\" VALUE=\"" + entry.getsvendorsitemnumber() + "\">";
 		}
-		s += "</TD>";
-		s += "</TR>";
+		s += "</TD>" + "\n";
+		s += "</TR>" + "\n";
 		
 		//New Row:
 		//Qty
-		s += "<TR>";
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Quantity: <FONT COLOR=RED>*Required*</FONT></TD>";
-		s += "<TD>";
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Quantity: <FONT COLOR=RED>*Required*</FONT></TD>" + "\n";
+		s += "    <TD>";
 		if (
 			(entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
 			|| (entry.getstatus() == SMTableicpolines.STATUS_PARTIALLY_RECEIVED)
@@ -463,24 +468,24 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Parambdqtyordered
 			+ "\" VALUE=\"" + entry.getsqtyordered() + "\">";
 		}
-		s += "</TD>";
+		s += "</TD>" + "\n";
 			
 		//Vendor's item comments:
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Vendor's item comment:</FONT></TD>";
-		s += "<TD>";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Vendor's item comment:</FONT></TD>" + "\n";
+		s += "    <TD>";
 		s += entry.getsvendorsitemcomment().replace("\"", "&quot;")
 		+ "<INPUT TYPE=HIDDEN NAME=\"" 
 		+ ICPOLine.Paramsvendorsitemcomment
 		+ "\" VALUE=\"" + entry.getsvendorsitemcomment() + "\">";
-		s += "</TD>";
+		s += "</TD>" + "\n";
 		
-		s += "</TR>";	
+		s += "  </TR>" + "\n";	
 		
 		//Number of labels:
-		s += "<TR>";
+		s += "  <TR>" + "\n";
 		if (entry.getsnoninventoryitem().compareToIgnoreCase("0") == 0){
-			s += "<TD style=\" text-align:right; font-weight:bold; \">Number of labels:</FONT></TD>";
-			s += "<TD>";
+			s += "    <TD style=\" text-align:right; font-weight:bold; \">Number of labels:</FONT></TD>" + "\n";
+			s += "    <TD>";
 			if (
 				(entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
 				|| (entry.getstatus() == SMTableicpolines.STATUS_PARTIALLY_RECEIVED)
@@ -497,15 +502,15 @@ public class ICEditPOLineEdit  extends HttpServlet {
 				+ ICPOLine.Parambdnumberoflabels
 				+ "\" VALUE=\"" + entry.getsnumberoflabels() + "\">";
 			}
-			s += "</TD>";
+			s += "</TD>" + "\n";
 		}
-		s += "<TR>";
+		s += "  <TR>" + "\n";
 		
 		//New Row:
 		//Unit cost
-		s += "<TR>";
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Unit cost:</TD>";
-		s += "<TD>";
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Unit cost:</TD>" + "\n";
+		s += "    <TD>";
 		if (entry.getstatus() == SMTableicpolines.STATUS_ENTERED){
 			s += "<INPUT TYPE=TEXT NAME=\"" + ICPOLine.Parambdunitcost + "\""
 			+ " VALUE=\"" + entry.getsunitcost().replace("\"", "&quot;") + "\""
@@ -527,11 +532,11 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Parambdunitcost
 			+ "\" VALUE=\"" + entry.getsunitcost() + "\">";
 		}
-		s += "</TD>";
+		s += "</TD>" + "\n";
 		
 		//Extended cost
-		s += "<TD style=\" text-align:right; font-weight:bold; \">Extended order cost:</TD>";
-		s += "<TD>";
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Extended order cost:</TD>" + "\n";
+		s += "    <TD>";
 		if (
 				(entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
 				|| (entry.getstatus() == SMTableicpolines.STATUS_PARTIALLY_RECEIVED)
@@ -547,8 +552,8 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Parambdextendedordercost
 			+ "\" VALUE=\"" + entry.getsextendedordercost() + "\">";
 		}
-		s+= "</TD>";
-		s += "</TR>";
+		s+= "</TD>" + "\n";
+		s += "  </TR>" + "\n";
 		
 		//The user needs to choose an expense account for EITHER a non-inventory item OR for a non-stock INVENTORY item:
 		//If this is an INVENTORY item:
@@ -560,36 +565,36 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		//if (!bIsStockInventoryItem){
 			//New Row:
 			//GL Expense acct:
-			s += "<TR>";
-			s += "<TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Expense account<SUP>1</SUP>:</TD>";
-			s += "<TD>";
+			s += "  <TR>" + "\n";
+			s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Expense account<SUP>1</SUP>:</TD>" + "\n";
+			s += "    <TD>" + "\n";
 			if (entry.getstatus() == SMTableicpolines.STATUS_ENTERED){
-				s += "<SELECT NAME=\"" + ICPOLine.Paramsglexpenseacct + "\"" + ">";
+				s += "      <SELECT NAME=\"" + ICPOLine.Paramsglexpenseacct + "\"" + ">" + "\n";
 				//Add one for the 'blank':
-				s += "<OPTION VALUE=\"" + "" + "\"";
+				s += "        <OPTION VALUE=\"" + "" + "\"";
 				if (entry.getsglexpenseacct().compareToIgnoreCase("") == 0){
 					s += " selected=YES ";
 				}
 				s += ">** Choose an expense account **";
-				s += "</OPTION>";
+				s += "</OPTION>" + "\n";
 				int i = 0;
 				try {
 					for (i = 0; i < m_sGLValues.size(); i++){
-						s += "<OPTION";
+						s += "        <OPTION";
 						if (m_sGLValues.get(i).compareToIgnoreCase(entry.getsglexpenseacct()) == 0){
 							s += " selected=YES ";
 						}
 						s += " VALUE=\"" + m_sGLValues.get(i).toString() + "\">" + m_sGLDescriptions.get(i).toString();
-						s += "</OPTION>";
+						s += "</OPTION>" + "\n";
 					}
 				} catch (Exception e) {
 					System.out.println("Error [1389641947] - i = " + i + ", m_sGLValues.size = " + m_sGLValues.size() 
 						+ ", m_sGLDescriptions.size = " + m_sGLDescriptions.size() + " - " + e.getMessage());
 				}
-	        	s += "</SELECT>";
+	        	s += "      </SELECT>";
 	        	
-		        s += "</TD>";
-		        s += "<TD>";
+		        s += "</TD>" + "\n";
+		        s += "  <TD>";
 				s += "<INPUT TYPE=SUBMIT NAME='" + "FINDGLEXPENSEACCT" + "'" 
 					+ " VALUE='Find GL expense account'" 
 					+ " STYLE='height: 0.24in'>"
@@ -600,8 +605,8 @@ public class ICEditPOLineEdit  extends HttpServlet {
 				+ ICPOLine.Paramsglexpenseacct
 				+ "\" VALUE=\"" + entry.getsglexpenseacct() + "\">";
 			}
-			s += "</TD><TD>&nbsp;</TD>";
-			s += "</TR>";
+			s += "</TD>"  + "\n" + "    <TD>&nbsp;</TD>" + "\n";
+			s += "  </TR>" + "\n";
 		//}else{
 		//	s += "<INPUT TYPE=HIDDEN NAME=\"" 
 		//	+ ICPOLine.Paramsglexpenseacct
@@ -609,9 +614,9 @@ public class ICEditPOLineEdit  extends HttpServlet {
 		//}
 		//New Row:
 		//Instructions:
-		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Instructions:</TD>";
-		s += "<TD colspan=3>";
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Instructions:</TD>" + "\n";
+		s += "    <TD colspan=3>";
 		if (
 				(entry.getstatus() == SMTableicpolines.STATUS_ENTERED)
 				|| (entry.getstatus() == SMTableicpolines.STATUS_PARTIALLY_RECEIVED)
@@ -628,47 +633,47 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ ICPOLine.Paramsinstructions
 			+ "\" VALUE=\"" + entry.getsinstructions() + "\">";
 		}
-        s += "</TD>";
-		s += "</TR>";
+        s += "</TD>" + "\n";
+		s += "  </TR>" + "\n";
 
 		//New Row:
 		//Embedded table for the qty and cost data:
-		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; text-align:center; \" colspan=4>";
-		s += "<TABLE style=\" border-style:none; border-color:black; font-size:small; width:100%\">";
+		s += "  <TR>" + "\n";
+		s += "    <TD style=\" vertical-align:top; text-align:center; \" colspan=4>" + "\n";
+		s += "<TABLE style=\" border-style:none; border-color:black; font-size:small; width:100%\">" + "\n";
 
-			s += "<TR>";
+		s += "  <TR>" + "\n";
 
-			//Quantity received:
-			s += "<TD style=\" text-align:right; font-weight:bold; \">Qty received:</TD>";
-			s += "<TD>"
-				+ entry.getsqtyreceived().replace("\"", "&quot;")
-				+ "<INPUT TYPE=HIDDEN NAME=\"" 
-				+ ICPOLine.Parambdqtyreceived
-				+ "\" VALUE=\"" + entry.getsqtyreceived() + "\">"
-				+ "</TD>"
-			;
+		//Quantity received:
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Qty received:</TD>" + "\n";
+		s += "    <TD>"
+			+ entry.getsqtyreceived().replace("\"", "&quot;")
+			+ "<INPUT TYPE=HIDDEN NAME=\"" 
+			+ ICPOLine.Parambdqtyreceived
+			+ "\" VALUE=\"" + entry.getsqtyreceived() + "\">"
+			+ "</TD>" + "\n"
+		;
 
-			//Extended received cost:
-			s += "<TD style=\" text-align:right; font-weight:bold; \">Total received cost:</TD>";
-			s += "<TD>"
-				+ entry.getsextendedreceivedcost().replace("\"", "&quot;")
-				+ "<INPUT TYPE=HIDDEN NAME=\"" 
-				+ ICPOLine.Parambdextendedreceivedcost
-				+ "\" VALUE=\"" + entry.getsextendedreceivedcost() + "\">"
-				+ "</TD>"
-			;
+		//Extended received cost:
+		s += "    <TD style=\" text-align:right; font-weight:bold; \">Total received cost:</TD>" + "\n";
+		s += "    <TD>"
+			+ entry.getsextendedreceivedcost().replace("\"", "&quot;")
+			+ "<INPUT TYPE=HIDDEN NAME=\"" 
+			+ ICPOLine.Parambdextendedreceivedcost
+			+ "\" VALUE=\"" + entry.getsextendedreceivedcost() + "\">"
+			+ "</TD>" + "\n"
+		;
 
-			s += "</TR>";
+		s += "  </TR>" + "\n";
 		
-		s += "</TABLE>";
-		s += "</TD>";
-		s += "</TR>";
+		s += "</TABLE>" + "\n";
+		s += "    </TD>" + "\n";
+		s += "  </TR>" + "\n";
 		//End of embedded table
 		
 		//Validate button:
-		s += "<TR>";
-		s += "<TD style=\" vertical-align:top; text-align:center; \" colspan=4>"
+		s += "  <TR>";
+		s += "    <TD style=\" vertical-align:top; text-align:center; \" colspan=4>"
 			+ "<INPUT TYPE=SUBMIT NAME='" + "VALIDATE" + "'" 
 				+ " VALUE='Validate this line before updating'" 
 				+ " STYLE='height: 0.24in'>"
@@ -679,16 +684,15 @@ public class ICEditPOLineEdit  extends HttpServlet {
 				+ " STYLE='height: 0.24in'>"
 				;
 			}
-			s += "</TD>";
-		s += "</TR>";
-		
-		s += "</TABLE>";
+			s += "</TD>" + "\n";
+		s += "  </TR>" + "\n";
+		s += "</TABLE>" + "\n";
 		
 		//if (!bIsStockInventoryItem){
 		s += "<BR>";
 		s += "<SUP>1</SUP><B>Expense account</B>:&nbsp;This expense account is ONLY used for <I><B>'NON-INVENTORY'</B></I> (for example, office supplies, small tools, etc.) or <I><B>NON-STOCK</B></I> inventory (inventory items which are expensed)."
 			+ " <BR><I><B>STOCK</B></I> inventory will use the Payables Clearing account in the appropriate inventory location as the 'Expense' account."
-			+ "<BR>"
+			+ "<BR>" + "\n"
 		;
 		//}
 		
@@ -700,10 +704,101 @@ public class ICEditPOLineEdit  extends HttpServlet {
 			+ " VALUE='" + UPDATEANDADD_LABEL + "'" 
 			+ " STYLE='height: 0.24in'>"
 		;
+		s += "&nbsp;<INPUT TYPE=SUBMIT NAME='" + UPDATEANDGOTONEXT_BUTTON + "'" 
+			+ " VALUE='" + UPDATEANDGOTONEXT_LABEL + "'" 
+			+ " STYLE='height: 0.24in'>"
+		;
 		
 		return s;
 	}
+	private String getCommandScript(){
+		String s = "";
+		
+		s += "<NOSCRIPT>\n"
+				+ "    <font color=red>\n"
+				+ "    <H3>This page requires that JavaScript be enabled to function properly</H3>\n"
+				+ "    </font>\n"
+				+ "</NOSCRIPT>\n"
+			;
 
+		s += "<script type='text/javascript'>\n";
+		
+		//Hot key stuff:
+		s += "function initShortcuts() {\n";
+		
+		s += "    shortcut.add(\"Alt+d\",function() {\n";
+		s += "        deleteentry();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+e\",function() {\n";
+		s += "        saveandaddline();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+f\",function() {\n";
+		s += "        findVendor();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+n\",function() {\n";
+		s += "        saveandaddentry();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+t\",function() {\n";
+		s += "        calculateTerms();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+u\",function() {\n";
+		s += "        save();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+v\",function() {\n";
+		s += "        updateVendorInfo();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+		s += "    shortcut.add(\"Alt+w\",function() {\n";
+		s += "        toggleUnappliedDocsTable();\n";
+		s += "    },{\n";
+		s += "        'type':'keydown',\n";
+		s += "        'propagate':false,\n";
+		s += "        'target':document\n";
+		s += "    });\n";
+		
+
+		s += "}\n";
+		s += "\n";
+		
+		s += "</script>\n";
+		
+		return s;
+		
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

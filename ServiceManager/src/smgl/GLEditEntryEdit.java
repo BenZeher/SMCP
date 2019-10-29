@@ -117,7 +117,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 
 	    		//We'll need to reload the entry every time then, to make sure we get the lines loaded as well:
 	    		try {
-	    			Long lStartingTime = System.currentTimeMillis();
+	    			//Long lStartingTime = System.currentTimeMillis();
 					entry.load(getServletContext(), smedit.getsDBID(), smedit.getUserName());
 					//System.out.println("[2019196149222] " + "Loading time: " + (System.currentTimeMillis() - lStartingTime)/1000);
 				} catch (Exception e) {
@@ -952,7 +952,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		long lLineCounter = 0;
 		String s1stBufferLineText = "";
 		String s2ndBufferLineText = "";
-		Long lStartingTime = System.currentTimeMillis();
+		//Long lStartingTime = System.currentTimeMillis();
 		for (int i = 0; i < entry.getLineArray().size(); i++){
 			GLTransactionBatchLine line = entry.getLineArray().get(i);
 			sBackgroundColor = TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR;

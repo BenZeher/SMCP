@@ -149,6 +149,9 @@ function createPicker() {
 								asyncUpdateFolderURL('https://drive.google.com/drive/folders/' + folderID);
 							buildPicker();
 							break;
+						case 403:
+							alert('Check that you have permission to this parent folder.');
+							break;
 						default:
 							break;
 						}

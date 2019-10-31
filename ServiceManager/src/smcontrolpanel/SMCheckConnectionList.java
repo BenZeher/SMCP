@@ -77,8 +77,8 @@ public class SMCheckConnectionList extends HttpServlet {
 		   out.println("</TABLE>");
 		   
 		   //add dummy connection into the queue.
-		   out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.addNewConnection?BUSY=0&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">add available connection</A>&nbsp;&nbsp;&nbsp;&nbsp;");
-		   out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.addNewConnection?BUSY=1&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">add busy connection</A>");
+		   //out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.addNewConnection?BUSY=0&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">add available connection</A>&nbsp;&nbsp;&nbsp;&nbsp;");
+		   //out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.addNewConnection?BUSY=1&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">add busy connection</A>");
 		   
 		   out.println("</BODY></HTML>");
 	   }catch(Exception ex){

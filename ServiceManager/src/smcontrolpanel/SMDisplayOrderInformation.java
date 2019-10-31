@@ -2614,14 +2614,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 	private String sStyleScripts(){
 		String s = "";
-		String sBorderSize = "0";
-		String sRowHeight = "22px";
 		s += "<style type=\"text/css\">\n";
 		
 		//Layout table:
 		s +=
 			"table.basic {"
-			+ "border-width: " + sBorderSize + "px; "
+			+ "border-width: 0px; "
 			+ "border-spacing: 2px; "
 			//+ "border-style: outset; "
 			+ "border-style: none; "
@@ -2658,7 +2656,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		//This is the def for a table cell, left justified:
 		s +=
 			"td.leftjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
+			+ "height: 22; "
 			+ "border: 0px solid; "
 			+ "padding: 2px; "
 			+ "border-color: " + CELL_BORDER_COLOR + "; "
@@ -2676,7 +2674,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		//This is the def for a table cell, right justified:
 		s +=
 			"td.rightjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
+			+ "height: 22; "
 			+ "border: 0px solid; "
 			+ "padding: 2px; "
 			+ "border-color: " + CELL_BORDER_COLOR + "; "
@@ -2694,7 +2692,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		//This is the def for a table cell, center justified:
 		s +=
 			"td.centerjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
+			+ "height: 22; "
 			+ "border: 0px solid; "
 			+ "padding: 2px; "
 			+ "border-color: " + CELL_BORDER_COLOR + "; "

@@ -300,6 +300,26 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s+= "</TD>\n"
 				+ "</TR>\n";
 		
+		//Date Returned
+		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
+			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
+					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsent().replace("\"", "&quot;")) + "\""
+					+ " SIZE=" + "13"
+					+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
+					+ "</TR>"
+		 		;
+		}else {
+		s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
+			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+			+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
+			+ " VALUE=\"" + entry.getdatreturnsent().replace("\"", "&quot;") + "\""
+			+ " SIZE=" + "13"
+			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
+			+ "</TR>"
+ 		;
+		}
 		
 
 		
@@ -331,31 +351,10 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		s += "</TD>"
 				+ "</TR>";
-
-		//Date Returned
-		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
-			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
-					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsent().replace("\"", "&quot;")) + "\""
-					+ " SIZE=" + "13"
-					+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
-					+ "</TR>"
-		 		;
-		}else {
-		s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
-			+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-			+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
-			+ " VALUE=\"" + entry.getdatreturnsent().replace("\"", "&quot;") + "\""
-			+ " SIZE=" + "13"
-			+ ">" + SMUtilities.getDatePickerString(SMMaterialReturn.Paramdatreturnsent, getServletContext()) + "</TD>"
-			+ "</TR>"
- 		;
-		}
 		
 		//TODO Change field name in DB
-		//Expected Credit Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Expected Credit Amount:"  + " </B></TD>";
+		//Adjusted Credit Amount
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Amount:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdentryamount + "\""
 			+ " VALUE=\"" + entry.getbdentryamount().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdentryamount + "\""
@@ -364,6 +363,8 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "></TD>"
 			+ "</TR>"
 		;
+		
+
 		
 		//Credit Memo Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Memo Number:"  + " </B></TD>";
@@ -397,8 +398,9 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
  		;
 		}
 		
-		//Credit Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Amount:"  + " </B></TD>";
+		//TODO Rename in DB
+		//Credit received
+		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Received:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
 			+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""

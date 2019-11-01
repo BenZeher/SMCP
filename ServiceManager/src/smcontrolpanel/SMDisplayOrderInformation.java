@@ -65,9 +65,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 	private static final String BILLING_SUMMARY_TABLE_BG_COLOR = "#F2C3FA";
 	private static final String CRITICAL_DATE_TABLE_BG_COLOR = "#FFBCA2";
 	private static final String TAX_CALCULATION_TABLE_BG_COLOR = "#A3D1FF";
-	private static final String CELL_BORDER_COLOR = "#808080";
-	
 	private static final long serialVersionUID = 1L;
+	
 	private static final String DELIVERY_TICKET_TABLE_BG_COLOR = "#EE9A4D";
 	private static final String LABOR_BACKCHARGES_TABLE_BG_COLOR = "#FFFFBB";
 	private static final String FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR = "#FFBCA2";
@@ -129,9 +128,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
 			
-			//TODO  Update Style  from the Scripts to the MSS
 			out.println(SMUtilities.getMasterStyleSheetLink());
-			out.println(sStyleScripts());
 			
 			if (!displayOrder(sDBID, sUserID, sOrderNumber, out, request, CurrentSession)){
 			}
@@ -2596,153 +2593,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		s += "</TABLE>";
 		return s;
 
-	}
-
-	private String sStyleScripts(){
-		String s = "";
-		s += "<style type=\"text/css\">\n";
-		
-		//Layout table:
-		s +=
-			"table.basic {"
-			+ "border-width: 0px; "
-			+ "border-spacing: 2px; "
-			//+ "border-style: outset; "
-			+ "border-style: none; "
-			+ "border-color: white; "
-			+ "border-collapse: separate; "
-			+ "width: 100%; "
-			+ "font-size: " + "small" + "; "
-			+ "font-family : Arial; "
-			+ "color: black; "
-			//+ "background-color: white; "
-			+ "}"
-			+ "\n"
-			;
-		
-		/*
-		//This is the def for a label field:
-		s +=
-			"td.fieldlabel {"
-			+ "height: " + sRowHeight + "; "
-			//+ "border-width: " + sBorderSize + "px; "
-			//+ "padding: 2px; "
-			//+ "border-style: none; "
-			//+ "border-color: white; "
-			//+ "vertical-align: text-middle;"
-			//+ "background-color: black; "
-			+ "font-weight: bold; "
-			+ "text-align: right; "
-			//+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		*/
-		//This is the def for a table cell, left justified:
-		s +=
-			"td.leftjustifiedcell {"
-			+ "height: 22; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: bottom;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: left; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-
-		//This is the def for a table cell, right justified:
-		s +=
-			"td.rightjustifiedcell {"
-			+ "height: 22; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: bottom;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: right; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a table cell, center justified:
-		s +=
-			"td.centerjustifiedcell {"
-			+ "height: 22; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: bottom;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: center; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a left-aligned heading on a table:
-		s +=
-			"td.leftjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: left; "
-			+ "vertical-align:bottom; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a right-aligned heading on a table:
-		s +=
-			"td.rightjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: right; "
-			+ "vertical-align:bottom; "
-			+ "}"
-			+ "\n"
-			;
-
-		//This is the def for a center-aligned heading on a table:
-		s +=
-			"td.centerjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: center; "
-			+ "vertical-align:bottom; "
-			+ "}"
-			+ "\n"
-			;
-		
-		s += "</style>"
-			+ "\n"
-			;
-
-		return s;
 	}
 	
 }

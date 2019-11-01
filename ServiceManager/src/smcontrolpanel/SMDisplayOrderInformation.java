@@ -26,6 +26,7 @@ import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableappointments;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTablebids;
@@ -67,10 +68,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 	private static final String CELL_BORDER_COLOR = "#808080";
 	
 	private static final long serialVersionUID = 1L;
-	//private static final String LIGHT_BG_COLOR = "EEEEEE";
-	private static final String LIGHT_GREY_BG_COLOR = "#f3f3f3";
-	private static final String DARK_ROW_BG_COLOR = "#DCDCDC";
-	private static final String LIGHT_ROW_BG_COLOR = "#FFFFFF";
 	private static final String DELIVERY_TICKET_TABLE_BG_COLOR = "#EE9A4D";
 	private static final String LABOR_BACKCHARGES_TABLE_BG_COLOR = "#FFFFBB";
 	private static final String FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR = "#FFBCA2";
@@ -132,6 +129,8 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
 			log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMDISPLAYORDERINFORMATION, "REPORT", "SMDisplayOrderInformation", "[1376509320]");
 			
+			//TODO  Update Style  from the Scripts to the MSS
+			out.println(SMUtilities.getMasterStyleSheetLink());
 			out.println(sStyleScripts());
 			
 			if (!displayOrder(sDBID, sUserID, sOrderNumber, out, request, CurrentSession)){
@@ -1077,7 +1076,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		int iRowSpan = 0;
 		String sInvoiceComments = "";
 		String sInternalComments = "";
@@ -1101,20 +1099,20 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			ResultSet rsDetails = clsDatabaseFunctions.openResultSet(SQL, conn);
 			s += "<BR><a name=\"OrderDetails\"><B><U>Order Details</U></B><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ ORDER_DETAILS_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B><BR>Line #</B></TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Qty<BR>ordered</TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Qty shipped<BR>to date</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Item #</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Description</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>U/M</B></TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Unit<BR>price</B></TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Extended<BR>price</B></TD>";
-			s += "<TD ALIGN=CENTER style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Line<BR>booked</B></TD>";
-			s += "<TD ALIGN=CENTER style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Line<BR>Cat.</B></TD>";
-			s += "<TD ALIGN=CENTER style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Line<BR>Loc.</B></TD>";
+			
+			s += "<TABLE WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">";
+			s += "<TR STYLE=\"background-color: " + ORDER_DETAILS_BG_COLOR +";\" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\"><BR>Line #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Qty<BR>ordered</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Qty shipped<BR>to date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><BR>Item #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><BR>Description</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\"><BR>U/M</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Unit<BR>price</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Extended<BR>price</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Line<BR>booked</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Line<BR>Cat.</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + "\">Line<BR>Loc.</TD>";
 			s += "</TR>";
 			bOddRow = true;
 
@@ -1142,9 +1140,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				*/
 				//Updated to match rounding on extended prices on individual lines - TJR 2/16/2012:
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
 				}
 				iRowSpan = 2;
 
@@ -1201,49 +1197,64 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					;
 				}
 				
-				
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \"rightjustifiedcell\" style = \" vertical-align: text-top; \" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
+				if(bOddRow){
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				}else{
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+				}
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
 					+ sLineNumberLink + "</B></TD>";
-				s += "<TD class = \"rightjustifiedcell\">" 
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, 
 						rsDetails.getBigDecimal(SMTableorderdetails.dQtyOrdered)) + "</TD>";
-				s += "<TD class = \"rightjustifiedcell\">" 
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
 					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyShippedScale,
 						rsDetails.getBigDecimal(SMTableorderdetails.dQtyShippedToDate)) + "</TD>";
-				s += "<TD class = \"leftjustifiedcell\">" + sItemNumberLink + "</TD>";
-				s += "<TD class = \"leftjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sItemDesc) + "</TD>";
-				s += "<TD class = \"leftjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</TD>";
-				s += "<TD class = \"rightjustifiedcell\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsDetails.getBigDecimal(SMTableorderdetails.dOrderUnitPrice)) + "</TD>";
-				s += "<TD class = \"rightjustifiedcell\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsDetails.getBigDecimal(SMTableorderdetails.dExtendedOrderPrice)) + "</TD>";
-				s += "<TD class = \"centerjustifiedcell\">" + clsDateAndTimeConversions.resultsetDateStringToString(rsDetails.getString(SMTableorderdetails.datLineBookedDate)) + "</TD>";
-				s += "<TD class = \"centerjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sItemCategory) + "</TD>";
-				s += "<TD class = \"centerjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sLocationCode) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + sItemNumberLink + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sItemDesc) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsDetails.getBigDecimal(SMTableorderdetails.dOrderUnitPrice)) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rsDetails.getBigDecimal(SMTableorderdetails.dExtendedOrderPrice)) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDateAndTimeConversions.resultsetDateStringToString(rsDetails.getString(SMTableorderdetails.datLineBookedDate)) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sItemCategory) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sLocationCode) + "</TD>";
 				s += "</TR>";
 
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD colspan = 6 class = \"leftjustifiedcell\">Mechanic: " 
+				if(bOddRow){
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				}else{
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+				}
+				s += "<TD colspan = 5 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Mechanic: " 
 						+ rsDetails.getString(SMTableorderdetails.sMechInitial) 
 						+ " - "
 						+ rsDetails.getString(SMTableorderdetails.sMechFullName)
 						+ "</TD>";
-				s += "<TD colspan = 6  class = \"leftjustifiedcell\" >Door label: " 
+				s += "<TD colspan = 5  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >Door label: " 
 						+ rsDetails.getString(SMTableorderdetails.sLabel) 
 						+ "</TD>";
 				s += "</TR>";
 
 				if(sInvoiceComments != null){
 					if(sInvoiceComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Invoice detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=10  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Invoice detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mInvoiceComments) + "</I></TD>";
 						s += "</TR>";
 					}
 				}
 				if(sInternalComments != null){
 					if(sInternalComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Internal detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=11  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Internal detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mInternalComments) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1251,8 +1262,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				if(sTicketComments != null){
 					if(sTicketComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor+ sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Work order detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=11  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Work order detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mTicketComments) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1261,8 +1276,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				if(sWorkOrderComment != null){
 					if(sWorkOrderComment.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor+ sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\" ><B>Work order item comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=11  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +  "\" ><B>Work order item comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableicitems.sworkordercomment) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1292,7 +1311,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		int iRowSpan = 0;
 		String sInvoiceComments = "";
 		String sInternalComments = "";
@@ -1315,26 +1333,21 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			ResultSet rsDetails = clsDatabaseFunctions.openResultSet(SQL, conn);
 			s += "<BR><a name=\"ItemsLeftOnOrder\"><B><U>Item(s) Left On Order</U></B><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ LEFT_ON_ORDER_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B><BR>Line #</B></TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Qty<BR>Remaining</TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Qty shipped<BR>to date</B></TD>";
-			s += "<TD ALIGN=RIGHT style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Original<BR>Qty</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Item #</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>Description</B></TD>";
-			s += "<TD style=\"border: 1px solid\" bordercolor=\"000\"><FONT SIZE=2><B>U/M</B></TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +LEFT_ON_ORDER_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\"><BR>Line #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Qty<BR>Remaining</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Qty shipped<BR>to date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">Original<BR>Qty</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Item #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">U/M</TD>";
 			s += "</TR>";
 			bOddRow = true;
 
 			while(rsDetails.next()){
 				
-				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-				}
 				iRowSpan = 2;
 
 				sInvoiceComments = rsDetails.getString(SMTableorderdetails.mInvoiceComments);
@@ -1389,26 +1402,34 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					;
 				}
 				
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \"rightjustifiedcell\" style = \" vertical-align: text-top; \" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
-					+ sLineNumberLink + "</B></TD>";
-				s += "<TD class = \"rightjustifiedcell\">" 
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, 
-					rsDetails.getBigDecimal(SMTableorderdetails.dQtyOrdered)) + "</TD>";
-				s += "<TD class = \"rightjustifiedcell\">" 
-					+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyShippedToDateScale,
-						rsDetails.getBigDecimal(SMTableorderdetails.dQtyShippedToDate)) + "</TD>";
-				s += "<TD class = \"rightjustifiedcell\">" + 
+				if(bOddRow){
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				}else{
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+				}
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" rowspan=" + Integer.toString(iRowSpan) + "><B>" 
+						+ sLineNumberLink + "</B></TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyOrderedScale, 
+							rsDetails.getBigDecimal(SMTableorderdetails.dQtyOrdered)) + "</TD>";
+					s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" 
+						+ clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dQtyShippedScale,
+							rsDetails.getBigDecimal(SMTableorderdetails.dQtyShippedToDate)) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + 
 						clsManageBigDecimals.BigDecimalToScaledFormattedString(SMTableorderdetails.dOriginalQtyScale,
 						rsDetails.getBigDecimal(SMTableorderdetails.dOriginalQty)) + "</TD>";;
-				s += "<TD class = \"leftjustifiedcell\">" + sItemNumberLink + "</TD>";
-				s += "<TD class = \"leftjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sItemDesc) + "</TD>";
-				s += "<TD class = \"leftjustifiedcell\">" + rsDetails.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">" + sItemNumberLink + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sItemDesc) + "</TD>";
+				s += "<TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + rsDetails.getString(SMTableorderdetails.sOrderUnitOfMeasure) + "</TD>";
 				
 				s += "</TR>";
 
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD colspan = 6 class = \"leftjustifiedcell\">Mechanic: " 
+				if(bOddRow){
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				}else{
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+				}
+				s += "<TD colspan = 6 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Mechanic: " 
 						+ rsDetails.getString(SMTableorderdetails.sMechInitial) 
 						+ " - "
 						+ rsDetails.getString(SMTableorderdetails.sMechFullName)
@@ -1417,16 +1438,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				if(sInvoiceComments != null){
 					if(sInvoiceComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Invoice detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=12  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Invoice detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mInvoiceComments) + "</I></TD>";
 						s += "</TR>";
 					}
 				}
 				if(sInternalComments != null){
 					if(sInternalComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Internal detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=12  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Internal detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mInternalComments) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1434,8 +1463,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				if(sTicketComments != null){
 					if(sTicketComments.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor+ sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\"><B>Work order detail comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=12  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Work order detail comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableorderdetails.mTicketComments) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1444,8 +1477,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 				if(sWorkOrderComment != null){
 					if(sWorkOrderComment.compareToIgnoreCase("") !=0){
-						s += "<TR bgcolor =" + sBackgroundColor+ sBackgroundColor + ">";
-						s += "<TD colspan=12  class = \"leftjustifiedcell\" ><B>Work order item comment:</B> " 
+						if(bOddRow){
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+						}else{
+							s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
+						}
+						s += "<TD colspan=12  class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ><B>Work order item comment:</B> " 
 							+ "<I>" + rsDetails.getString(SMTableicitems.sworkordercomment) + "</I></TD>";
 						s += "</TR>";
 					}
@@ -1472,7 +1509,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		//Change order information goes here:
 		BigDecimal bdChangeOrderTotal = new BigDecimal(0);
 		if (!bAllowProjectView){
@@ -1500,51 +1536,49 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 			s += "<BR><B><a name=\"ChangeOrders\"><B><U>Change Orders</U></B></a>"+ sLink + "<BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-					+ CHANGEORDERS_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >Date</TD>";
-			s += "<TD class = \" rightjustifiedheading \" >C.O. #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Description</TD>";
-			s += "<TD class = \" rightjustifiedheading \" >Truck Days</TD>";
-			s += "<TD class = \" rightjustifiedheading \" >Total MU</TD>";
-			s += "<TD class = \" rightjustifiedheading \" >Amount</TD>";
+			
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +CHANGEORDERS_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED +"\">C.O. #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Truck Days</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Total MU</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Amount</TD>";
 			s += "</TR>";
 			bOddRow = true;
 			if(bOddRow){
-				sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 			}else{
-				sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 			}
-			s += "<TR bgcolor =" + sBackgroundColor + ">";
-			s += "<TD class = \" leftjustifiedcell \" ><B>" + order.getM_datOrderDate() + "</B></TD>";
-			s += "<TD class = \" leftjustifiedcell \" >&nbsp;</FONT></TD>";
-			s += "<TD class = \" rightjustifiedcell \" ><B>ORIGINAL CONTRACT AMOUNT</B></TD>";
-			s += "<TD class = \" rightjustifiedcell \" ><B>" + order.getM_bdtruckdays() + "</B></TD>";
-			s += "<TD class = \" rightjustifiedcell \" ><B>" + order.getM_bdtotalmarkup() + "</B></TD>";
-			s += "<TD class = \" rightjustifiedcell \" ><B>" + order.getM_bdtotalcontractamount() + "</B></TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" ><B>" + order.getM_datOrderDate() + "</B></TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >&nbsp;</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" ><B>ORIGINAL CONTRACT AMOUNT</B></TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" ><B>" + order.getM_bdtruckdays() + "</B></TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" ><B>" + order.getM_bdtotalmarkup() + "</B></TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" ><B>" + order.getM_bdtotalcontractamount() + "</B></TD>";
 			s += "</TR>";
 			bOddRow = ! bOddRow;
 			while(rsChangeOrders.next()){
 				bdChangeOrderTotal = bdChangeOrderTotal.add(rsChangeOrders.getBigDecimal(SMTablechangeorders.dAmount.replace("`", "")));
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				//sCellStyle = "style=\"border: 0px solid\" bordercolor=" + sBackgroundColor;
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \" leftjustifiedcell \" >" + clsDateAndTimeConversions.utilDateToString(rsChangeOrders.getDate(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.utilDateToString(rsChangeOrders.getDate(
 					SMTablechangeorders.datChangeOrderDate.replace("`", "")),"M/d/yyyy") + "</TD>";
-				s += "<TD class = \" rightjustifiedcell \" >" + clsManageBigDecimals.doubleToDecimalFormat(rsChangeOrders.getDouble(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsManageBigDecimals.doubleToDecimalFormat(rsChangeOrders.getDouble(
 					SMTablechangeorders.dChangeOrderNumber.replace("`", "")),0) + "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" + rsChangeOrders.getString(SMTablechangeorders.sDesc.replace("`", "")) 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsChangeOrders.getString(SMTablechangeorders.sDesc.replace("`", "")) 
 					+ "</TD>";
-				s += "<TD class = \" rightjustifiedcell \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
 					SMTablechangeorders.dTruckDays.replace("`", ""))) + "</TD>";
-				s += "<TD class = \" rightjustifiedcell \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
 					SMTablechangeorders.dTotalMarkUp.replace("`", ""))) + "</TD>";
-				s += "<TD class = \" rightjustifiedcell \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsChangeOrders.getDouble(
 					SMTablechangeorders.dAmount.replace("`", ""))) + "</TD>";
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -1552,29 +1586,19 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			rsChangeOrders.close();
 			
 			//Print the change order total:
-			if(bOddRow){
-				sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-			}else{
-				sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-			}
-			s += "<TR bgcolor =" + sBackgroundColor + ">";
-			s += "<TD class = \" rightjustifiedcell \" COLSPAN = 5><B>CHANGE ORDER TOTAL:</B></TD>"
-				+ "<TD class = \" rightjustifiedcell \" ><B>" 
+			
+			s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\"COLSPAN = 5>CHANGE ORDER TOTAL:</TD>";
+			s += "<TD class = \" "+SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED+" \" ><B>" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdChangeOrderTotal) + "</B></TD>"
 				+ "</TR>"
 			;
 			bOddRow = ! bOddRow;
-			if(bOddRow){
-				sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-			}else{
-				sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-			}
-			//Print the total of the contract amount AND the change orders:
-			s += "<TR bgcolor =" + sBackgroundColor + ">";
-			s += "<TD class = \" rightjustifiedcell \" COLSPAN = 5><B>"
+			s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\" COLSPAN = 5 >"
 				+ "TOTAL CONTRACT AMOUNT (ORIGINAL CONTRACT AMOUNT <I>PLUS</I> CHANGE ORDER TOTAL):"
-				+ "</B></TD>"
-				+ "<TD class = \" rightjustifiedcell \" ><B>" 
+				+ "</TD>"
+				+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" ><B>" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 					bdChangeOrderTotal.add(new BigDecimal(order.getM_bdtotalcontractamount().replace(",", "")))
 					) 
@@ -1597,7 +1621,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTableworkorders.TableName
 			+ " WHERE ("
@@ -1609,30 +1632,29 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 			s += "<BR><a name=\"WorkOrders\"><B><U>Work Orders</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-					+ WORK_ORDERS_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >Schedule date</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Done date</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >W.O. #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >View?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" ><B>Mechanic</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Posted?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" ><B>Imported?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" ><B>Documents</TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +WORK_ORDERS_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Schedule date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Done date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">W.O. #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">View?</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Mechanic</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Posted?</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Imported?</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Documents</TD>";
 			s += "</TR>";
 
 			bOddRow = true;
 			while(rsWorkOrders.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 						+ clsDateAndTimeConversions.resultsetDateStringToString(rsWorkOrders.getString(SMTableworkorders.datscheduleddate)) + "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +" \" >" 
 					+ clsDateAndTimeConversions.resultsetDateStringToString(rsWorkOrders.getString(SMTableworkorders.dattimedone)) + "</TD>";
 					//+ SMUtilities.utilDateToString(rsWorkOrders.getDate(SMTableworkorders.dattimedone),"M/d/yyyy") + "</TD>";
 
@@ -1649,7 +1671,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "</A>"
 					;
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sWOLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sWOLink + "</TD>";
 				//Next a link to VIEW the work order:
 				String sViewWOLink = "(Not posted)";
 				if (rsWorkOrders.getInt(SMTableworkorders.iposted) == 1){
@@ -1663,24 +1685,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "</A>"
 					;
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sViewWOLink + "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" + rsWorkOrders.getString(SMTableworkorders.smechanicname) + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sViewWOLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsWorkOrders.getString(SMTableworkorders.smechanicname) + "</TD>";
 				String sPosted = "N";
 				if (rsWorkOrders.getInt(SMTableworkorders.iposted)==1){
 					sPosted = "Y";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sPosted + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sPosted + "</TD>";
 				String sImported = "N";
 				if (rsWorkOrders.getInt(SMTableworkorders.iimported)==1){
 					sImported = "Y";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sImported + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sImported + "</TD>";
 				
 				String sGDocLink = rsWorkOrders.getString(SMTableworkorders.sgdoclink);
 				if(sGDocLink.compareToIgnoreCase("") != 0){
-					s+= "<TD class = \" leftjustifiedcell \"><A HREF=\"" + sGDocLink + "\">" + "View Folder" + "</A></TD>";
+					s+= "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"><A HREF=\"" + sGDocLink + "\">" + "View Folder" + "</A></TD>";
 				}else{
-					s+= "<TD class = \" leftjustifiedcell \">None</TD>";
+					s+= "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER	 + " \">None</TD>";
 				}
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -1702,7 +1724,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTableappointments.TableName
 			+ " WHERE ("
@@ -1716,24 +1737,23 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 			s += "<BR><a name=\"Appointments\"><B><U>Appointments</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-					+ APPOINTMENTS_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >ID #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Date/Time</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Scheduled for</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Comment</TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +APPOINTMENTS_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date/Time</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Scheduled for</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Comment</TD>";
 			s += "</TR>";
 
 			bOddRow = true;
 			while(rsAppointments.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \" leftjustifiedcell \" >";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >";
 				if(bAllowEditAppointments){		
 				s += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditAppointmentEdit?" 
 						 + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID+"&"
@@ -1743,14 +1763,14 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					s += rsAppointments.getString(SMTableappointments.lid);
 				}
 				s += "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 					+ clsDateAndTimeConversions.resultsetDateStringToString(rsAppointments.getString(SMTableappointments.datentrydate)) 
 					+ " " + SMAppointment.timeIntegerToString(rsAppointments.getInt(SMTableappointments.iminuteofday))
 					+ "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 					+ SMUtilities.getFullNamebyUserID(rsAppointments.getString(SMTableappointments.luserid), conn)
 					+ "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 					+ rsAppointments.getString(SMTableappointments.mcomment)
 					+ "</TD>";
 				s += "</TR>";
@@ -1773,7 +1793,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTabledeliverytickets.TableName
 			+ " WHERE ("
@@ -1785,25 +1804,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 			s += "<BR><a name=\"DeliveryTickets\"><B><U>Delivery Ticket</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-					+ DELIVERY_TICKET_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >Initiated date</TD>";		
-			s += "<TD class = \" leftjustifiedheading \" >Delivery Ticket #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >View?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Posted?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >W.O. #</TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +DELIVERY_TICKET_TABLE_BG_COLOR + "; \" >";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Initiated date</TD>";		
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Delivery Ticket #</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +" \" >View?</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Posted?</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >W.O. #</TD>";
 			s += "</TR>";
 
 			bOddRow = true;
 			while(rsDeliveryTicket.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +" \" >" 
 						+ clsDateAndTimeConversions.resultsetDateStringToString(rsDeliveryTicket.getString(SMTabledeliverytickets.datinitiated)) + "</TD>";
 				
 				//First, a link to the ID for editing:
@@ -1819,7 +1837,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "</A>"
 					;
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sDTLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sDTLink + "</TD>";
 				//Next a link to VIEW the delivery ticket:
 				String sViewDTLink = "(Not posted)";
 				if (rsDeliveryTicket.getInt(SMTableworkorders.iposted) == 1){
@@ -1833,19 +1851,19 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					;
 				}
 		
-				s += "<TD class = \" leftjustifiedcell \" >" + sViewDTLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sViewDTLink + "</TD>";
 			
 				String sPosted = "N";
 				if (rsDeliveryTicket.getInt(SMTabledeliverytickets.iposted)==1){
 					sPosted = "Y";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sPosted + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sPosted + "</TD>";
 				
 				String sWONumber = "(None)";
 				if(rsDeliveryTicket.getString(SMTabledeliverytickets.iworkorderid).compareToIgnoreCase("0") != 0){
 					sWONumber = rsDeliveryTicket.getString(SMTabledeliverytickets.iworkorderid);
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 					+ sWONumber + "</TD>";
 					//+ SMUtilities.utilDateToString(rsWorkOrders.getDate(SMTableworkorders.dattimedone),"M/d/yyyy") + "</TD>";
 				
@@ -1869,7 +1887,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTablematerialreturns.TableName
 			+ " WHERE ("
@@ -1878,28 +1895,27 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			+ " ORDER BY " + SMTablematerialreturns.datinitiated
 			;
 			ResultSet rsMaterialReturns = clsDatabaseFunctions.openResultSet(SQL, conn);
-			s += "<BR><a name=\"MaterialReturns\"><B><U>MaterialReturns</U></B></a><BR>";
+			s += "<BR><a name=\"MaterialReturns\"><B><U>Material Returns</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ MATERIAL_RETURNS_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >ID #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Initiated</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >By</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >W.O. #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >To be returned?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Vendor #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Resolved?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Description</TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +MATERIAL_RETURNS_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Initiated</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">By</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">W.O. #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">To be returned?</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Vendor #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Resolved?</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>";
 			s += "</TR>";
 
 			while(rsMaterialReturns.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
 				
 				//First, a link to the ID for editing:
 				String sMaterialReturnID = Long.toString(rsMaterialReturns.getLong(SMTablematerialreturns.lid));
@@ -1913,10 +1929,10 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ "</A>"
 					;
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sMRLink + "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				s += "<TD class = \" " +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER+ " \" >" + sMRLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
 						rsMaterialReturns.getString(SMTablematerialreturns.datinitiated) + "</TD>");
-				s += "<TD class = \" leftjustifiedcell \" >" + rsMaterialReturns.getString(SMTablematerialreturns.sinitiatedbyfullname) 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsMaterialReturns.getString(SMTablematerialreturns.sinitiatedbyfullname) 
 					+ "</TD>";
 				
 				//Next, a link to the work order ID for viewing:
@@ -1944,9 +1960,9 @@ public class SMDisplayOrderInformation extends HttpServlet {
 							+ "</A>"
 						;
 					}
-					s += "<TD class = \" leftjustifiedcell \" >" + sViewWOLink + "</TD>";
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sViewWOLink + "</TD>";
 				}else{
-					s += "<TD class = \" leftjustifiedcell \" >" + "N/A" + "</TD>";
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + "N/A" + "</TD>";
 				}
 				
 				//To Be Returned?
@@ -1954,18 +1970,18 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				if (rsMaterialReturns.getInt(SMTablematerialreturns.itobereturned)==1){
 					sToBeReturned = "Y";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sToBeReturned + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sToBeReturned + "</TD>";
 				
 				//Vendor acct:
-				s += "<TD class = \" leftjustifiedcell \" >" + rsMaterialReturns.getString(SMTablematerialreturns.svendoracct) + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsMaterialReturns.getString(SMTablematerialreturns.svendoracct) + "</TD>";
 				
 				//Resolved:
 				String sResolved = "N";
 				if (rsMaterialReturns.getInt(SMTablematerialreturns.iresolved)==1){
 					sResolved = "Y";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sResolved + "</TD>";
-				s += "<TD class = \" leftjustifiedcell \" >" + rsMaterialReturns.getString(SMTablematerialreturns.sdescription) + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sResolved + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsMaterialReturns.getString(SMTablematerialreturns.sdescription) + "</TD>";
 				
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -2003,7 +2019,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTablebids.TableName
 			+ " WHERE ("
@@ -2017,24 +2032,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			}
 			s += "<BR><a name=\"FollowUpSalesLead\"><B><U>Follow Up Sales Leads</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >ID #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Date</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Sales Person</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Bill To Name</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Ship To Name</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >View Folder</TD>";
+			
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +FOLLOWUP_SALES_LEAD_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Date</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Sales Person</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Bill To Name</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Ship To Name</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">View Folder</TD>";
 			s += "</TR>";
 
 			while(rsFollowUpSalesLead.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
 				
 				//First, a link to the ID for editing:
 				String sFollowUpSalesLeadID = Long.toString(rsFollowUpSalesLead.getLong(SMTablebids.lid));
@@ -2049,18 +2064,18 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				;
 				}
 				//Sales Lead ID
-				s += "<TD class = \" leftjustifiedcell \" >" + sSalesLeadLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sSalesLeadLink + "</TD>";
 				//Date initiated:
-				s += "<TD class = \" leftjustifiedcell \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
 						rsFollowUpSalesLead.getString(SMTablebids.datcreatedtime) + "</TD>");
 				//Sales Person:
-				s += "<TD class = \" leftjustifiedcell \" >" + rsFollowUpSalesLead.getString(SMTablebids.ssalespersoncode) 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsFollowUpSalesLead.getString(SMTablebids.ssalespersoncode) 
 					+ "</TD>";
 				//Bill To Name
-				s += "<TD class = \" leftjustifiedcell \" >" + rsFollowUpSalesLead.getString(SMTablebids.scustomername).toString() 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsFollowUpSalesLead.getString(SMTablebids.scustomername).toString() 
 						+ "</TD>";
 				//Ship To Name
-				s += "<TD class = \" leftjustifiedcell \" >" + rsFollowUpSalesLead.getString(SMTablebids.sprojectname) 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsFollowUpSalesLead.getString(SMTablebids.sprojectname) 
 						+ "</TD>";		
 				//Folder
 				String sGdoclink = rsFollowUpSalesLead.getString(SMTablebids.sgdoclink).trim();
@@ -2069,7 +2084,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}else{
 					sGdoclink = "None";
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sGdoclink
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER	 + " \" >" + sGdoclink
 						+ "</TD>";		
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -2090,7 +2105,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			String sDBID) throws Exception {
 		String s = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		try{
 			String SQL = "SELECT * FROM " + SMTablelaborbackcharges.TableName
 			+ " WHERE ("
@@ -2101,23 +2115,23 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			ResultSet rsLaborBackCharge = clsDatabaseFunctions.openResultSet(SQL, conn);
 			s += "<BR><a name=\"LaborBackCharges\"><B><U>Labor Back Charges</U></B></a><BR>";
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ LABOR_BACKCHARGES_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" leftjustifiedheading \" >ID #</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Initiated</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >By</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Credit Requested</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Description</TD>";
+			
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +LABOR_BACKCHARGES_TABLE_BG_COLOR + "; \" >";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">ID #</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Initiated</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">By</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Credit Requested</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Description</TD>";
 			s += "</TR>";
 
 			while(rsLaborBackCharge.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
 				
 				//First, a link to the ID for editing:
 				String sLaborBackChargeID = Long.toString(rsLaborBackCharge.getLong(SMTablelaborbackcharges.lid));
@@ -2131,18 +2145,18 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					+ "</A>"
 				;
 				}
-				s += "<TD class = \" leftjustifiedcell \" >" + sLBCLink + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sLBCLink + "</TD>";
 				//Date initiated:
-				s += "<TD class = \" leftjustifiedcell \" >" + clsDateAndTimeConversions.resultsetDateStringToString(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateStringToString(
 						rsLaborBackCharge.getString(SMTablelaborbackcharges.datinitiated) + "</TD>");
 				//Initiated by:
-				s += "<TD class = \" leftjustifiedcell \" >" + rsLaborBackCharge.getString(SMTablelaborbackcharges.sinitiatedbyfullname) 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsLaborBackCharge.getString(SMTablelaborbackcharges.sinitiatedbyfullname) 
 					+ "</TD>";
 				//Back Charge total
-				s += "<TD class = \" leftjustifiedcell \" >" + rsLaborBackCharge.getBigDecimal(SMTablelaborbackcharges.bdcreditrequested).toString() 
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsLaborBackCharge.getBigDecimal(SMTablelaborbackcharges.bdcreditrequested).toString() 
 						+ "</TD>";
 				//Description
-				s += "<TD class = \" leftjustifiedcell \" >" + rsLaborBackCharge.getString(SMTablelaborbackcharges.sdescription) + "</TD>";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsLaborBackCharge.getString(SMTablelaborbackcharges.sdescription) + "</TD>";
 				
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -2222,7 +2236,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		String s = "";
 		boolean bOddRow = true;
 		String SQL = "";
-		String sBackgroundColor = "";
 		if (bAllowProjectView){
 			try{
 				SQL = "SELECT"
@@ -2249,25 +2262,24 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				ResultSet rsInvoices = clsDatabaseFunctions.openResultSet(SQL, conn);
 				s += "<BR><a name=\"BILLINGSUMMARY\"><B><U>Billing Summary</U></B><BR>";
 				s += sLinks + "<BR>";
-				s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-						+ BILLING_SUMMARY_TABLE_BG_COLOR + "; \" >";
-				s += "<TR>";
-				s += "<TD class = \" leftjustifiedheading \" >Invoice date</TD>";
-				s += "<TD class = \" leftjustifiedheading \" >Invoice number</TD>";
-				s += "<TD class = \" leftjustifiedheading \" >Created by</TD>";
-				s += "<TD class = \" leftjustifiedheading \" >Type</TD>";
-				s += "<TD class = \" rightjustifiedheading \" >Amount</TD>";
+				
+				s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+				s += "<TR STYLE=\"background-color: " +BILLING_SUMMARY_TABLE_BG_COLOR + "; \" >";
+				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Invoice date</TD>";
+				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Invoice number</TD>";
+				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Created by</TD>";
+				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Type</TD>";
+				s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED +"\">Amount</TD>";	
 				s += "</TR>";
 	
 				while(rsInvoices.next()){
 					bdTotalBilled = bdTotalBilled.add(rsInvoices.getBigDecimal("EXTPRICE"));
 					if(bOddRow){
-						sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+						s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 					}else{
-						sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+						s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 					}
-					s += "<TR bgcolor =" + sBackgroundColor + ">";
-					s += "<TD class = \" leftjustifiedcell \" >" 
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 						+ clsDateAndTimeConversions.utilDateToString(
 							rsInvoices.getDate(
 								SMTableinvoiceheaders.TableName + "." 
@@ -2277,7 +2289,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ SMTableinvoicedetails.sInvoiceNumber).trim();
 	
 					if (bAllowInvoiceView){
-						s += "<TD class = \" leftjustifiedcell \" >"
+						s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" 
 							+ SMUtilities.lnViewInvoice(sDBID, sInvoiceNumber)
 							+ "\">"
@@ -2285,7 +2297,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 							+ "</A>"
 							+ "</TD>";
 					}else{
-						s += "<TD class = \" leftjustifiedcell \" >" 
+						s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 							+ sInvoiceNumber + "</TD>";
 					}
 
@@ -2294,18 +2306,18 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					if (sCreatedByFullName == null){
 						sCreatedByFullName = "";
 					}
-					s += "<TD class = \" leftjustifiedcell \" >" + sCreatedByFullName + "</TD>";
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sCreatedByFullName + "</TD>";
 					
 					//Type
 					if (rsInvoices.getInt(SMTableinvoiceheaders.TableName + "." 
 							+ SMTableinvoiceheaders.iTransactionType) == SMTableinvoiceheaders.TYPE_INVOICE){
-						s += "<TD class = \" leftjustifiedcell \" >INVOICE</TD>";
+						s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >INVOICE</TD>";
 					}else{
-						s += "<TD class = \" leftjustifiedcell \" >CREDIT</TD>";
+						s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >CREDIT</TD>";
 					}
 					
 					//EXTPRICE
-					s += "<TD class = \" rightjustifiedcell \" >" 
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" 
 							+ clsManageBigDecimals.doubleTo2DecimalSTDFormat(rsInvoices.getDouble("EXTPRICE")) 
 							+ "</TD>";
 	
@@ -2314,14 +2326,9 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}
 				rsInvoices.close();
 				//Show the total amount billed:
-				if (bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD COLSPAN=4 class = \" rightjustifiedcell \" ><B>AMOUNT INVOICED TO DATE:</B></TD>"
-					+ "<TD class = \" rightjustifiedcell \" >" 
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				s += "<TD COLSPAN=4 class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" ><B>AMOUNT INVOICED TO DATE:</B></TD>"
+					+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >" 
 						+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalBilled)
 					+ "</TD>"
 					+ "</TR>"
@@ -2343,46 +2350,34 @@ public class SMDisplayOrderInformation extends HttpServlet {
 
 			if (bCalculationFailed == false){
 				if (bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
 				}
 				//Show the total amount remaining to be billed
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				s += 
-					"<TD COLSPAN=4 class = \" rightjustifiedcell \" >"
+					"<TD COLSPAN=4 class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "<B>AMOUNT ON ORDER DETAILS CURRENTLY BEING SHIPPED:</B></TD>"
-					+ "<TD class = \" rightjustifiedcell \" >"
+					+ "<TD class = \" " +SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED  +  " \" >"
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(order.getCalculatedOrderTotals_TotalAmtCurrentlyShipped())
 					+ "</TD>"
 					+ "</TR>"
 				;
 				bOddRow = !bOddRow;
-				if (bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				s += 
-					"<TD COLSPAN=4  class = \" rightjustifiedcell \" >"
+					"<TD COLSPAN=4  class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "<B>AMOUNT ON ORDER DETAILS REMAINING UNSHIPPED:</B></TD>"
-					+ "<TD class = \" rightjustifiedcell \" ><B>"
+					+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" ><B>"
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(order.getCalculatedOrderTotals_TotalAmtStillOnOrder())
 					+ "</B></TD>"
 					+ "</TR>"
 				;
 				bOddRow = !bOddRow;
 				//TOTAL ORDER AMOUNT (AMOUNT INVOICED TO DATE PLUS AMOUNT ON ORDER DETAILS REMAINING TO BE INVOICED):
-				if (bOddRow){
-					sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-				}
-				s += "<TR bgcolor =" + sBackgroundColor + ">";
-				s += "<TD class = \" rightjustifiedcell \"  COLSPAN=4>" 
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \"  COLSPAN=4>" 
 						+ "<B>TOTAL ORDER AMT (amt invoiced to date PLUS amt shipped PLUS amt left on order):</B>" + "</TD>";
-				s += "<TD class = \" rightjustifiedcell \" <B>"
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" <B>"
 					+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(
 						order.getCalculatedOrderTotals_TotalBilled().add(
 						order.getCalculatedOrderTotals_TotalAmtCurrentlyShipped()).add(
@@ -2419,7 +2414,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		String s = "";
 		String SQL = "";
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		if (!bAllowProjectView){
 			return s;
 		}
@@ -2446,47 +2440,46 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				"\">" + "Add new critical date" + "</A><BR>"
 			;
 			s += sLinks + "<BR>";
-			s += "<TABLE BORDER=0 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-					+ CRITICAL_DATE_TABLE_BG_COLOR + "; \" >";
-			s += "<TR>";
-			s += "<TD class = \" centerjustifiedheading \" >ID</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Date</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Resolved?</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Responsible</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Assigned&nbsp;by</TD>";
-			s += "<TD class = \" leftjustifiedheading \" >Comments</TD>";
+			
+			s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+			s += "<TR STYLE=\"background-color: " +CRITICAL_DATE_TABLE_BG_COLOR + "; \" >";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >ID</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Date</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Resolved?</TD>";
+			s += "<TD class = \"  " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Responsible</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +" \" >Assigned&nbsp;by</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Comments</TD>";
 			s += "</TR>";
 
 			bOddRow = true;
 			while(rsCriticalDates.next()){
 				if(bOddRow){
-					sBackgroundColor = "\"" + LIGHT_GREY_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 				}else{
-					sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TR   bgcolor =" + sBackgroundColor + ">";
-				s += "<TD  VALIGN=TOP class = \" centerjustifiedcell \"style = \" vertical-align: text-top; \" ><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+				s += "<TD  VALIGN=TOP class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" ><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 					+ "smcontrolpanel.SMCriticalDateEdit?id=" 
 					+ rsCriticalDates.getInt((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sId).replace("`", "")) +
 					"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" 
 					+ rsCriticalDates.getInt((SMTablecriticaldates.TableName + "." + SMTablecriticaldates.sId).replace("`", "")) 
 					+ "</A></TD>";
 
-				s += "<TD VALIGN=TOP class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + clsDateAndTimeConversions.utilDateToString(
+				s += "<TD VALIGN=TOP class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + clsDateAndTimeConversions.utilDateToString(
 						rsCriticalDates.getDate(SMTablecriticaldates.sCriticalDate.replace("`", "")),"M/d/yyyy") + "</TD>";
 				if(rsCriticalDates.getInt(SMTablecriticaldates.sResolvedFlag.replace("`", "")) == 0){
-					s += "<TD class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + "No" + "</TD>";
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + "No" + "</TD>";
 				}else{
-					s += "<TD class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + "Yes" + "</TD>";
+					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + "Yes" + "</TD>";
 				}
-				s += "<TD VALIGN=TOP class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(
+				s += "<TD VALIGN=TOP class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(
 						SMTablecriticaldates.sresponsibleuserfullname.replace("`", "")) + "</TD>";
 				
-				s += "<TD VALIGN=TOP class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(
+				s += "<TD VALIGN=TOP class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(
 					SMTablecriticaldates.sassignedbyuserfullname.replace("`", "")) + "</TD>";
 
 				//if(sCriticalDateComments.compareToIgnoreCase("") !=0){
-				s += "<TD VALIGN=TOP class = \" leftjustifiedcell \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(SMTablecriticaldates.sComments.replace("`", "")) 
+				s += "<TD VALIGN=TOP class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \"style = \" vertical-align: text-top; \" >" + rsCriticalDates.getString(SMTablecriticaldates.sComments.replace("`", "")) 
 					+ "</TD>";
 				s += "</TR>";
 				bOddRow = ! bOddRow;
@@ -2519,7 +2512,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		String sLinks,
 		boolean bAllowOrderDetailViewing) throws Exception{
 		boolean bOddRow = true;
-		String sBackgroundColor = "";
 		String s = "";
 		
 		if (!bAllowOrderDetailViewing){
@@ -2534,16 +2526,16 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		s += "<BR><a name=\"TaxCalculation\"><B><U>Sales&nbsp;Tax&nbsp;Calculation</U></B></a>&nbsp;";
 		s += "<FONT SIZE=2><B>NOTE:</B> Sales Tax is only calculated on items that currently have a 'Qty Shipped'.<BR>";
 		s += sLinks + "<BR>";
-		s += "<TABLE BORDER=1 WIDTH=100%  cellspacing=0 cellpadding=1 style= \" background-color: " 
-				+ TAX_CALCULATION_TABLE_BG_COLOR + "; \" >";
-		s += "<TR>";
-		s += "<TD class = \" centerjustifiedheading \" >Line</TD>";
-		s += "<TD class = \" leftjustifiedheading \" >Item</TD>";
-		s += "<TD class = \" rightjustifiedheading \" >Qty&nbsp;Shipped</TD>";
-		s += "<TD class = \" centerjustifiedheading \" >Taxable?</TD>";
-		s += "<TD class = \" rightjustifiedheading \" >Extended&nbsp;Price Before&nbsp;Discount</TD>";
-		s += "<TD class = \" rightjustifiedheading \" >Extended&nbsp;Price After&nbsp;Discount</TD>";
-		s += "<TD class = \" rightjustifiedheading \" >Sales&nbsp;Tax&nbsp;Amount</TD>";
+		
+		s += "<TABLE  WIDTH=100%  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\" >";
+		s += "<TR STYLE=\"background-color: " +TAX_CALCULATION_TABLE_BG_COLOR + "; \" >";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >Line</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >Item</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >Qty&nbsp;Shipped</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_CENTER_JUSTIFIED + " \" >Taxable?</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >Extended&nbsp;Price Before&nbsp;Discount</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >Extended&nbsp;Price After&nbsp;Discount</TD>";
+		s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >Sales&nbsp;Tax&nbsp;Amount</TD>";
 		s += "</TR>";
 		SMSalesOrderTaxCalculator sotc;
 		try {
@@ -2582,29 +2574,23 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				sTaxable = "N";
 			}
 			if(bOddRow){
-				sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">";
 			}else{
-				sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+				s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 			}
-			s += "<TR bgcolor =" + sBackgroundColor + ">";
-			s += "<TD class = \" rightjustifiedcell \">" + Integer.toString(i + 1) + "</TD>";
-			s += "<TD class = \" leftjustifiedcell \">" + sotc.getItem(i) + "</TD>";
-			s += "<TD class = \" rightjustifiedcell \">" + sotc.getQtyShipped(i).toString() + "</TD>";
-			s += "<TD class = \" centerjustifiedcell \">" + sTaxable + "</TD>";
-			s += "<TD class = \" rightjustifiedcell \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceBeforeDiscount(i)) + "</TD>";
-			s += "<TD class = \" rightjustifiedcell \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceAfterDiscount(i)) + "</TD>";
-			s += "<TD class = \" rightjustifiedcell \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getSalesTaxAmountPerLine(i)) + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + Integer.toString(i + 1) + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + sotc.getItem(i) + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + sotc.getQtyShipped(i).toString() + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + sTaxable + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceBeforeDiscount(i)) + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +" \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceAfterDiscount(i)) + "</TD>";
+			s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \">" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getSalesTaxAmountPerLine(i)) + "</TD>";
 			s += "</TR>";
 			bOddRow = !bOddRow;
 		}
-		if(bOddRow){
-			sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
-		}else{
-			sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
-		}
-		s += "<TR bgcolor =" + sBackgroundColor + ">"
-			+ "<TD COLSPAN = 6 class = \" rightjustifiedcell \" ><B>TOTAL SALES TAX:</B></TD>"
-			+ "<TD class = \" rightjustifiedcell \" >" + sotc.getTotalSalesTax().toString() + "</TD>"
+		s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">"
+			+ "<TD COLSPAN = 6 class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" ><B>TOTAL SALES TAX:</B></TD>"
+			+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >" + sotc.getTotalSalesTax().toString() + "</TD>"
 			+ "</TR>"
 		;
 		s += "</TABLE>";

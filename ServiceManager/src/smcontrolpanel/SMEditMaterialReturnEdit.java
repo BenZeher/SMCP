@@ -395,7 +395,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
  		;
 		}
 		
-		//TODO Rename in DB
 		//Credit received
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Received:"  + " </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
@@ -406,19 +405,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ "></TD>"
 			+ "</TR>"
 		;
-		
-		//Follow up notes
-	/*	s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Follow up notes</B>:</TD>\n";
-		s += "<TD>\n"
-			+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammfollowupnotes + "\""
-			+ " rows=\"" + "3" + "\""
-			+ " style = \" width: 100%; \""
-			+ ">"
-			+ entry.getmfollowupnotes().replace("\"", "&quot;")
-			+ "</TEXTAREA>"
-			+ "</TD>\n"
-			+ "</TR>\n"
-		;*/
 		
 		s += "</TABLE>";
 		return s;

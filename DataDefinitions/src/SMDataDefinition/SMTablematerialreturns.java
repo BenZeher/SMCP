@@ -24,7 +24,7 @@ public class SMTablematerialreturns {
 	// TJR - Added these fields 9/26/2019:
 	public static final String ladjustedbatchnumber = "ladjustedbatchnumber"; //AdjustedBatch#
 	public static final String lentrynumber = "lentrynumber"; //Adjusted Entry Number 
-	public static final String bdentryamount = "bdentryamount"; //Expected Credit Amount
+	public static final String bdadjustmentamount = "bdadjustmentamount"; //Adjusted Credit Amount
 	public static final String datcreditnotedate = "datcreditnotedate";
 	public static final String screditmemonumber = "screditmemonumber";
 	public static final String bdcreditamt = "bdcreditamt"; //Actual Credit Amount
@@ -40,7 +40,7 @@ public class SMTablematerialreturns {
 	public static final int svendoracctlength = 12;  //Same as icvendors.svendoracctLength
 	public static final int ladjustedbatchnumberlength = 11;
 	public static final int lentrynumberlength = 11;
-	public static final int bdentryamountlength = 19;
+	public static final int bdadjustmentamountlength = 19;
 	public static final int screditmemonumberlength = 24;
 	public static final int bdcreditamtlength = 19;
 	

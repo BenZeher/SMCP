@@ -42,7 +42,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramsvendoracct = "svendoracct";
 	public static final String Paramladjustedbatchnumber = "ladjustedbatchnumber";
 	public static final String Paramlentrynumber = "lentrynumber";
-	public static final String Parambdentryamount = "bdentryamount";
+	public static final String Parambdadjustmentamount = "bdadjustmentamount";
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
 	public static final String Paramscreditmemonumber = "screditmemonumber";
 	public static final String Parambdcreditamt = "bdcreditamt";
@@ -69,7 +69,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_svendoracct;
 	private String m_ladjustedbatchnumber;
 	private String m_lentrynumber;
-	private String m_bdentryamount;
+	private String m_bdadjustmentamount;
 	private String m_datcreditnotedate;
 	private String m_screditmemonumber;
 	private String m_bdcreditamt;
@@ -150,10 +150,10 @@ public class SMMaterialReturn extends clsMasterEntry{
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlentrynumber, req).compareToIgnoreCase("") == 0){
 			m_lentrynumber = "0";
 		}
-		m_bdentryamount = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Parambdentryamount, req).trim().replace("&quot;", "\"");
-		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdentryamount, req).compareToIgnoreCase("") == 0){
-			m_bdentryamount = "0.00";
+		m_bdadjustmentamount = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parambdadjustmentamount, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdadjustmentamount, req).compareToIgnoreCase("") == 0){
+			m_bdadjustmentamount = "0.00";
 		}
 		m_datcreditnotedate = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramdatcreditnotedate, req).trim().replace("&quot;", "\"");
@@ -252,7 +252,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				if(m_lentrynumber.compareToIgnoreCase("")== 0) {
 					m_lentrynumber = "0";
 					}
-				m_bdentryamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdentryamount));
+				m_bdadjustmentamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdadjustmentamount));
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
@@ -381,7 +381,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.svendoracct
 				+ ", " + SMTablematerialreturns.ladjustedbatchnumber
 				+ ", " + SMTablematerialreturns.lentrynumber
-				+ ", " + SMTablematerialreturns.bdentryamount
+				+ ", " + SMTablematerialreturns.bdadjustmentamount
 				+ ", " + SMTablematerialreturns.datcreditnotedate
 				+ ", " + SMTablematerialreturns.screditmemonumber
 				+ ", " + SMTablematerialreturns.bdcreditamt
@@ -410,7 +410,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdadjustmentamount().trim()) + ""
 			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
@@ -439,7 +439,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
 			+ ", " + SMTablematerialreturns.lentrynumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
-			+ ", " + SMTablematerialreturns.bdentryamount  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdentryamount().trim()) + ""
+			+ ", " + SMTablematerialreturns.bdadjustmentamount  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdadjustmentamount().trim()) + ""
 			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
@@ -833,11 +833,11 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setlentrynumber(String lentrynumber) {
 		m_lentrynumber = lentrynumber;
 	}
-	public String getbdentryamount() {
-		return m_bdentryamount;
+	public String getbdadjustmentamount() {
+		return m_bdadjustmentamount;
 	}
-	public void setbdentryamount(String bdentryamount) {
-		m_bdentryamount = bdentryamount;
+	public void setbdadjustmentamount(String bdadjustmentamount) {
+		m_bdadjustmentamount = bdadjustmentamount;
 	}
 	public String getdatcreditnotedate() {
 		return m_datcreditnotedate;
@@ -907,7 +907,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_svendoracct = "";
     	 m_ladjustedbatchnumber ="0";
     	 m_lentrynumber ="0";
-    	 m_bdentryamount ="0.00";
+    	 m_bdadjustmentamount ="0.00";
     	 m_datcreditnotedate = EMPTY_DATE_STRING;
     	 m_screditmemonumber = "";
     	 m_bdcreditamt = "0.00";

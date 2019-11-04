@@ -352,19 +352,16 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TD>"
 				+ "</TR>";
 		
-		//TODO Change field name in DB
 		//Adjusted Credit Amount
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Amount:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdentryamount + "\""
-			+ " VALUE=\"" + entry.getbdentryamount().replace("\"", "&quot;") + "\""
-			+ " ID =\"" + SMMaterialReturn.Parambdentryamount + "\""
+		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdadjustmentamount + "\""
+			+ " VALUE=\"" + entry.getbdadjustmentamount().replace("\"", "&quot;") + "\""
+			+ " ID =\"" + SMMaterialReturn.Parambdadjustmentamount + "\""
 			+ " SIZE=" + "13"
-			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdentryamountlength)
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdadjustmentamountlength)
 			+ "></TD>"
 			+ "</TR>"
 		;
-		
-
 		
 		//Credit Memo Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Memo Number:"  + " </B></TD>";
@@ -405,7 +402,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
 			+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""
 			+ " SIZE=" + "13"
-			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdentryamountlength)
+			+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.bdcreditamtlength)
 			+ "></TD>"
 			+ "</TR>"
 		;

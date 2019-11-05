@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1427;
+	private static final int m_CurrentDatabaseVersion = 1428;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "11/4/2019";
+	private static final String m_sLastRevisionDate = "11/5/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14853,6 +14853,17 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by BJA 11/4/2019
 				SQL = "ALTER TABLE materialreturns " + 
 					" Change bdentryamount bdadjustmentamount decimal(17,2)"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1427:
+				//Added by BJA 11/5/2019
+				SQL = "ALTER TABLE materialreturns " + 
+					" Change lentrynumber ladjustedentrynumber int(11)"
 				;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

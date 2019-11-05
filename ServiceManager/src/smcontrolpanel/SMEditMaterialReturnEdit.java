@@ -324,7 +324,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 
 		
 		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
-		String sEntryNumber = entry.getlentrynumber().replace("\"", "&quot;");
+		String sEntryNumber = entry.getladjustedentrynumber().replace("\"", "&quot;");
 		
 		//Adjustment Batch Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Batch Number:"  + " </B></TD>";
@@ -339,9 +339,9 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 		//Adjustment Entry Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Entry Number:"  + " </B></TD>";
-		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramlentrynumber + "\""
+		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedentrynumber + "\""
 				+ " VALUE=\"" + sEntryNumber + "\""
-				+ " ID =\"" + SMMaterialReturn.Paramlentrynumber + "\""
+				+ " ID =\"" + SMMaterialReturn.Paramladjustedentrynumber + "\""
 				+ " SIZE=" + "13"
 				+ " MAXLENGTH=" + Integer.toString(SMTablematerialreturns.lentrynumberlength) + ">";
 		sBatchNumber = clsStringFunctions.checkStringForNull(sBatchNumber);

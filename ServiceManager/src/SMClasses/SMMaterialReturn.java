@@ -41,7 +41,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramitobereturned = "itobereturned";
 	public static final String Paramsvendoracct = "svendoracct";
 	public static final String Paramladjustedbatchnumber = "ladjustedbatchnumber";
-	public static final String Paramlentrynumber = "lentrynumber";
+	public static final String Paramladjustedentrynumber = "ladjustedentrynumber";
 	public static final String Parambdadjustmentamount = "bdadjustmentamount";
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
 	public static final String Paramscreditmemonumber = "screditmemonumber";
@@ -68,7 +68,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_itobereturned;
 	private String m_svendoracct;
 	private String m_ladjustedbatchnumber;
-	private String m_lentrynumber;
+	private String m_ladjustedentrynumber;
 	private String m_bdadjustmentamount;
 	private String m_datcreditnotedate;
 	private String m_screditmemonumber;
@@ -145,10 +145,10 @@ public class SMMaterialReturn extends clsMasterEntry{
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramladjustedbatchnumber, req).compareToIgnoreCase("") == 0){
 			m_ladjustedbatchnumber = "0";
 		}
-		m_lentrynumber = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramlentrynumber, req).trim().replace("&quot;", "\"");
-		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlentrynumber, req).compareToIgnoreCase("") == 0){
-			m_lentrynumber = "0";
+		m_ladjustedentrynumber = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramladjustedentrynumber, req).trim().replace("&quot;", "\"");
+		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramladjustedentrynumber, req).compareToIgnoreCase("") == 0){
+			m_ladjustedentrynumber = "0";
 		}
 		m_bdadjustmentamount = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parambdadjustmentamount, req).trim().replace("&quot;", "\"");
@@ -248,9 +248,9 @@ public class SMMaterialReturn extends clsMasterEntry{
 				if(m_ladjustedbatchnumber.compareToIgnoreCase("")== 0) {
 				m_ladjustedbatchnumber = "0";
 				}
-				m_lentrynumber = Long.toString(rs.getLong(SMTablematerialreturns.lentrynumber));
-				if(m_lentrynumber.compareToIgnoreCase("")== 0) {
-					m_lentrynumber = "0";
+				m_ladjustedentrynumber = Long.toString(rs.getLong(SMTablematerialreturns.ladjustedentrynumber));
+				if(m_ladjustedentrynumber.compareToIgnoreCase("")== 0) {
+					m_ladjustedentrynumber = "0";
 					}
 				m_bdadjustmentamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdadjustmentamount));
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
@@ -380,7 +380,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.iponumber
 				+ ", " + SMTablematerialreturns.svendoracct
 				+ ", " + SMTablematerialreturns.ladjustedbatchnumber
-				+ ", " + SMTablematerialreturns.lentrynumber
+				+ ", " + SMTablematerialreturns.ladjustedentrynumber
 				+ ", " + SMTablematerialreturns.bdadjustmentamount
 				+ ", " + SMTablematerialreturns.datcreditnotedate
 				+ ", " + SMTablematerialreturns.screditmemonumber
@@ -409,7 +409,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + sPONumber
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
-			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
+			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getladjustedentrynumber().trim()) + ""
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdadjustmentamount().trim()) + ""
 			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
@@ -438,7 +438,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.iponumber + " = " + sPONumber
 			+ ", " + SMTablematerialreturns.svendoracct  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
 			+ ", " + SMTablematerialreturns.ladjustedbatchnumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedbatchnumber().trim()) + ""
-			+ ", " + SMTablematerialreturns.lentrynumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlentrynumber().trim()) + ""
+			+ ", " + SMTablematerialreturns.ladjustedentrynumber  + " = " + clsDatabaseFunctions.FormatSQLStatement(getladjustedentrynumber().trim()) + ""
 			+ ", " + SMTablematerialreturns.bdadjustmentamount  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdadjustmentamount().trim()) + ""
 			+ ", " + SMTablematerialreturns.datcreditnotedate  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatcreditnotedate().trim()) + "'"
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
@@ -643,20 +643,20 @@ public class SMMaterialReturn extends clsMasterEntry{
         	}
         }
         
-        if((m_ladjustedbatchnumber.compareToIgnoreCase("0") == 0 &&  m_lentrynumber.compareToIgnoreCase("0") != 0) || (m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_lentrynumber.compareToIgnoreCase("0") == 0)) {
-        	sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + ".  ";
+        if((m_ladjustedbatchnumber.compareToIgnoreCase("0") == 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) || (m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") == 0)) {
+        	sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ";
         }
         
         try {
-        if(m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_lentrynumber.compareToIgnoreCase("0") != 0) {
-        	ICEntry ent = new ICEntry(m_ladjustedbatchnumber,m_lentrynumber);
-        	System.out.println("[2019295133351] " + " Batch# " + m_ladjustedbatchnumber + " Entry #: " +m_lentrynumber );
+        if(m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) {
+        	ICEntry ent = new ICEntry(m_ladjustedbatchnumber,m_ladjustedentrynumber);
+        	System.out.println("[2019295133351] " + " Batch# " + m_ladjustedbatchnumber + " Entry #: " +m_ladjustedentrynumber );
         	if(!ent.load(conn)) {
-    			sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + " - " + ent.getErrorMessage() + ".  ";
+    			sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + " - " + ent.getErrorMessage() + ".  ";
         	}
         }
         }catch( Exception e){
-        	throw new Exception( sErrors + " Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_lentrynumber + ".  ");
+        	throw new Exception( sErrors + " Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ");
         }
         
         //Validate the vendor:
@@ -827,11 +827,11 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setladjustedbatchnumber(String ladjustedbatchnumber) {
 		m_ladjustedbatchnumber = ladjustedbatchnumber;
 	}
-	public String getlentrynumber() {
-		return m_lentrynumber;
+	public String getladjustedentrynumber() {
+		return m_ladjustedentrynumber;
 	}
-	public void setlentrynumber(String lentrynumber) {
-		m_lentrynumber = lentrynumber;
+	public void setladjustedentrynumber(String ladjustedentrynumber) {
+		m_ladjustedentrynumber = ladjustedentrynumber;
 	}
 	public String getbdadjustmentamount() {
 		return m_bdadjustmentamount;
@@ -906,7 +906,7 @@ public class SMMaterialReturn extends clsMasterEntry{
     	m_itobereturned = "0";
     	m_svendoracct = "";
     	 m_ladjustedbatchnumber ="0";
-    	 m_lentrynumber ="0";
+    	 m_ladjustedentrynumber ="0";
     	 m_bdadjustmentamount ="0.00";
     	 m_datcreditnotedate = EMPTY_DATE_STRING;
     	 m_screditmemonumber = "";

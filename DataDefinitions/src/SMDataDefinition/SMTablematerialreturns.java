@@ -23,7 +23,7 @@ public class SMTablematerialreturns {
 	public static final String svendoracct = "svendoracct";
 	// TJR - Added these fields 9/26/2019:
 	public static final String ladjustedbatchnumber = "ladjustedbatchnumber"; //AdjustedBatch#
-	public static final String lentrynumber = "lentrynumber"; //Adjusted Entry Number 
+	public static final String ladjustedentrynumber = "ladjustedentrynumber"; //Adjusted Entry Number 
 	public static final String bdadjustmentamount = "bdadjustmentamount"; //Adjusted Credit Amount
 	public static final String datcreditnotedate = "datcreditnotedate";
 	public static final String screditmemonumber = "screditmemonumber";

@@ -793,9 +793,22 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1555956144] creating entry transactions - " + e.getMessage());
 		}
 
+    	//If there are any transactions using period 15, then this batch is a GL 'closing' (year end)
+    	//batch, and we'll need to update ALL the balance sheet accounts to roll them over into the
+    	//following year:
+    	boolean bIsClosingBatch = false;
+    	int iClosingFiscalYear = 0;
+    	for(int i = 0; i < m_arrBatchEntries.size(); i++ ){
+    		GLTransactionBatchEntry entry = m_arrBatchEntries.get(i);
+    		if (entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) == 0){
+    			bIsClosingBatch = true;
+    			iClosingFiscalYear = Integer.parseInt(entry.getsfiscalyear());
+    		}
+    	}
+    	
     	//Update the fiscal set data:
     	try {
-			updateFiscalSets(log, sUserID, getsbatchnumber(), "", conn);
+			updateFiscalSets(log, sUserID, getsbatchnumber(), "", conn, bIsClosingBatch, iClosingFiscalYear);
 		} catch (Exception e) {
 			throw new Exception("Error [1555957702] updating fiscal sets - " + e.getMessage());
 		}
@@ -910,7 +923,9 @@ public class GLTransactionBatch {
 		String sUserID, 
 		String sBatchNumber,
 		String sExternalCompanyPullID, 
-		Connection conn
+		Connection conn,
+		boolean bIsClosingBatch,
+		int iClosingFiscalYear
 		) throws Exception{
     	if (bDebugMode){
     		String sDescription = "In GLTransactionBatch, batchnumber: '" + sBatchNumber + "',"
@@ -964,6 +979,34 @@ public class GLTransactionBatch {
 		} catch (Exception e) {
 			throw new Exception("Error [1555958198] reading GL transactions - " + e.getMessage());
 		}
+    	
+    	//If this is a CLOSING batch (year end), then we also have to update all the BALANCE SHEET accounts:
+    	if (bIsClosingBatch){
+    		//List all the balance sheet accounts, and update each.  The 'amount' for each account
+    		//is zero, since we're not updating any balance sheet accounts.  But this will trigger
+    		//the program to update the fiscal sets for the subsequent years and also update the 
+    		//financial statement data for them as well.
+    		
+    		SQL = "SELECT"
+    			+ " " + SMTableglaccounts.sAcctID
+    			+ " FROM " + SMTableglaccounts.TableName
+    			+ " WHERE ("
+    				+ "(" + SMTableglaccounts.sAcctType + " = '" + SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET + "')"
+    			+ ") ORDER BY " + SMTableglaccounts.sAcctID
+    		;
+    		ResultSet rsBalanceSheetAccounts = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+    		
+			while (rsBalanceSheetAccounts.next()){
+				updateFiscalSetsForAccount(
+					conn, 
+					rsBalanceSheetAccounts.getString(SMTableglaccounts.sAcctID),
+					iClosingFiscalYear,
+					SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS,
+					BigDecimal.ZERO
+					);
+			}
+    		rsBalanceSheetAccounts.close();		
+    	}
     	
     	return;
 	}
@@ -1170,7 +1213,6 @@ public class GLTransactionBatch {
 		} catch (Exception e) {
 			throw new Exception("Error [1555958398] reading fiscal years with SQL: '" + SQL + "' - " + e.getMessage());
 		}
-		
     	
     	GLFinancialDataCheck dc = new GLFinancialDataCheck();
 		try {

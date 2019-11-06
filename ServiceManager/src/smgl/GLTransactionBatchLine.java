@@ -226,8 +226,8 @@ public class GLTransactionBatchLine {
 					m_sdebitamt, 
 				"Debit Amount", 
 				SMTablegltransactionbatchlines.bddebitamtScale,
-				new BigDecimal("-9999999.99"),
-				new BigDecimal("9999999.99")
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
 				).replaceAll(",", "");
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";
@@ -242,8 +242,8 @@ public class GLTransactionBatchLine {
 					m_screditamt, 
 				"Credit Amount", 
 				SMTablegltransactionbatchlines.bdcreditamtScale,
-				new BigDecimal("-9999999.99"),
-				new BigDecimal("9999999.99")
+				new BigDecimal("-999999999.99"),
+				new BigDecimal("999999999.99")
 				).replaceAll(",", "");
 		} catch (Exception e) {
 			sResult += "  " + e.getMessage() + ".";

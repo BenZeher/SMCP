@@ -406,7 +406,7 @@ public class SMSalesContactEdit extends HttpServlet {
 		        		+ " " + SMTablebids.TableName 
 		        		+ " WHERE (" 
 		        			+ SMTablebids.isalescontactid + "=" + rs.getInt(SMTablesalescontacts.id)
-		        		+ ") ORDER BY " + SMTablebids.dattimebiddate + " DESC"; 
+		        		+ ") ORDER BY " + SMTablebids.dattimeoriginationdate + ""; 
 		        	
 		        	out.println("<TR><TD ALIGN=RIGHT>Related " + SMBidEntry.ParamObjectName + "s:&nbsp;</TD>" +
 		        				"<TD VALIGN=CENTER>");

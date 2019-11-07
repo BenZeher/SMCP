@@ -27,7 +27,6 @@ import ServletUtilities.clsManageRequestParameters;
 public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private int iDeleteInactiveItemsItemCounter = 0;
 
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -49,6 +48,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
+	    CurrentSession.removeAttribute(ICDeleteInactiveItemsSelection.DELETE_ERRORS_LIST);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
@@ -56,7 +56,6 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 	    
 	    //sCallingClass will look like: smar.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
-	    String sWarning = "";
 	    
 	    /**************Get Parameters**************/
 	    java.sql.Date datDeleteDate = null;
@@ -64,11 +63,12 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 		try {
 			datDeleteDate = clsDateAndTimeConversions.StringTojavaSQLDate("M/d/yyyy", sDeleteDate);
 		} catch (ParseException e1) {
-			sWarning = "Error:[1423661739] Invalid delete date: '" + datDeleteDate + "' - " + e1.getMessage();
+			CurrentSession.setAttribute(
+				ICDeleteInactiveItemsSelection.DELETE_ERRORS_LIST, 
+				"Error:[1423661739] Invalid delete date: '" + datDeleteDate + "' - " + e1.getMessage());
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 					+ "" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-					+ "&Warning=" + sWarning
 			);
 			return;
 		}
@@ -91,37 +91,36 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 		   );
 		
     	//Delete inactives:
-    	if (!deleteInactives(getServletContext(), sDBID, datDeleteDate, sUserID, sUserFullName, sWarning)){
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + URLEncoder.encode(sWarning, "UTF-8")
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    	String sResult = "";
+    	try {
+    		sResult = deleteInactives(getServletContext(), sDBID, datDeleteDate, sUserID, sUserFullName);
+		} catch (Exception e) {
+			CurrentSession.setAttribute(ICDeleteInactiveItemsSelection.DELETE_ERRORS_LIST, URLEncoder.encode(e.getMessage(), "UTF-8"));
+			response.sendRedirect(
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
     		);			
         	return;
-    	}
+		}
     	
-    	//If there was no error message, simply advise that the delete process was successful:
-    	if (sWarning.trim().compareToIgnoreCase("") == 0){
-    		sWarning = "ALL inactive items were successfully deleted.";
-    	}else if (sWarning.length() > 1024){
-    		sWarning += "<BR>.....<BR><BR> " + Integer.toString(iDeleteInactiveItemsItemCounter) + " total items could not be deleted. "
-    				+ "<BR> All OTHER inactive items were successfully deleted.";
-    	} else {
-    		sWarning += "<BR>All OTHER inactive items were successfully deleted.";
-    	}
+    	CurrentSession.setAttribute(ICDeleteInactiveItemsSelection.DELETE_ERRORS_LIST, sResult);
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-				+ "Warning=" + URLEncoder.encode(sWarning, "UTF-8")
-				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 		);			
     	return;
 	}
 	
-	private boolean deleteInactives(ServletContext context, String sDBID, Date datDeleteDate, String sUserID, String sUserFullName, String sWarning){	
+	private String deleteInactives(
+		ServletContext context, 
+		String sDBID, 
+		Date datDeleteDate, 
+		String sUserID, 
+		String sUserFullName) throws Exception{	
 	
-		sWarning = "";
-		iDeleteInactiveItemsItemCounter = 0;
-		
+		String m_sWarning = "";
+		long lSuccessfulDeletesCounter = 0;
+		long lUnsuccessfulDeletesCounter = 0;
 		//Delete all items with a last transaction date before the entered date
 		String SQL = "SELECT "
 			+ SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
@@ -136,8 +135,9 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 			+ " GROUP BY " + SMTableictransactions.TableName + "." + SMTableictransactions.sitemnumber
 			; 
 
+		Connection conn = null;
 		try{
-			Connection conn = clsDatabaseFunctions.getConnection(
+			conn = clsDatabaseFunctions.getConnection(
 					context, 
 					sDBID, 
 					"MySQL", 
@@ -147,8 +147,7 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 					
 					);
 				if (conn == null){
-					sWarning = "Could not get connection to delete inactives.";
-					return false;
+					throw new Exception("Error [20193111613495] " + "Could not get connection to delete inactives.");
 				}
 			
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -159,15 +158,10 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 					ICItem item = new ICItem(sItemNum);
 					//If an item cannot be deleted, add it to the warning string, but go on:
 					if (!item.delete(sItemNum, conn)){
-						iDeleteInactiveItemsItemCounter++;
-						if (sWarning.trim().compareToIgnoreCase("") == 0){
-							sWarning = "" + item.getErrorMessageString();
-						}else{
-							//Limit the length of this warning to 1024 or so
-							if (sWarning.length() < 1024){
-								sWarning = sWarning + item.getErrorMessageString() + " ";
-							}
-						}
+							m_sWarning = m_sWarning + item.getErrorMessageString() + " ";
+						lUnsuccessfulDeletesCounter++;
+					}else{
+						lSuccessfulDeletesCounter++;
 					}
 				}
 			}
@@ -187,23 +181,21 @@ public class ICDeleteInactiveItemsGenerate extends HttpServlet {
 				String sItemNum = rs1.getString(SMTableicitems.sItemNumber);
 				ICItem item = new ICItem(sItemNum);
 				if (!item.delete(sItemNum, conn)){
-					iDeleteInactiveItemsItemCounter++;
-					if (sWarning.trim().compareToIgnoreCase("") == 0){
-						sWarning = item.getErrorMessageString();
-					}else{
-						//Limit the length of this warning to 1024 or so
-						if (sWarning.length() < 1024){
-							sWarning = sWarning +  item.getErrorMessageString() + " ";
-						}
-					}
+					m_sWarning = m_sWarning +  item.getErrorMessageString() + " ";
+					lUnsuccessfulDeletesCounter++;
+				}else{
+					lSuccessfulDeletesCounter++;
 				}
 			}	
 			rs1.close();
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080813]");
 		}catch (Exception e){
-			sWarning = "Error deleting inactives - " + e.getMessage() + ".";
-			return false;
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080913]");
+			throw new Exception("Error [1573161124] deleting inactives - " + e.getMessage() + ".");
 		}
-		return true;
+
+		return Long.toString(lSuccessfulDeletesCounter) + " items WERE deleted, " + Long.toString(lUnsuccessfulDeletesCounter) + " could NOT be deleted."
+			+ "<BR><BR>" + m_sWarning
+		;
 	}
 }

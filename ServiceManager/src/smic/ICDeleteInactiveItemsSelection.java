@@ -18,7 +18,7 @@ import ServletUtilities.clsManageRequestParameters;
 
 public class ICDeleteInactiveItemsSelection extends HttpServlet {
 	public static final String DELETE_DATE= "DeleteDate";
-
+	public static final String DELETE_ERRORS_LIST = "DELETEINACTIVEITEMSERRORLIST";
 	private static final long serialVersionUID = 1L;
 
 	public void doGet(HttpServletRequest request,
@@ -51,9 +51,9 @@ public class ICDeleteInactiveItemsSelection extends HttpServlet {
 	    		SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), 
 	    		sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
-	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
-		if (sWarning.compareToIgnoreCase("") != 0){
-			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
+	    String sResult = (String)CurrentSession.getAttribute(DELETE_ERRORS_LIST);
+		if (sResult.compareToIgnoreCase("") != 0){
+			out.println("<B><FONT COLOR=\"RED\">RESULT: " + sResult + "</FONT></B><BR>");
 		}
 	    
 		//Print a link to the first page after login:

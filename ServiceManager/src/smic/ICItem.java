@@ -1398,6 +1398,7 @@ public class ICItem extends Object{
 			return false;
 		}
 
+		//START DELETING HERE:
 		//Cost buckets (iccosts)
 		try{
 			SQL = "DELETE FROM " + SMTableiccosts.TableName

@@ -51,7 +51,12 @@ public class ICDeleteInactiveItemsSelection extends HttpServlet {
 	    		SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), 
 	    		sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
+	    
+	    //Print any results from a previous try, if there was one....
 	    String sResult = (String)CurrentSession.getAttribute(DELETE_ERRORS_LIST);
+	    if (sResult == null){
+	    	sResult = "";
+	    }
 		if (sResult.compareToIgnoreCase("") != 0){
 			out.println("<B><FONT COLOR=\"RED\">RESULT: " + sResult + "</FONT></B><BR>");
 		}

@@ -232,13 +232,13 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		;
 		
 
-			//Status Options
+		//Status Options
 		    
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 		
 		//Credit Not Expected
-		//Credit to be expected with have a Expected Credit Amount
+		//Credit to be expected will have a Expected Credit Amount
 		//Credit received will have Credit Memo Number and Date of Credit Memo
 				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Not Expected?</B></TD>\n";
 				s += "<TD>\n";
@@ -255,7 +255,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}else{
-			sCheckBoxChecked = "";
+			sCheckBoxChecked = clsServletUtilities.CHECKBOX_UNCHECKED_STRING;
 		}
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>\n";
 		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
@@ -409,28 +409,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TABLE>";
 		return s;
 	}
-	/*
-	String getJavascript(){
-		String s = "";
-		s = "<script type= 'text/JavaScript'>\n"
-				+" function invisible(){\n"
-	    		+ "       document.getElementById(\"itemId\").style.display = \"none\";\n"
-	    		+ "       document.getElementById(\"textBoxId\").value = \"\";\n"
-	    		//+ "       document.getElementById(\"itemId\").children.value = \"\"\n;"
-	    		+ " }\n"
-	    		+"  $(document).ready(function(){\n"
-	    		+"        if(document.getElementById(\"invoicechecked\").checked == false){\n"
-	    		+ "       document.getElementById(\"itemId\").style.display = \"none\";\n"
-	    		+ "       document.getElementById(\"textBoxId\").value = \"\";\n"
-	    		+"         }\n   "
-	    		+"       });\n"
-	    		+ " function visible () {\n"
-	    		+ "       document.getElementById(\"itemId\").style.display = \"block\";\n  "
-	    		+ " }\n"
-	    		+ " </script>\n";
-		return s;
-	}
-	*/
 	
 	public String Script(String s) {
 		s+= "<script>\n";

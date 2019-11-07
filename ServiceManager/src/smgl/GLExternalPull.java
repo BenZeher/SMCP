@@ -222,7 +222,7 @@ public class GLExternalPull {
 			}
 	    	
 	    	//Now update the fiscal set data:
-	    	GLTransactionBatch.updateFiscalSets(log, sUserID, "", Long.toString(lExternalCompanyPullID), conn);
+	    	GLTransactionBatch.updateFiscalSets(log, sUserID, "", Long.toString(lExternalCompanyPullID), conn, false, 0);
 
 	    	//Commit the data transaction:
 	    	try {

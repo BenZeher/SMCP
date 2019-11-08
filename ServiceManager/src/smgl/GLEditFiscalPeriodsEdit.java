@@ -336,16 +336,17 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 			)
 		;
 
+	    /* TJR - 11/8/2019 - Not sure we need this field at all:
 	    //Lock adjustments?
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockadjustmentperiod, 
 			Integer.parseInt(entry.get_silockadjustmentperiod()), 
 			"Lock adjustments for this year?", 
-			"<I>Check to prevent adjustments to this fiscal year.  If checked, no updates - including updates to the opening balances"
-				+ " - will be posted to this year when previous year postings occur.</I>"
+			"<I>Check to prevent adjustments to this fiscal year.</I>"
 			)
 		;
-
+		*/
+	    
 	    //Lock closings?
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockclosingperiod, 

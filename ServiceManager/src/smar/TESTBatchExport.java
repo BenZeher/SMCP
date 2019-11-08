@@ -108,7 +108,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		// /*****************************************************
+		/*****************************************************
 		// TEST MS SQL Connection:
 		Connection cnAP = null;
 		String sAPDatabaseURL = "madg01.com";
@@ -146,6 +146,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Could not get MS SQL connection");
 			return;
 		}
+		*/
 		
 		/*
 		//Test GL Pull:
@@ -179,6 +180,7 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
+		/*
 		//Test financial statement integrity:
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
@@ -197,10 +199,12 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(e1.getMessage());
 		}
 		System.out.println("DONE");
+		*/
+		
 		
 		//Test GL Transaction Batch posting:
 		clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("4");
+		GLTransactionBatch glbatch = new GLTransactionBatch("9");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {

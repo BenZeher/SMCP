@@ -461,7 +461,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 	}
 	private void printTransactionHeader(PrintWriter out, boolean bOddRow){
 		out.println(ServletUtilities.clsServletUtilities.createHTMLComment("Begin table for transaction info"));
-		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">" + "\n");
 		if (bOddRow){
 			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
 		}else{
@@ -486,7 +486,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 	}
 	private void printDetailsHeader(PrintWriter out, boolean bOddRow){
 		out.println(ServletUtilities.clsServletUtilities.createHTMLComment("Begin table for transaction details"));
-		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
+		out.println("<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">" + "\n");
 		if (bOddRow){
 			out.println("  <TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD + "\">" + "\n");
 		}else{
@@ -504,7 +504,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 		out.println("  </TR>");
 	}
 	private void printTotalsSection(PrintWriter out, BigDecimal bdTotalCost){
-		out.println("<TABLE WIDTH = 100% align=right CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITHOUT_BORDER + "\">" + "\n");
+		out.println("<TABLE WIDTH = 100% align=right CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">" + "\n");
 		out.println("  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_TOTAL + " \" >\n");
 		out.println("    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" >"
 			+ " TOTAL CHANGE IN COST:&nbsp;"

@@ -303,12 +303,20 @@ public class SMCustomQuery extends java.lang.Object{
 			);
 
 			out.println("</style>");
+			
+			out.println("<style type=\"text/css\" media=\"print\">");
+			out.println("@media print {\n" + 
+					"thead {display: table-header-group;}\n" + 
+					"}");
+
+			out.println("</style>");
 
 			String sHeading = "";
 			long lRecordCount = 0;
 			String sHAlign = "";
 			try{
 				out.println("<table class=\"main\">");
+				out.println("<thead>");
 				out.println("<TR>");
 				if (bDebugMode){
 					System.out.println("In " + this.toString() + " - main SQL = " + sQueryString);
@@ -363,7 +371,7 @@ public class SMCustomQuery extends java.lang.Object{
 				out.println(sHeading);
 			}
 				out.println("</TR>");
-
+				out.println("</thead>");
 				boolean bWhiteRow = true;
 				while(rs.next()){
 					if (bAlternateRowColors){

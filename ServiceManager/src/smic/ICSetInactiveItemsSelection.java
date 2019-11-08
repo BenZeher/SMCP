@@ -107,7 +107,7 @@ public class ICSetInactiveItemsSelection  extends HttpServlet {
 	    	}
 	    	rsItems.close();
 	    	out.println("<TD>" + "<B>Starting with:</B> " 
-	    			+ clsCreateHTMLFormFields.TDTextBox("StartingItem", sStartingItemNumber, 10, 10, "") + "</TD>");
+	    			+ clsCreateHTMLFormFields.TDTextBox("StartingItem", sStartingItemNumber, 24, SMTableicitems.sItemNumberLength, "") + "</TD>");
 	    	
 	    	sSQL =
 	    		"SELECT"
@@ -127,7 +127,7 @@ public class ICSetInactiveItemsSelection  extends HttpServlet {
 	    		sEndingItemNumber = rsItems.getString(SMTableicitems.sItemNumber);
 	    	}
 	    	rsItems.close();
-	    	out.println("<TD>" + "<B>Ending with:</B> " + clsCreateHTMLFormFields.TDTextBox("EndingItem", sEndingItemNumber, 10, 10, "") + "</TD>");
+	    	out.println("<TD>" + "<B>Ending with:</B> " + clsCreateHTMLFormFields.TDTextBox("EndingItem", sEndingItemNumber, 24, SMTableicitems.sItemNumberLength, "") + "</TD>");
 	    	out.println("</TR>");
 	    		    	
 	    	//List actives/inactives:
@@ -176,7 +176,7 @@ public class ICSetInactiveItemsSelection  extends HttpServlet {
 	    			+ clsCreateHTMLFormFields.TDTextBox(
 	    					ENDING_DATE, 
 	    					clsDateAndTimeConversions.now("M/d/yyyy"), 
-	    					10, 
+	    					8, 
 	    					10, 
 	    					""
 	    					) 

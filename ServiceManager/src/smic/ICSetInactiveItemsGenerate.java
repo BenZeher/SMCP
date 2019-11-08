@@ -150,8 +150,6 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     	sCriteria += ", sorted by " + sSortByCriteria;
     	sCriteria += ".<BR>";
     	String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
-
-
     	
     	out.println("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0 " +
 		   "Transitional//EN\">" +
@@ -316,7 +314,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		}
 		
 		//First, create a temporary table to hold all the item records:
-		SQL = "CREATE TEMPORARY TABLE ICITEMLIST ("
+ 		String sTempTableName = "ICITEMLIST" + Long.toString(System.currentTimeMillis()/1000L);
+		SQL = "CREATE TEMPORARY TABLE " + sTempTableName + " ("
 			+ "sitemnumber varchar(" + Integer.toString(SMTableicitems.sItemNumberLength) 
 				+ ") NOT NULL DEFAULT ''"
 			+ ", sitemdescription varchar(" + Integer.toString(SMTableicitems.sItemDescriptionLength) 
@@ -339,12 +338,12 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080972]");
 			throw new Exception("Error creating temporary item table - " + e1.getMessage() + "."
-    			+ Remove_Temp_Table_ICITEMLIST(conn));
+    			+ removeTemporaryTable(sTempTableName, conn));
     	}
 		
 		//Now populate the table with active/inactive items:
 		long lStartTime = System.currentTimeMillis();
-		SQL = "INSERT INTO ICITEMLIST"
+		SQL = "INSERT INTO " + sTempTableName
 			+ " ("
 			+ "sitemnumber"
 			+ ", sitemdescription"
@@ -386,7 +385,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				clsDatabaseFunctions.freeConnection(context, conn, "[1547080973]");
 				throw new Exception("Error inserting into temporary item table with SQL: " + SQL + " - " 
 	    		+ e1.getMessage() + "."
-	    		+ Remove_Temp_Table_ICITEMLIST(conn));
+	    		+ removeTemporaryTable(sTempTableName, conn));
 	    	}		
 		    if (bDebugMode){
 		    	System.out.println("In " + this.toString() + " [1487711844] - inserts took " 
@@ -395,7 +394,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		    	lStartTime = System.currentTimeMillis();
 		    }
 		
-		//Delete items that are after the the last transaction date selected. 	    
+		//Remove items from the list of 'eligibles' that are after the the last transaction date selected. 	    
 		SQL = "SELECT " + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber 
 				+ "," + " MAX(" + SMTableictransactions.TableName + "." + SMTableictransactions.datpostingdate + ") AS 'TRANSDATE'"
 				+ " FROM " +  SMTableictransactions.TableName
@@ -410,8 +409,8 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			while(rs.next()){
 			//If TRANSDATE > 'entered date' DELETE from ICITEMS 
 				if (rs.getDate("TRANSDATE").after(datEndDate)){
-				SQL = "DELETE FROM ICITEMLIST"
-						+ " WHERE (" + "ICITEMLIST.sitemnumber = '" + rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemNumber) 	+ "')"
+				SQL = "DELETE FROM " + sTempTableName
+						+ " WHERE (" + sTempTableName + ".sitemnumber = '" + rs.getString(SMTableicitems.TableName + "." + SMTableicitems.sItemNumber) 	+ "')"
 					;	
 				try {
 					Statement stmt = conn.createStatement();
@@ -419,21 +418,20 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 				} catch (SQLException e1) {
 					clsDatabaseFunctions.freeConnection(context, conn, "[1547080974]");
 					throw new Exception("Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + "."
-		    		 + Remove_Temp_Table_ICITEMLIST(conn));
+		    		 + removeTemporaryTable(sTempTableName, conn));
 					}										
 				}
 			}				
 			rs.close();		
 		}catch(SQLException e){
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080975]");
-			throw new Exception(Remove_Temp_Table_ICITEMLIST(conn));
+			throw new Exception(removeTemporaryTable(sTempTableName, conn));
 		}
 		
-		
 		//Delete items that are outstanding in order entry:
-		SQL = "DELETE FROM ICITEMLIST"
+		SQL = "DELETE FROM " + sTempTableName
 			+ " WHERE ("
-				+ "ICITEMLIST.sitemnumber IN ("
+				+ sTempTableName + ".sitemnumber IN ("
 					+ "SELECT DISTINCT " + SMTableorderdetails.TableName + "." + SMTableorderdetails.sItemNumber 
 					+ " as sitemnumber"
 					+ " FROM " + SMTableorderdetails.TableName + " LEFT JOIN " 
@@ -454,7 +452,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080976]");
 			throw new Exception("Error ignoring items on orders with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		 + Remove_Temp_Table_ICITEMLIST(conn));
+    		 + removeTemporaryTable(sTempTableName, conn));
     	}		
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711847] - order entry filter took " 
@@ -463,9 +461,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	lStartTime = System.currentTimeMillis();
 	    }
 		//Ignore items that are outstanding on PO's
-		SQL = "DELETE FROM ICITEMLIST"
+		SQL = "DELETE FROM " + sTempTableName
 			+ " WHERE ("
-				+ "ICITEMLIST.sitemnumber IN ("
+				+ sTempTableName + ".sitemnumber IN ("
 					+ "SELECT DISTINCT " + SMTableicpolines.TableName + "." + SMTableicpolines.sitemnumber
 					+ " as sitemnumber"
 					+ " FROM " + SMTableicpolines.TableName + " LEFT JOIN " 
@@ -491,7 +489,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080977]");
 			throw new Exception("Error ignoring items on Purchase orders with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		 + Remove_Temp_Table_ICITEMLIST(conn));
+    		 + removeTemporaryTable(sTempTableName, conn));
     	}		
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711849] - purchase order filter took " 
@@ -500,9 +498,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	lStartTime = System.currentTimeMillis();
 	    }
 		//Remove any items that are outstanding on Receipts
-		SQL = "DELETE FROM ICITEMLIST"
+		SQL = "DELETE FROM " + sTempTableName
 			+ " WHERE ("
-				+ "ICITEMLIST.sitemnumber IN ("
+				+ sTempTableName + ".sitemnumber IN ("
 					+ "SELECT DISTINCT " + SMTableicporeceiptlines.TableName + "." + SMTableicporeceiptlines.sitemnumber 
 					+ " as sitemnumber"
 					+ " FROM " + SMTableicporeceiptlines.TableName + " LEFT JOIN " 
@@ -524,7 +522,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080978]");
 			throw new Exception("Error ignoring items on Purchase order receipts with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		 + Remove_Temp_Table_ICITEMLIST(conn));
+    		 + removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711851] - PO receipt filter took " 
@@ -533,9 +531,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	lStartTime = System.currentTimeMillis();
 	    }
 		//Remove items that have any costs or qtys in cost buckets:
-		SQL = "DELETE FROM ICITEMLIST"
+		SQL = "DELETE FROM " + sTempTableName
 			+ " WHERE ("
-				+ "ICITEMLIST.sitemnumber IN ("
+				+ sTempTableName + ".sitemnumber IN ("
 				
 					+ "SELECT DISTINCT " + SMTableiccosts.TableName + "." + SMTableiccosts.sItemNumber 
 					+ " as sitemnumber"
@@ -554,7 +552,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080979]");
 			throw new Exception("Error ignoring items in iccosts with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		 + Remove_Temp_Table_ICITEMLIST(conn));
+    		 + removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711853] - ICCOST filter took " 
@@ -563,9 +561,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	lStartTime = System.currentTimeMillis();
 	    }
 		//Remove items that have any qtys in locations:
-		SQL = "DELETE FROM ICITEMLIST"
+		SQL = "DELETE FROM " + sTempTableName
 			+ " WHERE ("
-				+ "ICITEMLIST.sitemnumber IN ("
+				+ sTempTableName + ".sitemnumber IN ("
 				
 					+ "SELECT DISTINCT " + SMTableicitemlocations.TableName + "." + SMTableicitemlocations.sItemNumber 
 					+ " as sitemnumber"
@@ -584,7 +582,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080980]");
 			throw new Exception("Error ignoring items in icitemlocations with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		+ Remove_Temp_Table_ICITEMLIST(conn));
+    		+ removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711855] - item location filter took " 
@@ -592,12 +590,12 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    	);
 	    	lStartTime = System.currentTimeMillis();
 	    }
-		SQL = "UPDATE ICITEMLIST"
+		SQL = "UPDATE " + sTempTableName
 			+ " SET datlasttransaction = "
 			+ "(SELECT MAX(" + SMTableictransactions.datpostingdate + ")"
 			+ " FROM " + SMTableictransactions.TableName 
 			+ " WHERE ("
-			+ " ICITEMLIST.sitemnumber = " 
+			+ " " + sTempTableName + ".sitemnumber = " 
 			+ SMTableictransactions.TableName + "." + SMTableictransactions.sitemnumber + ")"
 			+ ")"
 			;
@@ -607,7 +605,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 		} catch (SQLException e1) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547080981]");
 			throw new Exception("Error updating last transaction dates with SQL: " + SQL + " - " + e1.getMessage() + "."
-    		+ Remove_Temp_Table_ICITEMLIST(conn));
+    		+ removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
 	    	System.out.println("In " + this.toString() + " [1487711857] - set datLastTransaction took " 
@@ -623,9 +621,9 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 			sLicenseModuleLevel);
 		
 		if (sSortBy.compareToIgnoreCase(ICSetInactiveItemsSelection.SORT_BY_LAST_TRANSACTION_DATE) == 0){
-			SQL = "SELECT * FROM ICITEMLIST ORDER BY datlasttransaction, sitemnumber";
+			SQL = "SELECT * FROM " + sTempTableName + " ORDER BY datlasttransaction, sitemnumber";
 		}else{
-			SQL = "SELECT * FROM ICITEMLIST ORDER BY sitemnumber";
+			SQL = "SELECT * FROM " + sTempTableName + " ORDER BY sitemnumber";
 		}
     	long lItemsPrinted = 0;
     	try{
@@ -670,18 +668,18 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     	}catch (SQLException e){
     		clsDatabaseFunctions.freeConnection(context, conn, "[1547080982]");
     		throw new Exception("Error reading items - " + e.getMessage() + "."
-    		+ Remove_Temp_Table_ICITEMLIST(conn));
+    		+ removeTemporaryTable(sTempTableName, conn));
     	}	
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080983]");
 	}
 	
-	private String Remove_Temp_Table_ICITEMLIST(Connection conn){
+	private String removeTemporaryTable(String sTableName, Connection conn){
 
-    	String SQL = "DROP TABLE IF EXISTS ICITEMLIST";
+    	String SQL = "DROP TABLE IF EXISTS " + sTableName;
     	try{
     		clsDatabaseFunctions.executeSQL(SQL, conn);
     	}catch (SQLException ex){
-    		return "<BR>Error removing temp table ICITEMLIST - " + ex.getMessage() + ".";
+    		return "<BR>Error removing temp table '" + sTableName + "' - " + ex.getMessage() + ".";
     	}
     	return "";
 	}

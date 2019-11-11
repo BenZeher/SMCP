@@ -2271,6 +2271,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMTestOHDPlusAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMTestOHDPlusAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMTestOHDPlusSelect</servlet-name>
+        <servlet-class>smcontrolpanel.SMTestOHDPlusSelect</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMTruckScheduleEditHandler</servlet-name>
         <servlet-class>smcontrolpanel.SMTruckScheduleEditHandler</servlet-class>
     </servlet>
@@ -6255,6 +6265,16 @@
     <servlet-mapping>
         <servlet-name>SMTestDetailSheetResults</servlet-name>
         <url-pattern>/smcontrolpanel.SMTestDetailSheetResults</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMTestOHDPlusAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMTestOHDPlusAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMTestOHDPlusSelect</servlet-name>
+        <url-pattern>/smcontrolpanel.SMTestOHDPlusSelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

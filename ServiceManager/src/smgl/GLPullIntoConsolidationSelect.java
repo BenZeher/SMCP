@@ -82,10 +82,13 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    	+ "#" + Long.toString(SMSystemFunctions.GLPullExternalDataIntoConsolidation) 
 	    	+ "\">Summary</A><BR>");
 	    
-	    out.println("<BR>This function will pull GL transactions for the selected fiscal year and period"
-	    		+ " into this company's data.  If any transactions have already been pulled for that fiscal year,"
-	    		+ " and period, the process will stop and report the error."
-	    		+ "<BR><BR>"
+	    out.println("<BR>Pulling transactions for an external company will automatically add ALL the non-zero"
+	    	+ " GL transactions from that company, for the selected year and period, into THIS (consolidated) company."
+	    	+ "  There is no batch to post or any further steps required after doing the 'pull' for a selected company.<BR>"
+	    	+ "Every time an individual company is 'pulled' successfully, it gets recorded in the 'glcompanypulls' table."
+	    	+ "  If you try to pull the same company, fiscal year and period again, the program will check that record"
+	    	+ " and prevent you from pulling it again."  
+	    	+ "<BR><BR>"
 	    );
 	    
     	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smgl.GLPullIntoConsolidationAction\">");

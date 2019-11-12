@@ -1,13 +1,10 @@
 package smar;
-import java.io.PrintWriter;
-import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
 import ServletUtilities.clsDatabaseFunctions;
-import smgl.GLFinancialDataCheck;
+import smgl.GLExternalPull;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -24,7 +21,7 @@ public class TESTBatchExport extends HttpServlet{
 		String sUser = "smuser7sT559";//"smuser7sT559";
 		String sPassword = "kJ26D3G9bvK8";//"kJ26D3G9bvK8";
 		
-		//MADG server settings:
+//		//Google server settings:
 //		String sURL = "35.243.233.33"; //Google Cloud SQL = 35.243.233.33
 //		String sDBID = "servmgr1"; //servmgr1 - default
 //		String sConnString = "jdbc:mysql://" + sURL + ":3306/" + sDBID + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True";
@@ -148,7 +145,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
-		/*
+		
 		//Test GL Pull:
 		GLExternalPull pull = new GLExternalPull();
 		try {
@@ -158,14 +155,14 @@ public class TESTBatchExport extends HttpServlet{
 					"Tom Ronayne",
 					"1", 
 					"2019", 
-					"7", 
+					"10", 
 					conn,
 					null);
 		} catch (Exception e1) {
 			System.out.println("Error - " + e1.getMessage());
 		}
 		System.out.println("DONE");
-		*/
+		
 		
 		/*
 		//Test GL Transaction Batch for AR:

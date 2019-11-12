@@ -13,6 +13,7 @@ import smcontrolpanel.SMUtilities;
 public class SMTestOHDPlusSelect extends HttpServlet {
 	
 	public static final String PARAM_WARNING = "OHDPLUSCONNECTIONWARNING";
+	public static final String PARAM_REQUESTSTRING = "OHDPLUSCONNECTIONREQSTRING";
 	private static final long serialVersionUID = 1L;
 	
 	public void doGet(HttpServletRequest request,
@@ -33,9 +34,9 @@ public class SMTestOHDPlusSelect extends HttpServlet {
 	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-	    String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-	    String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
-	    				+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    //String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    //String sUserFullName = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
+	    //	+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String title = "Test Request To OHD Plus";
 	    String subtitle = "";
@@ -55,12 +56,11 @@ public class SMTestOHDPlusSelect extends HttpServlet {
     	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
     	out.println("<INPUT TYPE=HIDDEN NAME='CallingClass' VALUE='" + this.getClass().getName() + "'>\n");
     	
-    	out.println("Enter request string: <INPUT TYPE=TEXT SIZE=80 NAME='REQUESTSTRING'>");
+    	out.println("Enter request string: <INPUT TYPE=TEXT SIZE=80 NAME='" + PARAM_REQUESTSTRING + "'>");
     	
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Make query request----\">");
     	//out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");
 	    out.println("</BODY></HTML>");
 	}
-
 }

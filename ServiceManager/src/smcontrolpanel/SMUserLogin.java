@@ -297,6 +297,8 @@ public class SMUserLogin extends HttpServlet {
 		arMenu.add(SMSystemFunctions.SMViewSystemConfiguration);
 		
 		arMenu.add(SMSystemFunctions.SMEditServerSettingsFile);
+		
+		arMenu.add(SMSystemFunctions.SMTestOHDPlusConnection);
 	
 		
 		if (bMobileView){

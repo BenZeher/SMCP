@@ -34,14 +34,14 @@ public class GLExternalPull {
 			) throws Exception{
 			
 			//Create a log object:
-			SMLogEntry log = new SMLogEntry(sDBID, context);
+			SMLogEntry log = new SMLogEntry(conn);
 			
-	    	//Pull the transactions into a single GL batch:
-	    	
 	    	//First confirm that the period in the consolidated company is unlocked:
 	    	GLFiscalYear period = new GLFiscalYear();
 	    	if (period.isPeriodLocked(sFiscalYear, Integer.parseInt(sFiscalPeriod), conn)){
-	    		ServletUtilities.clsDatabaseFunctions.freeConnection(context, conn, "[1562875355]");
+	    		if (context != null){
+	    			ServletUtilities.clsDatabaseFunctions.freeConnection(context, conn, "[1562875355]");
+	    		}
 				throw new Exception(
 						"Error [20191901557102] " + "fiscal period '" + sFiscalYear + " - " + sFiscalPeriod + "' is locked.");
 	    	}
@@ -222,18 +222,25 @@ public class GLExternalPull {
 			}
 	    	
 	    	//Now update the fiscal set data:
-	    	GLTransactionBatch.updateFiscalSets(log, sUserID, "", Long.toString(lExternalCompanyPullID), conn, false, 0);
+	    	try {
+				GLTransactionBatch.updateFiscalSets(log, sUserID, "", Long.toString(lExternalCompanyPullID), conn, false, 0);
+			} catch (Exception e2) {
+				clsDatabaseFunctions.rollback_data_transaction(conn);
+				throw new Exception("Error [20193161423264] " + "updating fiscal sets - " + e2.getMessage());
+			}
 
 	    	//Commit the data transaction:
 	    	try {
 				ServletUtilities.clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
 			} catch (Exception e1) {
+				clsDatabaseFunctions.rollback_data_transaction(conn);
 				throw new Exception("Error [20191921620409] " + "Could not commit data transaction - " + e1.getMessage() + ".");
 			}
 	    	
 	    	try {
 				unsetPostingFlag(conn);
 			} catch (Exception e) {
+				clsDatabaseFunctions.rollback_data_transaction(conn);
 				throw new Exception("Error [20191971412326] " + e.getMessage());
 			}
 	    	

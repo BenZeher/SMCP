@@ -83,11 +83,11 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    	+ "\">Summary</A><BR>");
 	    
 	    out.println("<BR>Pulling transactions for an external company will automatically add ALL the non-zero"
-	    	+ " GL transactions from that company, for the selected year and period, into THIS (consolidated) company."
+	    	+ " GL transactions from that company, for the selected year and period, into THIS (consolidated) company.<BR>"
 	    	+ "  There is no batch to post or any further steps required after doing the 'pull' for a selected company.<BR>"
-	    	+ "Every time an individual company is 'pulled' successfully, it gets recorded in the 'glcompanypulls' table."
+	    	+ "<BR>Every time an individual company is 'pulled' successfully, it gets recorded in the 'glexternalcompanypulls' table."
 	    	+ "  If you try to pull the same company, fiscal year and period again, the program will check that record"
-	    	+ " and prevent you from pulling it again."  
+	    	+ " notify you, and prevent you from pulling it again."  
 	    	+ "<BR><BR>"
 	    );
 	    

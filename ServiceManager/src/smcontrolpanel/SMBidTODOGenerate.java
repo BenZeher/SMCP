@@ -73,6 +73,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, "#FFFFFF", sCompanyName));
 	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
+	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println(sStyleScripts());
 	    
 	    out.println("<BR><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
@@ -213,7 +214,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 			    //Original:
 	    		//out.println("<TABLE BORDER=1 WIDTH=100%> style = \" table-layout:fixed");
 
-	    		out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
+	    		out.println("<TABLE WIDTH=100% CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 	    		out.println("<TR CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">ID </TD>");
 	    		out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\"> SP</TD>");
@@ -337,65 +338,8 @@ public class SMBidTODOGenerate extends HttpServlet {
 	}
 	private String sStyleScripts(){
 		String s = "";
-		String sBorderSize = "0";
 		String sRowHeight = "22px";
 		s += "<style type=\"text/css\">\n";
-		
-		//Layout table:
-		s +=
-			"table.basic {"
-			+ "border-width: " + sBorderSize + "px; "
-			+ "border-spacing: 2px; "
-			//+ "border-style: outset; "
-			+ "border-style: none; "
-			+ "border-color: white; "
-			+ "border-collapse: separate; "
-			+ "width: 100%; "
-			+ "font-size: " + "small" + "; "
-			+ "font-family : Arial; "
-			+ "color: black; "
-			//+ "background-color: white; "
-			+ "}"
-			+ "\n"
-			;
-		
-		/*
-		//This is the def for a label field:
-		s +=
-			"td.fieldlabel {"
-			+ "height: " + sRowHeight + "; "
-			//+ "border-width: " + sBorderSize + "px; "
-			//+ "padding: 2px; "
-			//+ "border-style: none; "
-			//+ "border-color: white; "
-			//+ "vertical-align: text-middle;"
-			//+ "background-color: black; "
-			+ "font-weight: bold; "
-			+ "text-align: right; "
-			//+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		*/
-		//This is the def for a table cell, left justified:
-		s +=
-			"td.leftjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: top;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: left; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-
 	    //style= \" word-wrap:break-word; \"
 	    //style= \" word-wrap:normal; white-space:pre-wrap; \" 
 		s +=
@@ -412,86 +356,6 @@ public class SMBidTODOGenerate extends HttpServlet {
 			+ "color: black; "
 			+ "word-wrap:break-word; "
 			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		//This is the def for a table cell, right justified:
-		s +=
-			"td.rightjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: top;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: right; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a table cell, center justified:
-		s +=
-			"td.centerjustifiedcell {"
-			+ "height: " + sRowHeight + "; "
-			+ "border: 0px solid; "
-			+ "padding: 2px; "
-			+ "border-color: " + CELL_BORDER_COLOR + "; "
-			+ "vertical-align: top;"
-			+ "font-family : Arial; "
-			+ "font-weight: normal; "
-			+ "font-size: small; "
-			+ "text-align: center; "
-			+ "color: black; "
-			//+ "height: 50px; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a left-aligned heading on a table:
-		s +=
-			"td.leftjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: left; "
-			+ "vertical-align:bottom; "
-			+ "}"
-			+ "\n"
-			;
-		
-		//This is the def for a right-aligned heading on a table:
-		s +=
-			"td.rightjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: right; "
-			+ "vertical-align:bottom; "
-			+ "}"
-			+ "\n"
-			;
-
-		//This is the def for a center-aligned heading on a table:
-		s +=
-			"td.centerjustifiedheading {"
-			+ "border: 1px solid; "
-			+ "bordercolor: 000; "
-			+ "padding: 2px; "
-			+ "font-family : Arial; "
-			+ "font-size: small; "
-			+ "font-weight: bold; "
-			+ "text-align: center; "
-			+ "vertical-align:bottom; "
 			+ "}"
 			+ "\n"
 			;

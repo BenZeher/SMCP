@@ -334,10 +334,10 @@ public class ICPOReceivingReport extends java.lang.Object{
 							+ "?" + ICPOHeader.Paramlid + "=" + sPOID
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + sPOID + "</A>";
 					}
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >" + sPOLink + "</TD>";
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" + sPOLink + "</TD>";
 					
 					//PO date
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >" + 
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" + 
 						clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTableicpoheaders.TableName + "." 
 						+ SMTableicpoheaders.datpodate)) + "</TD>";
 					
@@ -350,21 +350,21 @@ public class ICPOReceivingReport extends java.lang.Object{
 							+ "&" + "EndingPOID" + "="
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + "View" + "</A>";
 					}
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >" + sPOViewLink + "</TD>";
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" + sPOViewLink + "</TD>";
 					
 					//Location:
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ rs.getString(SMTableicpolines.TableName + "." 
 								+ SMTableicpolines.slocation) + "</TD>";
 					
 					//Qty
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ clsManageBigDecimals.BigDecimalToFormattedString(
 									"###,###,##0.0000", rs.getBigDecimal(
 									SMTableicpolines.TableName + "." + SMTableicpolines.bdqtyordered)) 
 									+ "</FONT></TD>";
 					
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 						+ rs.getString(SMTableicpolines.TableName + "." + SMTableicpolines.svendorsitemnumber) 
 						+ "</TD>";
 					
@@ -380,10 +380,10 @@ public class ICPOReceivingReport extends java.lang.Object{
 					}else{
 						sItemNumberLink = sItemNumber;
 					}
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"+ sItemNumberLink + "</TD>";
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"+ sItemNumberLink + "</TD>";
 					
 					//Description:
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ rs.getString(
 									SMTableicpolines.TableName + "." + SMTableicpolines.sitemdescription) 
 									+ "</TD>";
@@ -392,28 +392,28 @@ public class ICPOReceivingReport extends java.lang.Object{
 							SMTableicitems.TableName + "." + SMTableicitems.sworkordercomment);
 					
 					String sWorkOrderComment = sTemp == null ? " " : sTemp;
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+sWorkOrderComment+"</TD>";
 					
 					//Arrival date
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >" +
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >" +
 							clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTableicpoheaders.TableName + "." 
 									+ SMTableicpoheaders.datexpecteddate)) + "</TD>";
 					
 					//Reference
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ rs.getString(
 									SMTableicpoheaders.TableName + "." + SMTableicpoheaders.sreference) 
 									+ "</TD>";
 					
 					//Comment
-					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut += "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ rs.getString(
 									SMTableicpoheaders.TableName + "." + SMTableicpoheaders.scomment) 
 									+ "</TD>";
 					
 					//Vendor
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"
 							+ rs.getString(
 									SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname) 
 									+ "</TD>";
@@ -424,7 +424,7 @@ public class ICPOReceivingReport extends java.lang.Object{
 						sComment1 = "";
 					}
 					sComment1 = sComment1.trim();
-					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" >"+ sComment1 + "</TD>";
+					sOutPut +=  "<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\" >"+ sComment1 + "</TD>";
 					
 					sOutPut += "</TR>";
 					iCount++;
@@ -444,22 +444,22 @@ public class ICPOReceivingReport extends java.lang.Object{
 		
 		String sOutPut = "";
 		
-		sOutPut += "<TABLE WIDTH = 100% CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">";
-		sOutPut += "<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>PO #</B<</TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Date</B></TD>";
-		sOutPut +="<TD NOWRAP  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>View ?</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Loc.</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Qty</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Vendor item #</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Item #</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Description</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Work Order Comment<B>/</TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Arrival Date</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Reference</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Comment</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Vendor</B></TD>";
-		sOutPut +="<TD  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_ALIGN_TOP + "\" ><B>Item Comment 1</B></TD>";
+		sOutPut += "<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">";
+		sOutPut += "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\" >";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >PO #</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Date</TD>";
+		sOutPut +="<TD NOWRAP  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >View ?</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Loc.</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\" >Qty</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Vendor item #</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Item #</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Description</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Work Order Comment/</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Arrival Date</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Reference</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Comment</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Vendor</TD>";
+		sOutPut +="<TD  CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\" >Item Comment 1</TD>";
 		sOutPut += "</TR>";
 		
 		return sOutPut;

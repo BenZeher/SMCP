@@ -108,21 +108,28 @@ public class SMQueryGenerate extends HttpServlet {
 			   //+ "X-XSS-Protection: 0" // This will prevent "token contains a reflected xss vector" errors if we include 
 		       								//double quotes in iframes, etc.
 		      //
-		       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>"
-		       + "<BODY BGCOLOR=\"#FFFFFF\">"
-			   + "<TABLE BORDER=0 WIDTH=100%>"
-			   + "<TR><TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
+		       + "<TITLE>" + sReportTitle + " - " + sCompanyName + "</TITLE></HEAD>\n<BR>" + "\n"
+		       + "<BODY BGCOLOR=\"#FFFFFF\">" + "\n"
+			   + "<TABLE BORDER=0 WIDTH=100%>" + "\n"
+			   + "  <TR>" + "\n"
+			   + "    <TD ALIGN=LEFT WIDTH=45%><FONT SIZE=2>" 
 			   + USDateformatter.format((new Timestamp(System.currentTimeMillis()))) + " Printed by " + SMUtilities.getFullNamebyUserID(sUserID, getServletContext(), sDBID, sCallingClass) 
-			   + "</FONT></TD><TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD></TR>"
-			   + "<TR><TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD></TR>"
+			   + "</FONT></TD>" + "\n"
+			   + "    <TD ALIGN=CENTER WIDTH=55%><FONT SIZE=2><B>" + sCompanyName + "</B></FONT></TD>" + "\n"
+			   + "  </TR>" + "\n"
+			   + "  <TR>" + "\n"
+			   + "    <TD VALIGN=BOTTOM COLSPAN=2><FONT SIZE=2><B>" + sReportTitle + "</B></FONT></TD>" + "\n"
+			   + "  </TR>" + "\n"
 			  );
 					   
-	    	out.println("<TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
+	    	out.println("  <TD><A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				+ "\">Return to user login</A><BR>");
 		    out.println("<A HREF=\"" + WebContextParameters.getdocumentationpageURL(getServletContext()) + "#" + Long.toString(SMSystemFunctions.SMQuerySelector) 
 		    		+ "\">Summary</A><BR><BR>");
-			out.println("</TD></TR></TABLE>");
+			out.println("</TD>" + "\n"
+		    		+ "  </TR>" + "\n"
+					+ "</TABLE>");
 			   }
 	    }
 	    
@@ -210,32 +217,32 @@ public class SMQueryGenerate extends HttpServlet {
 					+ "smcontrolpanel.SMQuerySelect" + "\">" + "\n");
 			
 			if(!sQueryTitle.trim().equalsIgnoreCase("(Default Query Title)")) {
+					
+				out.println("<B>Query ID #:&nbsp;" + sQueryID + "</B><BR>" + "\n");
 				
-			out.println("<B>Query ID #:&nbsp;" + sQueryID + "</B><BR>" + "\n");
-			
-			out.println("Comment:<BR>"
-				+ clsCreateHTMLFormFields.TDMemoBox(
-					SMTablesavedqueries.scomment, 
-					2, 
-					120, 
-					sComment, 
-					"")
-			);
-			
-			out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PRIVATE_BUTTON 
-					+ "' VALUE='" + SAVE_AS_PRIVATE_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
-			);
-			if (SMSystemFunctions.isFunctionPermitted(
-					SMSystemFunctions.SMManagePublicQueries, 
-					sUserID, 
-					getServletContext(), 
-					sDBID,
-					(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
-				out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PUBLIC_BUTTON 
-						+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+				out.println("Comment:<BR>"
+					+ clsCreateHTMLFormFields.TDMemoBox(
+						SMTablesavedqueries.scomment, 
+						2, 
+						120, 
+						sComment, 
+						"")
 				);
-			}
-	    }
+				
+				out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PRIVATE_BUTTON 
+						+ "' VALUE='" + SAVE_AS_PRIVATE_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+				);
+				if (SMSystemFunctions.isFunctionPermitted(
+						SMSystemFunctions.SMManagePublicQueries, 
+						sUserID, 
+						getServletContext(), 
+						sDBID,
+						(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))){
+					out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PUBLIC_BUTTON 
+							+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+					);
+				}
+		    }
 			out.println("</FORM>");
 			
 		    out.println("<TABLE BORDER=0 WIDTH=100%>\n"

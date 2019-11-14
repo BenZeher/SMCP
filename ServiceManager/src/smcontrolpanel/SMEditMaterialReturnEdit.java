@@ -240,7 +240,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//Credit Not Expected
 		//Credit to be expected will have a Expected Credit Amount
 		//Credit received will have Credit Memo Number and Date of Credit Memo
-				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit Not Expected?</B></TD>\n";
+				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit is no longer Expected</B></TD>\n";
 				s += "<TD>\n";
 				String sChecked = "";
 				if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){

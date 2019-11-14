@@ -233,7 +233,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 1 = " + fsACCPAC.m_bdnetchangeperiod1 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod1 + ".";
+					+ " net change, period 1 = " + fsACCPAC.m_bdnetchangeperiod1 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod1 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod1.subtract(fsSMCP.m_bdnetchangeperiod1)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod2.compareTo(fsSMCP.m_bdnetchangeperiod2) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -243,7 +245,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 2 = " + fsACCPAC.m_bdnetchangeperiod2 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod2 + ".";
+					+ " net change, period 2 = " + fsACCPAC.m_bdnetchangeperiod2 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod2 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod2.subtract(fsSMCP.m_bdnetchangeperiod2)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod3.compareTo(fsSMCP.m_bdnetchangeperiod3) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -253,7 +257,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 3 = " + fsACCPAC.m_bdnetchangeperiod3 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod3 + ".";
+					+ " net change, period 3 = " + fsACCPAC.m_bdnetchangeperiod3 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod3 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod3.subtract(fsSMCP.m_bdnetchangeperiod3)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod4.compareTo(fsSMCP.m_bdnetchangeperiod4) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -263,7 +269,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 4 = " + fsACCPAC.m_bdnetchangeperiod4 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod4 + ".";
+					+ " net change, period 4 = " + fsACCPAC.m_bdnetchangeperiod4 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod4 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod4.subtract(fsSMCP.m_bdnetchangeperiod4)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod5.compareTo(fsSMCP.m_bdnetchangeperiod5) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -273,7 +281,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 5 = " + fsACCPAC.m_bdnetchangeperiod5 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod5 + ".";
+					+ " net change, period 5 = " + fsACCPAC.m_bdnetchangeperiod5 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod5 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod5.subtract(fsSMCP.m_bdnetchangeperiod5)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod6.compareTo(fsSMCP.m_bdnetchangeperiod6) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -283,7 +293,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 6 = " + fsACCPAC.m_bdnetchangeperiod6 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod6 + ".";
+					+ " net change, period 6 = " + fsACCPAC.m_bdnetchangeperiod6 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod6 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod6.subtract(fsSMCP.m_bdnetchangeperiod6)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod7.compareTo(fsSMCP.m_bdnetchangeperiod7) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -293,7 +305,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 7 = " + fsACCPAC.m_bdnetchangeperiod7 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod7 + ".";
+					+ " net change, period 7 = " + fsACCPAC.m_bdnetchangeperiod7 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod7 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod7.subtract(fsSMCP.m_bdnetchangeperiod7)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod8.compareTo(fsSMCP.m_bdnetchangeperiod8) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -303,7 +317,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 8 = " + fsACCPAC.m_bdnetchangeperiod8 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod8 + ".";
+					+ " net change, period 8 = " + fsACCPAC.m_bdnetchangeperiod8 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod8 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod8.subtract(fsSMCP.m_bdnetchangeperiod8)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod9.compareTo(fsSMCP.m_bdnetchangeperiod9) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -313,7 +329,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 9 = " + fsACCPAC.m_bdnetchangeperiod9 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod9 + ".";
+					+ " net change, period 9 = " + fsACCPAC.m_bdnetchangeperiod9 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod9 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod9.subtract(fsSMCP.m_bdnetchangeperiod9)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod10.compareTo(fsSMCP.m_bdnetchangeperiod10) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -323,7 +341,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 						+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 10 = " + fsACCPAC.m_bdnetchangeperiod10 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod10 + ".";
+					+ " net change, period 10 = " + fsACCPAC.m_bdnetchangeperiod10 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod10 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod10.subtract(fsSMCP.m_bdnetchangeperiod10)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod11.compareTo(fsSMCP.m_bdnetchangeperiod11) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -333,7 +353,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 11 = " + fsACCPAC.m_bdnetchangeperiod11 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod11 + ".";
+					+ " net change, period 11 = " + fsACCPAC.m_bdnetchangeperiod11 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod11 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod11.subtract(fsSMCP.m_bdnetchangeperiod11)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod12.compareTo(fsSMCP.m_bdnetchangeperiod12) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -343,7 +365,9 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 12 = " + fsACCPAC.m_bdnetchangeperiod12 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod12 + ".";
+					+ " net change, period 12 = " + fsACCPAC.m_bdnetchangeperiod12 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod12 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod12.subtract(fsSMCP.m_bdnetchangeperiod12)
+					;
 				}
 				if (fsACCPAC.m_bdnetchangeperiod13.compareTo(fsSMCP.m_bdnetchangeperiod13) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
@@ -353,8 +377,11 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 13 = " + fsACCPAC.m_bdnetchangeperiod13 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod13 + ".";
+					+ " net change, period 13 = " + fsACCPAC.m_bdnetchangeperiod13 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod13 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod13.subtract(fsSMCP.m_bdnetchangeperiod13)
+					;
 				}
+				
 				if (fsACCPAC.m_bdnetchangeperiod14.compareTo(fsSMCP.m_bdnetchangeperiod14) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
 							+  sLinkBase 
@@ -363,8 +390,11 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 14 = " + fsACCPAC.m_bdnetchangeperiod14 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod14 + ".";
+					+ " net change, period 14 = " + fsACCPAC.m_bdnetchangeperiod14 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod14 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod15.subtract(fsSMCP.m_bdnetchangeperiod15)
+					;
 				}
+				
 				if (fsACCPAC.m_bdnetchangeperiod15.compareTo(fsSMCP.m_bdnetchangeperiod15) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" 
 							+  sLinkBase 
@@ -373,13 +403,18 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  fsACCPAC.m_sAcctID
 							+ "\">" + fsACCPAC.m_sAcctID + "</A>"
 					+ "', fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " net change, period 15 = " + fsACCPAC.m_bdnetchangeperiod15 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod15 + ".";
+					+ " net change, period 15 = " + fsACCPAC.m_bdnetchangeperiod15 + ", but SMCP has " + fsSMCP.m_bdnetchangeperiod15 + "."
+					+ " Difference = " + fsACCPAC.m_bdnetchangeperiod15.subtract(fsSMCP.m_bdnetchangeperiod15)
+					;
 				}
 				
 				if (fsACCPAC.m_bdopeningbalance.compareTo(fsSMCP.m_bdopeningbalance) != 0){
 					sMessages += "<BR>" + "ACCPAC account '" + fsACCPAC.m_sAcctID + ". fiscal year " + Integer.toString(fsACCPAC.m_ifiscalyear) 
-					+ " opening balance = " + fsACCPAC.m_bdopeningbalance + ", but SMCP has " + fsSMCP.m_bdopeningbalance + ".";
+					+ " opening balance = " + fsACCPAC.m_bdopeningbalance + ", but SMCP has " + fsSMCP.m_bdopeningbalance + "."
+					+ " Difference = " + fsACCPAC.m_bdopeningbalance.subtract(fsSMCP.m_bdopeningbalance)
+					;
 				}
+				
 			} catch (Exception e) {
 				sMessages += "<BR>" + "[1571430144]" + e.getMessage() + " - Could not read SMCP fiscal set for account '" + arrACCPACFiscalSets.get(i).m_sAcctID + ", fiscal year " 
 					+ Integer.toString(arrACCPACFiscalSets.get(i).m_ifiscalyear) + ".";

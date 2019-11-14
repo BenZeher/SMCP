@@ -168,7 +168,8 @@ public class GLTransactionListingAction extends HttpServlet {
 		//If an External Pull is Chosen Display only that Info
 		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
 			if(sSelectBy.compareToIgnoreCase("SEGMENT")==0) {
-				CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, "Segment chosen but External Pull was selected - leave default.");
+				CurrentSession.setAttribute(GLTransactionListingSelect.WARNING_SESSION_OBJECT, "If you choose to list ONLY transactions for a particular 'External Pull',"
+					+ " then you must select 'External Pull' for the 'Select By' option.");
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
 						+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID

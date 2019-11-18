@@ -20,6 +20,7 @@ import SMClasses.SMLogEntry;
 import SMClasses.SMOption;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablearcustomer;
 import SMDataDefinition.SMTabledefaultsalesgroupsalesperson;
 import SMDataDefinition.SMTableorderdetails;
@@ -94,6 +95,8 @@ public class ARDisplayCustomerInformation extends HttpServlet {
  	    SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(sDBID, getServletContext());
  	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARDISPLAYCUSTOMERINFO, "REPORT", "SMDisplayCustomerInformation", "[1376509275]");
     	
+ 	   out.println(SMUtilities.getMasterStyleSheetLink());
+ 	    
     	//Retrieve information
     	Connection conn = clsDatabaseFunctions.getConnection(getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMDisplayOrderInformation");
     	if (conn == null){
@@ -566,40 +569,31 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 		 		;
 				
 				ResultSet rsOpenOrders = clsDatabaseFunctions.openResultSet(SQL, conn);
-
-
-				
 					
 				if (iOrderCount < 1){
-					pwOut.println("<TABLE width=\"100%\" style= \"border-collapse:collapse;\">");
-					pwOut.println("<TR bgcolor=\"#A3D1FF\">"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Status</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Date</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Order Number</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Bill To</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Ship To</TD>"
-						+ "</TR>");	
+					pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
+					pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + "\">");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Status</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Date</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Order Number</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Bill To</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Ship To</TD>");
+					pwOut.println("</TR>");	
 				}
 				while(rsOpenOrders.next()){
 					iOrderCount++;
 					iRowCount++;
 					if(iRowCount % 2 == 0){
-						sRowColor = "#FFF";
+						sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 					}else{
-						sRowColor = "#DCDCDC";
+						sRowColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 					}
-						pwOut.println( "<TR bgcolor=\"" + sRowColor + "\" ><TD style=\"padding-right: 20px\"><FONT SIZE=2>" 
-						+ SMTableorderheaders.getOrderTypeDescriptions(rsOpenOrders.getInt(SMTableorderheaders.iOrderType)) 
-						+ "</TD>"
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDateAndTimeConversions.resultsetDateStringToString(rsOpenOrders.getString(SMTableorderheaders.datOrderCreationDate)) + "</FONT></TD>"
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?" 
-						+ "OrderNumber" + "=" + rsOpenOrders.getString(SMTableorderheaders.strimmedordernumber)
-						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
-						+ "\">" + rsOpenOrders.getString(SMTableorderheaders.strimmedordernumber) + "</A></FONT></TD>");						 
-						
-						pwOut.println("<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + rsOpenOrders.getString(SMTableorderheaders.sBillToName) + "</FONT></TD>"		
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + rsOpenOrders.getString(SMTableorderheaders.sShipToName) + "</FONT></TD>");
-
+						pwOut.println( "<TR CLASS=\"" + sRowColor + "\" >");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ SMTableorderheaders.getOrderTypeDescriptions(rsOpenOrders.getInt(SMTableorderheaders.iOrderType)) + "</TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsDateAndTimeConversions.resultsetDateStringToString(rsOpenOrders.getString(SMTableorderheaders.datOrderCreationDate)) + "</TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?" + "OrderNumber" + "=" + rsOpenOrders.getString(SMTableorderheaders.strimmedordernumber)+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + rsOpenOrders.getString(SMTableorderheaders.strimmedordernumber) + "</A></FONT></TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsOpenOrders.getString(SMTableorderheaders.sBillToName) + "</TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsOpenOrders.getString(SMTableorderheaders.sShipToName) + "</TD>");
 						pwOut.println( "</TR>");
 						iOrderCount++;				
 				}
@@ -622,52 +616,55 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				int iCertCount = 0;
 				iRowCount = 1;
 				sRowColor = "#FFF";
+				
+				//TODO
 								
 				if (iCertCount < 1){
-					pwOut.println("<TABLE width=\"100%\" style= \"border-collapse:collapse;\">");
-					pwOut.println("<TR bgcolor=\"#FFB8B8\">"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">View Certificate</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">ID</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Job #</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Ship To Name</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Project(s) Location</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Exempt Number</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Jurisdiction</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Expiration Date</TD>"
-						+ "</TR>");	
+					pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
+					pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + "\">");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">View Certificate</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">ID</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Job #</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Ship To Name</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Project(s) Location</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Exempt Number</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Jurisdiction</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Expiration Date</TD>");
+					pwOut.println("</TR>");	
 				}
 				while(rsTaxCert.next()){
 				iCertCount++;
 					iRowCount++;
 					if(iRowCount % 2 == 0){
-						sRowColor = "#FFF";
+						sRowColor = SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 					}else{
-						sRowColor = "#DCDCDC";
+						sRowColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 					}
 					if(rsTaxCert.getString(SMTabletaxcertificates.sgdoclink).compareToIgnoreCase("") != 0){
-
-						pwOut.println( "<TR bgcolor=\"" + sRowColor + "\" ><TD style=\"padding-right: 20px\"><FONT SIZE=2><A HREF=\"" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sgdoclink) 
-						+ "\">" + "View" + "</A> </TD>"
-						+ "<TD style=\"padding-right: 20px\"> <FONT SIZE=2> " 
-							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxCertificatesEdit?" 
-							+ SMTabletaxcertificates.lid + "=" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid))
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-							+ "\">" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid)) + "</A></FONT></TD>");
-											
-						 if(clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber).compareToIgnoreCase("") != 0){
-							pwOut.println( "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " +"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?" 
-							+ SMOrderHeader.ParamsOrderNumber + "=" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber)
-							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-							+ "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber) + "</A></FONT></TD>" );			
-						 } else{
-							 pwOut.println("<TD style=\"padding-right: 20px\"><FONT SIZE=2>&emsp;&emsp;&emsp;</FONT></TD>");
-						 }
+						
+						pwOut.println( "<TR CLASS=\"" + sRowColor + "\" >");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ "<A HREF=\"" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sgdoclink) 
+						+ "\">" + "View" + "</A> </TD>");
+						pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"
+								+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditTaxCertificatesEdit?" 
+								+ SMTabletaxcertificates.lid + "=" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid)) 
+								+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">" + Integer.toString(rsTaxCert.getInt(SMTabletaxcertificates.lid)) 
+								+ "</A></FONT></TD>");
+										
+						if(clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber).compareToIgnoreCase("") != 0){
+							pwOut.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" +"<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMDisplayOrderInformation?" 
+									+ SMOrderHeader.ParamsOrderNumber + "=" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber)
+									+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+									+ "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.strimmedordernumber) + "</A></TD>" );			
+						} else{
+							pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "&emsp;&emsp;&emsp;</FONT></TD>");
+						}
 						 
-						pwOut.println("<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.sShipToName) + "</FONT></TD>"		
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sprojectlocation) + "</FONT></TD>"
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sexemptnumber) + "</FONT></TD>"	
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.staxjurisdiction) + "</FONT></TD>"
-						+ "<TD style=\"padding-right: 20px\"><FONT SIZE=2> " + clsDateAndTimeConversions.resultsetDateStringToString(rsTaxCert.getString(SMTabletaxcertificates.datexpired)) + "</FONT></TD>");
+						 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTableorderheaders.sShipToName) + "</TD>");		
+						 pwOut.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sprojectlocation) + "</TD>");
+						 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.sexemptnumber) + "</TD>");	
+						 pwOut.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + clsDatabaseFunctions.getRecordsetStringValue(rsTaxCert, SMTabletaxcertificates.staxjurisdiction) + "</TD>");
+						 pwOut.println( "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ clsDateAndTimeConversions.resultsetDateStringToString(rsTaxCert.getString(SMTabletaxcertificates.datexpired)) + "</TD>");
 
 						pwOut.println( "</TR>");
 						iCertCount++;
@@ -691,34 +688,36 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				
 				int iSaleContactCount = 0;
 				iRowCount = 1;
-				sRowColor = "#FFF";
+				sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN ;
+				
+				//TODO
 				
 				if (iSaleContactCount < 1){
-					pwOut.println("<TABLE width=\"100%\" style= \"border-collapse:collapse;\">");
-					pwOut.println("<TR bgcolor=\"#FFB8B8\">"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">ID&nbsp;</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Salesperson&nbsp;Code</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Contact&nbsp;Name</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Phone&nbsp;Number</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left;\">Email&nbsp;Address</TD>"
-						+ "<TD style=\" border: 1px solid;font-size:small; font-weight:bold; text-align:left; width:50%;\">Notes</TD>"
-						+ "</TR>");	
+					pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
+					pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + "\">");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">ID&nbsp;</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Salesperson&nbsp;Code</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Contact&nbsp;Name</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Phone&nbsp;Number</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Email&nbsp;Address</TD>");
+					pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Notes</TD>");
+					pwOut.println("</TR>");	
 					while(rsSalesContact.next()){
 						iSaleContactCount++;
 							iRowCount++;
 							if(iRowCount % 2 == 0){
-								sRowColor = "#FFF";
+								sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN ;
 							}else{
-								sRowColor = "#DCDCDC";
+								sRowColor = SMMasterStyleSheetDefinitions.TABLE_ROW_ODD;
 							}
-
-								pwOut.println( "<TR bgcolor=\"" + sRowColor + "\" >\n" 
-										+ " <TD style=\"padding-right: 0px\"> <FONT SIZE=2> " + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactEdit?" + SMTablesalescontacts.id + "=" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id))+ "\">" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id)) + "</A></FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.salespersoncode)+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.scontactname)+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.sphonenumber)+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 20px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.semailaddress)+"</FONT></TD>\n"
-								+ " <TD style=\"padding-right: 10px\"> <FONT SIZE=2> "+ rsSalesContact.getString(SMTablesalescontacts.mnotes)+"</FONT></TD>\n");
+							
+							pwOut.println( "<TR CLASS=\"" + sRowColor + "\" >");
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactEdit?" + SMTablesalescontacts.id + "=" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id))+ "\">" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id)) + "</A></TD>\n");		
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.salespersoncode) + "</TD>");		
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.scontactname) + "</TD>");		
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.sphonenumber) + "</TD>");		
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.semailaddress) + "</TD>");		
+							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.mnotes) + "</TD>");		
 								pwOut.println( "</TR>");
 								iCertCount++;
 						}

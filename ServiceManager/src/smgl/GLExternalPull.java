@@ -104,7 +104,7 @@ public class GLExternalPull {
 	    	}
 	    	
 	    	try {
-				setPostingFlag(conn, sUserID, sCompanyName);
+				setPostingFlag(conn, sUserID, sCompanyName, "PULLING EXTERNAL COMPANY " + sCompanyName + "'");
 			} catch (Exception e2) {
 				throw new Exception("Error [20191971411123] " + "setting posting flag - " + e2.getMessage());
 			}
@@ -277,7 +277,7 @@ public class GLExternalPull {
 		
 		return;
 	}
-    private void setPostingFlag(Connection conn, String sUserID, String sCompanyName) throws Exception{
+    private void setPostingFlag(Connection conn, String sUserID, String sCompanyName, String sProcessDescription) throws Exception{
 		//First check to make sure no one else is posting:
 		try{
 			String SQL = "SELECT * FROM " + SMTablegloptions.TableName;
@@ -303,7 +303,7 @@ public class GLExternalPull {
 				+ " SET " + SMTablegloptions.ibatchpostinginprocess + " = 1"
 				+ ", " + SMTablegloptions.datstartdate + " = NOW()"
 				+ ", " + SMTablegloptions.sprocess 
-					+ " = 'PULLING EXTERNAL COMPANY " + sCompanyName + "'"
+					+ " = '" + sProcessDescription + "'"
 	   			+ ", " + SMTablegloptions.luserid 
 					+ " = " + sUserID
 			;
@@ -330,5 +330,95 @@ public class GLExternalPull {
 		}catch (SQLException e){
 			throw new Exception("Error [1563297146] clearing posting flag in GL Options - " + e.getMessage());
 		}
+	}
+	public void reversePreviousPull(Connection conn, String sUserID, String sCompanyName, String sPullID, SMLogEntry log) throws Exception{
+		//First, set the posting flag so nothing can change while we do it:
+    	try {
+			setPostingFlag(conn, sUserID, sCompanyName, "REVERSING PULL ID " + sPullID);
+		} catch (Exception e2) {
+			throw new Exception("Error [20191971412123] " + "setting posting flag to reverse pull - " + e2.getMessage());
+		}
+    	
+    	//Start a data transaction:
+    	try {
+			ServletUtilities.clsDatabaseFunctions.start_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [2019192172080] " + "Could not start data transaction - " + e1.getMessage() + ".");
+		}
+    	
+    	//Do the reversal:
+    	try {
+			reversePull(conn, sPullID, sUserID, log);
+		} catch (Exception e2) {
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20193221520447] " + " reversing Pull - " + e2.getMessage());
+		}
+    	
+    	//Commit the data transaction:
+    	try {
+			ServletUtilities.clsDatabaseFunctions.commit_data_transaction_with_exception(conn);
+		} catch (Exception e1) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20191921620409] " + "Could not commit data transaction - " + e1.getMessage() + ".");
+		}
+    	
+    	try {
+			unsetPostingFlag(conn);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20191971512326] " + e.getMessage());
+		}
+		
+	}
+	private void reversePull(Connection conn, String sPullID, String sUserID, SMLogEntry log) throws Exception {
+		
+		//First, update the fiscal sets and financial data for the pull:
+		
+		//We'll need to updated the fiscal sets and financial data, but there's no way
+		//to do that after the GL transaction line records are deleted.  So we'll
+		// first NEGATE all the transactions for this pull, and tell the fiscal set updater
+		// to update the fiscal sets and financial data for them.  This will effectively
+		// adjust the fiscal sets and financial data to values as if the pull transactions
+		// never happened.
+		// After that, we can just remove the GL transaction line records for the pull
+		// and we'll be all finished.
+		
+		String SQL = "UPDATE" + SMTablegltransactionlines.TableName
+			+ " SET " + SMTablegltransactionlines.bdamount + " = (-1 * " + SMTablegltransactionlines.bdamount + ")"
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sPullID + ")"
+			+ ")"
+		;
+		try {
+			ServletUtilities.clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+		} catch (Exception e) {
+			throw new Exception("Error [20193221546130] " + "negating GL transaction lines for pull ID " + sPullID + " with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		//Now tell the fiscal/financial updater to process those transactions:
+    	try {
+			GLTransactionBatch.updateFiscalSets(log, sUserID, "", sPullID, conn, false, 0);
+		} catch (Exception e2) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20193161425264] " + "updating fiscal sets - " + e2.getMessage());
+		}
+		
+		//Next, just delete the pull transactions
+		SQL = "DELETE FROM " + SMTablegltransactionlines.TableName
+			+ " WHERE ("
+				+ "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sPullID + ")"
+			+ ")"
+		;
+		try {
+			ServletUtilities.clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+		} catch (Exception e) {
+			throw new Exception("Error [20193221546140] " + "removing GL transaction lines for pull ID " + sPullID + " with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		//Finally, add a 'pull' record for the reversal:
+		//TODO
+		
+		
+		
 	}
 }

@@ -532,7 +532,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				//Row and color variables
 				int iOrderCount = 0;
 				int iRowCount = 1;
-				String sRowColor = "#FFF";
+				String sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 				
 				//View open orders
 				if(bDisplayOpenOrders) {
@@ -615,7 +615,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				ResultSet rsTaxCert = clsDatabaseFunctions.openResultSet(SQL, conn);
 				int iCertCount = 0;
 				iRowCount = 1;
-				sRowColor = "#FFF";
+				sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 				
 				//TODO
 								

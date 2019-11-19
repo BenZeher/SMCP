@@ -104,7 +104,7 @@ public class GLExternalPull {
 	    	}
 	    	
 	    	try {
-				setPostingFlag(conn, sUserID, sCompanyName, "PULLING EXTERNAL COMPANY " + sCompanyName + "'");
+				setPostingFlag(conn, sUserID, "PULLING EXTERNAL COMPANY " + sCompanyName + "'");
 			} catch (Exception e2) {
 				throw new Exception("Error [20191971411123] " + "setting posting flag - " + e2.getMessage());
 			}
@@ -287,7 +287,7 @@ public class GLExternalPull {
 		}
 		return;
 	}
-    private void setPostingFlag(Connection conn, String sUserID, String sCompanyName, String sProcessDescription) throws Exception{
+    private void setPostingFlag(Connection conn, String sUserID, String sProcessDescription) throws Exception{
 		//First check to make sure no one else is posting:
 		try{
 			String SQL = "SELECT * FROM " + SMTablegloptions.TableName;
@@ -341,10 +341,10 @@ public class GLExternalPull {
 			throw new Exception("Error [1563297146] clearing posting flag in GL Options - " + e.getMessage());
 		}
 	}
-	public void reversePreviousPull(Connection conn, String sUserID, String sUserFullName, String sCompanyName, String sPullID, SMLogEntry log) throws Exception{
+	public void reversePreviousPull(Connection conn, String sUserID, String sUserFullName, String sPullID, SMLogEntry log) throws Exception{
 		//First, set the posting flag so nothing can change while we do it:
     	try {
-			setPostingFlag(conn, sUserID, sCompanyName, "REVERSING PULL ID " + sPullID);
+			setPostingFlag(conn, sUserID, "REVERSING PULL ID " + sPullID);
 		} catch (Exception e2) {
 			throw new Exception("Error [20191971412123] " + "setting posting flag to reverse pull - " + e2.getMessage());
 		}
@@ -393,7 +393,7 @@ public class GLExternalPull {
 		// After that, we can just remove the GL transaction line records for the pull
 		// and we'll be all finished.
 		
-		String SQL = "UPDATE" + SMTablegltransactionlines.TableName
+		String SQL = "UPDATE " + SMTablegltransactionlines.TableName
 			+ " SET " + SMTablegltransactionlines.bdamount + " = (-1 * " + SMTablegltransactionlines.bdamount + ")"
 			+ " WHERE ("
 				+ "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sPullID + ")"
@@ -449,8 +449,8 @@ public class GLExternalPull {
     		+ ", 0"
     		+ ", " + SMTableglexternalcompanypulls.lcompanyid
     		+ ", " + sUserID
-    		+ ", '" + SMTableglexternalcompanypulls.scompanyname + "'"
-    		+ ", '" + SMTableglexternalcompanypulls.sdbname + "'"
+    		+ ", " + SMTableglexternalcompanypulls.scompanyname
+    		+ ", " + SMTableglexternalcompanypulls.sdbname
     		+ ", '" + sUserFullName + "'"
     		+ " FROM " + SMTableglexternalcompanypulls.TableName
     		+ " WHERE ("
@@ -484,6 +484,22 @@ public class GLExternalPull {
 	    	throw new Exception("Error [20191971223108] " + "getting last insert ID with SQL '" + SQL + "' - " + e.getMessage());
 		}
 		
+		//Flag the previous pull as 'reversed':
+		SQL = "UPDATE " + SMTableglexternalcompanypulls.TableName
+			+ " SET " + SMTableglexternalcompanypulls.ireversed + " = 1"
+			+ " WHERE ("
+				+ "(" + SMTableglexternalcompanypulls.lid + " = " + sPullID + ")"
+			+ ")"
+		;
+    	try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20191921616298] " 
+				+ "Could not flag previous pull as reversed with SQL: '" + SQL + "'" + e.getMessage() + ".");
+		}		
+		 
 		return;
 	}
 }

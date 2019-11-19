@@ -2673,13 +2673,14 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ "QUERYSTRING="
 							+ clsServletUtilities.URLEncode(
 									"SELECT"
-											+ " DATE_FORMAT(" + SMTableglexternalcompanypulls.dattimepulldate + ", '%c/%e/%Y %l:%i:%s %p') as 'Time'"
+											+ " " + SMTableglexternalcompanypulls.lid + " AS 'ID'"
+											+ ", DATE_FORMAT(" + SMTableglexternalcompanypulls.dattimepulldate + ", '%c/%e/%Y %l:%i:%s %p') as 'Time'"
 											+ ", " + SMTableglexternalcompanypulls.sfullusername + " as 'Name'"
 											+ ", " + "IF(" + SMTableglexternalcompanypulls.ipulltype + " = 0, 'PULL', 'REVERSAL') AS Type"
 											+ ", " + SMTableglexternalcompanypulls.scompanyname + " as 'Pulled From'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalyear + " as 'Fiscal Year'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalperiod + " as 'Fiscal Period'"
-											+ ", " + "IF(" + SMTableglexternalcompanypulls.ireversed + " = 0, 'No', 'Yes') AS Reversed?"
+											+ ", " + "IF(" + SMTableglexternalcompanypulls.ireversed + " = 0, 'No', 'Yes') AS 'Reversed?'"
 											+ " FROM " + SMTableglexternalcompanypulls.TableName
 											+ " ORDER BY " + SMTableglexternalcompanypulls.dattimepulldate + " DESC"
 									)

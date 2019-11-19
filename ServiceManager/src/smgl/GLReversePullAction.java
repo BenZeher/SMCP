@@ -7,8 +7,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import SMClasses.SMLogEntry;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class GLReversePullAction extends HttpServlet{
 	
@@ -19,19 +22,23 @@ public class GLReversePullAction extends HttpServlet{
 	
 		SMMasterEditAction smaction = new SMMasterEditAction(request, response);
 		try {
-			smaction.getCurrentSession().removeAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT);
+			smaction.getCurrentSession().removeAttribute(GLReversePullSelect.SESSION_WARNING_OBJECT);
 		} catch (Exception e2) {
 			//If this attribute isn't in the session, just go on without disruption....
 		}
-		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLPullExternalDataIntoConsolidation)){return;}
+		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLReverseExternalCompanyPulls)){return;}
 	    //Read the entry fields from the request object:
-	    String sExternalCompanyID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLPullIntoConsolidationSelect.RADIO_BUTTONS_NAME, request);
-	    String sFiscalYearAndPeriodPeriod = request.getParameter(GLPullIntoConsolidationSelect.PARAM_FISCAL_PERIOD_SELECTION);
-		String sFiscalYear = sFiscalYearAndPeriodPeriod.substring(0, sFiscalYearAndPeriodPeriod.indexOf(GLPullIntoConsolidationSelect.PARAM_VALUE_DELIMITER));
-		String sFiscalPeriod = sFiscalYearAndPeriodPeriod.replace(sFiscalYear + GLTrialBalanceSelect.PARAM_VALUE_DELIMITER, "");
+	    String sExternalPullID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLReversePullSelect.RADIO_BUTTONS_NAME, request);
+	    String sDBID = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID, request);
+	    		
+	    String sUserID = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME)
+	    	+ " " + (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME)
+	    ;
 		
-		if (request.getParameter(GLPullIntoConsolidationSelect.CONFIRM_PROCESS) == null){
-			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
+	    
+		if (request.getParameter(GLReversePullSelect.CONFIRM_PROCESS) == null){
+			smaction.getCurrentSession().setAttribute(GLReversePullSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
 			smaction.redirectAction(
 					"", 
 					"", 
@@ -46,10 +53,10 @@ public class GLReversePullAction extends HttpServlet{
 				getServletContext(), 
 				smaction.getsDBID(), 
 				"MySQL", 
-				this.toString() + ".updateCompanies - user: " + smaction.getFullUserName()
+				this.toString() + ".doPost - user: " + smaction.getFullUserName()
 			);
 		} catch (Exception e1) {
-			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, e1.getMessage());
+			smaction.getCurrentSession().setAttribute(GLReversePullSelect.SESSION_WARNING_OBJECT, e1.getMessage());
 			smaction.redirectAction(
 					"", 
 					"", 
@@ -58,21 +65,19 @@ public class GLReversePullAction extends HttpServlet{
 				return;
 		}
     	
+    	SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
     	GLExternalPull pull = new GLExternalPull();
 		try {
-			pull.pullCompany(
-				smaction.getsDBID(),
-				smaction.getUserID(),
-				smaction.getFullUserName(),
-				sExternalCompanyID, 
-				sFiscalYear, 
-				sFiscalPeriod, 
+			pull.reversePreviousPull(
 				conn, 
-				getServletContext()
-			);
+				sUserID, 
+				sUserFullName, 
+				sExternalPullID, 
+				log);
+
 		} catch (Exception e) {
-			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875614]");
-			smaction.getCurrentSession().setAttribute(GLPullIntoConsolidationSelect.SESSION_WARNING_OBJECT, e.getMessage());
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875914]");
+			smaction.getCurrentSession().setAttribute(GLReversePullSelect.SESSION_WARNING_OBJECT, e.getMessage());
 			smaction.redirectAction(
 				"", 
 				"", 
@@ -80,45 +85,14 @@ public class GLReversePullAction extends HttpServlet{
 			);
 			return;
 		}
-		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875615]");
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1562875915]");
 		smaction.redirectAction(
 			"", 
-			"Company with ID '" + sExternalCompanyID + "' was successfully pulled into the consolidated company.",
+			"Previous pull with ID# " + sExternalPullID + " was successfully reversed.",
     		""
 		);
 		return;
 	}
-
-	/* TJR - 7/12/2019 - probably can't use this because the account structures may not be the same in the SOURCE and TARGET companies....
-	private void addNewGLAccounts(Connection conn, String sDBName, String sFiscalYear, String sFiscalPeriod) throws Exception{
-		
-		String SQL = "SELECT DISTINCT " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.bdannualbudget
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iallowaspoexpense
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iCostCenterID
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sFormattedAcct
-			+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName + " LEFT JOIN " + sDBName + "." + SMTableglaccounts.TableName + " ON "
-			+ sDBName + "." + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " 
-			+ sDBName + "." + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ " WHERE ("
-			    + "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
-    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
-			+ ")"
-		;
-		
-		//TODO - go through the accounts and add them if needed:
-		
-		
-		return;
-	}
-	*/
 
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

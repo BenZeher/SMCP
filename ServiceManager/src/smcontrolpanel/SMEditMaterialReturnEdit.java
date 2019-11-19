@@ -294,7 +294,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ " MAXLENGTH=10"
 				+ ">";
 		if(PO.compareToIgnoreCase("")!=0) {
-			s+= "&nbsp;<A ID=\"POLink\"  HREF=\"/sm/smic.ICEditPOEdit?lid=" + PO + "&db=" + sm.getsDBID() +"\">View Purchase Order</A>";
+			s+= "&nbsp;<A ID=\"POLink\"  HREF=\"/sm/smic.ICEditPOEdit?lid=" + PO + "&db=" + sm.getsDBID() +"\"> View Purchase Order</A>";
 		}
 		s+= "";
 		s+= "</TD>\n"

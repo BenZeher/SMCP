@@ -617,8 +617,6 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				iRowCount = 1;
 				sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN;
 				
-				//TODO
-								
 				if (iCertCount < 1){
 					pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 					pwOut.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTPINK + "\">");
@@ -689,8 +687,6 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 				int iSaleContactCount = 0;
 				iRowCount = 1;
 				sRowColor =SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN ;
-				
-				//TODO
 				
 				if (iSaleContactCount < 1){
 					pwOut.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");

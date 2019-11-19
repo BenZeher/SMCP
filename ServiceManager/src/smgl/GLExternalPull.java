@@ -346,7 +346,7 @@ public class GLExternalPull {
 			throw new Exception("Error [1563297146] clearing posting flag in GL Options - " + e.getMessage());
 		}
 	}
-	public void reversePreviousPull(Connection conn, String sUserID, String sCompanyName, String sPullID, SMLogEntry log) throws Exception{
+	public void reversePreviousPull(Connection conn, String sUserID, String sUserFullName, String sCompanyName, String sPullID, SMLogEntry log) throws Exception{
 		//First, set the posting flag so nothing can change while we do it:
     	try {
 			setPostingFlag(conn, sUserID, sCompanyName, "REVERSING PULL ID " + sPullID);
@@ -363,7 +363,7 @@ public class GLExternalPull {
     	
     	//Do the reversal:
     	try {
-			reversePull(conn, sPullID, sUserID, log);
+			reversePull(conn, sPullID, sUserID, sUserFullName, log);
 		} catch (Exception e2) {
 			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [20193221520447] " + " reversing Pull - " + e2.getMessage());
@@ -385,8 +385,8 @@ public class GLExternalPull {
 		}
 		
 	}
-	private void reversePull(Connection conn, String sPullID, String sUserID, SMLogEntry log) throws Exception {
-		
+	private void reversePull(Connection conn, String sPullID, String sUserID, String sUserFullName, SMLogEntry log) throws Exception {
+
 		//First, update the fiscal sets and financial data for the pull:
 		
 		//We'll need to updated the fiscal sets and financial data, but there's no way
@@ -431,9 +431,61 @@ public class GLExternalPull {
 		}
 		
 		//Finally, add a 'pull' record for the reversal:
-		//TODO
+    	SQL = "INSERT INTO " + SMTableglexternalcompanypulls.TableName
+    		+ " ("
+    		+ SMTableglexternalcompanypulls.dattimepulldate
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
+    		+ ", " + SMTableglexternalcompanypulls.ipulltype
+    		+ ", " + SMTableglexternalcompanypulls.lcompanyid
+    		+ ", " + SMTableglexternalcompanypulls.luserid
+    		+ ", " + SMTableglexternalcompanypulls.scompanyname
+    		+ ", " + SMTableglexternalcompanypulls.sdbname
+    		+ ", " + SMTableglexternalcompanypulls.sfullusername
+    		+ " ) "
+    		
+    		+ " SELECT"
+    		
+    		+ " NOW()"
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
+    		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
+    		+ ", " + Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_REVERSAL)
+    		+ ", " + SMTableglexternalcompanypulls.lcompanyid
+    		+ ", " + sUserID
+    		+ ", '" + SMTableglexternalcompanypulls.scompanyname + "'"
+    		+ ", '" + SMTableglexternalcompanypulls.sdbname + "'"
+    		+ ", '" + sUserFullName + "'"
+    		+ " FROM " + SMTableglexternalcompanypulls.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTableglexternalcompanypulls.lid + " = " + sPullID + ")"
+    		+ ")"
+    	;
+    	try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20191921612298] " 
+				+ "Could not insert 'reversal' record with SQL: '" + SQL + "'" + e.getMessage() + ".");
+		}
+    	
+		SQL = "SELECT LAST_INSERT_ID()";
+		long lExternalCompanyPullID = 0L;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (!rs.next()){
+		    	clsDatabaseFunctions.rollback_data_transaction(conn);
+		    	rs.close();
+		    	throw new Exception("Error [20191971224397] " + "no last insert ID record with SQL '" + SQL + ".");
+			}else{
+				lExternalCompanyPullID = rs.getLong(1);
+				rs.close();
+			}
+		} catch (SQLException e) {
+	    	clsDatabaseFunctions.rollback_data_transaction(conn);
+	    	throw new Exception("Error [20191971223108] " + "getting last insert ID with SQL '" + SQL + "' - " + e.getMessage());
+		}
 		
-		
-		
+		return;
 	}
 }

@@ -4091,6 +4091,16 @@
     </servlet>
     
     <servlet>
+        <servlet-name>GLReversePullAction</servlet-name>
+        <servlet-class>smgl.GLReversePullAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLReversePullSelect</servlet-name>
+        <servlet-class>smgl.GLReversePullSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
         <servlet-name>GLTransactionListingAction</servlet-name>
         <servlet-class>smgl.GLTransactionListingAction</servlet-class>
     </servlet>
@@ -8088,6 +8098,16 @@
     <servlet-mapping>
         <servlet-name>GLResetPostingFlagSelect</servlet-name>
         <url-pattern>/smgl.GLResetPostingFlagSelect</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLReversePullAction</servlet-name>
+        <url-pattern>/smgl.GLReversePullAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>GLReversePullSelect</servlet-name>
+        <url-pattern>/smgl.GLReversePullSelect</url-pattern>
     </servlet-mapping>
     
     <servlet-mapping>

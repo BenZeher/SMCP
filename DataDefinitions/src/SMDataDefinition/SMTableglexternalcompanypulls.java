@@ -15,6 +15,7 @@ public class SMTableglexternalcompanypulls {
 	public static final String ifiscalyear = "ifiscalyear";
 	public static final String ifiscalperiod = "ifiscalperiod";
 	public static final String ipulltype = "ipulltype";
+	public static final String ireversed = "ireversed";
 
 	//Field Lengths:
 	public static final int sdbnameLength = 64;

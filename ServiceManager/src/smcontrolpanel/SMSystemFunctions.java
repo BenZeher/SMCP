@@ -337,6 +337,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLCloseFiscalYear = 1244;
 	public static long GLCheckFinancialData = 1245;
 	public static long SMTestOHDPlusConnection = 1246;
+	public static long GLReverseExternalCompanyPulls = 1247;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2724,6 +2725,12 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smcontrolpanel.SMTestOHDPlusSelect"); 
 			arrFunctionDescriptions.add("Used for testing requests to the OHD Plus System.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);			
+			
+			arrFunctions.add("GL Reverse External Company Pulls"); 
+			arrFunctionIDs.add(GLReverseExternalCompanyPulls); 
+			arrFunctionLinks.add("smgl.GLReversePullSelect"); 
+			arrFunctionDescriptions.add("Allows you to reverse a previous pull from an external company.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}
 

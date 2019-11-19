@@ -708,6 +708,9 @@ public class SMMaterialReturn extends clsMasterEntry{
         	sErrors += "'To Be Returned' status (" + m_itobereturned + ") is invalid.";
         }
         
+        m_bdcreditamt =m_bdcreditamt.replaceAll(",", "");
+        m_bdadjustmentamount =m_bdadjustmentamount.replaceAll(",", "");
+        
     	if (sErrors.compareToIgnoreCase("") != 0){
     		throw new Exception(sErrors);
     	}

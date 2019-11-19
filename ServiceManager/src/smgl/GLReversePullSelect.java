@@ -12,7 +12,6 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
-import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import smcontrolpanel.SMAuthenticate;
 import smcontrolpanel.SMSystemFunctions;
@@ -23,6 +22,7 @@ public class GLReversePullSelect extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
 	public static final String CONFIRM_PROCESS = "ConfirmProcess";
+	public static final String RADIO_BUTTONS_NAME = "RadioButtonSelect";
 	public static final String TABLE_ROW_EVEN_ROW_BACKGROUND_COLOR = "#FFFFFF";
 	public static final String TABLE_ROW_ODD_ROW_BACKGROUND_COLOR = "#DCDCDC";
 	public static String PARAM_VALUE_DELIMITER = " - ";
@@ -77,7 +77,7 @@ public class GLReversePullSelect extends HttpServlet {
 	    	+ "\">Summary</A><BR>");
 	    
 	    out.println("<BR>Select a previous 'pull' from the list below to reverse it.  If it has already been reversed, it won't"
-	    	+ " appear in the list, and is not eliegible to be reversed."
+	    	+ " appear in the list, and is not eligible to be reversed."
 	    	+ "<BR><BR>"
 	    );
 	    
@@ -106,6 +106,9 @@ public class GLReversePullSelect extends HttpServlet {
 			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
+					+ "Reverse?</TD>\n";
+			
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 				+ "ID#</TD>\n";
 			
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
@@ -117,10 +120,10 @@ public class GLReversePullSelect extends HttpServlet {
 			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
 					+ "Pulled By</TD>\n";
 			
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "Fiscal Year</TD>\n";
 
-			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
+			s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >"
 					+ "Fiscal Period</TD>\n";
 			
 		s += "  </TR>\n";
@@ -130,11 +133,11 @@ public class GLReversePullSelect extends HttpServlet {
 		
 		String SQL = "SELECT * FROM " + SMTableglexternalcompanypulls.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglexternalcompanypulls.ireversed + " != 1)"
+				+ "(" + SMTableglexternalcompanypulls.ireversed + " = 0)"
+				+ " AND (" + SMTableglexternalcompanypulls.ipulltype + " = " 
+					+ Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_PULL) + ")"
 			+ ")"
-			+ " ORDER BY " + SMTableglexternalcompanypulls.ifiscalyear 
-			+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
-			+ ", " + SMTableglexternalcompanypulls.ipulltype
+			+ " ORDER BY " + SMTableglexternalcompanypulls.lid 
 		;
 		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
 			SQL, 
@@ -152,25 +155,57 @@ public class GLReversePullSelect extends HttpServlet {
 				sBackgroundColor = TABLE_ROW_ODD_ROW_BACKGROUND_COLOR;
 			}
 			
-			String slid = Long.toString(rs.getLong(SMTableglexternalcompanies.lid));
 			sLineText += "  <TR style = \"  background-color:" + sBackgroundColor + ";  \""
-				+ ">\n"
-			;
+					+ ">\n"
+				;
 			
 			//Select:
 			String sChecked = "checked";
 			if (!bFirstRecord){
 				sChecked = "";
 			}
+			String slid = Long.toString(rs.getLong(SMTableglexternalcompanypulls.lid));
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL + " \" >" 
+				+ "<LABEL>&nbsp;&nbsp;&nbsp;"
+				+ "<input type=\"radio\" name=\"" + RADIO_BUTTONS_NAME + "\" value=\"" 
+				+ slid + "\"" + " " + sChecked + " " + ">" 
+				+ "&nbsp;&nbsp;&nbsp;</LABEL>"
+				+ "</TD>\n"
+			;
 			
 			//lid
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
 					+ slid 
 					+ "</TD>\n";
 			
+			//Time
+			String sTime = ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+				rs.getString(SMTableglexternalcompanypulls.dattimepulldate), 
+				ServletUtilities.clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+				ServletUtilities.clsServletUtilities.EMPTY_DATETIME_VALUE
+			);
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+					+ sTime 
+					+ "</TD>\n";
+			
 			//company name
 			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
-					+ rs.getString(SMTableglexternalcompanies.scompanyname).trim()
+					+ rs.getString(SMTableglexternalcompanypulls.scompanyname).trim()
+					+ "</TD>\n";
+			
+			//Pulled by
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+					+ rs.getString(SMTableglexternalcompanypulls.sfullusername).trim()
+					+ "</TD>\n";
+			
+			//Fiscal year
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+					+ Integer.toString(rs.getInt(SMTableglexternalcompanypulls.ifiscalyear)).trim()
+					+ "</TD>\n";
+			
+			//Fiscal period
+			sLineText += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \" >"
+					+ Integer.toString(rs.getInt(SMTableglexternalcompanypulls.ifiscalperiod)).trim()
 					+ "</TD>\n";
 			
 			sLineText += "  </TR>\n";

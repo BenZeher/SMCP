@@ -125,6 +125,7 @@ public class GLExternalPull {
 	    		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
 	    		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
 	    		+ ", " + SMTableglexternalcompanypulls.ipulltype
+	    		+ ", " + SMTableglexternalcompanypulls.ireversed
 	    		+ ", " + SMTableglexternalcompanypulls.lcompanyid
 	    		+ ", " + SMTableglexternalcompanypulls.luserid
 	    		+ ", " + SMTableglexternalcompanypulls.scompanyname
@@ -135,6 +136,7 @@ public class GLExternalPull {
 	    		+ ", " + sFiscalPeriod
 	    		+ ", " + sFiscalYear
 	    		+ ", " + Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_PULL)
+	    		+ ", 0"
 	    		+ ", " + sCompanyID
 	    		+ ", " + sUserID
 	    		+ ", '" + sCompanyName + "'"
@@ -260,20 +262,14 @@ public class GLExternalPull {
 				+ "(" + SMTableglexternalcompanypulls.lcompanyid + " = " + sCompanyID + ")"
 				+ " AND (" + SMTableglexternalcompanypulls.ifiscalperiod + " = " + sFiscalPeriod + ")"
 				+ " AND (" + SMTableglexternalcompanypulls.ifiscalyear + " = " + sFiscalYear + ")"
+				+ " AND (" + SMTableglexternalcompanypulls.ireversed + " = 0)"
 			+ ")"
 		;
 		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-		int iNumberOfPulls = 0;
-		int iNumberOfReversals = 0;
 		String sCompanyName = "";
 		String sFullUserName = "";
 		String sPullTime = "";
 		while (rs.next()){
-			if (rs.getInt(SMTableglexternalcompanypulls.ipulltype) == SMTableglexternalcompanypulls.PULL_TYPE_PULL){
-				iNumberOfPulls++;
-			}else{
-				iNumberOfReversals++;
-			}
 			sCompanyName = rs.getString(SMTableglexternalcompanypulls.scompanyname);
 			sFullUserName = rs.getString(SMTableglexternalcompanypulls.sfullusername);
 			sPullTime = ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
@@ -284,12 +280,11 @@ public class GLExternalPull {
 		}
 		rs.close();
 		
-		if (iNumberOfPulls > iNumberOfReversals){
+		if (sCompanyName.compareToIgnoreCase("") != 0){
 			throw new Exception("Error [201919384192] " + "Fiscal period " + sFiscalPeriod + " for fiscal year " + sFiscalYear + " has already been pulled"
 					+ " for company '" + sCompanyName + "' with company ID " + sCompanyID + " by " + sFullUserName + " - " + sPullTime + "."
 				);
 		}
-		
 		return;
 	}
     private void setPostingFlag(Connection conn, String sUserID, String sCompanyName, String sProcessDescription) throws Exception{
@@ -437,6 +432,7 @@ public class GLExternalPull {
     		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
     		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
     		+ ", " + SMTableglexternalcompanypulls.ipulltype
+    		+ ", " + SMTableglexternalcompanypulls.ireversed
     		+ ", " + SMTableglexternalcompanypulls.lcompanyid
     		+ ", " + SMTableglexternalcompanypulls.luserid
     		+ ", " + SMTableglexternalcompanypulls.scompanyname
@@ -450,6 +446,7 @@ public class GLExternalPull {
     		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
     		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
     		+ ", " + Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_REVERSAL)
+    		+ ", 0"
     		+ ", " + SMTableglexternalcompanypulls.lcompanyid
     		+ ", " + sUserID
     		+ ", '" + SMTableglexternalcompanypulls.scompanyname + "'"
@@ -470,6 +467,7 @@ public class GLExternalPull {
 		}
     	
 		SQL = "SELECT LAST_INSERT_ID()";
+		@SuppressWarnings("unused")
 		long lExternalCompanyPullID = 0L;
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

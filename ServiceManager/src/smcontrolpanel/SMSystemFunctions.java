@@ -2679,6 +2679,7 @@ public class SMSystemFunctions extends java.lang.Object{
 											+ ", " + SMTableglexternalcompanypulls.scompanyname + " as 'Pulled From'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalyear + " as 'Fiscal Year'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalperiod + " as 'Fiscal Period'"
+											+ ", " + "IF(" + SMTableglexternalcompanypulls.ireversed + " = 0, 'No', 'Yes') AS Reversed?"
 											+ " FROM " + SMTableglexternalcompanypulls.TableName
 											+ " ORDER BY " + SMTableglexternalcompanypulls.dattimepulldate + " DESC"
 									)

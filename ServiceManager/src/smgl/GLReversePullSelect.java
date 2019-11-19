@@ -129,6 +129,9 @@ public class GLReversePullSelect extends HttpServlet {
 		boolean bOddRow = true;
 		
 		String SQL = "SELECT * FROM " + SMTableglexternalcompanypulls.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglexternalcompanypulls.ireversed + " != 1)"
+			+ ")"
 			+ " ORDER BY " + SMTableglexternalcompanypulls.ifiscalyear 
 			+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
 			+ ", " + SMTableglexternalcompanypulls.ipulltype

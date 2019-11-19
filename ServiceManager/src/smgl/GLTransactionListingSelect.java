@@ -424,6 +424,7 @@ public class GLTransactionListingSelect extends HttpServlet {
 				+ " WHERE ("
 					+ "(" + SMTableglexternalcompanypulls.ipulltype + " = " 
 					+ Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_PULL) + ")"
+					+ " AND (" + SMTableglexternalcompanypulls.ireversed + " = 0)"
 				+ ")"
 				+ " ORDER BY " + SMTableglexternalcompanypulls.lid
 			;

@@ -24,7 +24,18 @@ public class SMTableglexternalcompanypulls {
 	//Pull Types:
 	public static final int PULL_TYPE_PULL = 0;  //Normal pull type - when we pull transactions in from
 													// an external company
-	public static final int PULL_TYPE_REVERSE = 1; //This indicates the REVERSAL of a pull, such as when
+	public static final int PULL_TYPE_REVERSAL = 1; //This indicates the REVERSAL of a pull, such as when
 													// the user finds it necessary to 'roll back' a previous pull.
+	
+	public String getPullTypeDescription(int iPullType){
+		switch(iPullType){
+		case PULL_TYPE_PULL:
+			return "PULL";
+		case PULL_TYPE_REVERSAL:
+			return "REVERSAL";
+		default:
+			return "PULL";
+		}
+	}
 }
 

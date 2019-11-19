@@ -124,6 +124,7 @@ public class GLExternalPull {
 	    		+ SMTableglexternalcompanypulls.dattimepulldate
 	    		+ ", " + SMTableglexternalcompanypulls.ifiscalperiod
 	    		+ ", " + SMTableglexternalcompanypulls.ifiscalyear
+	    		+ ", " + SMTableglexternalcompanypulls.ipulltype
 	    		+ ", " + SMTableglexternalcompanypulls.lcompanyid
 	    		+ ", " + SMTableglexternalcompanypulls.luserid
 	    		+ ", " + SMTableglexternalcompanypulls.scompanyname
@@ -133,6 +134,7 @@ public class GLExternalPull {
 	    		+ "NOW()"
 	    		+ ", " + sFiscalPeriod
 	    		+ ", " + sFiscalYear
+	    		+ ", " + Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_PULL)
 	    		+ ", " + sCompanyID
 	    		+ ", " + sUserID
 	    		+ ", '" + sCompanyName + "'"
@@ -249,6 +251,7 @@ public class GLExternalPull {
 	private void checkForPreviousPull(Connection conn, String sFiscalYear, String sFiscalPeriod, String sCompanyID) throws Exception{
 		String SQL = "SELECT"
 			+ " " + SMTableglexternalcompanypulls.dattimepulldate
+			+ ", " + SMTableglexternalcompanypulls.ipulltype
 			+ ", " + SMTableglexternalcompanypulls.lid
 			+ ", " + SMTableglexternalcompanypulls.scompanyname
 			+ ", " + SMTableglexternalcompanypulls.sfullusername
@@ -260,20 +263,32 @@ public class GLExternalPull {
 			+ ")"
 		;
 		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-		if (rs.next()){
-			String sCompanyName = rs.getString(SMTableglexternalcompanypulls.scompanyname);
-			String sFullUserName = rs.getString(SMTableglexternalcompanypulls.sfullusername);
-			String sPullTime = ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
+		int iNumberOfPulls = 0;
+		int iNumberOfReversals = 0;
+		String sCompanyName = "";
+		String sFullUserName = "";
+		String sPullTime = "";
+		while (rs.next()){
+			if (rs.getInt(SMTableglexternalcompanypulls.ipulltype) == SMTableglexternalcompanypulls.PULL_TYPE_PULL){
+				iNumberOfPulls++;
+			}else{
+				iNumberOfReversals++;
+			}
+			sCompanyName = rs.getString(SMTableglexternalcompanypulls.scompanyname);
+			sFullUserName = rs.getString(SMTableglexternalcompanypulls.sfullusername);
+			sPullTime = ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 				rs.getString(SMTableglexternalcompanypulls.dattimepulldate),
 				ServletUtilities.clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY,
 				ServletUtilities.clsServletUtilities.EMPTY_DATETIME_VALUE)
 			;
-			rs.close();
-			throw new Exception("Error [201919384192] " + "Fiscal period " + sFiscalPeriod + " for fiscal year " + sFiscalYear + " has already been pulled"
-				+ " for company '" + sCompanyName + "' with company ID " + sCompanyID + " by " + sFullUserName + " - " + sPullTime + "."
-			);
 		}
 		rs.close();
+		
+		if (iNumberOfPulls > iNumberOfReversals){
+			throw new Exception("Error [201919384192] " + "Fiscal period " + sFiscalPeriod + " for fiscal year " + sFiscalYear + " has already been pulled"
+					+ " for company '" + sCompanyName + "' with company ID " + sCompanyID + " by " + sFullUserName + " - " + sPullTime + "."
+				);
+		}
 		
 		return;
 	}

@@ -2671,9 +2671,10 @@ public class SMSystemFunctions extends java.lang.Object{
 					"smcontrolpanel.SMQueryParameters?" 
 							+ "QUERYSTRING="
 							+ clsServletUtilities.URLEncode(
-									"select"
+									"SELECT"
 											+ " DATE_FORMAT(" + SMTableglexternalcompanypulls.dattimepulldate + ", '%c/%e/%Y %l:%i:%s %p') as 'Time'"
 											+ ", " + SMTableglexternalcompanypulls.sfullusername + " as 'Name'"
+											+ ", " + "IF(" + SMTableglexternalcompanypulls.ipulltype + " = 0, 'PULL', 'REVERSAL') AS Type"
 											+ ", " + SMTableglexternalcompanypulls.scompanyname + " as 'Pulled From'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalyear + " as 'Fiscal Year'"
 											+ ", " + SMTableglexternalcompanypulls.ifiscalperiod + " as 'Fiscal Period'"

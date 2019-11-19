@@ -421,6 +421,10 @@ public class GLTransactionListingSelect extends HttpServlet {
 		out.println("  </TR>");
 		
 		sSQL = "SELECT * FROM " + SMTableglexternalcompanypulls.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglexternalcompanypulls.ipulltype + " = " 
+					+ Integer.toString(SMTableglexternalcompanypulls.PULL_TYPE_PULL) + ")"
+				+ ")"
 				+ " ORDER BY " + SMTableglexternalcompanypulls.lid
 			;
 		out.println("  <TR>");

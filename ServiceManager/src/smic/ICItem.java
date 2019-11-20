@@ -1342,7 +1342,7 @@ public class ICItem extends Object{
 			+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
 			+ " FROM " + SMTableinvoicedetails.TableName + " LEFT JOIN " + SMTableinvoiceheaders.TableName
 			+ " ON " + SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber + " = "
-			+ SMTableinvoiceheaders.TableName + "." + SMTableinvoiceheaders.sInvoiceNumber
+			+ SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.sInvoiceNumber
 			+ " WHERE ("
 			+ "(" + SMTableinvoicedetails.sItemNumber + " = '" + sItemNumber + "')"
 			+ " AND ("

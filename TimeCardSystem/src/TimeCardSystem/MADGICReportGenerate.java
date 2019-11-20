@@ -127,8 +127,10 @@ public class MADGICReportGenerate extends HttpServlet {
 			Enumeration<String> paramNames = request.getParameterNames();
 			while(paramNames.hasMoreElements()) {
 				String s = paramNames.nextElement().toString();
-				if (s.substring(0, MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX.length()).compareTo(MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX) == 0){
-					alDepartments.add(s.substring(MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX.length(), s.length()));
+				if (s.length() >= MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX.length()){
+					if (s.substring(0, MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX.length()).compareTo(MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX) == 0){
+						alDepartments.add(s.substring(MADGICReportGenerate.PARAM_DEPARTMENT_PREFIX.length(), s.length()));
+					}
 				}
 			}
 		}

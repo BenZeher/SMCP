@@ -33,7 +33,7 @@ public class MADGICReportCriteriaSelection extends HttpServlet {
 	    
 	    PrintWriter out = response.getWriter();
 	    String title = "Time Card System";
-	    String subtitle = "MADGIC Report criterias";
+	    String subtitle = "MADGIC Report criteria";
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS, TimeCardUtilities.BASE_FONT_FAMILY));
 	    out.println(TimeCardUtilities.getDatePickerIncludeString(getServletContext()));

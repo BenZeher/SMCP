@@ -31,6 +31,7 @@ import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicshipvias;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTablematerialreturns;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -357,6 +358,8 @@ public class ICEditPOEdit  extends HttpServlet {
 			);
 			smedit.getPWOut().println("<BR>");
 			
+
+			
 			smedit.getPWOut().println(SMCriticalDateEntry.listCriticalDates(
 					SMTablecriticaldates.PURCHASE_ORDER_RECORD_TYPE,
 					entry.getsID(),
@@ -369,7 +372,16 @@ public class ICEditPOEdit  extends HttpServlet {
 					));
 		}
 		
+		listMaterialReturns(
+				smedit.getPWOut(), 
+				getServletContext(), 
+				smedit.getsDBID(), 
+				smedit.getUserID(), 
+				entry,
+				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+		);
 		
+		smedit.getPWOut().println("<BR>");
 		
 		
 		return;
@@ -2469,6 +2481,96 @@ public class ICEditPOEdit  extends HttpServlet {
 
 		return s;
 	}
+	
+	//TODO
+	private void listMaterialReturns(
+			PrintWriter out, 
+			ServletContext context, 
+			String sDBID, 
+			String sUserID,
+			ICPOHeader entry,
+			String sLicenseModuleLevel
+			){
+
+
+		out.println("<br><b><u><FONT SIZE=2>Material Returns</FONT></u></b><BR>");
+		if (entry.getsID().compareToIgnoreCase("") != 0){
+			String SQL = "SELECT"
+					+ " " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.iponumber
+					+ " , " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.lid
+					+ " FROM " + SMTablematerialreturns.TableName
+					+ " WHERE " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.iponumber 
+					+ " = " + entry.getsID()
+					;
+
+			boolean bEditMaterialReturns  = 
+					SMSystemFunctions.isFunctionPermitted(
+							SMSystemFunctions.SMEditMaterialReturns, 
+							sUserID, 
+							context,
+							sDBID,
+							sLicenseModuleLevel
+							); 
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+						SQL, 
+						context, 
+						sDBID, 
+						"MySQL", 
+						SMUtilities.getFullClassName(this.toString() + " - userID: " + sUserID)
+						);
+
+				if(rs.next() != false) {
+					out.println("<TABLE BORDER=0 cellspacing=0 cellpadding=1 style= \""
+							+ " background-color: " + RECEIPTS_TABLE_BG_COLOR + "; \" ><TR>");
+					out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Material Return Link(s)</B></FONT></TD>");				
+					out.println("</TR>");
+					rs.beforeFirst();
+
+
+					boolean bOddRow = false;
+					String sBackgroundColor= "";
+					while (rs.next()){
+						if(bOddRow){
+							sBackgroundColor = "\"" + DARK_ROW_BG_COLOR + "\"";
+						}else{
+							sBackgroundColor = "\"" + LIGHT_ROW_BG_COLOR + "\"";
+						}
+						//Because we are getting a 'SUM' in this query, it will return one record every time, even if there are no
+						//receipts at all.  So we have to add this check to make sure that we have a 'real' receipt:
+						out.println("<TR  bgcolor =" + sBackgroundColor +">");
+						//Line number:
+						int MRID = rs.getInt(SMTablematerialreturns.TableName + "." + SMTablematerialreturns.lid); 
+						String sMRIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+						+ "smcontrolpanel.SMEditMaterialReturnEdit"
+						+ "?lid=" + MRID
+						+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+						+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(Integer.toString(MRID)) + "</A>";
+
+						if (bEditMaterialReturns){
+							out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + sMRIDLink + "</FONT></TD>");	
+						}else{
+							out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + MRID + "</FONT></TD>");
+						}
+
+						out.println("</TR>");
+						bOddRow = !bOddRow;
+
+					}
+					out.println("</TABLE>");
+				}
+
+				rs.close();
+			} catch (SQLException e) {
+				System.out.println("In " + this.toString() + "Error [1574190570] with SQL: " + SQL + " - " + e.getMessage());
+			}
+		}
+
+
+	}
+	
+	
 	private String getGDocUploadLink( 
 		boolean bUseGoogleDrivePicker,
 		String sPONumber, 

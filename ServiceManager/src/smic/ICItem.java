@@ -1350,7 +1350,7 @@ public class ICItem extends Object{
 				+ " OR (" + SMTableinvoiceheaders.iExportedToIC + " != 1)"
 			+ ")"
 			+ ")"
-			;
+		;
 
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

@@ -347,6 +347,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		;
 		*/
 	    
+	    /*
 	    //Lock closings?
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockclosingperiod, 
@@ -355,7 +356,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 			"<I>Check to prevent closing to this fiscal year.</I>"
 			)
 		;
-	    
+	    */
        //We need a row to hold our starting and ending dates:
         s += buildRowForFiscalPeriodDates(smedit, entry);
         

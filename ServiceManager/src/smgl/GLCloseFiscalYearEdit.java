@@ -122,9 +122,9 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 		String sSQL = "SELECT"
 			+ " " + SMTableglfiscalperiods.ifiscalyear
 			+ " FROM " + SMTableglfiscalperiods.TableName
-			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.ilockclosingperiod + " = 0)"
-			+ ")"
+			//+ " WHERE ("
+			//	+ "(" + SMTableglfiscalperiods.ilockclosingperiod + " = 0)"
+			//+ ")"
 			+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
 		;
 		try {

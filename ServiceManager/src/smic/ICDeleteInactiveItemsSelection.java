@@ -14,7 +14,6 @@ import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import ServletUtilities.clsCreateHTMLFormFields;
-import ServletUtilities.clsManageRequestParameters;
 
 public class ICDeleteInactiveItemsSelection extends HttpServlet {
 	public static final String DELETE_DATE= "DeleteDate";

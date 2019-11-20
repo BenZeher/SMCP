@@ -981,8 +981,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.iactive
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid
-				+ ", " + SMTableglfiscalperiods.ilockclosingperiod
-				+ ", " + SMTableglfiscalperiods.ilockadjustmentperiod
+				//+ ", " + SMTableglfiscalperiods.ilockclosingperiod
+				//+ ", " + SMTableglfiscalperiods.ilockadjustmentperiod
 				+ ", " + SMTableglfiscalperiods.inumberofperiods
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername
 				+ ", " + SMTableglfiscalperiods.datlastediteddateandtime
@@ -1016,8 +1016,8 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("ACTIVE"))
 				+ ", " + rsGLFiscalPeriods.getString("FSCYEAR")
 				+ ", " + sUserID
-				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSCLS"))
-				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSADJ"))
+				//+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSCLS"))
+				//+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSADJ"))
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("PERIODS"))
 				+ ", '" + sUserFullName + "'"
 				//+ ", DATE_FORMAT(NOW(), '%Y-%m-%d %H:%i:%S')"

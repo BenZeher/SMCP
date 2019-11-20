@@ -36,8 +36,6 @@ public class GLFiscalYear extends java.lang.Object{
 	public String m_slasteditedbyfullusername;
 	public String m_sinumberofperiods;
 	public String m_siactive;
-	public String m_silockadjustmentperiod;
-	public String m_silockclosingperiod;
 	public String m_sdatbeginningdateperiod1;
 	public String m_sdatendingdateperiod1;
 	public String m_speriod1locked;
@@ -88,8 +86,6 @@ public class GLFiscalYear extends java.lang.Object{
 		m_silastediteddatetime = clsServletUtilities.EMPTY_DATETIME_VALUE;
 		m_sinumberofperiods = "0";
 		m_siactive = "0";
-		m_silockadjustmentperiod = "0";
-		m_silockclosingperiod = "0";
 		m_sdatbeginningdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatendingdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatbeginningdateperiod2 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
@@ -144,16 +140,7 @@ public class GLFiscalYear extends java.lang.Object{
 		}else{
 			m_siactive = "1";
 		}
-		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ilockadjustmentperiod, req).compareToIgnoreCase("") == 0){
-			m_silockadjustmentperiod = "0";
-		}else{
-			m_silockadjustmentperiod = "1";
-		}
-		if (clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.ilockclosingperiod, req).compareToIgnoreCase("") == 0){
-			m_silockclosingperiod = "0";
-		}else{
-			m_silockclosingperiod = "1";
-		}
+
 		m_sdatbeginningdateperiod1 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datbeginningdateperiod1, req).trim();
 		m_sdatbeginningdateperiod2 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datbeginningdateperiod2, req).trim();
 		m_sdatbeginningdateperiod3 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datbeginningdateperiod3, req).trim();
@@ -292,8 +279,6 @@ public class GLFiscalYear extends java.lang.Object{
 					rs.getString(SMTableglfiscalperiods.datlastediteddateandtime), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE);
 				m_sinumberofperiods = Integer.toString(rs.getInt(SMTableglfiscalperiods.inumberofperiods));
 				m_siactive = Integer.toString(rs.getInt(SMTableglfiscalperiods.iactive));
-				m_silockadjustmentperiod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ilockadjustmentperiod));
-				m_silockclosingperiod = Integer.toString(rs.getInt(SMTableglfiscalperiods.ilockclosingperiod));
 				m_sdatbeginningdateperiod1 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
 					rs.getString(SMTableglfiscalperiods.datbeginningdateperiod1), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE);
 				m_sdatbeginningdateperiod2 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -429,8 +414,6 @@ public class GLFiscalYear extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.iactive
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid
-				+ ", " + SMTableglfiscalperiods.ilockadjustmentperiod
-				+ ", " + SMTableglfiscalperiods.ilockclosingperiod
 				+ ", " + SMTableglfiscalperiods.inumberofperiods
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername
 				+ ", " + SMTableglfiscalperiods.datlastediteddateandtime
@@ -609,8 +592,6 @@ public class GLFiscalYear extends java.lang.Object{
 			+ ", " + get_siactive()
 			+ ", " + get_sifiscalyear()
 			+ ", " + get_slasteditedbyuserid()
-			+ ", " + get_silockadjustmentperiod()
-			+ ", " + get_silockclosingperiod()
 			+ ", " + get_sinumberofperiods()
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(get_slasteditedbyuserfullname()) + "'"
 			+ ", '" + ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
@@ -821,8 +802,6 @@ public class GLFiscalYear extends java.lang.Object{
 					) + "'"				
 				+ ", " + SMTableglfiscalperiods.iactive + " = " + get_siactive()
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid + " = " + get_slasteditedbyuserid()	
-				+ ", " + SMTableglfiscalperiods.ilockadjustmentperiod + " = " + get_silockadjustmentperiod()
-				+ ", " + SMTableglfiscalperiods.ilockclosingperiod + " = " + get_silockclosingperiod()
 				+ ", " + SMTableglfiscalperiods.inumberofperiods + " = " + get_sinumberofperiods()
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername + " = '" + clsDatabaseFunctions.FormatSQLStatement(get_slasteditedbyuserfullname()) + "'"
 				+ ", " + SMTableglfiscalperiods.datlastediteddateandtime + " = '" + ServletUtilities.clsDateAndTimeConversions.convertDateFormat(
@@ -1128,17 +1107,7 @@ public class GLFiscalYear extends java.lang.Object{
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}
-       	try {
-			set_silockadjustmentperiod(clsValidateFormFields.validateIntegerField(get_silockadjustmentperiod(), "Lock adjustment period", 0, 1));
-		} catch (Exception e1) {
-			s += e1.getMessage() + "\n";
-		}
-       	try {
-			set_silockclosingperiod(clsValidateFormFields.validateIntegerField(get_silockclosingperiod(), "Lock closing period", 0, 1));
-		} catch (Exception e1) {
-			s += e1.getMessage() + "\n";
-		}
-       	
+  
        	try {
 			set_siperiod1locked(clsValidateFormFields.validateIntegerField(get_siperiod1locked(), "Period 1 locked", 0, 1));
 		} catch (Exception e1) {
@@ -2142,12 +2111,6 @@ public class GLFiscalYear extends java.lang.Object{
 	public void set_siactive(String sActive) {
 		m_siactive = sActive;
 	}
-	public void set_silockadjustmentperiod(String sLockAdjustmentPeriod) {
-		m_silockadjustmentperiod = sLockAdjustmentPeriod;
-	}
-	public void set_silockclosingperiod(String sLockClosingPeriod) {
-		m_silockclosingperiod = sLockClosingPeriod;
-	}
 	public void set_siperiod1locked(String sPeriod1Locked) {
 		m_speriod1locked = sPeriod1Locked;
 	}
@@ -2283,12 +2246,6 @@ public class GLFiscalYear extends java.lang.Object{
 	}
 	public String get_siactive() {
 		return m_siactive;
-	}
-	public String get_silockadjustmentperiod() {
-		return m_silockadjustmentperiod;
-	}
-	public String get_silockclosingperiod() {
-		return m_silockclosingperiod;
 	}
 	public String get_siperiod1locked() {
 		return m_speriod1locked;

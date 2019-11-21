@@ -608,9 +608,10 @@ public class SMProposalForm extends java.lang.Object{
 					+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
 					+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
 					+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonTitle
-					+ " FROM " + SMTableorderheaders.TableName + " LEFT JOIN " + SMTablesalesperson.TableName
-					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson + " = "
-					+ SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
+					+ " FROM " + SMTableorderheaders.TableName 
+					+ " LEFT JOIN " + SMTablesalesperson.TableName
+					+ " ON " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sSalesperson 
+					+ " = " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonCode
 					+ " WHERE ("
 						+ "(" + SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber + " = '" + sProposalNumber + "')"
 					+ ")"
@@ -620,11 +621,37 @@ public class SMProposalForm extends java.lang.Object{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (rs.next()){
 				sSignature = rs.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.mSignature);
+				//If the signature is null because a sales person is not selected on the order header then
+				// use the sales person record linked to the last signed user id.
 				if (sSignature == null){
-					throw new Exception("No salesperson found for this order.");
+					SQL = "SELECT"
+							+ " " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sDirectDial
+							+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonEmail
+							+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.mSignature
+							+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonFirstName
+							+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonLastName
+							+ ", " + SMTablesalesperson.TableName + "." + SMTablesalesperson.sSalespersonTitle
+							+ " FROM " + SMTableproposals.TableName 
+							+ " LEFT JOIN " + SMTablesalesperson.TableName
+							+ " ON " + SMTablesalesperson.TableName + "." + SMTablesalesperson.lSalespersonUserID
+							+ " = " + SMTableproposals.TableName + "." + SMTableproposals.lsignedbyuserid
+							+ " WHERE ("
+								+ "(" + SMTableproposals.TableName + "." + SMTableproposals.strimmedordernumber + " = '" + sProposalNumber + "')"
+							+ ")"
+						;
+					ResultSet rs2 = clsDatabaseFunctions.openResultSet(SQL, conn);
+					if (rs2.next()){
+						sSignature = rs2.getString(SMTablesalesperson.TableName + "." + SMTablesalesperson.mSignature);	
+						if (sSignature == null){
+							throw new Exception("No sales person record can be found.");
+						}else {
+							//Use the new sales person record for the rest of the proposal. 
+							rs = rs2;
+						}
+					}
 				}
 			}else{
-				throw new Exception("No salesperson data found for this salesperson.");
+				throw new Exception("No proposal found for proposal number '" + sProposalNumber + "'.");
 			}
 			//Print the signature:
 			if (rsOrderAndProposal.getLong(SMTableproposals.TableName + "." + SMTableproposals.isigned) == 1 && bApproved){

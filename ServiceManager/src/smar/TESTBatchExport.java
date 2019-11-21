@@ -145,7 +145,20 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		//Test GL Transaction Batch posting:
+		clsDatabaseFunctions.start_data_transaction(conn);
+		GLTransactionBatch glbatch = new GLTransactionBatch("13");
+		try {
+			glbatch.post_with_connection(conn, "1", "airo");
+		} catch (Exception e) {
+			clsDatabaseFunctions.rollback_data_transaction(conn);
+			System.out.println(e.getMessage());
+		}
+		//clsDatabaseFunctions.commit_data_transaction(conn);
+		clsDatabaseFunctions.rollback_data_transaction(conn);
+		System.out.println("DONE");
 		
+		/*
 		//Test GL Pull:
 		GLExternalPull pull = new GLExternalPull();
 		try {
@@ -162,7 +175,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("Error - " + e1.getMessage());
 		}
 		System.out.println("DONE");
-		
+		*/
 		
 		/*
 		//Test GL Transaction Batch for AR:
@@ -197,20 +210,6 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		System.out.println("DONE");
 		*/
-		
-		
-		//Test GL Transaction Batch posting:
-		clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("9");
-		try {
-			glbatch.post_with_connection(conn, "1", "airo");
-		} catch (Exception e) {
-			clsDatabaseFunctions.rollback_data_transaction(conn);
-			System.out.println(e.getMessage());
-		}
-		//clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.rollback_data_transaction(conn);
-		System.out.println("DONE");
 		
 		
 		//Test GL conversion function:

@@ -271,7 +271,7 @@ public class GLEditBatchesAction extends HttpServlet{
 			try {
 				batch.post_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName);
 			} catch (Exception e) {
-				throw new Exception("Error [20193021449194] " + "error posting batch number: " + Long.toString(arrBatchesToPost.get(i)));
+				throw new Exception("Error [20193021449194] " + "error posting batch number: " + Long.toString(arrBatchesToPost.get(i)) + " - " + e.getMessage());
 			}
 		}
 		

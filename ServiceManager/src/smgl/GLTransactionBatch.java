@@ -948,11 +948,19 @@ public class GLTransactionBatch {
     	//Get a list of all the changes to all the accounts, and update the fiscal sets accordingly:
     	String SQL = "";
     	if (!bIsClosingBatch){
+    		//Here we have to get a list of all the accounts/fiscal year/fiscal periods that we need to check:
 	    	SQL = "SELECT"
 	    		+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS 'NETPERIODCHANGEFORACCOUNT'"
 	    		+ ", " + SMTablegltransactionlines.ifiscalperiod + " AS 'FISCALPERIOD'"
 	    		+ ", " + SMTablegltransactionlines.ifiscalyear + " AS 'FISCALYEAR'"
 	    		+ ", " + SMTablegltransactionlines.sacctid + " AS 'GLACCT'"
+	    		+ " FROM " + SMTablegltransactionlines.TableName
+	    		+ " LEFT JOIN "
+	    		
+	    		+ " (SELECT "
+	    		+ " " + SMTablegltransactionlines.sacctid + " AS ACCT"
+	    		+ ", " + SMTablegltransactionlines.ifiscalperiod + " AS FPERIOD"
+	    		+ ", " + SMTablegltransactionlines.ifiscalyear + " AS FYEAR"
 	    		+ " FROM " + SMTablegltransactionlines.TableName
 	    		+ " WHERE ("
 	    		;
@@ -963,6 +971,19 @@ public class GLTransactionBatch {
 	    		}
 	    			 
 	    		SQL += ")"
+	    		+ ") AS LIMITQUERY"
+	    		
+	    		+ " ON (" 
+	    			+ "(" + SMTablegltransactionlines.sacctid + " = LIMITQUERY.ACCT)"
+	    			+ " AND (" + SMTablegltransactionlines.ifiscalperiod + " = LIMITQUERY.FPERIOD)"
+	    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = LIMITQUERY.FYEAR)"
+	    		
+	    		+ ")"
+	    		
+	    		+ " WHERE ("
+	    			+ "(LIMITQUERY.ACCT IS NOT NULL)"
+	    		+ ")"
+	    		
 	    		+ " GROUP BY " + SMTablegltransactionlines.sacctid
 	    		+ ", " + SMTablegltransactionlines.ifiscalyear
 	    		+ ", " + SMTablegltransactionlines.ifiscalperiod
@@ -970,7 +991,8 @@ public class GLTransactionBatch {
     	}else{
     		//But if it IS a closing batch, then we just need to update ALL the accounts
 	    	SQL = "SELECT"
-	    		+ " SUM(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ") AS 'NETPERIODCHANGEFORACCOUNT'"
+	    		+ " SUM(IF(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + " IS NOT NULL, " 
+	    			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ", 0.00)) AS 'NETPERIODCHANGEFORACCOUNT'"
 	    		+ ", " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + " AS 'FISCALPERIOD'"
 	    		+ ", " + Integer.toString(iClosingFiscalYear) + " AS 'FISCALYEAR'"
 	    		+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + " AS 'GLACCT'"
@@ -980,6 +1002,17 @@ public class GLTransactionBatch {
 	    		+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 	    		+ " WHERE ("
 	    			+ "(" + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive + " = 1)"
+	    			+ " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " = " 
+	    					+ Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) 
+	    				+ ") OR (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + " IS NULL)"
+	    			+ ")"
+	    				
+	    			+ " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " = " 
+							+ Integer.toString(iClosingFiscalYear) 
+						+ ") OR (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " IS NULL)"
+					+ ")"
+	    		
+	    		+ ")"
 	    		+ " GROUP BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 	    		+ ", `FISCALYEAR`"
 	    		+ ", `FISCALPERIOD`"
@@ -1031,7 +1064,7 @@ public class GLTransactionBatch {
 			+ ", " + Integer.toString(iFiscalYear)
 			+ ", '" + sAccount + "'"
 			+ ") ON DUPLICATE KEY UPDATE "
-			+ sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetTotalPeriodChangeForAccount)
+			+ sNetChangeField + " = " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetTotalPeriodChangeForAccount)
 		;
 		
 		try {
@@ -1075,7 +1108,7 @@ public class GLTransactionBatch {
 				throw new Exception("Error [1556569791] checking GL Options closing account " 
 					+ " - " + gloptions.getErrorMessageString());
 			}
-			sTargetAccount = gloptions.getsClosingAccount();
+			//sTargetAccount = gloptions.getsClosingAccount();
 			sClosingAccount = gloptions.getsClosingAccount();
 		}
 		
@@ -1119,7 +1152,7 @@ public class GLTransactionBatch {
 						"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
 						+ "', fiscal year " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
 						+ " - " + e.getMessage());
-				}	
+				}
 			}
 			rsFiscalYears.close();
 		} catch (Exception e) {

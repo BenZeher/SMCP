@@ -1477,6 +1477,8 @@ public class GLFiscalYear extends java.lang.Object{
     			EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(i)));
     			BeginningCalendar.setTime(Date.valueOf(arrBeginningDates.get(i+1)));
     			StartCalendar.setTime(Date.valueOf(arrBeginningDates.get(i)));
+    			
+    			//This is for the case if there is no previous year.
     			if (sHighestPreviousEndingDate == null || sHighestPreviousEndingDate.trim().isEmpty()) {
     				LastYear.setTime( Date.valueOf(arrBeginningDates.get(i)));
     				LastYear.add(Calendar.DATE, -1);

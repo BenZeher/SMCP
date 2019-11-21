@@ -944,69 +944,63 @@ public class GLTransactionBatch {
 	        );
     	}
     	
+    	//If this is NOT a closing batch, then
     	//Get a list of all the changes to all the accounts, and update the fiscal sets accordingly:
-    	String SQL = "SELECT"
-    		+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS 'ACCTTOTAL'"
-    		+ ", " + SMTablegltransactionlines.ifiscalperiod
-    		+ ", " + SMTablegltransactionlines.ifiscalyear
-    		+ ", " + SMTablegltransactionlines.sacctid
-    		+ " FROM " + SMTablegltransactionlines.TableName
-    		+ " WHERE ("
-    		;
-    		if (sExternalCompanyPullID.compareToIgnoreCase("") != 0){
-    			SQL += "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sExternalCompanyPullID + ")";
-    		}else{
-    			SQL += "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + sBatchNumber + ")";
-    		}
-    			 
-    		SQL += ")"
-    		+ " GROUP BY " + SMTablegltransactionlines.sacctid
-    		+ ", " + SMTablegltransactionlines.ifiscalyear
-    		+ ", " + SMTablegltransactionlines.ifiscalperiod
-    	;
+    	String SQL = "";
+    	if (!bIsClosingBatch){
+	    	SQL = "SELECT"
+	    		+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS 'NETPERIODCHANGEFORACCOUNT'"
+	    		+ ", " + SMTablegltransactionlines.ifiscalperiod + " AS 'FISCALPERIOD'"
+	    		+ ", " + SMTablegltransactionlines.ifiscalyear + " AS 'FISCALYEAR'"
+	    		+ ", " + SMTablegltransactionlines.sacctid + " AS 'GLACCT'"
+	    		+ " FROM " + SMTablegltransactionlines.TableName
+	    		+ " WHERE ("
+	    		;
+	    		if (sExternalCompanyPullID.compareToIgnoreCase("") != 0){
+	    			SQL += "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sExternalCompanyPullID + ")";
+	    		}else{
+	    			SQL += "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + sBatchNumber + ")";
+	    		}
+	    			 
+	    		SQL += ")"
+	    		+ " GROUP BY " + SMTablegltransactionlines.sacctid
+	    		+ ", " + SMTablegltransactionlines.ifiscalyear
+	    		+ ", " + SMTablegltransactionlines.ifiscalperiod
+	    	;
+    	}else{
+    		//But if it IS a closing batch, then we just need to update ALL the accounts
+	    	SQL = "SELECT"
+	    		+ " SUM(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ") AS 'NETPERIODCHANGEFORACCOUNT'"
+	    		+ ", " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + " AS 'FISCALPERIOD'"
+	    		+ ", " + Integer.toString(iClosingFiscalYear) + " AS 'FISCALYEAR'"
+	    		+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + " AS 'GLACCT'"
+	    		+ " FROM " + SMTableglaccounts.TableName
+	    		+ " LEFT JOIN " + SMTablegltransactionlines.TableName
+	    		+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + " = "
+	    		+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+	    		+ " WHERE ("
+	    			+ "(" + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive + " = 1)"
+	    		+ " GROUP BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+	    		+ ", `FISCALYEAR`"
+	    		+ ", `FISCALPERIOD`"
+	    	;
+	    }
+    	
     	try {
 			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsTransactions.next()){
 				updateFiscalSetsForAccount(
 					conn, 
-					rsTransactions.getString(SMTablegltransactionlines.sacctid),
-					rsTransactions.getInt(SMTablegltransactionlines.ifiscalyear),
-					rsTransactions.getInt(SMTablegltransactionlines.ifiscalperiod),
-					rsTransactions.getBigDecimal("ACCTTOTAL")
+					rsTransactions.getString("GLACCT"),
+					rsTransactions.getInt("FISCALYEAR"),
+					rsTransactions.getInt("FISCALPERIOD"),
+					rsTransactions.getBigDecimal("NETPERIODCHANGEFORACCOUNT")
 					);
 			}
 			rsTransactions.close();
 		} catch (Exception e) {
 			throw new Exception("Error [1555958198] reading GL transactions - " + e.getMessage());
 		}
-    	
-    	//If this is a CLOSING batch (year end), then we also have to update all the BALANCE SHEET accounts:
-    	if (bIsClosingBatch){
-    		//List all the balance sheet accounts, and update each.  The 'amount' for each account
-    		//is zero, since we're not updating any balance sheet accounts.  But this will trigger
-    		//the program to update the fiscal sets for the subsequent years and also update the 
-    		//financial statement data for them as well.
-    		
-    		SQL = "SELECT"
-    			+ " " + SMTableglaccounts.sAcctID
-    			+ " FROM " + SMTableglaccounts.TableName
-    			+ " WHERE ("
-    				+ "(" + SMTableglaccounts.sAcctType + " = '" + SMTableglaccounts.ACCOUNT_TYPE_BALANCE_SHEET + "')"
-    			+ ") ORDER BY " + SMTableglaccounts.sAcctID
-    		;
-    		ResultSet rsBalanceSheetAccounts = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-    		
-			while (rsBalanceSheetAccounts.next()){
-				updateFiscalSetsForAccount(
-					conn, 
-					rsBalanceSheetAccounts.getString(SMTableglaccounts.sAcctID),
-					iClosingFiscalYear,
-					SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS,
-					BigDecimal.ZERO
-					);
-			}
-    		rsBalanceSheetAccounts.close();		
-    	}
     	
     	return;
 	}
@@ -1016,7 +1010,7 @@ public class GLTransactionBatch {
 		String sAccount,
 		int iFiscalYear,
 		int iFiscalPeriod,
-		BigDecimal bdAmt
+		BigDecimal bdNetTotalPeriodChangeForAccount
 		) throws Exception{
 		
 		//Determine which field we'll be updating:
@@ -1032,12 +1026,12 @@ public class GLTransactionBatch {
 			+ ", " + SMTableglfiscalsets.ifiscalyear
 			+ ", " + SMTableglfiscalsets.sAcctID
 			+ ") VALUES ("
-			+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+			+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetTotalPeriodChangeForAccount)
 			+ ", " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
 			+ ", " + Integer.toString(iFiscalYear)
 			+ ", '" + sAccount + "'"
 			+ ") ON DUPLICATE KEY UPDATE "
-			+ sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdAmt)
+			+ sNetChangeField + " = " + sNetChangeField + " + " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdNetTotalPeriodChangeForAccount)
 		;
 		
 		try {

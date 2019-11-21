@@ -332,7 +332,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 	    	SMTableglfiscalperiods.iactive, 
 			Integer.parseInt(entry.get_siactive()), 
 			"Active?", 
-			"<I>Uncheck to de-activate this fiscal year.</I>"
+			"<I>Setting to inactive prevents this fiscal year from being closed.</I>"
 			)
 		;
 

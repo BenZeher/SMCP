@@ -122,6 +122,7 @@ public class SMTableorderheaders {
 	public static String sinvoicingcontact = "sinvoicingcontact";
 	public static String sinvoicingnotes = "sinvoicingnotes";
 	public static String idoingbusinessasaddressid = "idoingbusinessasaddressid";
+	public static String mAddressNotes = "mAddressNotes"; //` text,
 	
 	//Field Lengths:
 	public static int sOrderNumberLength = 22;

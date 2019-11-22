@@ -47,11 +47,10 @@ public class GLConvertACCPAC extends HttpServlet {
 	public static final int PROCESS_GL_FISCAL_SETS_VALUE = 8;
 	public static final String PROCESS_GL_FISCAL_SETS_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Fiscal Sets";
 	public static final int PROCESS_GL_FINANCIALDATA_VALUE = 9;
-	public static final String PROCESS_GL_FINANCIALDATA_LABEL = Integer.toString(PROCESS_GL_FISCAL_SETS_VALUE) + ") Convert GL Financial Statement Data";
+	public static final String PROCESS_GL_FINANCIALDATA_LABEL = Integer.toString(PROCESS_GL_FINANCIALDATA_VALUE) + ") Convert GL Financial Statement Data";
 	public static final int PROCESS_GL_POSTEDTRANSACTIONS_VALUE = 10;
 	public static final String PROCESS_GL_POSTEDTRANSACTIONS_LABEL = Integer.toString(PROCESS_GL_POSTEDTRANSACTIONS_VALUE) + ") Convert GL Posted Transactions";
 
-	
 	public static final int LAST_FUNCTION_IN_SEQUENCE = PROCESS_GL_POSTEDTRANSACTIONS_VALUE;
 	
 	private static final String HIGHLIGHT_ROW_BACKGROUND_COLOR = "YELLOW";

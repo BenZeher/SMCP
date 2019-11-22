@@ -340,6 +340,49 @@ public class GLTransactionListingAction extends HttpServlet {
 		
 		long lEndingTime = System.currentTimeMillis();
 		out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000L + " seconds.\n");
+		
+		//Print the legend of document dates:
+		out.println("<BR><BR>");
+		
+		out.println(
+			"<I><B><a name=\"documentdate\">Document dates<SUP>1</SUP></a></B> above refer to these specific dates, depending on the type of transaction:</I><BR>"
+		);
+		
+    	ArrayList<String>arrSourceTypeDescriptions = GLSourceLedgers.getSourceTypeDescriptions();
+    	ArrayList<String>arrDocDateRemarks = new ArrayList<String>(0);
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the invoice date."); //AP Invoice
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the entry date on a debit note."); //AP Debit note
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the credit note date on a credit note."); //AP Credit note
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the invoice date."); //AP 'N/A'
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the check/payment date.");//AP - PY = AP Payment
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the payment date."); //AP - PP = AP Prepayment
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the entry date."); //AP - AT = AP Apply to
+    	arrDocDateRemarks.add("the AP entry's 'Document date', normally the check/payment date."); //AP - MI = AP Misc payment
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the invoice date."); //AR - IN = AR Invoice
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the date the credit was issued."); //AR - CN = AR Credit
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the date the receipt was entered."); //AR - PY = AR Receipt
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the payment date."); //AR - PI = AR Prepayment
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date of the reversal."); //AR - AD = AR Reversal
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date of the adjustment."); //AR - AD = AR Invoice Adjustment
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the date the receipt was entered."); //AR - UC = AR Misc Receipt
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date of the adjustment."); //AR - AD = AR Cash Adjustment
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date of the adjustment."); //AR - AD = AR Credit Adjustment
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date."); //AR - RT = AR Retainage
+    	arrDocDateRemarks.add("the AR entry's 'Document date', normally the entry date of the apply-to."); //AR - AD = AR Apply-To
+    	arrDocDateRemarks.add("'Transaction Date' entered by the user when the period end was processed."); //FA - SS = FA Periodic Depreciation
+    	arrDocDateRemarks.add("the IC entry's 'Entry Date', when imported from SM orders, this is the invoice date."); //IC - SH = IC Shipment
+    	arrDocDateRemarks.add("the IC entry's 'Entry 'Date', when imported automatically, this is the 'Date Received' on the receipt."); //IC - RC = IC Receipt
+    	arrDocDateRemarks.add("the IC entry's 'Entry Date', entered manually by the user."); //IC - AD = IC Adjustment
+    	arrDocDateRemarks.add("the IC entry's 'Entry Date', entered manually."); //IC - TF = IC Transfer
+    	arrDocDateRemarks.add("the IC entry's 'Entry Date', entered automatically by posting the physical inventory."); //IC - AD = IC Physical count
+    	arrDocDateRemarks.add("the 'Transaction date' from individual lines on the GL journal entry."); //GL - JE = JE Journal Entries
+    	arrDocDateRemarks.add("the transaction date from the Payroll import."); //PR - PR = PR Payroll Entries
+    	
+    	String sDocDateLegend = "";
+    	for (int i = 0; i < arrSourceTypeDescriptions.size(); i++){
+    		sDocDateLegend += arrSourceTypeDescriptions.get(i) + " - " + arrDocDateRemarks.get(i) + "<BR>\n";
+    	}
+		out.println(sDocDateLegend);
 		out.println("  </BODY>\n"
 			+ "    </HTML>\n");
 		return;	

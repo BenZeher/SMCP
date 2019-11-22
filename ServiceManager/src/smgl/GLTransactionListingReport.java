@@ -761,6 +761,27 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				
 				//System.out.println("[1554320753] - into the loop...");
 				
+				//If the account has changed, print the account totals:
+				if (
+						(rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareToIgnoreCase(sPreviousAccount) != 0)
+						&& (sPreviousAccount.compareToIgnoreCase("") != 0)
+					){
+						sStringBuffer += printAccountSubTotals(
+							bdNetChangeForAccount,
+							bdEndingBalanceForAccount,
+							bdTotalDebitsForAccount,
+							bdTotalCreditsForAccount,
+							sPreviousAccount + " - " + sPreviousAccountDescription
+							);
+						
+						bdGrandBalanceTotal = bdGrandBalanceTotal.add(bdEndingBalanceForAccount);
+						
+						bdNetChangeForAccount = BigDecimal.ZERO;
+						bdEndingBalanceForAccount = BigDecimal.ZERO;
+						bdTotalDebitsForAccount = BigDecimal.ZERO;
+						bdTotalCreditsForAccount = BigDecimal.ZERO;
+					}
+				
 				//If the fiscal period has changed, print the fiscal period totals:
 				if (
 					(rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
@@ -774,28 +795,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 						);
 					bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
 					bdEndingBalanceForPeriod = BigDecimal.ZERO;
-				}
-				
-				//System.out.println("[1554320754] - into the loop...2");
-				
-				if (
-					(rs.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid).compareToIgnoreCase(sPreviousAccount) != 0)
-					&& (sPreviousAccount.compareToIgnoreCase("") != 0)
-				){
-					sStringBuffer += printAccountSubTotals(
-						bdNetChangeForAccount,
-						bdEndingBalanceForAccount,
-						bdTotalDebitsForAccount,
-						bdTotalCreditsForAccount,
-						sPreviousAccount + " - " + sPreviousAccountDescription
-						);
-					
-					bdGrandBalanceTotal = bdGrandBalanceTotal.add(bdEndingBalanceForAccount);
-					
-					bdNetChangeForAccount = BigDecimal.ZERO;
-					bdEndingBalanceForAccount = BigDecimal.ZERO;
-					bdTotalDebitsForAccount = BigDecimal.ZERO;
-					bdTotalCreditsForAccount = BigDecimal.ZERO;
 				}
 				
 				//System.out.println("[1554320755] - into the loop...3");
@@ -936,6 +935,14 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		
 		s += sStringBuffer;
 		
+		s += printAccountSubTotals(
+				bdNetChangeForAccount,
+				bdEndingBalanceForAccount,
+				bdTotalDebitsForAccount,
+				bdTotalCreditsForAccount,
+				sPreviousAccount + " - " + sPreviousAccountDescription
+			);
+		
 		//Print the final fiscal period totals:
 		s += printFiscalPeriodSubtotals(
 			iPreviousFiscalYear,
@@ -944,16 +951,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			bdEndingBalanceForPeriod
 			);
 	
-		//System.out.println("[20191981532438] " + "003");
-		
-		s += printAccountSubTotals(
-			bdNetChangeForAccount,
-			bdEndingBalanceForAccount,
-			bdTotalDebitsForAccount,
-			bdTotalCreditsForAccount,
-			sPreviousAccount + " - " + sPreviousAccountDescription
-		);
-
 		//add the last account balance:
 		bdGrandBalanceTotal = bdGrandBalanceTotal.add(bdEndingBalanceForAccount);
 		
@@ -1072,11 +1069,11 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ "</TD>\n"
 								
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-				+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange)
+				+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdNetChange) + "</B>"
 				+ "</TD>\n"
 				
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-				+  ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance)
+				+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance) + "</B>"
 				+ "</TD>\n"
 				
 				+ "  </TR>\n"
@@ -1219,7 +1216,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "</TD>"
 			
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"
-			+  "Doc Date"
+			+  "<a href=\"#documentdate\">Doc Date<SUP>1</SUP></a>"
 			+ "</TD>"
 
 			+"    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + " \" >"

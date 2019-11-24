@@ -1,11 +1,10 @@
 package smar;
+import java.io.PrintWriter;
 import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
-import ServletUtilities.clsDatabaseFunctions;
-import smgl.GLExternalPull;
-import smgl.GLTransactionBatch;
+import smgl.GLFinancialDataCheck;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -145,9 +144,20 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		//Test financial statement integrity:
+		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
+		try {
+			//PrintWriter out = new PrintWriter(System.out);
+			System.out.println(objFinCheck.checkFiscalSetsAgainstTransactions("", "2018", conn));
+		} catch (Exception e1) {
+			System.out.println(e1.getMessage());
+		}
+		System.out.println("DONE");
+		
+		/*
 		//Test GL Transaction Batch posting:
 		clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("13");
+		GLTransactionBatch glbatch = new GLTransactionBatch("4");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
@@ -157,6 +167,7 @@ public class TESTBatchExport extends HttpServlet{
 		//clsDatabaseFunctions.commit_data_transaction(conn);
 		clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
+		*/
 		
 		/*
 		//Test GL Pull:
@@ -200,8 +211,6 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(e1.getMessage());
 		}
 		System.out.println("DONE");
-		
-		
 		
 		try {
 			System.out.println(objFinCheck.processFinancialRecords("10101073", "2016", conn, false, true, cnAP, null, null)); // "10101073"

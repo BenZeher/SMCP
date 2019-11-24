@@ -948,46 +948,34 @@ public class GLTransactionBatch {
     	//Get a list of all the changes to all the accounts, and update the fiscal sets accordingly:
     	String SQL = "";
     	if (!bIsClosingBatch){
-    		//Here we have to get a list of all the accounts/fiscal year/fiscal periods that we need to check:
 	    	SQL = "SELECT"
 	    		+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS 'NETPERIODCHANGEFORACCOUNT'"
 	    		+ ", " + SMTablegltransactionlines.ifiscalperiod + " AS 'FISCALPERIOD'"
 	    		+ ", " + SMTablegltransactionlines.ifiscalyear + " AS 'FISCALYEAR'"
 	    		+ ", " + SMTablegltransactionlines.sacctid + " AS 'GLACCT'"
 	    		+ " FROM " + SMTablegltransactionlines.TableName
-	    		+ " LEFT JOIN "
-	    		
-	    		+ " (SELECT "
-	    		+ " " + SMTablegltransactionlines.sacctid + " AS ACCT"
-	    		+ ", " + SMTablegltransactionlines.ifiscalperiod + " AS FPERIOD"
-	    		+ ", " + SMTablegltransactionlines.ifiscalyear + " AS FYEAR"
-	    		+ " FROM " + SMTablegltransactionlines.TableName
+	    		+ " LEFT JOIN"  
+	    		+ " (SELECT"
+	    		+ " DISTINCT"
+	    		+ " sacctid AS ACCT"
+	    		+ ", ifiscalperiod AS FPERIOD"
+	    		+ ", ifiscalyear AS FYEAR"
+	    		+ " FROM gltransactionlines"
 	    		+ " WHERE ("
 	    		;
-	    		if (sExternalCompanyPullID.compareToIgnoreCase("") != 0){
-	    			SQL += "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sExternalCompanyPullID + ")";
-	    		}else{
+	    		//If we're selecting by batchnumber:
+	    		if (sExternalCompanyPullID.compareToIgnoreCase("") == 0){
 	    			SQL += "(" + SMTablegltransactionlines.loriginalbatchnumber + " = " + sBatchNumber + ")";
+	    		}else{
+	    			SQL += "(" + SMTablegltransactionlines.lexternalcompanypullid + " = " + sExternalCompanyPullID + ")";
 	    		}
-	    			 
 	    		SQL += ")"
 	    		+ ") AS LIMITQUERY"
-	    		
-	    		+ " ON (" 
-	    			+ "(" + SMTablegltransactionlines.sacctid + " = LIMITQUERY.ACCT)"
-	    			+ " AND (" + SMTablegltransactionlines.ifiscalperiod + " = LIMITQUERY.FPERIOD)"
-	    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = LIMITQUERY.FYEAR)"
-	    		
-	    		+ ")"
-	    		
+	    		+ " ON ((sacctid = LIMITQUERY.ACCT) AND (ifiscalperiod = LIMITQUERY.FPERIOD) AND (ifiscalyear = LIMITQUERY.FYEAR))" 
 	    		+ " WHERE ("
-	    			+ "(LIMITQUERY.ACCT IS NOT NULL)"
-	    		+ ")"
-	    		
-	    		+ " GROUP BY " + SMTablegltransactionlines.sacctid
-	    		+ ", " + SMTablegltransactionlines.ifiscalyear
-	    		+ ", " + SMTablegltransactionlines.ifiscalperiod
-	    	;
+	    		+ "    (LIMITQUERY.ACCT IS NOT NULL)"
+	    		+ ") GROUP BY sacctid, ifiscalyear, ifiscalperiod"
+	    		;
     	}else{
     		//But if it IS a closing batch, then we just need to update ALL the accounts
 	    	SQL = "SELECT"
@@ -1018,7 +1006,7 @@ public class GLTransactionBatch {
 	    		+ ", `FISCALPERIOD`"
 	    	;
 	    }
-    	
+    	System.out.println("[2019326183350] " + "SQL = '" + SQL + "'.");
     	try {
 			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsTransactions.next()){

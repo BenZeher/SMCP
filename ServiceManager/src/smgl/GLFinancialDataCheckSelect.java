@@ -34,6 +34,11 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static final String SESSION_WARNING_OBJECT = "GLCHECKFINANCIALWARNING";
 	public static final String SESSION_RESULTS_OBJECT = "GLCHECKFINANCIALRESULTS";
 	
+	public static final String RADIO_OPTIONS_GROUP = "PROCESSOPTIONSGROUP";
+	public static final String CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS = "TRANSACTIONSAGAINSTFISCALSETS";
+	public static final String CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA = "FISCALSETSAGAINSTFINANCIALDATA";
+	public static final String CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS = "ACCPACFISCALSETSAGAINSTSMCPFISCALSETS";
+	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
@@ -178,15 +183,53 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 			out.println("<OPTION VALUE=\"" + alValues.get(i) + "\"> " + alValues.get(i));
 		}
 		out.println("</SELECT>");
+		
+		//Radio buttons start here:
+		out.println("<BR><BR>" + "\n");
+		
+		out.println("<I>To only run a check of the data, choose one of the following:</I>" + "\n");
+		out.println("<TABLE BORDER = 1>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS + "'  CHECKED >"
+			+ "&nbsp;" + "Check that the fiscal set data matches the totals for the actual transactions"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA + " " + "'>"
+			+ "&nbsp;" + "Check that the financial statement data matches the fiscal sets"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS + " " + "'>"
+			+ "&nbsp;" + "Check that the SMCP fiscal set data matches the ACCPAC fiscal set data"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("</TABLE>" + "\n");
     	
 		out.println("<BR>Check to UPDATE all the financial statement records: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_UPDATE_RECORDS + "\"><BR>");
-		
-		out.println("<BR>Check to reconcile against ACCPAC fiscal sets: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_CHECK_AGAINST_ACCPAC + "\"><BR>");
 		
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
     	//out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");
 	    out.println("</BODY></HTML>");
 	}
-
 }

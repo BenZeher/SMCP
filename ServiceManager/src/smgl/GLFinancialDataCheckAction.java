@@ -33,7 +33,7 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 		}
 		if (!smaction.processSession(getServletContext(), SMSystemFunctions.GLCheckFinancialData)){return;}
 	    //Read the entry fields from the request object:
-		String sFiscalYear = request.getParameter(GLFinancialDataCheckSelect.PARAM_FISCAL_YEAR_SELECTION);
+		String sStartingFiscalYear = request.getParameter(GLFinancialDataCheckSelect.PARAM_FISCAL_YEAR_SELECTION);
 		String sGLAccount = request.getParameter(GLFinancialDataCheckSelect.PARAM_GL_ACCOUNTS);
 		boolean bUpdateRecords = false;
 		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_RECORDS) != null){
@@ -58,6 +58,7 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 	    String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
+	    String sSelectedProcess = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLFinancialDataCheckSelect.RADIO_OPTIONS_GROUP, request);
     	Connection conn = null;
     	try {
 			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
@@ -149,35 +150,58 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	}
     	
     	long lStartingTimeInMS = System.currentTimeMillis();
-    	try {
-			sResults = dc.processFinancialRecords(
-				sGLAccount, 
-				sFiscalYear, 
-				conn, 
-				bUpdateRecords, 
-				bCheckAgainstACCPAC,
-				cnACCPAC,
-				getServletContext(),
-				smaction.getsDBID()
-				);
-		} catch (Exception e) {
-			if (cnACCPAC != null){
-				try {
-					cnACCPAC.close();
-				} catch (SQLException e1) {
-					//Don't need to do anything here....
-				}
-			}
-			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
-			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
-			smaction.redirectAction(
-					"", 
-					"", 
-		    		""
-				);
-				return;
-		}
     	
+    	//If the user chose to check transactionlines against fiscal sets, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS) == 0){
+        	try {
+    			sResults = dc.checkFiscalSetsAgainstTransactions(sGLAccount, sStartingFiscalYear, conn);
+    		} catch (Exception e) {
+    			if (cnACCPAC != null){
+    				try {
+    					cnACCPAC.close();
+    				} catch (SQLException e1) {
+    					//Don't need to do anything here....
+    				}
+    			}
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}	
+    	}else{
+        	try {
+    			sResults = dc.processFinancialRecords(
+    				sGLAccount, 
+    				sStartingFiscalYear, 
+    				conn, 
+    				bUpdateRecords, 
+    				bCheckAgainstACCPAC,
+    				cnACCPAC,
+    				getServletContext(),
+    				smaction.getsDBID()
+    				);
+    		} catch (Exception e) {
+    			if (cnACCPAC != null){
+    				try {
+    					cnACCPAC.close();
+    				} catch (SQLException e1) {
+    					//Don't need to do anything here....
+    				}
+    			}
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}
+    	}
     	
     	//return after successful processing:
     	//System.out.println("[2019289940487] " + "sResults = '" + sResults + "'.");

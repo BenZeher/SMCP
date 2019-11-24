@@ -29,4 +29,42 @@ public class SMTableglfiscalsets {
 	
 	//Field lengths:
 	public static int sAcctIDLength = 45;
+	
+	public static String getNetChangeFieldNameForSelectedPeriod(int iFiscalPeriod){
+		switch(iFiscalPeriod){
+		case 1:
+			return bdnetchangeperiod1;
+		case 2:
+			return bdnetchangeperiod2;
+		case 3:
+			return bdnetchangeperiod3;
+		case 4:
+			return bdnetchangeperiod4;
+		case 5:
+			return bdnetchangeperiod5;
+		case 6:
+			return bdnetchangeperiod6;
+		case 7:
+			return bdnetchangeperiod7;
+		case 8:
+			return bdnetchangeperiod8;
+		case 9:
+			return bdnetchangeperiod9;
+		case 10:
+			return bdnetchangeperiod10;
+		case 11:
+			return bdnetchangeperiod11;
+		case 12:
+			return bdnetchangeperiod12;
+		case 13:
+			return bdnetchangeperiod13;
+		case 14:
+			return bdnetchangeperiod14;
+		case 15:
+			return bdnetchangeperiod15;
+
+		default:
+			return "";
+		}
+	}
 }

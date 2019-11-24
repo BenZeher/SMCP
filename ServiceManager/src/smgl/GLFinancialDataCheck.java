@@ -11,6 +11,7 @@ import java.util.Calendar;
 
 import javax.servlet.ServletContext;
 
+import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
@@ -134,6 +135,167 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		return sStatusMessages += "<BR><BR><B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
 	}
 
+	public String checkFiscalSetsAgainstTransactions(
+			String sAccount,
+			String sStartingFiscalYear,
+			Connection conn) throws Exception{
+		
+		String sResult = "";
+		if (sAccount.compareToIgnoreCase("") != 0){
+			sResult =  checkFiscalSetsAgainstTransactionsForSelectedAccount(
+				sAccount,
+				sStartingFiscalYear,
+				conn
+			);
+		}else{
+			//Get a list of all the GL accounts, and process each, one by one:
+			String SQL = "SELECT"
+				+ " " + SMTableglaccounts.sAcctID
+				+ " FROM " + SMTableglaccounts.TableName
+				+ " ORDER BY " + SMTableglaccounts.sAcctID
+			;
+			try {
+				ResultSet rsGLAccounts = clsDatabaseFunctions.openResultSet(SQL, conn);
+				while (rsGLAccounts.next()){
+					sResult += checkFiscalSetsAgainstTransactionsForSelectedAccount(
+						rsGLAccounts.getString(SMTableglaccounts.sAcctID),
+						sStartingFiscalYear,
+						conn
+					);
+				}
+				rsGLAccounts.close();
+			} catch (Exception e) {
+				throw new Exception("Error [2019328134856] " + "Error getting list of GL accounts with SQL: '" + SQL + "' - " + e.getMessage());
+			}
+		}
+		return sResult;
+	}
+	private String checkFiscalSetsAgainstTransactionsForSelectedAccount(
+			String sAccount,
+			String sStartingFiscalYear,
+			Connection conn
+		) throws Exception{
+		String sResult = "";
+		
+		//First, get the list of selected and subsequent fiscal years:
+		String SQL = "SELECT"
+			+ " " + SMTableglfiscalperiods.ifiscalyear
+			+ ", " + SMTableglfiscalperiods.inumberofperiods
+			+ " FROM " + SMTableglfiscalperiods.TableName 
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalperiods.ifiscalyear + " >= " + sStartingFiscalYear + ")"
+			+ ")"
+			+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
+		;
+		ArrayList<String>arrFiscalYears = new ArrayList<String>(0);
+		ArrayList<Integer>arrNumberOfPeriodsInFiscalYear = new ArrayList<Integer>(0);
+		try {
+			ResultSet rsFiscalYears = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsFiscalYears.next()){
+				arrFiscalYears.add(Long.toString(rsFiscalYears.getLong(SMTableglfiscalperiods.ifiscalyear)));
+				arrNumberOfPeriodsInFiscalYear.add(rsFiscalYears.getInt(SMTableglfiscalperiods.inumberofperiods));
+			}
+			rsFiscalYears.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20193281139326] " + "Error reading current and subsequent fiscal years with SQL: '" + SQL + " - " + e.getMessage());
+		}
+		
+		for (int intFiscalYearCounter = 0; intFiscalYearCounter < arrFiscalYears.size(); intFiscalYearCounter++){
+			
+			//First get all the fiscal set totals into arrays:
+			ArrayList<BigDecimal>arrPeriodTotals = new ArrayList<BigDecimal>(0);
+			for (int iPeriodCounter = 0; iPeriodCounter < arrNumberOfPeriodsInFiscalYear.get(intFiscalYearCounter); iPeriodCounter++){
+				arrPeriodTotals.add(BigDecimal.ZERO);
+			}
+			
+			//Now add one more for the 'closing' period (period 15):
+			arrPeriodTotals.add(BigDecimal.ZERO);
+			
+			SQL = "SELECT"
+				+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS PERIODTOTAL"
+				+ ", " + SMTablegltransactionlines.ifiscalperiod
+				+ " FROM " + SMTablegltransactionlines.TableName
+				+ " WHERE (" 
+					+ "(" + SMTablegltransactionlines.sacctid + " = '" + sAccount + "')"
+					+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + arrFiscalYears.get(intFiscalYearCounter) + ")"
+				+ ")"
+				+ " GROUP BY " + SMTablegltransactionlines.ifiscalperiod
+				+ " ORDER BY " + SMTablegltransactionlines.ifiscalperiod
+			;
+		
+			//Get a total for each period into the totals array:
+			//If there are no transactions for the period, then the total will be zero:
+			try {
+				ResultSet rsTransactionTotals = clsDatabaseFunctions.openResultSet(SQL, conn);
+				while (rsTransactionTotals.next()){
+					//If it's a 'closing' period,transaction, add it to the last transaction total:
+					if (rsTransactionTotals.getInt(SMTablegltransactionlines.ifiscalperiod) == 15){
+						arrPeriodTotals.set(arrPeriodTotals.size() - 1, rsTransactionTotals.getBigDecimal("PERIODTOTAL"));
+					}else{
+						arrPeriodTotals.set(rsTransactionTotals.getInt(SMTablegltransactionlines.ifiscalperiod) - 1, rsTransactionTotals.getBigDecimal("PERIODTOTAL"));
+					}
+				}
+				rsTransactionTotals.close();
+			} catch (Exception e) {
+				throw new Exception("Error [20193281143599] " + "Error reading transaction lines to check against fiscal sets with SQL: '" + SQL + " - " + e.getMessage());
+			}
+
+			//Now check those totals against what we have for the fiscal sets:
+			SQL = "SELECT"
+				+ " * "
+				+ " FROM " + SMTableglfiscalsets.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+					+ " AND (" + SMTableglfiscalsets.ifiscalyear + " = " + arrFiscalYears.get(intFiscalYearCounter) + ")"
+				+ ")"
+			;
+			
+			ResultSet rsFiscalSet = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while(rsFiscalSet.next()){
+				//Match up all the periods:
+				//We'll check every one, but not the last one, because that's period 15, which we check below here
+				for (int iPeriodCounter = 1; iPeriodCounter < arrNumberOfPeriodsInFiscalYear.get(intFiscalYearCounter); iPeriodCounter++){
+					//Determine which field to read:
+					String sNetChangeField = SMTableglfiscalsets.getNetChangeFieldNameForSelectedPeriod(iPeriodCounter + 1);
+					BigDecimal bdTransTotal = arrPeriodTotals.get(iPeriodCounter);
+					BigDecimal bdNetChangeInFiscalPeriod = rsFiscalSet.getBigDecimal(sNetChangeField);
+					if (bdTransTotal.compareTo(bdNetChangeInFiscalPeriod) != 0){
+						sResult += "<BR>" 
+							+ "<B><FONT COLOR = RED>"
+							+ "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period " + (iPeriodCounter + 1) + ": Transactions total: " 
+							+ bdTransTotal + ", but fiscal set total is " + bdNetChangeInFiscalPeriod + " - difference of " 
+							+ (bdTransTotal.subtract(bdNetChangeInFiscalPeriod)) + "."
+							+ "</FONT></B>"
+						;
+					}else{
+						sResult += "<BR>" + "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period  " + (iPeriodCounter + 1) + ": Transactions total: " 
+							+ bdTransTotal + " matches fiscal set total."
+						;
+					}
+				}
+				
+				//Match up the 'closing period' (period 15):
+				BigDecimal bdTransTotal = arrPeriodTotals.get(arrPeriodTotals.size() - 1);
+				BigDecimal bdNetChangeInFiscalPeriod = rsFiscalSet.getBigDecimal(SMTableglfiscalsets.bdnetchangeperiod15);
+				if (bdTransTotal.compareTo(bdNetChangeInFiscalPeriod) != 0){
+					sResult += "<BR>" 
+						+ "<B><FONT COLOR = RED>"
+						+ "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period 15: Transactions total: " 
+						+ bdTransTotal + ", but fiscal set total is " + bdNetChangeInFiscalPeriod + " - difference of " 
+						+ (bdTransTotal.subtract(bdNetChangeInFiscalPeriod)) + "."
+						+ "</FONT></B>"
+					;
+				}else{
+					sResult += "<BR>" + "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period 15: Transactions total: " 
+						+ bdTransTotal + " matches fiscal set total."
+					;
+				}
+			}
+			rsFiscalSet.close();
+		}
+
+		return sResult;
+	}
 	private String checkAgainstACCPAC(
 		ArrayList<clsFiscalSet>arrFiscalSets, 
 		String sStartingFiscalYear, 

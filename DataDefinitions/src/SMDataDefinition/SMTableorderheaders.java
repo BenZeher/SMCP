@@ -22,6 +22,9 @@ public class SMTableorderheaders {
 	public static final int DAYEND_NOTPRINTED = 0;
 	public static final int DAYEND_PRINTED = 1;
 	
+	//Field Titles
+	public static String mAddressNotes_Name = "Address Notes";
+	
 	//Field names
 	public static String dOrderUniqueifier = "dOrderUniqueifier"; //NOT NULL default '0',
 	public static String sOrderNumber = "sOrderNumber"; //22) default NULL,

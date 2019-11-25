@@ -2246,10 +2246,12 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ "</TEXTAREA>"
 			+ "</TD>\n"
 		;
+		
 		s += "</TR>\n";
 		
 		s += "<TR>";
 		s += "<TD class=\" fieldheading \">\n<B>Invoicing instructions</B>&nbsp;</TD>\n";
+		s += "<TD class=\" fieldheading \">\n<B>" + SMTableorderheaders.mAddressNotes_Name + "</B>&nbsp;</TD>\n";
 		s += "</TR>\n";
 		s += "<TD class=\" fieldcontrol \" >"
 			+ "<TEXTAREA NAME=\"" + SMOrderHeader.ParamsInvoicingNotes + "\""
@@ -2262,6 +2264,19 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ "</TEXTAREA>"
 			+ "</TD>\n"
 		;
+		
+		//Address Notes
+		s += "<TD class=\" fieldcontrol \" >"
+			+ "<TEXTAREA NAME=\"" + SMOrderHeader.Parammaddressnotes + "\""
+			+ " rows=\"" + Integer.toString(iRows) + "\""
+			+ " cols=\"" + Integer.toString(iCols) + "\""
+			+ " onchange=\"flagDirty();\""
+			+ ">"
+			+ entry.getM_mAddressNotes().replace("\"", "&quot;")
+			+ "</TEXTAREA>"
+			+ "</TD>\n"
+		;
+		
 		s += "</TR>\n";
 		
 		//Convenience phrases:

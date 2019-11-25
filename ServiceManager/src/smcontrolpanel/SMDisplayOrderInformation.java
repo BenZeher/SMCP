@@ -888,6 +888,10 @@ public class SMDisplayOrderInformation extends HttpServlet {
 						+ sWageScaleNotes + "</FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
+					pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>" + SMTableorderheaders.mAddressNotes_Name + ": </B>" 
+						+ rsOrder.getString(SMTableorderheaders.mAddressNotes) + "</FONT></TD>");
+					pwOut.println("</TR>");
+					pwOut.println("<TR>");
 					pwOut.println("<TD colspan=\"4\"><FONT SIZE=2><B>Carpenter rate: </B>" 
 							+ rsOrder.getString(SMTableorderheaders.scarpenterrate) + "</FONT></TD>");
 					pwOut.println("</TR>");

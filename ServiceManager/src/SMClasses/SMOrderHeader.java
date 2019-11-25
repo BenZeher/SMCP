@@ -401,7 +401,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		m_sinvoicingcontact = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParamsInvoicingContact, req).trim();
 		m_sinvoicingnotes = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParamsInvoicingNotes, req).trim();
 		m_idoingbusinessasaddressid = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.Paramidoingbusinessasaddress, req).trim();
-		m_mAddressNotes = "";
+		m_mAddressNotes = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.Parammaddressnotes, req).trim();
 	}
 	
 	public void readOrderFieldInfoFromRequest (HttpServletRequest req){
@@ -420,7 +420,6 @@ public class SMOrderHeader extends clsMasterEntry{
 		m_sDirections = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParammDirections, req).trim();
 		m_sTicketComments = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParammTicketComments, req).trim();
 		m_sFieldNotes = clsManageRequestParameters.get_Request_Parameter(SMOrderHeader.ParammFieldNotes, req).trim();
-		m_mAddressNotes = "";
 
 	}
 	public boolean loadDefaultCustomerInformation(ServletContext context, String sDBID, String sUser){
@@ -951,7 +950,8 @@ public class SMOrderHeader extends clsMasterEntry{
 				m_sinvoicingcontact = rs.getString(SMTableorderheaders.sinvoicingcontact) + "";
 				m_sinvoicingnotes = rs.getString(SMTableorderheaders.sinvoicingnotes) + "";
 				m_idoingbusinessasaddressid = Long.toString(rs.getLong(SMTableorderheaders.idoingbusinessasaddressid));
-				m_mAddressNotes = "";
+				m_mAddressNotes = clsDatabaseFunctions.getRecordsetStringValue(rs, SMTableorderheaders.mAddressNotes);
+				if (m_mAddressNotes == null){m_mAddressNotes = "";}
 				rs.close();
 			} else {
 				super.addErrorMessage("No " + ParamObjectName + " found for : '" + sTrimmedOrderNumber
@@ -2400,7 +2400,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getM_sInvoicingEmail()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getM_sInvoicingNotes()) + "'"
 			+ ", " + m_idoingbusinessasaddressid
-			+ ", \"\" "
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getM_mAddressNotes()) + "'"
 
 			+ ")"
 			;
@@ -2521,7 +2521,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			+ ", " + SMTableorderheaders.sinvoicingemail + " = '" + clsDatabaseFunctions.FormatSQLStatement(getM_sInvoicingEmail()) + "'"
 			+ ", " + SMTableorderheaders.sinvoicingnotes + " = '" + clsDatabaseFunctions.FormatSQLStatement(getM_sInvoicingNotes()) + "'"
 			+ ", " + SMTableorderheaders.idoingbusinessasaddressid + " = " + m_idoingbusinessasaddressid
-			+ "," + SMTableorderheaders.mAddressNotes + " =  \"\" "
+			+ "," + SMTableorderheaders.mAddressNotes + " =  '" + clsDatabaseFunctions.FormatSQLStatement(getM_mAddressNotes()) + "'"
 			+ " WHERE ("
 				+ "(" + SMTableorderheaders.strimmedordernumber + " = '" + getM_strimmedordernumber() + "')"
 			+ ")"
@@ -5383,7 +5383,6 @@ public class SMOrderHeader extends clsMasterEntry{
 			+ ", " + SMTableorderheaders.LASTEDITTIME + " = DATE_FORMAT(NOW(), '%k%i%s')" // LAST EDIT TIME
 			+ ", " + SMTableorderheaders.LASTEDITUSERID + " = " + sUserID 
 			+ ", " + SMTableorderheaders.LASTEDITUSERFULLNAME + " = '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
-			+ " , " + SMTableorderheaders.mAddressNotes + " = \"\" "
 			+ " WHERE ("
 				+ SMTableorderheaders.dOrderUniqueifier + " = " + getM_siID()
 			+ ")"
@@ -6767,7 +6766,7 @@ public class SMOrderHeader extends clsMasterEntry{
     	newOrder.setM_sInvoicingEmail(m_sinvoicingemailaddress);
     	newOrder.setM_sInvoicingNotes(m_sinvoicingnotes);
     	newOrder.setM_idoingbusinessasaddressid(m_idoingbusinessasaddressid);
-    	newOrder.setM_mAddressNotes("");
+    	newOrder.setM_mAddressNotes(m_mAddressNotes);
     	
     	if (bCloneDetails){
     		for (int i=0;i<m_arrDetails.size();i++){

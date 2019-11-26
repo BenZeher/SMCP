@@ -36,7 +36,7 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 		String sStartingFiscalYear = request.getParameter(GLFinancialDataCheckSelect.PARAM_FISCAL_YEAR_SELECTION);
 		String sGLAccount = request.getParameter(GLFinancialDataCheckSelect.PARAM_GL_ACCOUNTS);
 		boolean bUpdateRecords = false;
-		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_RECORDS) != null){
+		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_FINANCIAL_DATA) != null){
 			bUpdateRecords = true;
 		}
 		boolean bCheckAgainstACCPAC = false;

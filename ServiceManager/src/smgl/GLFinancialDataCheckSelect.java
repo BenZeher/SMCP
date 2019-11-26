@@ -27,7 +27,8 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static String PARAM_VALUE_DELIMITER = " - ";
 	public static String PARAM_FISCAL_YEAR_SELECTION = "FISCALYEARSELECTION";
 	public static String PARAM_GL_ACCOUNTS = "GLACCOUNTS";
-	public static String PARAM_UPDATE_RECORDS = "UPDATERECORDS";
+	public static String PARAM_UPDATE_FINANCIAL_DATA = "UPDATEFINANCIALRECORDS";
+	public static String PARAM_UPDATE_FISCALSET_DATA = "UPDATEFISCALSETRECORDS";
 	public static String PARAM_CHECK_AGAINST_ACCPAC = "CHECKAGAINSTACCPAC";
 	public static String GL_SELECT_ALL_VALUE = "";
 	public static String GL_SELECT_ALL_LABEL = "** Check ALL GL Accounts **";
@@ -224,8 +225,36 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("  </TR>" + "\n");
 		
 		out.println("</TABLE>" + "\n");
-    	
-		out.println("<BR>Check to UPDATE all the financial statement records: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_UPDATE_RECORDS + "\"><BR>");
+		
+		//Provide options to UPDATE the GL data:
+		out.println("<BR><BR><I>To actually correct and UPDATE the data, choose one of the following:</I>" + "\n");
+		out.println("<TABLE BORDER = 1>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + PARAM_UPDATE_FISCALSET_DATA + "'  CHECKED >"
+			+ "&nbsp;" + "Update the fiscal set data to match the totals for the actual transactions"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + PARAM_UPDATE_FINANCIAL_DATA + " " + "'>"
+			+ "&nbsp;" + "Update the financial statement data to match the fiscal sets"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("</TABLE>" + "\n");
+		
+		//out.println("<BR>Check to UPDATE all the financial statement records: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_UPDATE_FINANCIAL_DATA + "\"><BR>");
 		
     	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
     	//out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");

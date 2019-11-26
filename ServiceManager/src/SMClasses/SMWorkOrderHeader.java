@@ -2654,7 +2654,6 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		bValid = false;
 		}
         
-        System.out.println(getmechid());
         if (getmechid().compareTo("0")==0){
         	sErrors += "Mechanic not selected.  ";
         	bValid = false;

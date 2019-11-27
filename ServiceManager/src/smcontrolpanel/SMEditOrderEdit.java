@@ -579,6 +579,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			;
 			bFirstRecord = false;
 		}
+		//rsSalespersons.close();
 		String sPriceLevel = "BASE";
 		if (cus.getM_sPriceLevel().compareToIgnoreCase("0") != 0){
 			sPriceLevel = "LEVEL " + cus.getM_sPriceLevel();
@@ -611,6 +612,64 @@ public class SMEditOrderEdit  extends HttpServlet {
 			s += "<BR><span style= \" font-size:small; \" > <B>Customer comments:</B>&nbsp;" + cus.getM_mCustomerComments()
 					+ "</span>"
 				;
+			s+="<BR><span style= \" font-size:small; \" ><B>Address Notes:</B>&nbsp;";
+			
+			//Get the Address Notes from all other Orders here:
+			SQL = "SELECT"
+					+ " " + SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.mAddressNotes
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToAddress1
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToAddress2
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToAddress3
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToAddress4
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToZip
+					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderType
+					+ " FROM " + SMTableorderheaders.TableName 
+					+ " WHERE ("
+					+ "(" + SMTableorderheaders.sShipToAddress1 + " = '" + entry.getM_sShipToAddress1() + "')"
+					+ " AND (" + SMTableorderheaders.sShipToAddress2 + " = '" + entry.getM_sShipToAddress2() + "')"
+					+ " AND (" + SMTableorderheaders.sShipToAddress3 + " = '" + entry.getM_sShipToAddress3() + "')"
+					+  " AND (" + SMTableorderheaders.sShipToAddress4 + " = '" + entry.getM_sShipToAddress4() + "')"
+					+  " AND (" + SMTableorderheaders.sShipToZip + " = '" + entry.getM_sShipToZip() + "')"
+					+ ")"
+					+ "ORDER BY CAST(" + SMTableorderheaders.strimmedordernumber + " AS UNSIGNED) DESC "
+					;
+			ResultSet rsAddressNotes = clsDatabaseFunctions.openResultSet(
+					SQL, 
+					getServletContext(), 
+					sm.getsDBID(), 
+					"MySQL", 
+					this.toString() + ".getdefaultsalespersons - user: " + sm.getUserID()
+					+ " - "
+					+ sm.getFullUserName());
+			String sOtherAddressNotes = "";
+			boolean bFirstNotes = true;
+			while (rsAddressNotes.next()){
+				if((rsAddressNotes.getString(SMTableorderheaders.mAddressNotes)!=null) && (!rsAddressNotes.getString(SMTableorderheaders.mAddressNotes).isEmpty())) {
+					if (!bFirstNotes){
+						sOtherAddressNotes += "<BR>&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&emsp;&ensp;&nbsp;";
+					}
+
+					sOtherAddressNotes += "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+					+ "smcontrolpanel.SMEditOrderEdit"
+					+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+					+ "&" + SMOrderHeader.Paramstrimmedordernumber + "=" + rsAddressNotes.getString(SMTableorderheaders.strimmedordernumber)
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() 
+					+ "\">";
+					sOtherAddressNotes += rsAddressNotes.getString(SMTableorderheaders.strimmedordernumber);
+					if(rsAddressNotes.getInt(SMTableorderheaders.iOrderType)==4) {
+						sOtherAddressNotes += " (Quote)";
+					}
+					sOtherAddressNotes += "</A>"	+ ": ";
+
+					System.out.println(rsAddressNotes.getString(SMTableorderheaders.mAddressNotes).isEmpty() );
+					sOtherAddressNotes += "&nbsp;" + rsAddressNotes.getString(SMTableorderheaders.mAddressNotes) + "&nbsp;";
+					bFirstNotes = false;
+				}
+			}
+			rsAddressNotes.close();
+			s+= sOtherAddressNotes;
+			s+="</span>";
 		}
 
 		String sMessages = "";
@@ -619,7 +678,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		} catch (Exception e) {
 			sMessages = "Error checking order - " + e.getMessage();
 		}
-		
+
 		if (sMessages.compareToIgnoreCase("") != 0){
 			s += "<BR><B><FONT COLOR=RED>MESSAGE:&nbsp;" + sMessages + "</FONT></B>";
 		}

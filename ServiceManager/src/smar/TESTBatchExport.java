@@ -148,7 +148,7 @@ public class TESTBatchExport extends HttpServlet{
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
 			//PrintWriter out = new PrintWriter(System.out);
-			System.out.println(objFinCheck.checkFiscalSetsAgainstTransactions("", "2018", conn));
+			System.out.println(objFinCheck.checkFiscalSetsAgainstTransactions("", "2018", conn, false));
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}

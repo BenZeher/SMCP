@@ -1515,36 +1515,6 @@ public class GLFiscalYear extends java.lang.Object{
     	}catch(Exception e) {
     		throw new Exception("Error [1557944615] checking starting and ending dates - " + e.getMessage() + ". At period " + (i+1) + " \t");
     	}
-    	
-    //This was not needed, since the next year will consider the previous years information. This was to ensure that the year encompassed every day.
-    /*	try {
-    		if(Integer.parseInt(get_sinumberofperiods())!=1) {
-    			Calendar EndingCalendar = Calendar.getInstance();
-    			Calendar NextYear = Calendar.getInstance();
-    			EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(Integer.parseInt(get_sinumberofperiods())-1)));
-    			NextYear.setTime(Date.valueOf(arrEndingDates.get(Integer.parseInt(get_sinumberofperiods())-2)));
-    			int year = NextYear.get(Calendar.YEAR)+1;
-    			NextYear.set(year, 0, 1);
-    			EndingCalendar.add(Calendar.DATE, 1);
-    			if(EndingCalendar.compareTo(NextYear)<0) {
-    				s += " Fiscal period " + Integer.parseInt(get_sinumberofperiods()) +"  does not encompass the whole year  " + (year-1)+". /n" ;
-    			} 
-    		}else {
-    			Calendar EndingCalendar = Calendar.getInstance();
-    			Calendar LastYear = Calendar.getInstance();
-    			EndingCalendar.setTime(Date.valueOf(arrEndingDates.get(Integer.parseInt(get_sinumberofperiods())-1)));
-    			LastYear.setTime(Date.valueOf(sHighestPreviousEndingDate));
-    			int year = LastYear.get(Calendar.YEAR)+2;
-    			LastYear.set(year, 0, 1);
-    			EndingCalendar.add(Calendar.DATE, 1);
-    			if(EndingCalendar.compareTo(LastYear)<0) {
-    				s += " Fiscal period " + Integer.parseInt(get_sinumberofperiods()) +"  does not encompass the whole year  " + (year-1) + ". /n" ;
-    			} 
-    		}
-    	}catch (Exception e){
-    		throw new Exception("Error [1558450722] checking the ending date of last period - " + e.getMessage());
-    	}
-  */  
 
     	if (s.compareToIgnoreCase("") != 0){
     		throw new Exception(s);

@@ -30,10 +30,95 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		String sAccount,
 		String sStartingFiscalYear,
 		Connection conn,
-		boolean bUpdateRecords,
-		boolean bCheckAgainstACCPAC,
-		//The next three are only needed for checking against ACCPAC
-		// - they can be all nulls if we're not doing that.
+		boolean bUpdateRecords
+
+		) throws Exception{
+		
+		ArrayList<clsFiscalSet>arrFiscalSets = new ArrayList<clsFiscalSet>(0);
+		String sErrorMessages = "";
+		String sStatusMessages = "";
+		
+		//Get an array list of the selected fiscal sets:
+		String SQL = "SELECT"
+			+ " " + SMTableglfiscalsets.TableName + ".*"
+			+ ", " + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.inumberofperiods
+			+ " FROM " + SMTableglfiscalsets.TableName
+			+ " LEFT JOIN " + SMTableglfiscalperiods.TableName
+			+ " ON " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear
+			+ " = " + SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.ifiscalyear
+			+ " WHERE ("
+			+ " (1 = 1)";
+		
+		if (sAccount.compareToIgnoreCase("") != 0){
+			SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')";
+		}
+		
+		SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= (" + sStartingFiscalYear + " - 2))";
+		
+		SQL += ")"
+			+ " ORDER BY " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + ", " 
+				+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear
+		;
+		
+		try {
+			ResultSet rsFiscalYears = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsFiscalYears.next()){
+				clsFiscalSet objFiscal = new clsFiscalSet(
+					rsFiscalYears.getString(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID),
+					rsFiscalYears.getInt(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdopeningbalance),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod1),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod2),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod3),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod4),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod5),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod6),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod7),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod8),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod9),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod10),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod11),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod12),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod13),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod14),
+					rsFiscalYears.getBigDecimal(SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.bdnetchangeperiod15),
+					rsFiscalYears.getInt(SMTableglfiscalperiods.TableName + "." + SMTableglfiscalperiods.inumberofperiods)
+				);
+				arrFiscalSets.add(objFiscal);
+			}
+			rsFiscalYears.close();
+		} catch (Exception e) {
+			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+
+		//If we are UPDATING records as well as checking, then first make sure we have financial statement records that correspond to ALL the
+		//fiscal sets:
+		if (bUpdateRecords){
+			sStatusMessages += insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
+		}
+		
+		//Read the financial records for each GL account that was read:
+		ArrayList<String>arrListOfUniqueGLAccounts = getUniqueGLAccounts(arrFiscalSets);
+		try {
+			for (int i = 0; i < arrListOfUniqueGLAccounts.size(); i++){
+				sErrorMessages += processSingleFiscalSet(arrListOfUniqueGLAccounts.get(i), conn, sStartingFiscalYear, arrFiscalSets, bUpdateRecords);
+				sStatusMessages += "<BR><I>" + "Checking GL Account " + arrListOfUniqueGLAccounts.get(i) + "...</I>";
+				//System.out.println("[2019289952298] " + "Finished checking GL Account " + arrListOfUniqueGLAccounts.get(i) + ".");
+			}
+		} catch (Exception e) {
+			sErrorMessages += "<BR>" + e.getMessage();
+		}
+		
+		if (sErrorMessages.compareToIgnoreCase("") != 0){
+			throw new Exception(sErrorMessages);
+		}
+		return sStatusMessages += "<BR><BR><B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
+	}
+
+	public String checkFiscalSetsAgainstACCPACFiscalSets(
+		String sAccount,
+		String sStartingFiscalYear,
+		Connection conn,
 		Connection cnACCPAC,
 		ServletContext context,
 		String sDBID
@@ -58,16 +143,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')";
 		}
 		
-		if (sStartingFiscalYear.compareToIgnoreCase("") != 0){
-			//Unless we're checking against ACCPAC, we'll get fiscal sets going back two years previous, because we'll need that history for some of the
-			// glfinancialstatementdata fields:
-			if (bCheckAgainstACCPAC){
-				SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= " + sStartingFiscalYear + ")";
-			}else{
-				SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= (" + sStartingFiscalYear + " - 2))";
-			}
-		}
-		
+		SQL += " AND (" + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear + " >= " + sStartingFiscalYear + ")";
 		SQL += ")"
 			+ " ORDER BY " + SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.sAcctID + ", " 
 				+ SMTableglfiscalsets.TableName + "." + SMTableglfiscalsets.ifiscalyear
@@ -105,47 +181,25 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 
-		//If we are checking against ACCPAC, then do that now, and exit after:
-		if (bCheckAgainstACCPAC){
-			sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC, context, sDBID);
-			return sStatusMessages;
-		}
-		
-		//If we are UPDATING records as well as checking, then first make sure we have financial statement records that correspond to ALL the
-		//fiscal sets:
-		if (bUpdateRecords){
-			sStatusMessages += insertMissingFinancialRecords(arrFiscalSets, sStartingFiscalYear, conn);
-		}
-		
-		//Read the financial records for each GL account that was read:
-		ArrayList<String>arrListOfUniqueGLAccounts = getUniqueGLAccounts(arrFiscalSets);
-		try {
-			for (int i = 0; i < arrListOfUniqueGLAccounts.size(); i++){
-				sErrorMessages += processSingleFiscalSet(arrListOfUniqueGLAccounts.get(i), conn, sStartingFiscalYear, arrFiscalSets, bUpdateRecords);
-				sStatusMessages += "<BR><I>" + "Checking GL Account " + arrListOfUniqueGLAccounts.get(i) + "...</I>";
-				//System.out.println("[2019289952298] " + "Finished checking GL Account " + arrListOfUniqueGLAccounts.get(i) + ".");
-			}
-		} catch (Exception e) {
-			sErrorMessages += "<BR>" + e.getMessage();
-		}
-		
+		sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC, context, sDBID);
 		if (sErrorMessages.compareToIgnoreCase("") != 0){
 			throw new Exception(sErrorMessages);
 		}
-		return sStatusMessages += "<BR><BR><B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
+		return sStatusMessages;
 	}
-
 	public String checkFiscalSetsAgainstTransactions(
 			String sAccount,
 			String sStartingFiscalYear,
-			Connection conn) throws Exception{
+			Connection conn,
+			boolean bUpdate) throws Exception{
 		
 		String sResult = "";
 		if (sAccount.compareToIgnoreCase("") != 0){
 			sResult =  checkFiscalSetsAgainstTransactionsForSelectedAccount(
 				sAccount,
 				sStartingFiscalYear,
-				conn
+				conn,
+				bUpdate
 			);
 		}else{
 			//Get a list of all the GL accounts, and process each, one by one:
@@ -160,7 +214,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					sResult += checkFiscalSetsAgainstTransactionsForSelectedAccount(
 						rsGLAccounts.getString(SMTableglaccounts.sAcctID),
 						sStartingFiscalYear,
-						conn
+						conn,
+						bUpdate
 					);
 				}
 				rsGLAccounts.close();
@@ -173,7 +228,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 	private String checkFiscalSetsAgainstTransactionsForSelectedAccount(
 			String sAccount,
 			String sStartingFiscalYear,
-			Connection conn
+			Connection conn,
+			boolean bUpdate
 		) throws Exception{
 		String sResult = "";
 		
@@ -260,6 +316,23 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					BigDecimal bdTransTotal = arrPeriodTotals.get(iPeriodCounter);
 					BigDecimal bdNetChangeInFiscalPeriod = rsFiscalSet.getBigDecimal(sNetChangeField);
 					if (bdTransTotal.compareTo(bdNetChangeInFiscalPeriod) != 0){
+						if (bUpdate){
+							SQL = "UPDATE " + SMTableglfiscalsets.TableName
+								+ " SET " + sNetChangeField + " = " + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdTransTotal)
+								+ " WHERE ("
+									+ "(" + SMTableglfiscalsets.sAcctID + " = '" + sAccount + "')"
+									+ " AND (" + SMTableglfiscalsets.ifiscalyear + " = " + arrFiscalYears.get(intFiscalYearCounter) + ")"
+								+ ")"
+							;
+							try {
+								ServletUtilities.clsDatabaseFunctions.executeSQLWithException(SQL, conn);
+							} catch (Exception e) {
+								throw new Exception("Error [201933182270] " + "updating fiscal set with SQL: '" + SQL + "' - " + e.getMessage());
+							}
+							sResult += "<BR>" + "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period  " + (iPeriodCounter + 1) + ": Transactions total: " 
+								+ bdTransTotal + " matches fiscal set total."
+							;
+						}else{
 						sResult += "<BR>" 
 							+ "<B><FONT COLOR = RED>"
 							+ "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period " + (iPeriodCounter + 1) + ": Transactions total: " 
@@ -267,6 +340,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 							+ (bdTransTotal.subtract(bdNetChangeInFiscalPeriod)) + "."
 							+ "</FONT></B>"
 						;
+						}
 					}else{
 						sResult += "<BR>" + "Acct '" + sAccount + "', year " + arrFiscalYears.get(intFiscalYearCounter) + ", period  " + (iPeriodCounter + 1) + ": Transactions total: " 
 							+ bdTransTotal + " matches fiscal set total."
@@ -842,7 +916,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 	    	
 	    	GLFinancialDataCheck dc = new GLFinancialDataCheck();
 			try {
-				dc.processFinancialRecords(sAccount, Integer.toString(iFiscalYear), conn, true, false, null, null, null);
+				dc.processFinancialRecords(sAccount, Integer.toString(iFiscalYear), conn, true);
 			} catch (Exception e) {
 				throw new Exception(e.getMessage());
 			}
@@ -850,7 +924,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//If there is a CLOSING account, update it, too:
 			if(sClosingAccount.compareToIgnoreCase("") != 0){
 				try {
-					dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true, false, null, null, null);
+					dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true);
 				} catch (Exception e) {
 					throw new Exception(e.getMessage());
 				}	

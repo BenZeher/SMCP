@@ -35,30 +35,14 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 	    //Read the entry fields from the request object:
 		String sStartingFiscalYear = request.getParameter(GLFinancialDataCheckSelect.PARAM_FISCAL_YEAR_SELECTION);
 		String sGLAccount = request.getParameter(GLFinancialDataCheckSelect.PARAM_GL_ACCOUNTS);
-		boolean bUpdateRecords = false;
-		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_UPDATE_FINANCIAL_DATA) != null){
-			bUpdateRecords = true;
-		}
-		boolean bCheckAgainstACCPAC = false;
-		if (request.getParameter(GLFinancialDataCheckSelect.PARAM_CHECK_AGAINST_ACCPAC) != null){
-			bCheckAgainstACCPAC = true;
-		}
-		
-//		if (request.getParameter(GLFinancialDataCheckSelect.CONFIRM_PROCESS) == null){
-//			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "You must check the 'Confirm' checkbox to continue.");
-//			smaction.redirectAction(
-//					"", 
-//					"", 
-//		    		""
-//				);
-//				return;
-//		}
-
 	    String sDBID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserID = (String) smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 	    String sUserFullName = (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERFIRSTNAME) + " "
 	    				+ (String)smaction.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sSelectedProcess = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(GLFinancialDataCheckSelect.RADIO_OPTIONS_GROUP, request);
+	    
+	    System.out.println("[2019331850338] " + "sSelectedProcess = '" + sSelectedProcess + "'");
+	    
     	Connection conn = null;
     	try {
 			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
@@ -82,9 +66,50 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	//System.out.println("[2019289938156] " + "sGLAccount = '" + sGLAccount + "'");
     	//System.out.println("[2019289938346] " + "sFiscalYear = '" + sFiscalYear + "'");
     	
-    	//If the user chose to check against ACCPAC, get an ACCPAC connection here:
-    	Connection cnACCPAC = null;
-    	if (bCheckAgainstACCPAC){
+    	long lStartingTimeInMS = System.currentTimeMillis();
+    	
+    	//If the user chose to check transactionlines against fiscal sets, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS) == 0){
+        	try {
+    			sResults = dc.checkFiscalSetsAgainstTransactions(sGLAccount, sStartingFiscalYear, conn, false);
+    		} catch (Exception e) {
+
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}	
+    	}
+    	
+    	//If the user chose to check fiscal sets against financial statement data, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA) == 0){
+        	try {
+    			sResults = dc.processFinancialRecords(
+    				sGLAccount, 
+    				sStartingFiscalYear, 
+    				conn, 
+    				false
+    				);
+    		} catch (Exception e) {
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426718]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}
+    	}
+    	
+    	//If the user chose to check fiscal sets against ACCPAC data, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS) == 0){
+        	//If the user chose to check against ACCPAC, get an ACCPAC connection here:
+        	Connection cnACCPAC = null;
             String sACCPACDatabaseURL = "";
             String sACCPACDatabasename = "";
             String sACCPACDatabaseuser = "";
@@ -147,14 +172,15 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 				);
 				return;
     		}
-    	}
-    	
-    	long lStartingTimeInMS = System.currentTimeMillis();
-    	
-    	//If the user chose to check transactionlines against fiscal sets, branch here:
-    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS) == 0){
-        	try {
-    			sResults = dc.checkFiscalSetsAgainstTransactions(sGLAccount, sStartingFiscalYear, conn);
+    	try {
+        		sResults = dc.checkFiscalSetsAgainstACCPACFiscalSets(
+        			sGLAccount, 
+        			sStartingFiscalYear, 
+        			conn, 
+        			cnACCPAC, 
+        			getServletContext(), 
+        			sDBID
+        		);
     		} catch (Exception e) {
     			if (cnACCPAC != null){
     				try {
@@ -163,7 +189,30 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     					//Don't need to do anything here....
     				}
     			}
-    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426818]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}
+			if (cnACCPAC != null){
+				try {
+					cnACCPAC.close();
+				} catch (SQLException e1) {
+					//Don't need to do anything here....
+				}
+			}
+    	}
+    	
+    	//If the user chose to UPDATE the fiscal sets from the transaction lines:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.PARAM_UPDATE_FISCALSET_DATA) == 0){
+        	try {
+    			sResults = dc.checkFiscalSetsAgainstTransactions(sGLAccount, sStartingFiscalYear, conn, true);
+    		} catch (Exception e) {
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571427618]");
     			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
     			smaction.redirectAction(
     					"", 
@@ -172,27 +221,19 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     				);
     				return;
     		}	
-    	}else{
+    	}
+    	
+    	//If the user chose to UPDATE the financial statement data to match the fiscal sets, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.PARAM_UPDATE_FINANCIAL_DATA) == 0){
         	try {
     			sResults = dc.processFinancialRecords(
     				sGLAccount, 
     				sStartingFiscalYear, 
     				conn, 
-    				bUpdateRecords, 
-    				bCheckAgainstACCPAC,
-    				cnACCPAC,
-    				getServletContext(),
-    				smaction.getsDBID()
+    				true
     				);
     		} catch (Exception e) {
-    			if (cnACCPAC != null){
-    				try {
-    					cnACCPAC.close();
-    				} catch (SQLException e1) {
-    					//Don't need to do anything here....
-    				}
-    			}
-    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426618]");
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571427718]");
     			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
     			smaction.redirectAction(
     					"", 
@@ -204,15 +245,8 @@ public class GLFinancialDataCheckAction extends HttpServlet{
     	}
     	
     	//return after successful processing:
-    	//System.out.println("[2019289940487] " + "sResults = '" + sResults + "'.");
 		sResults += "<BR><B>" + Long.toString((System.currentTimeMillis() - lStartingTimeInMS)/1000L) + "</B> seconds elapsed.<BR>";
-		if (cnACCPAC != null){
-			try {
-				cnACCPAC.close();
-			} catch (SQLException e1) {
-				//Don't need to do anything here....
-			}
-		}
+
 		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571426619]");
     	smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_RESULTS_OBJECT, sResults);
 		smaction.redirectAction(

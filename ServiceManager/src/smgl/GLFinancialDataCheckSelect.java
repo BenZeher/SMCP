@@ -206,7 +206,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("    <TD>"
 			+ "<LABEL>"
 			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
-			+ "\" VALUE='" + CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA + " " + "'>"
+			+ "\" VALUE='" + CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA + "'>"
 			+ "&nbsp;" + "Check that the financial statement data matches the fiscal sets"
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
@@ -217,7 +217,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("    <TD>"
 			+ "<LABEL>"
 			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
-			+ "\" VALUE='" + CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS + " " + "'>"
+			+ "\" VALUE='" + CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS + "'>"
 			+ "&nbsp;" + "Check that the SMCP fiscal set data matches the ACCPAC fiscal set data"
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
@@ -234,7 +234,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("    <TD>"
 			+ "<LABEL>"
 			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
-			+ "\" VALUE='" + PARAM_UPDATE_FISCALSET_DATA + "'  CHECKED >"
+			+ "\" VALUE='" + PARAM_UPDATE_FISCALSET_DATA + "'>"
 			+ "&nbsp;" + "Update the fiscal set data to match the totals for the actual transactions"
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
@@ -245,7 +245,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		out.println("    <TD>"
 			+ "<LABEL>"
 			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
-			+ "\" VALUE='" + PARAM_UPDATE_FINANCIAL_DATA + " " + "'>"
+			+ "\" VALUE='" + PARAM_UPDATE_FINANCIAL_DATA + "'>"
 			+ "&nbsp;" + "Update the financial statement data to match the fiscal sets"
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
@@ -256,7 +256,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 		
 		//out.println("<BR>Check to UPDATE all the financial statement records: <INPUT TYPE=CHECKBOX NAME=\"" + PARAM_UPDATE_FINANCIAL_DATA + "\"><BR>");
 		
-    	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Check data----\">");
+    	out.println ("<BR><INPUT TYPE=\"SUBMIT\" VALUE=\"----Proceed----\">");
     	//out.println("  Check to confirm process: <INPUT TYPE=CHECKBOX NAME=\"" + CONFIRM_PROCESS + "\"><BR>");
     	out.println ("</FORM>");
 	    out.println("</BODY></HTML>");

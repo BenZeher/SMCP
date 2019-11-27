@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import SMClasses.SMMaterialReturn;
 import SMClasses.SMOption;
 import smap.APVendor;
 import smcontrolpanel.SMCriticalDateEntry;
@@ -192,7 +193,18 @@ public class ICEditPOEdit  extends HttpServlet {
 					+ "?" + SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME + "=Y"
 					+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">" + "Create new Purchase Order" + "</A>"
-					+ "<BR>"
+			);
+			
+			smedit.getPWOut().println(
+					 "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+						+ "smcontrolpanel.SMEditMaterialReturnEdit"
+						+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
+						+ "&SubmitAdd=Add+New+Material+Return"
+						+ "&" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID()
+						+ "&" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor()
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() 
+						+ "\">" + "Add new material return" + "</A>"	
+						+ "<BR>"
 			);
 			
 			smedit.getPWOut().println( 
@@ -2494,6 +2506,7 @@ public class ICEditPOEdit  extends HttpServlet {
 
 
 		out.println("<br><b><u><FONT SIZE=2>Material Returns</FONT></u></b><BR>");
+
 		if (entry.getsID().compareToIgnoreCase("") != 0){
 			String SQL = "SELECT"
 					+ " " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.iponumber

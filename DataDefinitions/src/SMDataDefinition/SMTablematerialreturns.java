@@ -29,6 +29,7 @@ public class SMTablematerialreturns {
 	public static final String screditmemonumber = "screditmemonumber";
 	public static final String bdcreditamt = "bdcreditamt"; //Actual Credit Amount
 	public static final String datreturnsent = "datreturnsent";
+	public static final String iinvoiceonhold = "iinvoiceonhold";
 	
 	//Lengths
 	public static final int linitiatedbyidlength = 11;

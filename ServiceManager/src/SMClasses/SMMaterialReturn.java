@@ -47,6 +47,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramscreditmemonumber = "screditmemonumber";
 	public static final String Parambdcreditamt = "bdcreditamt";
 	public static final String Paramdatreturnsent = "datreturnsent";
+	public static final String Paramiinvoiceonhold = "iinvoiceonhold";
 	
 	
 	private String m_slid;
@@ -74,6 +75,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_screditmemonumber;
 	private String m_bdcreditamt;
 	private String m_datreturnsent;
+	private String m_sinvoiceonhold;
 	
 	private boolean bDebugMode = false;
 	
@@ -132,8 +134,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramicreditnotexpected, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 			SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
-		
-		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramitobereturned, req).compareToIgnoreCase("") == 0){
+		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
 			m_itobereturned = "0";
 		}else{
 			m_itobereturned = "1";
@@ -173,6 +174,11 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramdatreturnsent, req).trim().replace("&quot;", "\"");
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramdatreturnsent, req).compareToIgnoreCase("") == 0){
 			m_datreturnsent = clsServletUtilities.EMPTY_DATE_VALUE;
+		}
+		if(req.getParameter(SMMaterialReturn.Paramiinvoiceonhold) == null){
+			m_sinvoiceonhold = "0";
+		}else{
+			m_sinvoiceonhold = "1";
 		}
 		
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
@@ -257,6 +263,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
 				m_datreturnsent = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datreturnsent));
+				m_sinvoiceonhold = Long.toString(rs.getLong(SMTablematerialreturns.iinvoiceonhold));
 				rs.close();
 			} else {
 				rs.close();
@@ -386,6 +393,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ ", " + SMTablematerialreturns.screditmemonumber
 				+ ", " + SMTablematerialreturns.bdcreditamt
 				+ ", " + SMTablematerialreturns.datreturnsent
+				+ ", " + SMTablematerialreturns.iinvoiceonhold
 				+ ") VALUES ("
 				+ "NOW()"
 				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -415,6 +423,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", '" +  clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
+			+ ", " + getsinvoiceonhold()
 			+ ")"
 			;
     	}else{
@@ -444,6 +453,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.screditmemonumber  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscreditmemonumber().trim()) + "'"
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
+			+ ", " + SMTablematerialreturns.iinvoiceonhold + " = " + getsinvoiceonhold()
 				+ " WHERE ("
 					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 				+ ")"
@@ -708,6 +718,13 @@ public class SMMaterialReturn extends clsMasterEntry{
         	sErrors += "'To Be Returned' status (" + m_itobereturned + ") is invalid.";
         }
         
+        if (
+        		(m_sinvoiceonhold.compareToIgnoreCase("0") != 0)
+        		&& (m_sinvoiceonhold.compareToIgnoreCase("1") != 0)
+        ){
+        	sErrors += "'AP Invoice on Hold' status (" + m_sinvoiceonhold + ") is invalid.";
+        }
+        
         m_bdcreditamt = m_bdcreditamt.replaceAll(",", "");
         m_bdadjustmentamount = m_bdadjustmentamount.replaceAll(",", "");
         
@@ -860,12 +877,17 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setbdcreditamt(String bdcreditamt) {
 		m_bdcreditamt = bdcreditamt;
 	}
-	
 	public String getdatreturnsent() {
 		return m_datreturnsent;
 	}
 	public void setdatreturnsent(String datreturnsent) {
 		m_datreturnsent = datreturnsent;
+	}
+	public String getsinvoiceonhold() {
+		return m_sinvoiceonhold;
+	}
+	public void setsinvoiceonhold(String sinvoiceonhold) {
+		m_sinvoiceonhold = sinvoiceonhold;
 	}
     
 	
@@ -915,5 +937,6 @@ public class SMMaterialReturn extends clsMasterEntry{
     	 m_screditmemonumber = "";
     	 m_bdcreditamt = "0.00";
     	 m_datreturnsent = EMPTY_DATE_STRING;
+    	 m_sinvoiceonhold = "0";
 	}
 }

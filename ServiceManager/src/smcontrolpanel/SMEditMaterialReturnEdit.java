@@ -233,36 +233,46 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		
 
 		//Status Options
-		    
+
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
-		
+
 		//Credit Not Expected
 		//Credit to be expected will have a Expected Credit Amount
 		//Credit received will have Credit Memo Number and Date of Credit Memo
-				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit is no longer Expected</B></TD>\n";
-				s += "<TD>\n";
-				String sChecked = "";
-				if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
-					sChecked = " checked ";
-				}else{
-					sChecked = "";
-				}
-				s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
-
-		
-		//To Be Returned
-		if (entry.getstobereturned().compareToIgnoreCase("1") == 0){
-			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit is no longer Expected</B></TD>\n";
+		s += "<TD>\n";
+		String sChecked = "";
+		if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
+			sChecked = " checked ";
 		}else{
-			sCheckBoxChecked = clsServletUtilities.CHECKBOX_UNCHECKED_STRING;
+			sChecked = "";
 		}
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "To be returned?" + "</B></TD>\n";
-		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
-			+ " NAME=\"" + SMMaterialReturn.Paramitobereturned + "\" width=0.25></TD>\n"
-			+ "</TR>\n"
-		;
-		
+		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
+
+		//To Be Returned
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>To be returned? </B></TD>\n";
+		s += "<TD>\n";
+		sChecked = "";
+		if (entry.getstobereturned().compareToIgnoreCase(Integer.toString(1)) == 0){
+			sChecked = " checked ";
+		}else{
+			sChecked = "";
+		}
+		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramitobereturned + "'"+ sChecked + " ><BR>";
+
+		//AP Invoice Was Put on Hold
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>AP Invoice Was Put on Hold </B></TD>\n";
+		s += "<TD>\n";
+		sChecked = "";
+		if (entry.getsinvoiceonhold().compareToIgnoreCase(Integer.toString(1)) == 0){
+			sChecked = " checked ";
+		}else{
+			sChecked = "";
+		}
+		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramiinvoiceonhold + "'"+ sChecked + " ><BR>";
+
+
 		//Vendor
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramsvendoracct + "\""

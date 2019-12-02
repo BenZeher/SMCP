@@ -14930,7 +14930,7 @@ public class SMUpdateData extends java.lang.Object{
 			
 			//BEGIN CASE:
 			case 1434:
-				//Added by BJA 11/22/2019
+				//Added by BJA 12/2/2019
 				SQL = "ALTER TABLE `materialreturns` "
 						+ "ADD iinvoiceonhold int(11) NOT NULL default '0'"
 						;

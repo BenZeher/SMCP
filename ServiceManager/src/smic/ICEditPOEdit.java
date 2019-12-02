@@ -196,7 +196,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			);
 			
 			smedit.getPWOut().println(
-					 "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
+					 "&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 						+ "smcontrolpanel.SMEditMaterialReturnEdit"
 						+ "?CallingClass=" + SMUtilities.getFullClassName(this.toString())
 						+ "&SubmitAdd=Add+New+Material+Return"

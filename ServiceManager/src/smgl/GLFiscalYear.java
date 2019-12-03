@@ -15,6 +15,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -36,6 +37,7 @@ public class GLFiscalYear extends java.lang.Object{
 	public String m_slasteditedbyfullusername;
 	public String m_sinumberofperiods;
 	public String m_siactive;
+	public String m_siclosed;
 	public String m_sdatbeginningdateperiod1;
 	public String m_sdatendingdateperiod1;
 	public String m_speriod1locked;
@@ -86,6 +88,7 @@ public class GLFiscalYear extends java.lang.Object{
 		m_silastediteddatetime = clsServletUtilities.EMPTY_DATETIME_VALUE;
 		m_sinumberofperiods = "0";
 		m_siactive = "0";
+		m_siclosed = "0";
 		m_sdatbeginningdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatendingdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
 		m_sdatbeginningdateperiod2 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;
@@ -140,6 +143,8 @@ public class GLFiscalYear extends java.lang.Object{
 		}else{
 			m_siactive = "1";
 		}
+		
+		m_siclosed = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.iclosed, req);
 
 		m_sdatbeginningdateperiod1 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datbeginningdateperiod1, req).trim();
 		m_sdatbeginningdateperiod2 = clsManageRequestParameters.get_Request_Parameter(SMTableglfiscalperiods.datbeginningdateperiod2, req).trim();
@@ -279,6 +284,7 @@ public class GLFiscalYear extends java.lang.Object{
 					rs.getString(SMTableglfiscalperiods.datlastediteddateandtime), SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATETIME_VALUE);
 				m_sinumberofperiods = Integer.toString(rs.getInt(SMTableglfiscalperiods.inumberofperiods));
 				m_siactive = Integer.toString(rs.getInt(SMTableglfiscalperiods.iactive));
+				m_siclosed = Integer.toString(rs.getInt(SMTableglfiscalperiods.iclosed));
 				m_sdatbeginningdateperiod1 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
 					rs.getString(SMTableglfiscalperiods.datbeginningdateperiod1), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE);
 				m_sdatbeginningdateperiod2 = clsDateAndTimeConversions.resultsetDateStringToFormattedString(
@@ -412,6 +418,7 @@ public class GLFiscalYear extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod12
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod13
 				+ ", " + SMTableglfiscalperiods.iactive
+				+ ", " + SMTableglfiscalperiods.iclosed
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid
 				+ ", " + SMTableglfiscalperiods.inumberofperiods
@@ -590,6 +597,7 @@ public class GLFiscalYear extends java.lang.Object{
 				) + "'"
 
 			+ ", " + get_siactive()
+			+ ", " + get_siclosed()
 			+ ", " + get_sifiscalyear()
 			+ ", " + get_slasteditedbyuserid()
 			+ ", " + get_sinumberofperiods()
@@ -801,6 +809,7 @@ public class GLFiscalYear extends java.lang.Object{
 						clsServletUtilities.EMPTY_SQL_DATE_VALUE
 					) + "'"				
 				+ ", " + SMTableglfiscalperiods.iactive + " = " + get_siactive()
+				+ ", " + SMTableglfiscalperiods.iclosed + " = " + get_siclosed()
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid + " = " + get_slasteditedbyuserid()	
 				+ ", " + SMTableglfiscalperiods.inumberofperiods + " = " + get_sinumberofperiods()
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername + " = '" + clsDatabaseFunctions.FormatSQLStatement(get_slasteditedbyuserfullname()) + "'"
@@ -1073,6 +1082,13 @@ public class GLFiscalYear extends java.lang.Object{
 		} catch (Exception e1) {
 			s += e1.getMessage() + "\n";
 		}
+       	
+       	try {
+			set_siclosed(clsValidateFormFields.validateIntegerField(get_siclosed(), "Closed", 0, 1));
+		} catch (Exception e1) {
+			s += e1.getMessage() + "\n";
+		}
+       	
        	try {
 			set_sifiscalyear(clsValidateFormFields.validateIntegerField(get_sifiscalyear(), "Fiscal year", 1990, 3000));
 		} catch (Exception e1) {
@@ -1463,7 +1479,6 @@ public class GLFiscalYear extends java.lang.Object{
     	 * Case2: the Ending date of the current period is not next to the beginning date of the next period (some dates are being passed over)
     	 * Case3: It checks to ensure that there are now missing days between the First period of this year and the Last day of the last period of the year before
     	 */
-    	//TODO narrow down issues
     	
     	int i = 0;
     	try {
@@ -1525,8 +1540,33 @@ public class GLFiscalYear extends java.lang.Object{
 		
 		load(conn);
 	
-		//Now delete the cost center:
-		String SQL = "DELETE FROM " + SMTableglfiscalperiods.TableName
+		String SQL = "SELECT"
+			+ " " + SMTableglfiscalsets.ifiscalyear
+			+ " FROM " + SMTableglfiscalsets.TableName
+			+ " WHERE ("
+				+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + sFiscalYear + ")"
+			+ ")"
+		;
+		boolean bFiscalSetsExist = false;
+		ResultSet rsFiscalSets;
+		try {
+			rsFiscalSets = clsDatabaseFunctions.openResultSet(SQL, conn);
+			if (rsFiscalSets.next()){
+				bFiscalSetsExist = true;
+			}
+			rsFiscalSets.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [20193371756157] " + "checking for existing fiscal sets with SQL: " 
+				+ SQL + " - " + e1.getMessage());
+		}
+		
+		if (bFiscalSetsExist){
+			rsFiscalSets.close();
+			throw new Exception("Error [20193371754126] " + "Fiscal sets with data already exist for this"
+				+ " fiscal year, so it cannot be deleted.");
+		}
+		
+		SQL = "DELETE FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
 				+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + sFiscalYear + ")"
 			+ ")"
@@ -2094,6 +2134,9 @@ public class GLFiscalYear extends java.lang.Object{
 	public void set_siactive(String sActive) {
 		m_siactive = sActive;
 	}
+	public void set_siclosed(String sClosed) {
+		m_siclosed = sClosed;
+	}
 	public void set_siperiod1locked(String sPeriod1Locked) {
 		m_speriod1locked = sPeriod1Locked;
 	}
@@ -2229,6 +2272,9 @@ public class GLFiscalYear extends java.lang.Object{
 	}
 	public String get_siactive() {
 		return m_siactive;
+	}
+	public String get_siclosed() {
+		return m_siclosed;
 	}
 	public String get_siperiod1locked() {
 		return m_speriod1locked;

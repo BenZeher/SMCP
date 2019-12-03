@@ -123,7 +123,7 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 			+ " " + SMTableglfiscalperiods.ifiscalyear
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.iactive + " = 1)"
+				+ "(" + SMTableglfiscalperiods.iclosed + " = 0)"
 			+ ")"
 			+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
 		;

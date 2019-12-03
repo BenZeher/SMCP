@@ -160,10 +160,24 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 					entry.load( smedit.getsDBID(), getServletContext(), smedit.getUserName());
 					entry.set_snewrecord(GLFiscalYear.ADDING_NEW_RECORD_PARAM_VALUE_TRUE);
 					entry.NextYear();
-					entry.set_sifiscalyear(Integer.toString(maxYear+1));
+					entry.set_sifiscalyear(Integer.toString(maxYear + 1));
 					entry.set_slasteditedbyuserfullname("");
 					entry.set_slasteditedbyuserid("");
 					entry.set_sdattimelastedited("");
+					entry.set_siclosed("0");
+					entry.set_siperiod1locked("1");
+					entry.set_siperiod2locked("1");
+					entry.set_siperiod3locked("1");
+					entry.set_siperiod4locked("1");
+					entry.set_siperiod5locked("1");
+					entry.set_siperiod6locked("1");
+					entry.set_siperiod7locked("1");
+					entry.set_siperiod8locked("1");
+					entry.set_siperiod9locked("1");
+					entry.set_siperiod10locked("1");
+					entry.set_siperiod11locked("1");
+					entry.set_siperiod12locked("1");
+					entry.set_siperiod13locked("1");
 					
 				} catch (Exception e) {
 					clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1566411638]");
@@ -311,6 +325,22 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
     	  + "</TD>\n"
     	  + "  </TR>\n"
     	  ;
+        
+        //Closed?
+	    s +="  <TR>\n"
+	    + "    <TD ALIGN=RIGHT><B>" + "Closed?:"  + " </B></TD>\n"
+	    + "    <TD ALIGN=LEFT>";
+	      if(entry.get_siclosed().compareToIgnoreCase("1") == 0){
+	    	  s += "<B>YES</B><INPUT TYPE=HIDDEN NAME=\"" + SMTableglfiscalperiods.iclosed + "\" VALUE='" + entry.get_siclosed() + "'"
+				+ "></TD>\n"
+			;
+	      }else{
+	    	  s += 
+	    		"<B>NO</B><INPUT TYPE=HIDDEN NAME=\"" + SMTableglfiscalperiods.iclosed + "\" VALUE='" + entry.get_siclosed() + "'"
+				+ "></TD>\n"
+			;
+	      }
+	      s +="  </TR>\n";
         
         //Number of periods:
         s += "  <TR>\n"

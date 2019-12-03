@@ -977,7 +977,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.iactive
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid
-				//+ ", " + SMTableglfiscalperiods.ilockclosingperiod
+				+ ", " + SMTableglfiscalperiods.iclosed
 				//+ ", " + SMTableglfiscalperiods.ilockadjustmentperiod
 				+ ", " + SMTableglfiscalperiods.inumberofperiods
 				+ ", " + SMTableglfiscalperiods.slasteditedbyfullusername
@@ -1012,7 +1012,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("ACTIVE"))
 				+ ", " + rsGLFiscalPeriods.getString("FSCYEAR")
 				+ ", " + sUserID
-				//+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSCLS"))
+				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSCLS"))
 				//+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSADJ"))
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("PERIODS"))
 				+ ", '" + sUserFullName + "'"

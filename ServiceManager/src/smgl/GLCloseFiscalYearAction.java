@@ -194,7 +194,6 @@ public class GLCloseFiscalYearAction extends HttpServlet{
 		}
     	
     	//Now add one balancing entry for the retained earnings account:
-    	//TODO
 		GLTransactionBatchLine line = new GLTransactionBatchLine();
 		line.setAmount(ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalForRetainedEarnings).replace(",", ""));
 		line.setsacctid(sClosingAccount);

@@ -265,7 +265,7 @@ public class GLEditBatchesAction extends HttpServlet{
 		//Sort the array:
 		Collections.sort(arrBatchesToPost);
 		
-		//TODO - actually post the batches:
+		//Actually post the batches:
 		for (int i = 0; i < arrBatchesToPost.size(); i++){
 			GLTransactionBatch batch = new GLTransactionBatch(Long.toString(arrBatchesToPost.get(i)));
 			try {

@@ -1,10 +1,9 @@
 package smar;
-import java.io.PrintWriter;
 import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLFinancialDataCheck;
+import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -144,6 +143,7 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		/*
 		//Test financial statement integrity:
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
 		try {
@@ -153,21 +153,22 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(e1.getMessage());
 		}
 		System.out.println("DONE");
+		*/
 		
-		/*
+		
 		//Test GL Transaction Batch posting:
-		clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("4");
+		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
+		GLTransactionBatch glbatch = new GLTransactionBatch("2");
 		try {
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
-			clsDatabaseFunctions.rollback_data_transaction(conn);
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 			System.out.println(e.getMessage());
 		}
 		//clsDatabaseFunctions.commit_data_transaction(conn);
-		clsDatabaseFunctions.rollback_data_transaction(conn);
+		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
-		*/
+		
 		
 		/*
 		//Test GL Pull:

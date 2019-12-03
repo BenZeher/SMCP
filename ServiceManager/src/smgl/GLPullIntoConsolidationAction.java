@@ -89,37 +89,6 @@ public class GLPullIntoConsolidationAction extends HttpServlet{
 		return;
 	}
 
-	/* TJR - 7/12/2019 - probably can't use this because the account structures may not be the same in the SOURCE and TARGET companies....
-	private void addNewGLAccounts(Connection conn, String sDBName, String sFiscalYear, String sFiscalPeriod) throws Exception{
-		
-		String SQL = "SELECT DISTINCT " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.bdannualbudget
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iallowaspoexpense
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.iCostCenterID
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
-			+ ",  " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sFormattedAcct
-			+ " FROM " + sDBName + "." + SMTablegltransactionlines.TableName + " LEFT JOIN " + sDBName + "." + SMTableglaccounts.TableName + " ON "
-			+ sDBName + "." + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = " 
-			+ sDBName + "." + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ " WHERE ("
-			    + "(" + SMTablegltransactionlines.ifiscalperiod + " = " + sFiscalPeriod + ")"
-    			+ " AND (" + SMTablegltransactionlines.ifiscalyear + " = " + sFiscalYear + ")"
-			+ ")"
-		;
-		
-		//TODO - go through the accounts and add them if needed:
-		
-		
-		return;
-	}
-	*/
-
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

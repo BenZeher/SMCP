@@ -786,7 +786,7 @@ public class GLTransactionBatch {
     	
     	//IF this batch includes income statement account entries for a previous year, 
     	//then we'll have to add 'closing' entries to clear those accounts for the year
-    	checkForEntriesToPreviousYear(conn);
+    	//TODO
     	
     	//Next, create transactions for all of the entries:
     	clsDBServerTime dt = new clsDBServerTime(conn);

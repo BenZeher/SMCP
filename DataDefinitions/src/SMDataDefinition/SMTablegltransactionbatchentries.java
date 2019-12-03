@@ -17,6 +17,7 @@ public class SMTablegltransactionbatchentries {
 	public static final String ssourceledgertransactionid = "ssourceledgertransactionid";
 	public static final String ssourceledger = "ssourceledger";
 	public static final String iautoreverse = "iautoreverse";
+	public static final String iclosingentry = "iclosingentry";
 	
 	//Field lengths:
 	public static final int sentrydescriptionLength = 128;

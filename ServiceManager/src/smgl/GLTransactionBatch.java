@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegloptions;
 import SMDataDefinition.SMTablegltransactionbatchentries;
@@ -783,6 +784,10 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1555956143] - " + e1.getMessage());
 		}
     	
+    	//IF this batch includes income statement account entries for a previous year, 
+    	//then we'll have to add 'closing' entries to clear those accounts for the year
+    	checkForEntriesToPreviousYear(conn);
+    	
     	//Next, create transactions for all of the entries:
     	clsDBServerTime dt = new clsDBServerTime(conn);
     	setsposteddate(dt.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
@@ -847,6 +852,44 @@ public class GLTransactionBatch {
     	//return;
     }
 
+	private void checkForEntriesToPreviousYear(Connection conn) throws Exception{
+		
+		//IF there is a subsequent year, then create 'closing' entries for any income statement accounts
+		//that might be included in this batch:
+		
+		boolean bEntriesIncludePreviousYear = false;
+		for (int i = 0; i < m_arrBatchEntries.size(); i++){
+			int iEntryFiscalYear = 0;
+			try {
+				iEntryFiscalYear = Integer.parseInt(m_arrBatchEntries.get(i).getsfiscalyear());
+			} catch (Exception e) {
+				throw new Exception("Error [2019337148343] " + "Could not parse fiscal year '" 
+					+ m_arrBatchEntries.get(i).getsfiscalyear() + "' for entry number " + Integer.toString(iEntryFiscalYear)
+					+ ". - " + e.getMessage()
+				);
+			}
+			int iSubsequentFiscalYear = iEntryFiscalYear + 1;
+			String SQL = "SELECT"
+				+ " " + SMTableglfiscalperiods.ifiscalyear
+				+ " FROM " + SMTableglfiscalperiods.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfiscalperiods.ifiscalyear + " = " + Integer.toString(iSubsequentFiscalYear) + ")"
+				+ ")"
+			;
+			ResultSet rsFiscalYear = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			if(rsFiscalYear.next()){
+				bEntriesIncludePreviousYear = true;
+				break;
+			}
+			rsFiscalYear.close();
+		}
+		if (!bEntriesIncludePreviousYear){
+			return;
+		}
+		
+		//Since there IS a subsequent year we have to worry about, we'll have to 
+		
+	}
     public String reverse_batch (
     		ServletContext context,
     		String sDBID,

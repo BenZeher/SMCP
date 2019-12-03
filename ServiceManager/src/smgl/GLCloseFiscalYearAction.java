@@ -120,6 +120,8 @@ public class GLCloseFiscalYearAction extends HttpServlet{
     	glentry.setsfiscalperiod(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS));
     	glentry.setsfiscalyear(sFiscalYear);
     	glentry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
+    	//Flag this as a 'closing entry':
+    	glentry.setsclosingentry("1");
 
     	//Now get the ending balances for all the income statement accounts:
     	String SQL = "SELECT"

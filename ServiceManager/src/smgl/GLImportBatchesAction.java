@@ -640,6 +640,7 @@ public class GLImportBatchesAction extends HttpServlet{
 						}else{
 							glentry.setsautoreverse("0");
 						}
+						glentry.setsclosingentry("0");
 						glentry.setsdatdocdate(sEntryDocumentDate);
 						glentry.setsdatentrydate(sEntryDate);
 						glentry.setsentrydescription(sEntryDesc);

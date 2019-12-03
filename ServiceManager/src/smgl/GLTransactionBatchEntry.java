@@ -38,6 +38,7 @@ public class GLTransactionBatchEntry {
 	private String m_sourceledgertransactionlink;
 	private String m_ssourceledger;
 	private String m_autoreverse;
+	private String m_siclosingentry;
 
 	private ArrayList<GLTransactionBatchLine>m_arrBatchEntryLines;
 
@@ -110,7 +111,12 @@ public class GLTransactionBatchEntry {
 		}else{
 			setsautoreverse("0");
 		}
-
+		if (clsManageRequestParameters.get_Request_Parameter(SMTablegltransactionbatchentries.iclosingentry, req).compareToIgnoreCase("") != 0){
+			setsclosingentry("1");
+		}else{
+			setsclosingentry("0");
+		}
+		
 		readEntryLines(req);
 	}
 
@@ -283,6 +289,7 @@ public class GLTransactionBatchEntry {
 			+ SMTablegltransactionbatchentries.datdocdate
 			+ ", " + SMTablegltransactionbatchentries.datentrydate
 			+ ", " + SMTablegltransactionbatchentries.iautoreverse
+			+ ", " + SMTablegltransactionbatchentries.iclosingentry
 			+ ", " + SMTablegltransactionbatchentries.ifiscalperiod
 			+ ", " + SMTablegltransactionbatchentries.ifiscalyear
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber
@@ -296,6 +303,7 @@ public class GLTransactionBatchEntry {
 			+ "'" + getsdatdocdateInSQLFormat() + "'"
 			+ ", '" + getsentrydateInSQLFormat() + "'"
 			+ ", " + getsautoreverse()
+			+ ", " + getsclosingentry()
 			+ ", " + getsfiscalperiod()
 			+ ", " + getsfiscalyear()
 			+ ", " + getsbatchnumber()
@@ -310,6 +318,7 @@ public class GLTransactionBatchEntry {
 			+ " " + SMTablegltransactionbatchentries.datdocdate + " = '" + getsdatdocdateInSQLFormat() + "'"
 			+ ", " + SMTablegltransactionbatchentries.datentrydate + " = '" + getsentrydateInSQLFormat() + "'"
 			+ ", " + SMTablegltransactionbatchentries.iautoreverse + " = " + getsautoreverse()
+			+ ", " + SMTablegltransactionbatchentries.iclosingentry + " = " + getsclosingentry()
 			+ ", " + SMTablegltransactionbatchentries.ifiscalperiod + " = " + getsfiscalperiod()
 			+ ", " + SMTablegltransactionbatchentries.ifiscalyear + " = " + getsfiscalyear()
 			+ ", " + SMTablegltransactionbatchentries.lbatchnumber + " = " + getsbatchnumber()
@@ -600,6 +609,16 @@ public class GLTransactionBatchEntry {
 			sResult += "  " + e.getMessage() + ".";
 		}
 		
+		try {
+			m_siclosingentry = clsValidateFormFields.validateIntegerField(
+				m_siclosingentry, 
+				"Closing entry", 
+				0, 
+				1);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
 		//Validate the lines:
 		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
 			GLTransactionBatchLine line = m_arrBatchEntryLines.get(i);
@@ -714,6 +733,7 @@ public class GLTransactionBatchEntry {
 				setssourceledgertransactionlink(rs.getString(SMTablegltransactionbatchentries.ssourceledgertransactionid));
 				setssourceledger(rs.getString(SMTablegltransactionbatchentries.ssourceledger));
 				setsautoreverse(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iautoreverse)));
+				setsclosingentry(Integer.toString(rs.getInt(SMTablegltransactionbatchentries.iclosingentry)));
 			}else{
 				rs.close();
 				throw new Exception("Error [1555337558] - No GL transaction batch entry found with lid = " + getslid() + ".");
@@ -841,6 +861,14 @@ public class GLTransactionBatchEntry {
 	public void setsautoreverse(String sautoreverse){
 		m_autoreverse = sautoreverse;
 	}
+	
+	public String getsclosingentry(){
+		return m_siclosingentry;
+	}
+	public void setsclosingentry(String sclosingentry){
+		m_siclosingentry = sclosingentry;
+	}
+	
 	public BigDecimal getDebitTotal () throws Exception{
 		BigDecimal bdDebitTotal = new BigDecimal("0.00");
 		
@@ -862,6 +890,7 @@ public class GLTransactionBatchEntry {
 	public GLTransactionBatchEntry copyEntry(){
 		GLTransactionBatchEntry newentry = new GLTransactionBatchEntry();
 		newentry.setsautoreverse(getsautoreverse());
+		newentry.setsclosingentry(getsclosingentry());
 		newentry.setsbatchnumber(getsbatchnumber());
 		newentry.setsdatdocdate(getsdatdocdate());
 		newentry.setsdatentrydate(getsdatentrydate());
@@ -940,6 +969,7 @@ public class GLTransactionBatchEntry {
 		sQueryString += SMTablegltransactionbatchentries.datdocdate + "=" + clsServletUtilities.URLEncode(getsdatdocdate());
 		sQueryString += "&" + SMTablegltransactionbatchentries.datentrydate + "=" + clsServletUtilities.URLEncode(getsdatentrydate());
 		sQueryString += "&" + SMTablegltransactionbatchentries.iautoreverse + "=" + clsServletUtilities.URLEncode(getsautoreverse());
+		sQueryString += "&" + SMTablegltransactionbatchentries.iclosingentry + "=" + clsServletUtilities.URLEncode(getsclosingentry());
 		sQueryString += "&" + SMTablegltransactionbatchentries.ifiscalperiod + "=" + clsServletUtilities.URLEncode(getsfiscalperiod());
 		sQueryString += "&" + SMTablegltransactionbatchentries.ifiscalyear + "=" + clsServletUtilities.URLEncode(getsfiscalyear());
 		sQueryString += "&" + SMTablegltransactionbatchentries.lbatchnumber + "=" + clsServletUtilities.URLEncode(getsbatchnumber());
@@ -956,6 +986,7 @@ public class GLTransactionBatchEntry {
 		s += "  Doc date: " + getsdatdocdate() + "\n";
 		s += "  Entry date: " + getsdatentrydate() + "\n";
 		s += "  Auto reverse:" + getsautoreverse() + "\n";
+		s += "  Closing entry:" + getsclosingentry() + "\n";
 		s += "  Batch: " + getsbatchnumber() + "\n";
 		s += "  Entry: " + getsentrynumber() + "\n";
 		s += "  Fiscal period: " + getsfiscalperiod() + "\n";
@@ -988,6 +1019,7 @@ public class GLTransactionBatchEntry {
 		m_sourceledgertransactionlink = "0";
 		m_ssourceledger = "";
 		m_autoreverse = "0";
+		m_siclosingentry = "0";
 		m_arrBatchEntryLines = new ArrayList<GLTransactionBatchLine>(0);
 	}
 }

@@ -1561,9 +1561,9 @@ public class GLFiscalYear extends java.lang.Object{
 			+ " " + SMTableglfiscalperiods.ifiscalyear
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sDateInSQLFormat + "')"
+				+ "(" + SMTableglfiscalperiods.datendingdateperiod1 + " <= '" + sDateInSQLFormat + "')"
 				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
-					+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datbeginningdateperiod12+ " >= '" + sDateInSQLFormat + "')"
+					+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " >= '" + sDateInSQLFormat + "')"
 			+ ")"
 		;
 		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, conn);

@@ -1283,7 +1283,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 
 			+ "    var suom = document.getElementById(\"" + SMOrderDetail.ParamsOrderUnitOfMeasure + "\").value;\n"
 			+ "    if (suom==null || suom==\"\"){\n"
-			+ "        alert(\"Description cannot be blank.\");\n"
+			+ "        alert(\"Unit of measure cannot be blank.\");\n"
 			+ "        document.getElementById(\"" + SMOrderDetail.ParamsOrderUnitOfMeasure + "\").focus();\n"
 			+ "        return false;\n"
 			+ "    }\n"

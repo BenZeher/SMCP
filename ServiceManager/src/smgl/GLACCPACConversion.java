@@ -946,7 +946,18 @@ public class GLACCPACConversion  extends java.lang.Object{
 		Statement stmtACCPAC = cnACCPAC.createStatement();
 		ResultSet rsGLFiscalPeriods = stmtACCPAC.executeQuery(SQL);
 		int iCounter = 0;
+		
+		//Get the current year: we're going to set all the years to 'closed' except the current one.
+		//ACCPAC doesn't really flag a year as 'closed' but we need to.
+		Calendar calendar = Calendar.getInstance();
+		String sCurrentYear = Integer.toString(calendar.get(Calendar.YEAR));
+		String sFiscalYearClosed = "1";
 		while (rsGLFiscalPeriods.next()){
+			if (sCurrentYear.compareToIgnoreCase(rsGLFiscalPeriods.getString("FSCYEAR").trim()) == 0){
+				sFiscalYearClosed = "0";
+			}else{
+				sFiscalYearClosed = "1";
+			}
 			String SQLInsert = "INSERT INTO " + sTablename + "("
 				+ SMTableglfiscalperiods.datbeginningdateperiod1
 				+ ", " + SMTableglfiscalperiods.datbeginningdateperiod2
@@ -1012,7 +1023,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("ACTIVE"))
 				+ ", " + rsGLFiscalPeriods.getString("FSCYEAR")
 				+ ", " + sUserID
-				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSCLS"))
+				+ ", " + sFiscalYearClosed
 				//+ ", " + Long.toString(rsGLFiscalPeriods.getLong("STATUSADJ"))
 				+ ", " + Long.toString(rsGLFiscalPeriods.getLong("PERIODS"))
 				+ ", '" + sUserFullName + "'"
@@ -1049,6 +1060,49 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1530811942] - could not update unused period dates in " + sTablename + " table with SQL '" + SQLUpdate + "' - " + e.getMessage());
 		}
 
+		// TJR - 12/4/2019 - This was added to prevent the unsolved problem of the Harrisburg glfiscalperiods appearing to
+		// be corrupt after the ACCPAC conversion.  It creates a brand new table after the fiscal periods
+		//are populated.
+		SQL = "DROP TABLE IF EXISTS glfiscalperiods_bak";
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20193381620527] " + "deleting temporary table with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "RENAME TABLE " + SMTableglfiscalperiods.TableName + " TO glfiscalperiods_bak";
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20193381620528] " + "running SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "CREATE TABLE " + SMTableglfiscalperiods.TableName + " LIKE glfiscalperiods_bak";
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20193381620529] " + "running SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "INSERT INTO " + SMTableglfiscalperiods.TableName + " SELECT * FROM glfiscalperiods_bak";
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20193381620530] " + "running SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		SQL = "DROP TABLE IF EXISTS glfiscalperiods_bak";
+		try {
+			Statement stmtUpdate = cnSMCP.createStatement();
+			stmtUpdate.execute(SQL);
+		} catch (Exception e) {
+			throw new Exception("Error [20193381620531] " + "running SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
 		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL fiscal period records into " + sTablename + "<BR>";
 		
 		return sStatus;

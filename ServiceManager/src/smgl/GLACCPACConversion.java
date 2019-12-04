@@ -909,7 +909,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		try {
 			stmtCommit.execute("COMMIT");
 		} catch (Exception e) {
-			throw new Exception("Error [20192971432321] " + "commiting GL transaction Inserts - " + e.getMessage());
+			throw new Exception("Error [20192971432321] " + "committing GL transaction Inserts - " + e.getMessage());
 		}
 		//System.out.println("[2019297133029] " + "Including COMMIT, inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
 

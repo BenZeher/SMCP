@@ -121,14 +121,14 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		//If it's not a new entry:
 		if(entry.getslid().compareToIgnoreCase("-1")!=0){
-			s += "<TR>\n<TD ALIGN=RIGHT><B>Material Return ID</B>:</TD>\n<TD>\n<B>" 
+			s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sidlabel + "</B>:</TD>\n<TD>\n<B>" 
 					+ sID 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramlid + "\" VALUE=\"" 
 					+ sID + "\">"
 					+ "</B></TD>\n</TR>\n";
 			//but if it IS a new entry:
 		}else{
-			s += "<TR>\n<TD ALIGN=RIGHT><B>Material Return ID</B>:</TD>\n<TD>\n<B>" 
+			s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sidlabel + "</B>:</TD>\n<TD>\n<B>" 
 					+ "(NEW)" 
 					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramlid + "\" VALUE=\"" 
 					+ entry.getslid() + "\">"
@@ -144,7 +144,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		if (entry.getsinitiatedbyfullname().trim().compareToIgnoreCase("") == 0){
 			entry.setsinitiatedbyfullname(sm.getFullUserName());
 		}
-		s += "<TR>\n<TD ALIGN=RIGHT><B>Initiated by<B>:</TD>\n"
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sinitiatedlabel + "<B>:</TD>\n"
 				+ "<TD>\n" 
 				+ sInitiatedByString 
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMMaterialReturn.Paramdatinitiated + "\" VALUE=\"" + entry.getsdatinitiated() + "\">"
@@ -155,7 +155,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Work order ID:
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Work order ID:"  + " </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sworkorderidlabel  + ": </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiworkorderid + "\""
 				+ " VALUE=\"" + entry.getsworkorderid().replace("\"", "&quot;") + "\""
 				+ "SIZE=" + "13"
@@ -165,7 +165,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Trimmed order number:
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Order number:"  + " </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sordernumberlabel  + ": </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramstrimmedordernumber + "\""
 				+ " VALUE=\"" + entry.getstrimmedordernumber().replace("\"", "&quot;") + "\""
 				+ "SIZE=" + "13"
@@ -175,7 +175,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Description:
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>Description: <FONT COLOR=RED>*Required*</FONT></B>"  + " </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "<B>" + SMTablematerialreturns.sdescriptionlabel + ": <FONT COLOR=RED>*Required*</FONT></B>"  + " </B></TD>\n";
 		s += "<TD ALIGN=LEFT><TEXTAREA NAME=\"" + SMMaterialReturn.Paramsdescription + "\""
 				+"rows=\"" + "2" + "\""
 				+ " style = \" width: 100%; \""
@@ -186,7 +186,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Comments:
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Comments</B>:</TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.scommentslabel + "</B>:</TD>\n";
 		s += "<TD>\n"
 				+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammcomments + "\""
 				+ " rows=\"" + "3" + "\""
@@ -212,14 +212,14 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		if (entry.getsresolved().compareToIgnoreCase("1") == 0){
 			sCheckBoxChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
 		}
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Resolved?" + "</B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sresolvedlabel + "?</B></TD>\n";
 		s += "<TD ALIGN=LEFT> <INPUT TYPE=CHECKBOX" + sCheckBoxChecked
 				+ " NAME=\"" + SMMaterialReturn.Paramiresolved + "\" width=0.25>&nbsp;" + sResolvedBy + "</TD>\n"
 				;
 		s += "</TR>\n";
 
 		//Resolution Comments:
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Resolution Comments</B>:</TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sresolutioncommentslabel + "</B>:</TD>\n";
 		s += "<TD>\n"
 				+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammresolutioncomments + "\""
 				+ " rows=\"" + "3" + "\""
@@ -240,7 +240,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//Credit Not Expected
 		//Credit to be expected will have a Expected Credit Amount
 		//Credit received will have Credit Memo Number and Date of Credit Memo
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>Credit is no longer Expected</B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.screditnotexpectedlabel + "</B></TD>\n";
 		s += "<TD>\n";
 		String sChecked = "";
 		if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
@@ -251,7 +251,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
 
 		//To Be Returned
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>To be returned? </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.stobereturnedlabel + "? </B></TD>\n";
 		s += "<TD>\n";
 		sChecked = "";
 		if (entry.getstobereturned().compareToIgnoreCase(Integer.toString(1)) == 0){
@@ -262,7 +262,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramitobereturned + "'"+ sChecked + " ><BR>";
 
 		//AP Invoice Was Put on Hold
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>AP Invoice Was Put on Hold </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sinvoiceonholdlabel + " </B></TD>\n";
 		s += "<TD>\n";
 		sChecked = "";
 		if (entry.getsinvoiceonhold().compareToIgnoreCase(Integer.toString(1)) == 0){
@@ -274,7 +274,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 
 
 		//Vendor
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Vendor:"  + " </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.svendoracctlabel  + ": </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramsvendoracct + "\""
 				+ " VALUE=\"" + entry.getsvendoracct().replace("\"", "&quot;") + "\""
 				+ "SIZE=" + "13"
@@ -297,7 +297,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		String PO = entry.getsponumber().replace("\"", "&quot;");
 
 		//Purchase order number:
-		s += "<TR>\n<TD ALIGN=RIGHT><B>" + "PO Number:"  + " </B></TD>\n";
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sponumberlabel + ": </B></TD>\n";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"POEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramiponumber + "\""
 				+ " VALUE=\"" + PO + "\""
 				+ " SIZE=" + "13"
@@ -312,7 +312,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 
 		//Date Returned
 		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
-			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
+			s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sreturnsentlabel + ":<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatreturnsent().replace("\"", "&quot;")) + "\""
@@ -321,7 +321,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 					+ "</TR>"
 					;
 		}else {
-			s += "<TR><TD ALIGN=RIGHT><B>Date Returned:<B></TD>"
+			s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sreturnsentlabel + ":<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " ID =\"" + SMMaterialReturn.Paramdatreturnsent + "\""
 					+ " VALUE=\"" + entry.getdatreturnsent().replace("\"", "&quot;") + "\""
@@ -335,7 +335,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		String sEntryNumber = entry.getladjustedentrynumber().replace("\"", "&quot;");
 
 		//Adjustment Batch Number
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Batch Number:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sadjustedbatchnumberlabel  + ": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
 				+ " VALUE=\"" + sBatchNumber + "\""
 				+ " ID =\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""
@@ -346,7 +346,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Adjustment Entry Number
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Entry Number:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sadjustedentrynumberlabel  + ": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedentrynumber + "\""
 				+ " VALUE=\"" + sEntryNumber + "\""
 				+ " ID =\"" + SMMaterialReturn.Paramladjustedentrynumber + "\""
@@ -361,7 +361,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ "</TR>";
 
 		//Adjusted Credit Amount
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Adjustment Amount:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sadjustmentamountlabel  + ": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdadjustmentamount + "\""
 				+ " VALUE=\"" + entry.getbdadjustmentamount().replace("\"", "&quot;") + "\""
 				+ " ID =\"" + SMMaterialReturn.Parambdadjustmentamount + "\""
@@ -372,7 +372,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				;
 
 		//Credit Memo Number
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Memo Number:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.screditmemonumberlabel  + ": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramscreditmemonumber + "\""
 				+ " VALUE=\"" + entry.getscreditmemonumber().replace("\"", "&quot;") + "\""
 				+ " ID =\"" + SMMaterialReturn.Paramscreditmemonumber + "\""
@@ -384,7 +384,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 
 		//Date of Credit Memo:
 		if(entry.getdatcreditnotedate().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
-			s += "<TR><TD ALIGN=RIGHT><B>Date of Credit Memo:<B></TD>"
+			s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.screditnotedatelabel + ":<B></TD>"
 					+ "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
 					+ " ID =\"" + SMMaterialReturn.Paramdatcreditnotedate + "\""
 					+ " VALUE=\"" + clsDateAndTimeConversions.resultsetDateStringToString(entry.getdatcreditnotedate().replace("\"", "&quot;")) + "\""
@@ -404,7 +404,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 
 		//Credit received
-		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Received:"  + " </B></TD>";
+		s += "<TR><TD ALIGN=RIGHT><B>" +SMTablematerialreturns.screditamtlabel +": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMMaterialReturn.Parambdcreditamt + "\""
 				+ " VALUE=\"" + entry.getbdcreditamt().replace("\"", "&quot;") + "\""
 				+ " ID =\"" + SMMaterialReturn.Parambdcreditamt + "\""

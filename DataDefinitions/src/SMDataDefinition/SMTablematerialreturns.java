@@ -44,6 +44,28 @@ public class SMTablematerialreturns {
 	public static final int bdadjustmentamountlength = 19;
 	public static final int screditmemonumberlength = 24;
 	public static final int bdcreditamtlength = 19;
+	
+	//Labels
+	public static final String sidlabel = "Material Return ID";
+	public static final String sinitiatedlabel = "Initiated by";
+	public static final String sresolvedlabel = "Resolved";
+	public static final String sdescriptionlabel = "Description";
+	public static final String scommentslabel = "Comments";
+	public static final String sresolutioncommentslabel = "Resolution Comments";
+	public static final String sworkorderidlabel = "Work order ID";
+	public static final String sordernumberlabel = "Order number";
+	public static final String screditnotexpectedlabel = "Credit is no longer Expected";
+	public static final String sponumberlabel = "PO Number";
+	public static final String stobereturnedlabel = "To be returned";
+	public static final String svendoracctlabel = "Vendor";
+	public static final String sadjustedbatchnumberlabel = "Adjustment Batch Number"; 
+	public static final String sadjustedentrynumberlabel = "Adjustment Entry Number";
+	public static final String sadjustmentamountlabel = "Adjustment Amount"; 
+	public static final String screditnotedatelabel = "Date of Credit Memo";
+	public static final String screditmemonumberlabel = "Credit Memo Number";
+	public static final String screditamtlabel = "Credit Received";
+	public static final String sreturnsentlabel = "Date Returned";
+	public static final String sinvoiceonholdlabel = "AP Invoice Was Put on Hold";
 
 	public static int STATUS_CREDITNOTEXPECTED = 1;
 

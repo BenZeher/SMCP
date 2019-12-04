@@ -20,9 +20,9 @@ import smic.ICEntry;
 import smic.ICPOHeader;
 
 public class SMMaterialReturn extends clsMasterEntry{
-	
+
 	public static final String ParamObjectName = "Material Return";
-	
+
 	public static final String Paramlid = "lid";
 	public static final String Paramdatinitiated = "datinitiated";
 	public static final String Paramlinitiatedbyid = "linitiatedbyid";
@@ -48,8 +48,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Parambdcreditamt = "bdcreditamt";
 	public static final String Paramdatreturnsent = "datreturnsent";
 	public static final String Paramiinvoiceonhold = "iinvoiceonhold";
-	
-	
+
+
 	private String m_slid;
 	private String m_datinitiated;
 	private String m_linitiatedbyid;
@@ -76,31 +76,31 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_bdcreditamt;
 	private String m_datreturnsent;
 	private String m_sinvoiceonhold;
-	
+
 	private boolean bDebugMode = false;
-	
-    public SMMaterialReturn() {
+
+	public SMMaterialReturn() {
 		super();
 		initEntryVariables();
-        }
-    
-    public SMMaterialReturn(HttpServletRequest req){
+	}
+
+	public SMMaterialReturn(HttpServletRequest req){
 		super(req);
 		initEntryVariables();
 		m_slid = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramlid, req).trim();
 		m_datinitiated = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramdatinitiated, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramdatinitiated, req).trim().replace("&quot;", "\"");
 		if(m_datinitiated.compareToIgnoreCase("") == 0){
 			m_datinitiated = EMPTY_DATETIME_STRING;
 		}
 		m_linitiatedbyid = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramlinitiatedbyid, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramlinitiatedbyid, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(SMMaterialReturn.Paramiresolved) == null || m_linitiatedbyid.compareToIgnoreCase("") == 0){
 			m_linitiatedbyid = "0";
 		}
 		m_sinitiatedbyfullname = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramsinitiatedbyfullname, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramsinitiatedbyfullname, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(SMMaterialReturn.Paramiresolved) == null){
 			m_sresolved = "0";
 		}else{
@@ -108,22 +108,22 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}
 		m_datresolved = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramdatresolved, req).trim().replace("&quot;", "\"");
-		
+
 		if(m_datresolved.compareToIgnoreCase("") == 0){
-				m_datresolved = EMPTY_DATETIME_STRING;
-			}
-			
+			m_datresolved = EMPTY_DATETIME_STRING;
+		}
+
 		m_lresolvedbyid = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramlresolvedbyid, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramlresolvedbyid, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(SMMaterialReturn.Paramiresolved) == null || m_lresolvedbyid.compareToIgnoreCase("") == 0){
 			m_lresolvedbyid = "0";
 		}
 		m_sresolvedbyfullname = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramsresolvedbyfullname, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramsresolvedbyfullname, req).trim().replace("&quot;", "\"");
 		m_sdescription = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramsdescription, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramsdescription, req).trim().replace("&quot;", "\"");
 		m_scomments = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Parammcomments, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Parammcomments, req).trim().replace("&quot;", "\"");
 		m_sresolutioncomments = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parammresolutioncomments, req).trim().replace("&quot;", "\"");
 		m_sworkorderid = clsManageRequestParameters.get_Request_Parameter(
@@ -133,7 +133,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_screditnotexpected = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramicreditnotexpected, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
-			SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
+				SMMaterialReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
 		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
 			m_itobereturned = "0";
 		}else{
@@ -163,13 +163,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}
 		m_screditmemonumber = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramscreditmemonumber, req).trim().replace("&quot;", "\"");
-		
+
 		m_bdcreditamt = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parambdcreditamt, req).trim().replace("&quot;", "\"");
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Parambdcreditamt, req).compareToIgnoreCase("") == 0){
 			m_bdcreditamt = "0.00";
 		}
-		
+
 		m_datreturnsent = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramdatreturnsent, req).trim().replace("&quot;", "\"");
 		if(clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramdatreturnsent, req).compareToIgnoreCase("") == 0){
@@ -180,43 +180,43 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}else{
 			m_sinvoiceonhold = "1";
 		}
-		
+
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
-    }
-    public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
-    	Connection conn = clsDatabaseFunctions.getConnection(
-    			context, 
-    			sDBIB, 
-    			"MySQL", 
-    			this.toString() + " - user: " + sUserID + " - " + sUserFullName
-    			);
-    	
-    	if (conn == null){
-    		throw new Exception("Error opening data connection to load " + ParamObjectName + ".");
-    	}
-    	
-    	try {
+	}
+	public void load (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
+		Connection conn = clsDatabaseFunctions.getConnection(
+				context, 
+				sDBIB, 
+				"MySQL", 
+				this.toString() + " - user: " + sUserID + " - " + sUserFullName
+				);
+
+		if (conn == null){
+			throw new Exception("Error opening data connection to load " + ParamObjectName + ".");
+		}
+
+		try {
 			load (conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067708]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067709]");
-    }
-    public boolean load (Connection conn) throws Exception{
-    	return load (m_slid, conn);
-    }
-    private boolean load (String sID, Connection conn) throws Exception{
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067709]");
+	}
+	public boolean load (Connection conn) throws Exception{
+		return load (m_slid, conn);
+	}
+	private boolean load (String sID, Connection conn) throws Exception{
 
-    	sID = sID.trim();
-    	if (sID.compareToIgnoreCase("") == 0){
-    		throw new Exception("ID code cannot be blank when loading " + ParamObjectName + ".");
-    	}
-		
+		sID = sID.trim();
+		if (sID.compareToIgnoreCase("") == 0){
+			throw new Exception("ID code cannot be blank when loading " + ParamObjectName + ".");
+		}
+
 		String SQL = "SELECT * FROM " + SMTablematerialreturns.TableName
-			+ " WHERE ("
+				+ " WHERE ("
 				+ SMTablematerialreturns.lid + " = " + sID
-			+ ")";
+				+ ")";
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
 		}
@@ -225,9 +225,9 @@ public class SMMaterialReturn extends clsMasterEntry{
 			if (rs.next()) {
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTablematerialreturns.lid));
-				
+
 				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
-					rs.getString(SMTablematerialreturns.datinitiated));
+						rs.getString(SMTablematerialreturns.datinitiated));
 				m_linitiatedbyid = Long.toString(rs.getLong(SMTablematerialreturns.linitiatedbyid));
 				m_sinitiatedbyfullname = rs.getString(SMTablematerialreturns.sinitiatedbyfullname).trim();
 				m_sresolved = Long.toString(rs.getLong(SMTablematerialreturns.iresolved));
@@ -249,15 +249,15 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_strimmedordernumber = rs.getString(SMTablematerialreturns.strimmedordernumber).trim();
 				m_itobereturned = Long.toString(rs.getLong(SMTablematerialreturns.itobereturned));
 				m_svendoracct = rs.getString(SMTablematerialreturns.svendoracct).trim();
-				
+
 				m_ladjustedbatchnumber = Long.toString(rs.getLong(SMTablematerialreturns.ladjustedbatchnumber));
 				if(m_ladjustedbatchnumber.compareToIgnoreCase("")== 0) {
-				m_ladjustedbatchnumber = "0";
+					m_ladjustedbatchnumber = "0";
 				}
 				m_ladjustedentrynumber = Long.toString(rs.getLong(SMTablematerialreturns.ladjustedentrynumber));
 				if(m_ladjustedentrynumber.compareToIgnoreCase("")== 0) {
 					m_ladjustedentrynumber = "0";
-					}
+				}
 				m_bdadjustmentamount = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdadjustmentamount));
 				m_datcreditnotedate = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datcreditnotedate));
 				m_screditmemonumber = rs.getString(SMTablematerialreturns.screditmemonumber).trim();
@@ -271,134 +271,134 @@ public class SMMaterialReturn extends clsMasterEntry{
 			}
 		} catch (Exception e) {
 			throw new Exception("Error reading " + ParamObjectName + " for lid : '" + sID
-				+ "' - " + e.getMessage());
+					+ "' - " + e.getMessage());
 		}
 		return true;
-    }
-    
-    public void save_without_data_transaction (ServletContext context, String sDBID,  String sUserID, String sUserFullName) throws Exception{
+	}
 
-       	Connection conn = clsDatabaseFunctions.getConnection(
-    			context, 
-    			sDBID, 
-    			"MySQL", 
-    			this.toString() + " - user: " + sUserID + " - "+ sUserFullName
-    			);
-    	
-    	if (conn == null){
-    		throw new Exception("Error [1408649178] opening data connection.");
-    	}
-    	
-    	try {
+	public void save_without_data_transaction (ServletContext context, String sDBID,  String sUserID, String sUserFullName) throws Exception{
+
+		Connection conn = clsDatabaseFunctions.getConnection(
+				context, 
+				sDBID, 
+				"MySQL", 
+				this.toString() + " - user: " + sUserID + " - "+ sUserFullName
+				);
+
+		if (conn == null){
+			throw new Exception("Error [1408649178] opening data connection.");
+		}
+
+		try {
 			save_without_data_transaction (conn, sUserID, sUserFullName, sDBID);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067710]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067711]");
-    	
-    }
-    public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName, String sDBID) throws Exception{
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067711]");
 
-    	try {
+	}
+	public void save_without_data_transaction (Connection conn, String sUserID, String sUserFullName, String sDBID) throws Exception{
+
+		try {
 			validate_entry_fields(conn, sDBID);
 		} catch (Exception e1) {
 			throw new Exception (e1.getMessage());
 		}
-    	
-    	//If it's a new record OR if it's being 'resolved', then we need to get the user's info:
-    	String SQL = "";
 
-    	boolean bReturnIsBeingResolved = false;
-    	long lid;
+		//If it's a new record OR if it's being 'resolved', then we need to get the user's info:
+		String SQL = "";
+
+		boolean bReturnIsBeingResolved = false;
+		long lid;
 		try {
 			lid = Long.parseLong(getslid());
 		} catch (Exception e1) {
 			throw new Exception("Error [1408653581] parsing " + ParamObjectName + " lid '" + this.getslid() + "' - " + e1.getMessage());
 		}
-    	if (lid < 1){
-    		//It's a new record
-    		setsNewRecord("1");
-    		if (getsresolved().compareToIgnoreCase("1") == 0){
-    			bReturnIsBeingResolved = true;
-    		}
-    	}else{
-    		//If it's marked as resolved, see if it was not resolved until now:
-    		if (getsresolved().compareToIgnoreCase("1") == 0){
-    			SQL = "SELECT"
-    				+ " " + SMTablematerialreturns.iresolved
-    				+ " FROM " + SMTablematerialreturns.TableName
-    				+ " WHERE ("
-    					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
-    				+ ")"
-    			;
-    			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
-    			if (rs.next()){
-    				if (rs.getInt(SMTablematerialreturns.iresolved) == 0){
-    					bReturnIsBeingResolved = true;
-    				}
-    			}else{
-    				rs.close();
-    				throw new Exception("Error [1413917865] - could not read record for ID '" + this.getslid() + "'.");
-    			}
-    			rs.close();
-    		}
-    	}
+		if (lid < 1){
+			//It's a new record
+			setsNewRecord("1");
+			if (getsresolved().compareToIgnoreCase("1") == 0){
+				bReturnIsBeingResolved = true;
+			}
+		}else{
+			//If it's marked as resolved, see if it was not resolved until now:
+			if (getsresolved().compareToIgnoreCase("1") == 0){
+				SQL = "SELECT"
+						+ " " + SMTablematerialreturns.iresolved
+						+ " FROM " + SMTablematerialreturns.TableName
+						+ " WHERE ("
+						+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
+						+ ")"
+						;
+				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rs.next()){
+					if (rs.getInt(SMTablematerialreturns.iresolved) == 0){
+						bReturnIsBeingResolved = true;
+					}
+				}else{
+					rs.close();
+					throw new Exception("Error [1413917865] - could not read record for ID '" + this.getslid() + "'.");
+				}
+				rs.close();
+			}
+		}
 
-    	if (getsNewRecord().compareToIgnoreCase("1") == 0){
-    		setlinitiatedbyid(sUserID);
-    		setsinitiatedbyfullname(sUserFullName);
-    		
-    	}
-    	if (bReturnIsBeingResolved){
-    		setlresolvedbyid(sUserID);
-    		setsresolvedbyfullname(sUserFullName);
-    	}
-    	String sWorkOrderID = getsworkorderid();
-    	if (sWorkOrderID.compareToIgnoreCase("") == 0){
-    		sWorkOrderID = "-1";
-    	}
-    	String sPONumber = getsponumber();
-    	if (sPONumber.compareToIgnoreCase("") == 0){
-    		sPONumber = "0";
-    	}
-    	String sCreditStatus = getscreditnotexpected();
-    	if (sCreditStatus.compareToIgnoreCase("") == 0){
-    		sCreditStatus = "0";
-    	}
+		if (getsNewRecord().compareToIgnoreCase("1") == 0){
+			setlinitiatedbyid(sUserID);
+			setsinitiatedbyfullname(sUserFullName);
+
+		}
+		if (bReturnIsBeingResolved){
+			setlresolvedbyid(sUserID);
+			setsresolvedbyfullname(sUserFullName);
+		}
+		String sWorkOrderID = getsworkorderid();
+		if (sWorkOrderID.compareToIgnoreCase("") == 0){
+			sWorkOrderID = "-1";
+		}
+		String sPONumber = getsponumber();
+		if (sPONumber.compareToIgnoreCase("") == 0){
+			sPONumber = "0";
+		}
+		String sCreditStatus = getscreditnotexpected();
+		if (sCreditStatus.compareToIgnoreCase("") == 0){
+			sCreditStatus = "0";
+		}
 
 		//If it's a new record, do an insert:
-    	if (getsNewRecord().compareToIgnoreCase("1") == 0){
+		if (getsNewRecord().compareToIgnoreCase("1") == 0){
 			SQL = "INSERT INTO " + SMTablematerialreturns.TableName + " ("
-				+ SMTablematerialreturns.datinitiated
-				+ ", " + SMTablematerialreturns.linitiatedbyid
-				+ ", " + SMTablematerialreturns.sinitiatedbyfullname
-				+ ", " + SMTablematerialreturns.datresolved
-				+ ", " + SMTablematerialreturns.iresolved
-				+ ", " + SMTablematerialreturns.itobereturned
-				+ ", " + SMTablematerialreturns.lresolvedbyid
-				+ ", " + SMTablematerialreturns.sresolvedbyfullname
-				+ ", " + SMTablematerialreturns.mresolutioncomments
-				+ ", " + SMTablematerialreturns.mcomments
-				+ ", " + SMTablematerialreturns.sdescription
-				+ ", " + SMTablematerialreturns.iworkorderid
-				+ ", " + SMTablematerialreturns.strimmedordernumber
-				+ ", " + SMTablematerialreturns.icreditnotexpected
-				+ ", " + SMTablematerialreturns.iponumber
-				+ ", " + SMTablematerialreturns.svendoracct
-				+ ", " + SMTablematerialreturns.ladjustedbatchnumber
-				+ ", " + SMTablematerialreturns.ladjustedentrynumber
-				+ ", " + SMTablematerialreturns.bdadjustmentamount
-				+ ", " + SMTablematerialreturns.datcreditnotedate
-				+ ", " + SMTablematerialreturns.screditmemonumber
-				+ ", " + SMTablematerialreturns.bdcreditamt
-				+ ", " + SMTablematerialreturns.datreturnsent
-				+ ", " + SMTablematerialreturns.iinvoiceonhold
-				+ ") VALUES ("
-				+ "NOW()"
-				+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
-				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
-			;
+					+ SMTablematerialreturns.datinitiated
+					+ ", " + SMTablematerialreturns.linitiatedbyid
+					+ ", " + SMTablematerialreturns.sinitiatedbyfullname
+					+ ", " + SMTablematerialreturns.datresolved
+					+ ", " + SMTablematerialreturns.iresolved
+					+ ", " + SMTablematerialreturns.itobereturned
+					+ ", " + SMTablematerialreturns.lresolvedbyid
+					+ ", " + SMTablematerialreturns.sresolvedbyfullname
+					+ ", " + SMTablematerialreturns.mresolutioncomments
+					+ ", " + SMTablematerialreturns.mcomments
+					+ ", " + SMTablematerialreturns.sdescription
+					+ ", " + SMTablematerialreturns.iworkorderid
+					+ ", " + SMTablematerialreturns.strimmedordernumber
+					+ ", " + SMTablematerialreturns.icreditnotexpected
+					+ ", " + SMTablematerialreturns.iponumber
+					+ ", " + SMTablematerialreturns.svendoracct
+					+ ", " + SMTablematerialreturns.ladjustedbatchnumber
+					+ ", " + SMTablematerialreturns.ladjustedentrynumber
+					+ ", " + SMTablematerialreturns.bdadjustmentamount
+					+ ", " + SMTablematerialreturns.datcreditnotedate
+					+ ", " + SMTablematerialreturns.screditmemonumber
+					+ ", " + SMTablematerialreturns.bdcreditamt
+					+ ", " + SMTablematerialreturns.datreturnsent
+					+ ", " + SMTablematerialreturns.iinvoiceonhold
+					+ ") VALUES ("
+					+ "NOW()"
+					+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
+					;
 			if (bReturnIsBeingResolved){
 				SQL += ", NOW()";
 			}else{
@@ -426,9 +426,9 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + getsinvoiceonhold()
 			+ ")"
 			;
-    	}else{
+		}else{
 			SQL = " UPDATE " + SMTablematerialreturns.TableName + " SET "
-			;
+					;
 			if (bReturnIsBeingResolved){
 				SQL +=  SMTablematerialreturns.datresolved + " = NOW()";
 			}else{
@@ -454,18 +454,18 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ", " + SMTablematerialreturns.iinvoiceonhold + " = " + getsinvoiceonhold()
-				+ " WHERE ("
-					+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
-				+ ")"
+			+ " WHERE ("
+			+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
+			+ ")"
 			;
-    	}
-    	System.out.println("[20193011047489] " + SQL);
+		}
+		System.out.println("[20193011047489] " + SQL);
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
-		    Statement stmt = conn.createStatement();
-		    stmt.executeUpdate(SQL);
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
 			throw new Exception ("Error [1572032662] in insert/update with SQL: " + SQL + " - " + ex.getMessage());
 		}
@@ -488,250 +488,250 @@ public class SMMaterialReturn extends clsMasterEntry{
 				throw new Exception("Could not get last ID number.");
 			}
 		}
-    }
+	}
 
 
 
 	public void delete (ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
-    	
-    	Connection conn = clsDatabaseFunctions.getConnection(
-    			context, 
-    			sDBIB, 
-    			"MySQL", 
-    			this.toString() + " - user: " + sUserID + " - " + sUserFullName
-    			);
-    	
-    	if (conn == null){
-    		throw new Exception ("Error [1408649181] opening data connection.");
-    	}
-    	
-    	try {
+
+		Connection conn = clsDatabaseFunctions.getConnection(
+				context, 
+				sDBIB, 
+				"MySQL", 
+				this.toString() + " - user: " + sUserID + " - " + sUserFullName
+				);
+
+		if (conn == null){
+			throw new Exception ("Error [1408649181] opening data connection.");
+		}
+
+		try {
 			delete (conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067706]");
 			throw new Exception(e.getMessage());
 		}
-    	clsDatabaseFunctions.freeConnection(context, conn, "[1547067707]");
-    }
-    public void delete (Connection conn) throws Exception{
-    	
-    	//Validate deletions
-    	String SQL = "";
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547067707]");
+	}
+	public void delete (Connection conn) throws Exception{
 
-    	//Delete record:
-    	if (!clsDatabaseFunctions.start_data_transaction(conn)){
-    		throw new Exception("Error [1408649182] - Could not start transaction when deleting " + ParamObjectName + ".");
-    	}
-    	SQL = "DELETE FROM " + SMTablematerialreturns.TableName
-    		+ " WHERE ("
-    			+ SMTablematerialreturns.lid + " = " + this.getslid()
-    		+ ")"
-    		;
-    	
+		//Validate deletions
+		String SQL = "";
+
+		//Delete record:
+		if (!clsDatabaseFunctions.start_data_transaction(conn)){
+			throw new Exception("Error [1408649182] - Could not start transaction when deleting " + ParamObjectName + ".");
+		}
+		SQL = "DELETE FROM " + SMTablematerialreturns.TableName
+				+ " WHERE ("
+				+ SMTablematerialreturns.lid + " = " + this.getslid()
+				+ ")"
+				;
+
 		try{
-		    Statement stmt = conn.createStatement();
-		    stmt.executeUpdate(SQL);
+			Statement stmt = conn.createStatement();
+			stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [1408649183] - Could not delete " + ParamObjectName + " with ID " + getslid() + " with SQL: " + SQL + " - " + ex.getMessage());
 		}
-		
+
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [1408649184] - Could not commit data transaction while deleting " + ParamObjectName + ".");
 		}
 		//Empty the values:
 		initEntryVariables();
-    }
+	}
 
-    public void validate_entry_fields (Connection conn, String sDBID) throws Exception{
-        //Validate the entries here:
-    	String sErrors = "";
-    	m_slid = m_slid.trim();
-    	if (m_slid.compareToIgnoreCase("") == 0){
-    		m_slid = "-1";
-    	}
-    	try {
+	public void validate_entry_fields (Connection conn, String sDBID) throws Exception{
+		//Validate the entries here:
+		String sErrors = "";
+		m_slid = m_slid.trim();
+		if (m_slid.compareToIgnoreCase("") == 0){
+			m_slid = "-1";
+		}
+		try {
 			@SuppressWarnings("unused")
 			long lID = Long.parseLong(m_slid);
 		} catch (Exception e) {
 			throw new Exception("Invalid ID: '" + m_slid + "'.");
 		}
-    	
-    	m_datinitiated = m_datinitiated.trim();
-        if (m_datinitiated.compareToIgnoreCase("") == 0){
-        	m_datinitiated = EMPTY_DATETIME_STRING;
-        }
-        if (m_datinitiated.compareToIgnoreCase(EMPTY_DATETIME_STRING) != 0){
-        	if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy hh:ss a", m_datinitiated)){
-        		sErrors += "Date initiated is invalid: '" + m_datinitiated + "'.";
-        	}
-        }
-        m_linitiatedbyid = m_linitiatedbyid.trim();
-        if (m_linitiatedbyid.length() > SMTablematerialreturns.linitiatedbyidlength){
-        	sErrors += "Initiated by ID cannot be more than " + Integer.toString(SMTablematerialreturns.linitiatedbyidlength) + " characters.  ";
-        }
-        m_sinitiatedbyfullname = m_sinitiatedbyfullname.trim();
-        if (m_sinitiatedbyfullname.length() > SMTablematerialreturns.sinitiatedbyfullnamelength){
-        	sErrors += "Initiated by full name cannot be more than " + Integer.toString(SMTablematerialreturns.sinitiatedbyfullnamelength) + " characters.  ";
-        }
-        if (
-        		(m_sresolved.compareToIgnoreCase("0") != 0)
-        		&& (m_sresolved.compareToIgnoreCase("1") != 0)
-        ){
-        	sErrors += "'Resolved' status (" + m_sresolved + ") is invalid.";
-        }
-        
-        m_datresolved = m_datresolved.trim();
-        if (m_datresolved.compareToIgnoreCase("") == 0){
-        	m_datresolved = EMPTY_DATETIME_STRING;
-        }
-        if (m_datresolved.compareToIgnoreCase(EMPTY_DATETIME_STRING) != 0){
-        	if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy hh:ss a", m_datresolved)){
-        		sErrors += "Date resolved is invalid: '" + m_datresolved + "'.";
-        	}
-        }
-        m_lresolvedbyid = m_lresolvedbyid.trim();
-        if (m_lresolvedbyid.length() > SMTablematerialreturns.lresolvedbyidlength){
-        	sErrors += "Resolved by ID cannot be more than " + Integer.toString(SMTablematerialreturns.lresolvedbyidlength) + " characters.  ";
-        }
-        m_sresolvedbyfullname = m_sresolvedbyfullname.trim();
-        if (m_sresolvedbyfullname.length() > SMTablematerialreturns.sresolvedbyfullnamelength){
-        	sErrors += "Resolved by full name cannot be more than " + Integer.toString(SMTablematerialreturns.sresolvedbyfullnamelength) + " characters.  ";
-        }
-        m_sdescription = m_sdescription.trim();
-        if (m_sdescription.length() > SMTablematerialreturns.sdescriptionlength){
-        	sErrors += "Description cannot be more than " + Integer.toString(SMTablematerialreturns.sdescriptionlength) + " characters.  ";
-        }
-        //Also, the description can NOT be blank:
-        if (m_sdescription.compareToIgnoreCase("") == 0){
-        	sErrors += "Description cannot be blank.  ";
-        }
-        
-        m_scomments = m_scomments.trim();
 
-        m_sresolutioncomments = m_sresolutioncomments.trim();
-        if (getsresolved().compareToIgnoreCase("1") == 0){
-            if (m_sresolutioncomments.compareToIgnoreCase("") == 0){
-            	sErrors += ParamObjectName + "s cannot be resolved without adding a resolution comment.  ";
-            }
-        }else{
-        	if (m_sresolutioncomments.compareToIgnoreCase("") != 0){
-        		sErrors += "You cannot enter resolution comments unless the return is resolved.  ";
-        	}
-        }
-    	m_sworkorderid = m_sworkorderid.trim();
-    	if (m_sworkorderid.compareToIgnoreCase("") == 0){
-    	}else{
-	    	try {
+		m_datinitiated = m_datinitiated.trim();
+		if (m_datinitiated.compareToIgnoreCase("") == 0){
+			m_datinitiated = EMPTY_DATETIME_STRING;
+		}
+		if (m_datinitiated.compareToIgnoreCase(EMPTY_DATETIME_STRING) != 0){
+			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy hh:ss a", m_datinitiated)){
+				sErrors += "Date initiated is invalid: '" + m_datinitiated + "'.";
+			}
+		}
+		m_linitiatedbyid = m_linitiatedbyid.trim();
+		if (m_linitiatedbyid.length() > SMTablematerialreturns.linitiatedbyidlength){
+			sErrors += "Initiated by ID cannot be more than " + Integer.toString(SMTablematerialreturns.linitiatedbyidlength) + " characters.  ";
+		}
+		m_sinitiatedbyfullname = m_sinitiatedbyfullname.trim();
+		if (m_sinitiatedbyfullname.length() > SMTablematerialreturns.sinitiatedbyfullnamelength){
+			sErrors += "Initiated by full name cannot be more than " + Integer.toString(SMTablematerialreturns.sinitiatedbyfullnamelength) + " characters.  ";
+		}
+		if (
+				(m_sresolved.compareToIgnoreCase("0") != 0)
+				&& (m_sresolved.compareToIgnoreCase("1") != 0)
+				){
+			sErrors += "'Resolved' status (" + m_sresolved + ") is invalid.";
+		}
+
+		m_datresolved = m_datresolved.trim();
+		if (m_datresolved.compareToIgnoreCase("") == 0){
+			m_datresolved = EMPTY_DATETIME_STRING;
+		}
+		if (m_datresolved.compareToIgnoreCase(EMPTY_DATETIME_STRING) != 0){
+			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy hh:ss a", m_datresolved)){
+				sErrors += "Date resolved is invalid: '" + m_datresolved + "'.";
+			}
+		}
+		m_lresolvedbyid = m_lresolvedbyid.trim();
+		if (m_lresolvedbyid.length() > SMTablematerialreturns.lresolvedbyidlength){
+			sErrors += "Resolved by ID cannot be more than " + Integer.toString(SMTablematerialreturns.lresolvedbyidlength) + " characters.  ";
+		}
+		m_sresolvedbyfullname = m_sresolvedbyfullname.trim();
+		if (m_sresolvedbyfullname.length() > SMTablematerialreturns.sresolvedbyfullnamelength){
+			sErrors += "Resolved by full name cannot be more than " + Integer.toString(SMTablematerialreturns.sresolvedbyfullnamelength) + " characters.  ";
+		}
+		m_sdescription = m_sdescription.trim();
+		if (m_sdescription.length() > SMTablematerialreturns.sdescriptionlength){
+			sErrors += "Description cannot be more than " + Integer.toString(SMTablematerialreturns.sdescriptionlength) + " characters.  ";
+		}
+		//Also, the description can NOT be blank:
+		if (m_sdescription.compareToIgnoreCase("") == 0){
+			sErrors += "Description cannot be blank.  ";
+		}
+
+		m_scomments = m_scomments.trim();
+
+		m_sresolutioncomments = m_sresolutioncomments.trim();
+		if (getsresolved().compareToIgnoreCase("1") == 0){
+			if (m_sresolutioncomments.compareToIgnoreCase("") == 0){
+				sErrors += ParamObjectName + "s cannot be resolved without adding a resolution comment.  ";
+			}
+		}else{
+			if (m_sresolutioncomments.compareToIgnoreCase("") != 0){
+				sErrors += "You cannot enter resolution comments unless the return is resolved.  ";
+			}
+		}
+		m_sworkorderid = m_sworkorderid.trim();
+		if (m_sworkorderid.compareToIgnoreCase("") == 0){
+		}else{
+			try {
 				@SuppressWarnings("unused")
 				long lID = Long.parseLong(m_sworkorderid);
 			} catch (Exception e) {
 				sErrors += "Invalid work order ID: '" + m_sworkorderid + "'.  ";
 			}
-    	}
-        m_strimmedordernumber = m_strimmedordernumber.trim();
-        if (m_strimmedordernumber.length() > SMTablematerialreturns.strimmedordernumberlength){
-        	sErrors += "Order number cannot be more than " + Integer.toString(SMTablematerialreturns.strimmedordernumberlength) + " characters.  ";
-        }
-    	//Make sure it's a real order:
-        if (m_strimmedordernumber.compareToIgnoreCase("") != 0){
-	        SMOrderHeader ord = new SMOrderHeader();
-	        ord.setM_strimmedordernumber(m_strimmedordernumber);
-	        if (!ord.load(conn)){
-	        	sErrors += "Could not load order number '" + m_strimmedordernumber + "' - " + ord.getErrorMessages() + ".  ";
-	        }
-        }
-            
-        if (m_sponumber.compareToIgnoreCase("") != 0){
-        	if (m_sponumber.compareToIgnoreCase("0") != 0){
-        		ICPOHeader po = new ICPOHeader();
-        		po.setsID(m_sponumber);
-        		if (!po.load(conn)){
-        			sErrors += "Could not load PO number '" + m_sponumber + "' - " + po.getErrorMessages() + ".  ";
-        		}
-        	}
-        }
-        
-        if((m_ladjustedbatchnumber.compareToIgnoreCase("0") == 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) || (m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") == 0)) {
-        	sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ";
-        }
-        
-        try {
-        if(m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) {
-        	ICEntry ent = new ICEntry(m_ladjustedbatchnumber,m_ladjustedentrynumber);
-        	System.out.println("[2019295133351] " + " Batch# " + m_ladjustedbatchnumber + " Entry #: " +m_ladjustedentrynumber );
-        	if(!ent.load(conn)) {
-    			sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + " - " + ent.getErrorMessage() + ".  ";
-        	}
-        }
-        }catch( Exception e){
-        	throw new Exception( sErrors + " Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ");
-        }
-        
-        //Validate the vendor:
+		}
+		m_strimmedordernumber = m_strimmedordernumber.trim();
+		if (m_strimmedordernumber.length() > SMTablematerialreturns.strimmedordernumberlength){
+			sErrors += "Order number cannot be more than " + Integer.toString(SMTablematerialreturns.strimmedordernumberlength) + " characters.  ";
+		}
+		//Make sure it's a real order:
+		if (m_strimmedordernumber.compareToIgnoreCase("") != 0){
+			SMOrderHeader ord = new SMOrderHeader();
+			ord.setM_strimmedordernumber(m_strimmedordernumber);
+			if (!ord.load(conn)){
+				sErrors += "Could not load order number '" + m_strimmedordernumber + "' - " + ord.getErrorMessages() + ".  ";
+			}
+		}
 
-        	if (m_svendoracct.compareToIgnoreCase("") != 0){
-        		if (m_svendoracct.compareToIgnoreCase("0") != 0){
-        			APVendor vendor = new APVendor();
-        			vendor.setsvendoracct(m_svendoracct);;
-        			if (!vendor.load(conn)){
-        				sErrors += "Could not load vendor '" + m_svendoracct + "' - " + vendor.getErrorMessages() + ".  ";
-        			}
-        		}
-        	}
+		if (m_sponumber.compareToIgnoreCase("") != 0){
+			if (m_sponumber.compareToIgnoreCase("0") != 0){
+				ICPOHeader po = new ICPOHeader();
+				po.setsID(m_sponumber);
+				if (!po.load(conn)){
+					sErrors += "Could not load PO number '" + m_sponumber + "' - " + po.getErrorMessages() + ".  ";
+				}
+			}
+		}
 
-        	m_datcreditnotedate=m_datcreditnotedate.trim();
-            if (m_datcreditnotedate.compareToIgnoreCase("") == 0){
-            	m_datcreditnotedate = EMPTY_DATE_STRING;
-            }
-            
-            if (m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
-            	if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datcreditnotedate)){
-            		sErrors += "Date of Credit Memo is invalid: '" + m_datcreditnotedate + "'.  ";
-            	}
-            }
-            
-            m_datreturnsent=m_datreturnsent.trim();
-            if (m_datreturnsent.compareToIgnoreCase("") == 0){
-            	m_datreturnsent = EMPTY_DATE_STRING;
-            }
-            
-            if (m_datreturnsent.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
-            	if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datreturnsent)){
-            		sErrors += "Date of Return Sent is invalid: '" + m_datreturnsent + "'.  ";
-            	}
-            }
-            
+		if((m_ladjustedbatchnumber.compareToIgnoreCase("0") == 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) || (m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") == 0)) {
+			sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ";
+		}
 
-        	if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)!=0) && (m_screditmemonumber.compareToIgnoreCase("")==0 )) {
-        		sErrors += "Credit Memo Number needs to be filled out";
-        	}else if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)==0) && (m_screditmemonumber.compareToIgnoreCase("")!=0 )) {
-        		sErrors += "Date of Credit Memo needs to be filled out";
-        	}
- 
-        	
-        if (
-        		(m_itobereturned.compareToIgnoreCase("0") != 0)
-        		&& (m_itobereturned.compareToIgnoreCase("1") != 0)
-        ){
-        	sErrors += "'To Be Returned' status (" + m_itobereturned + ") is invalid.";
-        }
-        
-        if (
-        		(m_sinvoiceonhold.compareToIgnoreCase("0") != 0)
-        		&& (m_sinvoiceonhold.compareToIgnoreCase("1") != 0)
-        ){
-        	sErrors += "'AP Invoice on Hold' status (" + m_sinvoiceonhold + ") is invalid.";
-        }
-        
-        m_bdcreditamt = m_bdcreditamt.replaceAll(",", "");
-        m_bdadjustmentamount = m_bdadjustmentamount.replaceAll(",", "");
-        
-    	if (sErrors.compareToIgnoreCase("") != 0){
-    		throw new Exception(sErrors);
-    	}
-    }
+		try {
+			if(m_ladjustedbatchnumber.compareToIgnoreCase("0") != 0 &&  m_ladjustedentrynumber.compareToIgnoreCase("0") != 0) {
+				ICEntry ent = new ICEntry(m_ladjustedbatchnumber,m_ladjustedentrynumber);
+				System.out.println("[2019295133351] " + " Batch# " + m_ladjustedbatchnumber + " Entry #: " +m_ladjustedentrynumber );
+				if(!ent.load(conn)) {
+					sErrors += "Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + " - " + ent.getErrorMessage() + ".  ";
+				}
+			}
+		}catch( Exception e){
+			throw new Exception( sErrors + " Could not load Batch #: '" + m_ladjustedbatchnumber + "', Entry #: " + m_ladjustedentrynumber + ".  ");
+		}
+
+		//Validate the vendor:
+
+		if (m_svendoracct.compareToIgnoreCase("") != 0){
+			if (m_svendoracct.compareToIgnoreCase("0") != 0){
+				APVendor vendor = new APVendor();
+				vendor.setsvendoracct(m_svendoracct);;
+				if (!vendor.load(conn)){
+					sErrors += "Could not load vendor '" + m_svendoracct + "' - " + vendor.getErrorMessages() + ".  ";
+				}
+			}
+		}
+
+		m_datcreditnotedate=m_datcreditnotedate.trim();
+		if (m_datcreditnotedate.compareToIgnoreCase("") == 0){
+			m_datcreditnotedate = EMPTY_DATE_STRING;
+		}
+
+		if (m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
+			if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datcreditnotedate)){
+				sErrors += "Date of Credit Memo is invalid: '" + m_datcreditnotedate + "'.  ";
+			}
+		}
+
+		m_datreturnsent=m_datreturnsent.trim();
+		if (m_datreturnsent.compareToIgnoreCase("") == 0){
+			m_datreturnsent = EMPTY_DATE_STRING;
+		}
+
+		if (m_datreturnsent.compareToIgnoreCase(EMPTY_DATE_STRING) != 0){
+			if (!clsDateAndTimeConversions.IsValidDateString(clsServletUtilities.DATE_FORMAT_FOR_DISPLAY, m_datreturnsent)){
+				sErrors += "Date of Return Sent is invalid: '" + m_datreturnsent + "'.  ";
+			}
+		}
+
+
+		if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)!=0) && (m_screditmemonumber.compareToIgnoreCase("")==0 )) {
+			sErrors += "Credit Memo Number needs to be filled out";
+		}else if((m_datcreditnotedate.compareToIgnoreCase(EMPTY_DATE_STRING)==0) && (m_screditmemonumber.compareToIgnoreCase("")!=0 )) {
+			sErrors += "Date of Credit Memo needs to be filled out";
+		}
+
+
+		if (
+				(m_itobereturned.compareToIgnoreCase("0") != 0)
+				&& (m_itobereturned.compareToIgnoreCase("1") != 0)
+				){
+			sErrors += "'To Be Returned' status (" + m_itobereturned + ") is invalid.";
+		}
+
+		if (
+				(m_sinvoiceonhold.compareToIgnoreCase("0") != 0)
+				&& (m_sinvoiceonhold.compareToIgnoreCase("1") != 0)
+				){
+			sErrors += "'AP Invoice on Hold' status (" + m_sinvoiceonhold + ") is invalid.";
+		}
+
+		m_bdcreditamt = m_bdcreditamt.replaceAll(",", "");
+		m_bdadjustmentamount = m_bdadjustmentamount.replaceAll(",", "");
+
+		if (sErrors.compareToIgnoreCase("") != 0){
+			throw new Exception(sErrors);
+		}
+	}
 
 	public String getslid() {
 		return m_slid;
@@ -889,13 +889,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setsinvoiceonhold(String sinvoiceonhold) {
 		m_sinvoiceonhold = sinvoiceonhold;
 	}
-    
-	
+
+
 	public String getObjectName(){
 		return ParamObjectName;
 	}
-	
-/*
+
+	/*
 	public String read_out_debug_data(){
     	String sResult = "  ** " + SMUtilities.getFullClassName(this.toString()) + " read out: ";
     	sResult += "\nTerms code: " + this.
@@ -910,33 +910,33 @@ public class SMMaterialReturn extends clsMasterEntry{
     	sResult += "\nObject name: " + this.getObjectName();
     	return sResult;
     }
-*/
-    private void initEntryVariables(){
-    	m_slid = "-1";
-    	m_datinitiated = EMPTY_DATETIME_STRING;
-    	m_linitiatedbyid = "0";
-    	m_sinitiatedbyfullname = "";
-    	m_sresolved = "0";
-    	m_datresolved = EMPTY_DATETIME_STRING;
-    	m_lresolvedbyid = "0";
-    	m_sresolvedbyfullname = "";
-    	m_sdescription = "";
-    	m_scomments = "";
-    	m_sresolutioncomments = "";
-    	m_sworkorderid = "";
-    	m_strimmedordernumber = "";
-    	m_sNewRecord = "1";
-    	m_screditnotexpected = "0";
-    	m_sponumber = "0";
-    	m_itobereturned = "0";
-    	m_svendoracct = "";
-    	 m_ladjustedbatchnumber ="0";
-    	 m_ladjustedentrynumber ="0";
-    	 m_bdadjustmentamount ="0.00";
-    	 m_datcreditnotedate = EMPTY_DATE_STRING;
-    	 m_screditmemonumber = "";
-    	 m_bdcreditamt = "0.00";
-    	 m_datreturnsent = EMPTY_DATE_STRING;
-    	 m_sinvoiceonhold = "0";
+	 */
+	private void initEntryVariables(){
+		m_slid = "-1";
+		m_datinitiated = EMPTY_DATETIME_STRING;
+		m_linitiatedbyid = "0";
+		m_sinitiatedbyfullname = "";
+		m_sresolved = "0";
+		m_datresolved = EMPTY_DATETIME_STRING;
+		m_lresolvedbyid = "0";
+		m_sresolvedbyfullname = "";
+		m_sdescription = "";
+		m_scomments = "";
+		m_sresolutioncomments = "";
+		m_sworkorderid = "";
+		m_strimmedordernumber = "";
+		m_sNewRecord = "1";
+		m_screditnotexpected = "0";
+		m_sponumber = "0";
+		m_itobereturned = "0";
+		m_svendoracct = "";
+		m_ladjustedbatchnumber ="0";
+		m_ladjustedentrynumber ="0";
+		m_bdadjustmentamount ="0.00";
+		m_datcreditnotedate = EMPTY_DATE_STRING;
+		m_screditmemonumber = "";
+		m_bdcreditamt = "0.00";
+		m_datreturnsent = EMPTY_DATE_STRING;
+		m_sinvoiceonhold = "0";
 	}
 }

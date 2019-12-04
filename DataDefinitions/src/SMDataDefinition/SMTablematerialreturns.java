@@ -2,7 +2,7 @@ package SMDataDefinition;
 
 public class SMTablematerialreturns {
 	public static final String TableName = "materialreturns";
-	
+
 	public static final String lid = "lid";
 	public static final String datinitiated = "datinitiated";
 	public static final String linitiatedbyid = "linitiatedbyid";
@@ -30,7 +30,7 @@ public class SMTablematerialreturns {
 	public static final String bdcreditamt = "bdcreditamt"; //Actual Credit Amount
 	public static final String datreturnsent = "datreturnsent";
 	public static final String iinvoiceonhold = "iinvoiceonhold";
-	
+
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
 	public static final int sinitiatedbyfullnamelength = 128;
@@ -44,7 +44,7 @@ public class SMTablematerialreturns {
 	public static final int bdadjustmentamountlength = 19;
 	public static final int screditmemonumberlength = 24;
 	public static final int bdcreditamtlength = 19;
-	
+
 	public static int STATUS_CREDITNOTEXPECTED = 1;
 
 }

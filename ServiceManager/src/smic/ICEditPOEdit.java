@@ -19,6 +19,7 @@ import SMClasses.SMMaterialReturn;
 import SMClasses.SMOption;
 import smap.APVendor;
 import smcontrolpanel.SMCriticalDateEntry;
+import smcontrolpanel.SMEditMaterialReturnEdit;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
@@ -204,6 +205,39 @@ public class ICEditPOEdit  extends HttpServlet {
 						+ "&" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor()
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() 
 						+ "\">" + "Add new material return" + "</A>"	
+						
+						+ "&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
+								"?ObjectName=" + SMMaterialReturn.ParamObjectName +
+								"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() +
+								"&ResultClass=FinderResults" +
+								"&SearchingClass=smcontrolpanel.SMEditMaterialReturnEdit" +
+								"&ReturnField=" + SMMaterialReturn.Paramlid +
+								"&SearchField1=" + SMTablematerialreturns.sdescription +
+								"&SearchFieldAlias1=Description" +
+								"&SearchField2=" + SMTablematerialreturns.sinitiatedbyfullname +
+								"&SearchFieldAlias2=Initiated by" +
+								"&SearchField3=" + SMTablematerialreturns.iponumber +
+								"&SearchFieldAlias3=P.O. Number" +
+								"&SearchField4=" + SMTablematerialreturns.strimmedordernumber +
+								"&SearchFieldAlias4=Order Number" +
+								"&ResultListField1="  + SMTablematerialreturns.lid +
+								"&ResultHeading1=ID" +
+								"&ResultListField2="  + SMTablematerialreturns.iponumber +
+								"&ResultHeading2=P.O. Number" +
+								"&ResultListField3="  + SMTablematerialreturns.strimmedordernumber +
+								"&ResultHeading3=Order Number" +
+								"&ResultListField4="  + SMTablematerialreturns.sdescription +
+								"&ResultHeading4=Description" +
+								"&ResultListField5="  + SMTablematerialreturns.datinitiated +
+								"&ResultHeading5=Initiated" +
+								"&ResultListField6="  + SMTablematerialreturns.sinitiatedbyfullname +
+								"&ResultHeading6=Initiated%20By" +
+								"&ResultListField7="  + SMTablematerialreturns.iresolved +
+								"&ResultHeading7=Resolved?" +
+								"&ParameterString=*" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor() +
+								//TODO wont put PO Number in
+								"*" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID() +
+								"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>"
 						+ "<BR>"
 			);
 			

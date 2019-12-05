@@ -236,7 +236,7 @@ public class ICEditPOEdit  extends HttpServlet {
 								"&ResultHeading7=Resolved?" +
 								"&ParameterString=*" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor() +
 								//TODO wont put PO Number in
-								"*" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID() +
+								"&ParameterString=*" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID() +
 								"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>"
 						+ "<BR>"
 			);

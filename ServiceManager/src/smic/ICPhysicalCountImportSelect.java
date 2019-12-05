@@ -167,7 +167,7 @@ public class ICPhysicalCountImportSelect extends HttpServlet {
 	    //Description:
 	    out.println("  <TR>" + "\n");
 	    out.println("    <TD ALIGN=RIGHT>");
-	    out.println("Count description:");
+	    out.println("Count description:<FONT COLOR=RED><B>*Required*</B></FONT>");
 	    out.println("</TD>" + "\n");
 	    out.println("  <TD>");
 	    

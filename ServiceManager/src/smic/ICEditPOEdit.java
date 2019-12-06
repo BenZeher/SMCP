@@ -19,7 +19,6 @@ import SMClasses.SMMaterialReturn;
 import SMClasses.SMOption;
 import smap.APVendor;
 import smcontrolpanel.SMCriticalDateEntry;
-import smcontrolpanel.SMEditMaterialReturnEdit;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
@@ -234,9 +233,8 @@ public class ICEditPOEdit  extends HttpServlet {
 						"&ResultHeading6=Initiated%20By" +
 						"&ResultListField7="  + SMTablematerialreturns.iresolved +
 						"&ResultHeading7=Resolved?" +
-						"&ParameterString=*" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor() +
-						//TODO wont put PO Number in
-						"&ParameterString=*" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID() +
+						/*"&ParameterString=*" + SMMaterialReturn.Paramsvendoracct + "=" + entry.getsvendor() +
+						"&ParameterString=*" + SMMaterialReturn.Paramiponumber + "=" + entry.getsID() +*/
 						"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>"
 						+ "<BR>"
 					);

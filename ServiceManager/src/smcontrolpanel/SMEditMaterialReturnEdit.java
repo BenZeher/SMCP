@@ -71,6 +71,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//If there is a vendor in the request, then that might mean we are coming back from a vendor 'find', and we'll put that in the entry:
 		if (ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0){
 			entry.setsvendoracct(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request));
+			entry.setsponumber(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramiponumber, request));
 		}
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		smedit.printHeaderTable();

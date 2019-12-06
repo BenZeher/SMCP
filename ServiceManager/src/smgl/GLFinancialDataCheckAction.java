@@ -207,6 +207,107 @@ public class GLFinancialDataCheckAction extends HttpServlet{
 			}
     	}
     	
+    	//If the user chose to check the SMCP transactions against the ACCPAC transactions, branch here:
+    	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.CHECK_SMCPTRANSACTIONS_AGAINST_ACCPACTRANSACTIONS) == 0){
+        	//If the user chose to check against ACCPAC, get an ACCPAC connection here:
+        	Connection cnACCPAC = null;
+            String sACCPACDatabaseURL = "";
+            String sACCPACDatabasename = "";
+            String sACCPACDatabaseuser = "";
+            String sACCPACDatabasepw = "";
+            int iACCPACDatabaseType = 0;
+            
+            String SQL = "SELECT * FROM " + SMTablegloptions.TableName;
+            try {
+    			ResultSet rsOptions = clsDatabaseFunctions.openResultSet(
+    					SQL, 
+    					getServletContext(), 
+    					sDBID, 
+    					"MySQL", 
+    					SMUtilities.getFullClassName(this.toString()) + ".doGet - user: " + sUserID
+    					+ " - "
+    					+ sUserFullName
+    					);
+    			if (rsOptions.first()){
+    			    sACCPACDatabaseURL = rsOptions.getString(SMTablegloptions.saccpacdatabaseurl);
+    			    sACCPACDatabasename = rsOptions.getString(SMTablegloptions.saccpacdatabasename);
+    			    sACCPACDatabaseuser = rsOptions.getString(SMTablegloptions.saccpacdatabaseuser);
+    			    sACCPACDatabasepw = rsOptions.getString(SMTablegloptions.saccpacdatabaseuserpw);
+    			    iACCPACDatabaseType = rsOptions.getInt(SMTablegloptions.iaccpacdatabasetype);
+    			}else{
+    				rsOptions.close();
+    				ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571429615]");
+    				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to open GL Options table - function cannot run.");
+    				smaction.redirectAction(
+    						"", 
+    						"", 
+    			    		""
+    					);
+    					return;    			}
+    		} catch (SQLException e) {
+    			//Redirect back to calling class:
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571429616]");
+				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to open GL Options table - function cannot run.");
+				smaction.redirectAction(
+						"", 
+						"", 
+			    		""
+					);
+					return;  
+    		}
+            
+    		try {
+    			cnACCPAC = getACCPACConnection(
+    					iACCPACDatabaseType,
+    					sACCPACDatabaseURL,
+    					sACCPACDatabasename,
+    					sACCPACDatabaseuser,
+    					sACCPACDatabasepw);
+    		} catch (Exception e) {
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571429617]");
+				smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, "Unable to get ACCPAC connection - " + e.getMessage());
+				smaction.redirectAction(
+					"", 
+					"", 
+		    		""
+				);
+				return;
+    		}
+    	try {
+        		sResults = dc.checkTransactionsAgainstACCPACTransactions(
+        			sGLAccount, 
+        			sStartingFiscalYear, 
+        			conn, 
+        			cnACCPAC, 
+        			getServletContext(), 
+        			sDBID
+        		);
+    		} catch (Exception e) {
+    			if (cnACCPAC != null){
+    				try {
+    					cnACCPAC.close();
+    				} catch (SQLException e1) {
+    					//Don't need to do anything here....
+    				}
+    			}
+    			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1571429818]");
+    			smaction.getCurrentSession().setAttribute(GLFinancialDataCheckSelect.SESSION_WARNING_OBJECT, e.getMessage());
+    			smaction.redirectAction(
+    					"", 
+    					"", 
+    		    		""
+    				);
+    				return;
+    		}
+			if (cnACCPAC != null){
+				try {
+					cnACCPAC.close();
+				} catch (SQLException e1) {
+					//Don't need to do anything here....
+				}
+			}
+    	}
+    	
     	//If the user chose to UPDATE the fiscal sets from the transaction lines:
     	if (sSelectedProcess.compareToIgnoreCase(GLFinancialDataCheckSelect.PARAM_UPDATE_FISCALSET_DATA) == 0){
         	try {

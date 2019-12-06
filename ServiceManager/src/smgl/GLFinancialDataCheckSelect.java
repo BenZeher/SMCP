@@ -39,6 +39,7 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 	public static final String CHECK_TRANSACTIONLINES_AGAINST_FISCAL_SETS = "TRANSACTIONSAGAINSTFISCALSETS";
 	public static final String CHECK_FISCALSETS_AGAINST_FINANCIALSTATEMENTDATA = "FISCALSETSAGAINSTFINANCIALDATA";
 	public static final String CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS = "ACCPACFISCALSETSAGAINSTSMCPFISCALSETS";
+	public static final String CHECK_SMCPTRANSACTIONS_AGAINST_ACCPACTRANSACTIONS = "CHECKTRANSACTIONSAGAINSTACCPAC";
 	
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -219,6 +220,17 @@ public class GLFinancialDataCheckSelect extends HttpServlet {
 			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
 			+ "\" VALUE='" + CHECK_SMCPFISCALSETS_AGAINST_ACCPACFISCALSETS + "'>"
 			+ "&nbsp;" + "Check that the SMCP fiscal set data matches the ACCPAC fiscal set data"
+			+ "</LABEL>"
+			+ "</TD>" + "\n"
+		);
+		out.println("  </TR>" + "\n");
+		
+		out.println("  <TR>" + "\n");
+		out.println("    <TD>"
+			+ "<LABEL>"
+			+ "<INPUT TYPE=\"RADIO\" NAME=\"" + RADIO_OPTIONS_GROUP 
+			+ "\" VALUE='" + CHECK_SMCPTRANSACTIONS_AGAINST_ACCPACTRANSACTIONS + "'>"
+			+ "&nbsp;" + "Check that the SMCP transaction lines match the ACCPAC transaction lines"
 			+ "</LABEL>"
 			+ "</TD>" + "\n"
 		);

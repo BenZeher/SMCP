@@ -125,7 +125,49 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		) throws Exception{
 		
 		String sResult = "";
+		//Group the ACCPAC transactions by account:
+		ArrayList<BigDecimal>arrACCPACLineSubtotals = new ArrayList<BigDecimal>(0);
+		ArrayList<String>arrACCPACAcctIDs = new ArrayList<String>(0);
+		ArrayList<Integer>arrACCPACFiscalYears = new ArrayList<Integer>(0);
+		ArrayList<Integer>arrACCPACFiscalPeriods = new ArrayList<Integer>(0);
 		
+		ArrayList<BigDecimal>arrSMCPLineSubtotals = new ArrayList<BigDecimal>(0);
+		ArrayList<String>arrSMCPAcctIDs = new ArrayList<String>(0);
+		ArrayList<Integer>arrSMCPFiscalYears = new ArrayList<Integer>(0);
+		ArrayList<Integer>arrSMCPFiscalPeriods = new ArrayList<Integer>(0);
+		
+		long lCounter = 0;
+		
+		//Load the ACCPAC array:
+		String sACCPACSQL = "SELECT"
+			+ " SUM(TRANSAMT) AS ACCTTOTAL"
+			+ ", ACCTID"
+			+ ", FISCALYR"
+			+ ", FISCALPERD"
+			+ " FROM GLPOST"
+			+ " WHERE ("
+				+ "(ACCTID = '" + sAccount + "')"
+				+ " AND (FISCALYR >= " + sStartingFiscalYear + ")"
+			+ ")"
+			+ " GROUP BY ACCTID, FISCALYR, FISCALPERD"
+		;
+		try {
+			Statement stmtACCPAC = cnACCPAC.createStatement();
+			ResultSet rsACCPAC = stmtACCPAC.executeQuery(sACCPACSQL);
+			
+			while (rsACCPAC.next()){
+				arrACCPACLineSubtotals.add(rsACCPAC.getBigDecimal("ACCTTOTAL"));
+				arrSMCPAcctIDs.add(rsACCPAC.getString("ACCTID").trim());
+				arrSMCPFiscalYears.add(rsACCPAC.getInt("FISCALYR"));
+				arrACCPACFiscalPeriods.add(rsACCPAC.getInt("FISCALYR"));
+				lCounter++;
+			}
+			rsACCPAC.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20192941537413] " + "Error reading ACCPAC records with SQL: '" + sACCPACSQL + "' - " + e.getMessage() + ".");
+		}
+		
+		sResult = arrACCPACLineSubtotals.size() + " records read, counter says: " + lCounter + "..., SQL = '" + sACCPACSQL + "'";
 		
 		return sResult;
 	}
@@ -202,6 +244,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		return sStatusMessages;
 	}
+
 	public String checkFiscalSetsAgainstTransactions(
 			String sAccount,
 			String sStartingFiscalYear,

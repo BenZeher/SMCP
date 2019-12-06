@@ -279,6 +279,7 @@ public class ARTerms extends java.lang.Object{
 						+ ")"
 						;
 
+				System.out.println(SQL);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
@@ -302,6 +303,21 @@ public class ARTerms extends java.lang.Object{
 			m_sErrorMessageArray.add("Invalid characters in terms code");
 			return false;
 		}
+		if(m_dDiscountPercent.compareToIgnoreCase("") == 0) {
+   			m_dDiscountPercent = "0.00";
+   		}
+		if(m_iDiscountNumberOfDays.compareToIgnoreCase("") == 0) {
+    		m_iDiscountNumberOfDays = "0";
+   		}
+		if(m_iDiscountDayOfTheMonth.compareToIgnoreCase("") == 0) {
+			m_iDiscountDayOfTheMonth = "0";
+   		}
+		if(m_iDueNumberOfDays.compareToIgnoreCase("") == 0) {
+    		m_iDueNumberOfDays = "0";
+   		}
+		if(m_iDueDayOfTheMonth.compareToIgnoreCase("") == 0) {
+    		m_iDueDayOfTheMonth = "0";
+   		}
 		return true; 
 		
 	}
@@ -328,6 +344,9 @@ public class ARTerms extends java.lang.Object{
     		m_sErrorMessageArray.add("Invalid last maintained date: " + m_datLastMaintained); 
         		bEntriesAreValid = false;
     	}
+    	if(m_dDiscountPercent.compareToIgnoreCase("") == 0) {
+   			m_dDiscountPercent = "0.00";
+   		}
     	if(!clsValidateFormFields.IsValidBigDecimal(m_dDiscountPercent, 2)){
     		m_sErrorMessageArray.add("Invalid discount percent: " + m_dDiscountPercent); 
     		bEntriesAreValid = false;
@@ -337,24 +356,40 @@ public class ARTerms extends java.lang.Object{
 	   		bd = bd.setScale(2, BigDecimal.ROUND_HALF_UP);
 	   		m_dDiscountPercent = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bd);
     	}
+    	
+    	if(m_iDiscountNumberOfDays.compareToIgnoreCase("") == 0) {
+    		m_iDiscountNumberOfDays = "0";
+   		}
     	if(!clsValidateFormFields.IsValidInteger(m_iDiscountNumberOfDays)){
     		m_sErrorMessageArray.add("Invalid discount number of days: " + m_iDiscountNumberOfDays); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDiscountNumberOfDays = m_iDiscountNumberOfDays.replace(",", "");
     	}
+    	
+    	if(m_iDiscountDayOfTheMonth.compareToIgnoreCase("") == 0) {
+			m_iDiscountDayOfTheMonth = "0";
+   		}
     	if(!clsValidateFormFields.IsValidInteger(m_iDiscountDayOfTheMonth)){
     		m_sErrorMessageArray.add("Invalid discount day of the month: " + m_iDiscountDayOfTheMonth); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDiscountDayOfTheMonth = m_iDiscountDayOfTheMonth.replace(",", "");
     	}
+    	
+    	if(m_iDueNumberOfDays.compareToIgnoreCase("") == 0) {
+    		m_iDueNumberOfDays = "0";
+   		}
     	if(!clsValidateFormFields.IsValidInteger(m_iDueNumberOfDays)){
     		m_sErrorMessageArray.add("Invalid due number of days: " + m_iDueNumberOfDays); 
     		bEntriesAreValid = false;
     	}else{
     		m_iDueNumberOfDays = m_iDueNumberOfDays.replace(",", "");
     	}
+    	
+    	if(m_iDueDayOfTheMonth.compareToIgnoreCase("") == 0) {
+    		m_iDueDayOfTheMonth = "0";
+   		}
     	if(!clsValidateFormFields.IsValidInteger(m_iDueDayOfTheMonth)){
     		m_sErrorMessageArray.add("Invalid due day of the month: " + m_iDueDayOfTheMonth); 
     		bEntriesAreValid = false;
@@ -365,6 +400,7 @@ public class ARTerms extends java.lang.Object{
         		bEntriesAreValid = false;
     		}
     	}
+    	
     	return bEntriesAreValid;
 	}
 	public String getQueryString(){

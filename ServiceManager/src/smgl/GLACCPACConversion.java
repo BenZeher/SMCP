@@ -695,7 +695,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		try {
 			stmtCommit.execute("COMMIT");
 		} catch (Exception e) {
-			throw new Exception("Error [20192971432371] " + "commiting GL Fiscal Set Inserts - " + e.getMessage());
+			throw new Exception("Error [20192971432371] " + "committing GL Fiscal Set Inserts - " + e.getMessage());
 		}
 
 		sStatus +=  "<BR>Inserted " + Integer.toString(iCounter) + " GL fiscal set records into " + sTablename + ".<BR>";
@@ -810,13 +810,14 @@ public class GLACCPACConversion  extends java.lang.Object{
 			throw new Exception("Error [1523042093] - reading ACCPAC posted GL transactions - " + e1.getMessage());
 		}
 		long lCounter = 0L;
-		long lInsertCounter = 0;
+		long lInsertCounter = 0L;
 		//long lStartingTime = System.currentTimeMillis();
 		int iNumberOfQueriesPerInsert = 100;
 		String SQLInsert = "";
 		//System.out.println("[1553458952] - going into while loop.");
 		
 		//We turn this off to get faster inserts:
+		/*
 		Statement stmtCommit;
 		try {
 			stmtCommit = cnSMCP.createStatement();
@@ -824,7 +825,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 		} catch (Exception e1) {
 			throw new Exception("Error [20192971431453] " + "setting AUTOCOMMIT to ZERO to insert gltransactionlines - " + e1.getMessage());
 		}
-		
+		*/
 		while (rsPostedTransactions.next()){
 			//The batch, entry, and line number combination must be unique - so we need to
 			// make sure that each record gets a unique combination, just in case some
@@ -905,16 +906,28 @@ public class GLACCPACConversion  extends java.lang.Object{
 		}
 		rsPostedTransactions.close();
 		
+		//Now we insert any of the remaining transaction records from ACCPAC:
+		try {
+			Statement stmtInsert = cnSMCP.createStatement();
+			stmtInsert.execute(SQLInsert);
+			lCounter++;
+		} catch (Exception e) {
+			rsPostedTransactions.close();
+			throw new Exception("Error [1523043993] - could not insert remaining transactions into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+		}
+		
 		//System.out.println("[2019297133028] " + "Inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
+		/*
 		try {
 			stmtCommit.execute("COMMIT");
 		} catch (Exception e) {
 			throw new Exception("Error [20192971432321] " + "committing GL transaction Inserts - " + e.getMessage());
 		}
+		*/
 		//System.out.println("[2019297133029] " + "Including COMMIT, inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
 
 		sStatus +=  "<BR>ACCPAC has " + Long.toString(lNumberOfACCPACGLTransactions) 
-			+ " posted GL transactions, added " + Long.toString(lCounter) + " GL posted transactions to " + sTablename + "<BR>";
+			+ " posted GL transactions, all added to " + sTablename + " in SMCP.<BR>";
 		
 		return sStatus;
 	}

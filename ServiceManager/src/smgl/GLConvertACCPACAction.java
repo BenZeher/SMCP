@@ -179,7 +179,11 @@ public class GLConvertACCPACAction extends HttpServlet {
 		} catch (NumberFormatException e2) {
     		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, "Invalid function value '" + sFunctionValue + "'.");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080729]");
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080730]");
+    		try {
+				cnACCPAC.close();
+			} catch (SQLException e) {
+				//Don't trip on this
+			}
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -206,7 +210,11 @@ public class GLConvertACCPACAction extends HttpServlet {
 		} catch (Exception e2) {
     		CurrentSession.setAttribute(SESSION_ATTRIBUTE_WARNING, e2.getMessage() + ".");
     		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080731]");
-    		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080732]");
+       		try {
+				cnACCPAC.close();
+			} catch (SQLException e) {
+				//Don't trip on this
+			}
     		response.sendRedirect(
     				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     				+ GLConvertACCPAC.RADIO_FIELD_NAME + "=" + GLConvertACCPAC.ROLLBACK_OPTION_VALUE
@@ -214,7 +222,12 @@ public class GLConvertACCPACAction extends HttpServlet {
     		);			
         	return;
 		}
-
+    	clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080733]");
+   		try {
+			cnACCPAC.close();
+		} catch (SQLException e) {
+			//Don't trip on this
+		}
     	sProcessingResult += "<BR><I> - Time elapsed " + Long.toString((System.currentTimeMillis() - lStartingTime)/1000L) 
     		+ " seconds.</I><BR>";
     	
@@ -225,8 +238,6 @@ public class GLConvertACCPACAction extends HttpServlet {
     	}else{
     		sNextFunctionValue = Integer.toString(iFunctionValue + 1);
     	}
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnSMCP, "[1547080733]");
-		clsDatabaseFunctions.freeConnection(getServletContext(), cnACCPAC, "[1547080734]");
 		CurrentSession.setAttribute(SESSION_ATTRIBUTE_RESULT, sProcessingResult);
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"

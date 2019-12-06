@@ -115,6 +115,21 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		return sStatusMessages += "<BR><BR><B>All selected financial statement data is in sync with the fiscal sets.</B><BR>";
 	}
 
+	public String checkTransactionsAgainstACCPACTransactions(
+		String sAccount,
+		String sStartingFiscalYear,
+		Connection conn,
+		Connection cnACCPAC,
+		ServletContext context,
+		String sDBID
+		) throws Exception{
+		
+		String sResult = "";
+		
+		
+		return sResult;
+	}
+	
 	public String checkFiscalSetsAgainstACCPACFiscalSets(
 		String sAccount,
 		String sStartingFiscalYear,
@@ -181,7 +196,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [2019287830270] " + "in rsFiscalYears loop with SQL: '" + SQL + "' - " + e.getMessage());
 		}
 
-		sStatusMessages += checkAgainstACCPAC(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC, context, sDBID);
+		sStatusMessages += checkAgainstACCPACFiscalSets(arrFiscalSets, sStartingFiscalYear, sAccount, conn, cnACCPAC, context, sDBID);
 		if (sErrorMessages.compareToIgnoreCase("") != 0){
 			throw new Exception(sErrorMessages);
 		}
@@ -370,7 +385,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 
 		return sResult;
 	}
-	private String checkAgainstACCPAC(
+	private String checkAgainstACCPACFiscalSets(
 		ArrayList<clsFiscalSet>arrFiscalSets, 
 		String sStartingFiscalYear, 
 		String sGLAccount,

@@ -12,7 +12,8 @@ import javax.servlet.http.HttpSession;
 import smar.ARCustomer;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMTaxCertificate;
-import SMDataDefinition.SMTabletaxcertificates;;
+import SMDataDefinition.SMTabletaxcertificates;
+import ServletUtilities.clsDateAndTimeConversions;;
 
 public class SMEditTaxCertificatesEdit  extends HttpServlet {
 
@@ -113,15 +114,20 @@ public class SMEditTaxCertificatesEdit  extends HttpServlet {
 				}
 		
 		//Created by:
-				s += "<TR>\n<TD ALIGN=RIGHT><B>Created by<B>:</TD>\n"
-					+ "<TD>\n" 
-					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramdatcreated + "\" VALUE=\"" + entry.getdatcreated() + "\">"
-					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramlcreatedbyuserid + "\" VALUE=\"" + entry.getlcreatedbyuserid() + "\">"
-					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramscreatedbyfullname + "\" VALUE=\"" + entry.getscreatedbyfullname() + "\">"
-					+ "</TD>\n"
-					+ "</TR>\n"
-				;	
-
+		String sCreatedBy = "N/A";
+		
+		s	+= "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramdatcreated + "\" VALUE=\"" + entry.getdatcreated() + "\">"
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramlcreatedbyuserid + "\" VALUE=\"" + entry.getlcreatedbyuserid() + "\">"
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTaxCertificate.Paramscreatedbyfullname + "\" VALUE=\"" + entry.getscreatedbyfullname() + "\">";
+		//If it's not a new entry
+		if(entry.getslid().compareToIgnoreCase("-1") != 0){
+			sCreatedBy = entry.getscreatedbyfullname();
+		}
+		s += "<TR>\n<TD ALIGN=RIGHT><B>Created by<B>:</TD>\n"
+			+ "<TD>\n" + sCreatedBy 
+			+ "</TD>\n"
+			+ "</TR>\n"
+			;	
 		//Customer Number:
 				s += "<TR>\n<TD ALIGN=RIGHT><B>" + "Customer Number<FONT COLOR=RED>*</FONT>:"  + " </B></TD>\n";
 				s += "<TD ALIGN=LEFT><INPUT TYPE=TEXT NAME=\"" + SMTaxCertificate.Paramscustomernumber + "\""

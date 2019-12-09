@@ -136,7 +136,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		ArrayList<Integer>arrSMCPFiscalYears = new ArrayList<Integer>(0);
 		ArrayList<Integer>arrSMCPFiscalPeriods = new ArrayList<Integer>(0);
 		
-		long lCounter = 0;
+		long lACCPACCounter = 0;
 		
 		//Load the ACCPAC array:
 		String sACCPACSQL = "SELECT"
@@ -146,9 +146,12 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			+ ", FISCALPERD"
 			+ " FROM GLPOST"
 			+ " WHERE ("
-				+ "(ACCTID = '" + sAccount + "')"
-				+ " AND (FISCALYR >= " + sStartingFiscalYear + ")"
-			+ ")"
+			+ " (FISCALYR >= " + sStartingFiscalYear + ")"
+		;
+		if(sAccount.compareToIgnoreCase("") != 0){
+			sACCPACSQL += " AND (ACCTID = '" + sAccount + "')";
+		}
+		sACCPACSQL += ")"
 			+ " GROUP BY ACCTID, FISCALYR, FISCALPERD"
 		;
 		try {
@@ -157,17 +160,52 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			
 			while (rsACCPAC.next()){
 				arrACCPACLineSubtotals.add(rsACCPAC.getBigDecimal("ACCTTOTAL"));
-				arrSMCPAcctIDs.add(rsACCPAC.getString("ACCTID").trim());
-				arrSMCPFiscalYears.add(rsACCPAC.getInt("FISCALYR"));
-				arrACCPACFiscalPeriods.add(rsACCPAC.getInt("FISCALYR"));
-				lCounter++;
+				arrACCPACAcctIDs.add(rsACCPAC.getString("ACCTID").trim());
+				arrACCPACFiscalYears.add(rsACCPAC.getInt("FISCALYR"));
+				arrACCPACFiscalPeriods.add(rsACCPAC.getInt("FISCALPERD"));
+				lACCPACCounter++;
 			}
 			rsACCPAC.close();
 		} catch (Exception e) {
 			throw new Exception("Error [20192941537413] " + "Error reading ACCPAC records with SQL: '" + sACCPACSQL + "' - " + e.getMessage() + ".");
 		}
 		
-		sResult = arrACCPACLineSubtotals.size() + " records read, counter says: " + lCounter + "..., SQL = '" + sACCPACSQL + "'";
+		//Now read the SMCP transactions:
+		String SQL = "SELECT"
+			+ " SUM(" + SMTablegltransactionlines.bdamount + ") AS ACCTTOTAL"
+			+ ", " + SMTablegltransactionlines.sacctid
+			+ ", " + SMTablegltransactionlines.ifiscalyear
+			+ ", " + SMTablegltransactionlines.ifiscalperiod
+			+ " FROM " + SMTablegltransactionlines.TableName
+			+ " WHERE ("
+			+ "(" + SMTablegltransactionlines.ifiscalyear + " >= " + sStartingFiscalYear + ")"
+		;
+		if (sAccount.compareToIgnoreCase("") != 0){
+			SQL += " AND (" + SMTablegltransactionlines.sacctid + " = '" + sAccount + "')";
+		}
+		SQL += ")"
+			+ " GROUP BY " + SMTablegltransactionlines.sacctid 
+			+ ", " + SMTablegltransactionlines.ifiscalyear
+			+ ", " + SMTablegltransactionlines.ifiscalperiod
+		;
+		long lSMCPCounter = 0L;
+		try {
+			ResultSet rsSMCPTransactions = clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsSMCPTransactions.next()){
+				arrSMCPLineSubtotals.add(rsSMCPTransactions.getBigDecimal("ACCTTOTAL"));
+				arrSMCPAcctIDs.add(rsSMCPTransactions.getString(SMTablegltransactionlines.sacctid).trim());
+				arrSMCPFiscalYears.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalyear));
+				arrSMCPFiscalPeriods.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalperiod));
+				lSMCPCounter++;
+			}
+			rsSMCPTransactions.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20192941538413] " + "Error reading SMCP records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+			
+		sResult = arrACCPACLineSubtotals.size() + " ACCPAC records read, counter says: " + lACCPACCounter
+			+ ", " + arrSMCPLineSubtotals.size() + " SMCP records read, counter says: " + lSMCPCounter + "."
+		;
 		
 		return sResult;
 	}

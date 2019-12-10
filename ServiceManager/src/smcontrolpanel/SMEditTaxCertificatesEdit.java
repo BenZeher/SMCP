@@ -13,7 +13,6 @@ import smar.ARCustomer;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMTaxCertificate;
 import SMDataDefinition.SMTabletaxcertificates;
-import ServletUtilities.clsDateAndTimeConversions;;
 
 public class SMEditTaxCertificatesEdit  extends HttpServlet {
 

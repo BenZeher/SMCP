@@ -137,8 +137,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		ArrayList<Integer>arrSMCPFiscalPeriods = new ArrayList<Integer>(0);
 		ArrayList<Boolean>arrSMCPAlreadyChecked = new ArrayList<Boolean>(0);
 		
-		long lACCPACCounter = 0;
-		
 		//Load the ACCPAC array:
 		String sACCPACSQL = "SELECT"
 			+ " SUM(TRANSAMT) AS ACCTTOTAL"
@@ -165,7 +163,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				arrACCPACAcctIDs.add(rsACCPAC.getString("ACCTID").trim());
 				arrACCPACFiscalYears.add(rsACCPAC.getInt("FISCALYR"));
 				arrACCPACFiscalPeriods.add(rsACCPAC.getInt("FISCALPERD"));
-				lACCPACCounter++;
 			}
 			rsACCPAC.close();
 		} catch (Exception e) {
@@ -190,7 +187,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			+ ", " + SMTablegltransactionlines.ifiscalyear
 			+ ", " + SMTablegltransactionlines.ifiscalperiod
 		;
-		long lSMCPCounter = 0L;
 		try {
 			ResultSet rsSMCPTransactions = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsSMCPTransactions.next()){
@@ -199,7 +195,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				arrSMCPFiscalYears.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalyear));
 				arrSMCPFiscalPeriods.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalperiod));
 				arrSMCPAlreadyChecked.add(false);
-				lSMCPCounter++;
 			}
 			rsSMCPTransactions.close();
 		} catch (Exception e) {

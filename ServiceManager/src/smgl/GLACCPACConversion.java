@@ -809,7 +809,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 		} catch (Exception e1) {
 			throw new Exception("Error [1523042093] - reading ACCPAC posted GL transactions - " + e1.getMessage());
 		}
-		long lCounter = 0L;
 		long lInsertCounter = 0L;
 		//long lStartingTime = System.currentTimeMillis();
 		int iNumberOfQueriesPerInsert = 100;
@@ -886,7 +885,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 				try {
 					Statement stmtInsert = cnSMCP.createStatement();
 					stmtInsert.execute(SQLInsert);
-					lCounter++;
 				} catch (Exception e) {
 					rsPostedTransactions.close();
 					try {
@@ -905,7 +903,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 //				lStartingTime = System.currentTimeMillis();
 //			}
 			
-			lCounter++;
 		}
 		rsPostedTransactions.close();
 		
@@ -913,7 +910,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 		try {
 			Statement stmtInsert = cnSMCP.createStatement();
 			stmtInsert.execute(SQLInsert);
-			lCounter++;
 		} catch (Exception e) {
 			rsPostedTransactions.close();
 			try {

@@ -135,6 +135,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		ArrayList<String>arrSMCPAcctIDs = new ArrayList<String>(0);
 		ArrayList<Integer>arrSMCPFiscalYears = new ArrayList<Integer>(0);
 		ArrayList<Integer>arrSMCPFiscalPeriods = new ArrayList<Integer>(0);
+		ArrayList<Boolean>arrSMCPAlreadyChecked = new ArrayList<Boolean>(0);
 		
 		long lACCPACCounter = 0;
 		
@@ -153,6 +154,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}
 		sACCPACSQL += ")"
 			+ " GROUP BY ACCTID, FISCALYR, FISCALPERD"
+			+ " ORDER BY ACCTID"
 		;
 		try {
 			Statement stmtACCPAC = cnACCPAC.createStatement();
@@ -196,6 +198,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				arrSMCPAcctIDs.add(rsSMCPTransactions.getString(SMTablegltransactionlines.sacctid).trim());
 				arrSMCPFiscalYears.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalyear));
 				arrSMCPFiscalPeriods.add(rsSMCPTransactions.getInt(SMTablegltransactionlines.ifiscalperiod));
+				arrSMCPAlreadyChecked.add(false);
 				lSMCPCounter++;
 			}
 			rsSMCPTransactions.close();
@@ -203,11 +206,84 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			throw new Exception("Error [20192941538413] " + "Error reading SMCP records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
 		}
 			
-		sResult = arrACCPACLineSubtotals.size() + " ACCPAC records read, counter says: " + lACCPACCounter
+		String sLinkBase = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLCheckTransactionLinesAgainstACCPAC" + "?" 
+			+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
+		
+		//Now compare the two sets:
+		//First, check against the ACCPAC totals:
+		for (int iACCPACIndex = 0; iACCPACIndex < arrACCPACLineSubtotals.size(); iACCPACIndex++){
+			BigDecimal bdSMCPAcctTotal = getSMCPTotalByValues(
+				arrSMCPAcctIDs, 
+				arrSMCPFiscalYears, 
+				arrSMCPFiscalPeriods, 
+				arrSMCPLineSubtotals, 
+				arrSMCPAlreadyChecked,
+				arrACCPACAcctIDs.get(iACCPACIndex), 
+				arrACCPACFiscalYears.get(iACCPACIndex), 
+				arrACCPACFiscalPeriods.get(iACCPACIndex)
+			);
+			
+			if (bdSMCPAcctTotal.compareTo(arrACCPACLineSubtotals.get(iACCPACIndex)) != 0){
+				sResult += "<BR>Account '" 
+					+  sLinkBase 
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + Integer.toString(arrACCPACFiscalPeriods.get(iACCPACIndex)) 
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(arrACCPACFiscalYears.get(iACCPACIndex))
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  arrACCPACAcctIDs.get(iACCPACIndex)
+					+ "\">" + arrACCPACAcctIDs.get(iACCPACIndex) + "</A>" 
+					+ " fiscal year " + Integer.toString(arrACCPACFiscalYears.get(iACCPACIndex))
+					+ ", period " + Integer.toString(arrACCPACFiscalPeriods.get(iACCPACIndex)) + ", ACCPAC has " + arrACCPACLineSubtotals.get(iACCPACIndex)
+					+ ", SMCP has " + bdSMCPAcctTotal + ", difference = " + (bdSMCPAcctTotal.subtract(arrSMCPLineSubtotals.get(iACCPACIndex)))
+				;
+			}
+		}
+		
+		//Now go through the unchecked SMCP items:
+		for (int iSMCPIndex = 0; iSMCPIndex < arrSMCPAlreadyChecked.size(); iSMCPIndex++){
+			if (arrSMCPAlreadyChecked.get(iSMCPIndex) == false){
+				//Add it to the list of mismatches:
+				sResult += "<BR>Account '" 
+						+  sLinkBase 
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + Integer.toString(arrSMCPFiscalPeriods.get(iSMCPIndex)) 
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(arrSMCPFiscalYears.get(iSMCPIndex))
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  arrSMCPAcctIDs.get(iSMCPIndex)
+						+ "\">" + arrSMCPAcctIDs.get(iSMCPIndex) + "</A>" 
+					+ " fiscal year " + Integer.toString(arrSMCPFiscalYears.get(iSMCPIndex))
+					+ ", period " + Integer.toString(arrSMCPFiscalPeriods.get(iSMCPIndex)) + ", SMCP has " + arrSMCPLineSubtotals.get(iSMCPIndex)
+					+ ", ACCPAC has 0.00, difference = " + arrSMCPLineSubtotals.get(iSMCPIndex)
+			;
+			}
+		}
+		
+		sResult += "<BR><BR>" + arrACCPACLineSubtotals.size() + " ACCPAC records read, counter says: " + lACCPACCounter
 			+ ", " + arrSMCPLineSubtotals.size() + " SMCP records read, counter says: " + lSMCPCounter + "."
 		;
 		
 		return sResult;
+	}
+	
+	private BigDecimal getSMCPTotalByValues(
+		ArrayList<String>arrAcctList,
+		ArrayList<Integer>arrFiscalYears,
+		ArrayList<Integer>arrFiscalPeriods,
+		ArrayList<BigDecimal>arrSubtotals,
+		ArrayList<Boolean>arrSMCPAlreadyChecked,
+		String sAcctid, 
+		int iFiscalYear, 
+		int iFiscalPeriod) throws Exception{
+		
+		BigDecimal bdTotals = new BigDecimal("0.00");
+		
+		for(int i = 0; i < arrAcctList.size(); i++){
+			if (
+				(arrAcctList.get(i).compareToIgnoreCase(sAcctid) == 0)
+				&& (arrFiscalYears.get(i) == iFiscalYear)
+				&& (arrFiscalPeriods.get(i) == iFiscalPeriod)
+			){
+				arrSMCPAlreadyChecked.set(i, true);
+				return arrSubtotals.get(i);
+			}
+		}
+		return bdTotals;
 	}
 	
 	public String checkFiscalSetsAgainstACCPACFiscalSets(

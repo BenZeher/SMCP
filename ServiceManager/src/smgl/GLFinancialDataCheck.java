@@ -262,8 +262,8 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			}
 		}
 		
-		sResult += "<BR><BR>" + arrACCPACLineSubtotals.size() + " ACCPAC records read, counter says: " + lACCPACCounter
-			+ ", " + arrSMCPLineSubtotals.size() + " SMCP records read, counter says: " + lSMCPCounter + "."
+		sResult += "<BR><BR>" + arrACCPACLineSubtotals.size() + " ACCPAC records read, "
+			+ ", " + arrSMCPLineSubtotals.size() + " SMCP records read."
 		;
 		
 		return sResult;

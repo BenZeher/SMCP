@@ -360,15 +360,9 @@ public class GLFiscalYear extends java.lang.Object{
 			throw new Exception("Error [1530825054] loading fiscal year '" + m_sifiscalyear + "' using SQL: " + SQL + " - " + ex.getMessage());
 		}
 	}
-    public void save(ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
-		
-    	String currentDateTime = new SimpleDateFormat(clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY).format(new Date(System.currentTimeMillis()));
-    	//Set the user ID and full name first:
-    	set_slasteditedbyuserid(sUserID);
-    	set_slasteditedbyuserfullname(sUserFullName);
-    	set_sdattimelastedited(clsValidateFormFields.validateDateTimeField(currentDateTime, "Time last edited", clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY, true));
+	public void saveWithoutConnection(ServletContext context, String sDBIB, String sUserID, String sUserFullName) throws Exception{
     	//Get connection
-		Connection conn;
+		Connection conn = null;
 		try {
 			conn = clsDatabaseFunctions.getConnectionWithException(
 				context, 
@@ -380,11 +374,27 @@ public class GLFiscalYear extends java.lang.Object{
 			throw new Exception("Error [1530899382] - could not get connection to save.");
 		}
 		
+		try {
+			saveWithConnection(conn, sUserID, sUserFullName);
+		} catch (Exception e) {
+			clsDatabaseFunctions.freeConnection(context, conn, "[1547080752]");
+			throw new Exception("Error [20193441252436] " + e.getMessage());
+		}
+		clsDatabaseFunctions.freeConnection(context, conn, "[1547081752]");
+		return;
+	}
+    public void saveWithConnection(Connection conn, String sUserID, String sUserFullName) throws Exception{
+		
+	   	String currentDateTime = new SimpleDateFormat(clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY).format(new Date(System.currentTimeMillis()));
+    	//Set the user ID and full name first:
+    	set_slasteditedbyuserid(sUserID);
+    	set_slasteditedbyuserfullname(sUserFullName);
+    	set_sdattimelastedited(clsValidateFormFields.validateDateTimeField(currentDateTime, "Time last edited", clsServletUtilities.DATETIME_FORMAT_FOR_DISPLAY, true));
+		
 		//Validate entries
 		try {
 			validateEntries(conn);
 		} catch (Exception e1) {
-			clsDatabaseFunctions.freeConnection(context, conn, "[1547080752]");
 			throw new Exception("ERROR [1535029204] "+e1.getMessage());
 		}
 		//Update the editable fields.
@@ -841,12 +851,11 @@ public class GLFiscalYear extends java.lang.Object{
 	 		Statement stmt = conn.createStatement();
 	 		stmt.executeUpdate(SQL);
 	 	}catch (SQLException e){
-	 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080753]");
 	 		throw new Exception("Error [1530901737] saving " + GLFiscalYear.ParamObjectName + " record - with SQL:" + SQL + " - " + e.getMessage());
 	 	}
 
 	 	set_snewrecord(ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
-	 	clsDatabaseFunctions.freeConnection(context, conn, "[1547080754]");
+	 	return;
     }
     private void validateEntries(Connection conn) throws Exception{
     	

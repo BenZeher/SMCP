@@ -27,7 +27,7 @@ public class GLEditFiscalPeriodsAction extends HttpServlet{
 		//If it's an edit, process that:
 	    //if(smaction.isEditRequested()){
 	    	try {
-				entry.save(
+				entry.saveWithoutConnection(
 					getServletContext(), 
 					smaction.getsDBID(), 
 					smaction.getUserID(),

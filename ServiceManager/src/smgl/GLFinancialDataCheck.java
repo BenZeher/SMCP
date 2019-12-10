@@ -212,6 +212,10 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//Now compare the two sets:
 		//First, check against the ACCPAC totals:
 		for (int iACCPACIndex = 0; iACCPACIndex < arrACCPACLineSubtotals.size(); iACCPACIndex++){
+			BigDecimal bdACCPACTotal = arrACCPACLineSubtotals.get(iACCPACIndex);
+			String sACCPACAccount = arrACCPACAcctIDs.get(iACCPACIndex);
+			String sACCPACFiscalPeriod = Integer.toString(arrACCPACFiscalPeriods.get(iACCPACIndex));
+			String sACCPACFiscalYear = Integer.toString(arrACCPACFiscalYears.get(iACCPACIndex));
 			BigDecimal bdSMCPAcctTotal = getSMCPTotalByValues(
 				arrSMCPAcctIDs, 
 				arrSMCPFiscalYears, 
@@ -223,16 +227,16 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				arrACCPACFiscalPeriods.get(iACCPACIndex)
 			);
 			
-			if (bdSMCPAcctTotal.compareTo(arrACCPACLineSubtotals.get(iACCPACIndex)) != 0){
+			if (bdSMCPAcctTotal.compareTo(bdACCPACTotal) != 0){
 				sResult += "<BR>Account '" 
 					+  sLinkBase 
-					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + Integer.toString(arrACCPACFiscalPeriods.get(iACCPACIndex)) 
-					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(arrACCPACFiscalYears.get(iACCPACIndex))
-					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  arrACCPACAcctIDs.get(iACCPACIndex)
-					+ "\">" + arrACCPACAcctIDs.get(iACCPACIndex) + "</A>" 
-					+ " fiscal year " + Integer.toString(arrACCPACFiscalYears.get(iACCPACIndex))
-					+ ", period " + Integer.toString(arrACCPACFiscalPeriods.get(iACCPACIndex)) + ", ACCPAC has " + arrACCPACLineSubtotals.get(iACCPACIndex)
-					+ ", SMCP has " + bdSMCPAcctTotal + ", difference = " + (bdSMCPAcctTotal.subtract(arrSMCPLineSubtotals.get(iACCPACIndex)))
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + sACCPACFiscalPeriod 
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + sACCPACFiscalYear
+					+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  sACCPACAccount
+					+ "\">" + sACCPACAccount + "</A>" 
+					+ " fiscal year " + sACCPACFiscalYear
+					+ ", period " + sACCPACFiscalPeriod + ", ACCPAC has " + bdACCPACTotal
+					+ ", SMCP has " + bdSMCPAcctTotal + ", difference = " + (bdSMCPAcctTotal.subtract(bdACCPACTotal))
 				;
 			}
 		}
@@ -241,15 +245,19 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		for (int iSMCPIndex = 0; iSMCPIndex < arrSMCPAlreadyChecked.size(); iSMCPIndex++){
 			if (arrSMCPAlreadyChecked.get(iSMCPIndex) == false){
 				//Add it to the list of mismatches:
+				String sSMCPAccount = arrSMCPAcctIDs.get(iSMCPIndex);
+				String sSMCPFiscalPeriod = Integer.toString(arrSMCPFiscalPeriods.get(iSMCPIndex));
+				String sSMCPFiscalYear = Integer.toString(arrSMCPFiscalYears.get(iSMCPIndex));
+				BigDecimal bdSMCPAccountTotal = arrSMCPLineSubtotals.get(iSMCPIndex);
 				sResult += "<BR>Account '" 
 						+  sLinkBase 
-						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + Integer.toString(arrSMCPFiscalPeriods.get(iSMCPIndex)) 
-						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + Integer.toString(arrSMCPFiscalYears.get(iSMCPIndex))
-						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  arrSMCPAcctIDs.get(iSMCPIndex)
-						+ "\">" + arrSMCPAcctIDs.get(iSMCPIndex) + "</A>" 
-					+ " fiscal year " + Integer.toString(arrSMCPFiscalYears.get(iSMCPIndex))
-					+ ", period " + Integer.toString(arrSMCPFiscalPeriods.get(iSMCPIndex)) + ", SMCP has " + arrSMCPLineSubtotals.get(iSMCPIndex)
-					+ ", ACCPAC has 0.00, difference = " + arrSMCPLineSubtotals.get(iSMCPIndex)
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALPERIOD + "=" + sSMCPFiscalPeriod
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_FISCALYEAR + "=" + sSMCPFiscalYear
+						+ "&" + GLCheckTransactionLinesAgainstACCPAC.PARAM_GLACCOUNT + "=" +  sSMCPAccount
+						+ "\">" + sSMCPAccount + "</A>" 
+					+ " fiscal year " + sSMCPFiscalYear
+					+ ", period " + sSMCPFiscalPeriod + ", SMCP has " + bdSMCPAccountTotal
+					+ ", ACCPAC has 0.00, difference = " + bdSMCPAccountTotal
 			;
 			}
 		}

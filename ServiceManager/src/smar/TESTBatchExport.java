@@ -1,10 +1,9 @@
 package smar;
 import java.sql.DriverManager;
-import java.util.Calendar;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLTransactionBatch;
+import smgl.GLFinancialDataCheck;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -144,6 +143,21 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		//Test updating financial statement records:
+		GLFinancialDataCheck dc = new GLFinancialDataCheck();
+		try {
+			System.out.println(dc.processFinancialRecords(
+				"",
+				"2018",
+				conn,
+				true
+				)
+			);
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		System.out.println("DONE");
+		
 		/*
 		//Test financial statement integrity:
 		GLFinancialDataCheck objFinCheck = new GLFinancialDataCheck();
@@ -156,7 +170,22 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
+		/*
+		//test GLFiscalYear saving:
+		GLFiscalYear fy = new GLFiscalYear();
+		fy.set_sifiscalyear("2019");
 		
+		try {
+			fy.load(conn);
+			fy.saveWithConnection(conn, "0", "Tom R");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println("DONE");
+		*/
+		
+		/*
 		//Test GL Transaction Batch posting:
 		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
 		GLTransactionBatch glbatch = new GLTransactionBatch("2");
@@ -169,7 +198,7 @@ public class TESTBatchExport extends HttpServlet{
 		//clsDatabaseFunctions.commit_data_transaction(conn);
 		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
-		
+		*/
 		
 		/*
 		//Test GL Pull:

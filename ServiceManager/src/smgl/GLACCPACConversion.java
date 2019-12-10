@@ -817,7 +817,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 		//System.out.println("[1553458952] - going into while loop.");
 		
 		//We turn this off to get faster inserts:
-		/*
 		Statement stmtCommit;
 		try {
 			stmtCommit = cnSMCP.createStatement();
@@ -825,7 +824,6 @@ public class GLACCPACConversion  extends java.lang.Object{
 		} catch (Exception e1) {
 			throw new Exception("Error [20192971431453] " + "setting AUTOCOMMIT to ZERO to insert gltransactionlines - " + e1.getMessage());
 		}
-		*/
 		while (rsPostedTransactions.next()){
 			//The batch, entry, and line number combination must be unique - so we need to
 			// make sure that each record gets a unique combination, just in case some
@@ -891,7 +889,12 @@ public class GLACCPACConversion  extends java.lang.Object{
 					lCounter++;
 				} catch (Exception e) {
 					rsPostedTransactions.close();
-					throw new Exception("Error [1523041993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
+					try {
+						stmtCommit.execute("COMMIT");
+					} catch (Exception e1) {
+						throw new Exception("Error [20192971442321] " + "committing GL transaction Inserts - " + e1.getMessage());
+					}
+					throw new Exception("Error [1523051993] - could not insert into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 				}
 				lInsertCounter = 0;
 			}
@@ -913,17 +916,20 @@ public class GLACCPACConversion  extends java.lang.Object{
 			lCounter++;
 		} catch (Exception e) {
 			rsPostedTransactions.close();
+			try {
+				stmtCommit.execute("COMMIT");
+			} catch (Exception e1) {
+				throw new Exception("Error [20192971432921] " + "committing GL transaction Inserts - " + e1.getMessage());
+			}
 			throw new Exception("Error [1523043993] - could not insert remaining transactions into " + sTablename + " table with SQL '" + SQLInsert + "' - " + e.getMessage());
 		}
 		
 		//System.out.println("[2019297133028] " + "Inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
-		/*
 		try {
 			stmtCommit.execute("COMMIT");
 		} catch (Exception e) {
 			throw new Exception("Error [20192971432321] " + "committing GL transaction Inserts - " + e.getMessage());
 		}
-		*/
 		//System.out.println("[2019297133029] " + "Including COMMIT, inserts took " + ((System.currentTimeMillis() - lStartingTime) / 1000) + " seconds.");
 
 		sStatus +=  "<BR>ACCPAC has " + Long.toString(lNumberOfACCPACGLTransactions) 

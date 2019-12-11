@@ -145,7 +145,7 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 		} catch (Exception e1) {
 			out.println("<BR><FONT COLOR=RED><B>Error [1562701323] getting fiscal year selections - " + e1.getMessage() + "</B></FONT><BR>");
 		}
-		out.println("<BR>Close this fiscal year (only ACTIVE fiscal years are listed):&nbsp;");
+		out.println("<BR>Close this fiscal year (only UNCLOSED fiscal years are listed):&nbsp;");
 		
 		out.println("<SELECT NAME=\"" + PARAM_FISCAL_YEAR_SELECTION + "\"" 
 			+ " ID = \"" + 	PARAM_FISCAL_YEAR_SELECTION + "\""

@@ -299,7 +299,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		//Auto reverse
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Auto-reverse?</TD>\n"
  		    ;
-     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) !=0)){
+     	if (bEditable && (entry.getsclosingentry().compareToIgnoreCase("1") != 0)){
      		String sTemp = "";
      		if (entry.getsautoreverse().compareToIgnoreCase("0") != 0){
     			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
@@ -382,7 +382,7 @@ public class GLEditEntryEdit  extends HttpServlet {
     	
     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Fiscal&nbsp;year/period:&nbsp;</TD>\n";
 		
-		if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) !=0)){
+		if (bEditable && (entry.getsclosingentry().compareToIgnoreCase("1") != 0)){
 			//int iCurrentFiscalYear = 0;
 			//try {
 			//	iCurrentFiscalYear = GLFiscalPeriod.getCurrentFiscalYear(sm.getsDBID(), sm.getFullUserName(), getServletContext());
@@ -743,7 +743,7 @@ public class GLEditEntryEdit  extends HttpServlet {
         //Source Ledger:
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Source&nbsp;ledger:&nbsp;</TD>\n"
  		    ;
-     	if (bEditable && (entry.getsfiscalperiod().compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) !=0) ){
+     	if (bEditable && (entry.getsclosingentry().compareToIgnoreCase("1") != 0)){
  			sControlHTML = "<SELECT NAME = \"" + SMTablegltransactionbatchentries.ssourceledger + "\" >\n";
  			sControlHTML += "<OPTION"
  				+ " VALUE=\"" 

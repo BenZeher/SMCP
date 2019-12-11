@@ -784,11 +784,6 @@ public class GLTransactionBatch {
 			throw new Exception("Error [1555956143] - " + e1.getMessage());
 		}
     	
-    	//IF this batch includes entries for a previously closed year, we may have to
-    	//add some entries to period 15 to move income statement account entries
-    	// to the retained earnings account:
-    	checkForPreviouslyClosedYear(conn);
-    	
     	//Next, create transactions for all of the entries:
     	clsDBServerTime dt = new clsDBServerTime(conn);
     	setsposteddate(dt.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
@@ -869,92 +864,7 @@ public class GLTransactionBatch {
     	
     	//return;
     }
-	private void checkForPreviouslyClosedYear(Connection conn)throws Exception{
-		
-		for(int i = 0; i < m_arrBatchEntries.size(); i++){
-			GLFiscalYear fy = new GLFiscalYear();
-			fy.set_sifiscalyear(m_arrBatchEntries.get(i).getsfiscalyear());
-			try {
-				fy.load(conn);
-			} catch (Exception e) {
-				throw new Exception("Error [20193371617151] " + "Could not load fiscal year '" + m_arrBatchEntries.get(i).getsfiscalyear() + "'"
-					+ " to check closing flag.");
-			}
-			if (fy.get_siclosed().compareToIgnoreCase("1") == 0){
-				//We'll process each line to see if it needs a retained earnings entry to balance it:
-				for (int j = 0; j < m_arrBatchEntries.get(i).getLineArray().size(); j++){
-					try {
-						processEntryLineForClosedYear(conn, m_arrBatchEntries.get(i).getLineArray().get(j), m_arrBatchEntries.get(i).getsfiscalyear());
-					} catch (Exception e) {
-						throw new Exception("Error [2019337162442] " + "Error processing entry line for closed year - " + e.getMessage());
-					}
-				}
-			}
-		}
-		return;
-	}
-	private void processEntryLineForClosedYear(Connection conn, GLTransactionBatchLine GLLine, String sFiscalYear) throws Exception{
-		GLAccount glacct = new GLAccount(GLLine.getsacctid());
-		if(!glacct.load(conn)){
-			throw new Exception("Error [20193371624542] " + "Could not load GL account '" + GLLine.getsacctid() + "' - " + glacct.getErrorMessageString());
-		}
-		
-		if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
-			//We'll need to add an entry to move this amount to retained earnings:
-			GLOptions glopt = new GLOptions();
-			if(!glopt.load(conn)){
-				throw new Exception("Error [20193371627309] " + "Could not load GL options to determine closing account - " + glopt.getErrorMessageString());
-			}
-			String sClosingAccount = glopt.getsClosingAccount();
-			//Now add an entry and line for the closing account:
-			GLTransactionBatchEntry entry = new GLTransactionBatchEntry();
-			entry.setsautoreverse("0");
-			entry.setsbatchnumber(getsbatchnumber());
-			entry.setsclosingentry("0");
-			entry.setsdatdocdate(getsbatchdate());
-			entry.setsdatentrydate(getsbatchdate());
-			entry.setsentrydescription("Adjusting to closing account");
-			entry.setsfiscalperiod(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS));
-			entry.setsfiscalyear(sFiscalYear);
-			entry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
-			entry.setssourceledgertransactionlink("");
-			entry.setsentrynumber(Integer.toString(m_arrBatchEntries.size() + 1));
-			
-			//Add a line for the debit, to the retained earnings acct:
-			GLTransactionBatchLine closingaccountline = new GLTransactionBatchLine();
-			closingaccountline.setsacctid(sClosingAccount);
-			closingaccountline.setsbatchnumber(getsbatchnumber());
-			closingaccountline.setscomment("");
-			closingaccountline.setscreditamt("0.00");
-			closingaccountline.setsdebitamt(GLLine.getscreditamt());
-			closingaccountline.setsdescription("Refers to entry " + GLLine.getsentrynumber() + ", line " + GLLine.getslinenumber());
-			closingaccountline.setsreference("");
-			closingaccountline.setssourceledger(entry.getssourceledger());
-			closingaccountline.setssourcetype("JE");
-			closingaccountline.setstransactiondate(getsbatchdate());
-			closingaccountline.setslinenumber(Integer.toString(entry.getLineArray().size() + 1));
-			entry.addLine(closingaccountline);
-			
-			//And add a line for the credit:
-			GLTransactionBatchLine incomeaccountline = new GLTransactionBatchLine();
-			incomeaccountline.setsacctid(GLLine.getsacctid());
-			incomeaccountline.setsbatchnumber(getsbatchnumber());
-			incomeaccountline.setscomment("");
-			incomeaccountline.setscreditamt(GLLine.getsdebitamt());
-			incomeaccountline.setsdebitamt("0.00");
-			incomeaccountline.setsdescription("Refers to entry " + GLLine.getsentrynumber() + ", line " + GLLine.getslinenumber());
-			incomeaccountline.setsreference("");
-			incomeaccountline.setssourceledger(entry.getssourceledger());
-			incomeaccountline.setssourcetype("JE");
-			incomeaccountline.setstransactiondate(getsbatchdate());
-			incomeaccountline.setslinenumber(Integer.toString(entry.getLineArray().size() + 1));
-			entry.addLine(incomeaccountline);
-			
-			addBatchEntry(entry);
-		}
-		
-		return;
-	}
+
     public String reverse_batch (
     		ServletContext context,
     		String sDBID,

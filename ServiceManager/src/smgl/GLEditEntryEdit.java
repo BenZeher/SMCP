@@ -691,6 +691,27 @@ public class GLEditEntryEdit  extends HttpServlet {
 							;
 						}
 					}
+					
+					//Add an option for the 'closing' period, if it's not locked:
+					if (rsOpenFiscalPeriods.getInt(SMTableglfiscalperiods.ilockclosingperiod) == 0){
+						sControlHTML += "<OPTION";
+						try {
+							if (iFiscalYear == Integer.parseInt(entry.getsfiscalyear())){
+								if (Integer.parseInt(entry.getsfiscalperiod()) == SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS){
+									sControlHTML += " selected=YES ";	
+								}
+							}
+						} catch (Exception e) {
+							//If we generate an exception because getsfiscalyear or getsfiscalperiod is blank, don't 
+							//stop anything, just go on:
+						}
+						sControlHTML += " VALUE=\"" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) 
+							+ "\">" 
+							+ Integer.toString(iFiscalYear) + FISCAL_YEAR_AND_PERIOD_DELIMITER + "CLOSING PERIOD" 
+							+ "</OPTION>\n"
+						;
+					}
 				}
 				rsOpenFiscalPeriods.close();
 			} catch (NumberFormatException e) {

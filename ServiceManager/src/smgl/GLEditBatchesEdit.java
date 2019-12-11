@@ -14,6 +14,7 @@ import javax.servlet.http.HttpSession;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMOption;
+import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTablegltransactionbatches;
 import ServletUtilities.clsServletUtilities;
@@ -379,7 +380,11 @@ public class GLEditBatchesEdit extends HttpServlet {
 	        	
 	        	//Fiscal year - period:
 	        	pwOut.println("    <TD>");
-	        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entry.getsfiscalyear() + " - " + entry.getsfiscalperiod()));
+	        	String sFiscalPeriod = entry.getsfiscalperiod();
+	        	if (sFiscalPeriod.compareToIgnoreCase(Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS)) == 0){
+	        		sFiscalPeriod = "CLOSING";
+	        	}
+	        	pwOut.println(clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(entry.getsfiscalyear() + " - " + sFiscalPeriod));
 	        	pwOut.println("</TD>\n");
 	        	
 	        	//Description

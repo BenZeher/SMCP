@@ -165,6 +165,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 					entry.set_slasteditedbyuserid("");
 					entry.set_sdattimelastedited("");
 					entry.set_siclosed("0");
+					entry.set_silockclosingperiod("1");
 					entry.set_siperiod1locked("1");
 					entry.set_siperiod2locked("1");
 					entry.set_siperiod3locked("1");
@@ -377,16 +378,15 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
 		;
 		*/
 	    
-	    /*
 	    //Lock closings?
 	    s += clsCreateHTMLTableFormFields.Create_Edit_Form_Checkbox_Row(
 	    	SMTableglfiscalperiods.ilockclosingperiod, 
 			Integer.parseInt(entry.get_silockclosingperiod()), 
 			"Lock closing for this year?", 
-			"<I>Check to prevent closing to this fiscal year.</I>"
+			"<I>Check to prevent entries to the closing period for this fiscal year.</I>"
 			)
 		;
-	    */
+	    
        //We need a row to hold our starting and ending dates:
         s += buildRowForFiscalPeriodDates(smedit, entry);
         

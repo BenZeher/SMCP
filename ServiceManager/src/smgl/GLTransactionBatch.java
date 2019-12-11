@@ -918,18 +918,38 @@ public class GLTransactionBatch {
 			entry.setsfiscalyear(sFiscalYear);
 			entry.setssourceledger(GLSourceLedgers.getSourceLedgerDescription(GLSourceLedgers.SOURCE_LEDGER_GL));
 			entry.setssourceledgertransactionlink("");
-			GLTransactionBatchLine line = new GLTransactionBatchLine();
-			line.setsacctid(sClosingAccount);
-			line.setsbatchnumber(getsbatchnumber());
-			line.setscomment("");
-			line.setscreditamt(GLLine.getsdebitamt());
-			line.setsdebitamt(GLLine.getscreditamt());
-			line.setsdescription("Refers to entry " + GLLine.getsentrynumber() + ", line " + GLLine.getslinenumber());
-			line.setsreference("");
-			line.setssourceledger(entry.getssourceledger());
-			line.setssourcetype("JE");
-			line.setstransactiondate(getsbatchdate());
-			entry.addLine(line);
+			entry.setsentrynumber(Integer.toString(m_arrBatchEntries.size() + 1));
+			
+			//Add a line for the debit, to the retained earnings acct:
+			GLTransactionBatchLine closingaccountline = new GLTransactionBatchLine();
+			closingaccountline.setsacctid(sClosingAccount);
+			closingaccountline.setsbatchnumber(getsbatchnumber());
+			closingaccountline.setscomment("");
+			closingaccountline.setscreditamt("0.00");
+			closingaccountline.setsdebitamt(GLLine.getscreditamt());
+			closingaccountline.setsdescription("Refers to entry " + GLLine.getsentrynumber() + ", line " + GLLine.getslinenumber());
+			closingaccountline.setsreference("");
+			closingaccountline.setssourceledger(entry.getssourceledger());
+			closingaccountline.setssourcetype("JE");
+			closingaccountline.setstransactiondate(getsbatchdate());
+			closingaccountline.setslinenumber(Integer.toString(entry.getLineArray().size() + 1));
+			entry.addLine(closingaccountline);
+			
+			//And add a line for the credit:
+			GLTransactionBatchLine incomeaccountline = new GLTransactionBatchLine();
+			incomeaccountline.setsacctid(GLLine.getsacctid());
+			incomeaccountline.setsbatchnumber(getsbatchnumber());
+			incomeaccountline.setscomment("");
+			incomeaccountline.setscreditamt(GLLine.getsdebitamt());
+			incomeaccountline.setsdebitamt("0.00");
+			incomeaccountline.setsdescription("Refers to entry " + GLLine.getsentrynumber() + ", line " + GLLine.getslinenumber());
+			incomeaccountline.setsreference("");
+			incomeaccountline.setssourceledger(entry.getssourceledger());
+			incomeaccountline.setssourcetype("JE");
+			incomeaccountline.setstransactiondate(getsbatchdate());
+			incomeaccountline.setslinenumber(Integer.toString(entry.getLineArray().size() + 1));
+			entry.addLine(incomeaccountline);
+			
 			addBatchEntry(entry);
 		}
 		

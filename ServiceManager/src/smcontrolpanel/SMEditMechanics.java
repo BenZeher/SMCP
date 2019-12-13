@@ -39,7 +39,7 @@ public class SMEditMechanics extends HttpServlet {
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-	    String title = "Manage Mechanics";
+	    String title = "Manage Technicians";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -61,14 +61,14 @@ public class SMEditMechanics extends HttpServlet {
 	        ;
 	        //System.out.println (sSQL);
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
-	        out.println("<H3>Mechanic(s) in system:</H3>");
+	        out.println("<H3>Technician(s) in system:</H3>");
         	//print the first line here. 
         	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditMechanicsEdit\">");
         	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
         	out.println("<INPUT TYPE=HIDDEN NAME=\"RESTRICTED\" VALUE=\"NO\">");
-        	out.println("Location and mechanic:<BR>");
+        	out.println("Location and Technician:<BR>");
         	out.println ("<SELECT NAME=\"MECHANIC\">" );
-        	out.println ("<OPTION VALUE=\"" + NEW_MECHANIC_ID + "\">----Create New Mechanic---- ");
+        	out.println ("<OPTION VALUE=\"" + NEW_MECHANIC_ID + "\">----Create New Technician---- ");
         	while (rs.next()){
         		String sLocationDescription = rs.getString(SMTablelocations.TableName + "." + SMTablelocations.sLocationDescription);
         		if (sLocationDescription == null){

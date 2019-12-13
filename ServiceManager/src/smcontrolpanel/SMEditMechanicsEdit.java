@@ -51,7 +51,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	    String sUserLastName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 	    String sMechanicID = "";
 		
-	    String title = "Manage Mechanics";
+	    String title = "Manage Technicians";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -92,10 +92,10 @@ public class SMEditMechanicsEdit extends HttpServlet{
 													+ "&MECHANIC=" + request.getParameter("MECHANIC")
 													+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID;
 	    	}
-	    	String sMechColorDescription = "Click on desired color to assign it to mechanic icon in schedule map. <BR>" +
+	    	String sMechColorDescription = "Click on desired color to assign it to Technician icon in schedule map. <BR>" +
 				"<BR>" +
-				"<FONT SIZE=2>Colors that have already been assigned to other mechanics are represented with a gray line struck through it. UNassigned colors are STILL available for use.<BR>" +
-				"Click <A HREF = \"" + sLink + "\">here</A> to show/hide color usage outside of current mechanic's location and service type.</FONT>";
+				"<FONT SIZE=2>Colors that have already been assigned to other Technicians are represented with a gray line struck through it. UNassigned colors are STILL available for use.<BR>" +
+				"Click <A HREF = \"" + sLink + "\">here</A> to show/hide color usage outside of current Technician's location and service type.</FONT>";
 	        //get mechanic info
 	        String sSQL = "SELECT"
 	        	+ " " + SMTablemechanics.TableName + "." + SMTablemechanics.lid
@@ -125,7 +125,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        	sMechanicID = Long.toString(rsMechInfo.getLong(SMTablemechanics.TableName + "." + SMTablemechanics.lid));
 	        	sMechLocation = rsMechInfo.getString(SMTablemechanics.sMechLocation);
 	        	iMechType = rsMechInfo.getInt(SMTablemechanics.iMechType);
-		        out.println ("<H3>Mechanic Information: " + rsMechInfo.getString(SMTablemechanics.sMechFullName) + "</H3>");
+		        out.println ("<H3>Technician Information: " + rsMechInfo.getString(SMTablemechanics.sMechFullName) + "</H3>");
 	
 	        	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditMechanicsSave\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
@@ -133,19 +133,19 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	
 	        	//Mechanic ID:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic ID</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician ID</B></TD>");
 	        	out.println("<TD><B>" + sMechanicID + "</B></TD>");
 	        	out.println ("<TD>(ID number - assigned automatically by the system.) </TD></TR>");
 	        	
 	        	//Mechanic's name:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Name</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Name</B></TD>");
 	        	out.println("<TD><INPUT TYPE=TEXT SIZE=50 MAXLENGTH=" + SMTablemechanics.sMechFullNameLength + " NAME=\"MECHNAME\" VALUE=\"" + rsMechInfo.getString(SMTablemechanics.sMechFullName)+ "\"></TD>");
-	        	out.println ("<TD>(Mechanic's full name, maximum 50 alphanumerics, including space. e.g. John Doe) </TD></TR>");
+	        	out.println ("<TD>(Technician's full name, maximum 50 alphanumerics, including space. e.g. John Doe) </TD></TR>");
 	        	
 	        	//Initials:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Initials</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Initials</B></TD>");
 	        	out.println("<TD><INPUT TYPE=TEXT SIZE=3 MAXLENGTH=" + SMTablemechanics.sMechInitialLength + " NAME=\"MECHINIT\" VALUE=\"" + rsMechInfo.getString(SMTablemechanics.sMechInitial)+ "\"></TD>");
-	        	out.println("<TD>Mechanic's Initials. Maximum 3 letters - <B><I>must be unique</I></B>. (e.g. ABC)</TD></TR>");
+	        	out.println("<TD>Technician's Initials. Maximum 3 letters - <B><I>must be unique</I></B>. (e.g. ABC)</TD></TR>");
 
 	        	//Employee ID:
 	        	out.println ("<TR><TD ALIGN=RIGHT><B>Employee ID</B></TD>");
@@ -153,7 +153,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        		+ " NAME=\"EMPLOYEEID\" VALUE=\"" + rsMechInfo.getString(SMTablemechanics.semployeeid)+ "\"></TD>");
 	        	out.println("<TD>Internal employee ID from Time Card System (if used)</TD></TR>");
 	        	
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Location</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Location</B></TD>");
 	        	out.println("<TD>");
         		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"SELECTEDLOC\" VALUE=0>N/A<BR>");
         		String s;
@@ -177,9 +177,9 @@ public class SMEditMechanicsEdit extends HttpServlet{
     	        		+ sSQL + " - " + e.getMessage() + ".<BR>");
     	        }
         		out.println ("</TD>");
-        		out.println ("<TD>Select the mechanic's location</TD>");
+        		out.println ("<TD>Select the Technician's location</TD>");
 	        	out.println ("</TR>"); 	
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Service Type</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Service Type</B></TD>");
 	        	out.println("<TD>");
 	        	
 		        //get service type info
@@ -246,26 +246,26 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        }else{
 	        	bNewMechanic = true;
 	        	sMechanicID = SMEditMechanics.NEW_MECHANIC_ID;
-		        out.println ("<H3>Mechanic Information: New Mechanic</H3>");
+		        out.println ("<H3>Technician Information: New Technician</H3>");
 	        	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditMechanicsSave\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"MECHANICID\" VALUE=\"" + sMechanicID + "\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	
 	        	//Mechanic ID:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic ID</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician ID</B></TD>");
 	        	out.println("<TD><B>" + "(NEW)" + "</B></TD>");
 	        	out.println ("<TD>(ID number - assigned automatically by the system.) </TD></TR>");
 	        	
 	        	//Mechanic name:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Name</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Name</B></TD>");
 	        	out.println("<TD><INPUT TYPE=TEXT SIZE=50 MAXLENGTH=" + SMTablemechanics.sMechFullNameLength + " NAME=\"MECHNAME\" VALUE=\"\"></TD>");
-	        	out.println("<TD>Mechanic's full name, maximum 50 alphanumerics, including space. e.g. John Doe)</TD></TR>");
+	        	out.println("<TD>Technician's full name, maximum 50 alphanumerics, including space. e.g. John Doe)</TD></TR>");
 	        	
 	        	//Initials:
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Initial</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Initial</B></TD>");
 	        	out.println("<TD><INPUT TYPE=TEXT SIZE=3 MAXLENGTH=" + SMTablemechanics.sMechInitialLength + " NAME=\"MECHINIT\" VALUE=\"\"></TD>");
-	        	out.println("<TD>Mechanic's Initials. Maximum 3 letters. e.g. ABC)</TD></TR>");
+	        	out.println("<TD>Technician's Initials. Maximum 3 letters. e.g. ABC)</TD></TR>");
 	        	
 	        	//Employee ID:
 	        	out.println ("<TR><TD ALIGN=RIGHT><B>Employee ID</B></TD>");
@@ -274,7 +274,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        	out.println("<TD>Internal employee ID from Time Card System (if used)</TD></TR>");
 	        	
 	        	//list all possible locations
-	        	out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Location</B></TD>");
+	        	out.println ("<TR><TD ALIGN=RIGHT><B>Technician Location</B></TD>");
 	        	out.println("<TD>");
 	      		out.println ("<INPUT TYPE=\"RADIO\" NAME=\"SELECTEDLOC\" VALUE=0>N/A<BR>");
 	      		
@@ -293,7 +293,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	      		out.println ("<TD>Locations</TD></TR>");
 	      		
 	      		//list all possible service types
-	      		out.println ("<TR><TD ALIGN=RIGHT><B>Mechanic Type</B></TD>");
+	      		out.println ("<TR><TD ALIGN=RIGHT><B>Technician Type</B></TD>");
 	      		out.println("<TD>");
 	      		
 		        sSQL = MySQLs.Get_Servicetypes_SQL();
@@ -326,7 +326,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	      				+ " NAME=\"STARTINGTIME\" VALUE=\"\"></TD>");
 	      		out.println("<TD>Starting time, maximum 10 alphanumerics, including space. e.g. '6:00 AM'</TD></TR>");
 
-	      		out.println("<TR><TD ALIGN=RIGHT><B>Mechanic's icon color code:</B></TD>");
+	      		out.println("<TR><TD ALIGN=RIGHT><B>Technician's icon color code:</B></TD>");
 	      		out.println("<TD>"); 
 	      		//print_mech_color_selection_table("000000", out);
 	      		print_mech_color_selection_map(0,
@@ -356,7 +356,7 @@ public class SMEditMechanicsEdit extends HttpServlet{
 	        	out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"Mechanic\" VALUE=\"" + sMechanicID + "\">");
 	        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");
-	        	out.println("<INPUT TYPE=CHECKBOX NAME=DoubleCheck VALUE=1>Check here if you want to delete this mechanic.");
+	        	out.println("<INPUT TYPE=CHECKBOX NAME=DoubleCheck VALUE=1>Check here if you want to delete this Technician.");
 	        	out.println("</FORM>");
       	}
       	out.println("</BODY></HTML>");

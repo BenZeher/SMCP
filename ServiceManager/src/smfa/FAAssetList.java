@@ -72,8 +72,11 @@ public class FAAssetList extends java.lang.Object{
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.sTruckNumber + "," +
 			" " + SMTablefaclasses.TableName + "." + SMTablefaclasses.sClassDescription +
 			", IF (YEAR(" + SMTablefamaster.datAcquisitionDate + ") = " + Integer.toString(iFiscalYear) + ", " + SMTablefamaster.bdAcquisitionAmount
-			+ ", 0.00) AS YTDPURCHASED" 
+			+ ", 0.00) AS YTDPURCHASED"
+			
+			//TODO - should this account for salvage value?
 			+ ", IF (YEAR(" + SMTablefamaster.datDateSold + ") = " + Integer.toString(iFiscalYear) + ", " + SMTablefamaster.bdAcquisitionAmount
+			+ " - " + SMTablefamaster.bdSalvageValue
 			+ ", 0.00) AS YTDDISPOSED"
 			+ ", TRANSQUERY.YTDDEPAMT"
 			+ ", IF (" + SMTablefamaster.TableName + "." + SMTablefamaster.datDateSold + " > '1900-01-01 00:00:00', 'Y', 'N') AS DISPOSED"
@@ -255,6 +258,8 @@ public class FAAssetList extends java.lang.Object{
 				bdYTDPurch = bdYTDPurch.add(rs.getBigDecimal("YTDPURCHASED"));
 				bdYTDDisp = bdYTDDisp.add(rs.getBigDecimal("YTDDISPOSED"));
 				bdYTDDep = bdYTDDep.add(bdYTDDepreciation);
+				
+				//If the asset is NOT DISPOSED, then add the values to the 'non-disposed assets' variables:
 				if (rs.getString("DISPOSED").compareToIgnoreCase("N") == 0){
 					bdCostOfNonDisposedAssets = bdCostOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
 					bdAccumulatedDepreciationOfNonDisposedAssets = bdAccumulatedDepreciationOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdAccumulatedDepreciation));

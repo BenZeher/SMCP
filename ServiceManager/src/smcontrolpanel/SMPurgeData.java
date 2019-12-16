@@ -1,6 +1,5 @@
 package smcontrolpanel;
 
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -51,8 +50,7 @@ public class SMPurgeData extends java.lang.Object{
 			boolean bPurgeMaterialReturns,
 			boolean bPurgeSecuritySystemLogs,
 			boolean bPurgeGLData,
-			Connection conn,
-			PrintWriter pwOut
+			Connection conn
 			) throws Exception{
 		
 		//If the user chose to purge NOTHING then advise and return:
@@ -567,8 +565,8 @@ public class SMPurgeData extends java.lang.Object{
 		//Remove all gl financial statement data
 	    SQL = "DELETE FROM " + SMTableglfinancialstatementdata.TableName
     	+ " WHERE ("
-        	+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " < '" 
-        		+ sFiscalYearToKeep + "')"
+        	+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " < " 
+        		+ sFiscalYearToKeep + ")"
         + ")"
         ;
 		try {
@@ -581,8 +579,8 @@ public class SMPurgeData extends java.lang.Object{
 		//Remove all fiscal year data:
 	    SQL = "DELETE FROM " + SMTableglfiscalperiods.TableName
     	+ " WHERE ("
-        	+ "(" + SMTableglfiscalperiods.ifiscalyear + " < '" 
-        		+ sFiscalYearToKeep + "')"
+        	+ "(" + SMTableglfiscalperiods.ifiscalyear + " < " 
+        		+ sFiscalYearToKeep + ")"
         + ")"
         ;
 		try {
@@ -595,8 +593,8 @@ public class SMPurgeData extends java.lang.Object{
 		//Remove all fiscal set data:
 	    SQL = "DELETE FROM " + SMTableglfiscalsets.TableName
     	+ " WHERE ("
-        	+ "(" + SMTableglfiscalsets.ifiscalyear + " < '" 
-        		+ sFiscalYearToKeep + "')"
+        	+ "(" + SMTableglfiscalsets.ifiscalyear + " < " 
+        		+ sFiscalYearToKeep + ")"
         + ")"
         ;
 		try {
@@ -609,8 +607,8 @@ public class SMPurgeData extends java.lang.Object{
 		//Remove all transaction data:
 	    SQL = "DELETE FROM " + SMTablegltransactionlines.TableName
     	+ " WHERE ("
-        	+ "(" + SMTablegltransactionlines.ifiscalyear + " < '" 
-        		+ sFiscalYearToKeep + "')"
+        	+ "(" + SMTablegltransactionlines.ifiscalyear + " < " 
+        		+ sFiscalYearToKeep + ")"
         + ")"
         ;
 		try {

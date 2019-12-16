@@ -1,9 +1,12 @@
 package smar;
 import java.sql.DriverManager;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLFinancialDataCheck;
+import smcontrolpanel.SMPurgeData;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -143,6 +146,34 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		//Test purging GL data:
+		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
+		java.sql.Date datPurgeDeadline = null;
+		try {
+			datPurgeDeadline = new java.sql.Date(df.parse("01-01-1991").getTime());
+		} catch (ParseException e) {
+			System.out.println("[2019350150334] " + e.getMessage());
+		}
+		try {
+			SMPurgeData.purgeData(
+				datPurgeDeadline, 
+				false, //boolean bPurgeOrders,
+				false, //boolean bPurgeCustomerCallLogs,
+				false, //boolean bPurgeBids,
+				false, //boolean bPurgeSalesContacts,
+				false, //boolean bPurgeSystemLog,
+				false, //boolean bPurgeMaterialReturns,
+				false, //boolean bPurgeSecuritySystemLogs,
+				true, //bPurgeGLData,
+				conn
+				)
+			;
+		} catch (Exception e) {
+			System.out.println("[2019350150582] " + e.getMessage());
+		}
+		System.out.println("DONE");
+		
+		/*
 		//Test updating financial statement records:
 		GLFinancialDataCheck dc = new GLFinancialDataCheck();
 		try {
@@ -157,6 +188,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(e.getMessage());
 		}
 		System.out.println("DONE");
+		*/
 		
 		/*
 		//Test financial statement integrity:

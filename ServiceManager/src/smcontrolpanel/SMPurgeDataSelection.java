@@ -98,9 +98,9 @@ public class SMPurgeDataSelection extends HttpServlet {
 	    );
 	    
 	    out.println("If you choose to PURGE the <B>GENERAL LEDGER data</B>, this function will purge all" 
-	    	+ " GL export records (from subledger batch postings), all 'external pull' records, all financial statement data,"
-	    	+ " fiscal sets, fiscal years, and GL transactions"
-	    		+ " previous to the purge deadline date.<BR>"
+	    	+ " GL export records (from subledger batch postings) and 'external pull' records previous to the purge deadline date. Additionally it will delete"
+	    	+ " all financial statement data, fiscal sets, fiscal years, and GL transactions for all fiscal years UP TO BUT NOT INCLUDING the fiscal year"
+	    		+ " of the purge deadline date.<BR>"
 	    );
 	    
 	    out.println("If you choose to PURGE the <B>SECURITY SYSTEM LOGS</B>, this function will purge all device event and user event records which"

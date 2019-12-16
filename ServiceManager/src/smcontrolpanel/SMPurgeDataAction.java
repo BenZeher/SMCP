@@ -119,8 +119,7 @@ public class SMPurgeDataAction extends HttpServlet{
 				request.getParameter(SMPurgeDataSelection.PURGE_MATERIALRETURNS) != null,
 				request.getParameter(SMPurgeDataSelection.PURGE_SECURITYSYSTEMLOGS) != null,
 				request.getParameter(SMPurgeDataSelection.PURGE_GLDATA) != null,
-				conn, 
-				out);
+				conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080652]");
 			response.sendRedirect(

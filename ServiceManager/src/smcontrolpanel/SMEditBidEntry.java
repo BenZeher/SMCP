@@ -1562,7 +1562,7 @@ public class SMEditBidEntry  extends HttpServlet {
 		return "<button type=\"button\""
 			+ " value=\"" + UPDATE_BUTTON_LABEL + "\""
 			+ " name=\"" + UPDATE_BUTTON_LABEL + "\""
-			+ " onClick=\"update();\">"
+			+ " onClick=\"update(this);\">"
 			+ UPDATE_BUTTON_LABEL
 			+ "</button>\n"
 			;
@@ -1958,7 +1958,8 @@ public class SMEditBidEntry  extends HttpServlet {
 		;
 		
 		//Update:
-		s += "function update(){\n"
+		s += "function update(param){\n"
+				+ "param.disabled=true;\n"
 			+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
 				+ UPDATE_COMMAND_VALUE + "\";\n"
 			+ "    document.forms[\"MAINFORM\"].submit();\n"

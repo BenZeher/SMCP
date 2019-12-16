@@ -524,7 +524,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			}
 			rs.close();
 		} catch (SQLException e) {
-			throw new Exception("Error [1391538712] - Could not load mechanics - " + e.getMessage());
+			throw new Exception("Error [1391538712] - Could not load technicians - " + e.getMessage());
 		}
 
 		return true;
@@ -2394,7 +2394,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 			s += "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Paramdattimedone + "\" VALUE=\"" + workorder.getdattimedone() 
 				+ "\"" + ">";
 			//Mechanic:	
-			s += "<TD class=\" fieldlabel \">Mechanic:&nbsp;</TD>";
+			s += "<TD class=\" fieldlabel \">Technician:&nbsp;</TD>";
 			s += "<TD>" + workorder.getmechanicsname() + "</TD>";
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
 					+ SMWorkOrderHeader.Paramsmechanicname 
@@ -2443,7 +2443,7 @@ public class SMWorkOrderEdit  extends HttpServlet {
 				;
 			
 			//Mechanic:	
-			s += "<TD class=\" fieldlabel \">Mechanic:&nbsp;</TD>";
+			s += "<TD class=\" fieldlabel \">Technician:&nbsp;</TD>";
 			s += "<TD>" + workorder.getmechanicsname() + "</TD>";
 			s += " <INPUT TYPE=HIDDEN NAME=\"" 
 				+ SMWorkOrderHeader.Paramsmechanicname 

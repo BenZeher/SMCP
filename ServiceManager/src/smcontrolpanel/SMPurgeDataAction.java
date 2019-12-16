@@ -77,7 +77,8 @@ public class SMPurgeDataAction extends HttpServlet{
 			+ ", Purge customer " + SMBidEntry.ParamObjectName.toLowerCase() + "s: " + (request.getParameter(SMPurgeDataSelection.PURGE_BIDS) != null)
 			+ ", Purge customer sales contacts: " + (request.getParameter(SMPurgeDataSelection.PURGE_SALESCONTACTS) != null)
 			+ ", Purge system logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_SYSTEMLOG) != null)
-			+ ", Purge materialreturns: " + (request.getParameter(SMPurgeDataSelection.PURGE_MATERIALRETURNS) != null)
+			+ ", Purge material returns: " + (request.getParameter(SMPurgeDataSelection.PURGE_MATERIALRETURNS) != null)
+			+ ", Purge General Ledger: " + (request.getParameter(SMPurgeDataSelection.PURGE_GLDATA) != null)
 			+ ", Purge security system logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_SECURITYSYSTEMLOGS) != null),
 			"[1376509351]"
 		);
@@ -117,6 +118,7 @@ public class SMPurgeDataAction extends HttpServlet{
 				request.getParameter(SMPurgeDataSelection.PURGE_SYSTEMLOG) != null,
 				request.getParameter(SMPurgeDataSelection.PURGE_MATERIALRETURNS) != null,
 				request.getParameter(SMPurgeDataSelection.PURGE_SECURITYSYSTEMLOGS) != null,
+				request.getParameter(SMPurgeDataSelection.PURGE_GLDATA) != null,
 				conn, 
 				out);
 		} catch (Exception e) {
@@ -139,6 +141,7 @@ public class SMPurgeDataAction extends HttpServlet{
 				+ ", Purge customer sales contacts: " + (request.getParameter(SMPurgeDataSelection.PURGE_SALESCONTACTS) != null)
 				+ ", Purge system logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_SYSTEMLOG) != null)
 				+ ", Purge material returns: " + (request.getParameter(SMPurgeDataSelection.PURGE_MATERIALRETURNS) != null)
+				+ ", Purge General LEdger data: " + (request.getParameter(SMPurgeDataSelection.PURGE_GLDATA) != null)
 				+ ", Purge security system logs: " + (request.getParameter(SMPurgeDataSelection.PURGE_SECURITYSYSTEMLOGS) != null),
 				"[1376509352]"
 			);
@@ -177,6 +180,13 @@ public class SMPurgeDataAction extends HttpServlet{
 			}
 			m_sWarning += "MATERIAL RETURNS";
 		}
+		if (request.getParameter(SMPurgeDataSelection.PURGE_GLDATA) != null){
+			if (m_sWarning.compareToIgnoreCase("") != 0){
+				m_sWarning += ", ";
+			}
+			m_sWarning += "GENERAL LEDGER DATA";
+		}
+
 		if (request.getParameter(SMPurgeDataSelection.PURGE_SECURITYSYSTEMLOGS) != null){
 			if (m_sWarning.compareToIgnoreCase("") != 0){
 				m_sWarning += ", ";

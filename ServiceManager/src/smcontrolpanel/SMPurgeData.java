@@ -11,6 +11,13 @@ import SMDataDefinition.SMTablechangeorders;
 import SMDataDefinition.SMTablecriticaldates;
 import SMDataDefinition.SMTablecustomercalllog;
 import SMDataDefinition.SMTabledeliverytickets;
+import SMDataDefinition.SMTableglexportdetails;
+import SMDataDefinition.SMTableglexportheaders;
+import SMDataDefinition.SMTableglexternalcompanypulls;
+import SMDataDefinition.SMTableglfinancialstatementdata;
+import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglfiscalsets;
+import SMDataDefinition.SMTablegltransactionlines;
 import SMDataDefinition.SMTableinvoicedetails;
 import SMDataDefinition.SMTableinvoiceheaders;
 import SMDataDefinition.SMTableinvoicemgrcomments;
@@ -43,6 +50,7 @@ public class SMPurgeData extends java.lang.Object{
 			boolean bPurgeSystemLog,
 			boolean bPurgeMaterialReturns,
 			boolean bPurgeSecuritySystemLogs,
+			boolean bPurgeGLData,
 			Connection conn,
 			PrintWriter pwOut
 			) throws Exception{
@@ -56,6 +64,7 @@ public class SMPurgeData extends java.lang.Object{
 			&& !bPurgeSystemLog
 			&& !bPurgeMaterialReturns
 			&& !bPurgeSecuritySystemLogs
+			&& !bPurgeGLData
 		){
 			throw new Exception("You did not select anything to purge.");
 		}
@@ -71,7 +80,8 @@ public class SMPurgeData extends java.lang.Object{
 				bPurgeSalesContacts, 
 				bPurgeSystemLog,
 				bPurgeMaterialReturns,
-				bPurgeSecuritySystemLogs
+				bPurgeSecuritySystemLogs,
+				bPurgeGLData
 			);
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
@@ -92,7 +102,8 @@ public class SMPurgeData extends java.lang.Object{
 			boolean bPurgeSalesContacts,
 			boolean bPurgeSystemLog,
 			boolean bPurgeMaterialReturns,
-			boolean bPurgeSSLogs
+			boolean bPurgeSSLogs,
+			boolean bPurgeGLData
 		) throws Exception{
 
 		if (bPurgeOrders){
@@ -142,6 +153,13 @@ public class SMPurgeData extends java.lang.Object{
 		if (bPurgeSSLogs){
 			try {
 				purgeSecuritySystemLogs(conn, datPurgeDeadline);
+			} catch (Exception e) {
+				throw new Exception (e.getMessage());
+			}
+		}
+		if (bPurgeGLData){
+			try {
+				purgeGLData(conn, datPurgeDeadline);
 			} catch (Exception e) {
 				throw new Exception (e.getMessage());
 			}
@@ -486,7 +504,123 @@ public class SMPurgeData extends java.lang.Object{
 		}
 
 	}
-	
+	private static void purgeGLData(
+			Connection conn, 
+			java.sql.Date datPurgeDeadline
+		) throws Exception{
+
+		//Remove all the GL export headers and details:
+	    String SQL = "DELETE FROM " + SMTableglexportheaders.TableName
+	    	+ " WHERE ("
+	        	+ "(" + SMTableglexportheaders.datentrydate + " < '" 
+	        		+ clsDateAndTimeConversions.sqlDateToString(datPurgeDeadline, "yyyy-MM-dd") + "')"
+	        + ")"
+	        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523511] - Could not delete " + "GL export header" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+
+		SQL = "DELETE GLEXDETAILS.* FROM " + SMTableglexportdetails.TableName + " GLEXDETAILS"
+			+ " LEFT JOIN " + SMTableglexportheaders.TableName + " GLEXHEADERS"
+			+ " ON ("
+			
+			+ "(GLEXDETAILS." + SMTableglexportdetails.lbatchnumber 
+				+ " = GLEXHEADERS." + SMTableglexportheaders.lbatchnumber + ")"
+			+ " AND (GLEXDETAILS." + SMTableglexportdetails.lbatchentry 
+				+ " = GLEXHEADERS." + SMTableglexportheaders.lbatchentry + ")"
+			+ " AND (GLEXDETAILS." + SMTableglexportdetails.sdetailsourceledger
+				+ " = GLEXHEADERS." + SMTableglexportheaders.ssourceledger + ")"
+				
+			+ ")"
+			+ " WHERE (GLEXHEADERS." + SMTableglexportheaders.id + " IS NULL)"
+		;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523512] - Could not delete " + "GL export detail" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+
+		//Remove all records of previous external company 'pulls':
+	    SQL = "DELETE FROM " + SMTableglexternalcompanypulls.TableName
+    	+ " WHERE ("
+        	+ "(" + SMTableglexternalcompanypulls.dattimepulldate + " < '" 
+        		+ clsDateAndTimeConversions.sqlDateToString(datPurgeDeadline, "yyyy-MM-dd") + "')"
+        + ")"
+        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523513] - Could not delete " + "external company 'pull'" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+		
+		//We need to get the last fiscal year that can be purged here since we need to go by fiscal years, not dates for the
+		//rest of these deletions:
+		//No matter what the purge date, we can remove up to the fiscal year of the purge date - we don't want to remove ANY records from
+		//the actual fiscal year of the purge date, or otherwise the data for that year will be incomplete:
+		String sFiscalYearToKeep = clsDateAndTimeConversions.sqlDateToString(datPurgeDeadline, "yyyy-MM-dd").substring(0, 4);
+		
+		//Remove all gl financial statement data
+	    SQL = "DELETE FROM " + SMTableglfinancialstatementdata.TableName
+    	+ " WHERE ("
+        	+ "(" + SMTableglfinancialstatementdata.ifiscalyear + " < '" 
+        		+ sFiscalYearToKeep + "')"
+        + ")"
+        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523514] - Could not delete " + "financial statement data" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+		
+		//Remove all fiscal year data:
+	    SQL = "DELETE FROM " + SMTableglfiscalperiods.TableName
+    	+ " WHERE ("
+        	+ "(" + SMTableglfiscalperiods.ifiscalyear + " < '" 
+        		+ sFiscalYearToKeep + "')"
+        + ")"
+        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523515] - Could not delete " + "fiscal period" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+		
+		//Remove all fiscal set data:
+	    SQL = "DELETE FROM " + SMTableglfiscalsets.TableName
+    	+ " WHERE ("
+        	+ "(" + SMTableglfiscalsets.ifiscalyear + " < '" 
+        		+ sFiscalYearToKeep + "')"
+        + ")"
+        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523516] - Could not delete " + "fiscal set" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+		
+		//Remove all transaction data:
+	    SQL = "DELETE FROM " + SMTablegltransactionlines.TableName
+    	+ " WHERE ("
+        	+ "(" + SMTablegltransactionlines.ifiscalyear + " < '" 
+        		+ sFiscalYearToKeep + "')"
+        + ")"
+        ;
+		try {
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		} catch (SQLException e) {
+			throw new Exception("Error [1576523517] - Could not delete " + "GL transaction line" + " records with SQL: '" + SQL + "' - " + e.getMessage() + ".");
+		}
+		
+	}
 	/*
 	private static void purgeSalesContacts(
 			Connection conn, 

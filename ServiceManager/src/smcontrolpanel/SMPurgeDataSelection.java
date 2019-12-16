@@ -21,6 +21,7 @@ public class SMPurgeDataSelection extends HttpServlet {
 	public static final String PURGE_SALESCONTACTS = "PURGESALESCONTACTS";
 	public static final String PURGE_SYSTEMLOG = "PURGESYSTEMLOG";
 	public static final String PURGE_MATERIALRETURNS = "PURGEMATERIALRETURNS";
+	public static final String PURGE_GLDATA = "PURGEGLDATA";
 	public static final String PURGE_SECURITYSYSTEMLOGS = "PURGESECURITYSYSTEMLOGS";
 	public void doGet(HttpServletRequest request,
 				HttpServletResponse response)
@@ -96,6 +97,12 @@ public class SMPurgeDataSelection extends HttpServlet {
 	    		+ " are flagged as resolved, and which have a resolved date previous to the purge deadline date.<BR>"
 	    );
 	    
+	    out.println("If you choose to PURGE the <B>GENERAL LEDGER data</B>, this function will purge all" 
+	    	+ " GL export records (from subledger batch postings), all 'external pull' records, all financial statement data,"
+	    	+ " fiscal sets, fiscal years, and GL transactions"
+	    		+ " previous to the purge deadline date.<BR>"
+	    );
+	    
 	    out.println("If you choose to PURGE the <B>SECURITY SYSTEM LOGS</B>, this function will purge all device event and user event records which"
 	    		+ " have a log date previous to the purge deadline date.<BR>"
 	    );
@@ -111,6 +118,7 @@ public class SMPurgeDataSelection extends HttpServlet {
 	    out.println("<BR><B>Purge sales contacts?:</B> <INPUT TYPE=CHECKBOX NAME=\"" + PURGE_SALESCONTACTS + "\">");
 	    out.println("<BR><B>Purge system log?:</B> <INPUT TYPE=CHECKBOX NAME=\"" + PURGE_SYSTEMLOG + "\">");
 	    out.println("<BR><B>Purge material returns?:</B> <INPUT TYPE=CHECKBOX NAME=\"" + PURGE_MATERIALRETURNS + "\">");
+	    out.println("<BR><B>Purge General Ledger data?:</B> <INPUT TYPE=CHECKBOX NAME=\"" + PURGE_GLDATA + "\">");
 	    out.println("<BR><B>Purge security system logs?:</B> <INPUT TYPE=CHECKBOX NAME=\"" + PURGE_SECURITYSYSTEMLOGS + "\">");
 	    
     	out.println("<TABLE BORDER=1>");

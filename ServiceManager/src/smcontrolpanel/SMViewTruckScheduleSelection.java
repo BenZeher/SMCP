@@ -133,7 +133,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 					sDBID, 
 					"MySQL", 
 					"smcontrolpanel.SMViewTruckScheduleSelection");
-			out.println("<TR><TD ALIGN=RIGHT><H4>ONLY show mechanics assigned to these locations:&nbsp;</H4></TD><TD>");
+			out.println("<TR><TD ALIGN=RIGHT><H4>ONLY show technicians assigned to these locations:&nbsp;</H4></TD><TD>");
 			String sChecked = "";
 			while(rsLocations.next()){
 				String sLocation = rsLocations.getString(SMTablelocations.TableName + "." 
@@ -160,7 +160,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			sSQL = MySQLs.Get_Distinct_Servicetypes_SQL();
 			//System.out.println("Service Type SQL: " + sSQL);
 			ResultSet rsServiceTypes = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID, "MySQL", "smcontrolpanel.SMUnbilledContractReportCriteriaSelection");
-			out.println("<TR><TD ALIGN=RIGHT><H4>If the job OR mechanic is associated with these service types:&nbsp;</H4></TD><TD>");
+			out.println("<TR><TD ALIGN=RIGHT><H4>If the job OR technician is associated with these service types:&nbsp;</H4></TD><TD>");
 			/*
 	    	"<SELECT NAME=\"SelectedServiceType\">");
 	    	out.println("<OPTION VALUE=ALLST SELECTED>All Service Types");
@@ -295,9 +295,9 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 					sDBID, 
 					"MySQL", 
 					"smcontrolpanel.SMViewTruckScheduleSelection");
-			out.println("<TR><TD ALIGN=RIGHT><H4>Choose a single mechanic to show ALL entries for THAT mechanic:&nbsp;</H4></TD><TD>");
+			out.println("<TR><TD ALIGN=RIGHT><H4>Choose a single technician to show ALL entries for THAT technician:&nbsp;</H4></TD><TD>");
 			out.println("<SELECT NAME = \"" + MECHANIC_PARAMETER + "\">");
-			out.println("<OPTION VALUE = \"" + "" + "\">** ALL Mechanics **</OPTION>");
+			out.println("<OPTION VALUE = \"" + "" + "\">** ALL Technicians **</OPTION>");
 			String s = "";
 			while(rsMechanics.next()){
 				String sMechInitial = rsMechanics.getString(SMTablemechanics.TableName + "." 

@@ -2526,7 +2526,6 @@ public class ICEditPOEdit  extends HttpServlet {
 		return s;
 	}
 	
-	//TODO
 	private void listMaterialReturns(
 			PrintWriter out, 
 			ServletContext context, 

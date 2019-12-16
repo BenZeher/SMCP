@@ -124,7 +124,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 				}
 				rs.close();
 			} catch (SQLException e) {
-				out.println("<HTML>WARNING: Error reading user to determine mechanic ID - " + e.getMessage()
+				out.println("<HTML>WARNING: Error reading user to determine technician ID - " + e.getMessage()
 					+ ".</BODY></HTML>");
 				return;	
 			}
@@ -159,7 +159,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 						getServletContext(), 
 						sDBID, 
 						"MySQL", 
-						this.toString() + ".checking mechanic initials match - user: " 
+						this.toString() + ".checking technician initials match - user: " 
 						+ sUserID
 						+ " - "
 						+ sUserFullName
@@ -176,7 +176,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 			
 			//If this user is NOT associated with the selected mechanic, bump him out:
 			if (!bMechanicMatchesUser){
-				out.println("<HTML>WARNING: You do not currently have access to view schedules for mechanics other than yourself.</BODY></HTML>");
+				out.println("<HTML>WARNING: You do not currently have access to view schedules for technicians other than yourself.</BODY></HTML>");
 				return;	
 			}
 		}
@@ -452,9 +452,9 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
     		+ ", ending with date '<B>" + sEndingDate + "</B>'"
     	;
     	if (sMechanicInitials.compareToIgnoreCase("") != 0){
-    		sCriteria += " ONLY for mechanic: '<B>" + sMechanicInitials + "</B>'.";
+    		sCriteria += " ONLY for technician: '<B>" + sMechanicInitials + "</B>'.";
     	}else{
-    		sCriteria += ", including ONLY mechanics for these locations: ";
+    		sCriteria += ", including ONLY technicians for these locations: ";
 	    	for (int i = 0; i < sLocations.size(); i++){
 	    		if (i == 0){
 	    			sCriteria += "<B>" + sLocations.get(i) + "</B>";
@@ -462,7 +462,7 @@ public class SMViewTruckScheduleGenerate extends HttpServlet {
 	    			sCriteria += ", <B>" + sLocations.get(i) + "</B>";
 	    		}
 	    	}
-	    	sCriteria += ", including mechanics AND orders associated with these service types: ";
+	    	sCriteria += ", including technicians AND orders associated with these service types: ";
 	    	for (int i = 0; i < sServiceTypes.size(); i++){
 	    		if (i == 0){
 	    			sCriteria += "<B>" + sServiceTypes.get(i) + "</B>";

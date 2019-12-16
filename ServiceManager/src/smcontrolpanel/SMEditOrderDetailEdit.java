@@ -751,7 +751,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 		s += "</SELECT></TD>";
 		
 		//mechanic
-		s += "<TD class=\" fieldlabel \">Mechanic:&nbsp;</TD>"
+		s += "<TD class=\" fieldlabel \">Technician:&nbsp;</TD>"
 			+ "<TD class=\" fieldcontrol \">"
 			+ "<SELECT NAME=\"" + SMOrderDetail.ParamsMechInitial + "\"" 
 			+ " id = \"" + SMOrderDetail.ParamsMechInitial + "\""
@@ -765,7 +765,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			+ " ORDER BY " + SMTablemechanics.sMechInitial
 		;
 		s += "<OPTION VALUE=\"" + "" + "\">" 
-		+ "** SELECT MECHANIC **"
+		+ "** SELECT TECHNICIAN **"
 		+ "</OPTION>";
 		try {
 			ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -781,7 +781,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			}
 			rsMechanics.close();
 		} catch (SQLException e) {
-			throw new SQLException("Error loading mechanics with SQL: " + SQL + " - " + e.getMessage());
+			throw new SQLException("Error loading technicians with SQL: " + SQL + " - " + e.getMessage());
 		}
 
 		s += "</SELECT></TD>";

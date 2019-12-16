@@ -68,9 +68,9 @@ public class SMOrderDetailList  extends HttpServlet {
 	public static final String LINECOMMANDCOPYABOVE_LABEL = "Copy selected A<B><FONT COLOR=RED>B</FONT></B>OVE"; //B
 	public static final String COPYABOVESELECT_NAME = "COPYABOVESELECT";
 	public static final String LINECOMMANDSETMECHANIC_BUTTON = "LINECOMMANDSETMECHANIC";
-	public static final String LINECOMMANDSETMECHANIC_LABEL = "S<B><FONT COLOR=RED>e</FONT></B>t mechanic"; //E
+	public static final String LINECOMMANDSETMECHANIC_LABEL = "S<B><FONT COLOR=RED>e</FONT></B>t technician"; //E
 	public static final String LINECOMMANDSETMECHANICNSHIP_BUTTON = "LINECOMMANDSETMECHANICNSHIP";
-	public static final String LINECOMMANDSETMECHANICNSHIP_LABEL = "Set mechanic and shi<B><FONT COLOR=RED>p</FONT></B>"; //P
+	public static final String LINECOMMANDSETMECHANICNSHIP_LABEL = "Set technician and shi<B><FONT COLOR=RED>p</FONT></B>"; //P
 	public static final String SETMECHANICIDSELECT_NAME = "SETMECHANICIDSELECT";
 	public static final String LINECOMMANDCREATEITEM_BUTTON = "LINECOMMANDCREATEITEM";
 	public static final String LINECOMMANDCREATEITEM_LABEL = "Crea<B><FONT COLOR=RED>t</FONT></B>e item"; //T
@@ -610,7 +610,7 @@ public class SMOrderDetailList  extends HttpServlet {
 			try{
 				String SQL = "SELECT * FROM " + SMTablemechanics.TableName + " ORDER BY " + SMTablemechanics.sMechInitial;
 				ResultSet rsMechanics = clsDatabaseFunctions.openResultSet(SQL, conn);
-				s += "<OPTION VALUE = \"" + "0" + "\">" + "** NO MECHANIC SELECTED **" + "</OPTION>";
+				s += "<OPTION VALUE = \"" + "0" + "\">" + "** NO TECHNICIAN SELECTED **" + "</OPTION>";
 				while(rsMechanics.next()){
 					s += "<OPTION VALUE = \"" + Long.toString(rsMechanics.getLong(SMTablemechanics.lid)) + "\""
 						+ ">" + rsMechanics.getString(SMTablemechanics.sMechInitial) + " - "

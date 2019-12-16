@@ -1226,7 +1226,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}else{
 					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TD colspan = 5 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Mechanic: " 
+				s += "<TD colspan = 5 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Technician: " 
 						+ rsDetails.getString(SMTableorderdetails.sMechInitial) 
 						+ " - "
 						+ rsDetails.getString(SMTableorderdetails.sMechFullName)
@@ -1430,7 +1430,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				}else{
 					s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_ODD+ ">";
 				}
-				s += "<TD colspan = 6 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Mechanic: " 
+				s += "<TD colspan = 6 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">Technician: " 
 						+ rsDetails.getString(SMTableorderdetails.sMechInitial) 
 						+ " - "
 						+ rsDetails.getString(SMTableorderdetails.sMechFullName)
@@ -1640,7 +1640,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Done date</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">W.O. #</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">View?</TD>";
-			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Mechanic</TD>";
+			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Technician</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Posted?</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Imported?</TD>";
 			s += "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED +"\">Documents</TD>";

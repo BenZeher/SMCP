@@ -517,7 +517,7 @@ public class SMWorkOrderReceipt extends java.lang.Object{
 		String s = "<TABLE style= \" width:100%; border-style:none; font-family: Arial; font-weight: normal; font-size: small;\" >";
 		s += "<TR><TD colspan=2><B><U>Description of work performed:</U></B></TD></TR>";
 		s += "<TR><TD WIDTH=40%>" +
-				"<B>Mechanic Name:</B>&nbsp;&nbsp;&nbsp;&nbsp;" + wo.getmechanicsname() + "<BR>" +
+				"<B>Technician Name:</B>&nbsp;&nbsp;&nbsp;&nbsp;" + wo.getmechanicsname() + "<BR>" +
 				"<B>Date of Work:</B>&nbsp;&nbsp;&nbsp;&nbsp;" + wo.getdattimedone() + 
 			"</TD>";
 		s += "<TD WIDTH=60%><B>Comment:</B> <BR>" + 

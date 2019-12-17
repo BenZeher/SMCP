@@ -626,10 +626,10 @@ public class SMEditOrderEdit  extends HttpServlet {
 					+ ", " + SMTableorderheaders.TableName + "." + SMTableorderheaders.iOrderType
 					+ " FROM " + SMTableorderheaders.TableName 
 					+ " WHERE ("
-					+ "(" + SMTableorderheaders.sShipToAddress1 + " = '" + entry.getM_sShipToAddress1() + "')"
-					+ " AND (" + SMTableorderheaders.sShipToAddress2 + " = '" + entry.getM_sShipToAddress2() + "')"
-					+ " AND (" + SMTableorderheaders.sShipToAddress3 + " = '" + entry.getM_sShipToAddress3() + "')"
-					+  " AND (" + SMTableorderheaders.sShipToAddress4 + " = '" + entry.getM_sShipToAddress4() + "')"
+					+ "(" + SMTableorderheaders.sShipToAddress1 + " = '" + entry.getM_sShipToAddress1().replace("\"", "&quot;").replace("\'", "	&apos;") + "')"
+					+ " AND (" + SMTableorderheaders.sShipToAddress2 + " = '" +  entry.getM_sShipToAddress2().replace("\"", "&quot;").replace("\'", "	&apos;")  + "')"
+					+ " AND (" + SMTableorderheaders.sShipToAddress3 + " = '" +  entry.getM_sShipToAddress3().replace("\"", "&quot;").replace("\'", "	&apos;")  + "')"
+					+  " AND (" + SMTableorderheaders.sShipToAddress4 + " = '" +  entry.getM_sShipToAddress4().replace("\"", "&quot;").replace("\'", "	&apos;")  + "')"
 					+  " AND (" + SMTableorderheaders.sShipToZip + " = '" + entry.getM_sShipToZip() + "')"
 					+ ")"
 					+ "ORDER BY CAST(" + SMTableorderheaders.strimmedordernumber + " AS UNSIGNED) DESC "

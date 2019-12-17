@@ -3,6 +3,7 @@ package smic;
 import SMClasses.*;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
+import ServletUtilities.clsManageRequestParameters;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -60,7 +61,8 @@ public class ICEditBatchesUpdate extends HttpServlet{
     batch.sSetLastEditedByID(sUserID);
     batch.sModuleType(SMModuleTypes.IC);
     
-	if (request.getParameter("Delete") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(ICEditBatchesEdit.DELETE_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmDelete") != null){
 			if (batch.flag_as_deleted(getServletContext(), sDBID)){
 				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT , "Batch " + batch.sBatchNumber() + " was deleted." );
@@ -93,7 +95,8 @@ public class ICEditBatchesUpdate extends HttpServlet{
 		    return;
 		}
 	}
-	if (request.getParameter("Post") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(ICEditBatchesEdit.POST_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmPost") != null){
 			if (!batch.load(getServletContext(), sDBID)){
 				m_EditBatchesUpdateWarning = "WARNING: could not load batch " + sBatchNumber + ": \n" + batch.getErrorMessages();

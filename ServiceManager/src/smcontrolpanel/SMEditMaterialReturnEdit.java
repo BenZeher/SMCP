@@ -238,23 +238,11 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//'Returned' section:
 		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>VENDOR RETURNS</B>:</TD>\n</TR>\n";
 
-		//Credit Not Expected
-		//Credit to be expected will have a Expected Credit Amount
-		//Credit received will have Credit Memo Number and Date of Credit Memo
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.screditnotexpectedlabel + "</B></TD>\n";
-		s += "<TD>\n";
-		String sChecked = "";
-		if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
-			sChecked = " checked ";
-		}else{
-			sChecked = "";
-		}
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
-
+		
 		//To Be Returned
 		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.stobereturnedlabel + "? </B></TD>\n";
 		s += "<TD>\n";
-		sChecked = "";
+		String sChecked = "";
 		if (entry.getstobereturned().compareToIgnoreCase(Integer.toString(1)) == 0){
 			sChecked = " checked ";
 		}else{
@@ -415,6 +403,20 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ "</TR>"
 				;
 
+		//Credit Not Expected
+				//Credit to be expected will have a Expected Credit Amount
+				//Credit received will have Credit Memo Number and Date of Credit Memo
+				s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.screditnotexpectedlabel + "</B></TD>\n";
+				s += "<TD>\n";
+				sChecked = "";
+				if (entry.getscreditnotexpected().compareToIgnoreCase(Integer.toString(1)) == 0){
+					sChecked = " checked ";
+				}else{
+					sChecked = "";
+				}
+				s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditnotexpected + "' VALUE= "+ SMTablematerialreturns.STATUS_CREDITNOTEXPECTED + sChecked + " ><BR>";
+
+		
 		s += "</TABLE>";
 		return s;
 	}

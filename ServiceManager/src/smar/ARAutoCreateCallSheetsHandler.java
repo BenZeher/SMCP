@@ -364,13 +364,13 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 			} catch (Exception e1) {
 				clsDatabaseFunctions.rollback_data_transaction(conn);
 				clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067486]");
-				throw new Exception("Error [1548694924] creating call sheets - " + e1.getMessage());
+				throw new Exception("Error %5B1548694924%5D creating call sheets - " + e1.getMessage());
 			}
 		}
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067487]");
-			throw new Exception("Error [1548694925] committing data transaction.");
+			throw new Exception("Error %5B1548694925%5BD committing data transaction.");
 		}
 
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067488]");
@@ -423,7 +423,7 @@ public class ARAutoCreateCallSheetsHandler extends HttpServlet{
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		} catch (SQLException e) {
-			throw new Exception("Error [1548695350] inserting call sheet with SQL: " + clsServletUtilities.URLEncode(SQL) + " - " + e.getMessage());
+			throw new Exception("Error %5B1548695350%5D inserting call sheet with SQL: " + clsServletUtilities.URLEncode(SQL) + " - " + e.getMessage());
 		}
 		
 		return;

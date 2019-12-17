@@ -104,7 +104,7 @@ public class FAAssetList extends java.lang.Object{
 			+ ") AS TRANSQUERY"
 			+ " ON " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + " = " + " TRANSQUERY.ASSETNUM"
 
-			//Now join the transactions to get the accummulated depreciation UP TO the selected fiscal year:
+			//Now join the transactions to get the accumulated depreciation UP TO the selected fiscal year:
 			+ " LEFT JOIN "
 			+ "(SELECT "
 			+ " SUM(" + SMTablefatransactions.dAmountDepreciated + ") AS ACCUMDEP"
@@ -121,7 +121,7 @@ public class FAAssetList extends java.lang.Object{
 			+ ")"
 			+ " GROUP BY " + SMTablefatransactions.sTransAssetNumber
     		+ ") AS ACCUMDEPQUERY"
-    		+ " ON " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + " = " + " TRANSQUERY.ASSETNUM"
+    		+ " ON " + SMTablefamaster.TableName + "." + SMTablefamaster.sAssetNumber + " = " + " ACCUMDEPQUERY.ASSETNUM"
     		
     		+ " WHERE (" +
     		" (" + SMTablefamaster.TableName + "." + SMTablefamaster.sClass + " =" +

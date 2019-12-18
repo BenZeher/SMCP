@@ -1013,34 +1013,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			
 			//Allow for the possibility that this update affects an opening balance in a subsequent fiscal set:
 			//Update the opening balance for any subsequent fiscal years for this account:
-			//Update retained earnings for the year RATHER than the starting balance
-			GLAccount glacct = new GLAccount(sAccount);
-			//This flag will remember for us whether an income/expense account was involved here.  If it was, we'll
-			//need to update the financial statement data for the closing account, as well as the income/expense account.
-			//That may be done more than once if we loop through here more than once - but that's simpler in the logic,
-			//even if it means that we spend a few redundant iterations....
-			if(!glacct.load(conn)){
-				throw new Exception("Error [1556569790] checking normal balance type for GL account '" 
-					+ sAccount + "' - " + glacct.getErrorMessageString());
-			}
-			
-			//If it's a balance sheet account, then we simply update all the opening balances in any subsequent
-			//fiscal sets.
-			
-			//Income statement account changes from the previous year go to Retained Earnings (the 'closing' account).
-			// Retained earnings normally carries a 'credit' balance, as do income accounts.
-			// Expense accounts normally carry a debit balance.
-			String sTargetAccount = sAccount;
-			String sClosingAccount = "";
-			if (glacct.getM_stype().compareToIgnoreCase(SMTableglaccounts.ACCOUNT_TYPE_INCOME_STATEMENT) == 0){
-				GLOptions gloptions = new GLOptions();
-				if (!gloptions.load(conn)){
-					throw new Exception("Error [1556569791] checking GL Options closing account " 
-						+ " - " + gloptions.getErrorMessageString());
-				}
-				//sTargetAccount = gloptions.getsClosingAccount();
-				sClosingAccount = gloptions.getsClosingAccount();
-			}
 			
 			//Determine how many subsequent fiscal years there are, and update the opening balance on each:
 			SQL = "SELECT"
@@ -1056,7 +1028,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				while (rsFiscalYears.next()){
 					//First, get the closing balance of the previous year:
 					bdPreviousYearClosingBalance = getClosingBalanceForFiscalYear(
-						sTargetAccount, rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear) - 1, conn);
+						sAccount, rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear) - 1, conn);
 					
 					//FUTURE Fiscal set records get inserted or updated as needed:
 					SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
@@ -1066,7 +1038,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						+ ") VALUES ("
 						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
 						+ ", " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
-						+ ", '" + sTargetAccount + "'"
+						+ ", '" + sAccount + "'"
 						+ ")"
 						+ " ON DUPLICATE KEY UPDATE "
 						+ SMTableglfiscalsets.bdopeningbalance + " = " 
@@ -1096,14 +1068,6 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				throw new Exception(e.getMessage());
 			}
 			
-			//If there is a CLOSING account, update it, too:
-			if(sClosingAccount.compareToIgnoreCase("") != 0){
-				try {
-					dc.processFinancialRecords(sClosingAccount, Integer.toString(iFiscalYear), conn, true);
-				} catch (Exception e) {
-					throw new Exception(e.getMessage());
-				}	
-			}
 			return;
 		}
 	private static BigDecimal getClosingBalanceForFiscalYear(String sAcctID, int iFiscalYear, Connection conn) throws Exception{

@@ -48,6 +48,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Parambdcreditamt = "bdcreditamt";
 	public static final String Paramdatreturnsent = "datreturnsent";
 	public static final String Paramiinvoiceonhold = "iinvoiceonhold";
+	public static final String Parammvendorcomments = "mVendorComments";
 
 
 	private String m_slid;
@@ -76,6 +77,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_bdcreditamt;
 	private String m_datreturnsent;
 	private String m_sinvoiceonhold;
+	private String m_svendorcomments;
 
 	private boolean bDebugMode = false;
 
@@ -180,6 +182,9 @@ public class SMMaterialReturn extends clsMasterEntry{
 		}else{
 			m_sinvoiceonhold = "1";
 		}
+		
+		m_svendorcomments = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parammvendorcomments, req).trim().replace("&quot;", "\""); 
 
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
 	}
@@ -264,6 +269,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_bdcreditamt = clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTablematerialreturns.bdcreditamt));
 				m_datreturnsent = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datreturnsent));
 				m_sinvoiceonhold = Long.toString(rs.getLong(SMTablematerialreturns.iinvoiceonhold));
+				m_svendorcomments = rs.getString(SMTablematerialreturns.mVendorComments).trim();
 				rs.close();
 			} else {
 				rs.close();
@@ -394,6 +400,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 					+ ", " + SMTablematerialreturns.bdcreditamt
 					+ ", " + SMTablematerialreturns.datreturnsent
 					+ ", " + SMTablematerialreturns.iinvoiceonhold
+					+ ", " + SMTablematerialreturns.mVendorComments
 					+ ") VALUES ("
 					+ "NOW()"
 					+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -424,6 +431,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " +  clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ", " + getsinvoiceonhold()
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsVendorComments().trim()) + "'"
 			+ ")"
 			;
 		}else{
@@ -454,12 +462,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.bdcreditamt  + " = " + clsDatabaseFunctions.FormatSQLStatement(getbdcreditamt().trim()) + ""
 			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ", " + SMTablematerialreturns.iinvoiceonhold + " = " + getsinvoiceonhold()
+			+ ", " + SMTablematerialreturns.mVendorComments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsVendorComments().trim()) + "'"
 			+ " WHERE ("
 			+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 			+ ")"
 			;
 		}
-		System.out.println("[20193011047489] " + SQL);
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
 		}
@@ -889,6 +897,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setsinvoiceonhold(String sinvoiceonhold) {
 		m_sinvoiceonhold = sinvoiceonhold;
 	}
+	public String getsVendorComments() {
+		return m_svendorcomments;
+	}
+	public void setsVendorComments(String svendorcomments) {
+		m_svendorcomments = svendorcomments;
+	}
+	
 
 
 	public String getObjectName(){

@@ -299,6 +299,20 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s+= "</TD>\n"
 				+ "</TR>\n";
 
+		//Comments:
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sVendorCommentsLabel + "</B>:</TD>\n";
+		s += "<TD>\n"
+				+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammvendorcomments + "\""
+				+ " rows=\"" + "3" + "\""
+				//+ " cols=\"" + Integer.toString(iCols) + "\""
+				+ " style = \" width: 100%; \""
+				+ ">"
+				+ entry.getsVendorComments().replace("\"", "&quot;")
+				+ "</TEXTAREA>"
+				+ "</TD>\n"
+				+ "</TR>\n"
+				;
+		
 		//Date Returned
 		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
 			s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sreturnsentlabel + ":<B></TD>"
@@ -319,6 +333,9 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 					+ "</TR>"
 					;
 		}
+		
+		//'Returned' section:
+		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>ACCOUNTING</B>:</TD>\n</TR>\n";
 
 		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
 		String sEntryNumber = entry.getladjustedentrynumber().replace("\"", "&quot;");

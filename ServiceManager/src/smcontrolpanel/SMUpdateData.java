@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1438;
+	private static final int m_CurrentDatabaseVersion = 1439;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "12/17/2019";
+	private static final String m_sLastRevisionDate = "12/18/2019";
 	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14966,6 +14966,17 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 12/11/2019
 				SQL = "ALTER TABLE `glfiscalperiods` "
 						+ "ADD ilockclosingperiod int(11) NOT NULL default '1'"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1438:
+				//Added by BJA 12/18/2019
+				SQL = "ALTER TABLE `materialreturns` "
+						+ " ADD mVendorComments MEDIUMTEXT NOT NULL"
 						;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

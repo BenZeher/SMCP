@@ -181,7 +181,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 	        out.println("</TABLE><BR><BR>");
 	        
         	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----List----\">");
-    	    out.println(clsCreateHTMLFormFields.TDCheckBox("CheckSubtotalOnly", false, "<B>Show subtotals for mechanics only.</B>"));
+    	    out.println(clsCreateHTMLFormFields.TDCheckBox("CheckSubtotalOnly", false, "<B>Show subtotals for technicians only.</B>"));
         	out.println("</FORM>");
 		    
 	    } catch (Exception ex) {

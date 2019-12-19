@@ -953,5 +953,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_bdcreditamt = "0.00";
 		m_datreturnsent = EMPTY_DATE_STRING;
 		m_sinvoiceonhold = "0";
+		m_svendorcomments = "";
 	}
 }

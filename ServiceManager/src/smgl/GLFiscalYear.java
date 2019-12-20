@@ -14,6 +14,8 @@ import java.util.GregorianCalendar;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMDataDefinition.SMTableglaccounts;
+import SMDataDefinition.SMTableglfinancialstatementdata;
 import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import ServletUtilities.clsDatabaseFunctions;
@@ -864,9 +866,108 @@ public class GLFiscalYear extends java.lang.Object{
 	 	}catch (SQLException e){
 	 		throw new Exception("Error [1530901737] saving " + GLFiscalYear.ParamObjectName + " record - with SQL:" + SQL + " - " + e.getMessage());
 	 	}
+	 	
+	 	//If it's a new fiscal year, then also add blank fiscal set and financial statement data for the new fiscal year:
+	 	if (get_snewrecord().compareToIgnoreCase(ADDING_NEW_RECORD_PARAM_VALUE_TRUE) == 0){
+	 		try {
+				addBlankFiscalData(conn, get_sifiscalyear());
+			} catch (Exception e) {
+				throw new Exception("Error [20193531318295] " + " could not add fiscal set and financial statement data for fiscal year " + get_sifiscalyear()
+					+ " - " + e.getMessage() + "."
+				);
+			}
+	 	}
 
 	 	set_snewrecord(ADDING_NEW_RECORD_PARAM_VALUE_FALSE);
 	 	return;
+    }
+    private void addBlankFiscalData(Connection conn, String sFiscalYear) throws Exception{
+    	
+    	//First, get a recordset of all the GL accounts:
+    	String SQL = "SELECT "
+    		+ " " + SMTableglaccounts.sAcctID
+    		+ " FROM " + SMTableglaccounts.TableName
+    		+ " ORDER BY " + SMTableglaccounts.sAcctID
+    	;
+    	try {
+			ResultSet rsGLAccts = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsGLAccts.next()){
+				//Insert a new fiscal set record here:
+				SQL = "INSERT IGNORE INTO " + SMTableglfiscalsets.TableName
+					+ " ("
+					+ SMTableglfiscalsets.ifiscalyear
+					+ ", " + SMTableglfiscalsets.sAcctID
+					+ ") VALUES ("
+					+ sFiscalYear
+					+ ", '" + rsGLAccts.getString(SMTableglaccounts.sAcctID) + "'"
+					+ ")"
+				;
+				try {
+					Statement stmt = conn.createStatement();
+					stmt.execute(SQL);
+				} catch (Exception e) {
+					rsGLAccts.close();
+					throw new Exception("Error [20193531326426] " + "could not insert new fiscal set record with SQL: '" + SQL + "' - "
+						+ " - " + e.getMessage() + "."
+					);
+				}
+			}
+			rsGLAccts.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20193531327337] " + " - " + e.getMessage());
+		}
+    	
+    	int iNumberOfPeriods;
+		try {
+			iNumberOfPeriods = Integer.parseInt(get_sinumberofperiods());
+		} catch (Exception e1) {
+			throw new Exception("Error [20193531333335] " + "Could not parse '" + get_sinumberofperiods() + "' into an integer - " + e1.getMessage() + ".");
+		}
+    	
+    	//Now create the financial statement data:
+    	SQL = "SELECT"
+    		+ " " + SMTableglfiscalsets.sAcctID
+    		+ ", " + SMTableglfiscalsets.ifiscalyear
+    		+ " FROM " + SMTableglfiscalsets.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTableglfiscalsets.ifiscalyear + " = " + sFiscalYear + ")"
+    		+ ")"
+    	;
+    	try {
+			ResultSet rsGLFiscalSets = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+			while (rsGLFiscalSets.next()){
+				//Insert all the appropriate financial statement data records:
+				for (int iPeriod = 1; iPeriod <= iNumberOfPeriods; iPeriod++){
+					//Insert a financial statement record for each account, and each period:
+					SQL = "INSERT IGNORE INTO " + SMTableglfinancialstatementdata.TableName
+						+ "("
+						+ SMTableglfinancialstatementdata.sacctid
+						+ ", " + SMTableglfinancialstatementdata.ifiscalperiod
+						+ ", " + SMTableglfinancialstatementdata.ifiscalyear
+						+ ") VALUES ("
+						+ "'" + rsGLFiscalSets.getString(SMTableglfiscalsets.sAcctID) + "'"
+						+ ", " + Integer.toString(iPeriod)
+						+ ", " + sFiscalYear
+						+ ")"
+					;
+					try {
+						Statement stmt = conn.createStatement();
+						stmt.execute(SQL);
+					} catch (Exception e) {
+						rsGLFiscalSets.close();
+						throw new Exception("Error [20193531326426] " + "could not insert new financial statement data record with SQL: '" + SQL + "' - "
+							+ " - " + e.getMessage() + "."
+						);
+					}
+				}
+			}
+			rsGLFiscalSets.close();
+		} catch (Exception e) {
+			throw new Exception("Error [20193531330486] " + " could not update financial statement data - " + e.getMessage() + ".");
+		}
+    	
+    	return;
+		
     }
     private void validateEntries(Connection conn) throws Exception{
     	

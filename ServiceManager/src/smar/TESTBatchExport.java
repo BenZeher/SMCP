@@ -1,12 +1,10 @@
 package smar;
 import java.sql.DriverManager;
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 
 import javax.servlet.http.HttpServlet;
 
-import smcontrolpanel.SMPurgeData;
+import smgl.GLACCPACConversion;
+import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -146,6 +144,35 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		
+		//Test GL Transaction Batch posting:
+		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
+		GLTransactionBatch glbatch = new GLTransactionBatch("1");
+		try {
+			glbatch.post_with_connection(conn, "1", "airo");
+		} catch (Exception e) {
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			System.out.println(e.getMessage());
+		}
+		//clsDatabaseFunctions.commit_data_transaction(conn);
+		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+		System.out.println("DONE");
+		
+		
+		/*
+		//Test GL conversion function:
+		String s = "";
+		try {
+			GLACCPACConversion conv = new GLACCPACConversion();
+			s = conv.processGLFinancialData(conn, "airo");
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+		}
+		
+		System.out.println(s);
+		*/
+		
+		/*
 		//Test purging GL data:
 		DateFormat df = new SimpleDateFormat("MM-dd-yyyy");
 		java.sql.Date datPurgeDeadline = null;
@@ -172,6 +199,7 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println("[2019350150582] " + e.getMessage());
 		}
 		System.out.println("DONE");
+		*/
 		
 		/*
 		//Test updating financial statement records:
@@ -199,7 +227,19 @@ public class TESTBatchExport extends HttpServlet{
 		} catch (Exception e1) {
 			System.out.println(e1.getMessage());
 		}
-		System.out.println("DONE");
+		System.out.println("DONE");create table glfinancialstatementdata_bak like glfinancialstatementdata;
+create table glfiscalsets_bak like glfiscalsets;
+create table gltransactionbatchentries_bak like gltransactionbatchentries;
+create table gltransactionbatches_bak like gltransactionbatches;
+create table gltransactionbatchlines_bak like gltransactionbatchlines;
+create table gltransactionlines_bak like gltransactionlines;
+
+insert into glfinancialstatementdata_bak select * from glfinancialstatementdata;
+insert into glfiscalsets_bak select * from glfiscalsets;
+insert into gltransactionbatchentries_bak select * from gltransactionbatchentries;
+insert into gltransactionbatches_bak select * from gltransactionbatches;
+insert into gltransactionbatchlines_bak select * from gltransactionbatchlines;
+insert into gltransactionlines_bak select * from gltransactionlines;
 		*/
 		
 		/*
@@ -214,21 +254,6 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(e.getMessage());
 		}
 		
-		System.out.println("DONE");
-		*/
-		
-		/*
-		//Test GL Transaction Batch posting:
-		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
-		GLTransactionBatch glbatch = new GLTransactionBatch("2");
-		try {
-			glbatch.post_with_connection(conn, "1", "airo");
-		} catch (Exception e) {
-			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
-			System.out.println(e.getMessage());
-		}
-		//clsDatabaseFunctions.commit_data_transaction(conn);
-		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
 		*/
 		
@@ -283,23 +308,6 @@ public class TESTBatchExport extends HttpServlet{
 		System.out.println("DONE");
 		*/
 		
-		
-		//Test GL conversion function:
-		/*
-		try {
-			GLACCPACConversion conv = new GLACCPACConversion();
-			String s = conv.processGLAccountStructureTables(
-					conn, 
-					cnAP, 
-					"comp3",
-					0, 
-					"airo");
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
-		}
-		
-		System.out.println("DONE");
-		*/
 		
 		/*
 				APBatch batch = new APBatch("514");

@@ -1008,6 +1008,7 @@ public class GLTransactionBatch {
 	    		;
     	}else{
     		//But if it IS a closing batch, then we just need to update ALL the accounts
+    		/*
 	    	SQL = "SELECT"
 	    		+ " SUM(IF(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + " IS NOT NULL, " 
 	    			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ", 0.00)) AS 'NETPERIODCHANGEFORACCOUNT'"
@@ -1034,6 +1035,37 @@ public class GLTransactionBatch {
 	    		+ " GROUP BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 	    		+ ", `FISCALYEAR`"
 	    		+ ", `FISCALPERIOD`"
+	    		+ " ORDER BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+	    		+ ", `FISCALYEAR`"
+	    		+ ", `FISCALPERIOD`"
+	    	;
+	    	*/
+	    	//Testing this:
+	    	SQL = "SELECT"
+	    		+ " IF(TRANSACTIONQUERY.NETPERIODCHANGE IS NOT NULL, TRANSACTIONQUERY.NETPERIODCHANGE, 0.00) AS 'NETPERIODCHANGEFORACCOUNT'"
+				+ ", " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + " AS 'FISCALPERIOD'"
+				+ ", " + Integer.toString(iClosingFiscalYear) + " AS 'FISCALYEAR'"
+				+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + " AS 'GLACCT'"
+	    		+ " FROM " + SMTableglaccounts.TableName
+				+ " LEFT JOIN"
+				+ " (SELECT" 
+				+ " SUM(IF(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + " IS NOT NULL, " 
+					+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + ", 0.00)) AS 'NETPERIODCHANGE'"
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " AS 'ACCT'"
+ 				+ " FROM " + SMTablegltransactionlines.TableName
+ 				+ " WHERE ("
+ 					+ "(" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear 
+ 						+ " = " + Integer.toString(iClosingFiscalYear) + ")"
+ 					+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod 
+ 						+ " = " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + ")"
+				+ ")"		
+				+ ") AS TRANSACTIONQUERY"
+ 				+ " ON (TRANSACTIONQUERY.ACCT=" + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + ")"
+				
+				+ " WHERE ("
+					+ "(" + SMTableglaccounts.TableName + "." + SMTableglaccounts.lActive + " = 1)"
+				+ ") GROUP BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + ", `FISCALYEAR`, `FISCALPERIOD`"
+ 				+ " ORDER BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + ", `FISCALYEAR`, `FISCALPERIOD`"
 	    	;
 	    }
     	//System.out.println("[2019326183350] " + "SQL = '" + SQL + "'.");
@@ -1041,6 +1073,7 @@ public class GLTransactionBatch {
     	try {
 			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsTransactions.next()){
+				//System.out.println("[20193541038507] " + "Account = '" + rsTransactions.getString("GLACCT") + "'");
 				dc.updateFiscalSetsForAccount(
 					conn, 
 					rsTransactions.getString("GLACCT"),

@@ -842,7 +842,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		long lStartingNumberOfRecords = 0L;
 		long lEndingNumberOfRecords = 0L;
 		int iBufferSize = 0;
-		final int MAX_BUFFER = 100;
+		final int MAX_BUFFER = 10;
 		
 		try {
 			SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
@@ -982,7 +982,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//First, get the closing balance from the previous fiscal year:
 			BigDecimal bdPreviousYearClosingBalance = getClosingBalanceForFiscalYear(sAccount, iFiscalYear - 1, conn);
 			
-			//The fiscal set record gets created or updated here:
+			//The fiscal set record, for ThiS fiscal year, gets created or updated here:
 			String SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
 				+ sNetChangeField
 				+ ", " + SMTableglfiscalsets.bdopeningbalance
@@ -1024,11 +1024,12 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				+ ")"
 			;
 	    	try {
-				ResultSet rsFiscalYears = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-				while (rsFiscalYears.next()){
+				ResultSet rsSubsequentFiscalYears = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+				while (rsSubsequentFiscalYears.next()){
 					//First, get the closing balance of the previous year:
-					bdPreviousYearClosingBalance = getClosingBalanceForFiscalYear(
-						sAccount, rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear) - 1, conn);
+					int iSubsequentFiscalYear = rsSubsequentFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear);
+					int iPreviousFiscalYear = iSubsequentFiscalYear - 1;
+					bdPreviousYearClosingBalance = getClosingBalanceForFiscalYear(sAccount, iPreviousFiscalYear, conn);
 					
 					//FUTURE Fiscal set records get inserted or updated as needed:
 					SQL = "INSERT INTO " + SMTableglfiscalsets.TableName + "("
@@ -1037,7 +1038,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 						+ ", " + SMTableglfiscalsets.sAcctID
 						+ ") VALUES ("
 						+ ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSQLFormat(bdPreviousYearClosingBalance)
-						+ ", " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
+						+ ", " + Integer.toString(iSubsequentFiscalYear)
 						+ ", '" + sAccount + "'"
 						+ ")"
 						+ " ON DUPLICATE KEY UPDATE "
@@ -1052,11 +1053,11 @@ public class GLFinancialDataCheck extends java.lang.Object{
 					} catch (Exception e) {
 						throw new Exception(
 							"Error [1555962592] updating opening balance of subsequent GL fiscal sets for account '" + sAccount 
-							+ "', fiscal year " + Integer.toString(rsFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
+							+ "', fiscal year " + Integer.toString(rsSubsequentFiscalYears.getInt(SMTableglfiscalsets.ifiscalyear))
 							+ " - " + e.getMessage());
 					}
 				}
-				rsFiscalYears.close();
+				rsSubsequentFiscalYears.close();
 			} catch (Exception e) {
 				throw new Exception("Error [1555958398] reading fiscal years with SQL: '" + SQL + "' - " + e.getMessage());
 			}
@@ -1163,7 +1164,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		
 		//Opening balance:
 		if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdopeningbalance).compareTo(objCurrentFiscalSet.m_bdopeningbalance) != 0){
-			sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+			sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 				+ " opening balance shows " + rsFinancialData.getBigDecimal(
 					SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance)
 				+ " but the fiscal set shows " + objCurrentFiscalSet.m_bdopeningbalance + "."
@@ -1174,7 +1175,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//Net change per period:
 		if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforperiod).compareTo(
 				objCurrentFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod)) != 0){
-			sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+			sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 				+ " net change for period shows " + rsFinancialData.getBigDecimal(
 					SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod)
 				+ " but the fiscal set shows " + objCurrentFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod) + "."
@@ -1184,7 +1185,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		//Total year to date:
 		if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdtotalyeartodate).compareTo(
 				objCurrentFiscalSet.getTotalYearToDataByPeriod(iFiscalPeriod)) != 0){
-			sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+			sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 				+ " total year to date for period shows " + rsFinancialData.getBigDecimal(
 					SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate)
 				+ " but the fiscal set shows " + objCurrentFiscalSet.getTotalYearToDataByPeriod(iFiscalPeriod) + "."
@@ -1209,7 +1210,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//Test the net change from same period, previous year:
 			if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear).compareTo(
 					objPreviousFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod)) != 0){
-				sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+				sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 					+ " same period, for the previous year shows " + rsFinancialData.getBigDecimal(
 						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiodpreviousyear)
 					+ " but the fiscal set shows " + objPreviousFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod) + "."
@@ -1219,7 +1220,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//Test the previous year's total to date:
 			if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdtotalpreviousyeartodate).compareTo(
 					objPreviousFiscalSet.getTotalYearToDataByPeriod(iFiscalPeriod)) != 0){
-				sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+				sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 					+ " total previous year to date shows " + rsFinancialData.getBigDecimal(
 						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalpreviousyeartodate)
 					+ " but the fiscal set shows " + objPreviousFiscalSet.getTotalYearToDataByPeriod(iFiscalPeriod) + "."
@@ -1229,7 +1230,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			//Test the previous year's opening balance:
 			if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdopeningbalancepreviousyear).compareTo(
 					objPreviousFiscalSet.m_bdopeningbalance) != 0){
-				sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+				sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 					+ " previous year opening balance shows " + rsFinancialData.getBigDecimal(
 						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalancepreviousyear)
 					+ " but the fiscal set shows " + objPreviousFiscalSet.m_bdopeningbalance + "."
@@ -1244,7 +1245,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 				BigDecimal bdNetChangeLastPeriodPreviousYear = objPreviousFiscalSet.getPeriodChangeByPeriod(objPreviousFiscalSet.m_numberofperiods);
 				if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod).compareTo(
 						bdNetChangeLastPeriodPreviousYear) != 0){
-					sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+					sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 						+ " previous period net change shows " + rsFinancialData.getBigDecimal(
 							SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod)
 						+ " but the fiscal set shows " + bdNetChangeLastPeriodPreviousYear + "."
@@ -1254,7 +1255,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		}else{
 			if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod).compareTo(
 					objCurrentFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod - 1)) != 0){
-				sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+				sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 					+ " previous period net change shows " + rsFinancialData.getBigDecimal(
 						SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiod)
 					+ " but the fiscal set shows " + objCurrentFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod - 1) + "."
@@ -1281,7 +1282,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			if (bTwoPreviousYearsFound){
 				if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear).compareTo(
 						objPreviousTwoYearsFiscalSet.getPeriodChangeByPeriod(objPreviousTwoYearsFiscalSet.m_numberofperiods)) != 0){
-					sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+					sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 						+ " previous period, previous year net change shows " + rsFinancialData.getBigDecimal(
 							SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear)
 						+ " but the fiscal set shows " + objPreviousTwoYearsFiscalSet.getPeriodChangeByPeriod(objPreviousTwoYearsFiscalSet.m_numberofperiods) + "."
@@ -1292,7 +1293,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 			if (bPreviousYearFound){
 				if (rsFinancialData.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear).compareTo(
 						objPreviousFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod - 1)) != 0){
-					sMessages += "\n" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
+					sMessages += "<BR>" + "Acct " + sAccount + " year " + Integer.toString(iFiscalYear) + " period " + Integer.toString(iFiscalPeriod)
 						+ " previous period, previous year net change shows " + rsFinancialData.getBigDecimal(
 							SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforpreviousperiodpreviousyear)
 						+ " but the fiscal set shows " + objPreviousFiscalSet.getPeriodChangeByPeriod(iFiscalPeriod - 1) + "."

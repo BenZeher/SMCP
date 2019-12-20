@@ -842,7 +842,7 @@ public class GLFinancialDataCheck extends java.lang.Object{
 		long lStartingNumberOfRecords = 0L;
 		long lEndingNumberOfRecords = 0L;
 		int iBufferSize = 0;
-		final int MAX_BUFFER = 10;
+		final int MAX_BUFFER = 50;
 		
 		try {
 			SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;

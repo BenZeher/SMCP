@@ -581,13 +581,20 @@ public class GLACCPACConversion  extends java.lang.Object{
 		rsFiscalSets.close();
 		
 		GLFinancialDataCheck dc = new GLFinancialDataCheck();
-		dc.processFinancialRecords(
-			"", 
-			sStartingFiscalYear,
-			cnSMCP,
-			true
-		);
-
+		ServletUtilities.clsDatabaseFunctions.start_data_transaction(cnSMCP);
+		try {
+			dc.processFinancialRecords(
+				"", 
+				sStartingFiscalYear,
+				cnSMCP,
+				true
+			);
+		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(cnSMCP);
+			throw new Exception("Error [20193541558439] " + " - " + e1.getMessage() + ".");
+		}
+		ServletUtilities.clsDatabaseFunctions.commit_data_transaction(cnSMCP);
+		
 		//Get the count of financial statement records:
 		SQL = "SELECT COUNT(*) AS RECORDCOUNT FROM " + SMTableglfinancialstatementdata.TableName;
 		long lCount;

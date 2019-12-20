@@ -1059,6 +1059,7 @@ public class GLTransactionBatch {
  					+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod 
  						+ " = " + Integer.toString(SMTableglfiscalsets.TOTAL_NUMBER_OF_GL_PERIODS) + ")"
 				+ ")"		
+ 				+ " GROUP BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
 				+ ") AS TRANSACTIONQUERY"
  				+ " ON (TRANSACTIONQUERY.ACCT=" + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID + ")"
 				
@@ -1073,6 +1074,9 @@ public class GLTransactionBatch {
     	try {
 			ResultSet rsTransactions = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 			while (rsTransactions.next()){
+				//if (rsTransactions.getString("GLACCT").compareToIgnoreCase("29500075") == 0){
+				//	System.out.println("[1576877407] Retained earnings");
+				//}
 				//System.out.println("[20193541038507] " + "Account = '" + rsTransactions.getString("GLACCT") + "'");
 				dc.updateFiscalSetsForAccount(
 					conn, 
@@ -1120,6 +1124,7 @@ public class GLTransactionBatch {
 
     		//Get the normal GL account type:
         	GLAccount acct = new GLAccount(line.getsacctid());
+        	
         	if(!acct.load(conn)){
         		throw new Exception("Error [1556039863] loading GL account '" + line.getsacctid() + "' - " + acct.getErrorMessageString());
         	}

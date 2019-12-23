@@ -52,12 +52,14 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		//the session will have an entry object in it, and that's what we'll pick up.
 		HttpSession currentSession = smedit.getCurrentSession();
 
-		if (currentSession.getAttribute(SMMaterialReturn.ParamObjectName) != null){
+		if (currentSession.getAttribute(SMMaterialReturn.ParamObjectName) != null ){
 			entry = (SMMaterialReturn) currentSession.getAttribute(SMMaterialReturn.ParamObjectName);
 			currentSession.removeAttribute(SMMaterialReturn.ParamObjectName);
 			//But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 			//edit, we'll pick up the ID or key from the request and try to load the entry:
-		}else{
+		}else if(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0 &&ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlid, request).compareToIgnoreCase("-1") == 0 ){
+			//IF new entry, and clicked find vendor: don't load
+		}else {
 			if (!smedit.getAddingNewEntryFlag()){
 				try {
 					entry.load(getServletContext(), smedit.getsDBID(), smedit.getUserID(), smedit.getFullUserName());

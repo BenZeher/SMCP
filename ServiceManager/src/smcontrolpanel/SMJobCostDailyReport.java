@@ -345,7 +345,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 					}
 			 	}catch (ArithmeticException e){
 			 		pwSuppressed.println(
-							"Caught arithmetic exception [1412714605] - mechanic: " + sCurrentMechanic + ", day: "
+							"Caught arithmetic exception [1412714605] - technician: " + sCurrentMechanic + ", day: "
 							+ sCurrentDay + ", job: " + sOrderNumber + ", hrs: " + bdJobHoursUsed.toString()
 							+ ", travel: " + bdJobHoursTravel.toString() + ", total estimated: "
 							+ bdTotalEstimated.toString() + ", bdTotalProductionHoursUsed = "
@@ -525,7 +525,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("In " + this.toString() + " could not read mechanic's name - " + e.getMessage());
+			System.out.println("In " + this.toString() + " could not read technician's name - " + e.getMessage());
 		}
 		
 		pwOut.println("<BR>");
@@ -632,7 +632,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			+ "Travel: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTravelHoursForDay) + "<BR>"
 			+ "<B>TOTAL CHARGED: </B>" 
 				+ clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdChargedHoursForDay.add(bdTravelHoursForDay)) + "<BR>"
-			+ "BackCharge: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBackChargeHoursForDay) + "<BR>"
+			+ "Backcharge: " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBackChargeHoursForDay) + "<BR>"
 		);
 		
 		pwOut.println("</TD>");
@@ -648,7 +648,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 						bdWorkAndTravelHoursForDay.setScale(4), 2, BigDecimal.ROUND_HALF_UP);
 				}catch (ArithmeticException e){
 					pwOut.println(
-						"Caught arithmetic exception ln 624 - mechanic: " + sMechanic + ", day: "
+						"Caught arithmetic exception ln 624 - technician: " + sMechanic + ", day: "
 						+ sDate + ", bdDailyEfficiencyProduct: " + bdDailyEfficiencyProduct.toString() 
 						+ ", bdWorkAndTravelHoursForDay: " + bdWorkAndTravelHoursForDay.toString()
 					);
@@ -794,13 +794,13 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("In " + this.toString() + " could not read mechanic's name - " + e.getMessage());
+			System.out.println("In " + this.toString() + " could not read technician's name - " + e.getMessage());
 		}
 		
 		pwOut.println("<TABLE  WIDTH = 100% CLASS = \"" +SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");
 		pwOut.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		pwOut.println("<TD COLSPAN=\"4\" CLASS = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL + " \"><B>Date:&nbsp;</B>" + sDate 
-			+ "&nbsp;<B>Mechanic:&nbsp;</B> " + sMechanicName + "</TD>");
+			+ "&nbsp;<B>Technician:&nbsp;</B> " + sMechanicName + "</TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
 		//Embed the hours table:
@@ -835,9 +835,9 @@ public class SMJobCostDailyReport extends java.lang.Object{
 		pwSuppressedOut.println("<FONT SIZE=2><B>'Job Efficiency %':&nbsp</B>Hours Used divided by Hours Estimated,"
 			+ "expressed as a percentage.<BR>");
 		pwSuppressedOut.println("<FONT SIZE=2><B>'Total Charged Hours For Day':&nbsp</B>Total of hours logged"
-			+ " into job cost system for this mechanic, for this day.<BR>");
+			+ " into job cost system for this technician, for this day.<BR>");
 		pwSuppressedOut.println("<FONT SIZE=2><B>'Avg JOB Efficiency For Day %':&nbsp</B>Average efficiency of"
-			+ " ALL jobs for this mechanic for this day.  This is a weighted average: the hours logged"
+			+ " ALL jobs for this technician for this day.  This is a weighted average: the hours logged"
 			+ " in the job cost system for each job are multiplied by the job efficency for that job"
 			+ " giving a product for each job for that day."
 			+ "  These products are added for the entire day, then divided by the Total Charged Hours"
@@ -855,7 +855,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			+ "'bdDailyJobEfficiency = bdDailyEfficiencyProduct / bdWorkAndTravelHoursForDay')"
 			+ "<BR>");
 		pwSuppressedOut.println("<FONT SIZE=2><B>'On The Clock':&nbsp</B>Total number of hours recorded"
-			+ " for the mechanic for the day, read from the time card system data.<BR>");
+			+ " for the technician for the day, read from the time card system data.<BR>");
 		pwSuppressedOut.println("<FONT SIZE=2><B>'Net Daily Efficiency':&nbsp</B>Efficiency, expressed as a"
 			+ " percentage, based on the job efficiency multiplied by the ratio of hours logged on"
 			+ " jobs to hours on the clock.  This number reflects the job efficiency increased"
@@ -866,11 +866,11 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			+ "on the clock hours)<BR>"
 		);
 		pwOut.println("<FONT SIZE=2><B>'Overall Avg. Job Efficiency %':&nbsp</B>Overall average efficiency of"
-			+ " the jobs this mechanic worked on during the selected time period.  This DOES NOT "
+			+ " the jobs this technician worked on during the selected time period.  This DOES NOT "
 			+ " take into account time on the clock, only the efficiency of those jobs based on "
 			+ " hours entered into the job cost system.<BR>");
 		pwOut.println("<FONT SIZE=2><B>'Overall Avg. Net Efficiency%':&nbsp</B>Average efficiency for the"
-			+ " mechanic for the selected period, factoring in the job efficiency AND time on the"
+			+ " technician for the selected period, factoring in the job efficiency AND time on the"
 			+ " clock.<BR>");
 	}
 	public String getErrorMessage (){

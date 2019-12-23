@@ -75,13 +75,13 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 		    		+ SMUtilities.getFullClassName(this.toString())
 		    		+ "?SelectByCategory=no"
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "\">Select by individual mechanic</A><BR>");	    	
+		    		+ "\">Select by individual technician</A><BR>");	    	
 	    }else{
 		    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "" 
 		    		+ SMUtilities.getFullClassName(this.toString())
 		    		+ "?SelectByCategory=yes"
 		    		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-		    		+ "\">Select by locations and mechanic types</A><BR>");
+		    		+ "\">Select by locations and technician types</A><BR>");
 	    }
 
     	out.println ("<FORM ACTION =\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMJobCostDailyReportGenerate\">");
@@ -148,7 +148,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        		+ ".createMechanicSelections - user: " + sUserID
 	        		+ " - "
 	        		+ sUserFullName);
-	        pwOut.println("<TR><TD VALIGN=CENTER><B>Mechanics</B></FONT></TD><TD VALIGN=CENTER>");
+	        pwOut.println("<TR><TD VALIGN=CENTER><B>Technicians</B></FONT></TD><TD VALIGN=CENTER>");
 	        pwOut.println("<TABLE WIDTH=100% BORDER=0>");
 
         	ArrayList <String> alMechanics = new ArrayList<String>(0);
@@ -192,7 +192,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        		+ " - "
 	        		+ sUserFullName
 	        		);
-	        pwOut.println("<TR><TD VALIGN=CENTER><B>Mechanic default locations</B></FONT></TD><TD VALIGN=CENTER>");
+	        pwOut.println("<TR><TD VALIGN=CENTER><B>Technician default locations</B></FONT></TD><TD VALIGN=CENTER>");
 	        pwOut.println("<TABLE WIDTH=100% BORDER=0>");
 
         	ArrayList <String> alLocations = new ArrayList<String>(0);
@@ -236,7 +236,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        	"MySQL", 
 	        	SMUtilities.getFullClassName(this.toString())+ ".createCategorySelections - user: " 
 	        		+ sUserID + " - "+ sUserFullName);
-	        pwOut.println("<TR><TD VALIGN=CENTER><B>Mechanic default service types</B></FONT></TD><TD VALIGN=CENTER>");
+	        pwOut.println("<TR><TD VALIGN=CENTER><B>Technician default service types</B></FONT></TD><TD VALIGN=CENTER>");
 	        pwOut.println("<TABLE WIDTH=100% BORDER=0>");
 	
 	    	ArrayList <String> alServiceTypes = new ArrayList<String>(0);

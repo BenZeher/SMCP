@@ -99,7 +99,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 			  }
 		    }
 			if(sLocations.size() == 0){
-				sWarning = "You must select a mechanic location";
+				sWarning = "You must select a technician location";
 				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
 	        }
@@ -133,7 +133,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 				}
 				rs.close();
 			} catch (SQLException e) {
-				sWarning = "Could not read list of mechanics: " + e.getMessage();
+				sWarning = "Could not read list of technicians: " + e.getMessage();
 				redirectAfterError(response, sCallingClass, sWarning, sDBID);
 				return;
 			}
@@ -154,9 +154,9 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 	    if (sMechanics.size() == 0){
 	    	if (bSelectByCategory){
 	    		sWarning = "You selected a combination of locations and service types that includes no"
-	    			+ " mechanics.";
+	    			+ " technicians.";
 	    	}else{
-	    		sWarning = "You must select at least one mechanic.";
+	    		sWarning = "You must select at least one technician.";
 	    	}
     		
     		redirectAfterError(response, sCallingClass, sWarning, sDBID);
@@ -175,7 +175,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     		+ ", ending with date <B>" + sEndingDate + "</B>";
     	
     	if (bSelectByCategory){
-    		sCriteria += ", selected mechanic locations:&nbsp;";
+    		sCriteria += ", selected technician locations:&nbsp;";
     		for (int i = 0; i < sLocations.size(); i++){
     			if (i == 0){
     				sCriteria += "<B>" 
@@ -187,7 +187,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     		}
     	}
     	
-    	sCriteria += ", including mechanics: ";
+    	sCriteria += ", including technicians: ";
     	
     	for (int i = 0; i < sMechanics.size(); i++){
     		if (i == 0){

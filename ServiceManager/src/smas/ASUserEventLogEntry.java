@@ -3,9 +3,13 @@ package smas;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTablessdeviceevents;
 import SMDataDefinition.SMTablessuserevents;
 import SMDataDefinition.SMTableusers;
@@ -146,6 +150,15 @@ public class ASUserEventLogEntry {
 				+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sAlarmName) + "'"
 			+ ")"
 			;
+		
+		//Here we log it in the systemlog as well to ensure we know who access what
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserFirstName + " " + sUserLastName + " accessed the device " + sDeviceID + ":" + sDeviceDes + " at " + formattedDate  , "ASUserEventLogEntry", "[1577471378]");
 		
 		try {
 			Statement stmt = conn.createStatement();

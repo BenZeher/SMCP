@@ -60,8 +60,9 @@ public class ICCreateBatchFromReceipts extends HttpServlet {
 	    if(conn == null){
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
-					+ "Warning=Error - Could not get data connection to create receipt batch."
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + "Warning=Error - Could not get data connection to create receipt batch."
+					
 			);
 	    }
 	    
@@ -71,15 +72,15 @@ public class ICCreateBatchFromReceipts extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080810]");
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
-					+ "Status=Receipt batch " + iccreate.getM_sBatchNumber() + " successfully created and posted."
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+					+ "&" + "Status=Receipt batch " + iccreate.getM_sBatchNumber() + " successfully created and posted."
 			);
 		}else{
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080811]");
 			response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
-					+ "Warning=Batch NOT created: " + iccreate.getErrorMessage()
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
+				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				+ "&" + "Warning=Batch NOT created: " + SMUtilities.URLEncode(iccreate.getErrorMessage())
 			);
 		}
 		return;

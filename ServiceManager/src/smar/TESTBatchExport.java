@@ -3,7 +3,6 @@ import java.sql.DriverManager;
 
 import javax.servlet.http.HttpServlet;
 
-import smgl.GLACCPACConversion;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{

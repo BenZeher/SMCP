@@ -7,7 +7,6 @@ import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.sql.Connection;
 import java.text.ParseException;
 
@@ -27,7 +26,6 @@ public class SMPurgeDataAction extends HttpServlet{
 		String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 		String sPurgeDeadline = clsManageRequestParameters.get_Request_Parameter("PurgeDeadline", request);
 		
-		PrintWriter out = response.getWriter();
 		if (!SMAuthenticate.authenticateSMCPCredentials(
 				request, 
 				response, 

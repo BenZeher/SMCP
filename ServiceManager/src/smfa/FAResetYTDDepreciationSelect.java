@@ -72,7 +72,7 @@ public class FAResetYTDDepreciationSelect extends HttpServlet {
 	    					"on every asset.  This will also set the Year-To-Date purchase<BR> " +
 	    					"amount and the Year-To-Date disposed amount of every asset<BR> " +
 	    					"to zero.</B></FONT></P><BR><BR>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitReset' VALUE='Reset Year-To-Date Deppreciation' STYLE='width: 3.00in; height: 0.24in'>";
+		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitReset' VALUE='Reset Year-To-Date Depreciation' STYLE='width: 3.00in; height: 0.24in'>";
 		sOutPut = sOutPut + "  Check to confirm reset: <INPUT TYPE=CHECKBOX NAME=\"ConfirmReset\">";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);

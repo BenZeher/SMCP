@@ -110,9 +110,7 @@ public class FAEditAssetsSelect extends HttpServlet {
 			+ "&ParameterString="
 			+ "\"> Find asset</A></P>";
 		
-		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
-		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete Selected " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'>";
-		sOutPut = sOutPut + "  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">";
+		sOutPut += "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit/Delete Selected " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
 		sOutPut = sOutPut + "<P><INPUT TYPE=SUBMIT NAME='SubmitAdd' VALUE='Add New " + sAssetObjectName + "' STYLE='width: 2.00in; height: 0.24in'></P>";
 		sOutPut = sOutPut + "</FORM>";
 		out.println(sOutPut);

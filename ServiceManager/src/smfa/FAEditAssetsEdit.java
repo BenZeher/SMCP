@@ -53,66 +53,13 @@ public class FAEditAssetsEdit extends HttpServlet {
 		//Load the input class from the request object - if it's a 'resubmit', then this will contain
 	    //all the values typed from the previous screen.  If it's a 'first time' edit, then this will only
 	    //contain the item number
-		FAAsset asset = new FAAsset("");
-		asset.loadFromHTTPRequest(request);
-	    //First process if it's a 'delete':
-	    if(request.getParameter("SubmitDelete") != null){
-		    if (request.getParameter("ConfirmDelete") == null){
-				response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
-					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
-					+ "&Warning=You must check the 'confirming' check box to delete."
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);
-				return;
-		    }
-		    if (asset.getAssetNumber().compareToIgnoreCase("") == 0){
-				response.sendRedirect(
-					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
-					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
-					+ "&Warning=You must enter an asset number to delete."
-					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-				);
-				return;
-		    }else{
-		    	//Need a connection for the 'delete':
-		    	Connection conn = clsDatabaseFunctions.getConnection(
-		    		getServletContext(), 
-		    		sDBID,
-		    		"MySQL",
-		    		this.toString() + ".doPost - User: " + sUserID
-		    		+ " - "
-		    		+ sUserFullName
-		    			);
-		    	if(conn == null){
-    				response.sendRedirect(
-        					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
-        					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
-        					+ "&Warning=Error deleting item - cannot get connection."
-        					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-        				);
-    						return;
-		    	}
-			    if (!asset.delete(asset.getAssetNumber(), conn)){
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067474]");
-    				response.sendRedirect(
-    					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
-    					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
-    					+ "&Warning=Error deleting asset - " + asset.getErrorMessageString()
-    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-    				);
-					return;
-			    }else{
-			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067475]");
-    				response.sendRedirect(
-    					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
-    					+ "?Status=Successfully deleted asset " + asset.getAssetNumber() + "."
-    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-    				);
-					return;
-			    }
-		    }
+	    
+	    FAAsset asset = (FAAsset)CurrentSession.getAttribute(FAAsset.sObjectName);
+	    if (asset == null){
+	    	asset = new FAAsset("");
+	    	asset.loadFromHTTPRequest(request);
 	    }
+	    CurrentSession.removeAttribute(FAAsset.sObjectName);
 	    
 		String title = "";
 		String subtitle = "";
@@ -278,7 +225,7 @@ public class FAEditAssetsEdit extends HttpServlet {
         		+ " VALUE=\"" + asset.getAcquisitionDate().replace("\"", "&quot;") + "\""
         		+ " SIZE=60"
         		+ " MAXLENGTH=" + "10"
-        		+ " STYLE=\"width:.75 in;height: 0.25in\""
+        		+ " STYLE=\"width: 0.80in; height: 0.25in\""
         		+ ">"
         		+ SMUtilities.getDatePickerString(FAAsset.ParamAcquisitionDate, getServletContext())
         		+ "</TD>"
@@ -440,7 +387,7 @@ public class FAEditAssetsEdit extends HttpServlet {
         		+ "<INPUT TYPE=TEXT NAME=\"" + FAAsset.ParamState + "\""
         		+ " VALUE=\"" + asset.getState().replace("\"", "&quot;") + "\""
         		+ " MAXLENGTH=" + Integer.toString(SMTablefamaster.sStateLength)
-        		+ " STYLE=\"width:.75 in;height: 0.25in\""
+        		+ " STYLE=\"width: 0.75in;height: 0.25in\""
         		+ "></TD>"
         		+ "<TD ALIGN=LEFT>" 
         		+ "Up to " + SMTablefamaster.sStateLength + " characters." 
@@ -461,7 +408,7 @@ public class FAEditAssetsEdit extends HttpServlet {
         		+ " VALUE=\"" + sDate.replace("\"", "&quot;") + "\""
         		+ " SIZE=60"
         		+ " MAXLENGTH=" + "10"
-        		+ " STYLE=\"width:.75 in;height: 0.25in\""
+        		+ " STYLE=\"width:0.80in;height: 0.25in\""
         		+ ">"
         		+ SMUtilities.getDatePickerString(FAAsset.ParamDateSold, getServletContext())
         		+ "</TD>"
@@ -589,7 +536,9 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        pwOut.println(
 	        		"<TR>"
 	    	        + "<TD ALIGN=RIGHT><B>" + "Remaining depreciation:"  + " </B></TD>"
-	    	        + "<TD ALIGN=LEFT>0.00</TD>"
+	    	        + "<TD ALIGN=LEFT>"
+	    	        + asset.getRemainingDepreciation()
+	    	        + "</TD>"
 	        		+ "<TD ALIGN=LEFT>" 
 	        		+ "</TD>"
 	        		+ "</TR>"
@@ -614,7 +563,7 @@ public class FAEditAssetsEdit extends HttpServlet {
 	        		"<TR>"
 	    	        + "<TD ALIGN=RIGHT><B>" + "Remaining depreciation:"  + " </B></TD>"
 	    	        + "<TD ALIGN=LEFT>"
-	        		+ asset.getCurrentValue()
+	        		+ asset.getRemainingDepreciation()
 	        		+ "</TD>"
 	        		+ "<TD ALIGN=LEFT>" 
 	        		+ "</TD>"
@@ -762,7 +711,7 @@ public class FAEditAssetsEdit extends HttpServlet {
         
         pwOut.println("</TABLE>");
         
-        pwOut.println("<B>Document folder link:</B>&nbsp;"
+        pwOut.println("<BR><B>Document folder link:</B>&nbsp;"
 				+ "<INPUT TYPE=TEXT NAME=\"" + 
         			FAAsset.Paramgdoclink + "\""
 				+ " VALUE=\"" + asset.getgdoclink().replace("\"", "&quot;") + "\""
@@ -770,7 +719,12 @@ public class FAEditAssetsEdit extends HttpServlet {
 				+ " MAXLENGTH=" + Integer.toString(254)
 				+ "<BR>");
 			
-        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sAssetObjectName + "' STYLE='height: 0.24in'></P>");
+        pwOut.println("<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Update " + sAssetObjectName + "' STYLE='height: 0.24in'>");
+        
+        pwOut.println("&nbsp;&nbsp;<INPUT TYPE=SUBMIT NAME='SubmitDelete' VALUE='Delete " + sAssetObjectName + " And Related Depreciation Transactions' STYLE='height: 0.24in'>");
+        pwOut.println("  Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\">");
+        pwOut.println("</P>");
+        
         pwOut.println("</FORM>");
 		
 	}

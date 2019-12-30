@@ -52,7 +52,7 @@ public class FAAssetList extends java.lang.Object{
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.bdAmountSoldFor + "," +
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.datAcquisitionDate + "," +
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.datDateSold + "," +
-			//" " + SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation + "," +
+			" " + SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation + "," +
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.bdCurrentValue + "," +
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.bdSalvageValue + "," +
 			" " + SMTablefamaster.TableName + "." + SMTablefamaster.sAccumulatedDepreciationGLAcct + "," +
@@ -78,8 +78,11 @@ public class FAAssetList extends java.lang.Object{
 			+ " - " + SMTablefamaster.bdSalvageValue
 			+ ", 0.00) AS YTDDISPOSED"
 			+ ", TRANSQUERY.YTDDEPAMT"
+			
+			// 12/30/2019 - TJR - this field is no longer used in this report, but I left it all in just in case
+			// we decide we need it later:
 			+ ", IF (" + SMTablefamaster.TableName + "." + SMTablefamaster.datDateSold + " > '1900-01-01 00:00:00', 'Y', 'N') AS DISPOSED"
-			+ ", IF(ACCUMDEPQUERY.ACCUMDEP IS NOT NULL, ACCUMDEPQUERY.ACCUMDEP, 0.00) AS ACCUMULATEDDEPRECIATION"
+			+ ", IF(ACCUMDEPQUERY.ACCUMDEP IS NOT NULL, ACCUMDEPQUERY.ACCUMDEP, 0.00) AS SUMOFDEPRECIATIONTRANS"
 			+ " FROM" 
 			+ " " + SMTablefamaster.TableName + " LEFT JOIN " 
 			+ " " + SMTablefaclasses.TableName + " ON "
@@ -258,7 +261,7 @@ public class FAAssetList extends java.lang.Object{
 							rs.getString(SMTablefamaster.sDepreciationType),
 							rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount),
 							bdYTDDepreciation,
-							rs.getBigDecimal("ACCUMULATEDDEPRECIATION"),
+							rs.getBigDecimal(SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation),
 							rs.getBigDecimal(SMTablefamaster.bdCurrentValue),
 							rs.getString("DISPOSED").compareToIgnoreCase("Y") == 0,
 							rs.getString(SMTablefamaster.sSerialNumber),
@@ -271,7 +274,7 @@ public class FAAssetList extends java.lang.Object{
 				}
 
 				bdCost = bdCost.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
-				bdAccuDep = bdAccuDep.add(rs.getBigDecimal("ACCUMULATEDDEPRECIATION"));
+				bdAccuDep = bdAccuDep.add(rs.getBigDecimal(SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation));
 				bdBookValue = bdBookValue.add(rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				bdYTDPurch = bdYTDPurch.add(rs.getBigDecimal("YTDPURCHASED"));
 				bdYTDDisp = bdYTDDisp.add(rs.getBigDecimal("YTDDISPOSED"));
@@ -280,18 +283,20 @@ public class FAAssetList extends java.lang.Object{
 				//If the asset is NOT DISPOSED, then add the values to the 'non-disposed assets' variables:
 				if (rs.getString("DISPOSED").compareToIgnoreCase("N") == 0){
 					bdCostOfNonDisposedAssets = bdCostOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
-					bdAccumulatedDepreciationOfNonDisposedAssets = bdAccumulatedDepreciationOfNonDisposedAssets.add(rs.getBigDecimal("ACCUMULATEDDEPRECIATION"));
+					bdAccumulatedDepreciationOfNonDisposedAssets = bdAccumulatedDepreciationOfNonDisposedAssets.add(
+						rs.getBigDecimal(SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation));
 					bdBookValueOfNonDisposedAssets = bdBookValueOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				}
 				bdGrandCost = bdGrandCost.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
-				bdGrandAccuDep = bdGrandAccuDep.add(rs.getBigDecimal("ACCUMULATEDDEPRECIATION"));
+				bdGrandAccuDep = bdGrandAccuDep.add(rs.getBigDecimal(SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation));
 				bdGrandBookValue = bdGrandBookValue.add(rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				bdGrandYTDPurch = bdGrandYTDPurch.add(rs.getBigDecimal("YTDPURCHASED"));
 				bdGrandYTDDisp = bdGrandYTDDisp.add(rs.getBigDecimal("YTDDISPOSED"));
 				bdGrandYTDDep = bdGrandYTDDep.add(bdYTDDepreciation);
 				if (rs.getString("DISPOSED").compareToIgnoreCase("N") == 0){
 					bdGrandCostOfNonDisposedAssets = bdGrandCostOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
-					bdGrandAccumulatedDepreciationOfNonDisposedAssets = bdGrandAccumulatedDepreciationOfNonDisposedAssets.add(rs.getBigDecimal("ACCUMULATEDDEPRECIATION"));
+					bdGrandAccumulatedDepreciationOfNonDisposedAssets = bdGrandAccumulatedDepreciationOfNonDisposedAssets.add(rs.getBigDecimal(
+						SMTablefamaster.TableName + "." + SMTablefamaster.bdAccumulatedDepreciation));
 					bdGrandBookValueOfNonDisposedAssets = bdGrandBookValueOfNonDisposedAssets.add(rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				}
 				iCount++;

@@ -29,6 +29,10 @@ public class FAEditAssetsAction extends HttpServlet{
 	    	return;
 	    }	    //Get the session info:
 	    HttpSession CurrentSession = request.getSession(true);
+
+	    //Remove any leftover object here:
+	    CurrentSession.removeAttribute(FAAsset.sObjectName);
+	    
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 	    String sUserID = (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
@@ -38,8 +42,76 @@ public class FAEditAssetsAction extends HttpServlet{
 	    if (!SMAuthenticate.authenticateSMCPCredentials(request, response, getServletContext(), SMSystemFunctions.FAManageAssets)){
 	    	return;
 	    }
+	    
 		FAAsset asset = new FAAsset("");
 		asset.loadFromHTTPRequest(request);
+		
+	    //First process if it's a 'delete':
+	    if(request.getParameter("SubmitDelete") != null){
+		    if (request.getParameter("ConfirmDelete") == null){
+		    	CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
+				response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsEdit"
+					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
+					+ "&Warning=You must check the 'confirming' check box to delete."
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+				return;
+		    }
+		    if (asset.getAssetNumber().compareToIgnoreCase("") == 0){
+		    	CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
+				response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsEdit"
+					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
+					+ "&Warning=You must enter an asset number to delete."
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+				return;
+		    }else{
+		    	//Need a connection for the 'delete':
+		    	Connection conn = clsDatabaseFunctions.getConnection(
+		    		getServletContext(), 
+		    		sDBID,
+		    		"MySQL",
+		    		this.toString() + ".doPost - User: " + sUserID
+		    		+ " - "
+		    		+ sUserFullName
+		    			);
+		    	if(conn == null){
+		    		CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
+    				response.sendRedirect(
+        					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsEdit"
+        					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
+        					+ "&Warning=Error deleting item - cannot get connection."
+        					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+        				);
+    						return;
+		    	}
+		    	try {
+					asset.delete(asset.getAssetNumber(), conn);
+				} catch (Exception e) {
+			    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067474]");
+			    	CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
+    				response.sendRedirect(
+    					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsEdit"
+    					+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()
+    					+ "&" + asset.getQueryString()
+    					+ "&Warning=Error deleting asset - " + e.getMessage()
+    					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    				);
+					return;
+				}
+		    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067475]");
+				response.sendRedirect(
+					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smfa.FAEditAssetsSelect"
+					+ "?Status=Successfully deleted asset " + asset.getAssetNumber() + "."
+					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+				);
+				return;
+		    }
+	    }
+		
+		//If we're adding a NEW asset:
 		if(request.getParameter("AssetNumberNEW") != null){
 			String sSQL = "SELECT * FROM "+SMTablefamaster.TableName
 						+" WHERE "+SMTablefamaster.sAssetNumber+" = '"+request.getParameter("AssetNumberNEW")+"'";
@@ -54,10 +126,10 @@ public class FAEditAssetsAction extends HttpServlet{
 			        	+ sUserFullName
 			        	);
 			if(rsClasses.next()){
+				CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
 				response.sendRedirect(
 						"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter("CallingClass", request)
-						+ "?" + asset.getQueryString()
-						+ "&Warning=Could not save: Asset Number " +rsClasses.getString(SMTablefamaster.sAssetNumber)+" already exists"
+						+ "?Warning=Could not save: Asset Number " +rsClasses.getString(SMTablefamaster.sAssetNumber)+" already exists"
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 				);
 				return;
@@ -69,8 +141,6 @@ public class FAEditAssetsAction extends HttpServlet{
 			
 		}
 		
-		//System.out.println("1.2 - " + SMUtilities.get_Request_Parameter(ICItem.ParamItemNumber, request).trim().replace(" ", "").replace("&quot;", "\""));
-		//System.out.println("1.3 - " + SMUtilities.get_Request_Parameter("LOC3", request).trim().replace(" ", "").replace("&quot;", "\""));
 		Connection conn = clsDatabaseFunctions.getConnection(
 			getServletContext(), 
 			sDBID,
@@ -84,15 +154,16 @@ public class FAEditAssetsAction extends HttpServlet{
 		//Need a connection here because it involves a data transaction:
 		if(!asset.save(sUserName, conn)){
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067472]");
+			CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter("CallingClass", request)
-					+ "?" + asset.getQueryString()
-					+ "&Warning=Could not save: " + asset.getErrorMessageString()
+					+ "?Warning=Could not save: " + asset.getErrorMessageString()
 					+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
 			);
 			return;
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547067473]");
+		CurrentSession.setAttribute(FAAsset.sObjectName, (FAAsset)asset);
 		response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + clsManageRequestParameters.get_Request_Parameter("CallingClass", request)
 				+ "?" + FAAsset.ParamAssetNumber + "=" + asset.getAssetNumber()

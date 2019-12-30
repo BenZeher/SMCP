@@ -19,6 +19,7 @@ import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsStringFunctions;
 
 public class FAAsset extends Object{
+	public static final String sObjectName = "Fixed Asset";
 	public static final String ParamID = "ID";
 	public static final String ParamTruckNumber = "TruckNumber";
 	public static final String ParamNotePayableGLAcct = "NotPayableGLAcct";
@@ -235,7 +236,7 @@ public class FAAsset extends Object{
 				m_sAcquisitionDate = clsDateAndTimeConversions.resultsetDateStringToString(
 						rs.getString(SMTablefamaster.datAcquisitionDate));
 				
-				m_sAcquisitionAmount = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
+				m_sAcquisitionAmount = clsManageBigDecimals.BigDecimalToFormattedString("########0.00",
 						rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount));
 				m_sClass = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sClass));
 				m_sSerialNumber = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sSerialNumber));
@@ -249,16 +250,16 @@ public class FAAsset extends Object{
 				m_sGaragedLocation = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sGaragedLocation));
 				m_sLossOrGainGL = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sLossOrGainGL));
 				m_sDepreciationType = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sDepreciationType));
-				m_sCurrentValue = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
+				m_sCurrentValue = clsManageBigDecimals.BigDecimalToFormattedString("########0.00",
 						rs.getBigDecimal(SMTablefamaster.bdCurrentValue));
 				m_sComment = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sComment));
-				m_sAmountSoldFor = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
+				m_sAmountSoldFor = clsManageBigDecimals.BigDecimalToFormattedString("########0.00",
 						rs.getBigDecimal(SMTablefamaster.bdAmountSoldFor));
 				m_sDepreciationGLAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sDepreciationGLAcct));
 				m_sAccumulatedDepreciationGLAcct = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sAccumulatedDepreciationGLAcct));
-				m_sAccumulatedDepreciation = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
+				m_sAccumulatedDepreciation = clsManageBigDecimals.BigDecimalToFormattedString("########0.00",
 						rs.getBigDecimal(SMTablefamaster.bdAccumulatedDepreciation));
-				m_sSalvageValue = clsManageBigDecimals.BigDecimalToFormattedString("########0.0000",
+				m_sSalvageValue = clsManageBigDecimals.BigDecimalToFormattedString("########0.00",
 						rs.getBigDecimal(SMTablefamaster.bdSalvageValue));
 				m_sDriver = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.sdriver));
 				m_sComment1 = clsStringFunctions.checkStringForNull(rs.getString(SMTablefamaster.scomment1));
@@ -341,7 +342,9 @@ public class FAAsset extends Object{
 						+ ", " + SMTablefamaster.sComment + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sComment) + "'"
 						+ ", " + SMTablefamaster.sAccumulatedDepreciationGLAcct + " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sAccumulatedDepreciationGLAcct) + "'"
 						+ ", " + SMTablefamaster.bdAcquisitionAmount + " = '" + m_sAcquisitionAmount.replace(",", "") + "'"
-						+ ", " + SMTablefamaster.bdCurrentValue + " = '" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", new BigDecimal(m_sAcquisitionAmount.replace(",", "")).subtract(new BigDecimal(m_sAccumulatedDepreciation.replace(",", "")))) + "'" //m_sCurrentValue.replace(",", "") + "'"
+						+ ", " + SMTablefamaster.bdCurrentValue + " = '" + clsManageBigDecimals.BigDecimalToFormattedString(
+							"########0.00", new BigDecimal(m_sAcquisitionAmount.replace(",", "")).subtract(
+								new BigDecimal(m_sAccumulatedDepreciation.replace(",", "")))) + "'" //m_sCurrentValue.replace(",", "") + "'"
 						+ ", " + SMTablefamaster.bdAmountSoldFor + " = '" + m_sAmountSoldFor.replace(",", "") + "'"
 						+ ", " + SMTablefamaster.bdAccumulatedDepreciation + " = '" + m_sAccumulatedDepreciation.replace(",", "") + "'"
 						+ ", " + SMTablefamaster.bdSalvageValue + " = '" + m_sSalvageValue.replace(",", "") + "'"
@@ -418,7 +421,7 @@ public class FAAsset extends Object{
 						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sGaragedLocation) + "'"
 						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sLossOrGainGL) + "'"
 						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDepreciationType) + "'"
-						+ ", " + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", new BigDecimal(m_sAcquisitionAmount.replace(",", "")).subtract(new BigDecimal(m_sAccumulatedDepreciation.replace(",", "")))) //m_sCurrentValue.replace(",", "") //new asset gets it book value set here.
+						+ ", " + clsManageBigDecimals.BigDecimalToFormattedString("########0.00", new BigDecimal(m_sAcquisitionAmount.replace(",", "")).subtract(new BigDecimal(m_sAccumulatedDepreciation.replace(",", "")))) //m_sCurrentValue.replace(",", "") //new asset gets it book value set here.
 						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sComment) + "'"
 						+ ", " + m_sAmountSoldFor.replace(",", "")
 						+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sDepreciationGLAcct) + "'"
@@ -505,7 +508,7 @@ public class FAAsset extends Object{
 			}
 		}
 		if (m_sAcquisitionAmount.trim().compareToIgnoreCase("") == 0){
-			m_sAcquisitionAmount = "0.0000";
+			m_sAcquisitionAmount = "0.00";
 		}else{
 			try{
 				m_sAcquisitionAmount = m_sAcquisitionAmount.replace(",", "");
@@ -566,7 +569,7 @@ public class FAAsset extends Object{
 		}
 
 		if (m_sAmountSoldFor.trim().compareToIgnoreCase("") == 0){
-			m_sAmountSoldFor = "0.0000";
+			m_sAmountSoldFor = "0.00";
 		}else{
 			try{
 				m_sAmountSoldFor = m_sAmountSoldFor.replace(",", "");
@@ -595,7 +598,7 @@ public class FAAsset extends Object{
 			bEntriesAreValid = false;
 		}
 		if (m_sSalvageValue.trim().compareToIgnoreCase("") == 0){
-			m_sSalvageValue = "0.0000";
+			m_sSalvageValue = "0.00";
 		}else{
 			try{
 				m_sSalvageValue = m_sSalvageValue.replace(",", "");
@@ -609,7 +612,7 @@ public class FAAsset extends Object{
 		}
 
 		if (m_sAccumulatedDepreciation.trim().compareToIgnoreCase("") == 0){
-			m_sAccumulatedDepreciation = "0.0000";
+			m_sAccumulatedDepreciation = "0.00";
 		}else{
 			try{
 				m_sAccumulatedDepreciation = m_sAccumulatedDepreciation.replace(",", "");
@@ -623,7 +626,7 @@ public class FAAsset extends Object{
 		}
 
 		if (m_sCurrentValue.trim().compareToIgnoreCase("") == 0){
-			m_sCurrentValue = "0.0000";
+			m_sCurrentValue = "0.00";
 		}else{
 			try{
 				m_sCurrentValue = m_sCurrentValue.replace(",", "");
@@ -734,11 +737,12 @@ public class FAAsset extends Object{
 		return sQueryString;
 	}
 
-	public boolean delete(String sAssetNumber, Connection conn){
+	public void delete(String sAssetNumber, Connection conn) throws Exception{
 
 		m_sErrorMessage = "";
 
 		//First, check that the asset exists:
+		BigDecimal bdRemainingDepreciation = new BigDecimal("0.00");
 		String SQL = "SELECT * FROM " + SMTablefamaster.TableName
 				+ " WHERE ("
 				+ SMTablefamaster.sAssetNumber + " = '" + sAssetNumber + "'"
@@ -747,34 +751,71 @@ public class FAAsset extends Object{
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(!rs.next()){
-				m_sErrorMessage = "Asset " + sAssetNumber + " cannot be found.";
+				m_sErrorMessage = "Asset '" + sAssetNumber + "' cannot be found.";
 				rs.close();
-				return false;
+				throw new Exception("Error [1577735056] - asset " + sAssetNumber + " cannot be found.");
 			}else{
+				//Make sure the asset is fully depreciated:
+				bdRemainingDepreciation = (rs.getBigDecimal(SMTablefamaster.bdAcquisitionAmount).subtract(
+					rs.getBigDecimal(SMTablefamaster.bdSalvageValue))).subtract(
+						rs.getBigDecimal(SMTablefamaster.bdAccumulatedDepreciation))
+				;
 				rs.close();
+				if (bdRemainingDepreciation.compareTo(BigDecimal.ZERO) > 0){
+					throw new Exception("Error [20193641455417] " + "This asset has depreciation remaining on it, so it cannot be deleted."
+						+ "  If you really want to delete it, first set the salvage value to the amount of depreciation remaining, and this"
+						+ " asset will be considered FULLY depreciated."
+					);
+				}
 			}
-
-		}catch(SQLException e){
-			m_sErrorMessage = "Error checking asset " + sAssetNumber + " to delete - " + e.getMessage();
-			return false;
+		}catch(Exception e){
+			throw new Exception("Error [1577735055] checking asset " + sAssetNumber + " to delete - " + e.getMessage());
 		}
-		//The asset themselves:
+		
+		//Start a data transaction:
+		if (!ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn)){
+			throw new Exception("Error [20193641445232] " + "Could not start data transaction.");
+		};
+		
+		//First, try to delete all the associated transactions:
+		try{
+			SQL = "DELETE FROM " + SMTablefatransactions.TableName
+				+ " WHERE ("
+				+ SMTablefatransactions.sTransAssetNumber + " = '" + sAssetNumber + "'"
+				+ ")"
+			;
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		}catch(Exception e){
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [2019364145063] " + "deleting depreciation transactions with SQL: '" + SQL + "' - " + e.getMessage());
+		}
+		
+		if (!ServletUtilities.clsDatabaseFunctions.commit_data_transaction(conn)){
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20193641445232] " + "Could not start data transaction.");
+		};	
+		
+		//Now delete the asset itself:
 		try{
 			SQL = "DELETE FROM " + SMTablefamaster.TableName
 					+ " WHERE ("
 					+ SMTablefamaster.sAssetNumber + " = '" + sAssetNumber + "'"
 					+ ")"
 					;
-			if(!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				m_sErrorMessage = "Error deleting asset " + sAssetNumber;
-				return false;
-			}
-		}catch(SQLException e){
-			System.out.println("Error deleting asset " + sAssetNumber + " - " + e.getMessage());
-			m_sErrorMessage = "Error deleting asset " + sAssetNumber + " - " + e.getMessage();
-			return false;
+			Statement stmt = conn.createStatement();
+			stmt.execute(SQL);
+		}catch(Exception e){
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [2019364145053] " + "deleting asset with SQL: '" + SQL + "' - " + e.getMessage());
 		}
-		return true;
+		
+		if (!ServletUtilities.clsDatabaseFunctions.commit_data_transaction(conn)){
+			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
+			throw new Exception("Error [20193641445232] " + "Could not start data transaction.");
+		};		
+		
+		return;
 	}
 
 	//Depreciates the asset
@@ -1144,6 +1185,12 @@ public class FAAsset extends Object{
 	}
 	public void setgdoclink(String s){
 		m_sgdoclink = s.trim();
+	}
+	public String getRemainingDepreciation(){
+		BigDecimal bdAcquisitionAmt = new BigDecimal(getAcquisitionAmount().replace(",", ""));
+		BigDecimal bdSalvageValue = new BigDecimal(getSalvageValue().replace(",", ""));
+		BigDecimal bdAccumulatedDepreciation = new BigDecimal(getAccumulatedDepreciation().replace(",", ""));
+		return ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat((bdAcquisitionAmt.subtract(bdSalvageValue)).subtract(bdAccumulatedDepreciation)).replace(",", "");
 	}
 	public String getErrorMessageString(){
 		return clsServletUtilities.URLEncode(m_sErrorMessage);

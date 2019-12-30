@@ -3789,16 +3789,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>FAClearTransactionHistorySelect</servlet-name>
-        <servlet-class>smfa.FAClearTransactionHistorySelect</servlet-class>
-    </servlet>   
-
-    <servlet>
-        <servlet-name>FAClearTransactionHistoryAction</servlet-name>
-        <servlet-class>smfa.FAClearTransactionHistoryAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>FAEditDepreciationTypeSelect</servlet-name>
         <servlet-class>smfa.FAEditDepreciationTypeSelect</servlet-class>
     </servlet>
@@ -7800,16 +7790,6 @@
     <servlet-mapping>
         <servlet-name>FAPeriodEndProcessingAction</servlet-name>
         <url-pattern>/smfa.FAPeriodEndProcessingAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAClearTransactionHistorySelect</servlet-name>
-        <url-pattern>/smfa.FAClearTransactionHistorySelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAClearTransactionHistoryAction</servlet-name>
-        <url-pattern>/smfa.FAClearTransactionHistoryAction</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

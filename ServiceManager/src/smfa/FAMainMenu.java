@@ -193,8 +193,11 @@ public class FAMainMenu extends HttpServlet {
 		//Processing
 		arMenu.clear();
 		arMenu.add(SMSystemFunctions.FAPeriodEndProcessing);
-		arMenu.add(SMSystemFunctions.FAClearTransactionHistory);
 		arMenu.add(SMSystemFunctions.FAReCreateGLSelection);
+		
+		// TJR - 12/30/2019:
+		// This is not needed any longer, because all the 'YTD' values are just calculated now by summing FA transactions
+		//arMenu.add(SMSystemFunctions.FAResetYearToDateDepreciation);
 
 		if (bMobileView){
 			SMUtilities.buildMobileMenuTable(

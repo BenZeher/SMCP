@@ -216,7 +216,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long FAEnterAdjustments = 1123L;
 	public static long FASettings = 1124L;
 	public static long FAPeriodEndProcessing = 1125L;
-	public static long FAClearTransactionHistory = 1126L;
+	//public static long FAClearTransactionHistory = 1126L;
 	public static long FAResetYearToDateDepreciation = 1127L;
 	public static long FAAssetList = 1128L;
 	public static long FATransactionReport = 1129L;
@@ -1321,12 +1321,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(FAPeriodEndProcessing); 
 			arrFunctionLinks.add("smfa.FAPeriodEndProcessingSelect"); 
 			arrFunctionDescriptions.add("Required to run the Fixed Assets period end processing, which generates the depreciation transactions.");
-			arrFunctionModuleLevel.add(SMModuleListing.MODULE_FIXEDASSETS);
-
-			arrFunctions.add("FA Clear Transaction History"); 
-			arrFunctionIDs.add(FAClearTransactionHistory); 
-			arrFunctionLinks.add("smfa.FAClearTransactionHistorySelect"); 
-			arrFunctionDescriptions.add("Required to clear the Fixed Assets transaction history.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_FIXEDASSETS);
 
 			arrFunctions.add("FA Edit Depreciation Type"); 

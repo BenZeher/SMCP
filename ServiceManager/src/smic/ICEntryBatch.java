@@ -1157,6 +1157,7 @@ public class ICEntryBatch {
     	try {
 			post_without_data_transaction(conn, sUserFullName, sUserID);
 		} catch (Exception e1) {
+			addErrorMessage("Error [1577741242] posting - " + e1.getMessage());
     		//Clear the posting flag:
     		clsDatabaseFunctions.rollback_data_transaction(conn);
     		try {
@@ -1178,8 +1179,6 @@ public class ICEntryBatch {
 		//Clear the posting flag, then return
 		return true;
     }
-       
-    
     
     public void postImportedBatchwithout_data_transaction (
     		Connection conn,

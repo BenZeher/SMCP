@@ -123,7 +123,7 @@ public class ICEditBatchesUpdate extends HttpServlet{
 			    return;
 			}
 			else{
-				m_EditBatchesUpdateWarning = "WARNING: Error posting batch " + sBatchNumber + ": \n" 
+				m_EditBatchesUpdateWarning = "WARNING: Error posting batch " + sBatchNumber + ": " 
 					+ batch.getErrorMessages();
 				CurrentSession.setAttribute(ICEditBatchesEdit.IC_BATCH_POSTING_SESSION_WARNING_OBJECT , m_EditBatchesUpdateWarning);
 				response.sendRedirect(SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditBatchesEdit" 

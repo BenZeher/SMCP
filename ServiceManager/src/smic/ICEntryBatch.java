@@ -960,6 +960,7 @@ public class ICEntryBatch {
 				//We won't stop for this, but the next user will have to clear the IC posting flag
 			}
     		clsDatabaseFunctions.freeConnection(context, conn, "[1547080855]");
+    		addErrorMessage("Error [1577751099] - could not start data transaction.");
     		//Clear the posting flag, then return
     		return false;
     	}
@@ -967,6 +968,7 @@ public class ICEntryBatch {
     	try {
 			post_without_data_transaction(conn, sUserFullName, sUserID);
 		} catch (Exception e1) {
+			addErrorMessage(e1.getMessage());
     		//Clear the posting flag:
     		clsDatabaseFunctions.rollback_data_transaction(conn);
     		try {
@@ -1009,7 +1011,7 @@ public class ICEntryBatch {
 			removeCancelingCosts(conn);
 		} catch (Exception e) {
 			//We don't need to react to this, just trap it and go on - presumably it will run next time:
-			System.out.println(e.getMessage());
+			System.out.println("Error [1435002932]" + e.getMessage());
 		} 
     	
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547080857]");
@@ -1303,6 +1305,10 @@ public class ICEntryBatch {
 	        );
     	}
     	
+    	//if (this.iBatchType() == ICBatchTypes.IC_SHIPMENT){
+    	//	throw new Exception("Error test 1234567");
+    	//}
+    	
     	if (m_iFlagInvoices){
 	    	if (this.iBatchType() == ICBatchTypes.IC_SHIPMENT){
 	    		/* Here's the update statement without variables:
@@ -1519,6 +1525,12 @@ public class ICEntryBatch {
     		return false;
     	}
     	
+    	//Make sure there's at least one line in it:
+    	if (entry.getLineCount() == 0){
+    		addErrorMessage("<br>Entry number " + sEntryNumber + " has no lines - delete this entry or add at least one line to it.");
+    		return false;
+    	}
+    	
     	if (!entry.checkIfKeyIsUnique(conn)){
     		addErrorMessage("Entry " + sEntryNumber 
     			+ " is not a unique transaction.");
@@ -1576,8 +1588,14 @@ public class ICEntryBatch {
        	//This will carry the invoice number from which this credit note is created - IF this is a credit note (if not it will just be blank)
        	String sMatchingInvoiceNumber = "";
        	if(Integer.parseInt(entry.sEntryType()) == ICEntryTypes.SHIPMENT_ENTRY){
-       		if (entry.getLineByIndex(0).sInvoiceNumber().compareToIgnoreCase("") !=0){
-    			BigDecimal bdQtyShipped = new BigDecimal(entry.getLineByIndex(0).sQtySTDFormat());
+       		ICEntryLine firstline = null;
+       		try {
+				firstline = entry.getLineByIndex(0);
+			} catch (Exception e1) {
+				addErrorMessage("Error [1577757266] - getting line by index on entry number " + entry.lEntryNumber() + " - " + e1.getMessage());
+			}
+       		if (firstline.sInvoiceNumber().compareToIgnoreCase("") !=0){
+    			BigDecimal bdQtyShipped = new BigDecimal(firstline.sQtySTDFormat());
     			if (bdQtyShipped.compareTo(BigDecimal.ZERO) > 0){
     				
     				//If the entry corresponds to an SM invoice or credit, then ALL of the entrylines will carry that invoice number in the
@@ -1585,7 +1603,7 @@ public class ICEntryBatch {
     				String SQL = "SELECT " + SMTableinvoiceheaders.sMatchingInvoiceNumber
     					+ " FROM " + SMTableinvoiceheaders.TableName
     					+ " WHERE ("
-    						+ "(" + SMTableinvoiceheaders.sInvoiceNumber + " = '" + entry.getLineByIndex(0).sInvoiceNumber() +"')"
+    						+ "(" + SMTableinvoiceheaders.sInvoiceNumber + " = '" + firstline.sInvoiceNumber() +"')"
     					+ ")"
     				;
     				try {
@@ -1609,7 +1627,12 @@ public class ICEntryBatch {
        	
     	for (int i = 0; i < entry.getLineCount(); i++){
     	
-    		ICEntryLine line = entry.getLineByIndex(i);
+    		ICEntryLine line = null;
+			try {
+				line = entry.getLineByIndex(i);
+			} catch (Exception e2) {
+				addErrorMessage("Error [1577757480] - reading getLineByIndex for index '" + i + "', entry '" + entry.lEntryNumber() + "' - " + e2.getMessage());
+			}
     		if (!line.getItemDetails(conn)){
     			addErrorMessage("<BR>Could not get item details: " + line.getErrorMessage());
     			return false;
@@ -2104,9 +2127,13 @@ public class ICEntryBatch {
     	//Now that costs have been updated, save the entry:
     	if (!entry.save_without_data_transaction(conn, sUserID)){
     		String sErr = "";
-    		for (int i = 0; i < entry.getErrorMessage().size(); i++){
-    			sErr = entry.getErrorMessage().get(i) + "\n";
-    		}
+    		try {
+				for (int i = 0; i < entry.getErrorMessage().size(); i++){
+					sErr = entry.getErrorMessage().get(i) + "\n";
+				}
+			} catch (Exception e) {
+				addErrorMessage("Error [1577758014] - error reading entry.getErrorMessage - " + e.getMessage());
+			}
     		addErrorMessage("Could not save entry - " + sErr);
     		return false;
     	}

@@ -41,19 +41,19 @@ public class SMServerSettingsAction extends HttpServlet{
 
 		String sControlsDatabaseURL = clsManageRequestParameters.get_Request_Parameter(ServerSettingsFileParameters.SERVER_SETTING_CONTROL_DB_URL, request);
 		if(sControlsDatabaseURL.compareToIgnoreCase("") == 0) {
-			sErrorMessage += "Controls database can not be blank.";
+			sErrorMessage += "Controls database URL can not be blank.";
 		}	
 		String sControlsDatabasePortValue = clsManageRequestParameters.get_Request_Parameter(ServerSettingsFileParameters.SERVER_SETTING_CONTROL_DB_PORT, request);
 		if(sControlsDatabasePortValue.compareToIgnoreCase("") == 0) {
-			sErrorMessage += "Controls database can not be blank.";
+			sErrorMessage += "Controls database port can not be blank.";
 		}	
 		String sControlsDatabaseUsernameValue = clsManageRequestParameters.get_Request_Parameter(ServerSettingsFileParameters.SERVER_SETTING_CONTROL_DB_USERNAME, request);
 		if(sControlsDatabaseUsernameValue.compareToIgnoreCase("") == 0) {
-			sErrorMessage += "Controls database can not be blank.";
+			sErrorMessage += "Controls database username can not be blank.";
 		}	
 		String sControlsDatabasePasswordValue = clsManageRequestParameters.get_Request_Parameter(ServerSettingsFileParameters.SERVER_SETTING_CONTROL_DB_PASSWORD, request);
 		if(sControlsDatabasePasswordValue.compareToIgnoreCase("") == 0) {
-			sErrorMessage += "Controls database can not be blank.";
+			sErrorMessage += "Controls database password can not be blank.";
 		}	
 		String sServerIDValue = clsManageRequestParameters.get_Request_Parameter(ServerSettingsFileParameters.SERVER_SETTING_SERVER_ID, request);
 		if(sServerIDValue.compareToIgnoreCase("") == 0) {

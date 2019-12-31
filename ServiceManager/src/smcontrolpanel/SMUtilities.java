@@ -1324,19 +1324,7 @@ public class SMUtilities extends clsServletUtilities {
 			//return full path to resource folder (e.g. '/var/lib/tomcat7/webapps/smlocalresources/')
 			return sFullFilePath;
 	}
-	public static String getTempFileDirectory(
-			ServletContext context, 
-			HttpServletRequest request){
-		
-		String sTemporaryFilePath = SMUtilities.getAbsoluteRootPath(request, context);
-		while (sTemporaryFilePath.endsWith(System.getProperty("file.separator"))){
-			sTemporaryFilePath = sTemporaryFilePath.substring(0, sTemporaryFilePath.length() - 1);
-		}
-		sTemporaryFilePath = sTemporaryFilePath + System.getProperty("file.separator");
-		sTemporaryFilePath = sTemporaryFilePath + WebContextParameters.gettempfiledirectory(context);
-		
-		return sTemporaryFilePath;
-	}
+
 	public static String getDatabaseRevisionNumber(ServletContext context, String sDBID, String sCallingClass, String sUserID, String sUserFullName){
 		String s = "";
 		String SQL = "SELECT"
@@ -1363,5 +1351,29 @@ public class SMUtilities extends clsServletUtilities {
 		
 		return s;
 	}
+	public static String getAbsoluteSMTempPath(HttpServletRequest req, ServletContext context){
 
+		String sPath = "";
+		
+		if (context.getInitParameter(WebContextParameters.webappname) != null){
+			sPath = System.getProperty( "catalina.base" ) 
+					+ System.getProperty("file.separator")  + "webapps" 
+					+ context.getInitParameter(WebContextParameters.smtempfolder);
+		}else{
+			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
+		}
+
+		//Strip off any file separators we don't need:
+		while (
+				sPath.endsWith(System.getProperty("file.separator"))
+				|| sPath.endsWith(".")
+		){
+			sPath = sPath.substring(0, sPath.length() - 1);
+		}
+
+		//Now add back one file separator:
+		sPath = sPath + System.getProperty("file.separator");
+
+		return sPath;
+	}
 }

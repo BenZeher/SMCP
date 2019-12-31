@@ -108,9 +108,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    boolean bIncludesHeaderRow = false;
 	    String sEncryptionKey = "";
 		String sFileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
-		String  sTempFilePath = SMUtilities.getAbsoluteRootPath(request, getServletContext())
-					+ WebContextParameters.gettempfiledirectory(getServletContext())
-					+ System.getProperty("file.separator");
+		String sTempFilePath = SMUtilities.getAbsoluteSMTempPath(request, getServletContext());
 
     	//Customized title
 	    String title = "Import wage scale job data.";

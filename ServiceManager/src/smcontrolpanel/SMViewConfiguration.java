@@ -174,7 +174,7 @@ public class SMViewConfiguration  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Path to web app:", SMUtilities.getAbsoluteRootPath(request, getServletContext()), "The path on the web server to the folder that holds the program itself.", bOddRow)); //?
 		bOddRow = !bOddRow;
-		out.println(createRow("Path to images:", WebContextParameters.getInitImagePath(getServletContext()), "The path on the web server to the folder that holds all the image files for the program.", bOddRow)); //?
+		out.println(createRow("Path to SM temporary files:", SMUtilities.getAbsoluteSMTempPath(request, getServletContext()), "The path that will hold any temporary files for the program.", bOddRow)); //?
 		bOddRow = !bOddRow;
 		out.println(createRow("Path to javascript scripts:", WebContextParameters.getInitScriptPath(getServletContext()), "The path on the web server to the folder that holds all the script files for the program.", bOddRow));
 		bOddRow = !bOddRow;
@@ -192,8 +192,6 @@ public class SMViewConfiguration  extends HttpServlet {
 		out.println(createRow("Control database user name:", sControlDatabaseUser, "User name used to connect to the control database.", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Maximum number of database connections:", WebContextParameters.getMaximumNumberOfConnections(getServletContext()), "Maximum number of connections allowed to accumulate in the connection pool.", bOddRow));
-		bOddRow = !bOddRow;
-		out.println(createRow("Logging work order updates:", WebContextParameters.getLogWorkOrderUpdates(getServletContext()), "If 'True', the program is logging all updates to the <I>workorders</I> and <I>workorderdetails</I> tables.", bOddRow));
 		bOddRow = !bOddRow;
 		/*out.println(createRow("Web app to create doc folders:", WebContextParameters.getcreatefolderURL(getServletContext()), "This is the URL of the Google 'web app' that is used to create document folders in Google Drive.", bOddRow));
 		bOddRow = !bOddRow;*/

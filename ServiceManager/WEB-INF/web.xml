@@ -74,14 +74,6 @@
     </context-param>
     
     <context-param>
-      <param-name>tempfiledir</param-name>
-      <param-value>temp</param-value>
-      <description>
-        The path to a folder to hold temporary files for printing, etc.
-      </description>
-    </context-param>
-
-    <context-param>
       <param-name>maximumnumberofconnections</param-name>
       <param-value>100</param-value>
       <description>
@@ -102,6 +94,14 @@
       <param-value>https://sites.google.com/site/airotechservicemanager/function-descriptions-3</param-value>
       <description>
       Identifies the URL of the page that contains all of the documentation for the function descriptions of SMCP
+      </description>
+    </context-param>
+    
+    <context-param>
+      <param-name>smtempfolder</param-name>
+      <param-value>/smtemp/</param-value>
+      <description>
+      Identifies the the folder, under webapps, which will be used to hold temporary files
       </description>
     </context-param>
 

@@ -12,7 +12,7 @@ public class WebContextParameters {
     public static final String maximumnumberofconnections = "maximumnumberofconnections";
     public static final String logworkorderupdates = "logworkorderupdates";
     public static final String documentationpageURL = "documentationpageURL";
-    public static final String tempfiledir = "tempfiledir";
+    public static final String smtempfolder = "smtempfolder";
     
 	 public static String getURLLinkBase(ServletContext context){
 		 String sSMAppName = context.getInitParameter(WebContextParameters.webappname);
@@ -84,11 +84,11 @@ public class WebContextParameters {
 			return sInitParam;
 	 }
 	 
-	 public static String gettempfiledirectory(ServletContext context){
-		 String sInitParam = context.getInitParameter(WebContextParameters.tempfiledir);
-		 if ((sInitParam == null) || (sInitParam.compareToIgnoreCase("")) == 0){
-			 sInitParam = "temp";
+	 public static String getsmtempfolder(ServletContext context){
+		 String sInitSMTemp = context.getInitParameter(WebContextParameters.smtempfolder);
+		 if ((sInitSMTemp == null) || (sInitSMTemp.compareToIgnoreCase("")) == 0){
+			 sInitSMTemp = "smtemp";
 			}
-			return sInitParam;
+			return sInitSMTemp;
 	 }
 }

@@ -757,7 +757,7 @@ public class SMWorkOrderAction extends HttpServlet{
 		} catch (Exception e) {
 			throw new Exception("Error loading SM Options data to email work order receipt - " + e.getMessage() + ".");
 		}
-		String sSystemRootPath = SMUtilities.getAbsoluteRootPath(req, getServletContext());
+		String sSMTemporaryFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
 		
 		String sSubject = "";
 		String SQL = "SELECT * FROM " + SMTablecompanyprofile.TableName;
@@ -793,7 +793,7 @@ public class SMWorkOrderAction extends HttpServlet{
 			String sSignatureBoxHeight = Integer.toString((int) (Math.round(iSignatureWidth/SMTablesmoptions.SIGNATURE_BOX_WIDTH_TO_HEIGHT_RATIO)));
 			
             clsEmailInlineHTML.emailEmbeddedHTMLWithSignature(
-            	sSystemRootPath,
+            	sSMTemporaryFilePath,
             	wo.getmsignature(), 
             	Integer.parseInt(sSignatureBoxWidth),
 	    		Integer.parseInt(sSignatureBoxHeight),

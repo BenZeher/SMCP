@@ -851,8 +851,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 		
 		//Get the temporary file path for saving files:
 		String sPDFInvoiceFileName = 
-			SMUtilities.getTempFileDirectory(context, req)
-			+ System.getProperty("file.separator")
+			SMUtilities.getAbsoluteSMTempPath(req, context)
 			+ INVOICE_PDF_FILE_PREFIX 
 			+ sInvoiceNumber.trim()
 			+ ".pdf";

@@ -145,7 +145,7 @@ public class clsEmailInlineHTML {
 		}
     }
     public static void emailEmbeddedHTMLWithSignature(
-    		String sProgramRootPath,
+    		String sSMTemporaryFilePath,
     		String jsonString,
     		int iImageWidth,
     		int iImageHeight,
@@ -164,9 +164,7 @@ public class clsEmailInlineHTML {
     	) throws Exception{
     	
     	//System.out.println("file.separator = " + System.getProperty("file.separator"));
-    	String sFullSignatureFileName = sProgramRootPath
-    		+ "images"
-			+ System.getProperty("file.separator") 
+    	String sFullSignatureFileName = sSMTemporaryFilePath
     		+ SIGNATURE_IMAGE_FILE_PREFIX 
     		+ Long.toString(System.currentTimeMillis())
     		+ ".png"
@@ -186,9 +184,6 @@ public class clsEmailInlineHTML {
 		} catch (Exception e) {
 			throw new Exception(e.getMessage());
 		}
-    	//String sFullOHDLogoFileName = sProgramRootPath
-		//			        		+ "images"
-		//			    			+ System.getProperty("file.separator") + "OHDLogo.gif";
     	//Here we read the image information and insert it into the body:
     	Map<String, String> inlineImages = new HashMap<String, String>();
     	inlineImages.put(NAME_OF_SIGNATURE_IMAGE, sFullSignatureFileName);

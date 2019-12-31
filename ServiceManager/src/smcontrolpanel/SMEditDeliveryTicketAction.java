@@ -380,7 +380,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 		} catch (Exception e) {
 			throw new Exception("Error loading SM Options data to email delivery ticket receipt - " + e.getMessage() + ".");
 		}
-		String sSystemRootPath = SMUtilities.getAbsoluteRootPath(req, getServletContext());
+		String sSMTemporaryFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
 		
 		String sSubject = "";
 		String SQL = "SELECT * FROM " + SMTablecompanyprofile.TableName;
@@ -416,7 +416,7 @@ public class SMEditDeliveryTicketAction extends HttpServlet{
 			String sDeliveryTicketReceipt = getHTMLDeliveryTicketForm(1, dt.getslid(), sm.getsDBID(), sm, true, sEmailTo);
 	        
             clsEmailInlineHTML.emailEmbeddedHTMLWithSignature(
-            	sSystemRootPath,
+            	sSMTemporaryFilePath,
             	dt.getmsignature(), 
             	Integer.parseInt(sSignatureBoxWidth),
 	    		Integer.parseInt(sSignatureBoxHeight),

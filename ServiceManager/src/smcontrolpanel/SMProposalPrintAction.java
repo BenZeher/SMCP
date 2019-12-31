@@ -171,7 +171,7 @@ public class SMProposalPrintAction extends HttpServlet {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080647]");
 			throw new Exception("Error reading SM Options record - " + e1.getMessage());
 		}
-		String sSystemRootPath = SMUtilities.getAbsoluteRootPath(req, getServletContext());
+		String sSMTemporaryFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
 	
 		//Get the salesperson's email address and ship to for the proposal:
 		SQL = "SELECT"
@@ -239,7 +239,7 @@ public class SMProposalPrintAction extends HttpServlet {
 		;
 		try{
 			 clsEmailInlineHTML.emailEmbeddedHTMLWithSignature(
-				sSystemRootPath,
+				sSMTemporaryFilePath,
 				sSignature,
 	        	Integer.parseInt(SMTableproposals.SIGNATURE_CANVAS_WIDTH),
 	    		Integer.parseInt(SMTableproposals.SIGNATURE_CANVAS_HEIGHT),

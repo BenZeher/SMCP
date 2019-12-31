@@ -48,6 +48,57 @@ public class SMUserLogin extends HttpServlet {
 				return;
 			}
 			
+			
+			/* TJR - 12/31/2019 - test code for creating, writing, and deleting temporary files:
+			//Create the file name:
+			String sFullFileName = ServletUtilities.clsServletUtilities.getAbsoluteSMTempPath(request, getServletContext()) + "test.txt";
+			System.out.println("[20193651456174] " + "sFullFileName = '" + sFullFileName + "'.");
+		    //Make sure the file doesn't already exist (not likely):
+		    File f = new File(sFullFileName);
+		    if (f.exists()){
+		    	System.out.println("[20193651456184] " + "'" + sFullFileName + "' already exists.");
+		    }
+		        
+		    BufferedWriter bwExportFile = null;
+			try{
+				bwExportFile = new BufferedWriter(new FileWriter(sFullFileName, true));
+			}catch(IOException ex){
+				System.out.println("[20193651516208] " + "error opening file - " + ex.getMessage());
+			}
+			
+			try{
+				bwExportFile.write("TEST");
+				bwExportFile.newLine();
+			}catch (IOException e){
+				//System.out.println("In " + this.toString() + ".writeExportFile - error writing export file definitions: " + e.getMessage());
+				System.out.println("[20193651517253] " + "Error writing: " + e.getMessage());
+				try {
+					bwExportFile.close();
+				} catch (IOException e1) {
+					System.out.println("Error [1474492471] closing file: " + e1.getMessage());
+				}
+			}
+
+			try {
+				bwExportFile.close();
+			} catch (IOException e){
+				System.out.println("Error [1474483473] closing  file: " + e.getMessage());
+			}
+			
+			//Now delete the file:
+			try {
+				f = new File(sFullFileName);           //file to be delete  
+				if(f.delete())                      //returns Boolean value  
+				{  
+					System.out.println("[20193651536144] " + sFullFileName + " was deleted.");
+				}else{
+					System.out.println("[20193651536145] " + sFullFileName + " was NOT deleted.");
+				}
+			} catch (Exception e1) {
+				System.out.println("[20193651537118] " + "error deleting file - " + e1.getMessage());
+			}
+			*/
+			
 			//Check for scheduled reminders
 			String sScheduleCheck = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_CHECK_SCHEDULE);
 			if(sScheduleCheck != null){
@@ -75,6 +126,7 @@ public class SMUserLogin extends HttpServlet {
 		}
 		return;
 	}
+
 	private String printHeading(
 			HttpServletRequest req, 
 			HttpSession session,

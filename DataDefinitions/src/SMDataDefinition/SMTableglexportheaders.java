@@ -24,5 +24,5 @@ public class SMTableglexportheaders {
 	public static final int sjournaldescriptionlength = 60;
 	public static final int ssourcedescriptionlength = 32;
 	public static final int sentrydescriptionlength = 96;
-	
+	public static final int ssourceledgertransactionidlength = 96;
 }

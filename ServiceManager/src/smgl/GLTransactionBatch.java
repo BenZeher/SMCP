@@ -356,7 +356,7 @@ public class GLTransactionBatch {
 			try {
 				entry.validate_fields(conn, sUserID, bBatchIsBeingPosted);
 			} catch (Exception e) {
-				sResult += "  In entry " + Integer.toString(i + 1) + " - " + e.getMessage() + ".";
+				sResult += "  In entry " + entry.getsentrynumber() + " - " + e.getMessage() + ".";
 			}
 		}
 		

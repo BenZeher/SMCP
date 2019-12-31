@@ -2382,7 +2382,7 @@ public class ICEntryBatch {
     		bdQtyShipped = bdQtyShipped.negate();
     		if (bdQtyAvailable.compareTo(bdQtyShipped) < 0){
     			addErrorMessage(
-    					"<br>Posting shipment entry " + ln.sEntryNumber() + ", line " + ln.sLineNumber()
+    					"<br>Posting shipment entry " + ln.sEntryNumber() + ", line " + ln.sLineNumber() + ", item '" + ln.sItemNumber()
     						+ " would cause quantity in cost bucket(s) " + ln.sCostBucketID()
     						+ " to drop below zero."
     			);

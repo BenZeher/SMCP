@@ -172,7 +172,8 @@ public class SMViewConfiguration  extends HttpServlet {
 		}
 		out.println(createRow("License expires on:", sExpirationDate, "Your current SMCP license expires on this date.", bOddRow));
 		bOddRow = !bOddRow;
-		
+		out.println(createRow("Path to web app:", SMUtilities.getAbsoluteRootPath(request, getServletContext()), "The path on the web server to the folder that holds the program itself.", bOddRow)); //?
+		bOddRow = !bOddRow;
 		out.println(createRow("Path to images:", WebContextParameters.getInitImagePath(getServletContext()), "The path on the web server to the folder that holds all the image files for the program.", bOddRow)); //?
 		bOddRow = !bOddRow;
 		out.println(createRow("Path to javascript scripts:", WebContextParameters.getInitScriptPath(getServletContext()), "The path on the web server to the folder that holds all the script files for the program.", bOddRow));

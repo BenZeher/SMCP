@@ -20,8 +20,8 @@ public class SMUpdateData extends java.lang.Object{
 
 	private static final int m_CurrentDatabaseVersion = 1441;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "12/31/2019";
-	private static final String m_sCopyright = "Copyright 2003-2019 AIRO Tech OMD, Inc.";
+	private static final String m_sLastRevisionDate = "1/1/2020";
+	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
 	private String m_sSuccessMessage;

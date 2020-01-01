@@ -20,6 +20,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
 import ACCPACDataDefinition.ICITEM;
+import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablelabelprinters;
 import ServletUtilities.clsDatabaseFunctions;
@@ -37,6 +38,7 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 	private boolean bDebugMode = false;
 	private boolean bTestPrintMode = false;
 	private int MAX_QTY_OF_LABELS = 10000;
+	private static String UPC_FILE_PREFIX = "UPC";
 	public static final String LABELPRINTER_LIST = "LABELPRINTER_LIST";
 
 	public ICPrintUPCItemLabel(
@@ -74,8 +76,8 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 		// 'java.lang.NoClassDefFoundError: Could not initialize class sun.awt. . . .
 		System.setProperty("java.awt.headless", "true");
 
-		String sBarCodeImagePath = "";
-		sBarCodeImagePath = getAbsoluteBarcodeImagePath(req, context);
+		String sBarCodeImagePath = SMUtilities.getAbsoluteSMTempPath(req, context);
+		//sBarCodeImagePath = getAbsoluteBarcodeImagePath(req, context);
 
 		//try to delete any existing bar code files here:
 		if (!deleteCurrentBarCodeFiles(sBarCodeImagePath)){
@@ -169,23 +171,6 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 		return true;
 	}
 
-	private String getAbsoluteBarcodeImagePath(HttpServletRequest req, ServletContext context){
-
-		String sPath = context.getInitParameter("barcodeimageabsolutepath");
-
-		if (sPath == null){
-			sPath = SMUtilities.getAbsoluteRootPath(req, context);
-
-			sPath = sPath 
-			+ "images" 
-			+ System.getProperty("file.separator") 
-			+ "barcodes" 
-			+ System.getProperty("file.separator");
-		}
-		return sPath;
-
-	}
-
 	private boolean deleteCurrentBarCodeFiles(String sBarCodeImagePath){
 
 		boolean bDeletionSuccessful = true;
@@ -205,13 +190,14 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 				continue;
 			}
 			//System.out.println("removing " + n.getPath());
-			if (!n.delete()){
-				m_sErrorMessage = m_sErrorMessage + "Unable to delete " + sBarCodeImagePath + info[i] + "\n";
-				bDeletionSuccessful = false;
+			if (info[i].startsWith(UPC_FILE_PREFIX)){
+				if (!n.delete()){
+					m_sErrorMessage = m_sErrorMessage + "Unable to delete " + sBarCodeImagePath + info[i] + "\n";
+					bDeletionSuccessful = false;
+				}
 			}
 		}
 		return bDeletionSuccessful;
-
 	}
 
 	private boolean printLabel(
@@ -343,7 +329,7 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 					File f = null;
 					try {
 						f = new File(
-								sImagePath + "UPC" + sItemNum + ".jpg"
+								sImagePath + UPC_FILE_PREFIX + sItemNum + ".jpg"
 						);
 					}catch (NullPointerException e){
 						//System.out.println("Error creating new file - " + e.getMessage());
@@ -359,18 +345,14 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 						pwOut.println("Error [1416590300] generating file " + e.getMessage() + ".");
 					}
 	
-					//TJR - 2/9/10 - Try appending the output so that it gives the system time to see the images
-					//before the HTML is sent out to the browser:
-					sBarcodeImageURLPath = context.getInitParameter("barcodeimagepath");
-					if (sBarcodeImageURLPath == null){
-						sBarcodeImageURLPath = "../images/barcodes/";
-					}
+					sBarcodeImageURLPath = ".." + WebContextParameters.getsmtempfolder(context);
+					System.out.println("[202011427520] " + "sBarcodeImageURLPath = '" + sBarcodeImageURLPath + "'.");
 				}
 				if (bPrintTwoPerRow){
 					sOutPut +=
 						"<TD>"
 						+ "<B><FONT SIZE=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + sDescription.trim() + "</FONT></B><BR>"
-						+ "<img src=\"" + sBarcodeImageURLPath + "UPC" + sItemNum + ".jpg\" height=24 width=270 alt=\"" 
+						+ "<img src=\"" + sBarcodeImageURLPath + UPC_FILE_PREFIX + sItemNum + ".jpg\" height=24 width=270 alt=\"" 
 						+ sItemNum + "\"/>"
 						+ "<BR><B><FONT SIZE=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + sItemNum 
 						+ "&nbsp;&nbsp;" + sUnitOfMeasure.trim() + "&nbsp;&nbsp;" + sReportGroup1.trim() + "&nbsp;&nbsp;" + sDedicatedToNumber.trim()
@@ -382,7 +364,7 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 						"<B><FONT SIZE=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + sDescription.trim() + "</FONT></B><BR>"
 						;
 						if (bPrintBarCode){
-							sOutPut += "<img src=\"" + sBarcodeImageURLPath + "UPC" + sItemNum + ".jpg\" height=24 width=270 alt=\"" 
+							sOutPut += "<img src=\"" + sBarcodeImageURLPath + UPC_FILE_PREFIX + sItemNum + ".jpg\" height=24 width=270 alt=\"" 
 							+ sItemNum + "\"/>";
 						}
 						sOutPut += "<BR><B><FONT SIZE=2>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;" + sItemNum 

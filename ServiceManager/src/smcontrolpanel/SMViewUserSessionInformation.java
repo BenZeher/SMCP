@@ -44,12 +44,23 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 
 		//Get the session info:
 		HttpSession CurrentSession = request.getSession(true);
+		if (CurrentSession == null){
+			System.out.println("[1577988342] session is null");
+		}else{
+			System.out.println("[1577988343] session is NOT null");
+		}
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sUserName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 		String sUserID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sOpts = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_OPTS);
 
+		if (sCompanyName == null){
+			System.out.println("[1577988344] company name is NOT null");
+		}else{
+			System.out.println("[1577988344] company name is null");
+		}
+		System.out.println("[1577988344] company name = '" + sCompanyName + "'.");
 		String title = "";
 		if (!SMSystemFunctions.isFunctionPermitted(
 				-1, 
@@ -63,6 +74,7 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 		}
 		
 		//Record the use of this function:
+		System.out.println("[1577988345] company name = '" + sCompanyName + "'.");
 		SMLogEntry log = new SMLogEntry(sDBID, getServletContext());
 		log.writeEntry(
 			sUserID, 

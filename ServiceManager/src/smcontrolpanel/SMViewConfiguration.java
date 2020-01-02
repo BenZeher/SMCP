@@ -57,7 +57,6 @@ public class SMViewConfiguration  extends HttpServlet {
 			//Don't catch anything here....
 		}
 		
-		
 		String title = "";
 		if (!SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.SMViewSystemConfiguration, 

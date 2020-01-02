@@ -281,7 +281,6 @@ public class SMProposalForm extends java.lang.Object{
 			if (iRequestType == SMProposalForm.REQUEST_TYPE_EMAIL){
 				s += "<img src=\"cid:" + clsEmailInlineHTML.NAME_OF_LOGO_IMAGE + "\" width=\"" + OHD_LOGO_WIDTH + "\" height=\"" + OHD_LOGO_HEIGHT + "\" />";
 			}else{
-				//String sImagePath = context.getInitParameter("imagepath");
 				String sImagePath = WebContextParameters.getLocalResourcesPath(context);
 				if (sImagePath == null){
 					sImagePath = "../images/smcontrolpanel/";

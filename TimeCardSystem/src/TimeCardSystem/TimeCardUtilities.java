@@ -71,7 +71,7 @@ public class TimeCardUtilities extends clsServletUtilities{
 	public static int Get_Pay_Period_Length(ServletContext context){
 
 		try {
-			return Integer.parseInt(context.getInitParameter("periodlength"));
+			return Integer.parseInt(TCWebContextParameters.getInitPeriodLength(context));
 		} catch (NumberFormatException e) {
 			return 1;
 		}
@@ -605,7 +605,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 
 	public static String getDatePickerString (String sBoundFieldName, ServletContext context){
 
-		String sImagePath = context.getInitParameter(TCWebContextParameters.getInitImagePath(context));
+		String sImagePath = TCWebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return "<img src=\"" + sImagePath + "calendar_icon.png\" alt=\"calendar_icon.png\" onclick='scwShow(scwID(\"" 
@@ -617,7 +617,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 
 	}
 	public static String getDatePickerIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(TCWebContextParameters.getInitScriptPath(context));
+		String sScriptPath = TCWebContextParameters.getInitScriptPath(context);
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "scw002.js'></script>";

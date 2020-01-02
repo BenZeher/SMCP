@@ -24,7 +24,6 @@ import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
-import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTablewagescalerecords;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -60,6 +59,8 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	private static int FIELD_MISCDED = 22;
 	private static int FIELD_NETPAY = 23;
 	private static int FIELD_VACALLOWED = 24;
+	
+	private static String IMPORT_FILE_PREFIX = "WAGESCALEIMPORT_";
 	
 	//Member variables for the data:
 	/*
@@ -107,7 +108,7 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	    // Set values needed to write data to temp values for scope reasons
 	    boolean bIncludesHeaderRow = false;
 	    String sEncryptionKey = "";
-		String sFileName = "WAGESCALEIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		String sFileName = IMPORT_FILE_PREFIX + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 		String sTempFilePath = SMUtilities.getAbsoluteSMTempPath(request, getServletContext());
 
     	//Customized title
@@ -476,9 +477,11 @@ public class SMLoadWageScaleDataAction extends HttpServlet{
 	      if (!n.isFile()) { // skip ., .., other directories, etc.
 	        continue;
 	      }
-	      if (!n.delete()){
-	    	  throw new Exception("Error [1560864810] - Unable to delete file '" + sTempImportFilePath + info[i] + "'.");
-	      } 
+	      if (info[i].startsWith(IMPORT_FILE_PREFIX)){
+		      if (!n.delete()){
+		    	  throw new Exception("Error [1560864810] - Unable to delete file '" + sTempImportFilePath + info[i] + "'.");
+		      } 
+	      }
 	    }
 	    return;
 	}

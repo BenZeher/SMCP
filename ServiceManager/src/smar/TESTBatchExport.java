@@ -67,7 +67,6 @@ public class TESTBatchExport extends HttpServlet{
 			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 
-		
 		/*
 		//TEST PERVASIVE CONNECTION:
 		Connection cnAP = null;

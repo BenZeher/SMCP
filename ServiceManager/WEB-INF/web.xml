@@ -40,24 +40,6 @@
     </context-param>
 
     <context-param>
-      <param-name>barcodeimagepath</param-name>
-      <param-value>/sm/images/barcodes/</param-value>
-      <description>
-        The URL path to the folder that will hold temporary barcode images to be displayed on web pages
-        when printing UPC bar codes
-      </description>
-    </context-param>
-
-    <context-param>
-      <param-name>barcodeimageabsolutepath</param-name>
-      <param-value>/tomcat/webapps/sm/images/barcodes/</param-value>
-      <description>
-        The absolute path to the folder that will hold temporary barcode images to be displayed on web pages
-        when printing UPC bar codes
-      </description>
-    </context-param>
-
-    <context-param>
       <param-name>scriptpath</param-name>
       <param-value>/sm/scripts/</param-value>
       <description>

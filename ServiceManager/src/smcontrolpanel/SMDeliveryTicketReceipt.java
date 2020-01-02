@@ -238,7 +238,6 @@ public class SMDeliveryTicketReceipt extends java.lang.Object{
 		s += "<TR>";
 		
 		if (bPrintLogo){
-			//String sImagePath = context.getInitParameter("imagepath");
 			String sImagePath = WebContextParameters.getLocalResourcesPath(context);
 			if (sImagePath == null){
 				sImagePath = "../images/smcontrolpanel/";

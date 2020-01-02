@@ -361,7 +361,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String faviconLink(ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	"<link rel=\"shortcut icon\" href=\"" + sImagePath + "SMCP16.ico\" type=\"image/x-icon\" />";
@@ -376,7 +376,7 @@ public class SMUtilities extends clsServletUtilities {
 
 	public static String getOpenTruckMarker (ServletContext context, String sColor){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "opentruck" + sColor + ".png";
@@ -387,7 +387,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getOpenTruckMarker (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "opentruck.png";
@@ -398,7 +398,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getMechanicMarkerSprite (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "mechanicicons.png";
@@ -409,7 +409,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getMechanicMarkerShadow (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "shadow.png";
@@ -420,7 +420,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getClosedTruckMarker (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "closedtruck.png";
@@ -431,7 +431,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getTruckMarkerShadow (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = WebContextParameters.getInitImagePath(context);
 
 		if (sImagePath != null){
 			return 	sImagePath + "shadow-truck.png";
@@ -567,14 +567,6 @@ public class SMUtilities extends clsServletUtilities {
 				// the array to be displayed:
 				if(arRequestedFunctions.get(i).compareTo(arPermittedFunctions.get(j)) == 0){
 					//Create the link to be added:
-					//If we can read the web app name from the Servlet Context (defined in web.xml), then append
-					//that to the servlet name - otherwise, append '" + SMUtilities.getURLLinkBase(getServletContext()) + "':
-
-					//String sURLBase = "" + SMUtilities.getURLLinkBase(getServletContext()) + "";
-					//String sURLBase = "/" + context.getInitParameter(SMWebContextParameters.webappname) + "/";
-					//if (sURLBase == null){
-					//	sURLBase = "" + SMUtilities.getURLLinkBase(context) + "";
-					//}
 					String sLink = 
 						"<a "
 						+ "HREF='" + WebContextParameters.getURLLinkBase(context)
@@ -629,14 +621,6 @@ public class SMUtilities extends clsServletUtilities {
 					//Add it to the menu to display:
 
 					//Create the link to be added:
-					//If we can read the web app name from the Servlet Context (defined in web.xml), then append
-					//that to the servlet name - otherwise, append '" + SMUtilities.getURLLinkBase(getServletContext()) + "':
-
-					//String sURLBase = "" + SMUtilities.getURLLinkBase(getServletContext()) + "";
-					//String sURLBase = "/" + context.getInitParameter(SMWebContextParameters.webappname) + "/";
-					//if (sURLBase == null){
-					//	sURLBase = "" + SMUtilities.getURLLinkBase(context) + "";
-					//}
 					String sLink = 
 						"<A HREF='" + WebContextParameters.getURLLinkBase(context)
 						+ arPermittedFunctionLinks.get(j)
@@ -851,7 +835,7 @@ public class SMUtilities extends clsServletUtilities {
 	
 	public static String getSMCP_CSSIncludeString (ServletContext context){
 		String SMCP_CSS_SCRIPT_NAME = "smcp.css";
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = WebContextParameters.getInitScriptPath(context);
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + SMCP_CSS_SCRIPT_NAME + "'></script>";
@@ -1169,7 +1153,7 @@ public class SMUtilities extends clsServletUtilities {
 			//System.out.println("[1466801033] - sFilePath = '" + sFilePath + "'");
 			
 			//Pick off the last folder, normally 'sm':
-			String sWebAppName = context.getInitParameter(WebContextParameters.webappname);
+			String sWebAppName = WebContextParameters.getInitWebAppName(context);
 			sFilePath = sFilePath.substring(0, sFilePath.length() - sWebAppName.length());
 		}
 		sFilePath += 
@@ -1227,7 +1211,7 @@ public class SMUtilities extends clsServletUtilities {
 			//System.out.println("[1466801033] - sFilePath = '" + sFilePath + "'");
 			
 			//Pick off the last folder, normally 'sm':
-			String sWebAppName = context.getInitParameter(WebContextParameters.webappname);
+			String sWebAppName = WebContextParameters.getInitWebAppName(context);
 			sFilePath = sFilePath.substring(0, sFilePath.length() - sWebAppName.length());
 		}
 		sFilePath += 
@@ -1355,10 +1339,10 @@ public class SMUtilities extends clsServletUtilities {
 
 		String sPath = "";
 		
-		if (context.getInitParameter(WebContextParameters.webappname) != null){
+		if ((WebContextParameters.getInitWebAppName(context)) != null){
 			sPath = System.getProperty( "catalina.base" ) 
 					+ System.getProperty("file.separator")  + "webapps" 
-					+ context.getInitParameter(WebContextParameters.smtempfolder);
+					+ WebContextParameters.getsmtempfolder(context);
 		}else{
 			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
 		}

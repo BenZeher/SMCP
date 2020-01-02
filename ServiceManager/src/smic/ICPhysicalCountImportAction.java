@@ -38,6 +38,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 	private static final int NUMBER_OF_FIELDS_PER_LINE = 2;
 	private static final int FIELD_ITEM = 0;
 	private static final int FIELD_QTY = 1;
+	private static String IMPORT_FILE_PREFIX = "ICIMPORT_";
 
 	private static final String sICPhysicalCountImportActionCallingClass = "smic.ICPhysicalCountImportSelect";
 	private static boolean bDebugMode = false;
@@ -195,7 +196,11 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					m_sCountDesc,
 					m_uploadedFile);
 		} catch (Exception e) {
-
+			try {
+				deleteCurrentImportFiles(SMUtilities.getAbsoluteSMTempPath(request, getServletContext()));
+			} catch (Exception e1) {
+				//Don't choke on this....
+			}
 			objICPhysicalInventoryEntry.addErrorMessage( e.getMessage());
 			CurrentSession.setAttribute(ICPhysicalCountImportSelect.IC_PHYSICAL_IMPORT_SESSION_WARNING_OBJECT,objICPhysicalInventoryEntry.getErrorMessages() );
 			objICPhysicalInventoryEntry.clearError();
@@ -208,6 +213,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			return;
 		}
 
+		try {
+			deleteCurrentImportFiles(SMUtilities.getAbsoluteSMTempPath(request, getServletContext()));
+		} catch (Exception e) {
+			//Don't choke on this...
+		}
+		
 		String sPhysicalCountImportStatus = "Import completed without errors.";
 		if (bDebugMode){
 			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
@@ -228,20 +239,26 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 
 		return;
 	}
-	private void createTempImportFileFolder(String sTempFileFolder) throws Exception{
-		File dir = new File(sTempFileFolder);
-		if (dir.exists()) {
+	private void deleteCurrentImportFiles(String sTempFilePath) throws Exception{
+
+		File dir = new File(sTempFilePath);
+		if (!dir.exists()) {
+			//Nothing to do in this case....
 			return;
 		}
 
-		//Need to create the path:
-		try{
-			// Create one directory
-			if (!new File(sTempFileFolder).mkdir()) {
-				throw new Exception("<BR>Error [1548955603] creating temp upload folder.");
-			}    
-		}catch (Exception e){//Catch exception if any
-			throw new Exception("<BR>Error [1548955604] creating temp upload folder: " + e.getMessage() + ".");
+		String[] info = dir.list();
+
+		for (int i = 0; i < info.length; i++) {
+			File n = new File(sTempFilePath + info[i]);
+			if (!n.isFile()) { // skip ., .., other directories, etc.
+				continue;
+			}
+			if (info[i].startsWith(IMPORT_FILE_PREFIX)){
+				if (!n.delete()){
+					throw new Exception("Error [20201194104] " + "Unable to delete " + sTempFilePath + info[i]);
+				}
+			}
 		}
 		return;
 	}
@@ -259,19 +276,12 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			FileItem fUploadedFile
 			) throws Exception{
 
-		String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
-				//+ System.getProperty("file.separator")
-				+ "iccountuploads"
-				;
-
-		//If the folder has not been created, create it now:
-		try {
-			createTempImportFileFolder(sTempFilePath);
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+		String sTempFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
+		//Strip off the trailing file separator character, if it has one:
+		if (sTempFilePath.endsWith(System.getProperty("file.separator"))){
+			sTempFilePath = sTempFilePath.substring(0, sTempFilePath.length() - 1);
 		}
-
-
+		
 		try {
 			writeFileAndProcess(
 					sTempFilePath, 
@@ -308,7 +318,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			) throws Exception{
 
 
-		String fileName = "ICIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		String fileName = IMPORT_FILE_PREFIX + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 		try {
 			fUploadedFile.write(new File(sTempImportFilePath, fileName));
 		} catch (Exception e) {

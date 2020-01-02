@@ -8,6 +8,7 @@ public class TCWebContextParameters {
     private static final String imagepath = "imagepath";
     private static final String scriptpath = "scriptpath";
     private static final String programtitle = "programtitle";
+    private static final String periodlength = "periodlength";
     
 	 public static String getURLLinkBase(ServletContext context){
 		 String sSMAppName = context.getInitParameter(TCWebContextParameters.webappname);
@@ -47,5 +48,12 @@ public class TCWebContextParameters {
 			 sInitParam = "sm";
 			}
 			return sInitParam;
-	 }	 
+	 }
+	 public static String getInitPeriodLength(ServletContext context){
+		 String sInitParam = context.getInitParameter(TCWebContextParameters.periodlength);
+		 if ((sInitParam == null) || (sInitParam.compareToIgnoreCase("")) == 0){
+			 sInitParam = "1";
+			}
+			return sInitParam;
+	 }
 }

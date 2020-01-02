@@ -55,6 +55,8 @@ public class SMAuthenticate{
 	    String sSessionDatabase =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sSessionUsername =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 
+	    //System.out.println("[20202131735] " + " sUserName = '" + sUserName + "'.");
+	    
         if(sSessionID == null) {
         	sSessionID = "";
         }
@@ -117,6 +119,7 @@ public class SMAuthenticate{
         
         //Make sure the current session is valid 
     	 if (!validateCurrentSession(sSessionID, sDatabaseID, sSessionDatabase) && !bAllQuickLinkParametersExist){
+    		 //System.out.println("[202021317458] " + " current session is NOT valid");
 	 	    	//String sCompanyName =  (String) req.getSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		    	
 	 	    	//If the session is not valid and there is a DB parameter redirect to that login page
@@ -178,18 +181,20 @@ public class SMAuthenticate{
 	  // OR If no session values exists for the database id or username then we always create a new session.
 	    
 	    try {
+	    	//System.out.println("[202011916558] " + "");
 			if (bProgramUpdateRequired || bComingFromLoginScreen 
 				||((bAllQuickLinkParametersExist && ((sDatabaseID.compareToIgnoreCase(sSessionDatabase) != 0 || sUserName.compareToIgnoreCase(sSessionUsername) != 0 )))
 				||(sSessionDatabase.compareToIgnoreCase("") == 0 || sSessionUsername.compareToIgnoreCase("") == 0 )
 				)){
 				
+				//System.out.println("[202011916559] " + "");
 				//Try to validate the user:
 				//First get any session and invalidate it:
 				HttpSession CurrentSession = req.getSession(true);
 				try {
 					CurrentSession.invalidate();
 				} catch (Exception e) {
-					System.out.println("Error [1415807185] invalidating session - " + e.getMessage());
+					//System.out.println("Error [1415807185] invalidating session - " + e.getMessage());
 				}
 				CurrentSession = req.getSession(true);
 				CurrentSession.setMaxInactiveInterval(SMUtilities.SMCP_MAX_SESSION_INTERVAL_IN_SECONDS);
@@ -198,6 +203,8 @@ public class SMAuthenticate{
 				CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID, sUserID);
 				CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_ACCESSCOUNTER, (Long)(1L));
 				CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_OPTS, sOpts);
+				
+				//System.out.println("[202011916560] " + "");
 				
 				//Get the module level and license info:
 				//Try to read the license file here:
@@ -209,6 +216,8 @@ public class SMAuthenticate{
 					return false;
 				}
 				
+				//System.out.println("[202011916561] " + "");
+				
 				CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL, sLicenseModuleLevel);
 				//CurrentSession.setAttribute(SMUtilities.SESSION_PARAM_CHECK_SCHEDULE, "YES");
 
@@ -218,6 +227,8 @@ public class SMAuthenticate{
 					CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_MOBILE, "N");
 				}
 				
+				//System.out.println("[202011916562] " + "");
+				
 				// TJR - 10/1/2014 - changed this to make it match the actual session ID:
 				//CurrentSession.setAttribute(SMUtilities.SESSIONTAG_SESSION_PARAM, Long.toString(System.currentTimeMillis()));
 				CurrentSession.setAttribute(SMUtilities.SMCP_SESSION_PARAM_SESSIONTAG, CurrentSession.getId());
@@ -226,7 +237,7 @@ public class SMAuthenticate{
 				try {
 					sSessionTagAttribute = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_SESSIONTAG);
 				} catch (Exception e1) {
-					System.out.println("Error [1421161767] reading session tag attribute - " + e1.getMessage());
+					//System.out.println("Error [1421161767] reading session tag attribute - " + e1.getMessage());
 				}
 				/* TJR - 2/3/2015 - removed this to reduce volume of logging:
 				log.writeEntry(
@@ -245,8 +256,11 @@ public class SMAuthenticate{
 					, 
 					"[1376509305]");
 				if (bDebugMode){
-					System.out.println("In SMAuthenticate.authenticateCredentials - going into processLogin - 04");
+					//System.out.println("In SMAuthenticate.authenticateCredentials - going into processLogin - 04");
 				}
+				
+				//System.out.println("[202011916563] " + "");
+				
 				if (!processSMCPLogIn(
 					sDatabaseID,
 					sUserName,
@@ -310,47 +324,48 @@ public class SMAuthenticate{
 							+ " in again.</BODY></HTML>");
 						return false;
 				}
+				
 				//check to see if the session tag in the request is different than the session tag in the session itself:
 				checkSMCPRequestAndSessionMatch(req, CurrentSession, lFunctionID);
 				
-				if(sSessionTagReadFromSession != null){
-					String sUserIDFromSession = "";
-					String sDBIDFromSession = "";
-					try {
-						sUserIDFromSession = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
-						sDBIDFromSession = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
-					} catch (Exception e) {
-						System.out.println("Error [1421162363] getting user and DB ID - " + e.getMessage());
-					}
-		    		try {
-						if (!clsServletUtilities.isSessionValid(CurrentSession)){
-							CurrentSession = req.getSession(true);
-						}
-					} catch (Exception e) {
-						clsServletUtilities.sysprint("SMAuthenticate.processLogIn", sUserName, "Error[1414430464] - Reading Session " + e.getMessage());
-					}
-	    			if (!SMSystemFunctions.isFunctionPermitted(
-	        				lFunctionID, 
-	        				sUserIDFromSession, 
-	        				context,
-	        				sDBIDFromSession,
-	        				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
-	        			)
-	    			){
-						out.println("<HTML>WARNING: You do not currently have access to this particular function.</BODY></HTML>");
-							return false;
-	    			}else{
-	    				return true;
-	    			}
-				}else{
+				if(sSessionTagReadFromSession == null){
 					//The session tag attribute in the session was null:
 					out.println("<HTML>Warning: Error [1414080365] - the session is no longer valid - session tag in SESSION is null.</BODY></HTML>");
 					return false;
 				}
+				//System.out.println("[202011916566] " + "");
+				String sUserIDFromSession = "";
+				String sDBIDFromSession = "";
+				try {
+					sUserIDFromSession = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERID);
+					sDBIDFromSession = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
+				} catch (Exception e) {
+					System.out.println("Error [1421162363] getting user and DB ID - " + e.getMessage());
+				}
+	    		try {
+					if (!clsServletUtilities.isSessionValid(CurrentSession)){
+						CurrentSession = req.getSession(true);
+					}
+				} catch (Exception e) {
+					clsServletUtilities.sysprint("SMAuthenticate.processLogIn", sUserName, "Error[1414430464] - Reading Session " + e.getMessage());
+				}
+    			if (!SMSystemFunctions.isFunctionPermitted(
+        				lFunctionID, 
+        				sUserIDFromSession, 
+        				context,
+        				sDBIDFromSession,
+        				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+        			)
+    			){
+					out.println("<HTML>WARNING: You do not currently have access to this particular function.</BODY></HTML>");
+						return false;
+    			}else{
+    				return true;
+    			}
 			}
 		} catch (Exception e) {
 			out.println("Error [1415894420] in SMAuthenticate - " + e.getMessage());
-			System.out.println("Error [1415894421] in SMAuthenticate - " + e.getMessage());
+			//System.out.println("Error [1415894421] in SMAuthenticate - " + e.getMessage());
 			return false;
 		}
 	}
@@ -450,6 +465,9 @@ public class SMAuthenticate{
 	
 	
 	private static void checkSMCPRequestAndSessionMatch(HttpServletRequest req, HttpSession session, long lFunctionID){
+		
+		//System.out.println("[202011916568] " + "");
+		
 		//String sSessionTagFromRequest = clsManageRequestParameters.get_Request_Parameter(SMUtilities.REQUEST_PARAM_SESSIONTAG, req);
 		String sSessionTagFromSession = "";
 		try {
@@ -457,6 +475,11 @@ public class SMAuthenticate{
 		} catch (Exception e) {
 			sSessionTagFromSession = "";
 		}
+		if (sSessionTagFromSession == null){
+			sSessionTagFromSession = "";
+		}
+		
+		//System.out.println("[202011916569] " + "");
 		
 		// TJR - 12/21/2018 - ignoring any session tags in requests now
 		
@@ -464,18 +487,25 @@ public class SMAuthenticate{
 		//	//Just return:
 		//	return;
 		//}
+		
+		//System.out.println("[202011916570] " + "");
+		
 		String sUser = "";
 		try {
 			sUser = (String) session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
 		} catch (Exception e) {
 			sUser = "N/A";
 		}
+		
 		String sDatabaseID = "";
 		try {
 			sDatabaseID = (String) session.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		} catch (Exception e) {
 			sUser = "N/A";
 		}
+		
+		//System.out.println("[202011916572] " + "");
+		
 		if (sSessionTagFromSession.compareToIgnoreCase("") == 0){
 			clsServletUtilities.sysprint(
 				"SMAuthenticate", 
@@ -484,6 +514,8 @@ public class SMAuthenticate{
 				+ ", Database ID = '" + sDatabaseID + "'."
 			);
 		}
+		
+		//System.out.println("[202011916573] " + "");
 		
 		//if (sSessionTagFromRequest.compareToIgnoreCase(sSessionTagFromSession) != 0){
 		//	SMUtilities.sysprint(

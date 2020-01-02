@@ -4,15 +4,15 @@ import javax.servlet.ServletContext;
 
 public class WebContextParameters {
 		
-    public static final String webappname = "webappname";
-    public static final String imagepath = "imagepath";
-    public static final String scriptpath = "scriptpath";
-    public static final String smlocalresourcespath = "smlocalresources";
-    public static final String programtitle = "programtitle";
-    public static final String maximumnumberofconnections = "maximumnumberofconnections";
-    public static final String logworkorderupdates = "logworkorderupdates";
-    public static final String documentationpageURL = "documentationpageURL";
-    public static final String smtempfolder = "smtempfolder";
+    private static final String webappname = "webappname";
+    private static final String imagepath = "imagepath";
+    private static final String scriptpath = "scriptpath";
+    private static final String smlocalresourcespath = "smlocalresources";
+    private static final String programtitle = "programtitle";
+    private static final String maximumnumberofconnections = "maximumnumberofconnections";
+    private static final String logworkorderupdates = "logworkorderupdates";
+    private static final String documentationpageURL = "documentationpageURL";
+    private static final String smtempfolder = "smtempfolder";
     
 	 public static String getURLLinkBase(ServletContext context){
 		 String sSMAppName = context.getInitParameter(WebContextParameters.webappname);

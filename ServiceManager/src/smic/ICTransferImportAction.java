@@ -36,8 +36,8 @@ public class ICTransferImportAction extends HttpServlet{
 	private static final int FIELD_ITEM = 1;
 	private static final int FIELD_FROM_LOCATION = 2;
 	private static final int FIELD_TO_LOCATION = 3;
+	private static String TRANSFER_IMPORT_FILE_PREFIX = "ICTRANSIMPORT_";
 	
-
 	//Keys used for local hash mapped member variables.
 	private static final String sCallingClass = "sCallingClass";
 	private static final String m_sBatchNumber = "m_sBatchNumber";
@@ -144,22 +144,7 @@ public class ICTransferImportAction extends HttpServlet{
 		
 		return;
 	}
-	private void createTempImportFileFolder(String sTempFileFolder) throws Exception{
-	    File dir = new File(sTempFileFolder);
-	    if (dir.exists()) {
-	      return;
-	    }
-	    
-	    //Need to create the path:
-	    try{
-	        // Create one directory
-	        if (!new File(sTempFileFolder).mkdir()) {
-	        	throw new Exception("Error [1396369064] creating temp upload folder.");
-	        }    
-        }catch (Exception e){//Catch exception if any
-        	throw new Exception("Error [1396369065] creating temp upload folder - " + e.getMessage() + ".");
-	    }
-	}
+
 	private void processRequest(
 			HttpSession ses, 
 			HttpServletRequest req,
@@ -169,20 +154,14 @@ public class ICTransferImportAction extends HttpServlet{
 			String sUserFullName,
 			HashMap<String, String> mv) throws Exception{
 
-    	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
-			+ System.getProperty("file.separator")
-			+ "iccountuploads"
-		;
-
-    	//If the folder has not been created, create it now:
-		try {
-			createTempImportFileFolder(sTempFilePath);
-		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+		String sTempFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
+		//Strip off the trailing file separator character, if it has one:
+		if (sTempFilePath.endsWith(System.getProperty("file.separator"))){
+			sTempFilePath = sTempFilePath.substring(0, sTempFilePath.length() - 1);
 		}
 		//First, remove any temporary files:
 		try {
-			deleteCurrentTempImportFiles(sTempFilePath);
+			deleteCurrentImportFiles(sTempFilePath);
 		} catch (Exception e1) {
 			throw new Exception("Error deleting temp files before import - " + e1.getMessage());
 		}
@@ -197,7 +176,7 @@ public class ICTransferImportAction extends HttpServlet{
 			throw new Exception (e2.getMessage());
 		}
 		try {
-			deleteCurrentTempImportFiles(sTempFilePath);
+			deleteCurrentImportFiles(sTempFilePath);
 		} catch (Exception e3) {
 			throw new Exception("Error deleting temp files after import - " + e3.getMessage());
 		}
@@ -242,7 +221,7 @@ public class ICTransferImportAction extends HttpServlet{
 			throw new Exception("Error on upload.parseRequest: " + e1.getMessage());
 		}
 		Iterator<FileItem> iter = fileItems.iterator();
-		String fileName = "ICTRNIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		String fileName = TRANSFER_IMPORT_FILE_PREFIX + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 		while (iter.hasNext()) {
 		    FileItem item = (FileItem) iter.next();
 		    if (item.isFormField()) {
@@ -508,24 +487,28 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 	}
 
-	private void deleteCurrentTempImportFiles(String sTempImportFilePath) throws Exception{
-		
-	    File dir = new File(sTempImportFilePath);
-	    if (!dir.exists()) {
-	    	throw new Exception("Error [1396369366] - directory " + sTempImportFilePath + " already exists.");
-	    }
-	    String[] info = dir.list();
-	    for (int i = 0; i < info.length; i++) {
-	      File n = new File(sTempImportFilePath + System.getProperty("file.separator") + info[i]);
-	      if (!n.isFile()) { // skip ., .., other directories, etc.
-	        continue;
-	      }
-	      if (!n.delete()){
-	    	  throw new Exception("Error [1396369367] - error deleting " 
-	    		+ sTempImportFilePath + System.getProperty("file.separator") + info[i] + ".");
-	      }
-	    }
+	private void deleteCurrentImportFiles(String sTempFilePath) throws Exception{
 
+		File dir = new File(sTempFilePath);
+		if (!dir.exists()) {
+			//Nothing to do in this case....
+			return;
+		}
+
+		String[] info = dir.list();
+
+		for (int i = 0; i < info.length; i++) {
+			File n = new File(sTempFilePath + info[i]);
+			if (!n.isFile()) { // skip ., .., other directories, etc.
+				continue;
+			}
+			if (info[i].startsWith(TRANSFER_IMPORT_FILE_PREFIX)){
+				if (!n.delete()){
+					throw new Exception("Error [20201194104] " + "Unable to delete " + sTempFilePath + info[i]);
+				}
+			}
+		}
+		return;
 	}
 	private void validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow) throws Exception{
 

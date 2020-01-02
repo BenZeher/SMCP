@@ -43,7 +43,7 @@ public class BKEntryImportAction extends HttpServlet{
 	private static final int FIELD_CHECK_NUMBER = 0;
 	private static final int FIELD_ISSUE_DATE = 1;
 	private static final int FIELD_AMOUNT = 2;
-	
+	private static final String BANK_IMPORT_FILE_PREFIX = "BKENTRYIMPORT_";
 	
 	//Member variables for local hash map key:
 	private static final String sBKEntryImportActionCallingClass = "sBKEntryImportActionCallingClass";
@@ -146,24 +146,7 @@ public class BKEntryImportAction extends HttpServlet{
 		
 		return;
 	}
-	private boolean createTempImportFileFolder(String sTempFileFolder, HashMap<String,String> mv){
-	    File dir = new File(sTempFileFolder);
-	    if (dir.exists()) {
-	      return true;
-	    }
-	    
-	    //Need to create the path:
-	    try{
-	        // Create one directory
-	        if (!new File(sTempFileFolder).mkdir()) {
-	        	this.addToErrorMessage("<BR>Error creating temp upload folder.", mv);
-	        	return false;
-	        }    
-        }catch (Exception e){//Catch exception if any
-        	this.addToErrorMessage("<BR>Error creating temp upload folder: " + e.getMessage() + ".", mv);
-	    }
-	    return true;
-	}
+
 	private boolean processRequest(
 			HttpSession ses, 
 			HttpServletRequest req,
@@ -174,19 +157,17 @@ public class BKEntryImportAction extends HttpServlet{
 			HashMap<String,String> mv
 			){
 
-    	String sTempFilePath = SMUtilities.getAbsoluteRootPath(req, getServletContext())
-			+ System.getProperty("file.separator")
-			+ "iccountuploads"
-		;
-
-    	//If the folder has not been created, create it now:
-		if (!createTempImportFileFolder(sTempFilePath, mv)){
-			return false;
+		String sTempFilePath = SMUtilities.getAbsoluteSMTempPath(req, getServletContext());
+		//Strip off the trailing file separator character, if it has one:
+		if (sTempFilePath.endsWith(System.getProperty("file.separator"))){
+			sTempFilePath = sTempFilePath.substring(0, sTempFilePath.length() - 1);
 		}
-    	
+
 		//First, remove any temporary files:
-		if (!deleteCurrentTempImportFiles(sTempFilePath, mv)){
-			return false;
+		try {
+			deleteCurrentImportFiles(sTempFilePath);
+		} catch (Exception e) {
+			//Don't choke on this
 		}
 
 		if (bDebugMode){
@@ -202,9 +183,12 @@ public class BKEntryImportAction extends HttpServlet{
 				sUserID, 
 				sUserFullName, mv
 				);
-		deleteCurrentTempImportFiles(sTempFilePath, mv);
+		try {
+			deleteCurrentImportFiles(sTempFilePath);
+		} catch (Exception e) {
+			//Don't choke on this
+		}
 		return bResult;
-		
 	}
 	@SuppressWarnings("unchecked")
 	private boolean writeFileAndProcess(
@@ -247,7 +231,7 @@ public class BKEntryImportAction extends HttpServlet{
 			return false;
 		}
 		Iterator<FileItem> iter = fileEntries.iterator();
-		String fileName = "BKENTRYIMPORT_" + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
+		String fileName = BANK_IMPORT_FILE_PREFIX + clsDateAndTimeConversions.now("yyyyMMdd_HHmmss") + ".csv";
 		while (iter.hasNext()) {
 		    FileItem fileitem = (FileItem) iter.next();
 		    if (fileitem.isFormField()) {
@@ -369,17 +353,17 @@ public class BKEntryImportAction extends HttpServlet{
 		return bResult;
 
 	}
- private String getBankGL(String sBankID, Connection conn) throws Exception{
-	 
-	 BKBank bank = new BKBank();
-	 bank.setslid(sBankID);
-	 try {
-		bank.load(conn);
-	} catch (Exception e) {
-		throw new Exception("Error loading bank information - " + e.getMessage() + ".");
-	}
-	 return bank.getsglaccount();
- }
+	 private String getBankGL(String sBankID, Connection conn) throws Exception{
+		 
+		 BKBank bank = new BKBank();
+		 bank.setslid(sBankID);
+		 try {
+			bank.load(conn);
+		} catch (Exception e) {
+			throw new Exception("Error loading bank information - " + e.getMessage() + ".");
+		}
+		 return bank.getsglaccount();
+	 }
 	private boolean insertEntries(
 			String sFilePath,
 			String sFileName,
@@ -517,28 +501,28 @@ public class BKEntryImportAction extends HttpServlet{
 		
 		return bAlreadyExists;
 	}
-	private boolean deleteCurrentTempImportFiles(String sTempImportFilePath, HashMap<String,String> mv){
-		
-		boolean bDeletionSuccessful = true;
-		
-	    File dir = new File(sTempImportFilePath);
-	    if (!dir.exists()) {
-	    	this.addToErrorMessage("<BR>Temp import file directory does not exist: " + sTempImportFilePath, mv);
-	      return false;
-	    }
-	    String[] info = dir.list();
-	    for (int i = 0; i < info.length; i++) {
-	      File n = new File(sTempImportFilePath + System.getProperty("file.separator") + info[i]);
-	      if (!n.isFile()) { // skip ., .., other directories, etc.
-	        continue;
-	      }
-	      if (!n.delete()){
-	    	  this.addToErrorMessage("Unable to delete " + sTempImportFilePath + info[i], mv);
-	    	  bDeletionSuccessful = false;
-	      } 
-	    }
-	    return bDeletionSuccessful;
+	private void deleteCurrentImportFiles(String sTempFilePath) throws Exception{
 
+		File dir = new File(sTempFilePath);
+		if (!dir.exists()) {
+			//Nothing to do in this case....
+			return;
+		}
+
+		String[] info = dir.list();
+
+		for (int i = 0; i < info.length; i++) {
+			File n = new File(sTempFilePath + info[i]);
+			if (!n.isFile()) { // skip ., .., other directories, etc.
+				continue;
+			}
+			if (info[i].startsWith(BANK_IMPORT_FILE_PREFIX)){
+				if (!n.delete()){
+					throw new Exception("Error [20201194204] " + "Unable to delete " + sTempFilePath + info[i]);
+				}
+			}
+		}
+		return;
 	}
 
 	private boolean validateFile(String sFilePath, String sFileName, boolean bFileIncludesHeaderRow, HashMap<String,String> mv) {
@@ -679,7 +663,7 @@ public class BKEntryImportAction extends HttpServlet{
 			mv.put(sBKEntryImportActionError, mv.get(sBKEntryImportActionError) + sMsg);
 		}
 		if (bDebugMode){
-			clsServletUtilities.sysprint(this.toString(), "ICCOUNTIMPORT", sMsg);
+			clsServletUtilities.sysprint(this.toString(), "BKIMPORT", sMsg);
 		}
 	}
 	public void doGet(HttpServletRequest request,

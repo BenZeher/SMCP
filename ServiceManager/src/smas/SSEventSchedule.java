@@ -464,7 +464,7 @@ public class SSEventSchedule extends clsMasterEntry{
 	    String formattedDate= dateFormat.format(date);
 	    
 		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
-	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserID + ": " + sUser + " deleted the Event Schedule " + tempid + ":" + tempname + " at " + formattedDate  , "ASUserEventLogEntry", "[1577471378]");
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserID + ": " + sUser + " deleted the Event Schedule " + tempid + ":" + tempname + " at " + formattedDate  , "ASDeleteEventSchedule", "[1577471378]");
 		
 	}
 	public void delete (Connection conn) throws Exception{

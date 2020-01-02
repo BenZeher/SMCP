@@ -46,50 +46,10 @@
     </context-param>
 
     <context-param>
-      <param-name>logfilename</param-name>
-      <param-value>/usr/local/tomcat6/webapps/madg/log.csv</param-value>
-      <description>
-        The absolute path to the log file which the program will create and use.
-      </description>
-    </context-param>
-
-    <context-param>
-      <param-name>emailserver</param-name>
-      <param-value>192.168.0.2</param-value>
-      <description>
-        The name of the email server used to send out email
-      </description>
-    </context-param>
-
-    <context-param>
-      <param-name>smtpusername</param-name>
-      <param-value></param-value>
-      <description>
-        The name of the email user used to send out email
-      </description>
-    </context-param>
-
-    <context-param>
-      <param-name>smtpuserpw</param-name>
-      <param-value></param-value>
-      <description>
-        The email user password
-      </description>
-    </context-param>
-
-    <context-param>
       <param-name>periodlength</param-name>
       <param-value>1</param-value>
       <description>
         The length of a pay period in weeks
-      </description>
-    </context-param>
-
-    <context-param>
-      <param-name>maximumnumberofconnections</param-name>
-      <param-value>35</param-value>
-      <description>
-        The maximum number of database connections that this web app will allow to be opened
       </description>
     </context-param>
 

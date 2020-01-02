@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -379,12 +382,25 @@ public class SSAlarmSequence extends clsMasterEntry{
 			throw new Exception ("Error [1459440503] opening data connection.");
 		}
 
+		String tempid = getslid();
+		String tempname = getsname();
+		
 		try {
 			delete (conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067621]");
 			throw new Exception(e.getMessage());
 		}
+
+		//TODO
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserID + ": "+  sUserFullName + " deleted the Alarm Sequence " + tempid + ":" + tempname + " at " + formattedDate  , "ASDeleteAlarmSequence", "[1577993819]");
+		
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067622]");
 	}
 	public void delete (Connection conn) throws Exception{

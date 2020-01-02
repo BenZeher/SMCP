@@ -4,8 +4,11 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
@@ -440,7 +443,8 @@ public class SSEventSchedule extends clsMasterEntry{
 				+ " - "
 				+ sUserFullName
 				);
-
+		String tempid = getslid();
+		String tempname = getsname();
 		if (conn == null){
 			throw new Exception ("Error [1481732939] opening data connection.");
 		}
@@ -452,6 +456,16 @@ public class SSEventSchedule extends clsMasterEntry{
 			throw new Exception(e.getMessage());
 		}
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067653]");
+		// Log
+		//Here we log it in the systemlog as well to ensure we know who access what
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserID + ": " + sUser + " deleted the Event Schedule " + tempid + ":" + tempname + " at " + formattedDate  , "ASUserEventLogEntry", "[1577471378]");
+		
 	}
 	public void delete (Connection conn) throws Exception{
 
@@ -504,6 +518,9 @@ public class SSEventSchedule extends clsMasterEntry{
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			throw new Exception("Error [1481814167] - Could not commit data transaction while deleting " + ParamObjectName + ".");
 		}
+		
+		
+		
 		//Empty the values:
 		initRecordVariables();
 	}

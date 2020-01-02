@@ -182,7 +182,7 @@ public class clsEmailInlineHTML {
 				sFullSignatureFileName
 			);
 		} catch (Exception e) {
-			throw new Exception(e.getMessage());
+			throw new Exception("Error [1577813603] unable access " + sFullSignatureFileName + " :"+e.getMessage());
 		}
     	//Here we read the image information and insert it into the body:
     	Map<String, String> inlineImages = new HashMap<String, String>();

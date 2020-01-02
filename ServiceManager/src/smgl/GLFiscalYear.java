@@ -1729,7 +1729,7 @@ public class GLFiscalYear extends java.lang.Object{
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
 			+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sDateInSQLFormat + "')"
-			+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
+			+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datendingdateperiod13
 			+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " >= '" + sDateInSQLFormat + "')"
 			+ ")"
 		;

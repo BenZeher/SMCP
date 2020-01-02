@@ -49,7 +49,7 @@ public class PostPeriodTotalConfirmation extends HttpServlet {
 	    	out.println("<BR><BR><H2>You are about to post period time totals for <FONT COLOR=MAROON>" 
 	    		+ sDepartmentName + "</FONT> ending on <FONT COLOR=MAROON>" + sEndPeriodDate + "</FONT>.</H2>");
 	    	out.println("<H3>To continue with posting, click <B>\"Confirm\"</B>. Otherwise, use the back button to go back.</H3>");
-	    	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PostPeriodTotal\">");
+	    	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PostPeriodTotal\">");
 	    	out.println("<INPUT TYPE=HIDDEN NAME=SelectedEndYear VALUE=" + request.getParameter("SelectedEndYear") + ">");
 	    	out.println("<INPUT TYPE=HIDDEN NAME=SelectedEndMonth VALUE=" + request.getParameter("SelectedEndMonth") + ">");
 	    	out.println("<INPUT TYPE=HIDDEN NAME=SelectedEndDay VALUE=" + request.getParameter("SelectedEndDay") + ">");

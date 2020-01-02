@@ -34,9 +34,9 @@ public class ManageACGroups extends HttpServlet {
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 	    //Print a link to the first page after login:
-	    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+	    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 	    
-	    out.println("<FORM NAME=\"MAINFORM\" ACTION=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroupsEdit\" METHOD=\"POST\">");
+	    out.println("<FORM NAME=\"MAINFORM\" ACTION=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroupsEdit\" METHOD=\"POST\">");
 	    
 	    String sOutPut = "";
 	    

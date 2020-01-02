@@ -21,7 +21,7 @@ public class TCSEditCompanyProfile extends HttpServlet{
 		HttpSession CurrentSession = request.getSession();
 		PrintWriter out = response.getWriter();
 
-		String title = ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext());
+		String title = TCWebContextParameters.getInitProgramTitle(getServletContext());
 		String subtitle = "Edit Company Profile";
 
 		out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(
@@ -31,7 +31,7 @@ public class TCSEditCompanyProfile extends HttpServlet{
 			TimeCardUtilities.BASE_FONT_FAMILY)
 		);
 
-		out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+		out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 		try {
 				String sSQL = "SELECT * FROM " + TCSTablecompanyprofile.TableName;
@@ -44,7 +44,7 @@ public class TCSEditCompanyProfile extends HttpServlet{
 				);
 				if (rs.next()){
 					out.println ("<FORM ACTION =\"" 
-							+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+							+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 							+ "TimeCardSystem.TCSEditCompanyProfileAction\">");
 					out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 					//Companyname

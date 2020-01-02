@@ -205,7 +205,7 @@ public class MADGICReportGenerate extends HttpServlet {
 					){
 					s += "  <TR>\n"
 					+ "    <TD><Font SIZE=3>"
-					+ "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>"
+					+ "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>"
 					+ "</FONT></TD>\n"
 					+ "  </TR>\n"
 					;
@@ -746,7 +746,7 @@ public class MADGICReportGenerate extends HttpServlet {
 							) 
 					){ 
 						sLinkToMADGICEvent = "<A HREF=\"" 
-							+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+							+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 							+ "TimeCardSystem.TCEditMADGICEventsEdit?lid=" + Long.toString(evententry.m_lEventID) 
 							+ "\">" + sLinkToMADGICEvent + "</A>"
 						;

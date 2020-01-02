@@ -74,7 +74,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 				while(rs.next()){
 					//Unless all records are not finalized do not export
 					if (rs.getInt("iFinalized") == 0){
-						response.sendRedirect(ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalDispCriteriaSelection" 
+						response.sendRedirect(TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalDispCriteriaSelection" 
 								+ "?Warning=All time totals must be finalized before exporting to CSV.");
 						rs.close();
 						return;
@@ -93,7 +93,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 				String title = "Time Summary Report - ";
 				String subtitle = (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB);
 				out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
-				out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+				out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 					+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 			}
 			//display this only when there is a parameter passed in
@@ -232,7 +232,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 
 					//edit link
 					out.println("<TD ALIGN=CENTER><A HREF=\"" 
-						+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+						+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 						+ "TimeCardSystem.PeriodTotalEdit" 
 						+ "?RecID=" + Integer.toString(rs.getInt("id")) 
 						+ "&Total=" + Double.toString(rs.getDouble("dPeriodTotal")) 
@@ -245,7 +245,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 					);
 
 					//display the finalize link
-					out.println("<TD ALIGN=CENTER><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" 
+					out.println("<TD ALIGN=CENTER><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" 
 						+ "?RecID=" + Integer.toString(rs.getInt("id")) 
 						+ "&OriginalURL=" + sCurrentURL 
 						+ "\">Finalize</A></TD>"
@@ -273,7 +273,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 				}
 
 				if (iMultipleSelected == 0 && sPeriodFrom.compareTo("") != 0){
-					out.println("<TD COLSPAN=2 ALIGN=CENTER><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" +
+					out.println("<TD COLSPAN=2 ALIGN=CENTER><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" +
 							"?RecID=0" +
 							"&RecPeriod=" + sPeriodFrom + 
 							"&RecEmployee=" + sEmployee + 
@@ -281,7 +281,7 @@ public class PeriodTotalReportGenerate extends HttpServlet{
 							"&OriginalURL=" + sCurrentURL + "\">Finalize ALL</A></TD></TR>");
 				}else{
 					if (sPeriodFrom.compareTo(sPeriodTo) == 0 && sPeriodFrom.compareTo("") != 0){
-						out.println("<TD COLSPAN=2 ALIGN=CENTER><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" +
+						out.println("<TD COLSPAN=2 ALIGN=CENTER><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize" +
 								"?RecID=0" +
 								"&RecPeriod=" + sPeriodFrom + 
 								"&RecEmployee=" + sEmployee + 

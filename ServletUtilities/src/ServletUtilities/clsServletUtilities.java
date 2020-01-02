@@ -721,10 +721,10 @@ public class clsServletUtilities {
 
 		String sPath = "";
 		
-		if (context.getInitParameter(WebContextParameters.webappname) != null){
+		if (context.getInitParameter(WebContextParameters.getInitWebAppName(context)) != null){
 			sPath = System.getProperty( "catalina.base" ) 
 					+ System.getProperty("file.separator")  + "webapps" 
-					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.webappname);
+					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.getInitWebAppName(context));
 		}else{
 			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
 		}
@@ -760,7 +760,7 @@ public class clsServletUtilities {
 	
 	public static String getDatePickerStringWithSelect (String sBoundFieldName, String sCheckedFieldID, ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return "<img src=\"" + sImagePath + "calendar_icon.png\" "
@@ -776,7 +776,7 @@ public class clsServletUtilities {
 	
 	public static String getDatePickerString (String sBoundFieldName, ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return "<img src=\"" + sImagePath + "calendar_icon.png\" alt=\"calendar_icon.png\" onclick='scwShow(scwID(\"" 
@@ -790,7 +790,7 @@ public class clsServletUtilities {
 	
 	public static String getRightDatePickerString (String sBoundFieldName, ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return "<img src=\"" + sImagePath + "calendar_icon.png\" alt=\"calendar_icon.png\" onclick='scwShowPositionedRight(scwID(\"" 
@@ -809,7 +809,7 @@ public class clsServletUtilities {
 	
 
 	public static String getDatePickerIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(WebContextParameters.getInitScriptPath(context));
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "scw002.js'></script>";
@@ -819,7 +819,7 @@ public class clsServletUtilities {
 	}
 	
 	public static String getColorPickerIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(WebContextParameters.getInitScriptPath(context));
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "jscolor.js'></script>";
@@ -829,7 +829,7 @@ public class clsServletUtilities {
 	}
 	
 	public static String getShortcutJSIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(WebContextParameters.getInitScriptPath(context));
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "shortcuts.js'></script>";
@@ -838,7 +838,7 @@ public class clsServletUtilities {
 		}
 	}
 	public static String getSMCPJSIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(WebContextParameters.getInitScriptPath(context));
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "smcp.js'></script>";
@@ -996,7 +996,7 @@ public class clsServletUtilities {
 				throw new Exception("Error reading API credentials from SMOptions.");
 			}
 		
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(WebContextParameters.getInitScriptPath(context));
 		if (sScriptPath != null){
 			//Note: consider hiding this information in a json file so it is not public in the html source. 
 			return ""
@@ -1020,7 +1020,7 @@ public class clsServletUtilities {
 	}
 	
 	public static String getImagePath(ServletContext context){
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 		if (sImagePath != null){
 			return 	sImagePath;
 		}else{
@@ -1029,7 +1029,7 @@ public class clsServletUtilities {
 	}
 	public static String getLogoLink (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return 	"<A HREF=\"" + "https://sites.google.com/site/airotechservicemanager/\">" 
@@ -1050,7 +1050,7 @@ public class clsServletUtilities {
 	
 	public static String getLargeLogoLink (ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(WebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return 	"<A HREF=\"" + "https://sites.google.com/site/airotechservicemanager/\">" 
@@ -1452,10 +1452,10 @@ public class clsServletUtilities {
 	public static String getRootPath(ServletContext context){
 		String sPath = "";
 	
-		if (context.getInitParameter(WebContextParameters.webappname) != null){
+		if (context.getInitParameter(WebContextParameters.getInitWebAppName(context)) != null){
 			sPath = System.getProperty( "catalina.base" ) 
 					+ System.getProperty("file.separator")  + "webapps" 
-					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.webappname);
+					+ System.getProperty("file.separator") + context.getInitParameter(WebContextParameters.getInitWebAppName(context));
 		}else{
 			sPath = System.getProperty( "catalina.base" ) + System.getProperty("file.separator") + "webapps";
 		}

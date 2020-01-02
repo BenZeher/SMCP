@@ -34,11 +34,11 @@ public class EmployeePerformanceListCriteriaSelection extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 	    try {
 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeePerformanceList\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeePerformanceList\">");
         	
         	out.println("<TABLE CELLPADDING=10 BORDER=1>");
         	//

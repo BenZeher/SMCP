@@ -30,7 +30,7 @@ public class EmployeeAuxiFieldList extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 	    	
@@ -40,7 +40,7 @@ public class EmployeeAuxiFieldList extends HttpServlet {
 	        out.println("<H2>Employee Auxiliary Field(s) in System:</H2><BR>");
 	        
         	//print the first line here. 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit\">");
         	//out.println ("METHOD=POST onSubmit=\"return dropdown(this.Mechanic)\">");
         	out.println ("<SELECT NAME=\"FieldID\">" );
         	out.println ("<OPTION VALUE=-1>----Create New Field---- ");

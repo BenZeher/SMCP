@@ -28,11 +28,11 @@ public class PeriodTotalEdit extends HttpServlet {
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     		    
 	    try {
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalSave\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalSave\">");
         	
         	//forward the parameters from previous form to the next form.
         	out.println("<INPUT TYPE=HIDDEN NAME=\"id\" VALUE=\"" + request.getParameter("RecID") + "\">");

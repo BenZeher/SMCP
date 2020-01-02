@@ -31,11 +31,11 @@ public class EmployeeLeaveSummaryCriteriaSelection extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 	    try {
 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveSummaryGenerate\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveSummaryGenerate\">");
         	
         	out.println("<TABLE CELLPADDING=10 BORDER=1>");
         
@@ -110,9 +110,9 @@ public class EmployeeLeaveSummaryCriteriaSelection extends HttpServlet {
 	        out.println ("</SELECT>");
 	        if (bIncludeInactive){
 	        	//show a link to include all employees, regardless of activeness.
-	        	out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerReviewListCriteriaSelection?ShowInactive=false\"><FONT SIZE=1>(Exclude inactive employees)</FONT></A>");
+	        	out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerReviewListCriteriaSelection?ShowInactive=false\"><FONT SIZE=1>(Exclude inactive employees)</FONT></A>");
 	        }else{
-	        	out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerReviewListCriteriaSelection?ShowInactive=true\"><FONT SIZE=1>(Include inactive employees)</FONT></A>");
+	        	out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerReviewListCriteriaSelection?ShowInactive=true\"><FONT SIZE=1>(Include inactive employees)</FONT></A>");
 	        }
 	        out.println ("</TD></TR>");
         	

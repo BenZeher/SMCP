@@ -30,7 +30,7 @@ public class LeaveAdjustmentTypeRemove extends HttpServlet{
 	    	
 	    	if (request.getParameter("DoubleCheck") == null){
 	    		//don't delete, just go back.
-	    		out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeEdit?Type=" + request.getParameter("Type") + "'>");
+	    		out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeEdit?Type=" + request.getParameter("Type") + "'>");
 	    	}else{
 	    		//delete the selected entry
 	    		ArrayList<String> alSQLs = new ArrayList<String>(0);
@@ -38,12 +38,12 @@ public class LeaveAdjustmentTypeRemove extends HttpServlet{
 	    		alSQLs.add(TimeCardSQLs.Get_Remove_Leave_Adjustment_Type_SQL(request.getParameter("Type")));
 	    		
 	    		if (clsDatabaseFunctions.executeSQLsInTransaction(alSQLs, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
-	    			out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeList'>");
+	    			out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeList'>");
 					out.println ("<BR><H2>You've removed the leave adjustment type sucessfully.</H2>");
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove leave adjustment type.</H2><BR>");
-		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeEdit?Type=" + request.getParameter("Type")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeEdit?Type=" + request.getParameter("Type")) + "\"><IMG src=\"" 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 		    	}
 	    	}

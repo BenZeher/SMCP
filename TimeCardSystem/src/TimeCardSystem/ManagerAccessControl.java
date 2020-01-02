@@ -28,7 +28,7 @@ public class ManagerAccessControl extends HttpServlet{
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
     	//get current URL
     	String sCurrentURL;
@@ -49,7 +49,7 @@ public class ManagerAccessControl extends HttpServlet{
 
 */
 	    	out.println("<H4>Here is a list of users who are currently assigned MANAGER level of access and their accessible departments. </H4>");
-	    	out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerAccessControlEdit?ManagerID=0&ManagerName=NEW&OriginalURL=" + sCurrentURL + "\">Assign department to new manager</A><BR><BR>");
+	    	out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerAccessControlEdit?ManagerID=0&ManagerName=NEW&OriginalURL=" + sCurrentURL + "\">Assign department to new manager</A><BR><BR>");
     		out.println("<TABLE BORDER=1 WIDTH=60%>");
     		//heading
     		out.println("<TR><TD><B>Manager</B></TD>" +
@@ -67,7 +67,7 @@ public class ManagerAccessControl extends HttpServlet{
 	    			sManagerName = rsManagerAC.getString("sEmployeeLastName") + ", " + rsManagerAC.getString("sEmployeeFirstName") + " " + rsManagerAC.getString("sEmployeeMiddleName");
 			    	out.println("<TR><TD COLSPAN=2></TD></TR>");
 			    	out.println("<TR><TD COLSPAN=2></TD></TR>");
-	    			out.println("<TD><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerAccessControlEdit?ManagerID=" + sCurrentManager + "&ManagerName=" + sManagerName + "&OriginalURL=" + sCurrentURL + "\">" + 
+	    			out.println("<TD><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManagerAccessControlEdit?ManagerID=" + sCurrentManager + "&ManagerName=" + sManagerName + "&OriginalURL=" + sCurrentURL + "\">" + 
 	    					    	  rsManagerAC.getString("sManagerID") + " - " + sManagerName + "</A></TD>");
 	    		}else{
 	    			out.println("<TD></TD>");

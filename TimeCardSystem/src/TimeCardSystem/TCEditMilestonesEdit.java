@@ -76,10 +76,10 @@ public class TCEditMilestonesEdit extends HttpServlet {
 	    out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(sTitle, sSubtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS, TimeCardUtilities.BASE_FONT_FAMILY));
 	    out.println(TimeCardUtilities.getDatePickerIncludeString(getServletContext()));
 	    
-	    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+	    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 	    	+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR>");
 	    
-	    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+	    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.TCEditMilestonesSelection\">Edit another Milestone</A><BR>");
 	    
     	String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);

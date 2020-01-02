@@ -35,7 +35,7 @@ public class TimeEntryEdit extends HttpServlet {
     	HttpSession CurrentSession = request.getSession();
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
     	Timestamp tsDate;
@@ -86,7 +86,7 @@ public class TimeEntryEdit extends HttpServlet {
 	    	//get the employee access level from session
 	    	SimpleDateFormat sdfDate = new SimpleDateFormat ("MM-dd-yyyy");
 	    	SimpleDateFormat sdfTime = new SimpleDateFormat ("hh:mm:ss a");
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntrySave\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntrySave\">");
         	
         	//forward the parameters from previous form to the next form.
         	out.println("<INPUT TYPE=HIDDEN NAME=\"Type\" VALUE=\"" + request.getParameter("Type") + "\">");
@@ -282,7 +282,7 @@ public class TimeEntryEdit extends HttpServlet {
         	if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 					 							AccessControlFunctionList.ManagerReviewListTimeEditing)){
 	        	//delete current record.
-	        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryRemove\">");
+	        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryRemove\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"id\" VALUE=\"" + request.getParameter("id") + "\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"Type\" VALUE=\"" + request.getParameter("Type") + "\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"EmployeeID\" VALUE=\"" + request.getParameter("EmployeeID") + "\">");

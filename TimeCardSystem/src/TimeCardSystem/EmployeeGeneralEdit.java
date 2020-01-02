@@ -34,7 +34,7 @@ public class EmployeeGeneralEdit extends HttpServlet{
 	    String bar = "Time Card System - " + sCompanyName;
 	    out.println(TimeCardUtilities.TCBarTitleSubBGColor(bar, title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 	    	
@@ -60,7 +60,7 @@ public class EmployeeGeneralEdit extends HttpServlet{
 		        out.println ("<BR><H2>Employee Information: " + sFullName + "</H2><BR>");
 		     	
 		        out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralSave\">");
 	        	out.println ("<TR><TD COLSPAN=2><H3>Basic Information</H3></TD></TR>");
 	        	//Employee ID
 	        	out.println ("<TR><TD><B>Employee ID</B></TD><TD>" + 
@@ -218,7 +218,7 @@ public class EmployeeGeneralEdit extends HttpServlet{
 		        out.println ("<BR><H2>Employee Information: New Employee" + "</H2><BR>");
 
 		        out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralSave\">");
 	        	out.println ("<TR><TD COLSPAN=2><H3>Basic Information</H3></TD></TR>");
 	        	//Employee ID
 	        	out.println ("<TR><TD><B>Employee ID</B></TD><TD>" + 
@@ -340,7 +340,7 @@ public class EmployeeGeneralEdit extends HttpServlet{
         	if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 												AccessControlFunctionList.EditEmployeeGeneralInformation) &&
 				!bNewEmployee){
-	        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeRemove\">");
+	        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeRemove\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"EmployeeID\" VALUE=\"" + request.getParameter("EmployeeID") + "\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"OriginalURL\" VALUE=\"" + request.getParameter("OriginalURL") + "\">");
 	        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");

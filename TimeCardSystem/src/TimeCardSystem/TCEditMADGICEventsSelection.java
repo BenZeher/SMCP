@@ -31,7 +31,7 @@ public class TCEditMADGICEventsSelection extends HttpServlet {
 	    String sSubtitle = "Edit MADGIC Events";
 	    out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(sTitle, sSubtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS, TimeCardUtilities.BASE_FONT_FAMILY));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
     	out.println("<I>To modify an existing entry, enter the ID number and click '" + BUTTON_EDIT_EVENT_LABEL + "'.</I>");
     	out.println("<BR><I>To add a new entry, just click '" + BUTTON_ADD_NEW_LABEL + "'.</I><BR>");
@@ -44,7 +44,7 @@ public class TCEditMADGICEventsSelection extends HttpServlet {
     	if (sStatus.compareToIgnoreCase("") != 0){
     		out.println("<BR><B><FONT COLOR=GREEN>" + sStatus + "</FONT></B><BR>");
     	}
-    	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TCEditMADGICEventsEdit\" METHOD = \"POST\">");
+    	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TCEditMADGICEventsEdit\" METHOD = \"POST\">");
     	
     	out.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" + this.getClass().getName() + "\">");
     	

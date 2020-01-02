@@ -186,7 +186,7 @@ public class MilestonesReportGenerate extends HttpServlet {
 					){
 					s += "  <TR>\n"
 					+ "    <TD nowrap><Font SIZE=3>"
-					+ "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>"
+					+ "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>"
 					+ "</FONT></TD>\n"
 					+ "  </TR>\n"
 					;

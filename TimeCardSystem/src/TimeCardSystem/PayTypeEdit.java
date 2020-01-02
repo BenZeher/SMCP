@@ -28,7 +28,7 @@ public class PayTypeEdit extends HttpServlet{
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 
@@ -46,7 +46,7 @@ public class PayTypeEdit extends HttpServlet{
 	    		//new department
 	        	out.println ("<BR><H2>Pay Type Information: New Type</H2><BR>");
 	        	
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeSave\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	//Pay Type ID
 	        	out.println ("<TR><TD><B>Type ID</B></TD><TD>" + 
@@ -70,7 +70,7 @@ public class PayTypeEdit extends HttpServlet{
 		        
 		        if (rsTypeInfo.next()){
 			        out.println ("<BR><H2>Pay Type Information: " + rsTypeInfo.getString("sTypeTitle") + "</H2><BR>");
-		        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeSave\">");
+		        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeSave\">");
 		        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 		        	//Pay Type ID
 		        	out.println ("<TR><TD><B>Type ID</B></TD><TD>" + 
@@ -87,7 +87,7 @@ public class PayTypeEdit extends HttpServlet{
 		        	out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Save----\">");
 		        	out.println ("</FORM>");
 		        	//Option to	delete current record.
-		        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeRemove\">");
+		        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeRemove\">");
 		        	out.println("<INPUT TYPE=HIDDEN NAME=\"Type\" VALUE=\"" + rsTypeInfo.getInt("iTypeID") + "\">");
 		        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");
 		        	out.println("<INPUT TYPE=CHECKBOX NAME=DoubleCheck VALUE=1>Check here if you want to delete this pay type.");

@@ -53,7 +53,7 @@ public class EmployeeLeaveSummaryGenerate extends HttpServlet {
 					    "<BODY BGCOLOR=\"" + TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS + "\">" +
 					    "<TABLE BORDER=0 WIDTH=100%><TR><TD VALIGN=BOTTOM><FONT SIZE=5><B>Employee Leave Summary</B></FONT></TD>" +
 					    "<TD VALIGN=BOTTOM><B>&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>" +
-					    "<TR><TD><Font SIZE=1><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A></TD></TR></TABLE>");
+					    "<TR><TD><Font SIZE=1><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A></TD></TR></TABLE>");
 
 	    	boolean bShowEligibleOnly;
 	    	if (request.getParameter("ShowEligibleOnly") != null){

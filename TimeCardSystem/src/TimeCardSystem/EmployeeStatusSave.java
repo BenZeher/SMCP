@@ -51,12 +51,12 @@ public class EmployeeStatusSave extends HttpServlet{
 	    				//saving successful;
 	    				out.println ("<BR>");
 	    	        	out.println ("<H4>Information saved!!</H4><BR><BR>");
-	    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList'>");
-	    	        	//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+	    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList'>");
+	    	        	//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 					}else{
 						//saving failed;
 						out.println("<BR><BR>Saving employee status information failed!!<BR>");
-						out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList>Click here to return to employee status list.</A>");
+						out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList>Click here to return to employee status list.</A>");
 					}
 	    		}
 		    	//clsoe resultset
@@ -73,12 +73,12 @@ public class EmployeeStatusSave extends HttpServlet{
 					//saving successful
 					out.println ("<BR>");
 					out.println ("<H4>Information saved!!</H4><BR><BR>");
-    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeList'>");
-					//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeList'>");
+					//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 				}else{
 					//saving failed
 					out.println("<BR><BR>Saving time entry type information failed!!<BR>");
-					out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeList>Click here to return to time entry type list.</A>");
+					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeList>Click here to return to time entry type list.</A>");
 				}
 	    	}
 	    } catch (Exception ex) {

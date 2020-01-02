@@ -30,7 +30,7 @@ public class RawEntryListGenerate extends HttpServlet{
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 	    HttpSession CurrentSession = request.getSession();
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 	    try {
 	    	

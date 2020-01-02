@@ -120,7 +120,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 			}else{
 				out.println("The pin code is not valid. Please try again.");	
 				out.println("<META http-equiv='Refresh' content='2;URL=" 
-					+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+					+ TCWebContextParameters.getURLLinkBase(getServletContext())
 					+ MainLogin.CLASS_NAME
 					+ "?db=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB)
 					+ "&" + MainLogin.MILESTONES_LOGIN_PARAM + "=Y" 
@@ -130,7 +130,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		} catch (Exception e1) {
 			out.println("Failed to log in - " + e1.getMessage());	
 			out.println("<META http-equiv='Refresh' content='2;URL=" 
-				+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+				+ TCWebContextParameters.getURLLinkBase(getServletContext())
 				+ MainLogin.CLASS_NAME
 				+ "?db=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB)
 				+ "&" + MainLogin.MILESTONES_LOGIN_PARAM + "=Y" 
@@ -191,7 +191,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 			// Redirect back to the main login
 			out.println("The pin code is not valid. Please try again.");
 			out.println("<META http-equiv='Refresh' content='2;URL="
-					+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + MainLogin.CLASS_NAME
+					+ TCWebContextParameters.getURLLinkBase(getServletContext()) + MainLogin.CLASS_NAME
 					+ "?db=" + (String) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB) + "&"
 					+ MainLogin.MILESTONES_LOGIN_PARAM + "=Y" + "'>");
 			return;

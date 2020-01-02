@@ -85,7 +85,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 				       " style = \" font-family:" + TimeCardUtilities.BASE_FONT_FAMILY + " \" >" + 
 					   "<TABLE BORDER=0 WIDTH=100%><TR><TD VALIGN=BOTTOM><FONT SIZE=5><B>Employee Leave Manager</B></FONT></TD>" +
 					   "<TD VALIGN=BOTTOM><B>&nbsp;&nbsp;&nbsp;&nbsp;</TD></TR>" +
-					   "<TR><TD><Font SIZE=1><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>&nbsp;&nbsp;<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveManagerCriteriaSelection?SelectedEmployee=" + sCurrentEmployee + "\">Return to criteria selection</A></FONT></TD></TR></TABLE>");
+					   "<TR><TD><Font SIZE=1><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>&nbsp;&nbsp;<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveManagerCriteriaSelection?SelectedEmployee=" + sCurrentEmployee + "\">Return to criteria selection</A></FONT></TD></TR></TABLE>");
 
 	    	//get current URL
 	    	String sCurrentURL;
@@ -172,7 +172,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 	    		out.println("</TR>");
 	    		//out.println("<TR><TD ALIGN=LEFT COLSPAN=3>Total number of selected leave types: " + alLeaveTotals.size() + "</TD></TR>");
 	    		out.println("<TR>");
-	    		out.println("<TD><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee +  
+	    		out.println("<TD><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee +  
 	    																			"&id=-1" + 
 	    																			"&OriginalURL=" + sCurrentURL +
 	    																			"\"><img src=\"/images/TimeCardSystem/new.gif\"></A></TD>");
@@ -218,7 +218,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 		    		*/
 			    		out.println("<TR>");
 			    		//line number and leave type
-			    		out.println("<TD ALIGN=CENTER><FONT size=2><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
+			    		out.println("<TD ALIGN=CENTER><FONT size=2><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
 										    																		  "&id=" + rsLeaveAdjustments.getInt("LeaveAdjustments.id") +
 										    																		  "&OriginalURL=" + sCurrentURL +
 										    																		  "\">" + rsLeaveAdjustments.getInt("LeaveAdjustments.id") + "</A></FONT></TD>" +

@@ -14,10 +14,9 @@ import javax.servlet.http.HttpSession;
 
 import ConnectionPool.CompanyDataCredentials;
 import ConnectionPool.ServerSettingsFileParameters;
-import ConnectionPool.WebContextParameters;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
-import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsStringFunctions;
 import TCSDataDefinition.ACGroupFunctions;
 import TCSDataDefinition.ACUserGroups;
@@ -31,7 +30,7 @@ public class TimeCardUtilities extends clsServletUtilities{
 		"Transitional//EN\">";
 
 	public static final String sProgramVersion = "2.0";
-	public static final String sLastUpdated = "8/2/2019";
+	public static final String sLastUpdated = "1/1/2020";
 	public static final String sJob = "OHD";
 	public static final String sPro = "@#$";
 	//Session attributes
@@ -80,7 +79,7 @@ public class TimeCardUtilities extends clsServletUtilities{
 
 	public static String linkToAdminMenu(ServletContext context) {
 
-		return "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(context) + "TimeCardSystem.AdminMain\">Return to main Admin Menu</A>";
+		return "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(context) + "TimeCardSystem.AdminMain\">Return to main Admin Menu</A>";
 	}
 
 	public static double CalculateDoubleTime(String sStartingTime, String sEndingTime, String sEmployeeStartTime) {
@@ -215,7 +214,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 	public static String Session_Expire_Handling(ServletContext context){
 
 		return "<BR><BR>Session expired, please login again.<BR>" + 
-		"<FORM METHOD=\"POST\" ACTION=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(context) + "TimeCardSystem.AdminMain\">" +
+		"<FORM METHOD=\"POST\" ACTION=\"" + TCWebContextParameters.getURLLinkBase(context) + "TimeCardSystem.AdminMain\">" +
 		"   Pass Code: <INPUT TYPE=\"PASSWORD\" NAME=\"" + TimeCardUtilities.REQUEST_PARAMETER_PINNUMBER + "\" SIZE=6 MAXLENGTH=6><BR>" +
 		"<BR><LEFT><INPUT TYPE=\"SUBMIT\" VALUE=\"---Login---\"></LEFT></FORM>";
 	}  
@@ -606,7 +605,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 
 	public static String getDatePickerString (String sBoundFieldName, ServletContext context){
 
-		String sImagePath = context.getInitParameter(WebContextParameters.imagepath);
+		String sImagePath = context.getInitParameter(TCWebContextParameters.getInitImagePath(context));
 
 		if (sImagePath != null){
 			return "<img src=\"" + sImagePath + "calendar_icon.png\" alt=\"calendar_icon.png\" onclick='scwShow(scwID(\"" 
@@ -618,7 +617,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 
 	}
 	public static String getDatePickerIncludeString (ServletContext context){
-		String sScriptPath = context.getInitParameter(WebContextParameters.scriptpath);
+		String sScriptPath = context.getInitParameter(TCWebContextParameters.getInitScriptPath(context));
 
 		if (sScriptPath != null){
 			return "<script type='text/JavaScript' src='" + sScriptPath + "scw002.js'></script>";

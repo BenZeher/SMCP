@@ -29,17 +29,17 @@ public class EmployeeStatusRemove extends HttpServlet{
 	    	
 	    	if (request.getParameter("DoubleCheck") == null){
 	    		//don't delete, just go back.
-	    		out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeEdit?Type=" + request.getParameter("Type") + "'>");
+	    		out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryTypeEdit?Type=" + request.getParameter("Type") + "'>");
 	    	}else{
 	    		//delete the selected entry
 	    		sSQL = TimeCardSQLs.Get_Remove_Employee_Status_SQL(request.getParameter("Status"));
 	    		if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
-	    			out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList'>");
+	    			out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusList'>");
 					out.println ("<BR><H2>You've removed the employe status sucessfully.</H2>");
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove employee status.</H2><BR>");
-		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusEdit?Type=" + request.getParameter("Status")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusEdit?Type=" + request.getParameter("Status")) + "\"><IMG src=\"" 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 		    	}
 	    	}

@@ -34,7 +34,7 @@ public class EmployeeContactList extends HttpServlet{
     	sCurrentURL = TimeCardUtilities.URLEncode(request.getRequestURI().toString() + "?" + request.getQueryString());
     	//sCurrentURL = sCurrentURL.replaceAll("&", "*");
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 	    try {
 	    		    	
@@ -99,7 +99,7 @@ public class EmployeeContactList extends HttpServlet{
         		out.println("<TD ALIGN=CENTER><Font SIZE=2>");
         		if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 													AccessControlFunctionList.EditEmployeeGeneralInformation)){
-        			out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralEdit?EmployeeID=" + rs.getString("sEmployeeID") + "&OriginalURL= " + sCurrentURL + "#CONTACTINFO\">");
+        			out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralEdit?EmployeeID=" + rs.getString("sEmployeeID") + "&OriginalURL= " + sCurrentURL + "#CONTACTINFO\">");
         		}
         		out.println(rs.getString("Employees.sEmployeeLastName") + ", " +
 						    rs.getString("Employees.sEmployeeFirstName") + " " + 

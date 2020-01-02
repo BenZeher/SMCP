@@ -59,7 +59,7 @@ public class EmployeeGeneralSave extends HttpServlet{
 						clsDatabaseFunctions.executeSQLsInTrans(alSQLs, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 					} catch (Exception e) {
 						out.println ("<H4>Error [1539616041] adding new employee: " + e.getMessage() + "</H4><BR><BR>");
-						out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList>Click here to return to employee list.</A>");
+						out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList>Click here to return to employee list.</A>");
 						out.println("</BODY></HTML>");
 						rs.close();
 						return;
@@ -93,7 +93,7 @@ public class EmployeeGeneralSave extends HttpServlet{
 					clsDatabaseFunctions.executeSQLsInTrans(alSQLs, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 				} catch (Exception e) {
 					out.println("<BR><BR>Error [1539616042] updating employee information - " + e.getMessage() + "<BR>");
-			    	out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList>Click here to return to employee list.</A>");
+			    	out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList>Click here to return to employee list.</A>");
 			    	out.println("</BODY></HTML>");
 			    	return;
 				}

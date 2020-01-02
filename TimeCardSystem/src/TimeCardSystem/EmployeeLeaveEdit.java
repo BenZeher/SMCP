@@ -34,7 +34,7 @@ public class EmployeeLeaveEdit extends HttpServlet {
     	HttpSession CurrentSession = request.getSession();
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
     	
     	try {
@@ -72,7 +72,7 @@ public class EmployeeLeaveEdit extends HttpServlet {
 	    		rs.close();
 	    	}
 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveSave\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveSave\">");
         	
         	//forward the parameters from previous form to the next form.
         	out.println("<INPUT TYPE=HIDDEN NAME=\"id\" VALUE=\"" + request.getParameter("id") + "\">");
@@ -185,7 +185,7 @@ public class EmployeeLeaveEdit extends HttpServlet {
         	out.println("</FORM>");
         	
         	//delete current record.
-        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveRemove\">");
+        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveRemove\">");
         	out.println("<INPUT TYPE=HIDDEN NAME=\"id\" VALUE=\"" + request.getParameter("id") + "\">");
         	out.println("<INPUT TYPE=HIDDEN NAME=\"OriginalURL\" VALUE=\"" + request.getParameter("OriginalURL") + "\">");
         	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");

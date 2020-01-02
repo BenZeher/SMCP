@@ -40,11 +40,11 @@ public class MADGICReportCriteriaSelection extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 	    try {
-        	out.println ("<FORM NAME=\"" + FORM_NAME + "\" ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MADGICReportGenerate\">");
+        	out.println ("<FORM NAME=\"" + FORM_NAME + "\" ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MADGICReportGenerate\">");
         	out.println("<TABLE CELLPADDING=10 BORDER=1>");
         	
         	//MADGIC Periods:

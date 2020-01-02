@@ -128,7 +128,7 @@ public class UserLogin extends HttpServlet {
 		}
 		CurrentSession.setAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_COMPANYNAME, sCompanyName);
 		
-	    String title = ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext()) + " - User Login";
+	    String title = TCWebContextParameters.getInitProgramTitle(getServletContext()) + " - User Login";
 	    String subtitle = "";
 	    String sDatabaseServer = "";
 	    
@@ -151,7 +151,7 @@ public class UserLogin extends HttpServlet {
 	    		sTimeInSecondsToRefresh_After_Waiting = "0";
 	    	}
 		    out.println("<META http-equiv='Refresh' content='" + sTimeInSecondsToRefresh_After_Waiting + ";URL="
-		    	+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+		    	+ TCWebContextParameters.getURLLinkBase(getServletContext())
 	    		+ MainLogin.CLASS_NAME
 		    	+ "?db=" + sDBID
 		    	+ "'>"
@@ -163,7 +163,7 @@ public class UserLogin extends HttpServlet {
 	    
 		out.println(
 				"<DIV style = \" color: black; font-family: arial; font-weight: bold; font-size: normal;  \" >" + "\n"
-				+ ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext())
+				+ TCWebContextParameters.getInitProgramTitle(getServletContext())
 				+ " version " + TimeCardUtilities.sProgramVersion
 				+ " last updated " + TimeCardUtilities.sLastUpdated
 				+ " currently running on server <B>" + clsServletUtilities.getHostName()
@@ -251,7 +251,7 @@ public class UserLogin extends HttpServlet {
 		    		+ "</DIV>"
 		    	);	
 		    	out.println("<META http-equiv='Refresh' content='" + TIME_IN_SECONDS_TO_REFRESH_ON_INVALID_PIN + ";URL="
-		    			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+		    			+ TCWebContextParameters.getURLLinkBase(getServletContext())
 		    			+ MainLogin.CLASS_NAME
 		    			+ "?db=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB) + "'>");
 		    }
@@ -452,7 +452,7 @@ public class UserLogin extends HttpServlet {
     		+ " ID=\"" + MAIN_FORM_NAME + "\""
     		+ " NAME=\"" + MAIN_FORM_NAME + "\""
     		+ " METHOD=\"" + "POST" + "\""
-    		+ " ACTION=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + FORM_ACTION_TARGET_CLASS  + "\""
+    		+ " ACTION=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + FORM_ACTION_TARGET_CLASS  + "\""
     		+ ">" + "\n";
     	//TODO - put any real form fields in here:
     	s += "<INPUT TYPE=HIDDEN"
@@ -682,7 +682,7 @@ public class UserLogin extends HttpServlet {
 		s += "\n" + "<DIV style = \" text-align:center; width:" + SCREEN_WIDTH_USAGE_PERCENTAGE + "% \" >" + "\n" + "\n";
 		
 		s += "<FORM NAME=\"" + MADGICReportGenerate.MADGIC_REPORT_FORM_NAME + "\""
-				+ " ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MADGICReportGenerate\""
+				+ " ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MADGICReportGenerate\""
 				+ " >\n";
 		
 		s += "\n" + "<B><I>Display MADGIC Report details for reporting period:</I></B> "
@@ -709,7 +709,7 @@ public class UserLogin extends HttpServlet {
 		String s = "<BR><BR>";
 		
 		s += "<FORM NAME=\"" + MilestonesReportGenerate.MILESTONES_REPORT_FORM_NAME + "\""
-				+ " ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MilestonesReportGenerate\""
+				+ " ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.MilestonesReportGenerate\""
 				+ " >\n";
 		
 		s += "<B><I>Display Milestone Report:</I></B>&nbsp;&nbsp; "

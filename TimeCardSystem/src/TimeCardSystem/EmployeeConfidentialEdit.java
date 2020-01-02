@@ -34,7 +34,7 @@ public class EmployeeConfidentialEdit extends HttpServlet{
 		}
 	    out.println(TimeCardUtilities.TCBarTitleSubBGColor(bar, title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 	    	//check for user previlidge again before displaying.
@@ -61,7 +61,7 @@ public class EmployeeConfidentialEdit extends HttpServlet{
 			        out.println ("<BR><H2>Employee Confidential Information: " + rsEmployeeInfo.getString(Employees.sEmployeeFirstName) + " " + rsEmployeeInfo.getString(Employees.sEmployeeLastName) + "</H2><BR>");
 			     	
 			        out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
-		        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeConfidentialSave\">");
+		        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeConfidentialSave\">");
 		        	out.println("<INPUT TYPE=HIDDEN NAME=\"EmployeeID\" VALUE=\"" + request.getParameter("EmployeeID") + "\">");
 	
 	        		//Employee start time

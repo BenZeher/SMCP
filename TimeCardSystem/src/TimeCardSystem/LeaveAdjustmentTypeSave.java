@@ -70,7 +70,7 @@ public class LeaveAdjustmentTypeSave extends HttpServlet{
 		//saving successful
 		out.println ("<BR>");
 		out.println ("<H4>Leave Adjustment Type '" + request.getParameter("TypeTitle") + " was saved successfully.</H4><BR><BR>");
-    	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeList'>");
+    	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeList'>");
 	    out.println("</BODY></HTML>");
 	    return;
 	}

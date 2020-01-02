@@ -47,7 +47,7 @@ public class SpecialNoteEdit extends HttpServlet{
 	        		getServletContext(), 
 	        		(String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));	
 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteSave\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteSave\">");
 	        out.println("<INPUT TYPE=HIDDEN NAME=LinkID VALUE=\"" + request.getParameter("LinkID") + "\">");
 		    if (request.getParameter("IsAdmin") != null){
 		        out.println("<INPUT TYPE=HIDDEN NAME=IsAdmin VALUE=\"" + request.getParameter("IsAdmin") + "\">");

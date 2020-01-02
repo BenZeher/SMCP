@@ -45,7 +45,7 @@ public class EmployeeList extends HttpServlet {
 		}
 	    out.println(TimeCardUtilities.TCBarTitleSubBGColor(bar, title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
     	//get current URL
     	String sCurrentURL;
@@ -62,10 +62,10 @@ public class EmployeeList extends HttpServlet {
 		    }
 	        
 	    	if (request.getParameter("InfoType").compareTo("general") == 0){
-	    		out.println ("<FORM METHOD=POST ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralEdit\">");
+	    		out.println ("<FORM METHOD=POST ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeGeneralEdit\">");
 	    		sSQL = TimeCardSQLs.Get_Employee_List_SQL(bIncludeInactive);
 	    	}else if (request.getParameter("InfoType").compareTo("confidential") == 0){
-	    		out.println ("<FORM METHOD=POST ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeConfidentialEdit\">");
+	    		out.println ("<FORM METHOD=POST ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeConfidentialEdit\">");
 	    		sSQL = TimeCardSQLs.Get_Employee_List_SQL(CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_EID).toString(), bIncludeInactive, false); //restrict employee list by manager's access
 	    	}
 	        ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB)); 
@@ -93,9 +93,9 @@ public class EmployeeList extends HttpServlet {
 	        out.println ("</SELECT> ");
 	        if (bIncludeInactive){
 	        	//show a link to include all employees, regardless of activeness.
-	        	out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList?ShowInactive=false&InfoType=" + request.getParameter("InfoType") + "\"><FONT SIZE=2>(Exclude inactive employees)</FONT></A>");
+	        	out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList?ShowInactive=false&InfoType=" + request.getParameter("InfoType") + "\"><FONT SIZE=2>(Exclude inactive employees)</FONT></A>");
 	        }else{
-	        	out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList?ShowInactive=true&InfoType=" + request.getParameter("InfoType") + "\"><FONT SIZE=2>(Include inactive employees)</FONT></A>");
+	        	out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeList?ShowInactive=true&InfoType=" + request.getParameter("InfoType") + "\"><FONT SIZE=2>(Include inactive employees)</FONT></A>");
 	        }
 	        out.println ("<BR>");
 	        out.println("<INPUT TYPE=HIDDEN NAME=\"InfoType\" VALUE=\"" + request.getParameter("InfoType") + "\">");

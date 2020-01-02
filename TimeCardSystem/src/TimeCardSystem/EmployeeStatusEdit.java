@@ -28,7 +28,7 @@ public class EmployeeStatusEdit extends HttpServlet{
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 
@@ -45,7 +45,7 @@ public class EmployeeStatusEdit extends HttpServlet{
 	    		//new department
 	        	out.println ("<BR><H2>Employee Status: New Status</H2><BR>");
 	        	
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusSave\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	//Time Entry Type ID
 	        	out.println ("<TR><TD><B>Status ID</B></TD><TD>" + 
@@ -69,7 +69,7 @@ public class EmployeeStatusEdit extends HttpServlet{
 		        
 		        if (rsTypeInfo.next()){
 			        out.println ("<BR><H2>Employee Status Information: " + rsTypeInfo.getString("sStatusTitle") + "</H2><BR>");
-		        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusSave\">");
+		        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusSave\">");
 		        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 		        	//Status Type ID
 		        	out.println ("<TR><TD><B>Status ID</B></TD><TD>" + 
@@ -86,7 +86,7 @@ public class EmployeeStatusEdit extends HttpServlet{
 		        	out.println ("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Save----\">");
 		        	out.println ("</FORM>");
 		        	//Option to	delete current record.
-		        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusRemove\">");
+		        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusRemove\">");
 		        	out.println("<INPUT TYPE=HIDDEN NAME=\"Status\" VALUE=\"" + rsTypeInfo.getInt("iStatusID") + "\">");
 		        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");
 		        	out.println("<INPUT TYPE=CHECKBOX NAME=DoubleCheck VALUE=1>Check here if you want to delete this status.");

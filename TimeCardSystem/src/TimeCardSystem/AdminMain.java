@@ -152,7 +152,7 @@ public class AdminMain extends HttpServlet {
 				"	Welcome to the administrative section for <B>" 
 						+ (String) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_COMPANYNAME) + "</B>.<BR>");//You are a member of ");
 				out.println(
-						ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext())
+						TCWebContextParameters.getInitProgramTitle(getServletContext())
 						+ " version " + TimeCardUtilities.sProgramVersion
 						+ " last updated " + TimeCardUtilities.sLastUpdated
 						+ " currently running on server <B> " + clsServletUtilities.getHostName()
@@ -523,7 +523,7 @@ public class AdminMain extends HttpServlet {
 			}else{
 				out.println("The pin code is not valid. Please try again.");	
 				out.println("<META http-equiv='Refresh' content='2;URL=" 
-						+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+						+ TCWebContextParameters.getURLLinkBase(getServletContext())
 						+ MainLogin.CLASS_NAME
 						+ "?" + TimeCardUtilities.REQUEST_PARAMETER_DB + "=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB)
 						+ "&" + TimeCardUtilities.REQUEST_PARAMETER_ADMIN_MODE + "=y"
@@ -557,7 +557,7 @@ public class AdminMain extends HttpServlet {
 			}
 			
 			if (bIsPermitted){ 
-				String EncodedURL = resp.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + sLink);
+				String EncodedURL = resp.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + sLink);
 				pwOut.println("<TR><TD><A HREF=\"" + EncodedURL + "\">" + sLinkName + " </TD></TR>");
 			}
 		} catch (Exception e) {

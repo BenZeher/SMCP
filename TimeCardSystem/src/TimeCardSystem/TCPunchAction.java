@@ -48,7 +48,7 @@ public class TCPunchAction extends HttpServlet{
 		out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_USER_SCREENS, "Arial"));
 		
 		out.println("<META http-equiv=\"Refresh\" content=\"" + TIME_IN_SECONDS_TO_REFRESH_AFTER_WAITING + ";URL="
-			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+			+ TCWebContextParameters.getURLLinkBase(getServletContext())
 			+ MainLogin.CLASS_NAME
 			+ "?db=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB) 
 			+ "\">")
@@ -375,18 +375,18 @@ public class TCPunchAction extends HttpServlet{
 					+ "  <TR>" + "\n";
 				s += "    <TD><A HREF=\"" 
 					//+ response.encodeURL( 
-					+	ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?LinkID=" + rsID.getString("id")
+					+	TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?LinkID=" + rsID.getString("id")
 					//)
 					+ "\"><IMG src=\"" 
-					+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext())
+					+ TCWebContextParameters.getInitImagePath(getServletContext())
 					//) 
 					+ "yes.gif\"></A></TD>" + "\n";
 				s += "    <TD><A HREF=\""
-					+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+					+ TCWebContextParameters.getURLLinkBase(getServletContext())
 					+ MainLogin.CLASS_NAME
 					+ "?db=" + sDBID
 					+ "\"><IMG src=\"" 
-					+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+					+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 					+ "no.gif\"></A></TD>" + "\n";
 			}
 			rsID.close();
@@ -530,16 +530,16 @@ public class TCPunchAction extends HttpServlet{
 		s += "<TABLE BORDER=1>" + "\n"
 			+ "  <TR>" + "\n";
 		s += "    <TD><A HREF=\"" 
-			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?LinkID=" + iMostRecentOutstandingPunchInID 
+			+ TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?LinkID=" + iMostRecentOutstandingPunchInID 
 			+ "\"><IMG src=\"" 
-			+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+			+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 			+ "yes.gif\"></A></TD>" + "\n";
 		s += "    <TD><A HREF=\""
-			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+			+ TCWebContextParameters.getURLLinkBase(getServletContext())
 			+ MainLogin.CLASS_NAME
 			+ "?db=" + sDBID
 			+ "\"><IMG src=\"" 
-			+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+			+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 			+ "no.gif\"></A></TD>" + "\n";
 			
 		s += "  <TR>" + "\n";

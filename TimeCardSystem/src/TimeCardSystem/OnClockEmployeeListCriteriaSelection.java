@@ -26,13 +26,13 @@ public class OnClockEmployeeListCriteriaSelection extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
     	out.println("Select the departent(s) to get a list of employees who are currently on the clock (punched in). <BR><BR>");
 
 	    try {
 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.OnClockEmployeeList\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.OnClockEmployeeList\">");
         	
         	out.println("<TABLE CELLPADDING=10>");
         	String sSQL;

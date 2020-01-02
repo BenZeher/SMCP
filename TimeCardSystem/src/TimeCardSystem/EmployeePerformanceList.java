@@ -84,7 +84,7 @@ public class EmployeePerformanceList extends HttpServlet {
 					   "&nbsp;&nbsp;-&nbsp;&nbsp;" + 
 					   "<B>End Date:</B> " + USDateOnlyformatter.format(SelectedEndingDay) + 
 					   "</FONT></TD></TR>" +
-					   "<TR><TD><Font SIZE=1><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>&nbsp;&nbsp;<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeePerformanceListCriteriaSelection?SelectedEmployee=" + sCurrentEmployee + "\">Return to criteria selection</A></FONT></TD></TR></TABLE>");
+					   "<TR><TD><Font SIZE=1><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A>&nbsp;&nbsp;<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeePerformanceListCriteriaSelection?SelectedEmployee=" + sCurrentEmployee + "\">Return to criteria selection</A></FONT></TD></TR></TABLE>");
 
 	    	//get current URL
 	    	String sCurrentURL;
@@ -196,7 +196,7 @@ public class EmployeePerformanceList extends HttpServlet {
 			    		bRecordExist = true;
 			    		out.println("<TR>");
 			    		//line number and leave type
-			    		out.println("<TD ALIGN=CENTER><FONT size=2><B><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
+			    		out.println("<TD ALIGN=CENTER><FONT size=2><B><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
 									    																		  "&id=" + rsLeaveEntries.getInt("LeaveAdjustments.id") +
 									    																		  "&OriginalURL=" + sCurrentURL +
 									    																		  "\">" + rsLeaveEntries.getInt("LeaveAdjustments.id") + "</A></B></FONT></TD>" +
@@ -358,7 +358,7 @@ public class EmployeePerformanceList extends HttpServlet {
 	    				//In time
 	    				out.println("<TD ALIGN=CENTER VALIGN=TOP");
 	    				out.print(" " + sINBGC + "><Font SIZE=1>");
-	    				out.print("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=0&EarlyStart=" + rs.getInt("iEarlyStart") + "&LateFlag=" + rs.getInt("iLate") + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&id=" + rs.getInt("id") + "&Date=" + sInTime + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
+	    				out.print("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=0&EarlyStart=" + rs.getInt("iEarlyStart") + "&LateFlag=" + rs.getInt("iLate") + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&id=" + rs.getInt("id") + "&Date=" + sInTime + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
 	    				if (bInMissing){
 	    					out.print("<FONT SIZE=2><b>");
 	    				}
@@ -373,7 +373,7 @@ public class EmployeePerformanceList extends HttpServlet {
 	            		//Out time		
 	            		out.println("</FONT></TD><TD ALIGN=CENTER VALIGN=TOP");
 	    				out.println(" " + sOUTBGC + "><Font SIZE=1>");
-	    				out.print("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=1&id=" + rs.getInt("id") + "&Date=" +  sOutTime + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
+	    				out.print("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=1&id=" + rs.getInt("id") + "&Date=" +  sOutTime + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
 	    				if (bOutMissing){
 	    					out.print("<FONT SIZE=2><b>");
 	    				}

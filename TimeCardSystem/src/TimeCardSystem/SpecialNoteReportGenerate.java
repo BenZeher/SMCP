@@ -29,7 +29,7 @@ public class SpecialNoteReportGenerate extends HttpServlet{
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, "", TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 	    HttpSession CurrentSession = request.getSession();
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 	    try {
 	    	

@@ -383,7 +383,7 @@ public class PostPeriodTotal extends HttpServlet {
 		);
 		
 		//back to main menu after finished.
-		out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+		out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 			+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 		out.println("</BODY></HTML>");
 	}

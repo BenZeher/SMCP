@@ -27,10 +27,10 @@ public class PostPeriodTotalCriteriaSelection extends HttpServlet {
 	    String subtitle = "Post total period time criterias";
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 	    HttpSession CurrentSession = request.getSession();
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	out.println("Make sure all time entries are properly filled in before proceeding with posting time totals. <BR><BR><BR>");
 	    try {
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PostPeriodTotalConfirmation\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PostPeriodTotalConfirmation\">");
         	out.println("<TABLE CELLPADDING=10>");
         	Calendar c = Calendar.getInstance();
         	c.setTime(new Date(System.currentTimeMillis()));

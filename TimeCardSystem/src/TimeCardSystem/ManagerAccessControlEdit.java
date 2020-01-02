@@ -35,9 +35,9 @@ public class ManagerAccessControlEdit extends HttpServlet {
     	HttpSession CurrentSession = request.getSession();
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
     		+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
-        out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+        out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
         	+ "TimeCardSystem.ManagerAccessControlSave\">");
         Connection conn = null;
         try {

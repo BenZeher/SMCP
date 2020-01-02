@@ -20,7 +20,7 @@ public class TCSEditCompanyProfileAction extends HttpServlet{
 		HttpSession CurrentSession = request.getSession();
 		PrintWriter out = response.getWriter();
 
-		String title = ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext());
+		String title = TCWebContextParameters.getInitProgramTitle(getServletContext());
 		String subtitle = "";
 
 		out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
@@ -37,7 +37,7 @@ public class TCSEditCompanyProfileAction extends HttpServlet{
 		} catch (NumberFormatException e) {
 			out.println("<BR><BR>Invalid period frequency: '" + sPeriodLength + "'<BR>");
 			out.println ("<A href=" 
-					+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+					+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 					+ "TimeCardSystem.TCSEditCompanyProfile>Click here to return to edit company profile.</A>");
 			out.println("</BODY></HTML>");
 			return;
@@ -59,7 +59,7 @@ public class TCSEditCompanyProfileAction extends HttpServlet{
 
 				out.println("<BR><BR>Could not save company profile.<BR>");
 				out.println ("<A href=" 
-						+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+						+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 						+ "TimeCardSystem.TCSEditCompanyProfile>Click here to return to edit company profile.</A>");
 				out.println("</BODY></HTML>");
 				return;
@@ -68,7 +68,7 @@ public class TCSEditCompanyProfileAction extends HttpServlet{
 		} catch (SQLException e) {
 			out.println("<BR><BR>Could not save company profile - " + e.getMessage() + ".<BR>");
 			out.println ("<A href=" 
-					+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+					+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 					+ "TimeCardSystem.TCSEditCompanyProfile>Click here to return to edit company profile.</A>");	
 			out.println("</BODY></HTML>");
 			return;
@@ -76,7 +76,7 @@ public class TCSEditCompanyProfileAction extends HttpServlet{
 		}
 		out.println ("<H4>Company profile successfully saved.</H4><BR><BR>");
     	out.println("<META http-equiv='Refresh' content='3;URL=" 
-    			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+    			+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
     			+ "TimeCardSystem.TCSEditCompanyProfile'>");
 		out.println("</BODY></HTML>");
 		return;

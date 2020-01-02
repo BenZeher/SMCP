@@ -29,17 +29,17 @@ public class PayTypeRemove extends HttpServlet{
 	    	
 	    	if (request.getParameter("DoubleCheck") == null){
 	    		//don't delete, just go back.
-	    		out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeEdit?Type=" + request.getParameter("Type") + "'>");
+	    		out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeEdit?Type=" + request.getParameter("Type") + "'>");
 	    	}else{
 	    		//delete the selected entry
 	    		sSQL = TimeCardSQLs.Get_Remove_Pay_Type_SQL(request.getParameter("Type"));
 	    		if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
-	    			out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
+	    			out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
 					out.println ("<BR><H2>You've removed the pay type sucessfully.</H2>");
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove pay type.</H2><BR>");
-		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeEdit?Type=" + request.getParameter("Type")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeEdit?Type=" + request.getParameter("Type")) + "\"><IMG src=\"" 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 		    	}
 	    	}

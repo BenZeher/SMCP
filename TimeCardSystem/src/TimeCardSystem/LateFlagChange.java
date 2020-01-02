@@ -34,7 +34,7 @@ public class LateFlagChange extends HttpServlet{
 	    	}else{
 	    		out.println("<BR><H2>Failed to alter late flag for this time entry.</H2><BR>");
 	    		out.println ("<TD><A HREF=\"" + response.encodeURL(request.getParameter("OriginalURL") + "#" + request.getParameter("EmployeeID")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 	    	}
 	    } catch (Exception ex) {

@@ -31,7 +31,7 @@ public class DepartmentList extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 	    	
@@ -42,7 +42,7 @@ public class DepartmentList extends HttpServlet {
 	        out.println("<H2>Department(s) in system:</H2><BR>");
 	        
         	//print the first line here. 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit\">");
         	//out.println ("METHOD=POST onSubmit=\"return dropdown(this.Mechanic)\">");
         	out.println ("<SELECT NAME=\"Department\">" );
         	out.println ("<OPTION VALUE=0>----Create New Department---- ");

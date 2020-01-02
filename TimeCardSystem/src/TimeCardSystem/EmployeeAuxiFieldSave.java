@@ -37,12 +37,12 @@ public class EmployeeAuxiFieldSave extends HttpServlet{
 		    		//saving successful;
     				out.println ("<BR>");
     	        	out.println ("<H4>Information saved!!</H4><BR><BR>");
-    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
-    	        	//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
+    	        	//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 				}else{
 					//saving failed;
 					out.println("<BR><BR>Saving Employee Auxiliary Field information failed!!<BR>");
-					out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList>Click here to return to employee auxiliary field list.</A>");
+					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList>Click here to return to employee auxiliary field list.</A>");
 				}
 		    	
 	    	}else{
@@ -56,12 +56,12 @@ public class EmployeeAuxiFieldSave extends HttpServlet{
 	    			//saving successful;
     				out.println ("<BR>");
     	        	out.println ("<H4>Information saved!!</H4><BR><BR>");
-    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
-    	        	//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
+    	        	//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 				}else{
 					//saving failed;
 					out.println("<BR><BR>Updating Employee Auxiliary Field information failed!!<BR>");
-					out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList>Click here to return to employee auxiliary field list.</A>");
+					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList>Click here to return to employee auxiliary field list.</A>");
 				}
 	    	}
 	    } catch (Exception ex) {

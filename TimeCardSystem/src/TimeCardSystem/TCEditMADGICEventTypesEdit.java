@@ -64,7 +64,7 @@ public class TCEditMADGICEventTypesEdit extends HttpServlet {
 	    String sSubtitle = "";
 	    out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(sTitle, sSubtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS, TimeCardUtilities.BASE_FONT_FAMILY));
 	    
-	    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+	    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 	    	+ "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 	    
 	    

@@ -35,7 +35,7 @@ public class SpecialNoteSave extends HttpServlet{
 
 	    if (request.getParameter("IsAdmin") == null){
 	    	out.println("<META http-equiv='Refresh' content='2;URL=" 
-	    			+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext())
+	    			+ TCWebContextParameters.getURLLinkBase(getServletContext())
 	    			+ MainLogin.CLASS_NAME
 	    			+ "?db=" + (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB) + "'>");
 	    }else{

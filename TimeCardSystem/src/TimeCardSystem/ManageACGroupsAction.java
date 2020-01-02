@@ -33,7 +33,7 @@ public class ManageACGroupsAction extends HttpServlet {
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 	    //Print a link to the first page after login:
-	    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+	    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 	    HttpSession CurrentSession = request.getSession(true);
 	    String sConfFile = (String) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB); 
 
@@ -74,7 +74,7 @@ public class ManageACGroupsAction extends HttpServlet {
 	    		sOutPut = "Could not complete update transaction - group was not updated.<BR>";
 	    	}else{
 	    		sOutPut = "Successfully updated group " + sGroupName + ".";
-		    	out.println("<META http-equiv='Refresh' content='2;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups'>");
+		    	out.println("<META http-equiv='Refresh' content='2;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups'>");
 	    	}
 	    }catch (SQLException ex){
 			System.out.println("Error in SMUtilities.commitTransaction class!!");

@@ -31,7 +31,7 @@ public class MainLogin extends HttpServlet {
 	    response.setContentType("text/html");
 	    
 	    PrintWriter out = response.getWriter();
-	    String title = ConnectionPool.WebContextParameters.getInitProgramTitle(getServletContext());
+	    String title = TCWebContextParameters.getInitProgramTitle(getServletContext());
 	    
 
 	    //check for valid db name
@@ -120,7 +120,7 @@ public class MainLogin extends HttpServlet {
 	    
 		//Now create the form:
 		out.println("<FORM NAME=MAINFORM METHOD=POST ACTION=\"/" 
-				+ ConnectionPool.WebContextParameters.getInitWebAppName(getServletContext()) 
+				+ TCWebContextParameters.getInitWebAppName(getServletContext()) 
 				+ "/TimeCardSystem." 
 				+ sLoginClass 
 				+ "\">");

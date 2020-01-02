@@ -30,7 +30,7 @@ public class EmployeeAuxiFieldEdit extends HttpServlet{
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 
@@ -38,7 +38,7 @@ public class EmployeeAuxiFieldEdit extends HttpServlet{
 	    		//new Field
 	        	out.println ("<BR><H2>Field Information: New Field</H2><BR>");
 	        	
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldSave\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	//Field Name
 	        	out.println ("<TR><TD><B>Field Name</B></TD><TD>" + 
@@ -71,7 +71,7 @@ public class EmployeeAuxiFieldEdit extends HttpServlet{
 		        //new Field
 	        	out.println ("<BR><H2>Field Information: " + rsEAIMetaData.getColumnName(iCol) + "</H2><BR>");
 	        	
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldSave\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	//Field Name
 	        	out.println ("<TR><TD><B>Field Name</B></TD><TD>" + 
@@ -99,7 +99,7 @@ public class EmployeeAuxiFieldEdit extends HttpServlet{
 	        	out.println ("</FORM>");
 	        	
 	        	//Option to	delete current record.
-	        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldRemove\">");
+	        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldRemove\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"FieldID\" VALUE=\"" + request.getParameter("FieldID") + "\">");
 	        	out.println("<INPUT TYPE=HIDDEN NAME=\"FieldName\" VALUE=\"" + rsEAIMetaData.getColumnName(iCol) + "\">");
 	        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");

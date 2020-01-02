@@ -55,7 +55,7 @@ public class EmployeeLeaveRemove extends HttpServlet{
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove the leave adjustment.</H2><BR>");
 		    		out.println ("<TD><A HREF=\"" + request.getParameter("OriginalURL") + "#" + request.getParameter("EmployeeID") + "\"><IMG src=\"" 
-						+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+						+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 						+ "return.gif\"></A></TD>");
 		    	}
 	    	}

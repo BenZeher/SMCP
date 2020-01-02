@@ -28,7 +28,7 @@ public class LeaveAdjustmentTypeEdit extends HttpServlet{
 	    
 	    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
     	String sSQL = "";
 	    try {
@@ -53,7 +53,7 @@ public class LeaveAdjustmentTypeEdit extends HttpServlet{
 	    		//new Leave Adjustment Type
 	        	out.println ("<BR><FONT SIZE=4>Leave Type Information: <B>New Type</B></FONT><BR>");
 	        	
-	        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeSave\">");
+	        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeSave\">");
 	        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 	        	//Leave Adjustment Type ID
 	        	out.println ("<TR><TD><B>Type ID</B></TD><TD>" + 
@@ -78,7 +78,7 @@ public class LeaveAdjustmentTypeEdit extends HttpServlet{
 		        
 		        if (rsTypeInfo.next()){
 			        out.println ("<BR><FONT SIZE=4>Leave Type Information: <B>" + rsTypeInfo.getString("sTypeTitle") + " - " + rsTypeInfo.getString("sTypeDesc") + "</B></FONT><BR>");
-		        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeSave\">");
+		        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeSave\">");
 		        	out.println ("<TABLE BORDER=12 CELLSPACING=2>" );
 		        	//Leave Adjustment Type ID, not editable.
 		        	out.println ("<TR><TD><B>Type ID</B></TD><TD>" + 
@@ -99,7 +99,7 @@ public class LeaveAdjustmentTypeEdit extends HttpServlet{
 		        	//Option to	delete current record.
 		        	//hardwire "vacation" in the program.
 		        	if (Integer.parseInt(request.getParameter("Type")) != 1){
-			        	out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeRemove\">");
+			        	out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LeaveAdjustmentTypeRemove\">");
 			        	out.println("<INPUT TYPE=HIDDEN NAME=\"Type\" VALUE=\"" + rsTypeInfo.getInt("iTypeID") + "\">");
 			        	out.println("<INPUT TYPE=\"SUBMIT\" VALUE=\"----Delete----\">");
 			        	out.println("<INPUT TYPE=CHECKBOX NAME=DoubleCheck VALUE=1>Check here if you want to delete this pay type.");

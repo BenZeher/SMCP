@@ -31,17 +31,17 @@ public class EmployeeAuxiFieldRemove extends HttpServlet{
 	    	
 	    	if (request.getParameter("DoubleCheck") == null){
 	    		//don't delete, just go back.
-	    		out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit?FieldID=" + request.getParameter("FieldID") + "'>");
+	    		out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit?FieldID=" + request.getParameter("FieldID") + "'>");
 	    	}else{
 	    		//delete the selected entry
 	    		sSQL = TimeCardSQLs.Get_Remove_Column_SQL("EmployeeAuxiliaryInfo", request.getParameter("FieldName"));
 	    		if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
-	    			out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
+	    			out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldList'>");
 					out.println ("<BR><H2>You've removed the field sucessfully.</H2>");
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove field.</H2><BR>");
-		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit?FieldID=" + request.getParameter("FieldID")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeAuxiFieldEdit?FieldID=" + request.getParameter("FieldID")) + "\"><IMG src=\"" 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 		    	}
 	    	}

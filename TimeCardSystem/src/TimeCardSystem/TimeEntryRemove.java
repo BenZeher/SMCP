@@ -84,7 +84,7 @@ public class TimeEntryRemove extends HttpServlet{
 	    			}else{
 	    				out.println("<BR><H2>Nullified the time entry successfully, but failed to wipe out the entry blank record.</H2><BR>");
 	    				out.println ("<TD><A HREF=\"" + response.encodeURL(request.getParameter("OriginalURL")) + "#" + request.getParameter("EmployeeID") + "\"><IMG src=\"" 
-							+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+							+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 							+ "return.gif\"></A></TD>");
 	    			}
 	    			rs.close();
@@ -92,7 +92,7 @@ public class TimeEntryRemove extends HttpServlet{
 		    	}else{
 		    		out.println("<BR><H2>Failed to nullify the time entry.</H2><BR>");
 		    		out.println ("<TD><A HREF=\"" + response.encodeURL(request.getParameter("OriginalURL")) + "#" + request.getParameter("EmployeeID") + "\"><IMG src=\"" 
-						+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+						+ TCWebContextParameters.getInitImagePath(getServletContext()) 
 						+ "return.gif\"></A></TD>");
 		    	}
 	    		

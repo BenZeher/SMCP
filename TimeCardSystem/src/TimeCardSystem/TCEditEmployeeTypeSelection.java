@@ -36,7 +36,7 @@ public class TCEditEmployeeTypeSelection extends HttpServlet {
 	    String sSubtitle = "Edit Employee Types";
 	    out.println(TimeCardUtilities.TCTitleSubBGColorWithFont(sTitle, sSubtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS, TimeCardUtilities.BASE_FONT_FAMILY));
 
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
     	String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
     	if (sWarning.compareToIgnoreCase("") != 0){
@@ -46,7 +46,7 @@ public class TCEditEmployeeTypeSelection extends HttpServlet {
     	if (sStatus.compareToIgnoreCase("") != 0){
     		out.println("<BR><B><FONT COLOR=GREEN>" + sStatus + "</FONT></B><BR>");
     	}
-    	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TCEditEmployeeTypesEdit\" METHOD = \"POST\">");
+    	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TCEditEmployeeTypesEdit\" METHOD = \"POST\">");
     	
     	out.println("<INPUT TYPE=HIDDEN NAME=\"" + "CallingClass" + "\" VALUE=\"" + this.getClass().getName() + "\">");
     	

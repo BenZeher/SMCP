@@ -31,17 +31,17 @@ public class DepartmentRemove extends HttpServlet{
 	    	
 	    	if (request.getParameter("DoubleCheck") == null){
 	    		//don't delete, just go back.
-	    		out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit?Department=" + request.getParameter("Department") + "'>");
+	    		out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit?Department=" + request.getParameter("Department") + "'>");
 	    	}else{
 	    		//delete the selected entry
 	    		sSQL = TimeCardSQLs.Get_Remove_Department_SQL(request.getParameter("Department"));
 	    		if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
-	    			out.println("<META http-equiv='Refresh' content='0;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList'>");
+	    			out.println("<META http-equiv='Refresh' content='0;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList'>");
 					out.println ("<BR><H2>You've removed the department sucessfully.</H2>");
 		    	}else{
 		    		out.println("<BR><H2>Failed to remove department.</H2><BR>");
-		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit?Department=" + request.getParameter("Department")) + "\"><IMG src=\"" 
-+ ConnectionPool.WebContextParameters.getInitImagePath(getServletContext()) 
+		    		out.println ("<TD><A HREF=\"" + response.encodeURL("" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentEdit?Department=" + request.getParameter("Department")) + "\"><IMG src=\"" 
++ TCWebContextParameters.getInitImagePath(getServletContext()) 
 + "return.gif\"></A></TD>");
 		    	}
 	    	}

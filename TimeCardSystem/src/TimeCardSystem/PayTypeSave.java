@@ -51,12 +51,12 @@ public class PayTypeSave extends HttpServlet{
 	    				//saving successful;
 	    				out.println ("<BR>");
 	    	        	out.println ("<H4>Information saved!!</H4><BR><BR>");
-	    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
-	    	        	//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+	    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
+	    	        	//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 					}else{
 						//saving failed;
 						out.println("<BR><BR>Saving pay type information failed!!<BR>");
-						out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList>Click here to return to pay type list.</A>");
+						out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList>Click here to return to pay type list.</A>");
 					}
 	    		}
 		    	//clsoe resultset
@@ -73,12 +73,12 @@ public class PayTypeSave extends HttpServlet{
 					//saving successful
 					out.println ("<BR>");
 					out.println ("<H4>Information saved!!</H4><BR><BR>");
-    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
-					//out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
+    	        	out.println("<META http-equiv='Refresh' content='1;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList'>");
+					//out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.DepartmentList>Click here to return to updated department list.</A>");
 				}else{
 					//saving failed
 					out.println("<BR><BR>Saving pay type information failed!!<BR>");
-					out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList>Click here to return to pay type list.</A>");
+					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PayTypeList>Click here to return to pay type list.</A>");
 				}
 	    	}
 	    } catch (Exception ex) {

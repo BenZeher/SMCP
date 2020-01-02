@@ -28,7 +28,7 @@ public class EmployeeStatusList extends HttpServlet {
 
 	    HttpSession CurrentSession = request.getSession();
     	
-    	out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+    	out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
     	
 	    try {
 	    	
@@ -38,7 +38,7 @@ public class EmployeeStatusList extends HttpServlet {
 	        out.println("<H2>Employee status(es) in system:</H2><BR>");
 	        
         	//print the first line here. 
-        	out.println ("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusEdit\">");
+        	out.println ("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeStatusEdit\">");
         	out.println ("<SELECT NAME=\"Status\">" );
         	out.println ("<OPTION VALUE=0>----Create New Status---- ");
         	

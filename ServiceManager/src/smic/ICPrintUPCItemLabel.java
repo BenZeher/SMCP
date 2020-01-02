@@ -77,7 +77,6 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 		System.setProperty("java.awt.headless", "true");
 
 		String sBarCodeImagePath = SMUtilities.getAbsoluteSMTempPath(req, context);
-		//sBarCodeImagePath = getAbsoluteBarcodeImagePath(req, context);
 
 		//try to delete any existing bar code files here:
 		if (!deleteCurrentBarCodeFiles(sBarCodeImagePath)){
@@ -189,7 +188,6 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 			if (!n.isFile()) { // skip ., .., other directories, etc.
 				continue;
 			}
-			//System.out.println("removing " + n.getPath());
 			if (info[i].startsWith(UPC_FILE_PREFIX)){
 				if (!n.delete()){
 					m_sErrorMessage = m_sErrorMessage + "Unable to delete " + sBarCodeImagePath + info[i] + "\n";

@@ -44,7 +44,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 		    //Print a link to the first page after login:
-		    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+		    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 			
 		    Edit_Group(sGroupName, out, sConfFile, false);
 	    }
@@ -55,7 +55,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 		    //Print a link to the first page after login:
-		    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+		    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 			
 		    if (request.getParameter("ConfirmDelete") == null){
 		    	out.println ("You must check the 'confirming' check box to delete a group.");
@@ -64,11 +64,11 @@ public class ManageACGroupsEdit extends HttpServlet {
 		    	System.out.println("Group Name#1 = " + sGroupName);
 			    if (Delete_Group(sGroupName, out, sConfFile) == false){
 			    	out.println ("Error deleting group " + sGroupName + ".");
-					out.println ("<A href=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups>Click here to return to access control group list.</A>");
+					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups>Click here to return to access control group list.</A>");
 			    }
 			    else{
 			    	out.println ("Successfully deleted group " + sGroupName + ".");
-			    	out.println("<META http-equiv='Refresh' content='2;URL=" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups'>");
+			    	out.println("<META http-equiv='Refresh' content='2;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups'>");
 			    }
 		    }
 	    }
@@ -81,7 +81,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		    out.println(TimeCardUtilities.TCTitleSubBGColor(title, subtitle, TimeCardUtilities.BACKGROUND_COLOR_FOR_ADMIN_SCREENS));
 
 		    //Print a link to the first page after login:
-		    out.println("<BR><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
+		    out.println("<BR><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.AdminMain\">Return to main menu</A><BR><BR>");
 
 		    if (sNewGroupName == ""){
 		    	out.println ("You chose to add a new group, but you did not enter a new group name to add.");
@@ -151,8 +151,8 @@ public class ManageACGroupsEdit extends HttpServlet {
 			}
 		}
 		
-		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroupsAction' METHOD='POST'>");
-		//pwOut.println("<FORM NAME='MAINFORM' ACTION='" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMManageSecurityGroupsAction' METHOD='POST'>");
+		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroupsAction' METHOD='POST'>");
+		//pwOut.println("<FORM NAME='MAINFORM' ACTION='" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMManageSecurityGroupsAction' METHOD='POST'>");
 	    pwOut.println("<INPUT TYPE=HIDDEN NAME=\"GroupName\" VALUE=\"" + sGroup + "\">");
 	    String sOutPut = "";
 	  

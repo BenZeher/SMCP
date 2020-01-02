@@ -104,7 +104,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 					   "<B>End Date:</B> " + USDateOnlyformatter.format(new Date(tsSelectedEndingDay.getTime())) + 
 					   "</FONT></TD></TR>" +
 					   "<TR><TD><Font SIZE=1><A HREF=\"" 
-					   	+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+					   	+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 					   	+ "TimeCardSystem.AdminMain\">Return to main menu</A></FONT></TD></TR><TR>");
 	    	/*
 	    	c.setTime(tsSelectedStartingDay);
@@ -242,8 +242,8 @@ public class ManagerReviewListGenerate extends HttpServlet {
 		    		String sNewOutLink;
 		    		if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 														AccessControlFunctionList.ManagerReviewListTimeEditing)){
-		    			sNewInLink = "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?EmployeeID=" + sCurrentEmployee + "&Type=0&SpecialEntryType=0&EarlyStart=0&LateFlag=0&id=0&Date=NA&OriginalURL=" + sCurrentURL + "\"> IN </A>";
-		    			sNewOutLink = "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?EmployeeID=" + sCurrentEmployee + "&Type=1&SpecialEntryType=0&id=0&Date=NA&OriginalURL=" + sCurrentURL + "\"> OUT </A>";
+		    			sNewInLink = "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?EmployeeID=" + sCurrentEmployee + "&Type=0&SpecialEntryType=0&EarlyStart=0&LateFlag=0&id=0&Date=NA&OriginalURL=" + sCurrentURL + "\"> IN </A>";
+		    			sNewOutLink = "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?EmployeeID=" + sCurrentEmployee + "&Type=1&SpecialEntryType=0&id=0&Date=NA&OriginalURL=" + sCurrentURL + "\"> OUT </A>";
 		    		}else{
 		    			sNewInLink = "IN";
 		    			sNewOutLink = "OUT";
@@ -322,7 +322,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	    					//attach a link to This leter to remove itself if applicable
 	    		    		if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 	    														AccessControlFunctionList.ManagerReviewListTimeEditing)){
-	    						out.print("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LateFlagChange?ID=" + rs.getInt("id") + "&CurrentStatus=1" + "&OriginalURL= " + sCurrentURL + "&EmployeeID=" + sCurrentEmployee + "\">L</A>");
+	    						out.print("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.LateFlagChange?ID=" + rs.getInt("id") + "&CurrentStatus=1" + "&OriginalURL= " + sCurrentURL + "&EmployeeID=" + sCurrentEmployee + "\">L</A>");
 	    					}else{
 	    						out.print("L");
 	    					}
@@ -349,7 +349,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	    				//In time
 	    				out.println("<TD ALIGN=CENTER VALIGN=TOP");
 	    				out.print(" " + sINBGC + "><Font SIZE=1>");
-	    				out.print("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=0&EarlyStart=" + rs.getInt("iEarlyStart") + "&LateFlag=" + rs.getInt("iLate") + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&id=" + rs.getInt("id") + "&Date=" + sInTime + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
+	    				out.print("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=0&EarlyStart=" + rs.getInt("iEarlyStart") + "&LateFlag=" + rs.getInt("iLate") + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&id=" + rs.getInt("id") + "&Date=" + sInTime + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
 	    				if (bInMissing){
 	    					out.print("<FONT SIZE=2><b>");
 	    				}
@@ -364,7 +364,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	            		//Out time		
 	            		out.println("</FONT></TD><TD ALIGN=CENTER VALIGN=TOP");
 	    				out.println(" " + sOUTBGC + "><Font SIZE=1>");
-	    				out.print("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=1&id=" + rs.getInt("id") + "&Date=" +  sOutTime + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
+	    				out.print("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.TimeEntryEdit?Type=1&id=" + rs.getInt("id") + "&Date=" +  sOutTime + "&SpecialEntryType=" + rs.getInt("iEntryTypeID") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">");
 	    				if (bOutMissing){
 	    					out.print("<FONT SIZE=2><b>");
 	    				}
@@ -437,7 +437,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	    														AccessControlFunctionList.ManagerReviewListTimeEditing) ||
 								TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 	    														AccessControlFunctionList.ManagerReviewListNoteEditing)){
-								out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?IsAdmin=1&LinkID=" + rs.getInt("id") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">"); 
+								out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?IsAdmin=1&LinkID=" + rs.getInt("id") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">"); 
 	    					}
 							out.println(rsNotes.getString("mNote"));
 	    					while (rsNotes.next()){
@@ -455,7 +455,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 																AccessControlFunctionList.ManagerReviewListTimeEditing) ||
 								TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 	    														AccessControlFunctionList.ManagerReviewListNoteEditing)){
-	    						out.println("<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?IsAdmin=1&LinkID=" + rs.getInt("id") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">+</A>");
+	    						out.println("<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.SpecialNoteEdit?IsAdmin=1&LinkID=" + rs.getInt("id") + "&EmployeeID=" + sCurrentEmployee + "&OriginalURL=" + sCurrentURL + "\">+</A>");
 	    					}
 	    				}
 	    				out.println("</FONT></TD>");
@@ -502,7 +502,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	    	    	while (rsLeaves.next()){
 	    	    		tempHTMLString = tempHTMLString + 
 	    	    					
-	    	    					"<TR><TD ALIGN=CENTER VALIGN=TOP><Font SIZE=1><A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
+	    	    					"<TR><TD ALIGN=CENTER VALIGN=TOP><Font SIZE=1><A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.EmployeeLeaveEdit?Employee=" + sCurrentEmployee + 
 														    																		"&id=" + rsLeaves.getInt("id") +
 														    																		"&OriginalURL=" + sCurrentURL +
 														    																		"\">" + rsLeaves.getInt("id") + "</A></FONT></TD>" +
@@ -589,7 +589,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 	            										   "<TD COLSPAN=2><TABLE BORDER=0 WIDTH=100%><TR><TD WIDTH=20%><Font SIZE=1><B>Overtime</B></FONT></TD>" +
 	            										   												"<TD WIDTH=20%><Font SIZE=1><B>Leave</B></FONT></TD><TD></TD></TR></TABLE></TD></TR>");
 		        		out.println("<TR><TD COLSPAN=3></TD><TD ALIGN=RIGHT COLSPAN=2><Font SIZE=1><B>Saved Totals:</B></FONT></TD>");
-		        		out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalSave\">");
+		        		out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalSave\">");
 		        		out.println("<TD ALIGN=RIGHT><Font SIZE=1><INPUT SIZE=5 TYPE=TEXT NAME=AdjustedRegular VALUE=" + dCurrentRegular + "></FONT></TD>");
 		        		out.println("<TD ALIGN=RIGHT><Font SIZE=1><INPUT SIZE=5 TYPE=TEXT NAME=AdjustedDouble VALUE=" + dCurrentDouble + "></FONT></TD>");
 		        		out.println("<TD ALIGN=RIGHT><Font SIZE=1><INPUT SIZE=5 TYPE=TEXT NAME=AdjustedTotal VALUE=" + dCurrentTotal + "></FONT></TD>");
@@ -600,7 +600,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 		        		out.println("<INPUT TYPE=HIDDEN NAME=\"OriginalURL\" VALUE=\"" + sCurrentURL  + "#" + sCurrentEmployee + "\">");
 		        		out.println("<TD ALIGN=CENTER WIDTH=20%><INPUT TYPE=\"SUBMIT\" VALUE=\"Save\"></TD>");
 		        		out.println("</FORM>");
-		        		out.println("<FORM ACTION =\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize\">");
+		        		out.println("<FORM ACTION =\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.PeriodTotalFinalize\">");
 		        		out.println("<TD ALIGN=CENTER WIDTH=20%>");
 		        		out.println("<INPUT TYPE=HIDDEN NAME=\"RecID\" VALUE=" + rsEmployeeUnfinalizedTotal.getInt("id") + ">");
 		        		out.println("<INPUT TYPE=HIDDEN NAME=\"OriginalURL\" VALUE=\"" + sCurrentURL  + "#" + sCurrentEmployee + "\">");
@@ -674,19 +674,19 @@ public class ManagerReviewListGenerate extends HttpServlet {
 		        					out.println("<TR><TD><Font SIZE=1>"
 		        						//Add a regular day
 		        						+ "<B><A HREF=\"" 
-		        						+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+		        						+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 		        						+ "TimeCardSystem.AddDefaultPunch?FullDay=1&" + TimeCardUtilities.REQUEST_PARAMETER_EID + "=" + sCurrentEmployee 
 		        						+ "&StartTime=" + sStartTime 
 		        						+ "&FocusDate=" + cWorkDays.get(i) 
 		        						+ "&OriginalURL=" + sCurrentURL + "\">&nbsp;<+W>&nbsp;</A>"
 		        						//Add a vacation day
-		        						+ "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+		        						+ "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 		        						+ "TimeCardSystem.AddDefaultLeave?" + TimeCardUtilities.REQUEST_PARAMETER_EID + "=" + sCurrentEmployee 
 		        						+ "&FocusDate=" + cWorkDays.get(i)
 		        						+ "&OriginalURL=" + sCurrentURL + "\">&nbsp;<+V>&nbsp;</A>"
 		        						//Add a holiday:
 		        						+ "<A HREF=\"" 
-		        						+ ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+		        						+ TCWebContextParameters.getURLLinkBase(getServletContext()) 
 		        						+ "TimeCardSystem.AddDefaultPunch?FullDay=1&" + TimeCardUtilities.REQUEST_PARAMETER_EID + "=" + sCurrentEmployee 
 		        						+ "&StartTime=" + sStartTime 
 		        						+ "&FocusDate=" + cWorkDays.get(i)
@@ -695,7 +695,7 @@ public class ManagerReviewListGenerate extends HttpServlet {
 		        						+ cWorkDays.get(i) + "</B></FONT></TD><TR>");
 		        				}else if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 																		  AccessControlFunctionList.ManagerReviewListNoteEditing)){
-		        					out.println("<TR><TD><Font SIZE=1><B>" + cWorkDays.get(i) + "<A HREF=\"" + ConnectionPool.WebContextParameters.getURLLinkBase(getServletContext()) 
+		        					out.println("<TR><TD><Font SIZE=1><B>" + cWorkDays.get(i) + "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(getServletContext()) 
 		        						+ "TimeCardSystem.AddDefaultPunch?FullDay=0&" + TimeCardUtilities.REQUEST_PARAMETER_EID + "=" 
 		        						+ sCurrentEmployee + "&StartTime=" + sStartTime + "&FocusDate=" + cWorkDays.get(i) + "&OriginalURL=" + sCurrentURL 
 		        						+ "\"> <+W> </A></B></FONT></TD><TR>");

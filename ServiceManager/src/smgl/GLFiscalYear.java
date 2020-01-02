@@ -1728,9 +1728,9 @@ public class GLFiscalYear extends java.lang.Object{
 			+ " " + SMTableglfiscalperiods.ifiscalyear
 			+ " FROM " + SMTableglfiscalperiods.TableName
 			+ " WHERE ("
-				+ "(" + SMTableglfiscalperiods.datendingdateperiod1 + " <= '" + sDateInSQLFormat + "')"
-				+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
-					+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " >= '" + sDateInSQLFormat + "')"
+			+ "(" + SMTableglfiscalperiods.datendingdateperiod1 + " <= '" + sDateInSQLFormat + "')"
+			+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datbeginningdateperiod13
+			+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " >= '" + sDateInSQLFormat + "')"
 			+ ")"
 		;
 		ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, conn);
@@ -1758,9 +1758,9 @@ public class GLFiscalYear extends java.lang.Object{
 				+ " " + SMTableglfiscalperiods.ifiscalyear
 				+ " FROM " + SMTableglfiscalperiods.TableName
 				+ " WHERE ("
-					+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " <= '" + sDateInSQLFormat + "')"
+					+ "(" + SMTableglfiscalperiods.datbeginningdateperiod1 + " >= '" + sDateInSQLFormat + "')"
 					+ " AND IF(" + SMTableglfiscalperiods.inumberofperiods  + " = 13, " + SMTableglfiscalperiods.datendingdateperiod13
-						+ " >= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " >= '" + sDateInSQLFormat + "')"
+						+ " <= '" + sDateInSQLFormat + "', " + SMTableglfiscalperiods.datendingdateperiod12+ " <= '" + sDateInSQLFormat + "')"
 				+ ")"
 			;
 			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(sSQL, conn);

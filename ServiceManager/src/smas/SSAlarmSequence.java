@@ -514,8 +514,17 @@ public class SSAlarmSequence extends clsMasterEntry{
 			sErrors += "zone name cannot be blank.  ";
 		}
 
-		m_snotificationemails = m_snotificationemails.trim();
+		System.out.println(m_snotificationemails.length());
+		System.out.println(m_snotificationemails.lastIndexOf(','));
 
+		//remove any , after the list of addresses
+		m_snotificationemails = m_snotificationemails.trim();
+		if(m_snotificationemails.lastIndexOf(',') == m_snotificationemails.length()-1) {
+			m_snotificationemails = m_snotificationemails.substring(0, (m_snotificationemails.length() -1));
+			m_snotificationemails = m_snotificationemails.trim();
+		}
+		
+		
 		m_salarmsetcountdown = m_salarmsetcountdown.trim();
 		
 		if (sErrors.compareToIgnoreCase("") != 0){

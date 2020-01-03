@@ -315,6 +315,14 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ "</TR>\n"
 				;
 		
+
+		
+		//'Returned' section:
+		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>ACCOUNTING</B>:</TD>\n</TR>\n";
+
+		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
+		String sEntryNumber = entry.getladjustedentrynumber().replace("\"", "&quot;");
+
 		//Date Returned
 		if(entry.getdatreturnsent().replace("\"", "&quot;").compareToIgnoreCase(clsServletUtilities.EMPTY_SQL_DATE_VALUE)==0) {
 			s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sreturnsentlabel + ":<B></TD>"
@@ -336,12 +344,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 					;
 		}
 		
-		//'Returned' section:
-		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>ACCOUNTING</B>:</TD>\n</TR>\n";
-
-		String sBatchNumber = entry.getladjustedbatchnumber().replace("\"", "&quot;");
-		String sEntryNumber = entry.getladjustedentrynumber().replace("\"", "&quot;");
-
 		//Adjustment Batch Number
 		s += "<TR><TD ALIGN=RIGHT><B>" + SMTablematerialreturns.sadjustedbatchnumberlabel  + ": </B></TD>";
 		s += "<TD ALIGN=LEFT><INPUT ONCHANGE=\"BatchEntry()\" TYPE=TEXT NAME=\"" + SMMaterialReturn.Paramladjustedbatchnumber + "\""

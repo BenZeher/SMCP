@@ -4,11 +4,15 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMLogEntry;
 import sscommon.SSConstants;
 import sscommon.SSUtilities;
 import SMDataDefinition.SMTablessalarmactivationdevices;
@@ -596,6 +600,14 @@ public class SSDevice extends clsMasterEntry{
        	if(getIsActivatedOnSchedule(conn) && (sUser != SMEventScheduleHandler.SCHEDULE_MANAGER_USER)){
        		throw new Exception("This device is currently being controlled by a schedule. ");
        	}
+       	
+    	Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+	    log.writeEntry(sUser, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUser + " Set Contact State " + sSetContactState + " for " + sDurationInMS + " at " + formattedDate + " from " + sServerID  , "ASSetOutputContactState", "[1578420366]");
            	
     	SSController controller = new SSController();
     	controller.setslid(getsoutputcontrollerid());

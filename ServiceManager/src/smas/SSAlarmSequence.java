@@ -812,6 +812,15 @@ public class SSAlarmSequence extends clsMasterEntry{
 			}
 		}
 		
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+	    log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserName + " armed the devices " + arrActivationDevices  + " at " + formattedDate  , "ASSetArmedState", "[1578421690]");
+		
+		
 		String sListeningState = "";
 		if (iArmingState == SMTablessalarmsequences.ALARM_STATE_ARMED){
 			sListeningState = SSConstants.QUERY_KEYVALUE_TERMINAL_LISTENING_STATUS_LISTENING;
@@ -1099,6 +1108,14 @@ public class SSAlarmSequence extends clsMasterEntry{
 			return;
 		}
 
+		Date date = new Date();
+	    String strDateFormat = "hh:mm:ss a";
+	    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+	    String formattedDate= dateFormat.format(date);
+	    
+		SMClasses.SMLogEntry syslog = new SMClasses.SMLogEntry(conn);
+		syslog.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUserName + " accessed the device " + sDeviceDescription  + " at " + formattedDate  , "ASInitiateAlarmSequence", "[1577471378]");
+		
 		//But if the countdown is finished, start doing things:
 		//If the alarm sequence is not already triggered, then send notifications and set the status to triggered:
 		if (getsalarmstate().compareToIgnoreCase(Integer.toString(SMTablessalarmsequences.ALARM_STATE_TRIGGERED)) != 0){
@@ -1160,7 +1177,16 @@ public class SSAlarmSequence extends clsMasterEntry{
 						sActivationDuration = device.getscontactduration();
 					}
 				}
+				Date date = new Date();
+			    String strDateFormat = "hh:mm:ss a";
+			    DateFormat dateFormat = new SimpleDateFormat(strDateFormat);
+			    String formattedDate= dateFormat.format(date);
+			    
+				SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+			   
 				device.setOutputContactsState(conn, sSetContactState, sActivationDuration, sUser, context, sServerID);
+				log.writeEntry(sUser, SMLogEntry.LOG_OPERATION_SSUSEREVENT, sUser + " activated the device " + device.getsdescription() + ": Active?" + device.getsactive() + " DeviceType " + device.getsdeviccetype() + "at " + formattedDate  , "ASActivateAlarmDevices", "[1578420668]");
+				    
 			}
 		}
 	}

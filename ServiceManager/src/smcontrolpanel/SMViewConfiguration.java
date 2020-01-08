@@ -175,9 +175,21 @@ public class SMViewConfiguration  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Path to SM temporary files:", SMUtilities.getAbsoluteSMTempPath(request, getServletContext()), "The path that will hold any temporary files for the program.", bOddRow)); //?
 		bOddRow = !bOddRow;
-		out.println(createRow("Path to javascript scripts:", WebContextParameters.getInitScriptPath(getServletContext()), "The path on the web server to the folder that holds all the script files for the program.", bOddRow));
+		out.println(createRow("Path to javascript scripts:", 
+				SMUtilities.getAbsoluteRootPath(request, getServletContext()).replace(
+					System.getProperty("file.separator") + WebContextParameters.getInitWebAppName(getServletContext()) + System.getProperty("file.separator"), "")
+				+ WebContextParameters.getInitScriptPath(getServletContext()),
+			"The path on the web server to the folder that holds all the script files for the program.", bOddRow));
 		bOddRow = !bOddRow;
-		out.println(createRow("Path to local resource files:", WebContextParameters.getLocalResourcesPath(getServletContext()), "Local resources include customized invoice or proposal logos, etc.", bOddRow));
+		
+		out.println(createRow("Path to javascript scripts:", 
+				SMUtilities.getAbsoluteRootPath(request, getServletContext()).replace(
+					System.getProperty("file.separator") + WebContextParameters.getInitWebAppName(getServletContext()) + System.getProperty("file.separator"), "")
+				+ WebContextParameters.getLocalResourcesPath(getServletContext()),
+			"Local resources include customized invoice or proposal logos, etc..", bOddRow));
+		
+		
+		//out.println(createRow("Path to local resource files:", WebContextParameters.getLocalResourcesPath(getServletContext()), "Local resources include customized invoice or proposal logos, etc.", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Control database server:", sControlDatabaseURL , "Address of the database server hosting the control database.", bOddRow));
 		bOddRow = !bOddRow;
@@ -215,6 +227,9 @@ public class SMViewConfiguration  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Current user:", sUserName, "User name you are currently logged in under - stored in your current web session.", bOddRow));
 		bOddRow = !bOddRow;
+		
+		//Add login opts, user first, last name, user ID:
+		
 		out.println(createRow("Current database ID:", sDBID, "This identifies the database you are currently working with - stored in your current web session.", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Current Company name:", sCompanyName, "Read from the database and stored in your current web session.", bOddRow));
@@ -227,7 +242,7 @@ public class SMViewConfiguration  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Maximum session interval:", Integer.toString(SMUtilities.SMCP_MAX_SESSION_INTERVAL_IN_SECONDS/60) + " minutes", "Maximum time a session will stay open after the last access.", bOddRow));
 		bOddRow = !bOddRow;
-
+		
 		out.println("</TABLE>");
 
 		//Now show all of the databases and information in the smcpcontrols database:

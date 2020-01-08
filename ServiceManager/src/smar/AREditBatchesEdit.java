@@ -41,6 +41,14 @@ public class AREditBatchesEdit extends HttpServlet {
 	 */
 	public static final String AR_BATCH_POSTING_SESSION_WARNING_OBJECT = "AREDITBATCHWARNING";
 	private static final String sObjectName = "Batch";
+	//Button labels and values
+		public static final String COMMAND_FLAG = "COMMANDFLAG";
+		public static final String SAVE_COMMAND_VALUE = "SAVE";
+		public static final String SAVE_BUTTON_LABEL = "Save " + sObjectName;
+		public static final String DELETE_COMMAND_VALUE = "DELETE";
+		public static final String DELETE_BUTTON_LABEL = "Delete " + sObjectName;
+		public static final String POST_COMMAND_VALUE = "POST";
+		public static final String POST_BUTTON_LABEL = "Post " + sObjectName;
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {

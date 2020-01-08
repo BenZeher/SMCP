@@ -49,6 +49,7 @@ public class SMViewConfiguration  extends HttpServlet {
 								+ (String)CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERLASTNAME);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 		String sLicenseModuleLevel = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL);
+		String sOpts = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_OPTS);
 
 		long lLicenseModuleLevel = 0;
 		try {
@@ -225,11 +226,14 @@ public class SMViewConfiguration  extends HttpServlet {
 			sUserID,
 			sUserFullName), "Minor database revision number, corresponds to every database structure change.", bOddRow));
 		bOddRow = !bOddRow;
-		out.println(createRow("Current user:", sUserName, "User name you are currently logged in under - stored in your current web session.", bOddRow));
+		out.println(createRow("Current user name:", sUserName, "User name you are currently logged in under - stored in your current web session.", bOddRow));
 		bOddRow = !bOddRow;
-		
-		//Add login opts, user first, last name, user ID:
-		
+		out.println(createRow("Current user ID:", sUserID, "User ID associated with your login name - stored in your current web session.", bOddRow));
+		bOddRow = !bOddRow;
+		out.println(createRow("Current user full name:", sUserFullName, "First and last name associated with your login name - stored in your current web session.", bOddRow));
+		bOddRow = !bOddRow;
+		out.println(createRow("'OPTS' login parameter:", sOpts, "'OPTS' parameter in login request string.", bOddRow));
+		bOddRow = !bOddRow;
 		out.println(createRow("Current database ID:", sDBID, "This identifies the database you are currently working with - stored in your current web session.", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Current Company name:", sCompanyName, "Read from the database and stored in your current web session.", bOddRow));

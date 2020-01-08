@@ -226,6 +226,7 @@ public class SMViewConfiguration  extends HttpServlet {
 			sUserID,
 			sUserFullName), "Minor database revision number, corresponds to every database structure change.", bOddRow));
 		bOddRow = !bOddRow;
+		
 		out.println(createRow("Current user name:", sUserName, "User name you are currently logged in under - stored in your current web session.", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Current user ID:", sUserID, "User ID associated with your login name - stored in your current web session.", bOddRow));

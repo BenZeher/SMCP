@@ -72,7 +72,8 @@ public class AREditBatchesUpdate extends HttpServlet{
     batch.sLastEditedByID(sUserFullName);
     batch.sModuleType(SMModuleTypes.AR);
     
-	if (request.getParameter("Delete") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(AREditBatchesEdit.DELETE_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmDelete") != null){
 			try {
 				batch.flag_as_deleted(getServletContext(), sDBID);			
@@ -105,7 +106,8 @@ public class AREditBatchesUpdate extends HttpServlet{
 		    return;
 		}
 	}
-	if (request.getParameter("Post") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(AREditBatchesEdit.POST_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmPost") != null){
 			try {
 				batch.load(getServletContext(), sDBID);

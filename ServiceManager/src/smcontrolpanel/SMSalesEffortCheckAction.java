@@ -45,26 +45,6 @@ public class SMSalesEffortCheckAction extends HttpServlet {
 	    //sCallingClass will look like: smcontrolpanel.ARAgedTrialBalanceReport
 	    String sCallingClass = clsManageRequestParameters.get_Request_Parameter("CallingClass", request);
 	    String sWarning = "";
-		if(clsManageRequestParameters.get_Request_Parameter(
-			SMMonthlySalesReportSelection.CHECKALLSALESPERSONSBUTTON, request).compareToIgnoreCase(
-				SMMonthlySalesReportSelection.CHECKALLSALESPERSONSLABEL) == 0){
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ SMMonthlySalesReportSelection.CHECKALLSALESPERSONSBUTTON + "=yes"
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-        		);			
-            	return;
-        }
-		if(clsManageRequestParameters.get_Request_Parameter(
-				SMMonthlySalesReportSelection.UNCHECKALLSALESPERSONSBUTTON, request).compareToIgnoreCase(
-					SMMonthlySalesReportSelection.UNCHECKALLSALESPERSONSLABEL) == 0){
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ SMMonthlySalesReportSelection.UNCHECKALLSALESPERSONSBUTTON + "=yes"
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-        		);			
-            	return;
-        }
 	    
 	    String sStartingDate = "";
 	    String sEndingDate = "";

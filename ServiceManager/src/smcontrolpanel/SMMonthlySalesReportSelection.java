@@ -32,10 +32,9 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 	public static final String PRINTINDIVIDUAL_VALUE_YES = "YES";
 	public static final String PRINTINDIVIDUAL_VALUE_NO = "NO";
 	public static final String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
-	public static final String CHECKALLSALESPERSONSBUTTON = "CheckAllSalespersons";
 	public static final String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
-	public static final String UNCHECKALLSALESPERSONSBUTTON = "UnCheckAllSalespersons";
 	public static final String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
+
 	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
@@ -96,6 +95,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	    out.println(SMUtilities.getDatePickerIncludeString(getServletContext()));
+	    out.println(getJavaScript());
 	    
 	    String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		if (! sWarning.equalsIgnoreCase("")){
@@ -244,16 +244,17 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		if (bPrintIndividual){
 			out.println("<INPUT TYPE=HIDDEN NAME='SALESPERSON" + sIndividualSalesperson + "' VALUE='" + sIndividualSalesperson + "'>");
 		}else{
-			out.println("<B><U>Including salespersons*:</U></B>"
-				+ "&nbsp;&nbsp;"
-				+ "<INPUT TYPE=\"SUBMIT\" NAME = \"" 
-				+ UNCHECKALLSALESPERSONSBUTTON 
-				+ "\" VALUE=\"" + UNCHECKALLSALESPERSONSLABEL + "\">"
-				+ "&nbsp;&nbsp;"
-				+ "<INPUT TYPE=\"SUBMIT\" NAME = \"" 
-				+ CHECKALLSALESPERSONSBUTTON 
-				+ "\" VALUE=\"" + CHECKALLSALESPERSONSLABEL + "\">"
-			);
+			out.println("<B><U>Including salespersons*:</U></B>");
+			
+			out.println("&nbsp;&nbsp;");
+			out.println("<input type=\"button\""
+				+ " value=\"" + UNCHECKALLSALESPERSONSLABEL + "\""
+				+ " onclick=\"checkboxes(false)\">");
+			
+			out.println(" &nbsp;&nbsp;");
+			out.println("<input type=\"button\""
+				+ " value=\"" + CHECKALLSALESPERSONSLABEL + "\""
+				+ " onclick=\"checkboxes(true)\">");
 			
 			//Add table of salespeople:
 			
@@ -297,9 +298,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 				String sFirstName = "";
 				String sLastName = "";
 				String sCheckedStatus = " checked=\"Yes\""; 
-				if (clsManageRequestParameters.get_Request_Parameter(UNCHECKALLSALESPERSONSBUTTON, request).compareToIgnoreCase("") != 0){
-					sCheckedStatus = ""; 
-				}
+
 				while (rs.next()){
 					if (rs.getString(SMTablesalesperson.sSalespersonFirstName) == null){
 						sFirstName = "";
@@ -314,7 +313,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 					
 					sSalespersonList.add((String) "<LABEL NAME=\"SALESPERSONLABEL" + rs.getString(SMTableorderheaders.sSalesperson) + " \" >"
 							+ "<INPUT TYPE=CHECKBOX " + sCheckedStatus  
-		        			+ " NAME=\"SALESPERSON" 
+							+ " NAME=\"SALESPERSON" 
 		        			+ rs.getString(SMTableorderheaders.sSalesperson) 
 		        			+ "\">" 
 		        			+ rs.getString("SALESPERSON")
@@ -366,6 +365,25 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 			//No need to do anything here - we'll return an empty string
 		}
 		return sSalesPerson;
+	}
+	
+	public String getJavaScript() {
+		String s = "<script>";
+		
+		//check or uncheck salesperson:
+		s += "function checkboxes(bcheck){\n"
+			+ " var inputs = document.getElementsByTagName(\"input\");\n"  
+			+ "	for(var i = 0; i < inputs.length; i++) {\n"  
+			+ "    if(inputs[i].type == \"checkbox\") {\n"
+			+ "       if(inputs[i].name.includes(\"SALESPERSON\")){\n"
+			+ "         inputs[i].checked = bcheck;\n"
+			+ "		  }\n"  
+			+ "    }\n" 
+			+ " }\n"	
+		  +"};\n";
+		
+		 s += "</script>";
+		return s;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

@@ -321,7 +321,7 @@ public class SMViewTruckScheduleSelection  extends HttpServlet {
 			out.println("</TR>");
 		}catch(SQLException ex){
 			//handle any errors
-			out.println("Error reading mechanics - " + ex.getMessage() + "<BR>");
+			out.println("Error reading technicians - " + ex.getMessage() + "<BR>");
 		}
 			
 		//Add a checkbox for editing:

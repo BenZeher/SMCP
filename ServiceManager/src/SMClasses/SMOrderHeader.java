@@ -4471,7 +4471,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			"MySQL", 
 			this.toString() + ".setMechanics - user: " + sUser);
 		if (conn == null){
-			throw new SQLException("Could not get connection to set mechanics.");
+			throw new SQLException("Could not get connection to set technicians.");
 		}
 		
 		setM_strimmedordernumber(sTrimmedOrderNumber);
@@ -4501,7 +4501,7 @@ public class SMOrderHeader extends clsMasterEntry{
 					sMechanicFullName = rsMechanicInfo.getString(SMTablemechanics.sMechFullName);
 				}else{
 					throw new SQLException(
-						"Error [1413813719] - Failed to get mechanic info in SMOrderHeader.setMechanics() with ID: '" 
+						"Error [1413813719] - Failed to get technician info in SMOrderHeader.setMechanics() with ID: '" 
 						+ sSelectedMechanicID + "'.");
 				}
 				rsMechanicInfo.close();
@@ -4519,7 +4519,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			log.writeEntry(
 					sUserID, 
 					SMLogEntry.LOG_OPERATION_SMSETDETAILMECHANICSFAIL,
-					"On order number '" + sTrimmedOrderNumber + "', failed to set mechanics for detail lines: " 
+					"On order number '" + sTrimmedOrderNumber + "', failed to set technicians for detail lines: " 
 						+ sSelectedLines + ".",
 					"ERROR: " + e.getMessage(),
 					"[1376509300]");
@@ -4530,9 +4530,9 @@ public class SMOrderHeader extends clsMasterEntry{
 			log.writeEntry(
 					sUserID, 
 				SMLogEntry.LOG_OPERATION_SMSETDETAILMECHANICSSSUCCEED,
-				"On order number '" + sTrimmedOrderNumber + "', successfully set mechanics for  detail lines: " 
+				"On order number '" + sTrimmedOrderNumber + "', successfully set technicians for  detail lines: " 
 					+ sSelectedLines + " above line number: " + sSelectedLines + ".",
-				"SUCCESSFUL SETTING ORDER LINE MECHANICS",
+				"SUCCESSFUL SETTING ORDER LINE TECHNICIANS",
 				"[1376509301]");
 		}
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067746]");

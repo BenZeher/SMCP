@@ -887,7 +887,7 @@ public class SMDeliveryTicket extends clsMasterEntry{
 
         m_smechanicname = m_smechanicname.trim();
         if (m_smechanicname.length() > SMTabledeliverytickets.smechanicnamelength){
-        	sErrors += "Mechanic's name cannot be more than " + Integer.toString(SMTabledeliverytickets.smechanicnamelength) + " characters.  ";
+        	sErrors += "Technician's name cannot be more than " + Integer.toString(SMTabledeliverytickets.smechanicnamelength) + " characters.  ";
         }
         
         m_stermscode = m_stermscode.trim();

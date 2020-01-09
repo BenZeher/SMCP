@@ -40,7 +40,7 @@ public class SMEditMechanicsRemove extends HttpServlet{
 	    String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 	    String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
 	    String sUser = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_USERNAME);
-	    String title = "Remove Mechanics";
+	    String title = "Remove Technicians";
 	    String subtitle = "";
 	    out.println(SMUtilities.SMCPTitleSubBGColor(
 	    	title, 
@@ -72,7 +72,7 @@ public class SMEditMechanicsRemove extends HttpServlet{
 					SMUtilities.getFullClassName(this.toString() + " - user: " + sUser)
 				);
 			} catch (SQLException e) {
-				out.println("Error deleting mechanic with SQL: " + sSQL + " - " + e.getMessage() + ".<BR>");
+				out.println("Error deleting technician with SQL: " + sSQL + " - " + e.getMessage() + ".<BR>");
 				out.println("</BODY></HTML>");
 				return;
 			}

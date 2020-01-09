@@ -452,7 +452,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 						);
 			} catch (SQLException e) {
 				smaction.redirectAction(
-						"Error setting mechanics - " + e.getMessage(), 
+						"Error setting technicians - " + e.getMessage(), 
 						"", 
 						SMOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
 					);
@@ -460,7 +460,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 			}
 			smaction.redirectAction(
 				"", 
-				"Successfully set detail mechanics", 
+				"Successfully set detail technicians", 
 				SMOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
 			);
 			return;
@@ -495,7 +495,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 						);
 			} catch (SQLException e) {
 				smaction.redirectAction(
-						"Error setting mechanics - " + e.getMessage(), 
+						"Error setting technicians - " + e.getMessage(), 
 						"", 
 						SMOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
 					);
@@ -522,7 +522,7 @@ public class SMOrderDetailListAction extends HttpServlet{
 			
 			smaction.redirectAction(
 				"", 
-				"Successfully set detail mechanics and shipped order lines", 
+				"Successfully set detail technicians and shipped order lines", 
 				SMOrderHeader.Paramstrimmedordernumber + "=" + entry.getM_strimmedordernumber()
 			);
 			return;

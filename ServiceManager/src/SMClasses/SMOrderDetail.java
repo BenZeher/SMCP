@@ -390,7 +390,7 @@ public class SMOrderDetail extends clsMasterEntry{
 				}
 				rsMechanic.close();
 			} catch (SQLException e) {
-				super.addErrorMessage("Error reading mechanics with SQL: " + SQL + " - " + e.getMessage());
+				super.addErrorMessage("Error reading technicians with SQL: " + SQL + " - " + e.getMessage());
 				bLineIsValid = false;
 			}
     	}else{
@@ -899,8 +899,8 @@ public class SMOrderDetail extends clsMasterEntry{
     	sResult += "\nItem number: " + getM_sItemNumber();
     	sResult += "\nLabel: " + getM_sLabel();
     	sResult += "\nLocation: " + getM_sLocationCode();
-    	sResult += "\nMechanic full name: " + getM_sMechFullName();
-    	sResult += "\nMechanic initials: " + getM_sMechInitial();
+    	sResult += "\nTechnician full name: " + getM_sMechFullName();
+    	sResult += "\nTechnician initials: " + getM_sMechInitial();
     	sResult += "\nMech ID: " + this.getM_sMechID();
     	sResult += "\nOrder unit of measure: " + getM_sOrderUnitOfMeasure();
     	sResult += "\nTrimmed order number: " + getM_strimmedordernumber();

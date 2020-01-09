@@ -160,7 +160,7 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 				entry.setdattimeleftprevious("00/00/0000 00:00 AM");
 				sResultString = "Successfully COPIED work order for order '" 
 						+ entry.getstrimmedordernumber() 
-						+ "' - mechanic " + entry.getmechanicsname()
+						+ "' - technician " + entry.getmechanicsname()
 						+ " from " + sOriginalDate.replace("/", "-") + " to " + entry.getsscheduleddate().replace("/", "-") + "."
 					;
 				break;
@@ -168,7 +168,7 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 				entry.setsjoborder(Integer.toString(Integer.parseInt(entry.getsjoborder()) + 1) );
 				sResultString = "Successfully MOVED work order for order '" 
 						+ entry.getstrimmedordernumber() 
-						+ "' - mechanic " + entry.getmechanicsname()
+						+ "' - technician " + entry.getmechanicsname()
 						+ " DOWN on " + entry.getsscheduleddate().replace("/", "-") + "."
 					;
 				break;
@@ -191,7 +191,7 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 				}
 				sResultString = "Successfully MOVED work order for order '" 
 						+ entry.getstrimmedordernumber() 
-						+ "' - mechanic " + entry.getmechanicsname()
+						+ "' - technician " + entry.getmechanicsname()
 						+ " from " + sOriginalDate.replace("/", "-") + " to " + entry.getsscheduleddate().replace("/", "-") + "."
 					;
 				break;
@@ -214,7 +214,7 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 				}
 				sResultString = "Successfully MOVED work order for order '" 
 						+ entry.getstrimmedordernumber() 
-						+ "' - mechanic " + entry.getmechanicsname()
+						+ "' - technician " + entry.getmechanicsname()
 						+ " from " + sOriginalDate.replace("/", "-") + " to " + entry.getsscheduleddate().replace("/", "-") + "."
 					;
 				break;
@@ -224,14 +224,14 @@ public class SMTruckScheduleEditHandler extends HttpServlet{
 					iJobOrder = iJobOrder - 1;
 					sResultString = "Successfully MOVED work order for order '" 
 							+ entry.getstrimmedordernumber() 
-							+ "' - mechanic " + entry.getmechanicsname()
+							+ "' - technician " + entry.getmechanicsname()
 							+ " UP on " + entry.getsscheduleddate().replace("/", "-") + "."
 						;
 				}else{
 					iJobOrder = 1;
 					sResultString = "Work order for order '" 
 							+ entry.getstrimmedordernumber() 
-							+ "' - mechanic " + entry.getmechanicsname()
+							+ "' - technician " + entry.getmechanicsname()
 							+ " was ALREADY the first entry on " + entry.getsscheduleddate().replace("/", "-") 
 							+ ", so it was NOT moved."
 						;

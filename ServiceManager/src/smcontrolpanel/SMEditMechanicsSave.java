@@ -38,7 +38,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 		HttpSession CurrentSession = request.getSession(true);
 		String sDBID = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_DATABASE_ID);
 		String sCompanyName = (String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_COMPANYNAME);
-		String title = "Manage Mechanics";
+		String title = "Manage Technicians";
 		String subtitle = "";
 		out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 
@@ -55,7 +55,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 			|| (request.getParameter("MECHANICID").compareTo("") == 0)
 		){
 			out.println ("<BR>");
-			out.println ("<H4>Invalid input - Mechanic's name and initials must BOTH have a value - Please try again.</H4><BR>");
+			out.println ("<H4>Invalid input - Technician's name and initials must BOTH have a value - Please try again.</H4><BR>");
 		}else{
 			//IF it's an 'ADD':
 			String sSQL;
@@ -72,7 +72,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 						iCol = rsCoor.getInt(SMTablecolortable.icol);
 					}
 				}catch(SQLException ex){
-					System.out.println("[1345120679] Error retrieving color coordinates for mechanic " + request.getParameter("MECHNAME"));
+					System.out.println("[1345120679] Error retrieving color coordinates for technician " + request.getParameter("MECHNAME"));
 					System.out.println("[1345120779] SQLException: " + ex.getErrorCode() + " - " + ex.getMessage());
 				}
 				
@@ -102,7 +102,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 				try {
 					clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
 				} catch (SQLException e) {
-					out.println("Error inserting mechanics with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
+					out.println("Error inserting technicians with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
 				}
 			}else{
 				
@@ -119,7 +119,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 						iCol = rsCoor.getInt(SMTablecolortable.icol);
 					}
 				}catch(SQLException ex){
-					System.out.println("[1345120679] Error retrieving color coordinates for mechanic " + request.getParameter("MECHNAME"));
+					System.out.println("[1345120679] Error retrieving color coordinates for technician " + request.getParameter("MECHNAME"));
 					System.out.println("[1345120879] SQLException: " + ex.getErrorCode() + " - " + ex.getMessage());
 				}
 				
@@ -156,7 +156,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 			try {
 				clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
 			} catch (SQLException e) {
-				out.println("Error deleting from mechanics service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
+				out.println("Error deleting from technicians service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
 			}
 			
 			//Insert all the selected service types if any were selected.
@@ -173,7 +173,7 @@ public class SMEditMechanicsSave extends HttpServlet{
 				try {
 					clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID, "MySQL", SMUtilities.getFullClassName(this.toString()));
 				} catch (SQLException e) {
-					out.println("Error inserting mechanics service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
+					out.println("Error inserting technicians service type with SQL: " + sSQL + " - " + e.getMessage() + "<BR>");
 				}
 			}
 		}	  

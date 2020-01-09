@@ -1475,7 +1475,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 		pwOut.println("<TD><FONT SIZE=2><B>DESCRIPTION</B></FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2><B>CAT.</B></FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2><B>LOC.</B></FONT></TD>");
-		pwOut.println("<TD><FONT SIZE=2><B>MECHANIC</B></FONT></TD>");
+		pwOut.println("<TD><FONT SIZE=2><B>TECHNICIAN</B></FONT></TD>");
 		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>QTY</B></FONT></TD>");
 		pwOut.println("<TD><FONT SIZE=2><B>UNIT</B></FONT></TD>");
 		pwOut.println("<TD ALIGN=RIGHT><FONT SIZE=2><B>COST</B></FONT></TD>");

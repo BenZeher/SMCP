@@ -1251,7 +1251,7 @@ public class SMSystemFunctions extends java.lang.Object{
 						+ "&" + SMViewTruckScheduleSelection.LOOKUPMECHANIC_PARAMETER + "=Y"
 						+ "&" + SMViewTruckScheduleSelection.VIEWALLLOCATIONS_PARAMETER + "=Y"
 						+ "&" + SMViewTruckScheduleSelection.VIEWALLSERVICETYPES_PARAMETER + "=Y"
-				); arrFunctionDescriptions.add("Required for a mechanic to view his individual truck schedule.");
+				); arrFunctionDescriptions.add("Required for a technician to view his individual truck schedule.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
 			arrFunctions.add("IC Find Items With Vendor Item Numbers");
@@ -1572,7 +1572,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("SM Edit Work Orders"); 
 			arrFunctionIDs.add(SMEditWorkOrders); 
 			arrFunctionLinks.add(""); 
-			arrFunctionDescriptions.add("Required to access the 'Edit work order' screen, typically used by mechanics in the field to enter work done and items used.");
+			arrFunctionDescriptions.add("Required to access the 'Edit work order' screen, typically used by technicians in the field to enter work done and items used.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
 			arrFunctions.add("IC Confirm Purchase Orders"); 
@@ -1620,7 +1620,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("SM Edit Work Order Detail Sheets"); 
 			arrFunctionIDs.add(SMEditDetailSheets); 
 			arrFunctionLinks.add("smcontrolpanel.SMDetailSheetSelect"); 
-			arrFunctionDescriptions.add("Required to maintain work order 'detail sheets', which typically are used for customized checklists for mechanics to fill out or check off on work orders.");
+			arrFunctionDescriptions.add("Required to maintain work order 'detail sheets', which typically are used for customized checklists for technicians to fill out or check off on work orders.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
 			arrFunctions.add("BK Edit Statements"); 
@@ -1659,7 +1659,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(SMInitiateMaterialReturns); 
 			arrFunctionLinks.add(""); 
 			arrFunctionDescriptions.add("Required to originate 'Material Returns', which are records of material that was returned from jobs, awaiting disposition (e.g., to be"
-					+ "returned to the vendor, to be replaced, to be scrapped, etc'). This permission is typically granted to mechanics so they can generate material returns from work"
+					+ "returned to the vendor, to be replaced, to be scrapped, etc'). This permission is typically granted to technicians so they can generate material returns from work"
 					+ " orders in the field.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
@@ -1845,7 +1845,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctions.add("SM Display Most Used Items On Work Order"); 
 			arrFunctionIDs.add(SMDisplayMostUsedItemsOnWorkOrder); 
 			arrFunctionLinks.add(""); 
-			arrFunctionDescriptions.add("Enables the function to display the mechanics most commonly used items on the work order edit screen.");
+			arrFunctionDescriptions.add("Enables the function to display the technicians most commonly used items on the work order edit screen.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
 			arrFunctions.add("SM Edit Location On Work Order Detail"); 

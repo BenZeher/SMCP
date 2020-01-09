@@ -207,7 +207,7 @@ public class SMViewUserSessionInformation  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Default salesperson code:", sDefaultSalespersonCode, "Your salesperson code (if you have one).", bOddRow));
 		bOddRow = !bOddRow;
-		out.println(createRow("Your mechanic initials:", sMechanicInitials, "Your initials as a mechanic in the system (if applicable).", bOddRow));
+		out.println(createRow("Your technician initials:", sMechanicInitials, "Your initials as a technician in the system (if applicable).", bOddRow));
 		bOddRow = !bOddRow;
 		out.println(createRow("Your security groups:", sSecurityGroups.replace(",", "<BR>"), "System security groups of which you are a member.", bOddRow));
 		bOddRow = !bOddRow;

@@ -279,7 +279,7 @@ public class SMStatistics extends HttpServlet {
 	     	rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	     	rs.first();
             out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
-	     	out.println ("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">Number of mechanics in system: " + rs.getLong("CNT") + ".</TD></TR>" );
+	     	out.println ("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\">Number of technicians in system: " + rs.getLong("CNT") + ".</TD></TR>" );
 	     	rs.close();
 	     	
 	     	sSQL = "SELECT COUNT(*) as CNT FROM " + SMTablesalescontacts.TableName

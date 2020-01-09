@@ -210,7 +210,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 		s += "<TH class = \" querylineheadingcenter \">Import?</TH>";
 		s += "<TH class = \" querylineheadingright \">Work Order ID</TH>";
 		s += "<TH class = \" querylineheadingleft \">Date</TH>";
-		s += "<TH class = \" querylineheadingleft \">Mechanic</TH>";
+		s += "<TH class = \" querylineheadingleft \">Technician</TH>";
 
 		String SQL = "SELECT"
 			+ " * FROM " + SMTableworkorders.TableName

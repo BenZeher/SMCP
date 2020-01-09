@@ -1404,7 +1404,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 
 		//SMTableworkorders.imechid
 		//Load the mechanics and job types:
-		s += "&nbsp;&nbsp;<B>Mechanic<FONT COLOR=\"RED\">*</FONT>:</B>&nbsp;";
+		s += "&nbsp;&nbsp;<B>Technician<FONT COLOR=\"RED\">*</FONT>:</B>&nbsp;";
 		if (wo.isWorkOrderPosted()){
 			s += wo.getmechanicsname()
 				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMWorkOrderHeader.Paramimechid + "\""
@@ -1439,7 +1439,7 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 				ArrayList<String> sUnassignedDescriptions = new ArrayList<String>();
 				//First, add a blank to make sure the user selects one:
 				sValues.add("");
-				sDescriptions.add("-- Select a mechanic --");
+				sDescriptions.add("-- Select a technician --");
 				boolean bMechExist = false;
 
 				while (rsMechanics.next()){

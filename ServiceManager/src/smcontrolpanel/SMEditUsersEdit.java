@@ -328,7 +328,7 @@ public class SMEditUsersEdit extends HttpServlet {
 			rsMechanics.close();
 		    //End the drop down list:
 		    sOutPut += "</SELECT></TD>";
-		    sOutPut += "<TD ALIGN=LEFT>Choose the mechanic associated with this user.</TD>";
+		    sOutPut += "<TD ALIGN=LEFT>Choose the technician associated with this user.</TD>";
 		    sOutPut += "</TR>";
 
 		}catch (SQLException ex){

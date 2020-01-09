@@ -2082,7 +2082,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			+ "*** Work Order Information" 
 			+ "\nOrder Number: " + getstrimmedordernumber()
 			+ "\nWork Order: " + getlid()
-			+ "\nMechanic's Name: " + getmechanicsname()
+			+ "\nTechnician's Name: " + getmechanicsname()
 			+ "\nTime Done: " + getdattimedone()
 			+ "\nBill To Name: " + smOrder.getM_sBillToName()
 			+ "\nShip To Name: " + smOrder.getM_sShipToName()
@@ -2250,11 +2250,11 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setmechanicsinitials(rs.getString(SMTablemechanics.sMechInitial));
 				setmechanicsname(rs.getString(SMTablemechanics.sMechFullName));
 			}else{
-				throw new Exception("Error [1391540167] mechanic with ID '" + getmechid() + "' not found.");
+				throw new Exception("Error [1391540167] technician with ID '" + getmechid() + "' not found.");
 			}
 			rs.close();
 		} catch (SQLException e) {
-			throw new Exception("Error [1391540168] updating mechanic info - " + e.getMessage());
+			throw new Exception("Error [1391540168] updating technician info - " + e.getMessage());
 		}
 	}
 	private void load_lines (Connection conn) throws Exception{
@@ -2558,11 +2558,11 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			lID = Long.parseLong(getmechid());
 		} catch (NumberFormatException e) {
 			bValid = false;
-			sErrors += "Invalid mechanic ID: '" + getmechid() + "'.  ";
+			sErrors += "Invalid technician ID: '" + getmechid() + "'.  ";
 		}
     	if (lID < -1){
     		bValid = false;
-    		sErrors += "Invalid mechanic ID: '" + getmechid() + "'.  ";
+    		sErrors += "Invalid technician ID: '" + getmechid() + "'.  ";
     	}
     	updateMechanicInfo(conn);
         
@@ -2655,7 +2655,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 		}
         
         if (getmechid().compareTo("0")==0){
-        	sErrors += "Mechanic not selected.  ";
+        	sErrors += "Technician not selected.  ";
         	bValid = false;
         }
         
@@ -2857,7 +2857,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
     		SMLogEntry.LOG_OPERATION_SMDELETEWO, 
     		"Deleted WO " + getlid(), 
     		"Order #: " + getstrimmedordernumber()
-    		+ ", mechanic: " + getmechanicsname()
+    		+ ", technician: " + getmechanicsname()
     		,
     		"[1392154145]");
     	if (WebContextParameters.getLogWorkOrderUpdates(context).compareToIgnoreCase("True") == 0){
@@ -3580,7 +3580,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 			if (s.compareToIgnoreCase("") != 0){
 				s += "<BR>";
 			}
-			s += "<B><I>Mechanic comments for customer: </I></B>" + sMechanicComments.replace("\n", "<BR>"); 
+			s += "<B><I>Technician comments for customer: </I></B>" + sMechanicComments.replace("\n", "<BR>"); 
 		}
 		String sWorkOrderAdditionalWork = sWorkOrderAdditionalWorkComments;
 		if (sWorkOrderAdditionalWork == null){

@@ -251,7 +251,7 @@ public class SMDetailSheetEdit extends HttpServlet {
 		}
 		pwOut.println("</TD>\n"
 				+ "<TD ALIGN=LEFT>Simple text will just appear on the work order; "
-				+ SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + " will create a new form each time for the mechanic to enter detail sheet information.</TD>\n"
+				+ SMTableworkorderdetailsheets.WEB_ENTRY_FORM_LABEL + " will create a new form each time for the technician to enter detail sheet information.</TD>\n"
 				+ "</TR>\n"
 			);
 

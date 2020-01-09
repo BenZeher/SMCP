@@ -34,6 +34,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 	public static final String INDIVIDUALSALESPERSON_PARAMETER = "INDIVIDUALSALESPERSON";
 	public static final String CHECKALLSALESPERSONSLABEL = "CHECK All Salespersons";
 	public static final String UNCHECKALLSALESPERSONSLABEL = "UNCHECK All Salespersons";
+	public static final String SALESPERSONMARKER = "SALESPERSON";
 
 	
 	public void doPost(HttpServletRequest request,
@@ -242,7 +243,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 		out.println("</TABLE><BR>");
 		
 		if (bPrintIndividual){
-			out.println("<INPUT TYPE=HIDDEN NAME='SALESPERSON" + sIndividualSalesperson + "' VALUE='" + sIndividualSalesperson + "'>");
+			out.println("<INPUT TYPE=HIDDEN NAME='" + SALESPERSONMARKER + sIndividualSalesperson + "' VALUE='" + sIndividualSalesperson + "'>");
 		}else{
 			out.println("<B><U>Including salespersons*:</U></B>");
 			
@@ -313,7 +314,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 					
 					sSalespersonList.add((String) "<LABEL NAME=\"SALESPERSONLABEL" + rs.getString(SMTableorderheaders.sSalesperson) + " \" >"
 							+ "<INPUT TYPE=CHECKBOX " + sCheckedStatus  
-							+ " NAME=\"SALESPERSON" 
+							+ " NAME=\"" + SALESPERSONMARKER 
 		        			+ rs.getString(SMTableorderheaders.sSalesperson) 
 		        			+ "\">" 
 		        			+ rs.getString("SALESPERSON")
@@ -375,7 +376,7 @@ public class SMMonthlySalesReportSelection  extends HttpServlet {
 			+ " var inputs = document.getElementsByTagName(\"input\");\n"  
 			+ "	for(var i = 0; i < inputs.length; i++) {\n"  
 			+ "    if(inputs[i].type == \"checkbox\") {\n"
-			+ "       if(inputs[i].name.includes(\"SALESPERSON\")){\n"
+			+ "       if(inputs[i].name.includes(\"" + SALESPERSONMARKER + "\")){\n"
 			+ "         inputs[i].checked = bcheck;\n"
 			+ "		  }\n"  
 			+ "    }\n" 

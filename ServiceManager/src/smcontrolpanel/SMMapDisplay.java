@@ -200,7 +200,7 @@ public class SMMapDisplay extends HttpServlet {
 		}
 		SQL += ")";
 		
-		System.out.println(SQL);
+		//System.out.println(SQL);
 		ResultSet rs = clsDatabaseFunctions.openResultSet(
 				SQL, 
 				context, 

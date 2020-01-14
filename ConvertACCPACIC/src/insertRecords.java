@@ -579,7 +579,7 @@ public class insertRecords extends java.lang.Object{
 			return false;			
 		}
 
-		System.out.println("Successfully updated icaccountsets - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025020] Successfully updated icaccountsets - " + getElapsedTime(lStartingTime));
 		//iccategories:
 		SQL =
 			"SELECT *"
@@ -633,7 +633,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating iccategories with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated iccategories - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025027] Successfully updated iccategories - " + getElapsedTime(lStartingTime));
 		//icitems:
 		//Don't pick up any items with spaces in them:
 		SQL =
@@ -743,7 +743,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating icitems with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icitems - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025030] Successfully updated icitems - " + getElapsedTime(lStartingTime));
 		//Update the most recent cost:
 		SQL = "SELECT"
 			+ " * FROM ICILOC"
@@ -778,7 +778,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating most recent cost with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated MRC - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025034] Successfully updated MRC - " + getElapsedTime(lStartingTime));
 		//vendor items:
 		SQL =
 			"SELECT"
@@ -854,7 +854,7 @@ public class insertRecords extends java.lang.Object{
 		}catch (Exception ex) {
 			m_sErrorMessage = "Error dropping icvendoritems_temp table with SQL: " + SQL;
 		}
-		System.out.println("Successfully updated icvendoritems - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025037] Successfully updated icvendoritems - " + getElapsedTime(lStartingTime));
 		//item locations:
 		SQL =
 			"SELECT"
@@ -893,7 +893,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating ic item locations with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icitemlocations - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025040] Successfully updated icitemlocations - " + getElapsedTime(lStartingTime));
 
 		//Having a lot of trouble with Pervasive error "LNA Session Closed", so we are going to try to 
 		//bring the table into MySQL, then do the updates from there:
@@ -1135,7 +1135,7 @@ public class insertRecords extends java.lang.Object{
 		} catch (SQLException e1) {
 			m_sErrorMessage = "Error dropping ICILOC table - " + e1.getMessage() + SQL;
 		}
-		System.out.println("Successfully updated iccosts. - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025043] Successfully updated iccosts. - " + getElapsedTime(lStartingTime));
 		//icitemprices
 		//Notes:
 		//Base Price Type in ACCPAC is ICPRIC.BPRICETYPE
@@ -1411,7 +1411,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error dropping ICPRICP table " + SQL + " - " + ex.getMessage();
 			return false;
 		}
-		System.out.println("Successfully updated icitemprices - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025047] Successfully updated icitemprices - " + getElapsedTime(lStartingTime));
 		//ic item statistics:
 		SQL =
 			"SELECT"
@@ -1474,8 +1474,8 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating ic item statistics with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icitemstatistics - " + getElapsedTime(lStartingTime));
-		//System.out.println("Updated " + lCounter + " ic item statistics - " 
+		System.out.println("[1579025050] Successfully updated icitemstatistics - " + getElapsedTime(lStartingTime));
+		//System.out.println("[WORD] Updated " + lCounter + " ic item statistics - " 
 		//	+ SMUtilities.getElapsedTime(lStartingTime) + " elapsed.");
 
 		//icvendorterms:
@@ -1535,7 +1535,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating icvendorterms with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icvendorterms - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025053] Successfully updated icvendorterms - " + getElapsedTime(lStartingTime));
 
 		return true;
 	}
@@ -1712,7 +1712,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating PO Lines with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icpolines - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025056] Successfully updated icpolines - " + getElapsedTime(lStartingTime));
 		//Update the po line instructions from POPORC:
 		// PORHSEQ is the same as POPORH1.PORHSEQ
 		// PORCREV is the sequence for line number
@@ -1772,7 +1772,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating PO Line instructions with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated PO line instructions - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025059] Successfully updated PO line instructions - " + getElapsedTime(lStartingTime));
 		return true;
 	}
 	public boolean convertPOHeaderData(
@@ -1882,7 +1882,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating ic vendors with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icvendors - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025061] Successfully updated icvendors - " + getElapsedTime(lStartingTime));
 		//PO Ship Vias:
 		sTable = "icshipvias";
 		if (!dropTable(conn, sTable, sUserName)){
@@ -1929,7 +1929,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating IC PO Ship Vias with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully updated icshipvias - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025063] Successfully updated icshipvias - " + getElapsedTime(lStartingTime));
 		//PO Headers:
 		sTable = "icpoheaders";
 		if (!dropTable(conn, sTable, sUserName)){
@@ -2062,7 +2062,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating PO Headers with SQL: " + e.getMessage();
 			return false;			
 		}
-		//System.out.println("Successfully inserted " + lCounter + " PO Headers - " 
+		//System.out.println("[WORD] Successfully inserted " + lCounter + " PO Headers - " 
 		//		+ SMUtilities.getElapsedTime(lStartingTime) + " elapsed.");
 
 		if (!dropTable(conn, "poporh2", sUserName)){
@@ -2271,7 +2271,7 @@ public class insertRecords extends java.lang.Object{
 		} catch (SQLException e) {
 			m_sErrorMessage = "Error dropping temporary table poporh2 with SQL: " + SQL + " - " + e.getMessage();
 		}
-		System.out.println("Successfully updated icpoheaders from POPORH2 - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025067] Successfully updated icpoheaders from POPORH2 - " + getElapsedTime(lStartingTime));
 		return true;
 	}
 	public boolean convertPOReceiptData(
@@ -2363,7 +2363,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating PO Receipt Headers with SQL: " + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully inserted " + lCounter + " PO Receipt Headers - " 
+		System.out.println("[1579025070] Successfully inserted " + lCounter + " PO Receipt Headers - " 
 				+ getElapsedTime(lStartingTime) + " elapsed.");
 
 		//Update the PO ID's:
@@ -2381,7 +2381,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated icporeceiptheaders with po id - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025072] Successfully updated icporeceiptheaders with po id - " + getElapsedTime(lStartingTime));
 		//PO Receipt Lines:
 		sTable = "icporeceiptlines";
 		if (!dropTable(conn, sTable, sUserName)){
@@ -2509,7 +2509,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error updating PO Receipt Lines with SQL: " + SQL + e.getMessage();
 			return false;			
 		}
-		System.out.println("Successfully inserted " + lCounter + " PO Receipt Lines - " 
+		System.out.println("[1579025074] Successfully inserted " + lCounter + " PO Receipt Lines - " 
 				+ getElapsedTime(lStartingTime) + " elapsed.");
 
 		//Update the PO receipt line ID's:
@@ -2527,7 +2527,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated icporeceiptlines with po receipt header - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025077] Successfully updated icporeceiptlines with po receipt header - " + getElapsedTime(lStartingTime));
 		//Have to add this index now because before this, the receipt header ID was zero
 		//and that would have created duplicate keys:
 		SQL = "ALTER TABLE icporeceiptlines ADD UNIQUE KEY`headerlinenokey` (`lreceiptheaderid`, `llinenumber`)";
@@ -2569,7 +2569,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated icporeceiptlines with poinvoice id - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025080] Successfully updated icporeceiptlines with poinvoice id - " + getElapsedTime(lStartingTime));
 		//TJR - commented this out 10/31/2011 - we'll leave it in in case people need to find their old invoice
 		//numbers that were entered in ACCPAC against receipts.
 		//Now we can remove the old 'invoicenumber' from the IC PO Receipt headers, since it's not used
@@ -2604,7 +2604,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated po line id on po receipt lines - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025082] Successfully updated po line id on po receipt lines - " + getElapsedTime(lStartingTime));
 		//Update the iccosts table with the receipt line ID's for the cost buckets:
 		SQL = "UPDATE iccosts, icporeceiptlines, icporeceiptheaders"
 			+ " SET iccosts.lreceiptlineid = icporeceiptlines.lid"
@@ -2622,7 +2622,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated po receipt line id on iccosts - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025086] Successfully updated po receipt line id on iccosts - " + getElapsedTime(lStartingTime));
 		//Update the icporeceiptlines with the correct GL account.  If the line is an inventory item,
 		//we need to get the payables clearing account for the particular line, based on the location:
 		SQL = "UPDATE icporeceiptlines, Locations"
@@ -2641,7 +2641,7 @@ public class insertRecords extends java.lang.Object{
 				+ SQL  + " - " + ex.getMessage();
 			return false;				
 		}
-		System.out.println("Successfully updated po receipt line with payables clearing account - " + getElapsedTime(lStartingTime));
+		System.out.println("[1579025088] Successfully updated po receipt line with payables clearing account - " + getElapsedTime(lStartingTime));
 		//icpoinvoiceheaders:
 		sTable = "icpoinvoiceheaders";
 		if (!dropTable(conn, sTable, sUserName)){
@@ -3032,7 +3032,7 @@ public class insertRecords extends java.lang.Object{
 			m_sErrorMessage = "Error creating " + sTable + " table - " + ex.getMessage();
 			return false;
 		}
-		System.out.println("Successfully created table " + sTable + " - " 
+		System.out.println("[1579025091] Successfully created table " + sTable + " - " 
 				+ getElapsedTime(lStartingTime) + " elapsed.");
 		return true;
 	}
@@ -3064,7 +3064,7 @@ public class insertRecords extends java.lang.Object{
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-			System.out.println("Error updating po line instruction with SQL: " + SQL + " - " + ex.getMessage() + " - " + getElapsedTime(lStartingTime));;
+			System.out.println("[1579025093] Error updating po line instruction with SQL: " + SQL + " - " + ex.getMessage() + " - " + getElapsedTime(lStartingTime));;
 			return false;
 		}
 		return true;
@@ -3104,7 +3104,7 @@ public class insertRecords extends java.lang.Object{
 			return rs;
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset with SQL: " + SQLStatement + " - " 
+			System.out.println("[1579025095] Error opening resultset with SQL: " + SQLStatement + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			throw new SQLException(ex.getMessage());
@@ -3217,7 +3217,7 @@ public class insertRecords extends java.lang.Object{
 			stmt.executeUpdate(SQLStatement);
 			return true;
 		}catch (Exception ex) {
-			System.out.println("Error executing SQL: " + SQLStatement + " - " + ex.getMessage());
+			System.out.println("[1579025097] Error executing SQL: " + SQLStatement + " - " + ex.getMessage());
 			throw new SQLException(ex.getMessage());
 		}
 	}
@@ -3272,7 +3272,7 @@ public class insertRecords extends java.lang.Object{
 		}
 
 		String sResult = "";
-		//System.out.println("SPADCHAR = " + sPadChar);
+		//System.out.println("[WORD] SPADCHAR = " + sPadChar);
 		for (int i = 0; i < iTotalStringLength - sStr.length(); i++){
 			sResult += sPadChar;
 			//System.out.println("sResult = " + sResult);

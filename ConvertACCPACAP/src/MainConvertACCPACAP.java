@@ -115,26 +115,26 @@ public class MainConvertACCPACAP
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				cnSMCP = DriverManager.getConnection("jdbc:mysql://" + sDatabaseURL + ":3306/" + sDatabaseName + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True", sUserName, sPassword);
 			} catch (InstantiationException e) {
-				System.out.println("InstantiationException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579019545] InstantiationException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (IllegalAccessException e) {
-				System.out.println("IllegalAccessException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579019555] IllegalAccessException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (ClassNotFoundException e) {
-				System.out.println("ClassNotFoundException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579019560] ClassNotFoundException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (SQLException e) {
-				System.out.println("SQLException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579019562] SQLException getting MySQL connection - " + e.getMessage());
 				return;
 			}
 		}
 		
 		if (cnSMCP == null){
-			System.out.println("Could not get MySQL connection");
+			System.out.println("[1579019569] Could not get MySQL connection");
 			return;
 		}
 		
-		System.out.println("Successfully got MySQL connection");
+		System.out.println("[1579019576] Successfully got MySQL connection");
 		
 		Connection cnAP = null;
 		
@@ -149,26 +149,26 @@ public class MainConvertACCPACAP
 					Class.forName("com.pervasive.jdbc.v2.Driver").newInstance();
 					cnAP = DriverManager.getConnection("jdbc:pervasive://" + sAPDatabaseURL + ":1583/" + sAPDatabaseName + "", sAPUserName, sAPPassword);
 				} catch (InstantiationException e) {
-					System.out.println("InstantiationException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579019581] InstantiationException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (IllegalAccessException e) {
-					System.out.println("IllegalAccessException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579019585] IllegalAccessException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (ClassNotFoundException e) {
-					System.out.println("ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024456] ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (SQLException e) {
-					System.out.println("SQLException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024460] SQLException getting ACCPAC connection - " + e.getMessage());
 					return;
 				}
 			}
 			
 			if (cnAP == null){
-				System.out.println("Could not get Pervasive connection");
+				System.out.println("[1579024466] Could not get Pervasive connection");
 				return;
 			}
 			
-			System.out.println("Successfully got Pervasive connection");
+			System.out.println("[1579024471] Successfully got Pervasive connection");
 		//If we're reading an MS SQL DB:
 		}else{
 			try
@@ -185,26 +185,26 @@ public class MainConvertACCPACAP
 					//String Url = "jdbc:sqlserver://localhost:1433;databaseName=movies";
 			        //Connection connection = DriverManager.getConnection(Url,"sa", "xxxxxxx);
 				} catch (InstantiationException e) {
-					System.out.println("InstantiationException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024478] InstantiationException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (IllegalAccessException e) {
-					System.out.println("IllegalAccessException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024485] IllegalAccessException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (ClassNotFoundException e) {
-					System.out.println("ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024490] ClassNotFoundException getting ACCPAC connection - " + e.getMessage());
 					return;
 				} catch (SQLException e) {
-					System.out.println("SQLException getting ACCPAC connection - " + e.getMessage());
+					System.out.println("[1579024495] SQLException getting ACCPAC connection - " + e.getMessage());
 					return;
 				}
 			}
 			
 			if (cnAP == null){
-				System.out.println("Could not get MSSQL connection");
+				System.out.println("[1579024499] Could not get MSSQL connection");
 				return;
 			}
 			
-			System.out.println("Successfully got MSSQL connection");
+			System.out.println("[1579024503] Successfully got MSSQL connection");
 		}
 		
 		//readPervasiveData(cnAP);
@@ -256,11 +256,11 @@ public class MainConvertACCPACAP
 						ResultSet rscount = stmtcount.executeQuery(SQL1);
 						while(rscount.next()){
 							if (rscount.getLong("TOTALRECORDS") > 0L){
-								System.out.println(sTableName.trim() + ", " + Long.toString(rscount.getLong("TOTALRECORDS")));
+								System.out.println("[1579024513] " + sTableName.trim() + ", " + Long.toString(rscount.getLong("TOTALRECORDS")));
 							}
 						}
 					}catch(Exception ex1){
-						System.out.println("Error opening resultset with SQL1: " + SQL1 + " - " 
+						System.out.println("[1579024524] Error opening resultset with SQL1: " + SQL1 + " - " 
 								+ ex1.toString() + "  *-*  " + ex1.getMessage());
 					}
 				}
@@ -268,7 +268,7 @@ public class MainConvertACCPACAP
 			rs.close();
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset with SQL: " + SQL + " - " 
+			System.out.println("[1579024531] Error opening resultset with SQL: " + SQL + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			//throw new SQLException(ex.getMessage());
@@ -278,7 +278,7 @@ public class MainConvertACCPACAP
 	private static void readPVTableFields(Connection cnPV, String sTableName){
 		String SQL = "select X$Field.* from X$Field, X$File where xe$File = xf$id"
 			+ " and xf$name = '" + sTableName + "' and xe$DataType < 200 order by xe$offset";
-		System.out.println("Table " + sTableName);
+		System.out.println("[1579024535] Table " + sTableName);
 		String sFields = "";
 		ArrayList<String>arrFieldNames = new ArrayList<String>(0);
 		try{
@@ -294,7 +294,7 @@ public class MainConvertACCPACAP
 			rs.close();
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset with SQL: " + SQL + " - " 
+			System.out.println("[1579024543] Error opening resultset with SQL: " + SQL + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			//throw new SQLException(ex.getMessage());
@@ -304,7 +304,7 @@ public class MainConvertACCPACAP
 		
 		//Get the data:
 		SQL = "SELECT * FROM " + sTableName;
-		System.out.println("Sample data:");
+		System.out.println("[1579024548] Sample data:");
 		try{
 			Statement stmt = cnPV.createStatement();
 			ResultSet rs = stmt.executeQuery(SQL);
@@ -313,7 +313,7 @@ public class MainConvertACCPACAP
 				boolean bReachedLastColumn = false;
 				try {
 					while ((rs.getString(i) != null) && (bReachedLastColumn == false)){
-						System.out.println(arrFieldNames.get(i - 1) + ": " + rs.getString(i));
+						System.out.println("[1579024554] " + arrFieldNames.get(i - 1) + ": " + rs.getString(i));
 						i++;
 					}
 				} catch (Exception e) {
@@ -324,7 +324,7 @@ public class MainConvertACCPACAP
 			rs.close();
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset with SQL: " + SQL + " - " 
+			System.out.println("[1579024572] Error opening resultset with SQL: " + SQL + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			//throw new SQLException(ex.getMessage());
@@ -338,12 +338,12 @@ public class MainConvertACCPACAP
 			Statement stmt = ConnectioncnACCPAC.createStatement();
 			ResultSet rs = stmt.executeQuery(SQL);
 			while (rs.next()){
-				System.out.println("Schedule interval '" + rs.getInt("INTERVAL"));
+				System.out.println("[1579024578] Schedule interval '" + rs.getInt("INTERVAL"));
 			}
 			rs.close();
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset to read schedule interval with SQL: " + SQL + " - " 
+			System.out.println("[1579024582] Error opening resultset to read schedule interval with SQL: " + SQL + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			//throw new SQLException(ex.getMessage());

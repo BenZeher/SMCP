@@ -353,7 +353,7 @@ public class ControllerResponses {
 	//Commands understood by the controller:
 	static void setInputPinListeningStatus(String sRequestString) throws Exception{
 	
-		String sDiagnosticMessage = "Setting input terminal listening status: ";
+		String sDiagnosticMessage = "[1579025544] Setting input terminal listening status: ";
 		
 		String sKeyValuePairs[] = SSUtilities.getKeyValuePairsList(sRequestString);
 		
@@ -393,7 +393,7 @@ public class ControllerResponses {
 		
 		//We just need to create the string of pin active/inactive values and pass it back.
 		//The calling function adds the acknowledgment to the response for us.
-		String sDiagnosticMessage = "Getting input terminal listening status: ";
+		String sDiagnosticMessage = "[1579025610] Getting input terminal listening status: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get listening status sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -428,7 +428,7 @@ public class ControllerResponses {
 	
 		//We just need to create the string of pin active/inactive values and pass it back.
 		//The calling function adds the acknowledgment to the response for us.
-		String sDiagnosticMessage = "Getting terminal activated status: ";
+		String sDiagnosticMessage = "[1579025610] Getting terminal activated status: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get contact status sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -475,7 +475,7 @@ public class ControllerResponses {
 	}
 
 	static void setOutputTerminalContactStatus(String sRequestString) throws Exception{
-		String sDiagnosticMessage = "Setting output pin active status: ";
+		String sDiagnosticMessage = "[1579025610] Setting output pin active status: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to output terminal active status sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -521,7 +521,7 @@ public class ControllerResponses {
 	/*
 	private static String getOutputTerminalRemainingInterval(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting output terminal remaining interval: ";
+		String sDiagnosticMessage = "[1579025610] Getting output terminal remaining interval: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get output terminal remaining duration sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_NAME)
@@ -550,7 +550,7 @@ public class ControllerResponses {
 	*/
 	private static String getLogFileContents(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting contents of log file: ";
+		String sDiagnosticMessage = "[1579025610] Getting contents of log file: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get log file contents sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -595,7 +595,7 @@ public class ControllerResponses {
 
 	private static String getSampleTelnetCommands(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting list of sample telnet commands: ";
+		String sDiagnosticMessage = "[1579025610] Getting list of sample telnet commands: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get list of sample telnet commands sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -611,7 +611,7 @@ public class ControllerResponses {
 	
 	private static String getPinMappings(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting list of Pi pin to terminal mappings: ";
+		String sDiagnosticMessage = "[1579025663] Getting list of Pi pin to terminal mappings: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get list of pin to terminal mappings "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -627,7 +627,7 @@ public class ControllerResponses {
 
 	private static String getConfigFileContents(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting contents of config file: ";
+		String sDiagnosticMessage = "[1579025666] Getting contents of config file: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to get config file sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -673,7 +673,7 @@ public class ControllerResponses {
 
 	private static void updateConfigFile(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Updating contents of config file: ";
+		String sDiagnosticMessage = "[1579025670] Updating contents of config file: ";
 		SecuritySystem.writeControllerLogEntry(
 				"Request to update config file sent by "
 				+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_USER_ID)
@@ -947,7 +947,7 @@ public class ControllerResponses {
 	}
 	static void setFakeInputTerminalContactStatus(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Setting FAKE input terminal contact status: ";
+		String sDiagnosticMessage = "[1579025674] Setting FAKE input terminal contact status: ";
 		
 		String sKeyValuePairs[] = SSUtilities.getKeyValuePairsList(sRequestString);
 		
@@ -977,7 +977,7 @@ public class ControllerResponses {
 	}
 	static void setTestMode(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Setting controller test mode to '" 
+		String sDiagnosticMessage = "[1579025676] Setting controller test mode to '" 
 			+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_TEST_MODE_STATE) + "': ";
 		
 		SecuritySystem.writeControllerLogEntry(
@@ -1051,7 +1051,7 @@ public class ControllerResponses {
 	}
 	static String getTestMode(String sRequestString) throws Exception{
 		
-		String sDiagnosticMessage = "Getting controller test mode state '" 
+		String sDiagnosticMessage = "[1579025678] Getting controller test mode state '" 
 			+ SSUtilities.getKeyValue(sRequestString, SSConstants.QUERY_KEY_TEST_MODE_STATE) + "': ";
 		
 		SecuritySystem.writeControllerLogEntry(

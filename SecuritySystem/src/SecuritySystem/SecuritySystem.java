@@ -76,7 +76,7 @@ public class SecuritySystem {
 		try {
 			SSUtilities.processCommandLine(args);
 		} catch (Exception e1) {
-			System.out.println("Exiting program - " + e1.getMessage());
+			System.out.println("[1579025876] Exiting program - " + e1.getMessage());
 			System.exit(SSConstants.EXIT_ERROR_COULD_NOT_PROCESS_COMMAND_LINE);
 		}
 
@@ -84,7 +84,7 @@ public class SecuritySystem {
 		try {
 			SSUtilities.processConfigFile(m_sConfFileFullName);
 		} catch (Exception e) {
-			System.out.println("Exiting program - " + e.getMessage());
+			System.out.println("[1579025879] Exiting program - " + e.getMessage());
 			System.exit(SSConstants.EXIT_ERROR_COULD_NOT_READ_CONFIG_FILE);
 		}
 
@@ -125,7 +125,7 @@ public class SecuritySystem {
 		
 		//Provision the terminals in the pi:
 		if (bOutDiagnosticsToCommandLine){
-			System.out.println("Provisioning Terminals...");
+			System.out.println("[1579025916] Provisioning Terminals...");
 		}
 		try {
 			m_gpio.provisionTerminals(bUsePiGpioPins);
@@ -138,7 +138,7 @@ public class SecuritySystem {
 		};
 		
 		if (bOutDiagnosticsToCommandLine){
-			System.out.println(m_gpio.getsProvisionedTerminals());
+			System.out.println("[1579025919] " + m_gpio.getsProvisionedTerminals());
 		}
 
 		//Start the listening server:
@@ -153,7 +153,7 @@ public class SecuritySystem {
 				"Error [1463513471] initializing terminal status - " + e1.getMessage() + ".",
 				1);
 
-			System.out.println(e1.getMessage());
+			System.out.println("[1579025937] " + e1.getMessage());
 			//shutdown(e1.getMessage(), SSConstants.EXIT_ERROR_COULD_NOT_SEND_COMMAND);
 		}
 		writeControllerLogEntry(
@@ -169,7 +169,7 @@ public class SecuritySystem {
 				"Error [1486250926] notifying server of startup - " + e1.getMessage() + ".",
 				1);
 
-			System.out.println(e1.getMessage());
+			System.out.println("[1579025952]" + e1.getMessage());
 			//shutdown(e1.getMessage(), SSConstants.EXIT_ERROR_COULD_NOT_SEND_COMMAND);
 		}
 		writeControllerLogEntry(
@@ -254,7 +254,7 @@ public class SecuritySystem {
 	private static void shutdown(String sShutdownMessage, int iExitStatus){
 		//Call gpio unprovisioning here...
 		m_gpio.shutdownGPIO();
-		System.out.println("Exiting program - " + sShutdownMessage);
+		System.out.println("[1579025963] Exiting program - " + sShutdownMessage);
 		writeControllerLogEntry(
 			"Exiting program - " + sShutdownMessage + ".",
 			1);

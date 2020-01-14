@@ -55,7 +55,7 @@ public class ListeningService implements Runnable {
 					3);
 
 			if (bDiagnosticOutputIsOn){
-				System.out.println( "Connection established with: " + clientSocket );
+				System.out.println( "[1579025833] Connection established with: " + clientSocket );
 			}
 			try {
 				is = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
@@ -79,7 +79,7 @@ public class ListeningService implements Runnable {
 					3);
 
 				if (bDiagnosticOutputIsOn){
-					System.out.println( "Received this request through listening socket: '" + sRequestString + "'.");
+					System.out.println( "[1579025842] Received this request through listening socket: '" + sRequestString + "'.");
 				}
 				String sResponseString = "";
 				try {
@@ -94,7 +94,7 @@ public class ListeningService implements Runnable {
 					;
 				}
 				if (bDiagnosticOutputIsOn){
-					System.out.println( "Response to request was: '" + sResponseString + "'.");
+					System.out.println( "[1579025849] Response to request was: '" + sResponseString + "'.");
 				}
 				SecuritySystem.writeControllerLogEntry(
 					"Response to request was: '" + sResponseString + "'.",
@@ -112,7 +112,7 @@ public class ListeningService implements Runnable {
 					3);
 
 				if (bDiagnosticOutputIsOn){
-					System.out.println( "Connection closed." );
+					System.out.println( "[1579025855] Connection closed." );
 				}
 			} catch (IOException e) {
 				String sError = "Error [1458178966] reading command line from socket input stream - " + e.getMessage();

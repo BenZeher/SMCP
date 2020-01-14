@@ -101,7 +101,7 @@ public class ServerRequests {
 		
 		//If we're outputting diagnostic messages, send this one along:
 		if (SecuritySystem.bOutDiagnosticsToCommandLine){
-			System.out.println("Received contact change report on terminal " + sTerminalNumber
+			System.out.println("[1579025981] Received contact change report on terminal " + sTerminalNumber
 				+ " - sending string: \n"
 				+ sServerRequest
 			);
@@ -162,7 +162,7 @@ public class ServerRequests {
 		
 		//If we're outputting diagnostic messages, send this one along:
 		if (SecuritySystem.bOutDiagnosticsToCommandLine){
-			System.out.println("Checking into server"
+			System.out.println("[1579025987] Checking into server"
 				+ " - sending string: \n"
 				+ sServerRequest
 			);
@@ -178,7 +178,7 @@ public class ServerRequests {
 	//Trigger event handler:
 	public static void triggerEventHandler(String sTerminalNumber, String sTriggerType){
 		if (SecuritySystem.bOutDiagnosticsToCommandLine){
-			System.out.println("Input sensor terminal number " + sTerminalNumber + " was triggered.");
+			System.out.println("[1579025993] Input sensor terminal number " + sTerminalNumber + " was triggered.");
 		}
 		
 		//If we are in 'TEST' mode, just activate the output contacts of a specified output..

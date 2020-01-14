@@ -19,23 +19,23 @@ public class WiringTest {
 	static boolean bUsePiGpioPins = true;
 	
     public static void main(String args[]) throws InterruptedException {
-        System.out.println("GPIO Wiring Test started...");
+        System.out.println("[1579026036] GPIO Wiring Test started...");
        
         System.out.println("Provisioning Pins...");
         final gpioHandler gpio = new gpioHandler(bUsePiGpioPins);
         try {
 			gpio.provisionTerminals(bUsePiGpioPins);
 		} catch (Exception e) {
-			System.out.println("Could not provision pins. - " + e.getMessage());
+			System.out.println("[1579026052] Could not provision pins. - " + e.getMessage());
 			System.exit(1);
 		}
          
         if(gpio.getProvisionedGpioOutputArray().length < 5){
-        	System.out.println("Wiring Test needs 5 or more outputs provisioned to run");
+        	System.out.println("[1579026056] Wiring Test needs 5 or more outputs provisioned to run");
         	System.exit(1);
         }
 		
-		System.out.println("Check to make sure all output LEDs are ON..");
+		System.out.println("[1579026061] Check to make sure all output LEDs are ON..");
 
 		for(int i = 0; i < gpio.getProvisionedGpioOutputArray().length; i++){
 			gpio.getProvisionedGpioOutputArray()[i].pulse(5000, PinState.LOW);
@@ -43,7 +43,7 @@ public class WiringTest {
 		
 		Thread.sleep(5080);
 		
-		System.out.println("Adding state change listener to pins...");
+		System.out.println("[1579026066] Adding state change listener to pins...");
 		for(int i = 0; i < gpio.getProvisionedGpioInputArray().length; i++){
 			gpio.getProvisionedGpioInputArray()[i].addListener(new GpioPinListenerDigital() {
             @Override
@@ -52,7 +52,7 @@ public class WiringTest {
             	try{
                 	iPinNumber = Integer.parseInt(event.getPin().getName());
                 }catch (Exception e){
-                	System.out.println("Could not parse pin number" + event.getPin().getName() + " - " + e.getMessage());
+                	System.out.println("[1579026072] Could not parse pin number" + event.getPin().getName() + " - " + e.getMessage());
                 }
                 if (event.getState() == PinState.LOW){
                 	switch(iPinNumber){
@@ -97,7 +97,7 @@ public class WiringTest {
         });
 		}
 		
-		System.out.println("Closing each terminal input will display the binary terminal value on the output LEDs.\n");
+		System.out.println("[1579026077] Closing each terminal input will display the binary terminal value on the output LEDs.\n");
 		
         // keep program running until user aborts (CTRL-C)
         for (;;) {

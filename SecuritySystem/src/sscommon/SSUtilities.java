@@ -42,7 +42,7 @@ public class SSUtilities {
 	}
 	
 	public static void printCommandSyntax(){
-		System.out.println("Command line usage: pass in the config file using the option " + SSConstants.COMMAND_LINE_OPTION_CONFIG_FILE);
+		System.out.println("[1579026093] Command line usage: pass in the config file using the option " + SSConstants.COMMAND_LINE_OPTION_CONFIG_FILE);
 		System.out.println("For Example:");
 		System.out.println("SecuritySystem " + SSConstants.COMMAND_LINE_OPTION_CONFIG_FILE + " /opt/securitysystem/ss.ini\n\n");
 		System.out.println("ADDITIONAL OPTIONS:\n");

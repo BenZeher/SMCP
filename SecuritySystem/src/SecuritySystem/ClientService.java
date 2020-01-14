@@ -75,7 +75,7 @@ public class ClientService
 				3)
 			;
 			if (bOutputDiagnostics){
-				System.out.println("Result from writing client socket: " + sResult);
+				System.out.println("[1579025517] Result from writing client socket: " + sResult);
 			}
 
 			// close the socket, and we're done

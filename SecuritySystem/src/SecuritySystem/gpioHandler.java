@@ -294,25 +294,25 @@ public class gpioHandler extends java.lang.Object{
 			try {
 				gpioProvider0 = new MCP23017GpioProvider(I2CBus.BUS_1, I2C_CHIP_ADDRESS_0x20);
 			} catch (Exception e) {
-				System.out.println("I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x20) + " could not be found on BUS 1. ");
+				System.out.println("[1579025715] I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x20) + " could not be found on BUS 1. ");
 			}
 
 			try {
 				gpioProvider1 = new MCP23017GpioProvider(I2CBus.BUS_1, I2C_CHIP_ADDRESS_0x21);
 			} catch (Exception e) {
-				System.out.println("I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x21) + " could not be found on BUS 1. ");
+				System.out.println("[1579025717] I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x21) + " could not be found on BUS 1. ");
 			}
 
 			try {
 				gpioProvider2 = new MCP23017GpioProvider(I2CBus.BUS_1, I2C_CHIP_ADDRESS_0x22);
 			} catch (Exception e) {
-				System.out.println("I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x22) + " could not be found on BUS 1. ");
+				System.out.println("[1579025720] I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x22) + " could not be found on BUS 1. ");
 			}
 
 			try {
 				gpioProvider3 = new MCP23017GpioProvider(I2CBus.BUS_1, I2C_CHIP_ADDRESS_0x23);
 			} catch (Exception e) {
-				System.out.println("I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x23) + " could not be found on BUS 1. ");
+				System.out.println("[1579025722] I2C address " + Integer.toString(I2C_CHIP_ADDRESS_0x23) + " could not be found on BUS 1. ");
 			}
 
 			//**********************
@@ -997,7 +997,7 @@ public class gpioHandler extends java.lang.Object{
 
 	public void provisionTerminals(boolean bUsePiGpioPins) throws Exception{
 		if (bFakingGPIOInput){
-			System.out.println("Faking like I'm provisioning pins....");
+			System.out.println("[1579025727] Faking like I'm provisioning pins....");
 			return;
 		}
 
@@ -1071,7 +1071,7 @@ public class gpioHandler extends java.lang.Object{
 		//Get pin array index corresponding to PI pin number
 		int pinIndex = getInputPinIndex(sTerminalNumber);
 		if(pinIndex == -1){
-			throw new Exception("Requested input terminal " + sTerminalNumber + " can not "
+			throw new Exception("[1579025761] Requested input terminal " + sTerminalNumber + " can not "
 					+ "be found in array of provisioned input pins");
 		}
 		if(bListening){
@@ -1099,7 +1099,7 @@ public class gpioHandler extends java.lang.Object{
 
 		int iPinIndex = getInputPinIndex(sTerminalNumber);
 		if (iPinIndex == -1){
-			throw new Exception("Terminal number '" + sTerminalNumber + "' does not correspond to an input pin on the controller.");
+			throw new Exception("[1579025767] Terminal number '" + sTerminalNumber + "' does not correspond to an input pin on the controller.");
 		}
 
 		if (bContactOpen){
@@ -1183,7 +1183,7 @@ public class gpioHandler extends java.lang.Object{
 		}else if(outputDevices[getOutputPinIndex(sTerminalNumber)].getState() == PinState.LOW){
 			bTerminalContactsAreOpen = false;
 		}else{
-			throw new Exception ("Output terminal " + outputDevices[getOutputPinIndex(sTerminalNumber)].getName() + " state can not be determined");
+			throw new Exception ("[1579025775] Output terminal " + outputDevices[getOutputPinIndex(sTerminalNumber)].getName() + " state can not be determined");
 		}
 		return bTerminalContactsAreOpen;
 	}
@@ -1208,13 +1208,13 @@ public class gpioHandler extends java.lang.Object{
 			return;
 		}
 		if (!getIsPinProvisioned(sTerminalNumber)){
-			throw new Exception("Requested ouput terminal number " + sTerminalNumber + " has not "
+			throw new Exception("[1579025780] Requested ouput terminal number " + sTerminalNumber + " has not "
 					+ "been provisioned");
 		}
 
 		int pinIndex = getOutputPinIndex(sTerminalNumber);
 		if(pinIndex == -1){
-			throw new Exception("Requested ouput terminal number " + sTerminalNumber + " can not "
+			throw new Exception("[1579025782] Requested ouput terminal number " + sTerminalNumber + " can not "
 					+ "be found in array of provisioned output pins");
 		}
 /*

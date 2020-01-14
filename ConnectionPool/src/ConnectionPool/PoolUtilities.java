@@ -38,7 +38,7 @@ public class PoolUtilities {
 
 		if (bDebugMode){
 			System.out.println(
-					"in PoolUtilities.OpenDatabaseConnection - "
+					"[1579019310] in PoolUtilities.OpenDatabaseConnection - "
 					+ "sDatabaseID = " + sDataBaseID
 					+ "sType = " + sType
 					+ "sCallingClass = " + sCallingClass
@@ -88,65 +88,65 @@ public class PoolUtilities {
 		//create an instance of JDBC connection if there is none.
 		//in case there is no instance of JDBC driver loaded, an exception will be thrown. catch that and load the driver.
 		if (bDebugMode){
-			System.out.println("in PoolUtilities.OpenDatabaseConnection - " + "trying first connection.");
+			System.out.println("[1579019319] in PoolUtilities.OpenDatabaseConnection - " + "trying first connection.");
 		}
 		String sConnectionString = "jdbc:" + sDriver + "://" + sDbURl + ":" + sPort + "/" + sDB + sConnectStringParams;
 		try {
 			Connection conn = DriverManager.getConnection(sConnectionString, sUserName, sPassword);
 			if (bDebugMode){
-				System.out.println("Connection String: " + sConnectionString + " - User: " + sUserName + " Password: '" + sPassword + "'");
+				System.out.println("[1579019329] Connection String: " + sConnectionString + " - User: " + sUserName + " Password: '" + sPassword + "'");
 			}
 			long lConnectionID = getConnectionID(conn, sDBType);
 			return (new LabelledConnection(conn, sDataBaseID, sDBType, sCallingClass, sDbURl, new Timestamp(System.currentTimeMillis()), lConnectionID));
 		}catch (SQLException e) {
 			try {
 				if (bDebugMode){
-					System.out.println("In PoolUtilities.OpenDatabaseConnection, First connection attempt failed, going to try to register class first.");
+					System.out.println("[1579019342] In PoolUtilities.OpenDatabaseConnection, First connection attempt failed, going to try to register class first.");
 				}
 				Class.forName(sDriverClassName).newInstance();
 			} catch (InstantiationException e2) {
 				if (bDebugMode){
-					System.out.println("In PoolUtilities.OpenDatabaseConnection, got InstantiationException trying to register driver class.");
+					System.out.println("[1579019349] In PoolUtilities.OpenDatabaseConnection, got InstantiationException trying to register driver class.");
 				}
-				throw new Exception("InstantiationException getting new instance for"
+				throw new Exception("[1579019359] InstantiationException getting new instance for"
 						+ sDBType + " driver with connection string: " + sConnectionString + " - User: " + sUserName + " Password: " 
 						+ sPassword + " - " + e2.getMessage()
 				);
 			} catch (IllegalAccessException e2) {
 				if (bDebugMode){
-					System.out.println("In PoolUtilities.OpenDatabaseConnection, got IllegalAccessException trying to register driver class.");
+					System.out.println("[1579019369] In PoolUtilities.OpenDatabaseConnection, got IllegalAccessException trying to register driver class.");
 				}
-				throw new Exception("IllegalAccessException getting new instance for " + sDBType + " driver with connection string:"
+				throw new Exception("[1579019377] IllegalAccessException getting new instance for " + sDBType + " driver with connection string:"
 					+ sConnectionString + " - User: " + sUserName + " Password: " + sPassword  + " - " + e2.getMessage());
 			} catch (ClassNotFoundException e3) {
 				if (bDebugMode){
-					System.out.println("In PoolUtilities.OpenDatabaseConnection, got ClassNotFoundException trying to register driver class.");
+					System.out.println("[1579019381] In PoolUtilities.OpenDatabaseConnection, got ClassNotFoundException trying to register driver class.");
 				}
-				throw new Exception("ClassNotFoundException getting new instance for"
+				throw new Exception("[1579019386] ClassNotFoundException getting new instance for"
 					+ sDBType + " driver with connection string: " + sConnectionString + " - User: " + sUserName + " Password: " 
 					+ sPassword + " - " + e3.getMessage());
 			}
 			if (bDebugMode){
-				System.out.println("In PoolUtilities.OpenDatabaseConnection, second try to get connection.");
+				System.out.println("[1579019391] In PoolUtilities.OpenDatabaseConnection, second try to get connection.");
 			}
 			try{
 				Connection conn = DriverManager.getConnection(sConnectionString, sUserName, sPassword);
 				if (bDebugMode){
-					System.out.println("(Second try) Connection String: " + sConnectionString + " - User: " + sUserName + " Password: "  
+					System.out.println("[1579019404] (Second try) Connection String: " + sConnectionString + " - User: " + sUserName + " Password: "  
 						+ sPassword);
 				}
 				if (bDebugMode){
-					System.out.println("In PoolUtilities.OpenDatabaseConnection, got connection on second try; returning connection."
+					System.out.println("[1579019409] In PoolUtilities.OpenDatabaseConnection, got connection on second try; returning connection."
 					);
 				}
 				long lConnectionID = getConnectionID(conn, sDBType);
 				return (new LabelledConnection(conn, sDataBaseID, sDBType, sCallingClass, sDbURl, new Timestamp(System.currentTimeMillis()), lConnectionID));
 			}catch(Exception e1){
 				if (bDebugMode){
-					System.out.println("Exception on second try getting connection for " + sDBType + " driver with connection string:"
+					System.out.println("[1579019414] Exception on second try getting connection for " + sDBType + " driver with connection string:"
 						+ sConnectionString + " - User: " + sUserName + " Password: " + sPassword + " - " + e1.getMessage());
 				}
-				throw new Exception("Exception getting new instance for " + sDBType + " driver with connection string:"
+				throw new Exception("[1579019420] Exception getting new instance for " + sDBType + " driver with connection string:"
 						+ sConnectionString + " - User: " + sUserName + " Password: " + sPassword + " - " + e1.getMessage());
 			}
 		}
@@ -182,7 +182,7 @@ public class PoolUtilities {
 		Connection conn;
 		ConnectionPool connections = (ConnectionPool) context.getAttribute("DBConnections");
 		if (bDebugMode){
-			System.out.println("01 Poolutilities.getConnection - sDBID = " + sDBID + ", sType = " + sType + ", sCallingClass = " + sCallingClass);
+			System.out.println("[1579019428] 01 Poolutilities.getConnection - sDBID = " + sDBID + ", sType = " + sType + ", sCallingClass = " + sCallingClass);
 		}
 		
 		if (sDBID.compareToIgnoreCase("") == 0){
@@ -193,7 +193,7 @@ public class PoolUtilities {
 		//If there is no connection pool yet, get one:
 		if (connections == null){
 			if (bDebugMode){
-				System.out.println("PoolUtilities.getConnection " + "there is no available connection pool, create one.");
+				System.out.println("[1579019432] PoolUtilities.getConnection " + "there is no available connection pool, create one.");
 			}
 			int iMaxNumberOfConnections;
 			try {

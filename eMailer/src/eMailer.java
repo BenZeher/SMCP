@@ -123,7 +123,7 @@ public class eMailer
 			try {
 				sText += "\n\n" + readInlineTextFile(sInlineTextFile);
 			} catch (Exception e) {
-				System.out.println(e.getMessage());
+				System.out.println("[1579025206] " + e.getMessage());
 			}
 		}
 		
@@ -141,14 +141,14 @@ public class eMailer
 			    arrFilesToAttach)
 			;
 		} catch (Exception e) {
-			System.out.println("Failed to send - " + e.getMessage());
+			System.out.println("[1579025210] Failed to send - " + e.getMessage());
 			return;
 		}
-		System.out.println("Email successfully sent.");
+		System.out.println("[1579025212] Email successfully sent.");
 		return;
 	}
 	public static void printSyntax(){
-		System.out.println("Command line usage: eMailer <options>");
+		System.out.println("[1579025214] Command line usage: eMailer <options>");
 		System.out.println("Options:");
 		System.out.println("  -" + SMTP_SERVER_URL_SWITCH + " smtpserverurl");
 		System.out.println("  -" + SMTP_SERVER_PORT_SWITCH + " smtpserverport (email will be sent on port " + SMTP_PORT_NUMBER + " by default.)");

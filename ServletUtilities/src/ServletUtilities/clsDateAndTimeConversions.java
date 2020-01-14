@@ -249,7 +249,7 @@ public class clsDateAndTimeConversions {
 			}
 		} catch (ParseException p) {
 			// Should never happen:
-			System.out.println("Could not parse cut off date.");
+			System.out.println("[1579026236] Could not parse cut off date.");
 		}
 	
 		Calendar cal = new GregorianCalendar();

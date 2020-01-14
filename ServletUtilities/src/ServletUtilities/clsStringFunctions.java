@@ -207,7 +207,7 @@ public class clsStringFunctions {
     		bd = bd.setScale(iScale, BigDecimal.ROUND_HALF_UP);
     		return  bd;
     	}catch (NumberFormatException e){
-    		System.out.println("ARUtilities.bdStringToDecimal - Error converting Original amount from string: " + sValue + ".");
+    		System.out.println("[1579026384] ARUtilities.bdStringToDecimal - Error converting Original amount from string: " + sValue + ".");
     		System.out.println("ARUtilities.bdStringToDecimal - " + e.getMessage());
     		return null;
     	}

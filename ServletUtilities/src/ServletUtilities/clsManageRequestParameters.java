@@ -61,7 +61,7 @@ public class clsManageRequestParameters {
 		Enumeration <String> e = req.getParameterNames();
 		String sParam = "";
 		//String sDisplay = "";
-		System.out.println("Listing request parameters:\n");
+		System.out.println("[1579026265] Listing request parameters:\n");
 		while (e.hasMoreElements()){
 			sParam = (String) e.nextElement();
 			System.out.println(sParam + " = '" + get_Request_Parameter(sParam, req) + "'");
@@ -74,7 +74,7 @@ public class clsManageRequestParameters {
 		Enumeration <String> e = req.getParameterNames();
 		String sParam = "";
 		//String sDisplay = "";
-		out.println("Listing request parameters:");
+		out.println("[1579026271] Listing request parameters:");
 		while (e.hasMoreElements()){
 			sParam = (String) e.nextElement();
 			out.println("\n" + sParam + " = '" + get_Request_Parameter(sParam, req) + "'");

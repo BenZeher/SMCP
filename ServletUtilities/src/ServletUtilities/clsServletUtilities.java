@@ -135,7 +135,7 @@ public class clsServletUtilities {
 			}		  
 			return new java.sql.Date(c.getTime().getTime());
 		}catch(Exception ex){
-			System.out.println("Error in finding previous date");
+			System.out.println("[1579026300] Error in finding previous date");
 			System.out.println("Exception = " + ex.getMessage());
 			return Date.valueOf("1979-04-10");
 		}
@@ -153,7 +153,7 @@ public class clsServletUtilities {
 
 			return new java.sql.Date(c.getTime().getTime());
 		}catch(Exception ex){
-			System.out.println("Error in finding previous date");
+			System.out.println("[1579026305] Error in finding previous date");
 			System.out.println("Exception = " + ex.getMessage());
 			return Date.valueOf("1979-04-10");
 		}
@@ -538,7 +538,7 @@ public class clsServletUtilities {
 		try{
 			sEncodedURL = URLEncoder.encode(s, "UTF-8" );
 		}catch(UnsupportedEncodingException ex){
-			System.out.println("Error in URLEncode: " + ex.getMessage());
+			System.out.println("[1579026317] Error in URLEncode: " + ex.getMessage());
 			sEncodedURL = "";
 		}
 		return sEncodedURL;
@@ -551,7 +551,7 @@ public class clsServletUtilities {
 		try{
 			sDecodedURL = URLDecoder.decode(s, "UTF-8" );
 		}catch(UnsupportedEncodingException ex){
-			System.out.println("Error in URLDecode: " + ex.toString());
+			System.out.println("[1579026326] Error in URLDecode: " + ex.toString());
 			sDecodedURL = "";
 		}
 		return sDecodedURL;
@@ -1433,7 +1433,7 @@ public class clsServletUtilities {
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String formattedDate = formatter.format(todaysDate);
 		System.out.println(
-				"SYSPRINT: "
+				"[1579026359] SYSPRINT: "
 				+ formattedDate
 				+ " - "
 				+ getFullClassName(sthis_to_string)

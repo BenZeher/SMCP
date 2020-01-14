@@ -213,7 +213,7 @@ public class clsDatabaseFunctions {
 				return false;
 			}
 		}catch (SQLException ex){
-			System.out.println("Error in SMUtilities - start transaction!!");
+			System.out.println("[1579026202] Error in SMUtilities - start transaction!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -242,7 +242,7 @@ public class clsDatabaseFunctions {
 				return false;
 			}
 		}catch (SQLException ex){
-			System.out.println("Error in SMUtilities - rollback transaction!!");
+			System.out.println("[1579026210] Error in SMUtilities - rollback transaction!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -259,7 +259,7 @@ public class clsDatabaseFunctions {
 				return false;
 			}
 		}catch (SQLException ex){
-			System.out.println("Error in SMUtilities - commit transaction!!");
+			System.out.println("[1579026215] Error in SMUtilities - commit transaction!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());

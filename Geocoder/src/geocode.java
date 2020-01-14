@@ -124,26 +124,26 @@ public class geocode
 						+ sDatabaseName 
 						+ "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True", sUserName, sPassword);
 			} catch (InstantiationException e) {
-				System.out.println("InstantiationException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579025295] InstantiationException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (IllegalAccessException e) {
-				System.out.println("IllegalAccessException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579025309] IllegalAccessException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (ClassNotFoundException e) {
-				System.out.println("ClassNotFoundException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579025311] ClassNotFoundException getting MySQL connection - " + e.getMessage());
 				return;
 			} catch (SQLException e) {
-				System.out.println("SQLException getting MySQL connection - " + e.getMessage());
+				System.out.println("[1579025313] SQLException getting MySQL connection - " + e.getMessage());
 				return;
 			}
 		}
 		
 		if (conn == null){
-			System.out.println("Could not get MySQL connection");
+			System.out.println("[1579025316] Could not get MySQL connection");
 			return;
 		}
 		
-		System.out.println("Successfully got MySQL connection");
+		System.out.println("[1579025318] Successfully got MySQL connection");
 		
 		//Display how many records left to update
     	String SQL = "";
@@ -177,7 +177,7 @@ public class geocode
 			rsCount.close();
 		
 		} catch (SQLException e2) {
-			System.out.println("Error getting record count!!");
+			System.out.println("[1579025321] Error getting record count!!");
 		}
 		//Here's where we update the geocodes:
 		int iNumberProcessedPerPass = -1;
@@ -186,13 +186,13 @@ public class geocode
 			try {
 				iNumberProcessedPerPass = updateGeocodes(conn, sAPIKey, sRecordType, NUM_TO_PROCESS_PER_PASS);
 			} catch (Exception e1) {
-				System.out.println(e1.getMessage());
+				System.out.println("[1579025464] " + e1.getMessage());
 				return;
 			}
 			try {
 				Thread.sleep(LOOP_PAUSE_IN_MILLISECONDS);
 			} catch (InterruptedException e) {
-				System.out.println("Error pausing - " + e.getMessage());
+				System.out.println("[1579025324] Error pausing - " + e.getMessage());
 				return;
 			}
 			iTotalNumberProcessed += iNumberProcessedPerPass;
@@ -200,14 +200,14 @@ public class geocode
 		try {
 			conn.close();
 		} catch (SQLException e) {
-			System.out.println("Error closing MySQL connection - " + e.getMessage());
+			System.out.println("[1579025327] Error closing MySQL connection - " + e.getMessage());
 			return;
 		}
-		System.out.println("Updated a total of " + iTotalNumberProcessed + " " + sRecordType+ " geocodes on " + new Date(System.currentTimeMillis()).toString());
+		System.out.println("[1579025329] Updated a total of " + iTotalNumberProcessed + " " + sRecordType+ " geocodes on " + new Date(System.currentTimeMillis()).toString());
 		return;
 	}
 	private static void printCommandSyntax(){
-		System.out.println("Command line usage: databaseURL databasename username password maxnumbertoprocess orders/appointments APIKey");
+		System.out.println("[1579025332] Command line usage: databaseURL databasename username password maxnumbertoprocess orders/appointments APIKey");
 		System.out.println("For example:");
 		System.out.println("geocode smdbserver01 ServMgr1 smuser smuser 2000 orders AIzaSyBy1RpeUW6xZCewNPWuu0xb_kN-Nwx5SAw");
 	}
@@ -294,7 +294,7 @@ public class geocode
 				if(sMapAddress.trim().compareToIgnoreCase("") != 0) {
 					sLatLng = codeAddress(sID, sMapAddress, sAPIKey);	
 				}else {
-					System.out.println(sID + " address is blank ");
+					System.out.println("[1579025409]" + sID + " address is blank ");
 				}
 				
 			} catch (XPathExpressionException e) {
@@ -332,7 +332,7 @@ public class geocode
 			iNumberProcessed++;
 		}
 		rs.close();
-		System.out.println("Updated " + Integer.toString(iNumberProcessed) + " " + sRecordType //+ sOrderList 
+		System.out.println("[1579025350] Updated " + Integer.toString(iNumberProcessed) + " " + sRecordType //+ sOrderList 
 				+ " in " + (System.currentTimeMillis() - lTimer)/1000 + " seconds.");
 		return iNumberProcessed;
     }
@@ -345,7 +345,7 @@ public class geocode
 			return rs;
 		}catch (Exception ex) {
 			// handle any errors
-			System.out.println("Error opening resultset with SQL: " + SQLStatement + " - " 
+			System.out.println("[1579025355] Error opening resultset with SQL: " + SQLStatement + " - " 
 				+ ex.toString() + "  *-*  " + ex.getMessage());
 			//return null;
 			throw new SQLException(ex.getMessage());
@@ -391,7 +391,7 @@ public class geocode
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/status", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting result - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579025359] In SMGeocoder.codeAddress, getting result - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 			sXMLStatus += resultNodeList.item(i).getTextContent();
 		}
@@ -400,7 +400,7 @@ public class geocode
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/result/formatted_address", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting formatted address - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579025361] In SMGeocoder.codeAddress, getting formatted address - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 		}
 
@@ -408,7 +408,7 @@ public class geocode
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting locality - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579025363] In SMGeocoder.codeAddress, getting locality - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 		}
 
@@ -423,7 +423,7 @@ public class geocode
 			if("lng".equals(node.getNodeName())) lng = Float.parseFloat(node.getTextContent());
 		}
 		if (bDebugMode){
-			System.out.println("In SMGeocoder.codeAddress, lat/lng=" + lat + "," + lng);
+			System.out.println("[1579025366] In SMGeocoder.codeAddress, lat/lng=" + lat + "," + lng);
 		}
 		
 		if(sXMLStatus.compareToIgnoreCase(REQUEST_OK) != 0) {	
@@ -431,11 +431,11 @@ public class geocode
 				System.out.println(ZERO_RESULTS_ERROR + " for Record ID '" + sRecordID + "' using address: '" + address + "'");
 				return "";
 			}else {
-				System.out.println("GeoCode Request failed - Status: " + sXMLStatus + " for Record ID '" + sRecordID + "' using query " + url.toString());
+				System.out.println("[1579025369] GeoCode Request failed - Status: " + sXMLStatus + " for Record ID '" + sRecordID + "' using query " + url.toString());
 				return Float.toString(lat) + "," + Float.toString(lng);	
 			}
 		}
-		System.out.println(sRecordID + " successfully updated to " + Float.toString(lat) + "," + Float.toString(lng));
+		System.out.println("[1579025430]" + sRecordID + " successfully updated to " + Float.toString(lat) + "," + Float.toString(lng));
 		return Float.toString(lat) + "," + Float.toString(lng);
 
 	}

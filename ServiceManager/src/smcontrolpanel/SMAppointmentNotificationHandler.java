@@ -73,10 +73,10 @@ public class SMAppointmentNotificationHandler  extends clsMasterEntry{
 			} catch (SQLException e) {
 				//If it's just because the database doesn't exist, don't choke over it:
 				if (e.getMessage().contains("doesn't exist")){
-					System.out.println("Error [SMTableappointments.datentrydate] - company database ID '" + sDatabaseID + "'"
-						+ ", which is listed in " + CompanyDataCredentials.TableName 
-						+ ", is missing table '" + SMTableappointments.TableName + "'."
-					);
+					//System.out.println("Error [1578602673] - company database ID '" + sDatabaseID + "'"
+					//	+ ", which is listed in " + CompanyDataCredentials.TableName 
+					//	+ ", is missing table '" + SMTableappointments.TableName + "'."
+					//);
 					clsDatabaseFunctions.freeConnection(context, conn, "[1547080402]");
 					return s;
 				}

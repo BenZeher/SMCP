@@ -87,10 +87,10 @@ public class SMEventScheduleHandler  extends clsMasterEntry{
 			} catch (SQLException e) {
 				//If it's just because the database doesn't exist, don't choke over it:
 				if (e.getMessage().contains("doesn't exist")){
-					System.out.println("Error [1483738051] - company database ID '" + sDatabaseID + "'"
-						+ ", which is listed in " + CompanyDataCredentials.TableName 
-						+ ", is missing table '" + SMTablesseventscheduledetails.TableName + "'."
-					);
+					//System.out.println("Error [1483738051] - company database ID '" + sDatabaseID + "'"
+					//	+ ", which is listed in " + CompanyDataCredentials.TableName 
+					//	+ ", is missing table '" + SMTablesseventscheduledetails.TableName + "'."
+					//);
 					clsDatabaseFunctions.freeConnection(context, conn, "[1547067614]");
 					return s;
 				}

@@ -40,7 +40,7 @@ public class ConnectionPool implements Runnable {
 			boolean bwaitIfBusy)
 	throws Exception {
 		if (bDebugMode){
-			System.out.println("03 ConnectionPool.ConnectionPool - "
+			System.out.println("[1579016016] 03 ConnectionPool.ConnectionPool - "
 					+ "dbID = " + dbID
 					+ "DBType = " + DBType
 					+ "CallingClass = " + CallingClass
@@ -61,7 +61,7 @@ public class ConnectionPool implements Runnable {
 		busyConnections = new Vector<LabelledConnection>();
 		for(int i=0; i<initialConnections; i++) {
 			if (bDebugMode){
-				System.out.println("04 ConnectionPool.ConnectionPool - "
+				System.out.println("[1579016020] 04 ConnectionPool.ConnectionPool - "
 						+ "dbID = " + dbID
 						+ "DBType = " + DBType
 						+ "CallingClass = " + CallingClass
@@ -86,7 +86,7 @@ public class ConnectionPool implements Runnable {
 		this.sDatabaseID = sDbID;
 		String sCurrentLabel = sDbID;  
 		if (bDebugMode){
-			System.out.println("In ConnectionPool.getConnection - starting out - sDbID = " + sDbID + ", sType = " + sType + ", sCallingClass = " + sCallingClass);
+			System.out.println("[1579016163] In ConnectionPool.getConnection - starting out - sDbID = " + sDbID + ", sType = " + sType + ", sCallingClass = " + sCallingClass);
 		}
 		sCurrentType = sType;
 		sCurrentCallingClass = sCallingClass;
@@ -96,7 +96,8 @@ public class ConnectionPool implements Runnable {
 		try {
 			if (!availableConnections.isEmpty()) {
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() 
+					System.out.println("[1579016185] "
+							+ PoolUtilities.SystemTime() 
 							+ "In ConnectionPool.getConnection - !availableConnections.isEmpty() - there ARE available connections - trying to "
 							+ " find matches for  label: " + sCurrentLabel + " and type: " + sType);
 				}
@@ -108,7 +109,8 @@ public class ConnectionPool implements Runnable {
 					//System.out.println(PoolUtilities.SystemTime() + "element label: " + ((LabelledConnection)availableConnections.elementAt(i)).Get_Label());
 					//System.out.println(PoolUtilities.SystemTime() + "element type: " + ((LabelledConnection)availableConnections.elementAt(i)).Get_Type());
 					if (bDebugMode){
-						System.out.println(PoolUtilities.SystemTime() 
+						System.out.println("[1579016210] " 
+								+ PoolUtilities.SystemTime() 
 								+ "In ConnectionPool.getConnection - "
 								+ "looping through available connections - label: " 
 								+ ((LabelledConnection)availableConnections.elementAt(i)).Get_Label()
@@ -119,7 +121,8 @@ public class ConnectionPool implements Runnable {
 							((LabelledConnection)availableConnections.elementAt(i)).Get_Type().compareTo(sType) == 0){
 						//found 
 						if (bDebugMode){
-							System.out.println(PoolUtilities.SystemTime() 
+							System.out.println("[1579016316] "
+									+ PoolUtilities.SystemTime() 
 									+ "In ConnectionPool.getConnection - "
 									+ "found connection with matching label and type");
 						}
@@ -133,7 +136,8 @@ public class ConnectionPool implements Runnable {
 						if ((lblconn.Get_Label().compareTo(sCurrentLabel) != 0)){
 							//Destroy the connection:
 							existingConnection = null;
-							System.out.println(PoolUtilities.SystemTime() 
+							System.out.println("[1579016342] "
+								+ PoolUtilities.SystemTime() 
 								+ " [1428610479] In ConnectionPool.getConnection - "
 								+ "selected connection no longer matches label");
 						}
@@ -148,7 +152,8 @@ public class ConnectionPool implements Runnable {
 		//If we did get a connection, then take that connection out of the 'available' pool for now:
 		if (existingConnection != null){
 			if (bDebugMode){
-				System.out.println(PoolUtilities.SystemTime() 
+				System.out.println("[1579016361] "
+						+ PoolUtilities.SystemTime() 
 						+ "In ConnectionPool.getConnection - "
 						+ "got a non-null connection");
 			}
@@ -175,7 +180,8 @@ public class ConnectionPool implements Runnable {
 			}else{
 				//Now we've got a good, matching connection:
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() 
+					System.out.println("[1579016377] "
+							+ PoolUtilities.SystemTime() 
 							+ "In ConnectionPool.getConnection - "
 							+ "adding connection to busyConnections");
 				}
@@ -205,7 +211,8 @@ public class ConnectionPool implements Runnable {
 					makeBackgroundConnection();
 				} catch (Exception e) {
 					if (bDebugMode){
-						System.out.println(PoolUtilities.SystemTime() 
+						System.out.println("[1579016415]"
+								+ PoolUtilities.SystemTime() 
 								+ " makeBackgroundConnection threw exception");
 					}
 					throw new Exception(
@@ -214,12 +221,12 @@ public class ConnectionPool implements Runnable {
 							+ "sLabel = '" + sCurrentLabel + "'"
 							+ ", sDBID = '" + sDbID + "'"
 							+ ", sType = '" + sType + "'"
-							+ ", sCallingClass = '" + sCallingClass + "'"
+							+ ", sCallingClass = '" + sCallingClass + "' [1579016441]"
 					);			
 				}
 			} else if (!bwaitIfBusy) {
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() + "connection limit reached OR another person is already"
+					System.out.println("[1579016451] " + PoolUtilities.SystemTime() + "connection limit reached OR another person is already"
 							+ " waiting");
 				}
 				throw new Exception("Connection limit reached");
@@ -228,7 +235,7 @@ public class ConnectionPool implements Runnable {
 			//to be freed up.
 			try {
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() 
+					System.out.println("[1579016548] " + PoolUtilities.SystemTime() 
 							+ "In ConnectionPool.getConnection - "
 							+ "calling wait()");
 				}
@@ -241,13 +248,15 @@ public class ConnectionPool implements Runnable {
 				//}
 
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() 
+					System.out.println("[1579016567] "
+							+ PoolUtilities.SystemTime() 
 							+ "In ConnectionPool.getConnection - "
 							+ "after wait()");
 				}
 			} catch(InterruptedException ie) {
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() 
+					System.out.println("[1579016577] "
+							+ PoolUtilities.SystemTime() 
 							+ "In ConnectionPool.getConnection - "
 							+ " caught InterruptedException");
 				}
@@ -256,7 +265,7 @@ public class ConnectionPool implements Runnable {
 						+ "InterruptedException with "
 						+ "sLabel = '" + sDbID + "'"
 						+ ", sType = '" + sType + "'"
-						+ ", sCallingClass = '" + sCallingClass + "'"
+						+ ", sCallingClass = '" + sCallingClass + "' [1579016584]"
 				);
 			}	
 		}
@@ -286,7 +295,8 @@ public class ConnectionPool implements Runnable {
 		}else{
 			// Failed to open connection
 			if (bDebugMode){
-				System.out.println(PoolUtilities.SystemTime() 
+				System.out.println("[1579016602] "
+						+ PoolUtilities.SystemTime() 
 						+ "In ConnectionPool.getConnection - "
 						+ " Unrecoverable failure to open connection - throwing Exception");
 			}
@@ -306,7 +316,7 @@ public class ConnectionPool implements Runnable {
 	private void makeBackgroundConnection() throws Exception{
 		connectionPending = true;
 		if (bDebugMode){
-			System.out.println(PoolUtilities.SystemTime() + "in makeBackgroundConnection");
+			System.out.println("[1579016617] " + PoolUtilities.SystemTime() + "in makeBackgroundConnection");
 		}
 		try {
 			Thread connectThread = new Thread(this);
@@ -316,7 +326,7 @@ public class ConnectionPool implements Runnable {
 		} catch(OutOfMemoryError oome) {
 			// Give up on new connection
 			throw new Exception(
-					"OutOfMemoryError in makeBackgroundConnection - failed to make connection - " + oome.getMessage());
+					"[1579016628] OutOfMemoryError in makeBackgroundConnection - failed to make connection - " + oome.getMessage());
 		}
 	}
 
@@ -325,13 +335,15 @@ public class ConnectionPool implements Runnable {
 		synchronized(this) {
 			//System.out.println("Let's see what is it: sDBID = " + sDBID);
 			if (bDebugMode){
-				System.out.println(PoolUtilities.SystemTime() + "in ConnectionPool.run"
+				System.out.println("[1579016668] "
+						+ PoolUtilities.SystemTime() + "in ConnectionPool.run"
 						+ " - going to try to open a database connection."	  
 				);
 			}
 			try {
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() + "run(): Current label/type = \"" 
+					System.out.println("[1579016680] "
+							+ PoolUtilities.SystemTime() + "run(): Current label/type = \"" 
 							+ sDatabaseID + "\"/\"" + sCurrentType + "\""
 							+ " - current database = " + sDatabaseID);
 				}
@@ -355,7 +367,7 @@ public class ConnectionPool implements Runnable {
 				}else{
 					availableConnections.addElement(connection);
 					if (bDebugMode){
-						System.out.println(PoolUtilities.SystemTime() + "added element to available list in run(). (new connection created)");
+						System.out.println("[1579016689] " + PoolUtilities.SystemTime() + "added element to available list in run(). (new connection created)");
 					}
 					connectionPending = false;
 					notifyAll();
@@ -364,7 +376,7 @@ public class ConnectionPool implements Runnable {
 				// Give up on new connection and wait for existing one
 				// to free up.
 				if (bDebugMode){
-					System.out.println(PoolUtilities.SystemTime() + "run() caused exception.");
+					System.out.println("[1579016707] " + PoolUtilities.SystemTime() + "run() caused exception.");
 					System.out.println(PoolUtilities.SystemTime() + "Exception.getMessage() = " + e.getMessage());
 				}
 				//TJR - added these to try to stop hanging 2/13/2011:
@@ -541,16 +553,16 @@ public class ConnectionPool implements Runnable {
 
 	public synchronized void PrintStatus(boolean bPrintConnectionList) throws Exception{
 
-		System.out.println(PoolUtilities.SystemTime() + "Connection Pool Status(available/busy/max): " + availableConnections.size() + "/" + busyConnections.size() + "/" + maxConnections);
+		System.out.println("[1579016794] " + PoolUtilities.SystemTime() + "Connection Pool Status(available/busy/max): " + availableConnections.size() + "/" + busyConnections.size() + "/" + maxConnections);
 
 		if (bPrintConnectionList){
 			System.out.println("");
-			System.out.println(PoolUtilities.SystemTime() + " Available Connections:");
+			System.out.println("[1579016803] " + PoolUtilities.SystemTime() + " Available Connections:");
 			if (!availableConnections.isEmpty()){
 				for(int i=0;i<availableConnections.size();i++){
 
 					if ((LabelledConnection) availableConnections.get(i) != null){
-						System.out.print(((LabelledConnection) availableConnections.get(i)).Get_Label());
+						System.out.print("[1579016835] " + ((LabelledConnection) availableConnections.get(i)).Get_Label());
 						System.out.print(" - ");
 						System.out.print((((LabelledConnection) availableConnections.get(i)).get_Creation_Timestamp()).toString());
 						System.out.print("  (");
@@ -559,7 +571,7 @@ public class ConnectionPool implements Runnable {
 					}
 				}
 			}else{
-				System.out.println(PoolUtilities.SystemTime() + "No available connections.");
+				System.out.println("[1579016841] " + PoolUtilities.SystemTime() + "No available connections.");
 			}
 			System.out.println("");
 			System.out.println(PoolUtilities.SystemTime() + " Busy Connections:");

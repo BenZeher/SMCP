@@ -24,7 +24,7 @@ import java.util.Calendar;
 /*  22 */       String sCompanyName = "Company";   //str5
 /*     */ 
 /*  25 */       BufferedReader brConffile = new BufferedReader(new FileReader(paramArrayOfString[0]));
-/*     */ 
+/*     */ 		System.out.println("[1579015499] Leave Period Check");
 /*     */       String s;
 /*  27 */       while ((s = brConffile.readLine()) != null)
 /*     */       {
@@ -236,6 +236,7 @@ import java.util.Calendar;
 		}catch (Exception localException1){
 /* 278 */       System.out.println("Exception in LeavePeriodCheck!!");
 /* 279 */       System.out.println("Exception.toString(): " + localException1.toString());
+						System.out.println("[1579015531] Leave Period Check End");
 /*     */}
 	}
 /*     */ 
@@ -293,7 +294,7 @@ private static double CalculateLeaveTotal(String sAwardPeriod,  			//paramString
 /* 358 */           alNumberOfHours.add(Double.valueOf(rsLeaveAdjustmentTypes.getDouble("dNumberOfHours")));
 /*     */         }
 /*     */ 
-/* 382 */         System.out.println("Total number of step-ups: " + alNumberOfMonth.size());
+/* 382 */         System.out.println("[1579015793] Total number of step-ups: " + alNumberOfMonth.size());
 /* 383 */         for (int j = 0; j < alNumberOfMonth.size(); ++j) {
 						//localTimestamp2
 	/* 384 */           Timestamp tsStepUPTime = Locate_Stepup_Time(new Timestamp(datHiredDate.getTime()), 
@@ -416,8 +417,8 @@ private static double CalculateLeaveTotal(String sAwardPeriod,  			//paramString
 /* 541 */       return true;
 /*     */     }
 /*     */     catch (Exception localException) {
-/* 544 */       System.out.println("<BR><BR>Error in EmployeeLeaveManager.EvaluateEligibility!!");
-/* 545 */       System.out.println("Exception: " + localException.getMessage()); }
+/* 544 */       System.out.println("<BR><BR>[1579015756] Error in EmployeeLeaveManager.EvaluateEligibility!!");
+/* 545 */       System.out.println("[1579015756] Exception: " + localException.getMessage()); }
 /* 546 */     return false;
 /*     */   }
 /*     */ 
@@ -470,7 +471,7 @@ private static double CalculateLeaveTotal(String sAwardPeriod,  			//paramString
 /* 657 */     c.add(Calendar.DAY_OF_MONTH, (int)((dNOofMonth - (int)dNOofMonth) * 30.4375D));
 /*     */ 
 /* 659 */     Timestamp ts = new Timestamp(c.getTimeInMillis());
-/* 660 */     System.out.println("Step up date: " + ts.toString());
+/* 660 */     System.out.println("[1579015739] Step up date: " + ts.toString());
 /*     */ 
 /* 662 */     return ts;
 /*     */   }

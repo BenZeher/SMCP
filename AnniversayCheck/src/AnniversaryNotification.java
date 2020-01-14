@@ -43,18 +43,18 @@ public class AnniversaryNotification
 			sSMTPUserName = paramArrayOfString[6];
 			sSMTPUserPassword = paramArrayOfString[7];
 		} catch (Exception e3) {
-			System.out.println("Error " + e3.getMessage());
+			System.out.println("[1579014007] Error " + e3.getMessage());
 			String sCommandLine = "";
 			for (int i = 0; i < paramArrayOfString.length; i++){
 				sCommandLine += paramArrayOfString[i] + " ";
 			}
-			System.out.println("Command line: " + sCommandLine);
+			System.out.println("[1579014016] Command line: " + sCommandLine);
 			return;
 		}
 
 		//Validate the strings:
 		if (sSMTPUserPassword.compareToIgnoreCase("") == 0){
-			System.out.println("Command line syntax should look like this:\n\n"
+			System.out.println("[1579014032] Command line syntax should look like this:\n\n"
 					+ "java AnniversaryNotification.class "
 					+ "databaseURL "
 					+ "databasename "
@@ -87,13 +87,13 @@ public class AnniversaryNotification
 				Class.forName("com.mysql.jdbc.Driver").newInstance();
 				conn = DriverManager.getConnection("jdbc:mysql://" + sDatabaseURL + ":3306/" + sDatabaseName + "?noDatetimeStringSync=true&connectTimeout=28800000&interactiveClient=True", sDatabaseUserName, sDatabaseUserPassword);
 			} catch (InstantiationException e) {
-				System.out.println("Instantiation Exception Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
+				System.out.println("[1579014055] Instantiation Exception Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
 			} catch (IllegalAccessException e) {
-				System.out.println("Illegal Access Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
+				System.out.println("[1579014111] Illegal Access Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
 			} catch (ClassNotFoundException e) {
-				System.out.println("ClassNotFound Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
+				System.out.println("[1579014117] ClassNotFound Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
 			} catch (SQLException e) {
-				System.out.println("SQLException Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
+				System.out.println("[1579014122] SQLException Error reading database - " + e.getMessage() + " - command line: " + sCommandLine);
 			}
 		}
 		String sSQL = "SELECT * FROM companyprofile";
@@ -104,13 +104,13 @@ public class AnniversaryNotification
 			if (!rs.next()){
 				rs.close();
 				conn.close();
-				System.out.println("No company name record using sSQL: " + sSQL);
+				System.out.println("[1579014142] No company name record using sSQL: " + sSQL);
 				return;
 			}
 			sCompany = rs.getString("scompanyname");
 			rs.close();
 		} catch (Exception e1) {
-			System.out.println("Error reading company name using sSQL: '" + sSQL + "'" + e1.getMessage());
+			System.out.println("[1579014130] Error reading company name using sSQL: '" + sSQL + "'" + e1.getMessage());
 			return;
 		}
 
@@ -143,7 +143,7 @@ public class AnniversaryNotification
 							calNextMonth, 
 							calBirthday);
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					System.out.println("[1579014164] "+e.getMessage());
 					return;
 				}
 				if (datNextBirthday != null) {
@@ -159,7 +159,7 @@ public class AnniversaryNotification
 				}
 			}
 		} catch (SQLException e2) {
-			System.out.println("Error reading birthday data: " + e2.getMessage());
+			System.out.println("[1579014179] Error reading birthday data: " + e2.getMessage());
 			return;
 		}
 		//sort now
@@ -183,7 +183,7 @@ public class AnniversaryNotification
 							calNextMonth, 
 							calHiredDate);
 				} catch (Exception e) {
-					System.out.println(e.getMessage());
+					System.out.println("[1579014211] " + e.getMessage());
 					return;
 				}
 				if (datNextAnniversary != null) {
@@ -200,7 +200,7 @@ public class AnniversaryNotification
 				}
 			}
 		} catch (SQLException e2) {
-			System.out.println("Error reading anniversary data: " + e2.getMessage());
+			System.out.println("[1579014217] Error reading anniversary data: " + e2.getMessage());
 			return;
 		}
 		//sort now
@@ -232,7 +232,7 @@ public class AnniversaryNotification
 			statement.close();
 			conn.close();
 		} catch (SQLException e1) {
-			System.out.println("Error reading email data: " + e1.getMessage());
+			System.out.println("[1579014222] Error reading email data: " + e1.getMessage());
 			return;
 		}
 		String sRecipients = "";
@@ -257,14 +257,14 @@ public class AnniversaryNotification
 		}catch (Exception e){
 			bEmailSucceeded = false;
 			System.out.println(sdf.format(cal.getTime()) + " email FAILED - " + e.getMessage());
-			System.out.println(" *********************");
+			System.out.println(" ********************* \n [1579015393]");
 		}
 		if (bEmailSucceeded){
 			System.out.println(sdf.format(cal.getTime()) + " email sent successfully to recipients:");
 			for (int i = 0; i < alEmails.size(); i++){
 				System.out.println(" - " + alEmails.get(i));
 			}
-			System.out.println(" *********************");
+			System.out.println(" ********************* \n[1579014260]");
 		}
 		return;
 	}

@@ -2276,7 +2276,7 @@ public class ARBatch extends SMClasses.SMEntryBatch{
 			export.saveExport(sExportBatchNumber, conn);
 		} catch (Exception e) {
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " - save export error message = " + e.getMessage());
+				System.out.println("[1579115106] In " + this.toString() + " - save export error message = " + e.getMessage());
 				System.out.println("In " + this.toString() + " - URL encode save export error message = " + clsServletUtilities.URLEncode(e.getMessage()));
 			}
 			super.addErrorMessage("Error saving GL export records - " + clsServletUtilities.URLEncode(e.getMessage()));

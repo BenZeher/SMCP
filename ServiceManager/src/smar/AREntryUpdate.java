@@ -129,7 +129,7 @@ public class AREntryUpdate extends HttpServlet{
 			try {
 				response.sendRedirect(sRedirectString);
 			} catch (IOException e) {
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579117741] In " + this.toString() 
 					+ "In " + this.toString() + " - After FINDGLACCOUNT - error redirecting with string: " 
 					+ sRedirectString);
 				response.sendRedirect(
@@ -340,12 +340,12 @@ public class AREntryUpdate extends HttpServlet{
    			+ ", " + SMTablearoptions.suserfullname + " = ''"
 			;
     		if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-        		System.out.println("In AREntryUpdate.clearPostingFlag: "
+        		System.out.println("[1579117793] In AREntryUpdate.clearPostingFlag: "
         				+ "Error clearing posting flag in aroptions");
         		return false;
     		}
     	}catch (SQLException e){
-			System.out.println("Error clearing posting flag in aroptions - " + e.getMessage());
+			System.out.println("[1579117796] Error clearing posting flag in aroptions - " + e.getMessage());
     		return false;
     	}
 		return true;

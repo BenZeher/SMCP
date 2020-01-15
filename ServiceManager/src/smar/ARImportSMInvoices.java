@@ -102,7 +102,7 @@ public class ARImportSMInvoices extends java.lang.Object{
 			rsAROptions.close();
 		}catch (SQLException e){
 			m_sErrorMessage = "Error checking for previous posting - " + e.getMessage();
-			System.out.println("Error checking for previous posting - " + e.getMessage());
+			System.out.println("[1579118768] Error checking for previous posting - " + e.getMessage());
 			return false;
 		}
 		//Set posting flag
@@ -116,12 +116,12 @@ public class ARImportSMInvoices extends java.lang.Object{
 					;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessage = "Error setting posting flag in aroptions";
-				System.out.println("In " + this.toString() + ".importInvoices: Error setting posting flag in aroptions");
+				System.out.println("[1579118775] In " + this.toString() + ".importInvoices: Error setting posting flag in aroptions");
 				return false;
 			}
 		}catch (SQLException e){
 			m_sErrorMessage = "Error setting posting flag in aroptions - " + e.getMessage();
-			System.out.println("Error setting posting flag in aroptions - " + e.getMessage());
+			System.out.println("[1579118780] Error setting posting flag in aroptions - " + e.getMessage());
 			return false;
 		}
 		if (bDebugMode){
@@ -203,12 +203,12 @@ public class ARImportSMInvoices extends java.lang.Object{
 					;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
 				m_sErrorMessage = "Error clearing posting flag in aroptions";
-				System.out.println("In " + this.toString() + ".importInvoices: Error clearing posting flag in aroptions");
+				System.out.println("[1579118786] In " + this.toString() + ".importInvoices: Error clearing posting flag in aroptions");
 				return false;
 			}
 		}catch (SQLException e){
 			m_sErrorMessage = "Error clearing posting flag in aroptions - " + e.getMessage();
-			System.out.println("Error clearing posting flag in aroptions - " + e.getMessage());
+			System.out.println("[1579118815] Error clearing posting flag in aroptions - " + e.getMessage());
 			return false;
 		}
 
@@ -407,7 +407,7 @@ public class ARImportSMInvoices extends java.lang.Object{
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("Error in " + this.toString() + ".loadInvoiceLinesByRevenueGL: " + e.getMessage());
+			System.out.println("[1579119436] Error in " + this.toString() + ".loadInvoiceLinesByRevenueGL: " + e.getMessage());
 			m_sErrorMessage = "Error in " + this.toString() + ".loadInvoiceLinesByRevenueGL: " + e.getMessage();
 			return false;
 		}

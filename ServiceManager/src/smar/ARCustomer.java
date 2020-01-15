@@ -324,7 +324,7 @@ public class ARCustomer extends Object{
     			return sCashAccount;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getCashAccount class!!");
+    	    	System.out.println("[1579115177] Error in " + this.toString()+ ".getCashAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -363,7 +363,7 @@ public class ARCustomer extends Object{
     			return sARControlAcct;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getARControlAccount class!!");
+    	    	System.out.println("[1579115185] Error in " + this.toString()+ ".getARControlAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -402,7 +402,7 @@ public class ARCustomer extends Object{
     			return sARControlAcct;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getARControlAccount class!!");
+    	    	System.out.println("[1579115191] Error in " + this.toString()+ ".getARControlAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -441,7 +441,7 @@ public class ARCustomer extends Object{
     			return sARPrepaymentLiabilityAcct;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getARPrepayLiabilityAccount class!!");
+    	    	System.out.println("[1579115197] Error in " + this.toString()+ ".getARPrepayLiabilityAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -474,7 +474,7 @@ public class ARCustomer extends Object{
     			return sARPrepaymentLiabilityAcct;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getARPrepayLiabilityAccount class!!");
+    	    	System.out.println("[1579115250] Error in " + this.toString()+ ".getARPrepayLiabilityAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -509,7 +509,7 @@ public class ARCustomer extends Object{
     			return sARControlAcct;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getARControlAccount class!!");
+    	    	System.out.println("[1579115257] Error in " + this.toString()+ ".getARControlAccount class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -544,7 +544,7 @@ public class ARCustomer extends Object{
     			return bdCurrentBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getCurrentBalance class!!");
+    	    	System.out.println("[1579115263] Error in " + this.toString()+ ".getCurrentBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -574,7 +574,7 @@ public class ARCustomer extends Object{
     			return bdCurrentBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getCurrentBalance class!!");
+    	    	System.out.println("[1579115271] Error in " + this.toString()+ ".getCurrentBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -613,7 +613,7 @@ public class ARCustomer extends Object{
     			return bdCalculatedBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getCurrentCalculatedBalance class!!");
+    	    	System.out.println("[1579115277] Error in " + this.toString()+ ".getCurrentCalculatedBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -647,7 +647,7 @@ public class ARCustomer extends Object{
     			return bdCalculatedBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getCurrentCalculatedBalance class!!");
+    	    	System.out.println("[1579115288] Error in " + this.toString()+ ".getCurrentCalculatedBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -686,7 +686,7 @@ public class ARCustomer extends Object{
     			return bdRetainageBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getRetainageBalance class!!");
+    	    	System.out.println("[1579115293] Error in " + this.toString()+ ".getRetainageBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -720,7 +720,7 @@ public class ARCustomer extends Object{
     			return bdRetainageBalance;
     			
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".getRetainageBalance class!!");
+    	    	System.out.println("[1579115301] Error in " + this.toString()+ ".getRetainageBalance class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());

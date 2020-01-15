@@ -1142,7 +1142,7 @@ public class AREditApplyToEntry extends HttpServlet {
 	        rs.close();
 
 			}catch (SQLException ex){
-		    	System.out.println("Error in ARCreateEntryForm.loadGLList!!");
+		    	System.out.println("[1579116245] Error in ARCreateEntryForm.loadGLList!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());

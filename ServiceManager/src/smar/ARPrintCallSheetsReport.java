@@ -290,7 +290,7 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 			
 			try{
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " SQL: " + SQL);
+					System.out.println("[1579120202] In " + this.toString() + " SQL: " + SQL);
 				}
 				int iCount = 0;
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

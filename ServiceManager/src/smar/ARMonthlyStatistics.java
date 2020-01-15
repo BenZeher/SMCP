@@ -74,7 +74,7 @@ public class ARMonthlyStatistics extends Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + ".load!!");
+	    	System.out.println("[1579119566] Error in " + this.toString() + ".load!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -151,13 +151,13 @@ public class ARMonthlyStatistics extends Object{
     		
 	        rs.close();
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
-	    		System.out.println(this.toString() + "Could not update monthly statistics");
+	    		System.out.println("[1579119574] " + this.toString() + "Could not update monthly statistics");
 	    		m_serrormessage = "Error updating monthly statistics";
 	    		return false;
 	    	}else{
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579119586] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());

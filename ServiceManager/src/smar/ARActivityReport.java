@@ -208,7 +208,7 @@ public class ARActivityReport extends java.lang.Object{
 		    out.println("<BR>Processing took " + (lEndingTime - lStartingTime)/1000 + " seconds.");
 
 		}catch(SQLException e){
-			System.out.println("Error in " + this.toString() + ":processReport - " + e.getMessage());
+			System.out.println("[1579114788] Error in " + this.toString() + ":processReport - " + e.getMessage());
 			m_sErrorMessage = "Error in " + this.toString() + ":processReport - " + e.getMessage();
 			return false;
 		}

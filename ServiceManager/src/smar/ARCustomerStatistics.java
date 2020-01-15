@@ -93,7 +93,7 @@ public class ARCustomerStatistics extends Object{
 	        }
 	        
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + ".load!!");
+	    	System.out.println("[1579116040] Error in " + this.toString() + ".load!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -143,7 +143,7 @@ public class ARCustomerStatistics extends Object{
 	        }
 	        
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + ".load!!");
+	    	System.out.println("[1579116046] Error in " + this.toString() + ".load!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -232,7 +232,7 @@ public class ARCustomerStatistics extends Object{
 	        }
 	        
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + ".load!!");
+	    	System.out.println("[1579116050] Error in " + this.toString() + ".load!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -299,7 +299,7 @@ public class ARCustomerStatistics extends Object{
 			rs.close();
 			
 		}catch (Exception e){
-			System.out.println("In " + this.toString() + ".updateCustomerBalances - error: " + e.getMessage());
+			System.out.println("[1579116059] In " + this.toString() + ".updateCustomerBalances - error: " + e.getMessage());
 			m_serrormessage = "In " + this.toString() + ".updateCustomerBalances - error: " + e.getMessage();
 			return false;
 		}

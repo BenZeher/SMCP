@@ -411,7 +411,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 
 			if (bDebugMode){
 				System.out.println(
-					"In " + this.toString() + " - " + "Creating temp tables took " 
+					"[1579115065] In " + this.toString() + " - " + "Creating temp tables took " 
 						+ (System.currentTimeMillis() - lTempTableTime) + " milliseconds overall.");
 			}
 			

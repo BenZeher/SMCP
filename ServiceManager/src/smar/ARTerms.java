@@ -118,7 +118,7 @@ public class ARTerms extends java.lang.Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579120259] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -175,7 +175,7 @@ public class ARTerms extends java.lang.Object{
 	        }
 		}catch(SQLException ex){
 			m_sErrorMessageArray.add("Error [1523041268] loading AR Terms - " + ex.getMessage());
-	    	System.out.println("Error in loadFromResultSet function!!");
+	    	System.out.println("[1579120265] Error in loadFromResultSet function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -279,7 +279,7 @@ public class ARTerms extends java.lang.Object{
 						+ ")"
 						;
 
-				System.out.println(SQL);
+				System.out.println("[1579120279] " + SQL);
 				if(!clsDatabaseFunctions.executeSQL(SQL, context, sDBID)){
 					m_sErrorMessageArray.add("Cannot execute INSERT sql.");
 					return false;
@@ -289,7 +289,7 @@ public class ARTerms extends java.lang.Object{
 				}
 			}
 		}catch(SQLException e){
-			System.out.println("Error saving terms - " + e.getMessage());
+			System.out.println("[1579120289] Error saving terms - " + e.getMessage());
 			m_sErrorMessageArray.add("Error saving terms - " + e.getMessage());
 			return false;
 		}
@@ -444,7 +444,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms to delete - " + e.getMessage());
+			System.out.println("[1579120296] Error checking terms to delete - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms to delete - " + e.getMessage());
 			return false;
 		}
@@ -469,7 +469,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms on customers - " + e.getMessage());
+			System.out.println("[1579120300] Error checking terms on customers - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms on customers - " + e.getMessage());
 			return false;
 		}
@@ -508,7 +508,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms on open orders - " + e.getMessage());
+			System.out.println("[1579120306] Error checking terms on open orders - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms on open orders - " + e.getMessage());
 			return false;
 		}
@@ -538,7 +538,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms on unexported invoices - " + e.getMessage());
+			System.out.println("[1579120311] Error checking terms on unexported invoices - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms on unexported invoices - " + e.getMessage());
 			return false;
 		}
@@ -570,7 +570,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms code - " + e.getMessage());
+			System.out.println("[1579120316] Error checking terms code - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms code - " + e.getMessage());
 			return false;
 		}
@@ -600,7 +600,7 @@ public class ARTerms extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking terms code on open transactions - " + e.getMessage());
+			System.out.println("[1579120320] Error checking terms code on open transactions - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking terms code on open transactions - " + e.getMessage());
 			return false;
 		}
@@ -617,7 +617,7 @@ public class ARTerms extends java.lang.Object{
 			}
 
 		}catch(SQLException e){
-			System.out.println("Error deleting terms - " + e.getMessage());
+			System.out.println("[1579120325] Error deleting terms - " + e.getMessage());
 			m_sErrorMessageArray.add("Error deleting terms - " + e.getMessage());
 			return false;
 		}

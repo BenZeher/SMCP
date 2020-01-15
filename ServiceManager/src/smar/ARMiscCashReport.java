@@ -120,7 +120,7 @@ public class ARMiscCashReport extends java.lang.Object{
 		    out.println("</TABLE>");
 		    
 		}catch(SQLException e){
-			System.out.println("Error in " + this.toString() + ":processReport - " + e.getMessage());
+			System.out.println("[1579119484] Error in " + this.toString() + ":processReport - " + e.getMessage());
 			m_sErrorMessage = "Error in " + this.toString() + ":processReport - " + e.getMessage();
 			return false;
 		}
@@ -195,7 +195,7 @@ public class ARMiscCashReport extends java.lang.Object{
 				+ ") ENGINE = InnoDb"
 				;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				System.out.println("Error creating temporary misc cash lines table");
+				System.out.println("[1579119490] Error creating temporary misc cash lines table");
 				m_sErrorMessage = "Error creating temporary misc cash lines table";
 				return false;
 			}
@@ -238,7 +238,7 @@ public class ARMiscCashReport extends java.lang.Object{
 			+ ")"
 			;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				System.out.println("Error inserting transactions into misc cash lines table");
+				System.out.println("[1579119495] Error inserting transactions into misc cash lines table");
 				m_sErrorMessage = "Error inserting transactions into misc cash lines table";
 				return false;
 			}
@@ -297,7 +297,7 @@ public class ARMiscCashReport extends java.lang.Object{
 			;
 
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				System.out.println("Error inserting transaction lines into misc cash lines table");
+				System.out.println("[1579119500] Error inserting transaction lines into misc cash lines table");
 				m_sErrorMessage = "Error inserting transaction lines into misc cash lines table";
 				return false;
 			}

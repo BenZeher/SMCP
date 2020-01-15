@@ -62,9 +62,9 @@ public class TESTBatchExport extends HttpServlet{
 					//, "smuser7sT559", "kJ26D3G9bvK8");
 
 			}catch(Exception F){
-				System.out.println(F.getMessage() + " - " + F.getLocalizedMessage());
+				System.out.println("[1579120402] " + F.getMessage() + " - " + F.getLocalizedMessage());
 			}
-			System.out.println(E.getMessage() + " - " + E.getLocalizedMessage());
+			System.out.println("[1579120410] " + E.getMessage() + " - " + E.getLocalizedMessage());
 		}
 
 		/*
@@ -150,7 +150,7 @@ public class TESTBatchExport extends HttpServlet{
 			glbatch.post_with_connection(conn, "1", "airo");
 		} catch (Exception e) {
 			ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
-			System.out.println(e.getMessage());
+			System.out.println("[1579120434] " + e.getMessage());
 		}
 		//clsDatabaseFunctions.commit_data_transaction(conn);
 		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);

@@ -92,7 +92,7 @@ public class ARCustomerGroup extends java.lang.Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579115311] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -122,7 +122,7 @@ public class ARCustomerGroup extends java.lang.Object{
 	        	return false;
 	        }
 		}catch(SQLException ex){
-	    	System.out.println("Error in loadFromResultSet function!!");
+	    	System.out.println("[1579115319] Error in loadFromResultSet function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -225,7 +225,7 @@ public class ARCustomerGroup extends java.lang.Object{
 				}
 			}
 		}catch(SQLException e){
-			System.out.println("Error saving customer group - " + e.getMessage());
+			System.out.println("[1579115327] Error saving customer group - " + e.getMessage());
 			m_sErrorMessageArray.add("Error saving customer group - " + e.getMessage());
 			return false;
 		}
@@ -308,7 +308,7 @@ public class ARCustomerGroup extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking customer group to delete - " + e.getMessage());
+			System.out.println("[1579115333] Error checking customer group to delete - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking customer group to delete - " + e.getMessage());
 			return false;
 		}
@@ -332,7 +332,7 @@ public class ARCustomerGroup extends java.lang.Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking customer group - " + e.getMessage());
+			System.out.println("[1579115340] Error checking customer group - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking customer group - " + e.getMessage());
 			return false;
 		}
@@ -349,7 +349,7 @@ public class ARCustomerGroup extends java.lang.Object{
 			}
 
 		}catch(SQLException e){
-			System.out.println("Error deleting customer - " + e.getMessage());
+			System.out.println("[1579115344] Error deleting customer - " + e.getMessage());
 			m_sErrorMessageArray.add("Error deleting customer - " + e.getMessage());
 			return false;
 		}

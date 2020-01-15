@@ -225,7 +225,7 @@ public class AREditMiscReceiptEntry extends HttpServlet {
 			}
 			
 		}catch (SQLException e){
-			System.out.println("In " + this.toString() + ".loadCashAccount - SQL error: " + e.getMessage());
+			System.out.println("[1579116439] In " + this.toString() + ".loadCashAccount - SQL error: " + e.getMessage());
 			return false;
 		}
 	}

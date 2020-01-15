@@ -862,7 +862,7 @@ public class AREditCustomersEdit extends HttpServlet {
             ;
 
         if (bDebugMode){
-        	System.out.println("In " + this.toString() + ".getsalesgroups - SQL: " + SQL); 
+        	System.out.println("[1579116415] In " + this.toString() + ".getsalesgroups - SQL: " + SQL); 
          }
         try {
 			ResultSet rsSalesGroups = clsDatabaseFunctions.openResultSet(

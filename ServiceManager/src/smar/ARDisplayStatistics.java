@@ -224,7 +224,7 @@ public class ARDisplayStatistics extends HttpServlet {
 		 	   log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_ARDISPLAYSTATISTICS, "REPORT", "ARDisplayStatistics", "[1564762299]");
 			pwOut.println("</TABLE>");
 		}catch (SQLException e){
-			System.out.println("Error reading monthly statistics - " + e.getMessage());
+			System.out.println("[1579116082] Error reading monthly statistics - " + e.getMessage());
 			pwOut.println("Error reading monthly statistics - " + e.getMessage());
 			return false;
 		}

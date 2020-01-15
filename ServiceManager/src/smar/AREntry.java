@@ -293,7 +293,7 @@ public class AREntry extends java.lang.Object{
 	    		return false;
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579117274] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -458,7 +458,7 @@ public class AREntry extends java.lang.Object{
     			m_iBatchType = rs.getInt(SMEntryBatch.ibatchtype);
     			rs.close();
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+    	    	System.out.println("[1579117283] Error in " + this.toString()+ ".load class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -522,7 +522,7 @@ public class AREntry extends java.lang.Object{
     			m_iBatchType = rs.getInt(SMEntryBatch.ibatchtype);
     			rs.close();
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+    	    	System.out.println("[1579117288] Error in " + this.toString()+ ".load class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -573,7 +573,7 @@ public class AREntry extends java.lang.Object{
         			m_iBatchType = rs.getInt(SMEntryBatch.ibatchtype);
         			rs.close();
         		}catch (SQLException ex){
-        	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+        	    	System.out.println("[1579117293] Error in " + this.toString()+ ".load class!!");
         	        System.out.println("SQLException: " + ex.getMessage());
         	        System.out.println("SQLState: " + ex.getSQLState());
         	        System.out.println("SQL: " + ex.getErrorCode());
@@ -636,7 +636,7 @@ public class AREntry extends java.lang.Object{
     			}
     			rs.close();
     		}catch (SQLException ex){
-    	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+    	    	System.out.println("[1579117299] Error in " + this.toString()+ ".load class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -672,7 +672,7 @@ public class AREntry extends java.lang.Object{
 	    		return false;
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " - delete_single_line!!");
+			System.out.println("[1579117304] Error in " + this.toString() + " - delete_single_line!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
@@ -1504,7 +1504,7 @@ public class AREntry extends java.lang.Object{
 	    		return 0;
 	    	}		
         }catch (SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579117391] Error in " + this.toString() + " class!!");
     	    System.out.println(this.toString() + "SQLException: " + ex.getMessage());
     	    System.out.println(this.toString() + "SQLState: " + ex.getSQLState());
     	    System.out.println(this.toString() + "SQL: " + ex.getErrorCode());
@@ -1566,7 +1566,7 @@ public class AREntry extends java.lang.Object{
 	    	}
     	}catch(SQLException ex){
     		m_sErrorMessage = "Error in " + this.toString() + " class!!";
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579117400] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -1586,7 +1586,7 @@ public class AREntry extends java.lang.Object{
 			rs.close();
     	}catch(SQLException ex){
     		m_sErrorMessage = "Error in " + this.toString() + " class!!";
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579117405] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -1649,7 +1649,7 @@ public class AREntry extends java.lang.Object{
 	    	}		
 	    	rs.close();
     	}catch (SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579117410] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -1681,7 +1681,7 @@ public class AREntry extends java.lang.Object{
 	    		return false;
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + "update_single_line class!!");
+    		System.out.println("[1579117428] Error in " + this.toString() + "update_single_line class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -1710,7 +1710,7 @@ public class AREntry extends java.lang.Object{
 	    		return false;
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + "add_single_line class!!");
+    		System.out.println("[1579117416] Error in " + this.toString() + "add_single_line class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());

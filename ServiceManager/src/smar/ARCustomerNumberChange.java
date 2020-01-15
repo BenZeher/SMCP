@@ -82,7 +82,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 	    		rs.close();
 	    	}
 	    }catch(SQLException e){
-	    	System.out.println("Error checking for unposted batches in " + this.toString() + " - " + e.getMessage());
+	    	System.out.println("[1579115717] Error checking for unposted batches in " + this.toString() + " - " + e.getMessage());
 	    	m_sErrorMessage = "Error checking for unposted batches in " + this.toString() + " - " + e.getMessage();
 	    	return false;
 	    }
@@ -106,7 +106,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for MERGE TO customer in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115720] Error checking for MERGE TO customer in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for MERGE TO customer in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -135,7 +135,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    	}
 		    	rs.close();
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for conflicting transaction documents in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115741] Error checking for conflicting transaction documents in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for conflicting transaction documents in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -162,7 +162,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    	}
 		    	rs.close();
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for conflicting matching documents in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115747] Error checking for conflicting matching documents in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for conflicting matching documents in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -198,7 +198,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    	}
 		    	rs.close();
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for conflicting ship-tos in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115754] Error checking for conflicting ship-tos in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for conflicting ship-tos in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -233,7 +233,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    	}
 		    	rs.close();
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for conflicting call sheets in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115760] Error checking for conflicting call sheets in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for conflicting call sheets in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -267,7 +267,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    	}
 		    	rs.close();
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for conflicting Sales Contacts in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115770] Error checking for conflicting Sales Contacts in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for conflicting Sales Contacts in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -298,7 +298,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for CHANGE TO customer in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115776] Error checking for CHANGE TO customer in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for CHANGE TO customer in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -320,7 +320,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for orders in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115782] Error checking for orders in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for orders in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -342,7 +342,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for Invoices in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115789] Error checking for Invoices in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for Invoices in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -364,7 +364,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for Speed search orders in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115796] Error checking for Speed search orders in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for Speed search orders in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -385,7 +385,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for call sheets in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115802] Error checking for call sheets in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for call sheets in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -405,7 +405,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
 		    		rs.close();
 		    	}
 		    }catch(SQLException e){
-		    	System.out.println("Error checking for sales contacts in " + this.toString() + " - " + e.getMessage());
+		    	System.out.println("[1579115806] Error checking for sales contacts in " + this.toString() + " - " + e.getMessage());
 		    	m_sErrorMessage = "Error checking for sales contacts in " + this.toString() + " - " + e.getMessage();
 		    	return false;
 		    }
@@ -420,7 +420,7 @@ public class ARCustomerNumberChange extends java.lang.Object{
     		ResultSet rsAROptions = clsDatabaseFunctions.openResultSet(SQL, conn);
     		if (!rsAROptions.next()){
     			m_sErrorMessage = "Error getting aroptions record";
-        		System.out.println("In " + this.toString() + ": Error getting aroptions record");
+        		System.out.println("[1579115815] In " + this.toString() + ": Error getting aroptions record");
         		return false;
     		}else{
     			if(rsAROptions.getLong(SMTablearoptions.ibatchpostinginprocess) == 1){

@@ -123,14 +123,14 @@ public class ARPostingJournal extends java.lang.Object{
 			try{
 				m_rs.close();
 			}catch (SQLException e){
-				System.out.println("In " + this.toString() + " - error closing resultset: " + e.getMessage());
+				System.out.println("[1579120171] In " + this.toString() + " - error closing resultset: " + e.getMessage());
 			}
 			return false;
 		}
 		try{
 			m_rs.close();
 		}catch (SQLException e){
-			System.out.println("In " + this.toString() + " - error closing resultset: " + e.getMessage());
+			System.out.println("[1579120184] In " + this.toString() + " - error closing resultset: " + e.getMessage());
 		}
 		
 	    SMLogEntry log = new SMLogEntry(conn);
@@ -493,7 +493,7 @@ public class ARPostingJournal extends java.lang.Object{
 			m_sCurrentBatchAndEntry = sBatchAndEntry;
 			return iCounter;
 		}catch (SQLException e){
-			System.out.println("In ARPostingJournal - SQL error in processRecord: " + e.getMessage());
+			System.out.println("[1579120191] In ARPostingJournal - SQL error in processRecord: " + e.getMessage());
 			m_sErrorMessage = "Error processing record: " + e.getMessage();
 			return -1;
 		}

@@ -445,7 +445,7 @@ public class ARCreateEntryForm {
     	        
     	        rsTerms.close();
             }catch (SQLException ex){
-    	    	System.out.println("Error in ARCreateEntryForm.Display_NONEditable_Lines class!!");
+    	    	System.out.println("[1579115136] Error in ARCreateEntryForm.Display_NONEditable_Lines class!!");
     	        System.out.println("SQLException: " + ex.getMessage());
     	        System.out.println("SQLState: " + ex.getSQLState());
     	        System.out.println("SQL: " + ex.getErrorCode());
@@ -632,7 +632,7 @@ public class ARCreateEntryForm {
 	        rsGLAccts.close();
 
 		}catch (SQLException ex){
-	    	System.out.println("Error in ARCreateEntryForm.loadGLList!!");
+	    	System.out.println("[1579115143] Error in ARCreateEntryForm.loadGLList!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -1579,7 +1579,7 @@ public class ARCreateEntryForm {
 		        rs.close();
 
 			}catch (SQLException ex){
-		    	System.out.println("Error in ARCreateEntryForm.loadGLList!!");
+		    	System.out.println("[1579115163] Error in ARCreateEntryForm.loadGLList!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());

@@ -261,7 +261,7 @@ public class APVendorRemitToLocation extends java.lang.Object{
 			+ "(" + SMTableapvendorremittolocations.sremittocode + " = '" + m_sremittocode + "')"
 			+ ")"
 		;
-		 System.out.println(SQL);
+		 System.out.println("[1579114321] " + SQL);
 		 	try {
 		 		Statement stmt = conn.createStatement();
 		 		stmt.executeUpdate(SQL);

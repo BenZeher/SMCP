@@ -251,7 +251,7 @@ public boolean delete(String s1099CPRSCode, Connection conn){
 				+ SMTableap1099cprscodes.lid + " = " + m_lid 
 			+ ")"
 		;
-		System.out.println(SQL);
+		System.out.println("[1579113476] " + SQL);
 		try{
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if(!rs.next()){

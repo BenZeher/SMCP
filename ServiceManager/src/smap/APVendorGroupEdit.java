@@ -427,7 +427,7 @@ public class APVendorGroupEdit extends HttpServlet {
     			}
     			rs.close();
     		} catch (SQLException e) {
-    			System.out.println("Error reading bank accounts - " + e.getMessage());
+    			System.out.println("[1579114302] Error reading bank accounts - " + e.getMessage());
     			s += "<B>Error reading bank account codes.</B><BR>";
     		}			
     		s += clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(

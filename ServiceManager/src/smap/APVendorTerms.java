@@ -145,7 +145,7 @@ public class APVendorTerms extends clsMasterEntry{
 				+ SMTableicvendorterms.sTermsCode + " = '" + sTermsCode + "'"
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579114333] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -261,13 +261,13 @@ public class APVendorTerms extends clsMasterEntry{
 		;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579114340] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName 
+    		System.out.println("[1579114348] " + this.toString() + "Could not insert/update " + ParamObjectName 
     				+ " - " + ex.getMessage() + ".<BR>");
     		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL
     				+ " - " + ex.getMessage());
@@ -345,7 +345,7 @@ public class APVendorTerms extends clsMasterEntry{
 		    Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-    		System.out.println("In " + this.toString() 
+    		System.out.println("[1579114365] In " + this.toString() 
     			+ " Could not delete vendor terms with terms code " + m_sTermsCode + " - " + ex.getMessage());
     		super.addErrorMessage("In " + this.toString() 
         			+ " Could not delete vendor terms with terms code " + m_sTermsCode + " - " + ex.getMessage());

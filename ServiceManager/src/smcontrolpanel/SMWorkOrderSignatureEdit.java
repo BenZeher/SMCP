@@ -544,7 +544,7 @@ public class SMWorkOrderSignatureEdit  extends HttpServlet {
 	private String sSignatureScripts(SMWorkOrderHeader workorder){
 	    //Scripts for signature:
 		
-		String s = "<script src=\"scripts/jquery-signaturepad-min-01.js\"></script>\n";
+		String s = "<script src=\"scripts/jquery-signaturepad-min-02.js\"></script>\n";
 	    s += "<script src=\"scripts/json2.min.js\"></script>\n"
 	    ;
 	    return s;

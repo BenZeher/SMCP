@@ -148,7 +148,7 @@ public class LateReportCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in LateReportCriteriaSelection class!!");
+	    	System.out.println("[1579100899] Error in LateReportCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

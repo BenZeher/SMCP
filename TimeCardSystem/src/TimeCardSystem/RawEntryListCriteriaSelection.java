@@ -146,7 +146,7 @@ public class RawEntryListCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in RawEntryCriteriaSelection class!!");
+	    	System.out.println("[1579104741] Error in RawEntryCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

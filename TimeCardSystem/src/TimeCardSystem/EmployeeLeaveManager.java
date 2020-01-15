@@ -375,7 +375,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 									   rsTypeInfo.getDouble("dMinimumHourWorked"), rsEmployeeInfo.getDouble("dWorkHour")
 									   );
 		}catch(SQLException exSQL){
-			System.out.println("<BR><BR>Error in EmployeeLeaveManager.EvaluateEligibility!!");
+			System.out.println("<BR><BR>[1579100809] Error in EmployeeLeaveManager.EvaluateEligibility!!");
 			System.out.println("SQLException: " + exSQL.getErrorCode() + " - " + exSQL.toString());
 			return false;
 		}
@@ -423,7 +423,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 			return b;
 			
 		}catch (Exception ex) {
-	    	System.out.println("<BR><BR>Error in EmployeeLeaveManager.EvaluateEligibility!!");
+	    	System.out.println("<BR><BR>[1579100820] Error in EmployeeLeaveManager.EvaluateEligibility!!");
 	    	System.out.println("Exception: " + ex.getMessage());
 	    	return false;
 	    }
@@ -568,7 +568,7 @@ public class EmployeeLeaveManager extends HttpServlet {
 			
 		}catch(Exception ex){
 	    	System.out.println("Error [1560446995] in EmployeeLeaveManager.CalculateLeaveTotal!!<BR>");
-	    	System.out.println("[1560446995] Exception: " + ex.getMessage() + "<BR>");
+	    	System.out.println("Exception: " + ex.getMessage() + "<BR>");
 	    	return 0;
 		}
 	}

@@ -125,7 +125,7 @@ public class DepartmentInfoSave extends HttpServlet{
 	        	return false;
 	        }
 		}catch (Exception ex) {
-	    	System.out.println("<BR><BR>Error in Save_Department_Info!!<BR>");
+	    	System.out.println("<BR><BR>[1579099048] Error in Save_Department_Info!!<BR>");
 	    	System.out.println("Exception: " + ex.getMessage() + "<BR>");
 	    	return false;
 	    }

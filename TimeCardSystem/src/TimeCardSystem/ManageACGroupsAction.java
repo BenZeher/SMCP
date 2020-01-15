@@ -77,7 +77,7 @@ public class ManageACGroupsAction extends HttpServlet {
 		    	out.println("<META http-equiv='Refresh' content='2;URL=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups'>");
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in SMUtilities.commitTransaction class!!");
+			System.out.println("[1579100957] Error in SMUtilities.commitTransaction class!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

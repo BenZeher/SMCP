@@ -94,7 +94,7 @@ public class PostPeriodTotalCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in PostPeriodTotalCriteriaSelection class!!");
+	    	System.out.println("[1579104315] Error in PostPeriodTotalCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

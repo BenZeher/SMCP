@@ -123,7 +123,7 @@ public class TimeEntryTypeInfoSave extends HttpServlet{
 	        	return false;
 	        }
 		}catch (Exception ex) {
-	    	System.out.println("<BR><BR>Error in Save_Time_Entry_Type_Info!!<BR>");
+	    	System.out.println("<BR><BR>[1579106929] Error in Save_Time_Entry_Type_Info!!<BR>");
 	    	System.out.println("Exception: " + ex.getMessage() + "<BR>");
 	    	return false;
 	    }

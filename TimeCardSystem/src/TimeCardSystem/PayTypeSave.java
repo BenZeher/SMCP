@@ -118,7 +118,7 @@ public class PayTypeSave extends HttpServlet{
 	        	return false;
 	        }
 		}catch (Exception ex) {
-	    	System.out.println("<BR><BR>Error in Save_Pay_Type_Info!!<BR>");
+	    	System.out.println("<BR><BR>[1579104277] Error in Save_Pay_Type_Info!!<BR>");
 	    	System.out.println("Exception: " + ex.getMessage() + "<BR>");
 	    	return false;
 	    }

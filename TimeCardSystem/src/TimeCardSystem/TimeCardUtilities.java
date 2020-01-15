@@ -268,7 +268,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 					rsTypeInfo.getDouble("dMinimumHourWorked"), rsEmployeeInfo.getDouble("dWorkHour")
 			);
 		}catch(SQLException exSQL){
-			System.out.println("<BR><BR>Error in EmployeeLeaveManager.EvaluateEligibility!!");
+			System.out.println("<BR><BR>[1579105655] Error in EmployeeLeaveManager.EvaluateEligibility!!");
 			System.out.println("SQLException: " + exSQL.getErrorCode() + " - " + exSQL.toString());
 			return false;
 		}
@@ -316,7 +316,7 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 			return b;
 
 		}catch (Exception ex) {
-			System.out.println("<BR><BR>Error in EmployeeLeaveManager.EvaluateEligibility!!");
+			System.out.println("<BR><BR>[1579105666] Error in EmployeeLeaveManager.EvaluateEligibility!!");
 			System.out.println("Exception: " + ex.getMessage());
 			return false;
 		}

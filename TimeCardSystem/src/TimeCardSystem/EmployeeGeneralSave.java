@@ -203,7 +203,7 @@ public class EmployeeGeneralSave extends HttpServlet{
 	        s = s.substring(0, s.length() - 1) + " WHERE sEmployeeID = '" + request.getParameter("EmployeeID") + "'";
 	        rs.close();
         }catch(Exception ex){
-        	System.out.println("Error in Get_Update_Employee_Auxiliary_Info_SQL: " + ex.toString());
+        	System.out.println("[1579099084] Error in Get_Update_Employee_Auxiliary_Info_SQL: " + ex.toString());
         }
 		return s;
 	}

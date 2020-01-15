@@ -120,7 +120,7 @@ public class DepartmentEdit extends HttpServlet{
 	
 	public boolean IsServiceType(int iMechType, int iServiceTypeID) throws SQLException{
 		
-		System.out.println("iMechType = " + iMechType + ", iServiceTypeID = " + iServiceTypeID);
+		System.out.println("[1579098967] iMechType = " + iMechType + ", iServiceTypeID = " + iServiceTypeID);
 		for (int i=24; i>iServiceTypeID; i--){
 			if (iMechType >= Math.pow(2, i)){
 				iMechType = iMechType - (int)Math.pow(2, i);

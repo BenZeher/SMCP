@@ -95,7 +95,7 @@ public class EmployeeAuxiInfoReportFieldSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in EmployeeAuxiInfoReportFieldSelection class!!");
+	    	System.out.println("[1579099059] Error in EmployeeAuxiInfoReportFieldSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

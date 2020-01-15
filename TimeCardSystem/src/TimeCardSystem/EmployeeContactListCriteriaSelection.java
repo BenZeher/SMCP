@@ -69,7 +69,7 @@ public class EmployeeContactListCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in PhoneListCriteriaSelection class!!");
+	    	System.out.println("[1579099072] Error in PhoneListCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

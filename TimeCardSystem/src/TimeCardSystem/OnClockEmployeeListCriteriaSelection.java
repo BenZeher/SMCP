@@ -60,7 +60,7 @@ public class OnClockEmployeeListCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in OnClockEmployeeListCriteriaSelection class!!");
+	    	System.out.println("[1579104265] Error in OnClockEmployeeListCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

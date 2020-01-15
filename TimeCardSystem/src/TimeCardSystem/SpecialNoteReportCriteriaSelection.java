@@ -117,7 +117,7 @@ public class SpecialNoteReportCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in PeriodTimeTotal class!!");
+	    	System.out.println("[1579104751] Error in PeriodTimeTotal class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

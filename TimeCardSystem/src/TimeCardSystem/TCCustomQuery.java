@@ -61,7 +61,7 @@ public class TCCustomQuery extends java.lang.Object{
 	) throws Exception{
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " bTotalNumericFields = " + bTotalNumericFields);
+			System.out.println("[1579104760] In " + this.toString() + " bTotalNumericFields = " + bTotalNumericFields);
 		}
 		long lStartingTime = System.currentTimeMillis();
 		
@@ -287,7 +287,7 @@ public class TCCustomQuery extends java.lang.Object{
 				out.println("<table class=\"main\">");
 				out.println("<TR>");
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " - main SQL = " + sQueryString);
+					System.out.println("[1579104767] In " + this.toString() + " - main SQL = " + sQueryString);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sQueryString, conn);
 				iColumnCount = rs.getMetaData().getColumnCount();

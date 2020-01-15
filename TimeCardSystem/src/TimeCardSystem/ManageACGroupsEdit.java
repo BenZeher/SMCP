@@ -61,7 +61,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 		    	out.println ("You must check the 'confirming' check box to delete a group.");
 		    }
 		    else{
-		    	System.out.println("Group Name#1 = " + sGroupName);
+		    	System.out.println("[1579100973] Group Name#1 = " + sGroupName);
 			    if (Delete_Group(sGroupName, out, sConfFile) == false){
 			    	out.println ("Error deleting group " + sGroupName + ".");
 					out.println ("<A href=" + TCWebContextParameters.getURLLinkBase(getServletContext()) + "TimeCardSystem.ManageACGroups>Click here to return to access control group list.</A>");
@@ -108,7 +108,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 			//If we never found a matching record, return 'NO':
 			return "";
 		}catch (SQLException ex){
-	    	System.out.println("Error in ManageACGroupsEdit class in Is_Function_In_Group!!");
+	    	System.out.println("[1579100982] Error in ManageACGroupsEdit class in Is_Function_In_Group!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -129,7 +129,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 			//If we never found a matching record, return:
 			return "";
 		}catch (SQLException ex){
-	    	System.out.println("Error in ManageACGroupsEdit class in Is_User_In_Group!!");
+	    	System.out.println("[1579100990] Error in ManageACGroupsEdit class in Is_User_In_Group!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -188,7 +188,7 @@ public class ManageACGroupsEdit extends HttpServlet {
         	//pwOut.println ("</TABLE>");
         	pwOut.println ("<BR>");
 		}catch (SQLException ex){
-	    	System.out.println("Error in ManageAccessControlGroupsEdit class!!");
+	    	System.out.println("[1579100997] Error in ManageAccessControlGroupsEdit class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -220,7 +220,7 @@ public class ManageACGroupsEdit extends HttpServlet {
         	pwOut.println(TimeCardUtilities.Build_HTML_Table(5, sUserTable,1,false));
         	
 		}catch (SQLException ex){
-	    	System.out.println("Error in ManageACGroupsEdit class!!");
+	    	System.out.println("[1579101003] Error in ManageACGroupsEdit class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -249,7 +249,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
+	    	System.out.println("[1579101015] Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -271,7 +271,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 			}
 			rs.close();
 		}catch(SQLException ex){
-	    	System.out.println("Error in ManageACGroupsEdit.Add_Group class!!");
+	    	System.out.println("[1579101020] Error in ManageACGroupsEdit.Add_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -283,7 +283,7 @@ public class ManageACGroupsEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in ManageACGroupsEdit.Add_Group class!!");
+	    	System.out.println("[1579101027] Error in ManageACGroupsEdit.Add_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

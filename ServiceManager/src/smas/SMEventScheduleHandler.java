@@ -11,7 +11,6 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
-import ConnectionPool.CompanyDataCredentials;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTablessalarmsequences;
 import SMDataDefinition.SMTablessdeviceevents;

@@ -6,7 +6,6 @@ import java.util.ArrayList;
 
 import javax.servlet.ServletContext;
 
-import ConnectionPool.CompanyDataCredentials;
 import SMClasses.MySQLs;
 import SMClasses.SMAppointment;
 import SMDataDefinition.SMTableappointments;

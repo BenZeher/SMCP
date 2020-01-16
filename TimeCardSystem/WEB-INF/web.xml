@@ -271,13 +271,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ManageACGroupsAction</servlet-name>
-        <servlet-class>TimeCardSystem.ManageACGroupsAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ManageACGroups</servlet-name>
         <servlet-class>TimeCardSystem.ManageACGroups</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ManageACGroupsAction</servlet-name>
+        <servlet-class>TimeCardSystem.ManageACGroupsAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -318,26 +318,6 @@
     <servlet>
         <servlet-name>MilestonesReportGenerate</servlet-name>
         <servlet-class>TimeCardSystem.MilestonesReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>MissingDayReportCriteriaSelection</servlet-name>
-        <servlet-class>TimeCardSystem.MissingDayReportCriteriaSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>MissingDayReportGenerate</servlet-name>
-        <servlet-class>TimeCardSystem.MissingDayReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>MissingTimeListCriteriaSelection</servlet-name>
-        <servlet-class>TimeCardSystem.MissingTimeListCriteriaSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>MissingTimeListGenerate</servlet-name>
-        <servlet-class>TimeCardSystem.MissingTimeListGenerate</servlet-class>
     </servlet>
 
     <servlet>
@@ -531,6 +511,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>TCSavedQueriesSelect</servlet-name>
+        <servlet-class>TimeCardSystem.TCSavedQueriesSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>TCSaveQueryAction</servlet-name>
+        <servlet-class>TimeCardSystem.TCSaveQueryAction</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>TCSEditCompanyProfile</servlet-name>
         <servlet-class>TimeCardSystem.TCSEditCompanyProfile</servlet-class>
     </servlet>
@@ -538,16 +528,6 @@
     <servlet>
         <servlet-name>TCSEditCompanyProfileAction</servlet-name>
         <servlet-class>TimeCardSystem.TCSEditCompanyProfileAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>TCSavedQueriesSelect</servlet-name>
-        <servlet-class>TimeCardSystem.TCSavedQueriesSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>TCSaveQueryAction</servlet-name>
-        <servlet-class>TimeCardSystem.TCSaveQueryAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -697,8 +677,11 @@
         <url-pattern>/TimeCardSystem.EmployeeLeaveManagerCriteriaSelection</url-pattern>
     </servlet-mapping>
 
-
-
+    <servlet-mapping>
+        <servlet-name>EmployeeLeaveRemove</servlet-name>
+        <url-pattern>/TimeCardSystem.EmployeeLeaveRemove</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>EmployeeLeaveSave</servlet-name>
         <url-pattern>/TimeCardSystem.EmployeeLeaveSave</url-pattern>
@@ -714,11 +697,6 @@
         <url-pattern>/TimeCardSystem.EmployeeLeaveSummaryGenerate</url-pattern>
     </servlet-mapping>
 
-    <servlet-mapping>
-        <servlet-name>EmployeeLeaveRemove</servlet-name>
-        <url-pattern>/TimeCardSystem.EmployeeLeaveRemove</url-pattern>
-    </servlet-mapping>
-    
     <servlet-mapping>
         <servlet-name>EmployeeList</servlet-name>
         <url-pattern>/TimeCardSystem.EmployeeList</url-pattern>
@@ -810,13 +788,13 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>ManageACGroupsAction</servlet-name>
-        <url-pattern>/TimeCardSystem.ManageACGroupsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>ManageACGroups</servlet-name>
         <url-pattern>/TimeCardSystem.ManageACGroups</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ManageACGroupsAction</servlet-name>
+        <url-pattern>/TimeCardSystem.ManageACGroupsAction</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -857,26 +835,6 @@
     <servlet-mapping>
         <servlet-name>MilestonesReportGenerate</servlet-name>
         <url-pattern>/TimeCardSystem.MilestonesReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>MissingDayReportCriteriaSelection</servlet-name>
-        <url-pattern>/TimeCardSystem.MissingDayReportCriteriaSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>MissingDayReportGenerate</servlet-name>
-        <url-pattern>/TimeCardSystem.MissingDayReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>MissingTimeListCriteriaSelection</servlet-name>
-        <url-pattern>/TimeCardSystem.MissingTimeListCriteriaSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>MissingTimeListGenerate</servlet-name>
-        <url-pattern>/TimeCardSystem.MissingTimeListGenerate</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -1070,6 +1028,16 @@
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>TCSavedQueriesSelect</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSavedQueriesSelect</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>TCSaveQueryAction</servlet-name>
+        <url-pattern>/TimeCardSystem.TCSaveQueryAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
         <servlet-name>TCSEditCompanyProfile</servlet-name>
         <url-pattern>/TimeCardSystem.TCSEditCompanyProfile</url-pattern>
     </servlet-mapping>
@@ -1077,16 +1045,6 @@
     <servlet-mapping>
         <servlet-name>TCSEditCompanyProfileAction</servlet-name>
         <url-pattern>/TimeCardSystem.TCSEditCompanyProfileAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>TCSavedQueriesSelect</servlet-name>
-        <url-pattern>/TimeCardSystem.TCSavedQueriesSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>TCSaveQueryAction</servlet-name>
-        <url-pattern>/TimeCardSystem.TCSaveQueryAction</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -1128,7 +1086,6 @@
         <servlet-name>UserLogin</servlet-name>
         <url-pattern>/TimeCardSystem.UserLogin</url-pattern>
     </servlet-mapping>
-
 
 
     <!-- Define the default session timeout for your application,

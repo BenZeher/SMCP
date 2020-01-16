@@ -636,7 +636,7 @@ public class SMGLExport extends java.lang.Object{
 				stmt.execute(SQL);
 			} catch (Exception e) {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " - " + "Error inserting GL header with SQL: " + SQL + " - error: " + e.getMessage());
+					System.out.println("[1579190693] In " + this.toString() + " - " + "Error inserting GL header with SQL: " + SQL + " - error: " + e.getMessage());
 				}
 				throw new Exception("Error inserting GL header with SQL: " + SQL + " - error: " + e.getMessage());
 			}
@@ -682,7 +682,7 @@ public class SMGLExport extends java.lang.Object{
 					stmt.execute(SQL);
 				} catch (Exception e) {
 					if (bDebugMode){
-						System.out.println("In " + this.toString() + " - " + "Error inserting GL header with SQL: " + SQL + " - error: " + e.getMessage());
+						System.out.println("[1579190697] In " + this.toString() + " - " + "Error inserting GL header with SQL: " + SQL + " - error: " + e.getMessage());
 					}
 					throw new Exception("Error inserting GL detail with SQL: " + SQL + " - error: " + e.getMessage());
 				}
@@ -809,7 +809,7 @@ public class SMGLExport extends java.lang.Object{
 		;
 		try {
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " - SQL = " + SQL);
+				System.out.println("[1579190705] In " + this.toString() + " - SQL = " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			long lCurrentBatchEntry = 0;
@@ -866,7 +866,7 @@ public class SMGLExport extends java.lang.Object{
 			throw new Exception("Error reading export headers with SQL: " + SQL + " - " + e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - m_HeaderRecordArray.size() = " + m_HeaderRecordArray.size());
+			System.out.println("[1579190711] In " + this.toString() + " - m_HeaderRecordArray.size() = " + m_HeaderRecordArray.size());
 			for (int i = 0; i < m_HeaderRecordArray.size(); i ++){
 				writeACCPACDownloadEntry(i, new PrintWriter(System.out));
 			}

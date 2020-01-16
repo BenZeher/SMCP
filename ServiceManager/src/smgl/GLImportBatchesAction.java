@@ -225,7 +225,7 @@ public class GLImportBatchesAction extends HttpServlet{
 			fileItems = upload.parseRequest(req);
 		} catch (FileUploadException e1) {
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+				System.out.println("[1579190624] In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
 			}
 			throw new Exception("Error [1557852636] on upload.parseRequest: " + e1.getMessage());
@@ -239,7 +239,7 @@ public class GLImportBatchesAction extends HttpServlet{
 		    		mv.put(CALLING_CLASS, item.getString());
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579190627] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter CallingClass = " + mv.get(CALLING_CLASS) + "."); 
 					}		
 		    	}
@@ -710,7 +710,7 @@ public class GLImportBatchesAction extends HttpServlet{
 					break;
 				}
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".validateFile - at line " + iLineCounter);
+					System.out.println("[1579190636] In " + this.toString() + ".validateFile - at line " + iLineCounter);
 				}
 				iLineCounter++;
 				

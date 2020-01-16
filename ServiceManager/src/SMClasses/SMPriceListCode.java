@@ -66,7 +66,7 @@ public class SMPriceListCode extends java.lang.Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579186362] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -88,7 +88,7 @@ public class SMPriceListCode extends java.lang.Object{
 	        	return false;
 	        }
 		}catch(SQLException ex){
-	    	System.out.println("Error in loadFromResultSet function!!");
+	    	System.out.println("[1579186366] Error in loadFromResultSet function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -193,7 +193,7 @@ public class SMPriceListCode extends java.lang.Object{
 				}
 			}
 		}catch(SQLException e){
-			System.out.println("Error saving price list code - " + e.getMessage());
+			System.out.println("[1579186372] Error saving price list code - " + e.getMessage());
 			m_sErrorMessageArray.add("Error saving price list code - " + e.getMessage());
 			return false;
 		}

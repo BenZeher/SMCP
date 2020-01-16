@@ -818,7 +818,7 @@ public class SMInvoice extends clsMasterEntry{//java.lang.Object{
         						+ "<BR>" + ex.getMessage());
         }
         if (bDebugMode){
-        	System.out.println("In Save_Invoice - finished save_without_data_transaction(conn)");
+        	System.out.println("[1579186123] In Save_Invoice - finished save_without_data_transaction(conn)");
         }
         boolean bRecordChanged = true;
         if (!opt.load(conn)){
@@ -845,7 +845,7 @@ public class SMInvoice extends clsMasterEntry{//java.lang.Object{
         }else{
         	//can't save.
 	        if (bDebugMode){
-	        	System.out.println("In Save_Invoice - " + opt.getLastEditUserFullName() 
+	        	System.out.println("[1579186129] In Save_Invoice - " + opt.getLastEditUserFullName() 
 	            		+ " created new invoice(s) at " 
 	            		+ opt.getLastEditTime() + " since you started.");
 	        }

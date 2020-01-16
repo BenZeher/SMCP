@@ -862,7 +862,7 @@ public class SMOrderDetail extends clsMasterEntry{
     	;
     	if (bDebugMode){
     		System.out.println("[1332266358]: " + clsDateAndTimeConversions.now("yyyyMMdd HH:mm:ss:SSS") + " " + SQL);
-    		System.out.println("In " + this.toString() + ".save SQL = " + SQL + ".");
+    		System.out.println("[1579186189] In " + this.toString() + ".save SQL = " + SQL + ".");
     	}
     	try {
 			Statement stmt = conn.createStatement();

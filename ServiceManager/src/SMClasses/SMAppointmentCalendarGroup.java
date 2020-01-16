@@ -77,7 +77,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
 				+ SMTableappointmentgroups.igroupid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579185903] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -178,7 +178,7 @@ public class SMAppointmentCalendarGroup extends clsMasterEntry{
     		    		throw new Exception("Could not complete update transaction - group was not updated.<BR>");
     		    	}
     		    }catch (SQLException ex){
-    				System.out.println("Error in SMUtilities.commitTransaction class!!");
+    				System.out.println("[1579185912] Error in SMUtilities.commitTransaction class!!");
     			    System.out.println("SQLException: " + ex.getMessage());
     			    System.out.println("SQLState: " + ex.getSQLState());
     			    System.out.println("SQL: " + ex.getErrorCode());

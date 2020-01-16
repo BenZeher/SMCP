@@ -1516,7 +1516,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " in save 1");
+			System.out.println("[1579186201] In " + this.toString() + " in save 1");
 		}
 		
 		//Grab a new geocode if the address field as changed
@@ -1533,7 +1533,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		String sCurrentTrimmedOrderNumber = getM_strimmedordernumber();
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " in save 2");
+			System.out.println("[1579186217] In " + this.toString() + " in save 2");
 		}
 		
 		//Now recalculate the entire order:
@@ -1553,7 +1553,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " in save 3");
+			System.out.println("[1579186223] In " + this.toString() + " in save 3");
 		}
 
 		try {
@@ -1675,7 +1675,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " in save 3");
+			System.out.println("[1579186230] In " + this.toString() + " in save 3");
 		}
 
 		try {
@@ -3388,7 +3388,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".deleteLines - starting into removal loop");
+			System.out.println("[1579186250] In " + this.toString() + ".deleteLines - starting into removal loop");
 		}
 		
 		//Don't let the user delete all the lines:
@@ -3418,14 +3418,14 @@ public class SMOrderHeader extends clsMasterEntry{
 				//Remove each detail from the order details array:
 				SMOrderDetail line = m_arrDetails.get(j);
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".deleteLines - "
+					System.out.println("[1579186254] In " + this.toString() + ".deleteLines - "
 						+ " sDetailNumbers(" + j + ") = '" + sDetailNumbers.get(i) + "', "
 						+ "line.getM_iDetailNumber() = '" + line.getM_iDetailNumber() + "'."
 					);
 				}
 				if (line.getM_iDetailNumber().compareToIgnoreCase(sDetailNumbers.get(i)) == 0){
 					if (bDebugMode){
-						System.out.println("In " + this.toString() + ".deleteLines - "
+						System.out.println("[1579186258] In " + this.toString() + ".deleteLines - "
 							+ " line is being removed."
 						);
 					}
@@ -4236,7 +4236,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		for (int i = 0; i < m_arrDetails.size(); i++){
 			try {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".moveLines - saving detail with line number = " 
+					System.out.println("[1579186268] In " + this.toString() + ".moveLines - saving detail with line number = " 
 						+ m_arrDetails.get(i).getM_iLineNumber());
 				}
 				m_arrDetails.get(i).save_line(conn);
@@ -4422,7 +4422,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		for (int i = 0; i < m_arrDetails.size(); i++){
 			try {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".copyLines - saving detail with line number = " 
+					System.out.println("[1579186280] In " + this.toString() + ".copyLines - saving detail with line number = " 
 						+ m_arrDetails.get(i).getM_iLineNumber());
 				}
 				m_arrDetails.get(i).save_line(conn);
@@ -4583,7 +4583,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		for (int i = 0; i < m_arrDetails.size(); i++){
 			try {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".setMechanic - saving detail with line number = " 
+					System.out.println("[1579186288] In " + this.toString() + ".setMechanic - saving detail with line number = " 
 						+ m_arrDetails.get(i).getM_iLineNumber());
 				}
 				m_arrDetails.get(i).save_line(conn);
@@ -4840,7 +4840,7 @@ public class SMOrderHeader extends clsMasterEntry{
 		for (int i = 0; i < m_arrDetails.size(); i++){
 			try {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".repriceQuote - saving detail with line number = " 
+					System.out.println("[1579186303] In " + this.toString() + ".repriceQuote - saving detail with line number = " 
 							+ m_arrDetails.get(i).getM_iLineNumber());
 				}
 				m_arrDetails.get(i).save_line(conn);
@@ -4968,9 +4968,9 @@ public class SMOrderHeader extends clsMasterEntry{
 
 		String sPriceLevelField = "";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".updateLinePrice - getM_iCustomerDiscountLevel() =  " 
+			System.out.println("[1579186312] In " + this.toString() + ".updateLinePrice - getM_iCustomerDiscountLevel() =  " 
 					+ getM_iCustomerDiscountLevel());
-			System.out.println("In " + this.toString() + ".updateLinePrice - Integer.parseInt(getM_iCustomerDiscountLevel()) =  " 
+			System.out.println("[1579186315] In " + this.toString() + ".updateLinePrice - Integer.parseInt(getM_iCustomerDiscountLevel()) =  " 
 					+ Integer.parseInt(getM_iCustomerDiscountLevel()));
 		}
 		switch (Integer.parseInt(getM_iCustomerDiscountLevel())){
@@ -5015,7 +5015,7 @@ public class SMOrderHeader extends clsMasterEntry{
 			System.out.println("[1332265964]:" + clsDateAndTimeConversions.now("yyyyMMdd HH:mm:ss:SSS") + SQL);
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".updateLinePrice - SQL =  " + SQL);
+			System.out.println("[1579186320] In " + this.toString() + ".updateLinePrice - SQL =  " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -5024,16 +5024,16 @@ public class SMOrderHeader extends clsMasterEntry{
 					SMTableorderdetails.dOrderUnitPriceScale,
 					rs.getBigDecimal(SMTableicitemprices.TableName + "." + sPriceLevelField)));
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".updateLinePrice sPriceLevelField =  " 
+					System.out.println("[1579186329] In " + this.toString() + ".updateLinePrice sPriceLevelField =  " 
 							+ sPriceLevelField);
-					System.out.println("In " + this.toString() + ".updateLinePrice line.getorderunitprice =  " 
+					System.out.println("[1579186332] In " + this.toString() + ".updateLinePrice line.getorderunitprice =  " 
 						+ line.getM_dOrderUnitPrice());
 				}
 				rs.close();
 			}else{
 				line.setM_dOrderUnitPrice("0.00");
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".updateLinePrice line.getorderunitprice =  " 
+					System.out.println("[1579186335] In " + this.toString() + ".updateLinePrice line.getorderunitprice =  " 
 						+ "0.00");
 				}
 				rs.close();

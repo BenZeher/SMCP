@@ -309,7 +309,7 @@ public class SMDeliveryTicket extends clsMasterEntry{
 				+ SMTabledeliverytickets.lid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579185932] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

@@ -367,7 +367,7 @@ public class SMEntryBatch {
     	
     	//Set the batch number for our batch:
     	if (!sBatchNumber(sBatchNumber)){
-    		System.out.println("Invalid batch number in delete_entry: " + sBatchNumber);
+    		System.out.println("[1579185952] Invalid batch number in delete_entry: " + sBatchNumber);
     		return false;
     	}
 
@@ -433,7 +433,7 @@ public class SMEntryBatch {
 	    		return false;
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " - delete_single_entry!!");
+			System.out.println("[1579185957] Error in " + this.toString() + " - delete_single_entry!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
@@ -452,7 +452,7 @@ public class SMEntryBatch {
 	    		return false;
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " - delete_lines_for_entry!!");
+			System.out.println("[1579185963] Error in " + this.toString() + " - delete_lines_for_entry!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
@@ -490,7 +490,7 @@ public class SMEntryBatch {
 	    	}
 	    	rs.close();
         }catch (SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class - renumbering all entries!!");
+    		System.out.println("[1579185968] Error in " + this.toString() + " class - renumbering all entries!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -535,7 +535,7 @@ public class SMEntryBatch {
 	    	}
 	    	rs.close();
         }catch (SQLException ex){
-    		System.out.println("Error in " + toString() + " class - getting last entry number!!");
+    		System.out.println("[1579185973] Error in " + toString() + " class - getting last entry number!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -548,7 +548,7 @@ public class SMEntryBatch {
 	    		return false;
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " - update_last_entry_number!!");
+			System.out.println("[1579185978] Error in " + this.toString() + " - update_last_entry_number!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
@@ -567,7 +567,7 @@ public class SMEntryBatch {
 	    		return false;
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " - delete_single_entry!!");
+			System.out.println("[1579185983] Error in " + this.toString() + " - delete_single_entry!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());
@@ -586,7 +586,7 @@ public class SMEntryBatch {
 			m_lbatchnumber = Integer.parseInt(sBatchNumber);
 			return true;
 		}catch (NumberFormatException e){
-			System.out.println("Error formatting batch number from string: " + sBatchNumber + ".");
+			System.out.println("[1579185988] Error formatting batch number from string: " + sBatchNumber + ".");
 			System.out.println("Error: " + e.getMessage());
 			return false;
 		}
@@ -688,7 +688,7 @@ public class SMEntryBatch {
     			default: return false;
     		}
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting batch status from string: " + sBatchStatus + ".");
+    		System.out.println("[1579185995] Error formatting batch status from string: " + sBatchStatus + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}
@@ -731,7 +731,7 @@ public class SMEntryBatch {
     			default: return false;
     		}
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting batch type from string: " + sBatchType + ".");
+    		System.out.println("[1579186000] Error formatting batch type from string: " + sBatchType + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}
@@ -886,7 +886,7 @@ public class SMEntryBatch {
     			return "0.00";
     		}
     	}catch(SQLException e){
-    		System.out.println("In SMEntryBatch: Error getting batch total amount " + e.getMessage());
+    		System.out.println("[1579186006] In SMEntryBatch: Error getting batch total amount " + e.getMessage());
     		return "0.00";
     	}
     }

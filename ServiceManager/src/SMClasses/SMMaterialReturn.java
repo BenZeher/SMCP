@@ -223,7 +223,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				+ SMTablematerialreturns.lid + " = " + sID
 				+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579186172] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -469,7 +469,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579186178] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 			Statement stmt = conn.createStatement();

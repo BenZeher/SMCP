@@ -665,7 +665,7 @@ public class TRANSACTIONSQLs {
 				+ " AND (" + SMTableentrylines.ilinenumber + " = " + sLineNumber + ")"
 			+ ")";
 		
-		System.out.println("Update_TransactionLine = " + SQL);
+		System.out.println("[1579186424] Update_TransactionLine = " + SQL);
 		return SQL;
 	}
 

@@ -109,7 +109,7 @@ public class SMEntryLine extends java.lang.Object{
 		    	}
 		    	rs.close();
 	        }catch (SQLException ex){
-	    		System.out.println("Error in " + this.toString() + "save class!!");
+	    		System.out.println("[1579186014] Error in " + this.toString() + "save class!!");
 	    	    System.out.println("SQLException: " + ex.getMessage());
 	    	    System.out.println("SQLState: " + ex.getSQLState());
 	    	    System.out.println("SQL: " + ex.getErrorCode());
@@ -149,13 +149,13 @@ public class SMEntryLine extends java.lang.Object{
     	
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, context, sDBID) == false){
-	    		System.out.println("Could not complete update transaction - " + "entry was not updated.<BR>");
+	    		System.out.println("[1579186020] Could not complete update transaction - " + "entry was not updated.<BR>");
 	    	}else{
 	    		
-	    		System.out.println("Successfully updated " + "entry: " + sEntryNumber() + ".");
+	    		System.out.println("[1579186029] Successfully updated " + "entry: " + sEntryNumber() + ".");
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579186032] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -172,17 +172,17 @@ public class SMEntryLine extends java.lang.Object{
 		){
     
 	    if (! sBatchNumber(sBatchNumber)){
-	    	System.out.println("Invalid sBatchNumber - " + sBatchNumber);
+	    	System.out.println("[1579186038] Invalid sBatchNumber - " + sBatchNumber);
 	    	return false;
 	    }
 	
 	    if (! sEntryNumber(sEntryNumber)){
-	    	System.out.println("Invalid sEntryNumber - " + sEntryNumber);
+	    	System.out.println("[1579186042] Invalid sEntryNumber - " + sEntryNumber);
 	    	return false;
 	    }
 	    
 	    if (! sLineNumber(sLineNumber)){
-	    	System.out.println("Invalid sLineNumber - " + sEntryNumber);
+	    	System.out.println("[1579186049] Invalid sLineNumber - " + sEntryNumber);
 	    	return false;
 	    }
 	
@@ -203,7 +203,7 @@ public class SMEntryLine extends java.lang.Object{
 			setApplyToOrderNumber(rs.getString(SMTableentrylines.sapplytoordernumber));
 			rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+	    	System.out.println("[1579186053] Error in " + this.toString()+ ".load class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -237,7 +237,7 @@ public class SMEntryLine extends java.lang.Object{
 			setApplyToOrderNumber(rs.getString(SMTableentrylines.sapplytoordernumber));
 			rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".load class!!");
+	    	System.out.println("[1579186060] Error in " + this.toString()+ ".load class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -264,7 +264,7 @@ public class SMEntryLine extends java.lang.Object{
     		m_iBatchNumber = Integer.parseInt(sBatchNumber);
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting batch number from string: " + sBatchNumber + ".");
+    		System.out.println("[1579186070] Error formatting batch number from string: " + sBatchNumber + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}
@@ -283,7 +283,7 @@ public class SMEntryLine extends java.lang.Object{
     		m_iEntryNumber = Integer.parseInt(sEntryNumber);
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting Entry number from string: " + sEntryNumber + ".");
+    		System.out.println("[1579186081] Error formatting Entry number from string: " + sEntryNumber + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}
@@ -305,7 +305,7 @@ public class SMEntryLine extends java.lang.Object{
     		m_iLineNumber = Integer.parseInt(sLineNumber);
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting line number from string: " + sLineNumber + ".");
+    		System.out.println("[1579186088] Error formatting line number from string: " + sLineNumber + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}
@@ -368,7 +368,7 @@ public class SMEntryLine extends java.lang.Object{
     		m_dAmount =  bd;
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println(this.toString() + ".setAmountString - Error converting amount from string: " + sAmount + ".");
+    		System.out.println("[1579186100] " + this.toString() + ".setAmountString - Error converting amount from string: " + sAmount + ".");
     		System.out.println(e.getMessage());
     		return false;
     	}
@@ -397,7 +397,7 @@ public class SMEntryLine extends java.lang.Object{
     		m_lDocAppliedToId = Long.parseLong(sDocAppliedToId);
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println("Error formatting DocAppliedToID from string: " + sDocAppliedToId + ".");
+    		System.out.println("[1579186103] Error formatting DocAppliedToID from string: " + sDocAppliedToId + ".");
     		System.out.println("Error: " + e.getMessage());
     		return false;
     	}

@@ -217,7 +217,7 @@ public class SMAppointment extends clsMasterEntry{
 				+ SMTableappointments.lid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579185858] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -383,7 +383,7 @@ public class SMAppointment extends clsMasterEntry{
 		;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579185864] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();
@@ -422,7 +422,7 @@ public class SMAppointment extends clsMasterEntry{
 		;
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579185869] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();
@@ -652,7 +652,7 @@ public class SMAppointment extends clsMasterEntry{
     	iMinutesAfterMidnight = (iMinutesAfterMidnight/100) * 60 + (iMinutesAfterMidnight%100);
 
     	if(bDebugMode){
-    		System.out.println("timeStringToInteger() "
+    		System.out.println("[1579185876] timeStringToInteger() "
     				+ "Minutes after midnight calculation: " + Integer.toString(iMinutesAfterMidnight));
     	}
     	return iMinutesAfterMidnight;
@@ -690,7 +690,7 @@ public class SMAppointment extends clsMasterEntry{
     		String sTime = sHour + ":" + sMinute + " " + sMeridiem;
     	
     	if(bDebugMode){
-    		System.out.println("timeIntegerToString() "
+    		System.out.println("[1579185893] timeIntegerToString() "
     						+ "Hour: " + sHour 
     						+ " Minute: " + sMinute
     						+ " Meridiem: " + sMeridiem);

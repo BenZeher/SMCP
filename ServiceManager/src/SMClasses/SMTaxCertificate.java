@@ -145,7 +145,7 @@ public class SMTaxCertificate extends clsMasterEntry{
 				+ SMTabletaxcertificates.lid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579186380] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -312,7 +312,7 @@ public class SMTaxCertificate extends clsMasterEntry{
 			;
     	}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579186385] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();

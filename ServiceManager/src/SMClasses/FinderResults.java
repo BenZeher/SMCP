@@ -702,7 +702,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datpodate + " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildICPOSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185786] In " + this.toString() + ".buildICPOSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -764,7 +764,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.datpodate + " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildICPOVendorItemSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185793] In " + this.toString() + ".buildICPOVendorItemSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -889,7 +889,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTablebids.lid + " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildSMBIDSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185799] In " + this.toString() + ".buildSMBIDSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -941,7 +941,7 @@ public class FinderResults extends HttpServlet {
 		+ " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildUninvoicePOReceiptSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185806] In " + this.toString() + ".buildUninvoicePOReceiptSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1130,7 +1130,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTableproposals.TableName + "." + SMTableproposals.strimmedordernumber + " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildProposalSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185811] In " + this.toString() + ".buildProposalSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1179,7 +1179,7 @@ public class FinderResults extends HttpServlet {
 		+ " ASC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildNonDedicatedItemSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185818] In " + this.toString() + ".buildNonDedicatedItemSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1296,7 +1296,7 @@ public class FinderResults extends HttpServlet {
 		+ " ASC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildItemWithVendorItemSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185824] In " + this.toString() + ".buildItemWithVendorItemSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1369,7 +1369,7 @@ public class FinderResults extends HttpServlet {
 		;
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildMostUsedItemSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185829] In " + this.toString() + ".buildMostUsedItemSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1424,7 +1424,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTableorderheaders.sOrderNumber + " DESC," + " " + SMTableorderdetails.sItemNumber;
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildSMOrderDetailSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185834] In " + this.toString() + ".buildSMOrderDetailSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}
@@ -1604,7 +1604,7 @@ public class FinderResults extends HttpServlet {
 		sSQL += " ORDER BY " + SMTableorderheaders.sOrderNumber + " DESC";
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".buildSMExtendedOrderSQLStatement - SQL = " + sSQL);
+			System.out.println("[1579185840] In " + this.toString() + ".buildSMExtendedOrderSQLStatement - SQL = " + sSQL);
 		}
 		return sSQL;
 	}

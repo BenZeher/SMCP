@@ -133,7 +133,7 @@ public class SMDoingbusinessasaddress extends clsMasterEntry{
 					+ SMTabledoingbusinessasaddresses.lid + " = " + sID
 					+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579185941] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

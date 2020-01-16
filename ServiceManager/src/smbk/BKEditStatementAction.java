@@ -37,7 +37,7 @@ public class BKEditStatementAction extends HttpServlet{
 					""
 			);
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " loadFromHTTPRequest failed");
+    			System.out.println("[1579184791] In " + this.toString() + " loadFromHTTPRequest failed");
     		}
 			return;
 		}
@@ -51,7 +51,7 @@ public class BKEditStatementAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			BKEditStatementEdit.SAVECOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into save");
+    			System.out.println("[1579184797] In " + this.toString() + " into save");
     		}
     		
     		try {
@@ -68,7 +68,7 @@ public class BKEditStatementAction extends HttpServlet{
 							+ clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, request)
 				);
 	    		if (bDebugMode){
-	    			System.out.println("In " + this.toString() + " save failed");
+	    			System.out.println("[1579184805] In " + this.toString() + " save failed");
 	    		}
 				return;
 			}
@@ -88,7 +88,7 @@ public class BKEditStatementAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			BKEditStatementEdit.POSTCOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into post");
+    			System.out.println("[1579184810] In " + this.toString() + " into post");
     		}
     		try {
 				statement.post_without_data_transaction(getServletContext(), smaction.getsDBID(), smaction.getUserName());
@@ -105,7 +105,7 @@ public class BKEditStatementAction extends HttpServlet{
 
 				);
 	    		if (bDebugMode){
-	    			System.out.println("In " + this.toString() + " post failed");
+	    			System.out.println("[1579184815] In " + this.toString() + " post failed");
 	    		}
 				return;
 			}
@@ -129,7 +129,7 @@ public class BKEditStatementAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			BKEditStatementEdit.ADDENTRY_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into add entry");
+    			System.out.println("[1579184823] In " + this.toString() + " into add entry");
     		}
 			String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
 			+ "smbk.BKAddEntryEdit"
@@ -147,7 +147,7 @@ public class BKEditStatementAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			BKEditStatementEdit.DELETECOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into delete");
+    			System.out.println("[1579184827] In " + this.toString() + " into delete");
     		}
     		try {
     			statement.delete(getServletContext(), smaction.getsDBID(), smaction.getUserName(), smaction.getUserID(), smaction.getFullUserName());
@@ -184,7 +184,7 @@ public class BKEditStatementAction extends HttpServlet{
     	//If it's a request to delete an entry:
     	if (sCommandValue.contains(BKEditStatementEdit.DELETEENTRYCOMMAND_VALUE)){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into delete entry");
+    			System.out.println("[1579184832 In " + this.toString() + " into delete entry");
     		}
     		String sLid = sCommandValue.substring(BKEditStatementEdit.DELETEENTRYCOMMAND_VALUE.length(), sCommandValue.length());
     		//System.out.println("[1404231444] sLid = '" + sLid + "'");
@@ -202,7 +202,7 @@ public class BKEditStatementAction extends HttpServlet{
 							+ clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, request)
 				);
 	    		if (bDebugMode){
-	    			System.out.println("In " + this.toString() + " save failed");
+	    			System.out.println("[1579184836] In " + this.toString() + " save failed");
 	    		}
 				return;
 			}
@@ -240,7 +240,7 @@ public class BKEditStatementAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579184841] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

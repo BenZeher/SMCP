@@ -58,7 +58,7 @@ public class BKEntryImportAction extends HttpServlet{
 			throws ServletException, IOException {
 	
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " 01");
+			System.out.println("[1579184935] In " + this.toString() + " 01");
 		}
 		
 		PrintWriter out = response.getWriter();
@@ -91,7 +91,7 @@ public class BKEntryImportAction extends HttpServlet{
 		mv.put(m_sGLAccount, "");
 	    
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
+	    	System.out.println("[1579184941] In " + this.toString() + ".doPost - contenttype: " 
 	    		+ request.getContentType()
 	    		+ " - getRequestURI: "
 	    		+ request.getRequestURI()
@@ -101,7 +101,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    	while (headerNames.hasMoreElements()){
 	    		String sHeaderName = headerNames.nextElement().toString();
 	    		if (bDebugMode){
-	    			System.out.println("headerName = " + sHeaderName);
+	    			System.out.println("[1579184945 headerName = " + sHeaderName);
 	    			System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
 	    		}
 	    	}
@@ -109,7 +109,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    
 	    if (!processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName, mv)){
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
+				System.out.println("[1579184950] In " + this.toString() + ".doPost - processRequest failed: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Warning=" + sError
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
@@ -127,7 +127,7 @@ public class BKEntryImportAction extends HttpServlet{
 	    }else{
 	    	sStatus = "Import completed without errors.";
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
+				System.out.println("[1579184954] In " + this.toString() + ".doPost - processRequest succeeded: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sBKEntryImportActionCallingClass)
 					+ "?Status=" + sStatus
 					+ "&" + BKBankStatement.Paramlbankid + "=" + clsManageRequestParameters.get_Request_Parameter(BKBankStatement.Paramlbankid, request)
@@ -171,7 +171,7 @@ public class BKEntryImportAction extends HttpServlet{
 		}
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
+			System.out.println("[1579184959] In " + this.toString() + ".processRequest - going into writeFileAndProcess");
 		}
 		
 		boolean bResult = writeFileAndProcess(
@@ -215,7 +215,7 @@ public class BKEntryImportAction extends HttpServlet{
         upload.setSizeMax(1000000);
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
         if (bDebugMode){
-        	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
+        	System.out.println("[1579184963] In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
         }
 		List<FileItem> fileEntries = null;
 		try {
@@ -224,7 +224,7 @@ public class BKEntryImportAction extends HttpServlet{
 			this.addToErrorMessage("<BR>"
 				+ "Error on upload.parseRequest: " + e1.getMessage(), mv);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+				System.out.println("[1579184970] In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
 			}
 			e1.printStackTrace();
@@ -239,7 +239,7 @@ public class BKEntryImportAction extends HttpServlet{
 		    		mv.put(sBKEntryImportActionCallingClass, fileitem.getString());
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579184981] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter CallingClass = " + mv.get(sBKEntryImportActionCallingClass) + "."); 
 					}		
 		    	}
@@ -247,7 +247,7 @@ public class BKEntryImportAction extends HttpServlet{
 		    		mv.put(m_sEntryDescription, fileitem.getString());		    		
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579184985] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
 							+ SMTablebkaccountentries.sdescription + " = " + mv.get(m_sEntryDescription) + "."); 
 					}
@@ -256,7 +256,7 @@ public class BKEntryImportAction extends HttpServlet{
 		    		mv.put(m_sBankID, fileitem.getString());
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579184989] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
 							+ BKBankStatement.Paramlbankid + " = " + mv.get(m_sBankID) + "."); 
 					}
@@ -267,7 +267,7 @@ public class BKEntryImportAction extends HttpServlet{
 		    			bIncludesHeaderRow = true;
 							if (bDebugMode){
 								System.out.println(
-									"In " + this.toString() 
+									"[1579184994] In " + this.toString() 
 									+ ".writeFileAndProcess, parameter "
 									+ BKEntryImportSelect.INCLUDES_BKENTRY_HEADER_ROW + " = " + bIncludesHeaderRow + "."); 
 							}
@@ -284,7 +284,7 @@ public class BKEntryImportAction extends HttpServlet{
 				} catch (Exception e) {
 					this.addToErrorMessage("<BR>"
 						+ "Error writing temporary file: " + e.getMessage(), mv);
-					System.out.println("In " + this.toString() + " error on fi.write: " + e.getMessage());
+					System.out.println("[1579185003] In " + this.toString() + " error on fi.write: " + e.getMessage());
 					return false;
 				}
 				//InputStream uploadedStream = item.getInputStream();
@@ -299,7 +299,7 @@ public class BKEntryImportAction extends HttpServlet{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
+			System.out.println("[1579185010] In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
 		if (!validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow, mv)){
 			return false;
@@ -319,7 +319,7 @@ public class BKEntryImportAction extends HttpServlet{
 		);
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess got a connection");
+			System.out.println("[1579185024] In " + this.toString() + ".writeFileAndProcess got a connection");
 		}
 		boolean bResult = true;		
 		//Get the GLAccount for this bank:
@@ -536,7 +536,7 @@ public class BKEntryImportAction extends HttpServlet{
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".validateFile - at line " + iLineCounter);
+					System.out.println("[1579185033] In " + this.toString() + ".validateFile - at line " + iLineCounter);
 				}
 				iLineCounter++;
 				
@@ -623,7 +623,7 @@ public class BKEntryImportAction extends HttpServlet{
 		sField = sField.replace("\"", "");
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + "FieldIndex = " + iFieldIndex 
+			System.out.println("[1579185041] In " + this.toString() + "FieldIndex = " + iFieldIndex 
 				+ ", value = " + sField);
 		}
 		if (iFieldIndex == FIELD_ISSUE_DATE){

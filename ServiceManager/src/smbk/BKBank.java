@@ -238,7 +238,7 @@ public class BKBank extends clsMasterEntry{
 				+ SMTablebkbanks.lid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579184768] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -410,7 +410,7 @@ public class BKBank extends clsMasterEntry{
 		;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579184774] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();

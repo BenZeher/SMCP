@@ -32,22 +32,6 @@ public class TimeCardSQLs {
 		return SQL;
 	}
 	
-	public static String Get_Leave_Logger_List_SQL(){
-
-		SQL = "SELECT * FROM " + Employees.TableName + ", " + ACGroupFunctions.TableName + ", " + ACUserGroups.TableName +
-			  " WHERE" + 
-			  	" " + Employees.TableName + "." + Employees.sEmployeeID + " = " +
-			  	" " + ACUserGroups.TableName + "." + ACUserGroups.sEmployeeID +
-			  " AND" + 
-			  	" " + ACGroupFunctions.TableName + "." + ACGroupFunctions.sGroupName + " = " +
-			  	" " + ACUserGroups.TableName + "." + ACUserGroups.sGroupName +
-			  " AND" + 
-			  	" " + ACGroupFunctions.TableName + "." + ACGroupFunctions.sFunction + " = '" + ACFunctions.sFunctionName + "'"; 
-		
-		//System.out.println ("Get_Security_Group_List_SQL = " + SQL);
-		return SQL;
-	}
-	
 	public static String Get_Access_Control_Function_List(){
 		
 		SQL = "SELECT * FROM " + ACFunctions.TableName + 
@@ -768,19 +752,6 @@ public class TimeCardSQLs {
 		return SQL;
 	}
 
-	public static String Get_Employee_TimeEntry_List_SQL(String sEID, 
-														 String sPeriodDate){
-		
-		String SQL = "SELECT * FROM " + TimeEntries.TableName + " WHERE (" +
-				" ("+ TimeEntries.sPeriodDate + " = '" + sPeriodDate + "')" + 
-			  " AND (" + TimeEntries.sEmployeeID + " = '" + sEID + "')" +
-			  " )" +
-			  " ORDER BY " + TimeEntries.dtInTime;
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
 	public static String Get_Employee_Workday_List_SQL(String sEID, String sStartingDate, String sEndingDate){
 		String SQL = "SELECT * FROM " + TimeEntries.TableName + 
 			  " WHERE" + 
@@ -793,40 +764,6 @@ public class TimeCardSQLs {
 			  " ORDER BY" + 
 			  	" " + TimeEntries.dtInTime;
 		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Missing_Time_List_SQL(String sEndDate, String sDeptID){
-		
-		String SQL = "SELECT * FROM " + TimeEntries.TableName + ", " + Employees.TableName + ", " + Departments.TableName + 
-			  " WHERE" +  
-			  	" " + Employees.sEmployeeID + " = " + TimeEntries.sEmployeeID +
-			  " AND" +
-			  	" " + Employees.iDepartmentID + " = " + Departments.iDeptID +
-			  " AND" + 
-			  	" " + TimeEntries.sPeriodDate + " = \"0000-00-00\"" +
-			  " AND" + 
-			  	" (" + TimeEntries.dtInTime + " = \"0000-00-00\" OR"+
-			  	" " + TimeEntries.dtOutTime + " = \"0000-00-00\")"+
-			  " AND" +
-				" " + TimeEntries.dtInTime + " <= \"" + sEndDate + "\"" +
-			  " AND" +
-				" " + TimeEntries.dtOutTime + " <= \"" + sEndDate + "\"";
-		if (sDeptID.length() > 0){
-			SQL = SQL + 
-			  " AND " + Departments.iDeptID + " = " + sDeptID;
-		}
-		SQL = SQL +
-			  " ORDER BY";
-		if (sDeptID.length() > 0){
-			SQL = SQL + 
-			  " " + Employees.iDepartmentID + ", " + Employees.sEmployeeID + ", " + TimeEntries.dtInTime;
-		}else{
-			SQL = SQL + 
-			  " " + Employees.sEmployeeID + ", " + TimeEntries.dtInTime;
-		}
-	
 		//System.out.println ("SQL = " + SQL);
 		return SQL;
 	}
@@ -1185,7 +1122,7 @@ public class TimeCardSQLs {
 		return SQL;
 	}
 
-	public static String Retieve_Specific_Time_Entry(int iTimeEntryID){
+	public static String Retrieve_Specific_Time_Entry(int iTimeEntryID){
 		String SQL = "SELECT * FROM " + TimeEntries.TableName + " WHERE " + TimeEntries.id + " = " + iTimeEntryID;
 	
 		//System.out.println ("SQL = " + SQL);
@@ -1376,74 +1313,6 @@ public class TimeCardSQLs {
 		return SQL;
 	}
 	
-	public static String Get_Create_Temp_Table_WorkingDays(String sStartingDate, 
-														   String sEndingDate, 
-														   String sEID, 
-														   String sDID){
-		
-		String SQL = "CREATE TEMPORARY TABLE WorkingDays" +
-				" SELECT " + Departments.sDeptDesc + "," +
-					  " " + Employees.sEmployeeID + "," +
-					  " " + TimeEntries.dtInTime + "," +
-					  " " + TimeEntries.dtOutTime +
-				" FROM" +
-					   " " + Employees.TableName + ", " + Departments.TableName + ", " + TimeEntries.TableName +
-				" WHERE" +
-				       " " + Employees.iDepartmentID + " = " + Departments.iDeptID + 
-				   " AND" +
-			       	   " " + Employees.sEmployeeID + " = " + TimeEntries.sEmployeeID;
-		if (sDID.length() != 0){
-			SQL = SQL + " AND " + Employees.iDepartmentID + " = " + sDID;
-		} 
-		if (sEID.length() != 0){
-			SQL = SQL + " AND " + Employees.sEmployeeID + " = '" + sEID + "'";
-		}
-			SQL = SQL + " AND (" +
-					       " (" + TimeEntries.dtInTime + " >= \"" + sStartingDate + " 00:00:00\"" +
-					   " AND" +
-					       " " + TimeEntries.dtInTime + " < \"" + sEndingDate + " 00:00:00\")" + 
-						  " OR " + 
-						   " (" + TimeEntries.dtOutTime + " >= \"" + sStartingDate + " 00:00:00\"" +
-							   " AND" +
-						   " " + TimeEntries.dtOutTime + " < \"" + sEndingDate + " 00:00:00\")" +  
-					") ORDER BY" +
-						   " " + Departments.sDeptDesc + "," +
-						   " " + Employees.sEmployeeID + "," +
-						   " " + TimeEntries.dtInTime;
-	
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Create_Temp_Table_EmployeeList(String sDID, 
-															String sEID){
-	
-		String SQL = "CREATE TEMPORARY TABLE EmployeeList " +
-				"SELECT " + Employees.sEmployeeID + "," +
-					   " " + Employees.sEmployeeFirstName + "," + 
-					   " " + Employees.sEmployeeLastName + "," +
-					   " " + Departments.iDeptID + "," +
-					   " " + Departments.sDeptDesc +
-				"FROM " + Employees.TableName + ", " + Departments.TableName +
-				"WHERE " + Employees.iDepartmentID + " = " + Departments.iDeptID;
-		if (sDID.length() != 0){
-			SQL = SQL + " AND " + Employees.iDepartmentID + " = " + sDID;
-		} 	
-		if (sEID.length() != 0){
-			SQL = SQL + " AND " + Employees.sEmployeeID + " = '" + sEID + "'";
-		}
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Missing_Days_SQL(){
-		
-		//the field name for sEmployeeID will change along with employee table as they are tied to that.
-		String SQL = "SELECT * FROM EmployeeList LEFT JOIN WorkingDays ON EmployeeList." + Employees.sEmployeeID + " = WorkingDays." + Employees.sEmployeeID;
-		 	
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
 
 	public static String Get_Change_Late_Flag_SQL(int iID, int iStatus){
 		
@@ -1946,47 +1815,6 @@ public class TimeCardSQLs {
 				" 0," +
 				" 'Recovered from a missing day.'" +  
 				")";
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Anniversary_Notification_Recipient_List_SQL(){
-		String SQL = "SELECT * FROM " + AnniversaryNotificationRecipients.TableName + " ORDER BY " + AnniversaryNotificationRecipients.sEmail;
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Anniversary_Notification_Recipient_Info_SQL(int iRecipientID){
-		String SQL = "SELECT * FROM " + AnniversaryNotificationRecipients.TableName + " WHERE " + AnniversaryNotificationRecipients.id + " = " + iRecipientID;
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Insert_Anniversary_Notification_Recipient_SQL(String sEmail){
-		String SQL = "INSERT INTO " + AnniversaryNotificationRecipients.TableName + " (" + AnniversaryNotificationRecipients.sEmail + ")" + 
-			  "VALUES('" + clsDatabaseFunctions.FormatSQLStatement(sEmail) + "')";
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Update_Anniversary_Notification_Recipient_SQL(int iRID, String sEmail){
-	
-		String SQL = "UPDATE " + AnniversaryNotificationRecipients.TableName + " SET" + 
-				 " " + AnniversaryNotificationRecipients.sEmail + " = '" + clsDatabaseFunctions.FormatSQLStatement(sEmail) + "'" + 
-			  " WHERE" +
-			 	 " " + AnniversaryNotificationRecipients.id + " = " + iRID;
-		
-		//System.out.println ("SQL = " + SQL);
-		return SQL;
-	}
-
-	public static String Get_Remove_Anniversary_Notification_Recipient_SQL(int iRID){
-		String SQL = "DELETE FROM " + AnniversaryNotificationRecipients.TableName +
-			  " WHERE" +
-			    " " + AnniversaryNotificationRecipients.id + " = '" + iRID + "'";
 		
 		//System.out.println ("SQL = " + SQL);
 		return SQL;

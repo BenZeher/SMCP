@@ -56,11 +56,6 @@
 
     <!-- TimeCardSystem package classes: -->
     <servlet>
-        <servlet-name>AccessControlFunctionList</servlet-name>
-        <servlet-class>TimeCardSystem.AccessControlFunctionList</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>AddDefaultLeave</servlet-name>
         <servlet-class>TimeCardSystem.AddDefaultLeave</servlet-class>
     </servlet>
@@ -258,11 +253,6 @@
     <servlet>
         <servlet-name>LeaveAdjustmentTypeSave</servlet-name>
         <servlet-class>TimeCardSystem.LeaveAdjustmentTypeSave</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>LeaveTypeTotal</servlet-name>
-        <servlet-class>TimeCardSystem.LeaveTypeTotal</servlet-class>
     </servlet>
 
    <servlet>
@@ -603,11 +593,6 @@
 
 <!--  TimeCardSystem class mappings: -->
     <servlet-mapping>
-        <servlet-name>AccessControlFunctionList</servlet-name>
-        <url-pattern>/TimeCardSystem.AccessControlFunctionList</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
         <servlet-name>AddDefaultLeave</servlet-name>
         <url-pattern>/TimeCardSystem.AddDefaultLeave</url-pattern>
     </servlet-mapping>
@@ -807,11 +792,6 @@
     <servlet-mapping>
         <servlet-name>LeaveAdjustmentTypeSave</servlet-name>
         <url-pattern>/TimeCardSystem.LeaveAdjustmentTypeSave</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>LeaveTypeTotal</servlet-name>
-        <url-pattern>/TimeCardSystem.LeaveTypeTotal</url-pattern>
     </servlet-mapping>
 
    <servlet-mapping>

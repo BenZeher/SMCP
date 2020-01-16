@@ -65,7 +65,7 @@ public class TimeEntryRemove extends HttpServlet{
 	    		}
 	    		if (clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB))){
 		    		//check to see if both in time and out time are 0000, wipe the whole thing out.
-	    			sSQL = TimeCardSQLs.Retieve_Specific_Time_Entry(Integer.parseInt(request.getParameter("id")));
+	    			sSQL = TimeCardSQLs.Retrieve_Specific_Time_Entry(Integer.parseInt(request.getParameter("id")));
 	    			ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 	    			
 	    			if (rs.next()){

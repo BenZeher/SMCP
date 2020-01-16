@@ -77,11 +77,6 @@ public class TimeCardUtilities extends clsServletUtilities{
 		}
 	}
 
-	public static String linkToAdminMenu(ServletContext context) {
-
-		return "<A HREF=\"" + TCWebContextParameters.getURLLinkBase(context) + "TimeCardSystem.AdminMain\">Return to main Admin Menu</A>";
-	}
-
 	public static double CalculateDoubleTime(String sStartingTime, String sEndingTime, String sEmployeeStartTime) {
 		//All Sunday time is double time, regardless of the hours.   
 		//All time worked on any day between the hours of 11PM and the employee's starting time is double time.
@@ -950,21 +945,6 @@ public static String getDatabaseServer(HttpServletRequest request, HttpSession s
 		"<HTML>" +
 		"<HEAD><TITLE>" + bar + "</TITLE></HEAD>\n<BR>" + 
 		"<BODY BGCOLOR=\"" + backgroundcolor + "\" style = \" font-family:" + BASE_FONT_FAMILY + "; \" >" +
-		"<TABLE BORDER=0><TR><TD VALIGN=BOTTOM><H1>" + title + "</H1></TD>";
-		if (subtitle.compareTo("") != 0){  
-			s = s + "<TD VALIGN=BOTTOM><H3>&nbsp;&nbsp;-&nbsp;&nbsp;" + subtitle + "</H3></TD>";
-		}
-	
-		s = s + "</TR></TABLE>";
-		return s;
-	}
-
-	public static String TCTitleSubBGColorWall(String title, String subtitle, String backgroundcolor, String wallpaper) {
-	
-		String s = clsServletUtilities.DOCTYPE +
-		"<HTML>" +
-		"<HEAD><TITLE>" + title + "</TITLE></HEAD>\n<BR>" + 
-		"<BODY BGCOLOR=\"" + backgroundcolor + "\" background=\"" + wallpaper + "\" + style = font-family:" + BASE_FONT_FAMILY + "\" >" +
 		"<TABLE BORDER=0><TR><TD VALIGN=BOTTOM><H1>" + title + "</H1></TD>";
 		if (subtitle.compareTo("") != 0){  
 			s = s + "<TD VALIGN=BOTTOM><H3>&nbsp;&nbsp;-&nbsp;&nbsp;" + subtitle + "</H3></TD>";

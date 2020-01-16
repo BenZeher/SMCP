@@ -50,7 +50,7 @@ public class TimeEntryEdit extends HttpServlet {
 	    	if (TimeCardUtilities.IsAccessible((ResultSet) CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_ACCCONTROLINFO),
 					 							AccessControlFunctionList.ManagerReviewListTimeEditing)){
 
-    			sSQL = TimeCardSQLs.Retieve_Specific_Time_Entry(Integer.parseInt(request.getParameter("id")));
+    			sSQL = TimeCardSQLs.Retrieve_Specific_Time_Entry(Integer.parseInt(request.getParameter("id")));
     			try{
     				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), (String)CurrentSession.getAttribute(TimeCardUtilities.SESSION_ATTRIBUTE_DB));
 			    	if (rs.next()){

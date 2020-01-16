@@ -69,7 +69,7 @@ public class ASClientService
 
 			// print out the result we got back from the server
 			if (bOutputDiagnostics){
-				System.out.println("Result from writing client socket: " + sResult);
+				System.out.println("[1579181748] Result from writing client socket: " + sResult);
 			}
 
 			// close the socket, and we're done

@@ -148,7 +148,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 					+ SMTablessalarmsequences.lid + " = " + sID
 				+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579183284] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -323,7 +323,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 				;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579183290] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 			Statement stmt = conn.createStatement();
@@ -514,7 +514,7 @@ public class SSAlarmSequence extends clsMasterEntry{
 			sErrors += "zone name cannot be blank.  ";
 		}
 
-		System.out.println(m_snotificationemails.length());
+		System.out.println("[1579183305] " + m_snotificationemails.length());
 		System.out.println(m_snotificationemails.lastIndexOf(','));
 
 		//remove any , after the list of addresses

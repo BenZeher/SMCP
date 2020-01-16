@@ -295,7 +295,7 @@ public class SSEventSchedule extends clsMasterEntry{
 				;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579183872] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 			Statement stmt = conn.createStatement();

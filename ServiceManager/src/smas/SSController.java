@@ -148,7 +148,7 @@ public class SSController extends clsMasterEntry{
 				+ SMTablesscontrollers.lid + " = " + sID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579183846] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -249,7 +249,7 @@ public class SSController extends clsMasterEntry{
 		;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579183853] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();
@@ -705,7 +705,7 @@ public class SSController extends clsMasterEntry{
 		;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579183859] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();

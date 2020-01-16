@@ -225,7 +225,7 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     	
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
-	    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579203086] " + this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}else{
@@ -356,7 +356,7 @@ public class ICPhysicalCountLineEntry extends clsMasterEntry{
     		m_sid = slid;
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println(this.toString() + "Error formatting entry ID from string: " + slid + ".");
+    		System.out.println("[1579203097] " + this.toString() + "Error formatting entry ID from string: " + slid + ".");
     		System.out.println(this.toString() + "Error: " + e.getMessage());
     		return false;
     	}

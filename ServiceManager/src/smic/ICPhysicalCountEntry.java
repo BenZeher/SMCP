@@ -187,13 +187,13 @@ public class ICPhysicalCountEntry extends clsMasterEntry{
     	
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
-	    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579201952] " + this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}else{
 	    	}
     	}catch(SQLException ex){
-    		System.out.println("Error in " + this.toString() + " class!!");
+    		System.out.println("[1579201962] Error in " + this.toString() + " class!!");
     	    System.out.println("SQLException: " + ex.getMessage());
     	    System.out.println("SQLState: " + ex.getSQLState());
     	    System.out.println("SQL: " + ex.getErrorCode());
@@ -364,7 +364,7 @@ public class ICPhysicalCountEntry extends clsMasterEntry{
     		m_sid = slid;
     		return true;
     	}catch (NumberFormatException e){
-    		System.out.println(this.toString() + "Error formatting entry ID from string: " + slid + ".");
+    		System.out.println("[1579201972] " + this.toString() + "Error formatting entry ID from string: " + slid + ".");
     		System.out.println(this.toString() + "Error: " + e.getMessage());
     		return false;
     	}

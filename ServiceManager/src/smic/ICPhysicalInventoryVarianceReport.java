@@ -82,7 +82,7 @@ public class ICPhysicalInventoryVarianceReport extends java.lang.Object{
 			;
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processReport - main SQL = " + SQL);
+			System.out.println("[1579203280] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		}
     	String sPreviousLoopItem = "";
     	
@@ -293,7 +293,7 @@ public class ICPhysicalInventoryVarianceReport extends java.lang.Object{
     		+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
     		+ "\">" + clsManageBigDecimals.BigDecimalToFormattedString("########0.0000", bdMostRecentCost) + "</A>";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".printLocationItemFooter - mostrecentcostlink = "
+			System.out.println("[1579203290] In " + this.toString() + ".printLocationItemFooter - mostrecentcostlink = "
 					+ sMostRecentCostLink
 			);
 		}

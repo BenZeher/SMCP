@@ -183,7 +183,7 @@ public class ICEntryBatch {
     ){
 
     	if (! sBatchNumber(sBatchNumber)){
-    		System.out.println("Invalid sBatchNumber - " + sBatchNumber);
+    		System.out.println("[1579195288] Invalid sBatchNumber - " + sBatchNumber);
     		return false;
     	}
 		String SQL = "SELECT * " 
@@ -363,7 +363,7 @@ public class ICEntryBatch {
     		){
         
     	    if (! sBatchNumber(sBatchNumber)){
-    	    	System.out.println("Invalid sBatchNumber - " + sBatchNumber);
+    	    	System.out.println("[1579195296] Invalid sBatchNumber - " + sBatchNumber);
     	    	return false;
     	    }
     	

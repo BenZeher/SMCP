@@ -323,7 +323,7 @@ public class ICEnterInvoiceAction extends HttpServlet{
 			try {
 				response.sendRedirect(sRedirectString);
 			} catch (IOException ex) {
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579192865] In " + this.toString() 
 					+ "After FINDGLACCOUNT - error redirecting with string: " + sRedirectString);
 				smaction.redirectAction(
 					"After FINDGLACCOUNT - error redirecting with string: " + sRedirectString, 

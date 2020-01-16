@@ -186,7 +186,7 @@ public class ICVendorItem extends clsMasterEntry{
 		    Statement stmt = conn.createStatement();
 		    stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-    		System.out.println(this.toString() + "Could not update vendor item data - " + ex.getMessage());
+    		System.out.println("[1579204486] " + this.toString() + "Could not update vendor item data - " + ex.getMessage());
     		super.addErrorMessage("Could not update vendor item data - with SQL: " + SQL
     				+ " - " + ex.getMessage());
     		return false;
@@ -257,7 +257,7 @@ public class ICVendorItem extends clsMasterEntry{
 
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-	    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579204498] " + this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}

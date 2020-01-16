@@ -177,7 +177,7 @@ public class ICOnHandByDescriptionReport extends java.lang.Object{
 		printRowHeader(out);
 		try{
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " SQL: " + SQL);
+				System.out.println("[1579201936] In " + this.toString() + " SQL: " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			int iCount = 0;

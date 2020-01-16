@@ -92,7 +92,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		boolean isMultipart = ServletFileUpload.isMultipartContent(request);
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
+			System.out.println("[1579202996] In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
 		}
 		List<FileItem> fileItems = null;
 		try {
@@ -123,7 +123,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					m_sCountDesc = item.getString();		    		
 					if (bDebugMode){
 						System.out.println(
-								"In " + this.toString() 
+								"[1579203002] In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
 								+ ICPhysicalCountEntry.ParamDesc + " = " + m_sCountDesc + "."); 
 					}
@@ -132,7 +132,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					sPhysicalInventoryID = item.getString();
 					if (bDebugMode){
 						System.out.println(
-								"In " + this.toString() 
+								"[1579203007] In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
 								+ ICPhysicalInventoryEntry.ParamID + " = " + sPhysicalInventoryID + "."); 
 					}
@@ -142,7 +142,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					bIncludesHeaderRow = true;
 					if (bDebugMode){
 						System.out.println(
-								"In " + this.toString() 
+								"[1579203010] In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
 								+ ICPhysicalCountImportSelect.PARAM_INCLUDES_HEADER_ROW + " = " + item.getString() + "."); 
 					}
@@ -152,7 +152,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 					bAddNewItems = true;
 					if (bDebugMode){
 						System.out.println(
-								"In " + this.toString() 
+								"[1579203015] In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
 								+ ICPhysicalCountImportSelect.PARAM_INCLUDE_NEW_ITEMS + " = " + item.getString() + "."); 
 					}
@@ -166,7 +166,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		}
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".doPost - contenttype: " 
+			System.out.println("[1579203018] In " + this.toString() + ".doPost - contenttype: " 
 					+ request.getContentType()
 					+ " - getRequestURI: "
 					+ request.getRequestURI()
@@ -176,7 +176,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			while (headerNames.hasMoreElements()){
 				String sHeaderName = headerNames.nextElement().toString();
 				if (bDebugMode){
-					System.out.println("headerName = " + sHeaderName);
+					System.out.println("[1579203030] headerName = " + sHeaderName);
 					System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
 				}
 			}
@@ -221,7 +221,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		
 		String sPhysicalCountImportStatus = "Import completed without errors.";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
+			System.out.println("[1579203038] In " + this.toString() + ".doPost - processRequest succeeded: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sICPhysicalCountImportActionCallingClass
 					+ "?Status=" + sPhysicalCountImportStatus
 					+ "&" + ICPhysicalInventoryEntry.ParamID + "=" + sPhysicalInventoryID
@@ -334,7 +334,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 		}
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
+			System.out.println("[1579203047] In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
 
 		//Start Validation
@@ -352,7 +352,7 @@ public class ICPhysicalCountImportAction extends HttpServlet{
 			String sItem = "";
 			while ((line = br.readLine()) != null) {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".insertCountLines - at line " + iLineCounter);
+					System.out.println("[1579203067] In " + this.toString() + ".insertCountLines - at line " + iLineCounter);
 				}
 				iLineCounter++;
 				//If the file has a header row and if this is the first line, then it's the header line

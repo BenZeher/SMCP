@@ -481,7 +481,7 @@ public class ICItemValuationReport extends java.lang.Object{
 				}
 				rs.close();
 			}catch (SQLException e){
-				System.out.println("Error reading location description for location: " + sLocations.get(i));
+				System.out.println("[1579201900] Error reading location description for location: " + sLocations.get(i));
 			}
 			
 			out.println(

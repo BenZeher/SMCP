@@ -257,7 +257,7 @@ public class ICUnderStockedItemReport extends java.lang.Object{
 		try{
 			//System.out.println("In [1415133482]" + this.toString() + " SQL: " + SQL);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " SQL: " + SQL);
+				System.out.println("[1579204446] In " + this.toString() + " SQL: " + SQL);
 			}
 			lStartingTime = System.currentTimeMillis();
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

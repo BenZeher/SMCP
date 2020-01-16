@@ -106,7 +106,7 @@ public class ICImportSMInvoices extends java.lang.Object{
 			}
 		}catch (Exception e){
 			m_sErrorMessage = "Error checking for previous posting - " + e.getMessage();
-			System.out.println("Error checking for previous posting - " + e.getMessage());
+			System.out.println("[1579195349] Error checking for previous posting - " + e.getMessage());
 			return false;
 		}
 
@@ -487,7 +487,7 @@ public class ICImportSMInvoices extends java.lang.Object{
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("Error in " + this.toString() + ".loadInvoiceLines: " + e.getMessage());
+			System.out.println("[1579195355] Error in " + this.toString() + ".loadInvoiceLines: " + e.getMessage());
 			m_sErrorMessage = "Error in " + this.toString() + ".loadInvoiceLines: " + e.getMessage();
 			return false;
 		}

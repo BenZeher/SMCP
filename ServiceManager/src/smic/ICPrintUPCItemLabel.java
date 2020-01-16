@@ -563,7 +563,7 @@ public class ICPrintUPCItemLabel extends java.lang.Object{
 				}catch (SQLException e){
 					addToErrorMessage("Error reading data for '" + arrItemNum.get(i) + "' - " + e.getMessage() + ".");
 					pwOut.println("Error reading data for '" + arrItemNum.get(i) + "' - " + e.getMessage() + ".<BR><BR>");
-					System.out.println("In " + this.toString() + ".printLabel - caught SQL error: " + e.getMessage());
+					System.out.println("[1579203906] In " + this.toString() + ".printLabel - caught SQL error: " + e.getMessage());
 					return true;
 				}
 

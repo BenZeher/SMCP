@@ -102,7 +102,7 @@ public class ICSetInactiveItemsAction extends HttpServlet {
 			}
 	    }
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " - number of items updated = " + Long.toString(lItemCounter)
+	    	System.out.println("[1579203977] In " + this.toString() + " - number of items updated = " + Long.toString(lItemCounter)
 	    		+ " in " + Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    }

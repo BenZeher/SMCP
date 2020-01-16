@@ -384,7 +384,7 @@ public class ICPOLine extends clsMasterEntry{
 		
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-	    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579203769] " + this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}
@@ -751,7 +751,7 @@ public class ICPOLine extends clsMasterEntry{
 			bEntriesAreValid = false;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + "validate_entry - m_bdqtyordered = '" + m_bdqtyordered + "'"
+			System.out.println("[1579203777] In " + this.toString() + "validate_entry - m_bdqtyordered = '" + m_bdqtyordered + "'"
 				+ ", m_bdunitcost = '" + m_bdunitcost + "', m_bdextendedcost = '" + m_bdextendedordercost + "'."
 			);
 		}

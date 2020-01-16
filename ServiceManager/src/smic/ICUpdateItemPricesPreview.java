@@ -157,7 +157,7 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 		);
 		try{
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " SQL: " + SQL);
+				System.out.println("[1579204455] In " + this.toString() + " SQL: " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			int iCount = 0;

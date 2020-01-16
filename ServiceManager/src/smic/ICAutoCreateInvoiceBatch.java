@@ -699,7 +699,7 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 			+ ")"
 		;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " reading in process invoices SQL = " + SQL);
+			System.out.println("[1579191022] In " + this.toString() + " reading in process invoices SQL = " + SQL);
 		}
 		boolean bInvalidInvoiceFound = false;
 		try {

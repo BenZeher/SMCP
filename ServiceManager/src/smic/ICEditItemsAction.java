@@ -118,7 +118,7 @@ public class ICEditItemsAction extends HttpServlet{
 				clsDatabaseFunctions.executeSQL(sSQL, conn);
 			}
 		}catch (SQLException ex){
-			System.out.println("ICEditItemsAction Error: error updating record.");
+			System.out.println("[1579191359] ICEditItemsAction Error: error updating record.");
 		}
 			
 		if (!clsDatabaseFunctions.commit_data_transaction(conn)){

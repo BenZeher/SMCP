@@ -98,13 +98,13 @@ public class ICEditPOEdit  extends HttpServlet {
 		);
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579191499] In " + this.toString() 
 					+ " smedit.getAddingNewEntryFlag() = " + smedit.getAddingNewEntryFlag() + ", entry.getsID() = " + entry.getsID());
 		}
 		String sCurrentCompleteURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() 
 				+ clsManageRequestParameters.getQueryStringFromPost(request)).replace("&", "*");
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579191503] In " + this.toString() 
 					+ "sCurrentCompleteURL = " + sCurrentCompleteURL);
 		}
 
@@ -926,7 +926,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				+ " ORDER BY " + SMTableicpolines.TableName + "." + SMTableicpolines.llinenumber
 				;
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".listPOLines - SQL = " + SQL);
+				System.out.println("[1579191513] In " + this.toString() + ".listPOLines - SQL = " + SQL);
 			}
 			
 			try {
@@ -1071,7 +1071,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				out.println("</tbody>");
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println("In " + this.toString() + "Error[1428417898] with SQL: " + SQL + " - " + e.getMessage());
+				System.out.println("[1579191519] In " + this.toString() + "Error[1428417898] with SQL: " + SQL + " - " + e.getMessage());
 			}
 		}
 		if(bOddRow){
@@ -1266,7 +1266,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			}
 			rs.close();
 			} catch (SQLException e) {
-				System.out.println("In " + this.toString() + "Error [1428417800] with SQL: " + SQL + " - " + e.getMessage());
+				System.out.println("[1579191528] In " + this.toString() + "Error [1428417800] with SQL: " + SQL + " - " + e.getMessage());
 			}
 		}
 		
@@ -2584,7 +2584,7 @@ public class ICEditPOEdit  extends HttpServlet {
 
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println("In " + this.toString() + "Error [1574190570] with SQL: " + SQL + " - " + e.getMessage());
+				System.out.println("[1579191570] In " + this.toString() + "Error [1574190570] with SQL: " + SQL + " - " + e.getMessage());
 			}
 		}
 

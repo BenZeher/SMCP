@@ -68,7 +68,7 @@ public class FAEditDepreciationTypeAction extends HttpServlet{
 	    		sOutPut = "Successfully updated " + sDepreciationTypeObjectName + ": " + sEditCode + ".";
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " class!!");
+			System.out.println("[1579189411] Error in " + this.toString() + " class!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

@@ -146,7 +146,7 @@ public class FAMainMenu extends HttpServlet {
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("Error getting list of permitted functions - " + e.getMessage());
+			System.out.println("[1579189489] Error getting list of permitted functions - " + e.getMessage());
 			return false;
 		}
 

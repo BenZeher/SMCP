@@ -136,7 +136,7 @@ public class FAEditAssetsAction extends HttpServlet{
 			}
 			
 			}catch(Exception e){
-				System.out.println(e);
+				System.out.println("[1579186949] " + e);
 			}
 			
 		}

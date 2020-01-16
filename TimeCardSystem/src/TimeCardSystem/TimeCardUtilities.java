@@ -30,7 +30,7 @@ public class TimeCardUtilities extends clsServletUtilities{
 		"Transitional//EN\">";
 
 	public static final String sProgramVersion = "2.0";
-	public static final String sLastUpdated = "1/1/2020";
+	public static final String sLastUpdated = "1/16/2020";
 	public static final String sJob = "OHD";
 	public static final String sPro = "@#$";
 	//Session attributes

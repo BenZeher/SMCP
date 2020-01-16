@@ -315,7 +315,7 @@ public class ICPOReceiptLine extends clsMasterEntry{
     	}
     	*/
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".save_without . . . : net qty change = " 
+    		System.out.println("[1579203847] In " + this.toString() + ".save_without . . . : net qty change = " 
     			+ bdNetQtyChange + ", net cost change = " + bdNetCostChange);
     	}
     	
@@ -422,7 +422,7 @@ public class ICPOReceiptLine extends clsMasterEntry{
 		//has the correct received and outstanding costs, qtys, etc.:
 		//Update with the NET CHANGES, not the current amounts . . . .
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".save_without . . . : going to updatePOLine");
+    		System.out.println("[1579203857] In " + this.toString() + ".save_without . . . : going to updatePOLine");
     	}
     	
     	//System.out.println("[1544555708] - getspolineid() ='" + this.getspolineid() + "'.");

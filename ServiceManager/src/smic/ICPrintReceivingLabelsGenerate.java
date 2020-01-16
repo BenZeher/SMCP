@@ -911,7 +911,7 @@ public class ICPrintReceivingLabelsGenerate extends HttpServlet {
 
 		try{
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " SQL: " + SQL);
+				System.out.println("[1579203887] In " + this.toString() + " SQL: " + SQL);
 			}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			while(rs.next()){

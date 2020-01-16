@@ -61,7 +61,7 @@ public class ICEditReceiptEdit  extends HttpServlet {
 	    String sCurrentCompleteURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() 
 	    		 + clsManageRequestParameters.getQueryStringFromPost(request)).replace("&", "*");
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() 
+	    	System.out.println("[1579191658] In " + this.toString() 
 	    		+ "sCurrentCompleteURL = " + sCurrentCompleteURL);
 	    }
 		
@@ -395,7 +395,7 @@ public class ICEditReceiptEdit  extends HttpServlet {
 			+ " ORDER BY " + SMTableicpolines.TableName + "." + SMTableicpolines.llinenumber
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".listPOLines - SQL = " + SQL);
+			System.out.println("[1579191667] In " + this.toString() + ".listPOLines - SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(

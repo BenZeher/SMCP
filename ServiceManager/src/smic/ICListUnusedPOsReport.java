@@ -73,7 +73,7 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 		printRowHeader(out);
 		try{
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " SQL: " + SQL);
+				System.out.println("[1579201922] In " + this.toString() + " SQL: " + SQL);
 			}
 			int iCount = 0;
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

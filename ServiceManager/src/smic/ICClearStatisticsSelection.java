@@ -120,7 +120,7 @@ public class ICClearStatisticsSelection  extends HttpServlet {
 	    	
 	    } catch (SQLException ex) {
 	        // handle any errors
-	    	System.out.println("Error in " + this.toString() + " class!!");
+	    	System.out.println("[1579191089] Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

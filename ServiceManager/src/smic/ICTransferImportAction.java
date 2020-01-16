@@ -59,7 +59,7 @@ public class ICTransferImportAction extends HttpServlet{
 		
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " 01");
+			System.out.println("[1579204274] In " + this.toString() + " 01");
 		}
 		
 		PrintWriter out = response.getWriter();
@@ -82,7 +82,7 @@ public class ICTransferImportAction extends HttpServlet{
 	    String sStatus = "";
 	    
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + ".doPost - contenttype: " 
+	    	System.out.println("[1579204278] In " + this.toString() + ".doPost - contenttype: " 
 	    		+ request.getContentType()
 	    		+ " - getRequestURI: "
 	    		+ request.getRequestURI()
@@ -92,7 +92,7 @@ public class ICTransferImportAction extends HttpServlet{
 	    	while (headerNames.hasMoreElements()){
 	    		String sHeaderName = headerNames.nextElement().toString();
 	    		if (bDebugMode){
-	    			System.out.println("headerName = " + sHeaderName);
+	    			System.out.println("[1579204281] headerName = " + sHeaderName);
 	    			System.out.println("headerNameValue = " + request.getHeader(sHeaderName));
 	    		}
 	    	}
@@ -102,7 +102,7 @@ public class ICTransferImportAction extends HttpServlet{
 			processRequest(CurrentSession, request, out, sDBID, sUserID, sUserFullName, mv);
 		} catch (Exception e) {
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".doPost - processRequest failed: "
+				System.out.println("[1579204285] In " + this.toString() + ".doPost - processRequest failed: "
 					+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 					+ "?Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 	  	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
@@ -124,7 +124,7 @@ public class ICTransferImportAction extends HttpServlet{
 
     	sStatus = "Import completed without errors.";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".doPost - processRequest succeeded: "
+			System.out.println("[1579204290] In " + this.toString() + ".doPost - processRequest succeeded: "
 				+ "" + SMUtilities.getURLLinkBase(getServletContext()) + "" + mv.get(sCallingClass)
 				+ "?Status=" + sStatus
   	    		+ "&" + ICEntry.ParamBatchNumber + "=" + mv.get(m_sBatchNumber)
@@ -167,7 +167,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processRequest - going into writeFileAndProcess");
+			System.out.println("[1579204296] In " + this.toString() + ".processRequest - going into writeFileAndProcess");
 		}
 		
 		try {
@@ -208,14 +208,14 @@ public class ICTransferImportAction extends HttpServlet{
         upload.setSizeMax(1000000);
         boolean isMultipart = ServletFileUpload.isMultipartContent(req);
         if (bDebugMode){
-        	System.out.println("In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
+        	System.out.println("[1579204313] In " + this.toString() + ".writeFileAndProcess - isMultipart = " + isMultipart);
         }
 		List<FileItem> fileItems = null;
 		try {
 			fileItems = upload.parseRequest(req);
 		} catch (FileUploadException e1) {
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " error on upload.parseRequest: " 
+				System.out.println("[1579204316] In " + this.toString() + " error on upload.parseRequest: " 
 					+ e1.getMessage());
 			}
 			throw new Exception("Error on upload.parseRequest: " + e1.getMessage());
@@ -229,7 +229,7 @@ public class ICTransferImportAction extends HttpServlet{
 		    		mv.put(sCallingClass,item.getString());
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579204321] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter CallingClass = " + mv.get(sCallingClass) + "."); 
 					}		
 		    	}
@@ -237,7 +237,7 @@ public class ICTransferImportAction extends HttpServlet{
 		    		mv.put(m_sBatchNumber, item.getString());		    		
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579204325] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
 							+ ICEntry.ParamBatchNumber + " = " + mv.get(m_sBatchNumber) + "."); 
 					}
@@ -246,7 +246,7 @@ public class ICTransferImportAction extends HttpServlet{
 		    		mv.put(m_sBatchType,item.getString());
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() 
+							"[1579204328] In " + this.toString() 
 							+ ".writeFileAndProcess, parameter "
 							+ ICEntry.ParamBatchType + " = " + mv.get(m_sBatchType) + "."); 
 					}
@@ -256,7 +256,7 @@ public class ICTransferImportAction extends HttpServlet{
 		    		mv.put(m_sEntryNumber,item.getString());
 						if (bDebugMode){
 							System.out.println(
-								"In " + this.toString() 
+								"[1579204331] In " + this.toString() 
 								+ ".writeFileAndProcess, parameter "
 								+ ICEntry.ParamEntryNumber + " = " + mv.get(m_sEntryNumber) + "."); 
 						}
@@ -287,7 +287,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into validateFile");
+			System.out.println("[1579204335] In " + this.toString() + ".writeFileAndProcess going into validateFile");
 		}
 		try {
 			validateFile(sTempImportFilePath, fileName, bIncludesHeaderRow);
@@ -309,7 +309,7 @@ public class ICTransferImportAction extends HttpServlet{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess got a connection");
+			System.out.println("[1579204349] In " + this.toString() + ".writeFileAndProcess got a connection");
 		}
 		
 		if (!clsDatabaseFunctions.start_data_transaction(conn)){
@@ -317,7 +317,7 @@ public class ICTransferImportAction extends HttpServlet{
 			throw new Exception("Error [1396369878] Could not start data transaction.");
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".writeFileAndProcess going into insertRecords");
+			System.out.println("[1579204352] In " + this.toString() + ".writeFileAndProcess going into insertRecords");
 		}
 		
 		try {
@@ -520,7 +520,7 @@ public class ICTransferImportAction extends HttpServlet{
 			int iLineCounter = 0;
 			while ((line = br.readLine()) != null) {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + ".validateFile - at line " + iLineCounter);
+					System.out.println("[1579204358] In " + this.toString() + ".validateFile - at line " + iLineCounter);
 				}
 				iLineCounter++;
 				
@@ -579,7 +579,7 @@ public class ICTransferImportAction extends HttpServlet{
 		sField = sField.replace("\"", "");
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + "FieldIndex = " + iFieldIndex 
+			System.out.println("[1579204367] In " + this.toString() + "FieldIndex = " + iFieldIndex 
 				+ ", value = " + sField);
 		}
 		if (iFieldIndex == FIELD_QTY){

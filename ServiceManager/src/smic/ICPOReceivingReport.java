@@ -313,7 +313,7 @@ public class ICPOReceivingReport extends java.lang.Object{
 			sOutPut += printRowHeader();
 			try{
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " SQL: " + SQL);
+					System.out.println("[1579203872] In " + this.toString() + " SQL: " + SQL);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 				while(rs.next()){

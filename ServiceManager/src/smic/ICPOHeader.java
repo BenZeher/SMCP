@@ -134,7 +134,7 @@ public class ICPOHeader extends clsMasterEntry{
 			m_slid = "-1";
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".ICPOHeaderEntry - ICPOHeaderEntry.Paramlid = " + m_slid);
+			System.out.println("[1579203415] In " + this.toString() + ".ICPOHeaderEntry - ICPOHeaderEntry.Paramlid = " + m_slid);
 		}
 		m_svendor = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsvendor, req).trim().toUpperCase();
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsponumber, req).trim().toUpperCase();
@@ -248,7 +248,7 @@ public class ICPOHeader extends clsMasterEntry{
 				+ SMTableicpoheaders.lid + " = " + sPOID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579203421] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);

@@ -471,7 +471,7 @@ public class ICPurchaseOrderForm extends java.lang.Object{
 				);
 			
 		} catch (SQLException e) {
-			System.out.println("Error printing POHeaderInfoBox - " + e.getMessage());
+			System.out.println("[1579203930] Error printing POHeaderInfoBox - " + e.getMessage());
 		}
 		
 		out.println("</TR></TABLE>");

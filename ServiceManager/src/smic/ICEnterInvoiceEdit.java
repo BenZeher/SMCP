@@ -213,7 +213,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
     			sFoundAcct = request.getParameter(ICEnterInvoiceEdit.FIND_EXPENSE_ACCT_PARAMETER + sRecordNumber);
     			if (bDebugMode){
     				System.out.println(
-    					"In " + this.toString()
+    					"[1579193019] In " + this.toString()
     					+ " - sRecordNumber = " + sRecordNumber
     					+ ", sFoundAcct = " + sFoundAcct
     				);
@@ -623,7 +623,7 @@ public class ICEnterInvoiceEdit  extends HttpServlet {
 				}
 				rs.close();
 			} catch (SQLException e) {
-				System.out.println("Error reading terms - " + e.getMessage());
+				System.out.println("[1579193025] Error reading terms - " + e.getMessage());
 				s += "<B>Error reading terms codes.</B><BR>";
 			}
 			

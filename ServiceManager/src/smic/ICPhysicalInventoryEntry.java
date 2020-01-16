@@ -563,7 +563,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		} else {
 			if (bDebugMode){
 				System.out.println(
-						"In " + this.toString() 
+						"[1579203207] In " + this.toString() 
 						+ ".writePhysicalInventory - going into updatePhysicalInventory(conn)");
 			}
 			bResult =  updatePhysicalInventory(conn);
@@ -591,13 +591,13 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 				+ m_sid + ")";
 		if (bDebugMode){
 			System.out.println(
-					"In " + this.toString() 
+					"[1579203211] In " + this.toString() 
 					+ ".updatePhysicalInventory - SQL = " + SQL);
 		}
 
 		try {
 			if (clsDatabaseFunctions.executeSQL(SQL, conn) == false) {
-				System.out.println(this.toString() + "Could not update "
+				System.out.println("[1579203219] " + this.toString() + "Could not update "
 						+ ParamObjectName + ".<BR>");
 				super.addErrorMessage("Could not update "
 						+ ParamObjectName + " with SQL: " + SQL);
@@ -612,7 +612,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 		
 		if (bDebugMode){
 			System.out.println(
-					"In " + this.toString() 
+					"[1579203225] In " + this.toString() 
 					+ ".updatePhysicalInventory - going into updateInventoryWorksheet(conn)");
 		}
 
@@ -826,7 +826,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 				;
 		try {
 			if (clsDatabaseFunctions.executeSQL(SQL, conn) == false) {
-				System.out.println(this.toString() + "Could not insert "
+				System.out.println("[1579203239] " + this.toString() + "Could not insert "
 						+ ParamObjectName + ".<BR>");
 				super.addErrorMessage("Could not insert "
 						+ ParamObjectName + " with SQL: " + SQL);
@@ -1243,7 +1243,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 			+ ")"
 		;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".addBatchEntry - 1st SQL = " + SQL);
+			System.out.println("[1579203248] In " + this.toString() + ".addBatchEntry - 1st SQL = " + SQL);
 		}
 		BigDecimal bdQtyOnHand = new BigDecimal(0);
 		BigDecimal bdQtyCounted = new BigDecimal(0);
@@ -1434,7 +1434,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 			m_sid = slid;
 			return true;
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString()
+			System.out.println("[1579203258] " + this.toString()
 					+ "Error formatting entry ID from string: " + slid + ".");
 			System.out.println(this.toString() + "Error: " + e.getMessage());
 			return false;

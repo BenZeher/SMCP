@@ -367,10 +367,10 @@ public class ICEntryLine extends java.lang.Object{
     	
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, context, sDBID) == false){
-	    		System.out.println("Could not complete update transaction - entry" + " was not updated.<BR>");
+	    		System.out.println("[1579195329] Could not complete update transaction - entry" + " was not updated.<BR>");
 	    	}else{
 	    		
-	    		System.out.println("Successfully updated entry" + ": " + sEntryNumber() + ".");
+	    		System.out.println("[1579195333] Successfully updated entry" + ": " + sEntryNumber() + ".");
 	    	}
     	}catch(SQLException ex){
     		m_sErrorMessage = "Error in " + this.toString() + " saving ICEntryLine with SQL: " + SQL + " - " + ex.getMessage();

@@ -73,7 +73,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 			m_slid = "-1";
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".ICPOReceiptHeaderEntry - ICPOReceiptHeaderEntry.Paramlid = " + m_slid);
+			System.out.println("[1579203785] In " + this.toString() + ".ICPOReceiptHeaderEntry - ICPOReceiptHeaderEntry.Paramlid = " + m_slid);
 		}
 		m_spoheaderid = clsManageRequestParameters.get_Request_Parameter(ICPOReceiptHeader.Paramlpoheaderid, req).trim();
 		if(clsManageRequestParameters.get_Request_Parameter(
@@ -145,7 +145,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 				+ SMTableicporeceiptheaders.lid + " = " + sPOReceiptID
 			+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579203790] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -293,7 +293,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		}
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579203804] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 		    Statement stmt = conn.createStatement();
@@ -749,7 +749,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 			+ ")"
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".receivePOLine - SQL 1 = " + SQL);
+			System.out.println("[1579203823] In " + this.toString() + ".receivePOLine - SQL 1 = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -768,7 +768,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 		receiptline.setsID(Long.toString(lPOReceiptLineID));
 		if (lPOReceiptLineID != -1){
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".receivePOLine - lPOReceiptLine != -1");
+				System.out.println("[1579203828] In " + this.toString() + ".receivePOLine - lPOReceiptLine != -1");
 			}
 			if(!receiptline.load(conn)){
 				throw new Exception("Error [1488322724] loading PO receipt line in .receivePOLine - " 
@@ -786,7 +786,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 			
 		}else{
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".receivePOLine - lPOReceiptLine is new");
+				System.out.println("[1579203833] In " + this.toString() + ".receivePOLine - lPOReceiptLine is new");
 			}
 			receiptline.setsglexpenseacct(poline.getsglexpenseacct());
 			receiptline.setsextendedcost(clsManageBigDecimals.BigDecimalToScaledFormattedString(
@@ -802,7 +802,7 @@ public class ICPOReceiptHeader extends clsMasterEntry{
 			receiptline.setsreceiptheaderid(this.getsID());
 			receiptline.setsunitcost(poline.getsunitcost());
 			if (bDebugMode){
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579203836] In " + this.toString() 
 					+ ".receivePOLine - poline.getsunitofmeasure() = " + poline.getsunitofmeasure());
 			}
 			receiptline.setsunitofmeasure(poline.getsunitofmeasure());

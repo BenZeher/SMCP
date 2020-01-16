@@ -69,7 +69,7 @@ public class ICTransactionDetailsReport extends java.lang.Object{
 			+ ", " + SMTableictransactiondetails.TableName + "." + SMTableictransactiondetails.ldetailnumber
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processReport - main SQL = " + SQL);
+			System.out.println("[1579204053] In " + this.toString() + ".processReport - main SQL = " + SQL);
 		}
     	
 		//Check permissions for viewing items:

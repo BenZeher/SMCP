@@ -388,7 +388,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
 	    		+ removeTemporaryTable(sTempTableName, conn));
 	    	}		
 		    if (bDebugMode){
-		    	System.out.println("In " + this.toString() + " [1487711844] - inserts took " 
+		    	System.out.println("[1579203985] In " + this.toString() + " [1487711844] - inserts took " 
 		    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 		    	);
 		    	lStartTime = System.currentTimeMillis();
@@ -455,7 +455,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		 + removeTemporaryTable(sTempTableName, conn));
     	}		
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711847] - order entry filter took " 
+	    	System.out.println("[1579203990] In " + this.toString() + " [1487711847] - order entry filter took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();
@@ -492,7 +492,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		 + removeTemporaryTable(sTempTableName, conn));
     	}		
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711849] - purchase order filter took " 
+	    	System.out.println("[1579203994] In " + this.toString() + " [1487711849] - purchase order filter took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();
@@ -525,7 +525,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		 + removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711851] - PO receipt filter took " 
+	    	System.out.println("[1579203999] In " + this.toString() + " [1487711851] - PO receipt filter took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();
@@ -555,7 +555,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		 + removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711853] - ICCOST filter took " 
+	    	System.out.println("[1579204008] In " + this.toString() + " [1487711853] - ICCOST filter took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();
@@ -585,7 +585,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		+ removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711855] - item location filter took " 
+	    	System.out.println("[1579204013] In " + this.toString() + " [1487711855] - item location filter took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();
@@ -608,7 +608,7 @@ public class ICSetInactiveItemsGenerate extends HttpServlet {
     		+ removeTemporaryTable(sTempTableName, conn));
     	}
 	    if (bDebugMode){
-	    	System.out.println("In " + this.toString() + " [1487711857] - set datLastTransaction took " 
+	    	System.out.println("[1579204017] In " + this.toString() + " [1487711857] - set datLastTransaction took " 
 	    		+ Long.toString(((System.currentTimeMillis() - lStartTime) / 1000))
 	    	);
 	    	lStartTime = System.currentTimeMillis();

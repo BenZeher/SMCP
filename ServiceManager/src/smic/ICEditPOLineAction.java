@@ -83,7 +83,7 @@ public class ICEditPOLineAction extends HttpServlet{
 			try {
 				response.sendRedirect(sRedirectString);
 			} catch (IOException e) {
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579191629] In " + this.toString() 
 					+ "After FINDITEM - error redirecting with string: " + sRedirectString);
 				smaction.redirectAction(
 					"After FINDITEM - error redirecting with string: " + sRedirectString, 
@@ -191,7 +191,7 @@ public class ICEditPOLineAction extends HttpServlet{
 			try {
 				response.sendRedirect(sRedirectString);
 			} catch (IOException e) {
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579191635] In " + this.toString() 
 					+ "After FINDGLACCOUNT - error redirecting with string: " + sRedirectString);
 				smaction.redirectAction(
 					"After FINDGLACCOUNT - error redirecting with string: " + sRedirectString, 

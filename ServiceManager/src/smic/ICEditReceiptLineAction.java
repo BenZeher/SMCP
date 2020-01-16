@@ -26,7 +26,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
 	    //Read the entry fields from the request object:
 		ICPOReceiptLine entry = new ICPOReceiptLine(request);
     	if(bDebugMode){
-    		System.out.println("In " + this.toString() + " - po receipt line dump immediately after ICPOReceiptLine(request) = "
+    		System.out.println("[1579191755] In " + this.toString() + " - po receipt line dump immediately after ICPOReceiptLine(request) = "
     				+ entry.read_out_debug_data()
     		);
     	}
@@ -70,7 +70,7 @@ public class ICEditReceiptLineAction extends HttpServlet{
 	    if(clsManageRequestParameters.get_Request_Parameter(
 	    		"VALIDATE", request).compareToIgnoreCase("") != 0){
 	    	if(bDebugMode){
-	    		System.out.println("In " + this.toString() + " - po receipt line dump = "
+	    		System.out.println("[1579191763] In " + this.toString() + " - po receipt line dump = "
 	    				+ entry.read_out_debug_data()
 	    		);
 	    	}

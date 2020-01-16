@@ -27,7 +27,7 @@ public class ICEditPhysicalInventoryAction extends HttpServlet{
 			    //Save this now so it's not lost after the delete:
 			    String sID = entry.slid();
 			    if (!entry.delete(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName())){
-			    	System.out.println("In " + this.toString() + " !entry.delete, error = '" + entry.getErrorMessages());
+			    	System.out.println("[1579191378] In " + this.toString() + " !entry.delete, error = '" + entry.getErrorMessages());
 			    	smaction.redirectAction("Could not delete: " + entry.getErrorMessages(), "", "");
 					return;
 			    }else{

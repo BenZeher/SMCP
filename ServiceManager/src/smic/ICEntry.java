@@ -414,7 +414,7 @@ public class ICEntry extends java.lang.Object {
 		//System.out.println("[1475181787] SQL = " + SQL);
 		try {
 			if (clsDatabaseFunctions.executeSQL(SQL, conn) == false) {
-				System.out.println(this.toString()
+				System.out.println("[1579193039] " + this.toString()
 						+ "Could not complete update transaction - entry"
 						+ " was not updated.<BR>");
 				m_sErrorMessage.add("Could not update entry with SQL: " + SQL);
@@ -457,13 +457,13 @@ public class ICEntry extends java.lang.Object {
 			ServletContext context, String sDBID) {
 
 		if (!sBatchNumber(sBatchNumber)) {
-			System.out.println(this.toString() + "Invalid sBatchNumber - "
+			System.out.println("[1579193052] " + this.toString() + "Invalid sBatchNumber - "
 					+ sBatchNumber);
 			return false;
 		}
 
 		if (!sEntryNumber(sEntryNumber)) {
-			System.out.println(this.toString() + "Invalid sEntryNumber - "
+			System.out.println("[1579193059] " + this.toString() + "Invalid sEntryNumber - "
 					+ sEntryNumber);
 			return false;
 		}
@@ -502,7 +502,7 @@ public class ICEntry extends java.lang.Object {
 			rs.close();
 
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString() + ".load class!!");
+			System.out.println("[1579193065] Error in " + this.toString() + ".load class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -523,13 +523,13 @@ public class ICEntry extends java.lang.Object {
 			Connection conn) {
 
 		if (!sBatchNumber(sBatchNumber)) {
-			System.out.println(this.toString() + "Invalid sBatchNumber - "
+			System.out.println("[1579193077] " + this.toString() + "Invalid sBatchNumber - "
 					+ sBatchNumber);
 			return false;
 		}
 
 		if (!sEntryNumber(sEntryNumber)) {
-			System.out.println(this.toString() + "Invalid sEntryNumber - "
+			System.out.println("[1579193231] " + this.toString() + "Invalid sEntryNumber - "
 					+ sEntryNumber);
 			return false;
 		}
@@ -554,7 +554,7 @@ public class ICEntry extends java.lang.Object {
 			}
 			rs.close();
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString() + ".load class!!");
+			System.out.println("[1579193238] Error in " + this.toString() + ".load class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -594,7 +594,7 @@ public class ICEntry extends java.lang.Object {
 			}
 			rs.close();
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString() + ".load class!!");
+			System.out.println("[1579193243] Error in " + this.toString() + ".load class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -629,7 +629,7 @@ public class ICEntry extends java.lang.Object {
 			}
 			rs.close();
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString() + ".load class!!");
+			System.out.println("[1579193247] Error in " + this.toString() + ".load class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -676,13 +676,13 @@ public class ICEntry extends java.lang.Object {
 			Connection conn) {
 
 		if (!sBatchNumber(sBatchNumber)) {
-			System.out.println(this.toString() + "Invalid sBatchNumber - "
+			System.out.println("[1579193256] " + this.toString() + "Invalid sBatchNumber - "
 					+ sBatchNumber);
 			return false;
 		}
 
 		if (!sEntryNumber(sEntryNumber)) {
-			System.out.println(this.toString() + "Invalid sEntryNumber - "
+			System.out.println("[1579193262] " + this.toString() + "Invalid sEntryNumber - "
 					+ sEntryNumber);
 			return false;
 		}
@@ -742,7 +742,7 @@ public class ICEntry extends java.lang.Object {
 			rs.close();
 		} catch (SQLException ex) {
 			m_sErrorMessage.add("Error [1533583093] - could no load lines with SQL '" + SQL + "' - " + ex.getMessage());
-			System.out.println("Error in " + this.toString() + ".load class!!");
+			System.out.println("[1579193315] Error in " + this.toString() + ".load class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -778,7 +778,7 @@ public class ICEntry extends java.lang.Object {
 				return false;
 			}
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString()
+			System.out.println("[1579193320] Error in " + this.toString()
 					+ " - delete_single_line!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
@@ -841,7 +841,7 @@ public class ICEntry extends java.lang.Object {
 			m_lid = Long.parseLong(slid);
 			return true;
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString()
+			System.out.println("[1579193330] " + this.toString()
 					+ "Error formatting entry ID from string: " + slid + ".");
 			System.out.println(this.toString() + "Error: " + e.getMessage());
 			return false;
@@ -886,7 +886,7 @@ public class ICEntry extends java.lang.Object {
 			m_lEntryNumber = Long.parseLong(sEntryNumber);
 			return true;
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString()
+			System.out.println("[1579193338] " + this.toString()
 					+ "Error formatting Entry number from string: "
 					+ sEntryNumber + ".");
 			System.out.println(this.toString() + "Error: " + e.getMessage());
@@ -996,7 +996,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193373] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineItemNumber");
 			return false;
 		}
@@ -1017,7 +1017,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193380] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineLocation");
 			return false;
 		}
@@ -1038,7 +1038,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193431] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineTargetLocation");
 			return false;
 		}
@@ -1059,7 +1059,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193580] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineDescription");
 			return false;
 		}
@@ -1080,7 +1080,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193628] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineComment");
 			return false;
 		}
@@ -1101,7 +1101,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193635] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineControlAcct");
 			return false;
 		}
@@ -1123,7 +1123,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193642] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineDistributionAcct");
 			return false;
 		}
@@ -1144,7 +1144,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193649] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineCategory");
 			return false;
 		}
@@ -1165,7 +1165,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193696] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineReceiptNumber");
 			return false;
 		}
@@ -1186,7 +1186,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193704] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineCostBucketID");
 			return false;
 		}
@@ -1206,7 +1206,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193712] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLinePriceString");
 			return false;
 		}
@@ -1230,7 +1230,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193720] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineCostString");
 			return false;
 		}
@@ -1253,7 +1253,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193729] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineCostString");
 			return false;
 		}
@@ -1274,7 +1274,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193736] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineQtyString");
 			return false;
 		}
@@ -1295,7 +1295,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193751] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineQtyString");
 			m_sErrorMessage.add("Invalid qty: " + sQty);
 			return false;
@@ -1306,7 +1306,7 @@ public class ICEntry extends java.lang.Object {
 			if (Line.sId().compareToIgnoreCase(Long.toString(lLineID)) == 0) {
 				if (!Line.setQtyString(sQty)) {
 					m_sErrorMessage.add(Line.getErrorMessage());
-					System.out.println("In " + this.toString()
+					System.out.println("[1579193755] In " + this.toString()
 							+ " adding Line.getErrorMessage: "
 							+ Line.getErrorMessage());
 				}
@@ -1323,7 +1323,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			lLineID = Long.parseLong(sLineID);
 		} catch (NumberFormatException e) {
-			System.out.println(this.toString() + "error formatting long from "
+			System.out.println("[1579193762] " + this.toString() + "error formatting long from "
 					+ sLineID + " in setLineAmountString");
 			return d;
 		}
@@ -1349,13 +1349,13 @@ public class ICEntry extends java.lang.Object {
 			bEntriesAreValid = false;
 		}
 		if (m_sDocNumber.length() > SMTableicbatchentries.sdocnumberLength) {
-			System.out.println(this.toString()
+			System.out.println("[1579193770] " + this.toString()
 					+ "Document number is too long - ICEntry.save.");
 			m_sErrorMessage.add("Document number is too long.");
 			bEntriesAreValid = false;
 		}
 		if (m_sEntryDescription.length() > SMTableicbatchentries.sentrydescriptionLength) {
-			System.out.println(this.toString()
+			System.out.println("[1579193780] " + this.toString()
 					+ "Entry description is too long - ICEntry.save.");
 			m_sErrorMessage.add("Entry description is too long.");
 			bEntriesAreValid = false;
@@ -2003,7 +2003,7 @@ public class ICEntry extends java.lang.Object {
 				return 0;
 			}
 		} catch (SQLException ex) {
-			System.out.println("Error in " + this.toString() + " class!!");
+			System.out.println("[1579193970] Error in " + this.toString() + " class!!");
 			System.out.println(this.toString() + "SQLException: "
 					+ ex.getMessage());
 			System.out.println(this.toString() + "SQLState: "
@@ -2024,7 +2024,7 @@ public class ICEntry extends java.lang.Object {
 				sBatchNumber(), conn) + 1;
 		if (iLastEntryNumberInBatch == -1) {
 			m_sErrorMessage.add("Could not get last entry number.");
-			System.out.println(this.toString() + " - " + m_sErrorMessage);
+			System.out.println("[1579193979] " + this.toString() + " - " + m_sErrorMessage);
 			return false;
 		} else {
 			lEntryNumber(iLastEntryNumberInBatch);
@@ -2072,7 +2072,7 @@ public class ICEntry extends java.lang.Object {
 		try {
 			if (clsDatabaseFunctions.executeSQL(SQL, conn) == false) {
 				m_sErrorMessage.add("Could not complete add new entry.");
-				System.out.println(m_sErrorMessage);
+				System.out.println("[1579193995] " + m_sErrorMessage);
 				return false;
 			} else {
 				// System.out.println(this.toString() +
@@ -2081,7 +2081,7 @@ public class ICEntry extends java.lang.Object {
 		} catch (SQLException ex) {
 			m_sErrorMessage.add("SQL Error inserting entry record: "
 					+ ex.getMessage());
-			System.out.println("Error in " + this.toString() + " class!!");
+			System.out.println("[1579194005] Error in " + this.toString() + " class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -2106,7 +2106,7 @@ public class ICEntry extends java.lang.Object {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (!rs.next()) {
 				m_sErrorMessage.add("Could not get entry ID for new entry.");
-				System.out.println(m_sErrorMessage);
+				System.out.println("[1579194013] " + m_sErrorMessage);
 				rs.close();
 				return false;
 			}
@@ -2115,7 +2115,7 @@ public class ICEntry extends java.lang.Object {
 		} catch (SQLException ex) {
 			m_sErrorMessage.add("SQL Error getting entry ID for new entry: "
 					+ ex.getMessage());
-			System.out.println("Error in " + this.toString() + " class!!");
+			System.out.println("[1579194019] Error in " + this.toString() + " class!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -2235,7 +2235,7 @@ public class ICEntry extends java.lang.Object {
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		} catch (SQLException ex) {
-			System.out.println(this.toString()
+			System.out.println("[1579194033] " + this.toString()
 					+ "Could not complete update line with line id: "
 					+ line.sId() + " - " + ex.getMessage() + " - SQL = " + SQL);
 			m_sErrorMessage.add("Could not complete update line - SQL error: "
@@ -2424,7 +2424,7 @@ public class ICEntry extends java.lang.Object {
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("Error in " + this.toString() + " - " + e.getMessage());
+			System.out.println("[1579194041] Error in " + this.toString() + " - " + e.getMessage());
 			m_sErrorMessage.add("Error checking if batch is open - " + e.getMessage());
 		}
 		return bResult;

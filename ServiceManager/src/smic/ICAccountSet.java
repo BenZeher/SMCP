@@ -118,7 +118,7 @@ public class ICAccountSet extends Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579190806] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -148,7 +148,7 @@ public class ICAccountSet extends Object{
 	        }
 	        
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579190810] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -185,7 +185,7 @@ public class ICAccountSet extends Object{
 	        	return false;
 	        }
 		}catch(SQLException ex){
-	    	System.out.println("Error in loadFromResultSet function!!");
+	    	System.out.println("[1579190814] Error in loadFromResultSet function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -340,7 +340,7 @@ public class ICAccountSet extends Object{
 				return true;				
 			}
 		}catch(SQLException e){
-			System.out.println("Error saving  - " + e.getMessage());
+			System.out.println("[1579190820] Error saving  - " + e.getMessage());
 			m_sErrorMessageArray.add("Error saving  - " + e.getMessage());
 			return false;
 		}
@@ -491,7 +491,7 @@ public class ICAccountSet extends Object{
 			}
 			
 		}catch(SQLException e){
-			System.out.println("Error checking account set " + sAccountSet + " to delete - " + e.getMessage());
+			System.out.println("[1579190827] Error checking account set " + sAccountSet + " to delete - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking account set " + sAccountSet + " to delete - " + e.getMessage());
 			return false;
 		}
@@ -550,7 +550,7 @@ public class ICAccountSet extends Object{
 			*/
 
 		}catch(SQLException e){
-			System.out.println("Error deleting account set " + sAccountSet + " - " + e.getMessage());
+			System.out.println("[1579190835] Error deleting account set " + sAccountSet + " - " + e.getMessage());
 			m_sErrorMessageArray.add("Error deleting account set " + sAccountSet + " - " + e.getMessage());
 			return false;
 		}

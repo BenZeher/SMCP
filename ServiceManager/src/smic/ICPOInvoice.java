@@ -211,7 +211,7 @@ public class ICPOInvoice extends clsMasterEntry{
 				}
 				if (bDebugMode){
 					System.out.println(
-							"In " + this.toString() + " invoiced cost on record number " + sRecordNumber 
+							"[1579203439] In " + this.toString() + " invoiced cost on record number " + sRecordNumber 
 							+ " = " + m_arrLines.get(Integer.parseInt(sRecordNumber)).getsinvoicedcost());
 				}
 			}
@@ -363,7 +363,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		+ SMTableicpoinvoiceheaders.lid + " = " + sID
 		+ ")";
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load SQL = " + SQL);
+			System.out.println("[1579203447] In " + this.toString() + " - load SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -435,7 +435,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			+ ", " + SMTableicpoinvoicelines.lid
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - load invoice lines SQL = " + SQL);
+			System.out.println("[1579203452] In " + this.toString() + " - load invoice lines SQL = " + SQL);
 		}
 		try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
@@ -682,7 +682,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - save SQL = " + SQL);
+			System.out.println("[1579203462] In " + this.toString() + " - save SQL = " + SQL);
 		}
 		try{
 			Statement stmt = conn.createStatement();
@@ -769,14 +769,14 @@ public class ICPOInvoice extends clsMasterEntry{
 			+ ")"
 			;
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + ".save_without_data_transaction - save line SQL = " 
+				System.out.println("[1579203469] In " + this.toString() + ".save_without_data_transaction - save line SQL = " 
 						+ SQL);
 			}
 			try{
 				Statement stmt = conn.createStatement();
 				stmt.executeUpdate(SQL);
 			}catch (Exception ex) {
-				System.out.println(this.toString() + "Could not insert/update invoice lines - " 
+				System.out.println("[1579203477] " + this.toString() + "Could not insert/update invoice lines - " 
 						+ ex.getMessage() + ".<BR>");
 				super.addErrorMessage("Could not insert/update invoice lines with SQL : " + SQL
 						+ " - " + ex.getMessage());
@@ -1048,7 +1048,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		BigDecimal bdLineInvoicedCostTotal = new BigDecimal(0);
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " m_arrLines.size() = " + m_arrLines.size());
+			System.out.println("[1579203491] In " + this.toString() + " m_arrLines.size() = " + m_arrLines.size());
 		}
 		for (int i = 0; i < m_arrLines.size(); i++){
 			try {
@@ -1166,7 +1166,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579203500] In " + this.toString() 
 					+ " Could not delete invoice with ID " + m_slid + " - " + ex.getMessage());
 			super.addErrorMessage("In " + this.toString() 
 					+ " Could not delete invoice with ID " + m_slid + " - " + ex.getMessage());
@@ -1674,7 +1674,7 @@ public class ICPOInvoice extends clsMasterEntry{
 					"MySQL", SMUtilities.getFullClassName(this.toString())
 					+ ".loadVendorInformation - user: " + sUserID);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " updating vendor info - SQL = " + SQL);
+				System.out.println("[1579203511] In " + this.toString() + " updating vendor info - SQL = " + SQL);
 			}
 			if (rs.next()) {
 				m_svendorname = rs.getString(
@@ -1690,7 +1690,7 @@ public class ICPOInvoice extends clsMasterEntry{
 					m_sterms = "";
 				}
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " updating vendor info - got record, terms = " + m_sterms);
+					System.out.println("[1579203515] In " + this.toString() + " updating vendor info - got record, terms = " + m_sterms);
 				}
 
 			} else {
@@ -1792,7 +1792,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			}
 			rs.close();
 		} catch (SQLException e) {
-			System.out.println("Could not read vendor terms to calculate discounts - " + e.getMessage());
+			System.out.println("[1579203526] Could not read vendor terms to calculate discounts - " + e.getMessage());
 			super.addErrorMessage("Could not read vendor terms to calculate discounts - " + e.getMessage());
 			bResult = false;
 		}
@@ -1804,7 +1804,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		try{
 			bdInvoiceTotal = new BigDecimal(this.getM_sinvoicetotal().replace(",", ""));
 		}catch(NumberFormatException e){
-			System.out.println("Error converting invoice total '" 
+			System.out.println("[1579203530] Error converting invoice total '" 
 					+ this.getM_sinvoicetotal().replace(",", "")
 					+ "' into BigDecimal - " + e.getMessage()
 			);
@@ -1843,7 +1843,7 @@ public class ICPOInvoice extends clsMasterEntry{
 		Calendar cDueDate = Calendar.getInstance(); 
 		cDueDate.setTime(datInvoice);
 		//If there is no 'Due date of the month', then just calculate using the number of days from the invoice date
-		System.out.println("Due day of the month = " + iDueDayOfTheMonth);
+		System.out.println("[1579203534] Due day of the month = " + iDueDayOfTheMonth);
 		System.out.println("Due number of days = " + iDueNumberOfDays);
 		if (iDueDayOfTheMonth == 0){
 			//Add the number of due days to the invoice date:
@@ -1853,7 +1853,7 @@ public class ICPOInvoice extends clsMasterEntry{
 
 			//We may have to move the month of the due date forward - check that here:
 			//If the due date of the month is <= the invoice date, add a month to the due date:
-			System.out.println("cDueDate.get(Calendar.DAY_OF_MONTH) = " + cDueDate.get(Calendar.DAY_OF_MONTH));
+			System.out.println("[1579203540] cDueDate.get(Calendar.DAY_OF_MONTH) = " + cDueDate.get(Calendar.DAY_OF_MONTH));
 			if (iDueDayOfTheMonth <= cDueDate.get(Calendar.DAY_OF_MONTH)){
 				cDueDate.add(Calendar.MONTH, 1);
 			//If not then...
@@ -1945,7 +1945,7 @@ public class ICPOInvoice extends clsMasterEntry{
 			Statement stmt = conn.createStatement();
 			stmt.executeUpdate(SQL);
 		}catch (Exception ex) {
-			System.out.println(this.toString() + "Could not delete invoice line with SQL: " + SQL 
+			System.out.println("[1579203557] " + this.toString() + "Could not delete invoice line with SQL: " + SQL 
 					+ " - ERROR: " + ex.getMessage() + ".<BR>");
 			super.addErrorMessage("Could not delete invoice line with SQL: " + SQL 
 					+ " - ERROR: " + ex.getMessage());

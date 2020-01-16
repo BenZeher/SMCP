@@ -108,7 +108,7 @@ public class ICCategory extends Object{
 	        	return false;
 	        }
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579191039] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -138,7 +138,7 @@ public class ICCategory extends Object{
 	        }
 	        
 		}catch (SQLException ex){
-	    	System.out.println("Error in load function!!");
+	    	System.out.println("[1579191044] Error in load function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -168,7 +168,7 @@ public class ICCategory extends Object{
 	        	return false;
 	        }
 		}catch(SQLException ex){
-	    	System.out.println("Error in loadFromResultSet function!!");
+	    	System.out.println("[1579191049] Error in loadFromResultSet function!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -314,7 +314,7 @@ public class ICCategory extends Object{
 				return true;				
 			}
 		}catch(SQLException e){
-			System.out.println("Error saving category - " + e.getMessage());
+			System.out.println("[1579191056] Error saving category - " + e.getMessage());
 			m_sErrorMessageArray.add("Error saving category - " + e.getMessage());
 			return false;
 		}
@@ -435,7 +435,7 @@ public class ICCategory extends Object{
 			}
 			
 		}catch(SQLException e){
-			System.out.println("Error checking category " + sCategory + " to delete - " + e.getMessage());
+			System.out.println("[1579191065] Error checking category " + sCategory + " to delete - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking category " + sCategory + " to delete - " + e.getMessage());
 			return false;
 		}
@@ -458,7 +458,7 @@ public class ICCategory extends Object{
 				rs.close();
 			}
 		}catch(SQLException e){
-			System.out.println("Error checking items for " + sCategory + " - " + e.getMessage());
+			System.out.println("[1579191071] Error checking items for " + sCategory + " - " + e.getMessage());
 			m_sErrorMessageArray.add("Error checking items for " + sCategory + " - " + e.getMessage());
 			return false;
 		}
@@ -484,7 +484,7 @@ public class ICCategory extends Object{
 			//TODO - delete any related table records:
 
 		}catch(SQLException e){
-			System.out.println("Error deleting category " + sCategory + " - " + e.getMessage());
+			System.out.println("[1579191076] Error deleting category " + sCategory + " - " + e.getMessage());
 			m_sErrorMessageArray.add("Error deleting category " + sCategory + " - " + e.getMessage());
 			return false;
 		}

@@ -76,7 +76,7 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 			bdMRC = new BigDecimal(sMostRecentCost);
 		} catch (Exception e1) {
 			System.out.println(
-				" In " + this.toString() 
+				"[1579204465]  In " + this.toString() 
 				+ ".updateItemCost - error converting sMostRecentCost '" 
 				+ sMostRecentCost + "' to a Big Decimal");
 		}
@@ -95,7 +95,7 @@ public class ICUpdateMostRecentCostAction extends HttpServlet {
 		;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".updateItemCost - SQL = " + SQL);
+			System.out.println("[1579204471] In " + this.toString() + ".updateItemCost - SQL = " + SQL);
 		}
 		try {
 			if (!clsDatabaseFunctions.executeSQL(

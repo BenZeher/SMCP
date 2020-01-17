@@ -365,7 +365,7 @@ public class SMEditOrderHandler extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579270723] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

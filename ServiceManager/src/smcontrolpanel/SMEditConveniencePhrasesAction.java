@@ -62,7 +62,7 @@ public class SMEditConveniencePhrasesAction extends HttpServlet{
     		sOutPut = "Successfully updated " + sObjectName + ": " + sEditCode + ".";
     	}
     }catch (SQLException ex){
-		System.out.println("Error in " + this.toString() + " class!!");
+		System.out.println("[1579269145] Error in " + this.toString() + " class!!");
 	    System.out.println("SQLException: " + ex.getMessage());
 	    System.out.println("SQLState: " + ex.getSQLState());
 	    System.out.println("SQL: " + ex.getErrorCode());

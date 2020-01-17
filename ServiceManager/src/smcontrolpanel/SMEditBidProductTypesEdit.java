@@ -178,7 +178,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 
 		if (conn == null){
 			pwOut.println("Error getting connection to delete record.");
-			System.out.println("Error getting connection to delete record.");
+			System.out.println("[1579268878] Error getting connection to delete record.");
 			return false;
 		}
 
@@ -224,7 +224,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			System.out.println("Error deleting product type record with SQL: " + SQL 
+			System.out.println("[1579268882] Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080474]");
@@ -242,7 +242,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			System.out.println("Error deleting product type record with SQL: " + SQL 
+			System.out.println("[1579268886] Error deleting product type record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080475]");
@@ -297,7 +297,7 @@ public class SMEditBidProductTypesEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error inserting product type with SQL: "
 					+ sSQL + " - " + ex.getMessage());
-			System.out.println("Error inserting product type with SQL: "
+			System.out.println("[1579268892] Error inserting product type with SQL: "
 					+ sSQL + " - " + ex.getMessage());
 			return false;
 		}

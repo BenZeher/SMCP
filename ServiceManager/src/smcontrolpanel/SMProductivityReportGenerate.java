@@ -195,7 +195,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){
-	    	System.out.println("Error when opening rs for productivity report!!");
+	    	System.out.println("[1579274753] Error when opening rs for productivity report!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -417,7 +417,7 @@ public class SMProductivityReportGenerate extends HttpServlet {
 		    rs.close();
 		    
 	    }catch (SQLException ex){
-	    	System.out.println("Error in SMProductivityReportGenerate!!");
+	    	System.out.println("[1579274760] Error in SMProductivityReportGenerate!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

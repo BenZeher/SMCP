@@ -373,7 +373,7 @@ public class SMViewAppointmentCalendarGenerate extends HttpServlet {
 					(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL))
 			;
 		} catch (Exception e) {
-			System.out.println("FAIL HERE: " + e.getMessage());
+			System.out.println("[1579275180] FAIL HERE: " + e.getMessage());
 			sRedirectString += "&Warning=" + clsServletUtilities.URLEncode(e.getMessage());
 			try {
 				response.sendRedirect(sRedirectString);

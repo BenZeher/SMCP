@@ -60,7 +60,7 @@ public class SMWorkOrderAction extends HttpServlet{
 					+ clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.RECORDWASCHANGED_FLAG, request)
 			);
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " loadFromHTTPRequest failed");
+    			System.out.println("[1579275524] In " + this.toString() + " loadFromHTTPRequest failed");
     		}
 			return;
 		}
@@ -329,7 +329,7 @@ public class SMWorkOrderAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     		    SMWorkOrderEdit.PRINTRECEIPTCOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into print mode");
+    			System.out.println("[1579275534] In " + this.toString() + " into print mode");
     		}
     		try {
 				smaction.getPwOut().println(getHTMLWorkOrderForm(
@@ -742,11 +742,11 @@ public class SMWorkOrderAction extends HttpServlet{
 	
 	private void sendEmail(HttpServletRequest req, SMWorkOrderHeader wo, SMMasterEditAction sm) throws Exception{
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " into email mode");
+			System.out.println("[1579275543] In " + this.toString() + " into email mode");
 		}
 		String sEmailTo = clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.EMAIL_TO_FIELD, req);
 		if (bDebugMode){
-			System.out.println("EMAILTO = " + sEmailTo);
+			System.out.println("[1579275547] EMAILTO = " + sEmailTo);
 		}
 		if (sEmailTo.compareToIgnoreCase("") == 0){
 			throw new Exception("Email address cannot be blank.");
@@ -816,11 +816,11 @@ public class SMWorkOrderAction extends HttpServlet{
 	}
 	private String createMaterialReturn(HttpServletRequest req, SMWorkOrderHeader wo, SMMasterEditAction sm) throws Exception{
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " into create material return mode");
+			System.out.println("[1579275553] In " + this.toString() + " into create material return mode");
 		}
 		String sDescription = clsManageRequestParameters.get_Request_Parameter(SMWorkOrderEdit.MATERIAL_RETURN_DESCRIPTION_FIELD, req);
 		if (bDebugMode){
-			System.out.println("MATERIAL RETURN DESCRIPTION = " + sDescription);
+			System.out.println("[1579275557] MATERIAL RETURN DESCRIPTION = " + sDescription);
 		}
 		if (sDescription.compareToIgnoreCase("") == 0){
 			throw new Exception("You must enter a description to create a material return.");

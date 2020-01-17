@@ -183,7 +183,7 @@ public class CustomerCallLogListGenerate extends HttpServlet {
 		    out.println("<TR><TD ALIGN=RIGHT VALIGN=TOP COLSPAN=5><FONT SIZE=5><B>Total number of calls: " + iRowCount + " (100.00%)</FONT></B></TD></TR>");
 		    out.println("</TABLE>");
 	    }catch (SQLException ex){
-	    	System.out.println("Error in CustomerCallLogListGenerate class!!");
+	    	System.out.println("[1579207392] Error in CustomerCallLogListGenerate class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

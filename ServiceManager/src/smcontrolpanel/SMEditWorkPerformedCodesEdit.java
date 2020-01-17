@@ -167,7 +167,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 	        		);
 	        rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
+	    	System.out.println("[1579272214] Error in " + this.toString()+ " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -198,7 +198,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
+	    	System.out.println("[1579272219] Error in " + this.toString()+ ".Delete_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -223,7 +223,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 			}
 			rs.close();
 		}catch(SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");
+	    	System.out.println("[1579272223] Error in " + this.toString()+ ".Add_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -235,7 +235,7 @@ public class SMEditWorkPerformedCodesEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");
+	    	System.out.println("[1579272227] Error in " + this.toString()+ ".Add_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

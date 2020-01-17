@@ -832,13 +832,13 @@ public class SMServiceTicketWithFormat extends java.lang.Object{
 
 			}else{
 				m_sErrorMessage = "Could not read data for location '" + sLocation + "'.";
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579275084] In " + this.toString() 
 						+ ".printTicketHeader - couldn't get location record.");
 			}
 			rs.close();
 		} catch (SQLException e) {
 			// Don't do anything - we just won't get the data printed:
-			System.out.println("In " + this.toString() + ".printTicketHeader - couldn't read company address");
+			System.out.println("[1579275087] In " + this.toString() + ".printTicketHeader - couldn't read company address");
 		}
 
 		//First, we need a table to enclose the three inner tables:

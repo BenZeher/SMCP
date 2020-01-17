@@ -98,7 +98,7 @@ public class SMManageSecurityGroupsAction extends HttpServlet {
 	    		sOutPut = "Successfully updated group " + sGroupName + ".";
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in SMUtilities.commitTransaction class!!");
+			System.out.println("[1579274030] Error in SMUtilities.commitTransaction class!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

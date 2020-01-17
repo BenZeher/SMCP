@@ -35,7 +35,7 @@ public class SMWorkOrderSignatureAction extends HttpServlet{
 					""
 			);
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " loadFromHTTPRequest failed");
+    			System.out.println("[1579275579] In " + this.toString() + " loadFromHTTPRequest failed");
     		}
 			return;
 		}
@@ -99,7 +99,7 @@ public class SMWorkOrderSignatureAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			SMWorkOrderSignatureEdit.EDITCOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into edit mode");
+    			System.out.println("[1579275584] In " + this.toString() + " into edit mode");
     			System.out.println(workorder.read_out_debug_data());
     		}
     		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
@@ -116,7 +116,7 @@ public class SMWorkOrderSignatureAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579275587] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

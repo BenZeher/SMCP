@@ -318,7 +318,7 @@ public class SMStatistics extends HttpServlet {
 	     	log.writeEntry(sUserID, SMLogEntry.LOG_OPERATION_SMWARRANTYSTATUSREPORT, "REPORT", "SMStatistics", "[1564758031]");
 		 	   
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + " class!!");
+	    	System.out.println("[1579275106] Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

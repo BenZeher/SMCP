@@ -87,7 +87,7 @@ public class SMManagePasswordsAction extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMChangeUserPasswordAction.Change_Current_Password class!!");
+	    	System.out.println("[1579274012] Error in SMChangeUserPasswordAction.Change_Current_Password class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

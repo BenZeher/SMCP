@@ -85,7 +85,7 @@ public class SMEditDirectOrderDetailEntry  extends HttpServlet {
 		if (currentSession.getAttribute(SMDirectOrderDetailEntry.ParamObjectName) != null){
 			entry = (SMDirectOrderDetailEntry) currentSession.getAttribute(SMDirectOrderDetailEntry.ParamObjectName);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
+				System.out.println("[1579269520] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
 			}
 			//Remove the object from the session:
 			currentSession.removeAttribute(SMDirectOrderDetailEntry.ParamObjectName);
@@ -94,7 +94,7 @@ public class SMEditDirectOrderDetailEntry  extends HttpServlet {
 		    entry = new SMDirectOrderDetailEntry(smedit.getRequest());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
+			System.out.println("[1579269524] In " + this.toString() + " entry after reading from request: " + entry.read_out_debug_data());
 		}
 	    
 	    smedit.printHeaderTable();
@@ -119,7 +119,7 @@ public class SMEditDirectOrderDetailEntry  extends HttpServlet {
 		smedit.setbIncludeUpdateButton(false);
 		smedit.setbIncludeDeleteButton(false);
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just before createEditPage.");
+			System.out.println("[1579269534] In " + this.toString() + " just before createEditPage.");
 		}
 	    try {
 			smedit.createEditPage(
@@ -140,7 +140,7 @@ public class SMEditDirectOrderDetailEntry  extends HttpServlet {
 				return;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just after createEditPage.");
+			System.out.println("[1579269537] In " + this.toString() + " just after createEditPage.");
 		}
 	    return;
 	}

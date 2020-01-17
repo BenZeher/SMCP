@@ -258,7 +258,7 @@ public class SMEditOrderDetailEdit  extends HttpServlet {
 			detail.setM_sItemNumber(clsManageRequestParameters.get_Request_Parameter(SMOrderDetail.ParamsItemNumber, request));
 			try {
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " - order.getM_iCustomerDiscountLevel() = " + order.getM_iCustomerDiscountLevel());
+					System.out.println("[1579270661] In " + this.toString() + " - order.getM_iCustomerDiscountLevel() = " + order.getM_iCustomerDiscountLevel());
 				}
 				order.updateLineWithItemData(
 					detail,

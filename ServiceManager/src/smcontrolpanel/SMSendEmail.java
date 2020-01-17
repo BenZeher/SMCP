@@ -47,7 +47,7 @@ public class SMSendEmail {
 			transport.close();
 			return true;
 		}catch (Exception ex){
-			System.out.println("Exception: " + ex.getMessage());
+			System.out.println("[1579274963] Exception: " + ex.getMessage());
 			return false;
 		}
     }

@@ -108,7 +108,7 @@ public class SMGeocoder {
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/status", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting result - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579272245] In SMGeocoder.codeAddress, getting result - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 			sXMLStatus += resultNodeList.item(i).getTextContent();
 		}
@@ -119,14 +119,14 @@ public class SMGeocoder {
 					TimeUnit.MILLISECONDS.sleep(RETRY_WAIT_TIME_MS);
 					
 					if (bDebugMode){
-						System.out.println("Failed trying for number '" + Integer.toString(iAttemptNumber)
+						System.out.println("[1579272248] Failed trying for number '" + Integer.toString(iAttemptNumber)
 						+ "' in " + Integer.toString(RETRY_WAIT_TIME_MS) + "ms");
 					}
 					return OVER_QUERY_LIMIT_ERROR;
 				}
 			} catch (Exception e) {
 				if (bDebugMode){
-					System.out.println("In SMGeocoder.codeAddress, failed waiting for next attempt -" + e.getMessage());
+					System.out.println("[1579272261] In SMGeocoder.codeAddress, failed waiting for next attempt -" + e.getMessage());
 				}
 			}
 		}
@@ -135,7 +135,7 @@ public class SMGeocoder {
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/result/formatted_address", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting formatted address - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579272265] In SMGeocoder.codeAddress, getting formatted address - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 		}
 
@@ -143,7 +143,7 @@ public class SMGeocoder {
 		resultNodeList = (NodeList) xpath.evaluate("/GeocodeResponse/result[1]/address_component[type/text()='locality']/long_name", geocoderResultDocument, XPathConstants.NODESET);
 		for(int i=0; i<resultNodeList.getLength(); ++i) {
 			if (bDebugMode){
-				System.out.println("In SMGeocoder.codeAddress, getting locality - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
+				System.out.println("[1579272271] In SMGeocoder.codeAddress, getting locality - resultNodeList.item(i).getTextContent() = " +  resultNodeList.item(i).getTextContent());
 			}
 		}
 
@@ -158,7 +158,7 @@ public class SMGeocoder {
 			if("lng".equals(node.getNodeName())) lng = Float.parseFloat(node.getTextContent());
 		}
 		if (bDebugMode){
-			System.out.println("In SMGeocoder.codeAddress, lat/lng=" + lat + "," + lng);
+			System.out.println("[1579272275] In SMGeocoder.codeAddress, lat/lng=" + lat + "," + lng);
 		}
 		
 		//Log every geocode request

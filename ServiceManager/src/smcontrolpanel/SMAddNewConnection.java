@@ -58,7 +58,7 @@ public class SMAddNewConnection extends HttpServlet{
 	    			alConnections.remove(0);
 	    		}
 	    	}catch (Exception ex){
-	    		System.out.println("Error: " + ex.getMessage());
+	    		System.out.println("[1579207978] Error: " + ex.getMessage());
 	    	}
 	    }
 	    //redirect
@@ -70,7 +70,7 @@ public class SMAddNewConnection extends HttpServlet{
 		try {
 			response.sendRedirect(sRedirectString);
 		} catch (IOException e) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579207983] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString
 			);
 		}

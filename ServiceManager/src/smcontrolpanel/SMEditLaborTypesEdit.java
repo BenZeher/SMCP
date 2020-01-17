@@ -193,7 +193,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 				pwOut.println("<TD ALIGN=LEFT>" + "Select a labor item to be associated with this labor type." + "</TD>");
 				pwOut.println("</TR>");
 			}catch (SQLException ex){
-		    	System.out.println("Error in " + this.toString()+ " class!!");
+		    	System.out.println("[1579270192] Error in " + this.toString()+ " class!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());
@@ -237,7 +237,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 				pwOut.println("<TD ALIGN=LEFT>" + "Select a category to be associated with this labor type." + "</TD>");
 				pwOut.println("</TR>");
 			}catch (SQLException ex){
-		    	System.out.println("Error in " + this.toString()+ " class!!");
+		    	System.out.println("[1579270196] Error in " + this.toString()+ " class!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());
@@ -255,7 +255,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 
 		rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
+	    	System.out.println("[1579270199] Error in " + this.toString()+ " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -282,7 +282,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
+	    	System.out.println("[1579270203] Error in " + this.toString()+ ".Delete_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -306,7 +306,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 			rs.close();
 			
 		}catch(SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");
+	    	System.out.println("[1579270207] Error in " + this.toString()+ ".Add_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -318,7 +318,7 @@ public class SMEditLaborTypesEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Add_Record class!!");
+	    	System.out.println("[1579270210] Error in " + this.toString()+ ".Add_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

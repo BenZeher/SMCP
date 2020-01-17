@@ -438,7 +438,7 @@ public class SMMapDisplay extends HttpServlet {
 				if (arrGeoCodes.size() > 0){
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() + ".loadScheduleEntries - "
+							"[1579274126] In " + this.toString() + ".loadScheduleEntries - "
 							+ "previous geocode was: '" + arrGeoCodes.get(arrGeoCodes.size() - 1) + "'"
 							+ ", current geocode is: '" + sGeoCode + "'."
 						);
@@ -450,7 +450,7 @@ public class SMMapDisplay extends HttpServlet {
 					}
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() + ".loadScheduleEntries - "
+							"[1579274129] In " + this.toString() + ".loadScheduleEntries - "
 							+ "bGeoCodeRepeated = " + bGeocodeIsRepeated + "."
 						);
 					}

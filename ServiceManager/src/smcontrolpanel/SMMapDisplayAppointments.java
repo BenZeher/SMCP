@@ -290,7 +290,7 @@ public class SMMapDisplayAppointments extends HttpServlet {
 				if (arrGeoCodes.size() > 0){
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() + ".loadAppointmentCalendarEntries - "
+							"[1579274145] In " + this.toString() + ".loadAppointmentCalendarEntries - "
 							+ "previous geocode was: '" + arrGeoCodes.get(arrGeoCodes.size() - 1) + "'"
 							+ ", current geocode is: '" + sGeoCode + "'."
 						);
@@ -302,7 +302,7 @@ public class SMMapDisplayAppointments extends HttpServlet {
 					}
 					if (bDebugMode){
 						System.out.println(
-							"In " + this.toString() + ".loadAppointmentCalendarEntries - "
+							"[1579274148] In " + this.toString() + ".loadAppointmentCalendarEntries - "
 							+ "bGeoCodeRepeated = " + bGeocodeIsRepeated + "."
 						);
 					}

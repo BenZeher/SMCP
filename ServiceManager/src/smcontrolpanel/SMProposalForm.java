@@ -97,7 +97,7 @@ public class SMProposalForm extends java.lang.Object{
 			;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - Main SQL = " + SQL);
+			System.out.println("[1579274783] In " + this.toString() + " - Main SQL = " + SQL);
 		}
 		
 		try{

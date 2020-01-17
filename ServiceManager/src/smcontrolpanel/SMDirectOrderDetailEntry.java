@@ -188,7 +188,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		+ ")"
     		;
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".validate_entry_fields - SQL = " + SQL);
+    		System.out.println("[1579268713] In " + this.toString() + ".validate_entry_fields - SQL = " + SQL);
     	}
 
     	try {
@@ -357,7 +357,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	BigDecimal bdContractAmountRemaining;
     	
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - before validate_entry_fields");
+    		System.out.println("[1579268720] In " + this.toString() + ".calculateValues - before validate_entry_fields");
     	}
 		Connection conn = clsDatabaseFunctions.getConnection(
 				context, sDBID, 
@@ -373,7 +373,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		throw new Exception(e.getMessage());
 		}
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - after validate_entry_fields");
+    		System.out.println("[1579268723] In " + this.toString() + ".calculateValues - after validate_entry_fields");
     	}
     	
     	removeZeroQtyLines();
@@ -392,7 +392,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     	}
         
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 01");
+    		System.out.println("[1579268728] In " + this.toString() + ".calculateValues - up to 01");
     	}
     	
         //Get the TOTAL MATERIAL COST by adding the extended material cost for each line.
@@ -413,7 +413,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         }
 
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 02");
+    		System.out.println("[1579268733] In " + this.toString() + ".calculateValues - up to 02");
     	}
     	
     	//Next loop through the lines to find the LASTLINENUMBERWITHMATERIAL and the LASTLINENUMBERWITHLABOR.
@@ -452,7 +452,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         }
 
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 03");
+    		System.out.println("[1579268737] In " + this.toString() + ".calculateValues - up to 03");
     	}
     	
     	//Calculate the labor billing values first: For each line, calculate the selling price by adding the estimated labor cost
@@ -486,7 +486,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         }
 
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 04");
+    		System.out.println("[1579268742] In " + this.toString() + ".calculateValues - up to 04");
     	}
     	//Next it subtracts the total labor billing value from the total contract amount to get the total material billing value:
         //First, determine how much billing value there is left in the contract for the material,
@@ -508,7 +508,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         }
         
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 05");
+    		System.out.println("[1579268750] In " + this.toString() + ".calculateValues - up to 05");
     	}
         bdMaterialCostProportion = m_dTotalMaterialCost.divide(bdTotalBillingValueWithoutLabor, 2, RoundingMode.HALF_UP);
         //System.out.println("[1380920550] bdMaterialCostProportion = " + bdMaterialCostProportion);
@@ -568,7 +568,7 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
         	}
         }
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + ".calculateValues - up to 06");
+    		System.out.println("[1579268756] In " + this.toString() + ".calculateValues - up to 06");
     	}
     	clsDatabaseFunctions.freeConnection(context, conn, "[1547080447]");
     }
@@ -585,25 +585,25 @@ public class SMDirectOrderDetailEntry extends clsMasterEntry{
     		;
     		
     	if (bDebugMode){
-    		System.out.println("In " + this.toString() + " .setUnitLaborMarkup - SQL = " + SQL);
+    		System.out.println("[1579268759] In " + this.toString() + " .setUnitLaborMarkup - SQL = " + SQL);
     	}
     	try {
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn); 
 			if (rs.next()){
 				this.setM_sunitlabormarkup(Double.toString(rs.getDouble(SMTablelabortypes.dMarkupAmount)));
 		    	if (bDebugMode){
-		    		System.out.println("In " + this.toString() + " .setUnitLaborMarkup, unit labor markup = " + m_sunitlabormarkup);
+		    		System.out.println("[1579268763] In " + this.toString() + " .setUnitLaborMarkup, unit labor markup = " + m_sunitlabormarkup);
 		    	}
 			}else{
 		    	if (bDebugMode){
-		    		System.out.println("In " + this.toString() + " .setUnitLaborMarkup, Could not read mark up for labor type ID: " + this.getM_slabortype());
+		    		System.out.println("[1579268766] In " + this.toString() + " .setUnitLaborMarkup, Could not read mark up for labor type ID: " + this.getM_slabortype());
 		    	}
 				throw new SQLException("Could not read mark up for labor type ID: " + this.getM_slabortype());
 			}
 			rs.close();
 		} catch (SQLException e) {
 	    	if (bDebugMode){
-	    		System.out.println("In " + this.toString() + " .setUnitLaborMarkup, SQLException: " + e.getMessage());
+	    		System.out.println("[1579268770] In " + this.toString() + " .setUnitLaborMarkup, SQLException: " + e.getMessage());
 	    	}
 			throw new SQLException("Error reading labor unit markup = " + e.getMessage());
 		}

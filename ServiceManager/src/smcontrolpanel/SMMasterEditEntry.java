@@ -210,7 +210,7 @@ public class SMMasterEditEntry  extends java.lang.Object{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579274269] In " + this.toString() 
 					+ ".processSession - m_sCurrentCompleteURL = " + m_sCurrentCompleteURL);
 		}
 		m_bAddingNewEntry = clsManageRequestParameters.get_Request_Parameter(
@@ -286,7 +286,7 @@ public class SMMasterEditEntry  extends java.lang.Object{
 		m_sCurrentCompleteURL = clsServletUtilities.URLEncode(req.getRequestURI().toString() 
 				+ clsManageRequestParameters.getQueryStringFromPost(req));
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579274276] In " + this.toString() 
 					+ ".processSession - m_sCurrentCompleteURL = " + m_sCurrentCompleteURL);
 		}
 		m_bAddingNewEntry = clsManageRequestParameters.get_Request_Parameter(
@@ -602,7 +602,7 @@ public class SMMasterEditEntry  extends java.lang.Object{
 		try {
 			m_response.sendRedirect(sRedirectString);
 		} catch (IOException e) {
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579274285] In " + this.toString() 
 					+ ".redirectAction - IOException error redirecting with string: "
 					+ sRedirectString + " - " + e.getMessage()
 			);
@@ -611,7 +611,7 @@ public class SMMasterEditEntry  extends java.lang.Object{
 					+ clsServletUtilities.URLEncode(sRedirectString + " - " + e.getMessage())
 			);
 		} catch (IllegalStateException e) {
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579274289] In " + this.toString() 
 					+ ".redirectAction - IllegalStateException error redirecting with string: "
 					+ sRedirectString + " - " + e.getMessage()
 			);

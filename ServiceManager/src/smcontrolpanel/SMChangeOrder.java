@@ -246,7 +246,7 @@ public class SMChangeOrder extends clsMasterEntry{
 
     	try{
 	    	if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-	    		System.out.println(this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579267184] " + this.toString() + "Could not insert/update " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert/update " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}

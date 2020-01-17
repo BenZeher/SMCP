@@ -173,7 +173,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 		        
     	    }catch (SQLException ex){
     	    	//catch SQL exceptions
-    	    	System.out.println("Error when creating and displaying location and service type list.");
+    	    	System.out.println("[1579274584] Error when creating and displaying location and service type list.");
     	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
     	    	System.out.println("SQL: " + ex.getSQLState());
     	    }
@@ -186,7 +186,7 @@ public class SMProductivityReportCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in SMProductivityReportCriteriaSelection class!!");
+	    	System.out.println("[1579274588] Error in SMProductivityReportCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

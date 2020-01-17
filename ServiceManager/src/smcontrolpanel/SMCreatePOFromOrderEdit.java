@@ -58,7 +58,7 @@ public class SMCreatePOFromOrderEdit  extends HttpServlet {
 		String sCurrentCompleteURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() 
 				+ clsManageRequestParameters.getQueryStringFromPost(request)).replace("&", "*");
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579267865] In " + this.toString() 
 					+ "sCurrentCompleteURL = " + sCurrentCompleteURL);
 		}
 

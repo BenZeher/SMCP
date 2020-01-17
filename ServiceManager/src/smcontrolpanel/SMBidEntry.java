@@ -306,7 +306,7 @@ public class SMBidEntry extends clsMasterEntry{
 						sProductTypeString
 						+ clsStringFunctions.PadLeft(clsManageRequestParameters.get_Request_Parameter(sParam, req), " ", 20));
 				if (bDebugMode){
-					System.out.println("In " + this.toString() 
+					System.out.println("[1579265700] In " + this.toString() 
 							+ ".SMBidEntry(request), sParam = " + sParam);
 					System.out.println("In " + this.toString() 
 							+ ".SMBidEntry(request), sParam value = " 
@@ -464,7 +464,7 @@ public class SMBidEntry extends clsMasterEntry{
 			;
 
 		if (bDebugMode){
-			System.out.println("In " +this.toString() + " SQL getting product amounts = " + SQL);
+			System.out.println("[1579265707] In " +this.toString() + " SQL getting product amounts = " + SQL);
 		}
 		m_arrBidProductTypeAmounts.clear();
 		try {
@@ -788,7 +788,7 @@ public class SMBidEntry extends clsMasterEntry{
 				+ sBidProductAmount
 			;
 			if (bDebugMode){
-				System.out.println("Inserting product amounts - SQL = " + SQL);
+				System.out.println("[1579265715] Inserting product amounts - SQL = " + SQL);
 			}
 			try {
 				clsDatabaseFunctions.executeSQL(SQL, conn);
@@ -1127,7 +1127,7 @@ public class SMBidEntry extends clsMasterEntry{
 		//Validate the product amounts:
 		for (int i = 0; i < m_arrBidProductTypeAmounts.size(); i++){
 			if (bDebugMode){
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579265721] In " + this.toString() 
 					+ " validating product amounts, amount = " + getsProductTypeAmount(i).trim());
 			}
 			try {

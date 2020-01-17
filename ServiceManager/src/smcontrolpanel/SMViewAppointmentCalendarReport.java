@@ -207,7 +207,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " Main SELECT SQL took " 
+				System.out.println("[1579275215] In " + this.toString() + " Main SELECT SQL took " 
 						+ (System.currentTimeMillis() - lTimer) + " milliseconds");
 				System.out.println("SQL staement - " + SQL);
 			}
@@ -342,7 +342,7 @@ public class SMViewAppointmentCalendarReport extends java.lang.Object{
 								 try {
 									 i = Integer.compare(SMAppointment.timeStringToInteger(o1.getiminuteofday()), (SMAppointment.timeStringToInteger(o2.getiminuteofday())));
 								} catch (Exception e) {
-									System.out.println("ERROR in COMPARE: " + e.getMessage());
+									System.out.println("[1579275220] ERROR in COMPARE: " + e.getMessage());
 								}
 								return i;
 							 }

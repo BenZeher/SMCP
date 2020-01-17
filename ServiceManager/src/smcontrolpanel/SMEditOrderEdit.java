@@ -139,7 +139,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		String sCurrentCompleteURL = clsServletUtilities.URLEncode(request.getRequestURI().toString() 
 			+ clsManageRequestParameters.getQueryStringFromPost(request)).replace("&", "*");
 		if (bDebugMode){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579270669] In " + this.toString() 
 				+ "sCurrentCompleteURL = " + sCurrentCompleteURL);
 		}
 
@@ -662,7 +662,8 @@ public class SMEditOrderEdit  extends HttpServlet {
 					}
 					sOtherAddressNotes += "</A>"	+ ": ";
 
-					System.out.println(rsAddressNotes.getString(SMTableorderheaders.mAddressNotes).isEmpty() );
+					//Rogue False
+					//System.out.println(rsAddressNotes.getString(SMTableorderheaders.mAddressNotes).isEmpty() );
 					sOtherAddressNotes += "&nbsp;" + rsAddressNotes.getString(SMTableorderheaders.mAddressNotes) + "&nbsp;";
 					bFirstNotes = false;
 				}

@@ -139,7 +139,7 @@ public class SMEditProposalTermsEdit extends HttpServlet {
 				+ ")"
 				;
 				if (bDebug){
-					System.out.println("SQL = " + sSQL);
+					System.out.println("[1579271132] SQL = " + sSQL);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 

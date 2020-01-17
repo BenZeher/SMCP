@@ -462,7 +462,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("Error reading time card database - " + e.getMessage());
+			System.out.println("[1579272773] Error reading time card database - " + e.getMessage());
 		}
 		
 		return sTCDatabase;
@@ -494,7 +494,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("Error reading total hours - " + e.getMessage());
+			System.out.println("[1579272778] Error reading total hours - " + e.getMessage());
 		}
 		
 		return bTotalsRead;
@@ -525,7 +525,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("In " + this.toString() + " could not read technician's name - " + e.getMessage());
+			System.out.println("[1579272782] In " + this.toString() + " could not read technician's name - " + e.getMessage());
 		}
 		
 		pwOut.println("<BR>");
@@ -723,7 +723,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 				//System.out.println("Couter = " + iCounter);
 				rs.close();
 			}catch(SQLException e){
-				System.out.println("In " + this.toString() + " could not read time entries - " + e.getMessage());
+				System.out.println("[1579272799] In " + this.toString() + " could not read time entries - " + e.getMessage());
 			}
 		}
 		pwOut.println("<B>TOTAL:&nbsp;</B>" + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdTotalHoursOnTheClock) 
@@ -794,7 +794,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("In " + this.toString() + " could not read technician's name - " + e.getMessage());
+			System.out.println("[1579272803] In " + this.toString() + " could not read technician's name - " + e.getMessage());
 		}
 		
 		pwOut.println("<TABLE  WIDTH = 100% CLASS = \"" +SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER  + "\">");

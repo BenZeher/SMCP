@@ -157,20 +157,20 @@ public class SMAuthenticate{
 	    String sUserID = SMUtilities.getUserIDbyUserName(sUserName, context, sDatabaseID);
 	    				
 	    if (bDebugMode){
-	    	System.out.println("In SMAuthenticate.authenticateCredentials - starting process:"
+	    	System.out.println("[1579263740] In SMAuthenticate.authenticateCredentials - starting process:"
 	    		+ "calling class = " + clsManageRequestParameters.get_Request_Parameter("CallingClass", req)
 	    	);
 		    if (sDatabaseID.compareToIgnoreCase("") != 0){
-		    	System.out.println("In SMAuthenticate.authenticateCredentials - Database ID is not null - 01");
+		    	System.out.println("[1579263744] In SMAuthenticate.authenticateCredentials - Database ID is not null - 01");
 		    }
 		    if (sUserName.compareToIgnoreCase("") != 0){
-		    	System.out.println("In SMAuthenticate.authenticateCredentials - user is not null - 02");
+		    	System.out.println("[1579263747] In SMAuthenticate.authenticateCredentials - user is not null - 02");
 		    }
 		    if (sUserID.compareToIgnoreCase("") != 0){
-		    	System.out.println("In SMAuthenticate.authenticateCredentials - userid is not null - 03");
+		    	System.out.println("[1579263751] In SMAuthenticate.authenticateCredentials - userid is not null - 03");
 		    }
 		    if (sPassword.compareToIgnoreCase("") != 0){
-		    	System.out.println("In SMAuthenticate.authenticateCredentials - pw is not null - 04");
+		    	System.out.println("[1579263755] In SMAuthenticate.authenticateCredentials - pw is not null - 04");
 		    }
 	    }
 	    
@@ -634,7 +634,7 @@ public class SMAuthenticate{
 			    	)){
 			    		bResult = false;
 			    		if (bDebugMode){
-			    			System.out.println("In SMAuthenticate.processLogin - checkForUpdates=false - 10");
+			    			System.out.println("[1579265089] In SMAuthenticate.processLogin - checkForUpdates=false - 10");
 			    		}
 			    	}else{
 				    	//User is authenticated, database is checked, proceed:

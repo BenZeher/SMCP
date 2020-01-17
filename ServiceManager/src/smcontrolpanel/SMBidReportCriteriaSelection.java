@@ -256,7 +256,7 @@ public class SMBidReportCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in BidReportCriteriaSelection class!!");
+	    	System.out.println("[1579267018] Error in BidReportCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

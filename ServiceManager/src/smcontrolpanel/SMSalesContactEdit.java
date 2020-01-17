@@ -676,7 +676,7 @@ public class SMSalesContactEdit extends HttpServlet {
 					;
 
 			} catch (SQLException e) {
-				System.out.println("ERROR: " + e.getMessage());
+				System.out.println("[1579274920] ERROR: " + e.getMessage());
 			}
     		if (SMSystemFunctions.isFunctionPermitted(
     				SMSystemFunctions.SMEditAppointmentCalendar, 

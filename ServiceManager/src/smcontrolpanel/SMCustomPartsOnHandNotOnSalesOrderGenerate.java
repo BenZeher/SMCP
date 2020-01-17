@@ -148,7 +148,7 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 				+ " ORDER BY CATEGORY, ITEM"
 		    ;
 		    if (bDebugMode){
-		    	System.out.println("In " + this.toString() + " - main SQL = " + sSQL);
+		    	System.out.println("[1579268025] In " + this.toString() + " - main SQL = " + sSQL);
 		    }
 			ResultSet rsItemOnHandList = clsDatabaseFunctions.openResultSet(
 					sSQL, 
@@ -219,7 +219,7 @@ public class SMCustomPartsOnHandNotOnSalesOrderGenerate extends HttpServlet {
 			//out.println("End Time: " + USTimeOnlyformatter.format(new Date(System.currentTimeMillis())) + "<BR>");
 			rsItemOnHandList.close();
 		}catch (SQLException ex){
-			System.out.println("Error in SMCustomPartsOnHandNotOnSalesOrderGenerate!!");
+			System.out.println("[1579268030] Error in SMCustomPartsOnHandNotOnSalesOrderGenerate!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());

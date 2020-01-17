@@ -38,7 +38,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 		
 		SMInvoice cInvoice = new SMInvoice();
 		if (bDebugMode){
-			System.out.println("Creating credit note for invoice# " + sInvoiceNumber);
+			System.out.println("[1579267465] Creating credit note for invoice# " + sInvoiceNumber);
 		}
 		cInvoice.setM_sInvoiceNumber(sInvoiceNumber);
 		if (!cInvoice.load(conn)){
@@ -134,7 +134,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 	    //TRANSACTION STARTS
 		clsDatabaseFunctions.start_data_transaction(conn);
 		if (bDebugMode){
-			System.out.println("In Create_Credit_Note - Going into cInvoice.Save_Invoice. . .");
+			System.out.println("[1579267471] In Create_Credit_Note - Going into cInvoice.Save_Invoice. . .");
 		}
 		try{
 			//here we save the invoice as a new credit note.
@@ -145,7 +145,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 					+ ex.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In Create_Credit_Note - saving invoice successful.");
+			System.out.println("[1579267474] In Create_Credit_Note - saving invoice successful.");
 		}
 		
 	    //Update the invoice to indicate that it has been credited:
@@ -157,7 +157,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 					+ ex.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In Create_Credit_Note - updating invoice status successful.");
+			System.out.println("[1579267478] In Create_Credit_Note - updating invoice status successful.");
 		}
 		
 	    //modify corresponding order here:
@@ -174,7 +174,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 					+ ex.getMessage());
 	    }
 		if (bDebugMode){
-			System.out.println("In Create_Credit_Note - updating order information successful.");
+			System.out.println("[1579267482] In Create_Credit_Note - updating order information successful.");
 		}
 		
 		//TRANSACTION ENDS
@@ -191,7 +191,7 @@ public class SMCreateCreditNote extends java.lang.Object{
 					  " WHERE" + 
 						" " + SMTableinvoiceheaders.sInvoiceNumber + " = '" + sInvoiceNumber + "'";
 		if (bDebugMode){
-			System.out.println("updating invoice status SQL:");
+			System.out.println("[1579267487] updating invoice status SQL:");
 			System.out.println(SQL);
 		}
 		return SQL;

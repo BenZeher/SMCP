@@ -344,7 +344,7 @@ public class SMSalesContactAction extends HttpServlet{
 			}
 			rs.close();
 		}catch (SQLException ex){
-			System.out.println("Error in SMSalesContactAction.Get_Customer_Name!!");
+			System.out.println("[1579274912] Error in SMSalesContactAction.Get_Customer_Name!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

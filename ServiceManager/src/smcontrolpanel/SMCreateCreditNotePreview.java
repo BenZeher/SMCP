@@ -113,7 +113,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 	    	//get request parameters
 	    	try{
 	    		if (bDebugMode){
-	    			System.out.println("Displaying invoice# " + sInvoiceNumber);
+	    			System.out.println("[1579267611] Displaying invoice# " + sInvoiceNumber);
 	    		}
 	    		DisplayInvoiceInfo(sInvoiceNumber,
 	    						   conn,
@@ -131,7 +131,7 @@ public class SMCreateCreditNotePreview extends HttpServlet{
 	        	return;
 		    }
     		if (bDebugMode){
-    			System.out.println("Finished displaying invoice information.");
+    			System.out.println("[1579267615] Finished displaying invoice information.");
     		}
 
 	    	out.println("<INPUT TYPE=HIDDEN NAME='INVOICENUMBER' VALUE='" + sInvoiceNumber + "'>");

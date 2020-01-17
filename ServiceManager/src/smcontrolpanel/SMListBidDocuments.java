@@ -70,7 +70,7 @@ public class SMListBidDocuments extends HttpServlet {
 			}
 			rsOptions.close();
 		}catch (SQLException e){
-			System.out.println("Error reading " + SMBidEntry.ParamObjectName + " docs URL in " + this.toString() + " - " + e.getMessage());
+			System.out.println("[1579273091] Error reading " + SMBidEntry.ParamObjectName + " docs URL in " + this.toString() + " - " + e.getMessage());
 			out.println("<B>Error reading " + SMBidEntry.ParamObjectName + " documents URL: " + e.getMessage() + "</B>");
 		}
 		

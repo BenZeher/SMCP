@@ -229,7 +229,7 @@ public class SMListOrdersForSchedulingReport extends java.lang.Object{
 		    out.println("</TABLE>");
 		    
 		}catch(SQLException e){
-			System.out.println("Error in " + this.toString() + ":processReport - " + e.getMessage());
+			System.out.println("[1579273282] Error in " + this.toString() + ":processReport - " + e.getMessage());
 			m_sErrorMessage = "Error in " + this.toString() + ":processReport - " + e.getMessage();
 			return false;
 		}

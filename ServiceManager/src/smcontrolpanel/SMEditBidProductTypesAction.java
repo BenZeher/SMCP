@@ -61,7 +61,7 @@ public class SMEditBidProductTypesAction extends HttpServlet{
 	    }catch (SQLException ex){
 	    	out.println("Error updating product type with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
-			System.out.println("Error updating product type with SQL: " + sSQL
+			System.out.println("[1579268865] Error updating product type with SQL: " + sSQL
 		    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
 			return;

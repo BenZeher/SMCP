@@ -330,7 +330,7 @@ public class SMEditAppointmentEdit extends HttpServlet {
 				calCurrentDate.setTime(dateFormat.parse(entry.getdatentrydate()));
 				sDate = clsDateAndTimeConversions.CalendarToString(calCurrentDate, "MM/dd/yyyy");
 			} catch (Exception e) {
-				System.out.println("Error in time function - " + e.getMessage());
+				System.out.println("[1579268821] Error in time function - " + e.getMessage());
 			}
 		}
 

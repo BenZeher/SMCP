@@ -101,7 +101,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579274544] In " + this.toString() 
 				+ ".doGet - error getting full name of user " + e.getMessage());
 		}
 
@@ -399,7 +399,7 @@ public class SMPrintPreInvoiceGenerate extends HttpServlet {
 	   }
 
 	   if (bDebugMode){
-		   System.out.println(this.toString() + " .get connection to Pervasive database - sDBID = " + sDBID);
+		   System.out.println("[1579274559] " + this.toString() + " .get connection to Pervasive database - sDBID = " + sDBID);
 	   }
 	   Connection ICconn = clsDatabaseFunctions.getConnection(    		
 			   getServletContext(), 

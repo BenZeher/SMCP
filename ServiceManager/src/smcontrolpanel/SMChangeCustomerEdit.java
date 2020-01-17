@@ -70,7 +70,7 @@ public class SMChangeCustomerEdit  extends HttpServlet {
 		smedit.setbIncludeUpdateButton(true);
 		smedit.setbIncludeDeleteButton(false);
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just before createEditPage.");
+			System.out.println("[1579267167] In " + this.toString() + " just before createEditPage.");
 		}
 	    try {
 			smedit.createEditPage(getEditHTML(smedit, order), "");
@@ -86,7 +86,7 @@ public class SMChangeCustomerEdit  extends HttpServlet {
 				return;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just after createEditPage.");
+			System.out.println("[1579267171] In " + this.toString() + " just after createEditPage.");
 		}
 	    return;
 	}

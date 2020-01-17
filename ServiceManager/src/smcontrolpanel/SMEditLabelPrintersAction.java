@@ -250,7 +250,7 @@ public class SMEditLabelPrintersAction extends HttpServlet{
 	    }catch (SQLException ex){
 	    	out.println("Error updating label printer with SQL: " + sSQL
 	    		+ " - " + ex.getMessage());
-			System.out.println("Error updating label printer with SQL: " + sSQL
+			System.out.println("[1579269698] Error updating label printer with SQL: " + sSQL
 		    		+ " - " + ex.getMessage());
 			out.println("</BODY></HTML>");
 			return;

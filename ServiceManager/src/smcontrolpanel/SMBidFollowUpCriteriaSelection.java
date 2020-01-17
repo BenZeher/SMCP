@@ -201,7 +201,7 @@ public class SMBidFollowUpCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in BidListCriteriaSelection class!!");
+	    	System.out.println("[1579265730] Error in BidListCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

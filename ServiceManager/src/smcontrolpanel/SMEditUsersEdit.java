@@ -332,7 +332,7 @@ public class SMEditUsersEdit extends HttpServlet {
 		    sOutPut += "</TR>";
 
 		}catch (SQLException ex){
-			System.out.println("Error in SMEditUsers class - reading mechanics");
+			System.out.println("[1579271797] Error in SMEditUsers class - reading mechanics");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

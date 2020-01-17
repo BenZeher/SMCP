@@ -167,7 +167,7 @@ public class SMSalesContactListCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in SMSalesContactListCriteriaSelection class!!");
+	    	System.out.println("[1579274930] Error in SMSalesContactListCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

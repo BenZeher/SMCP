@@ -144,7 +144,7 @@ public class SMProposalPhrasesEdit extends HttpServlet {
 				+ ")"
 				;
 				if (bDebug){
-					System.out.println("SQL = " + sSQL);
+					System.out.println("[1579274811] SQL = " + sSQL);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 

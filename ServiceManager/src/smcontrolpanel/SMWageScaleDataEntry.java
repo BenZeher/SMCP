@@ -289,7 +289,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	}
     	try{
 	    	if (clsDatabaseFunctions.executeSQL(SQL, conn) == false){
-	    		System.out.println(this.toString() + "Could not insert " + ParamObjectName + ".<BR>");
+	    		System.out.println("[1579275427] " + this.toString() + "Could not insert " + ParamObjectName + ".<BR>");
 	    		super.addErrorMessage("Could not insert " + ParamObjectName + " with SQL: " + SQL);
 	    		return false;
 	    	}else{
@@ -332,7 +332,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 	    	rs.close();
     	}catch (SQLException ex){
     		
-    		System.out.println("Error validating ecryption key");
+    		System.out.println("[1579275432] Error validating ecryption key");
     	}
     	clsDatabaseFunctions.freeConnection(context, conn, "[1547080683]");
     	return bKeyisValid;
@@ -371,7 +371,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 			//Employee SSN
 			m_sEmployeeSSN = m_sEmployeeSSN.trim();
 	    	if (bDebugMode){
-				System.out.println("m_sEmployeeSSN: " + m_sEmployeeSSN);
+				System.out.println("[1579275439] m_sEmployeeSSN: " + m_sEmployeeSSN);
 			}
 			if (m_sEmployeeSSN.compareToIgnoreCase("") == 0){
 	        	super.addErrorMessage("[1368033963] Employee SSN cannot be empty on line " + iLine + ".");
@@ -405,14 +405,14 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	//check to see if cost number is valid
     	String sDayCheck = "MO,TU,WE,TH,FR,SA,SU";
     	if (bDebugMode){
-			System.out.println("m_sCostNumber: " + m_sCostNumber);
+			System.out.println("[1579275449] m_sCostNumber: " + m_sCostNumber);
 		}
     	if (m_sCostNumber.trim().compareTo("") == 0){
     		//if the cost number is empty, assuming this is a line for regular jobs. Don't do anything.
     	}else if (sDayCheck.indexOf(m_sCostNumber.substring(0, 2)) >= 0){
 			//day field is valid, validate order now.
         	if (bDebugMode){
-    			System.out.println("Day: " + m_sCostNumber.substring(0, 2));
+    			System.out.println("[1579275452] Day: " + m_sCostNumber.substring(0, 2));
     			System.out.println("Index: " + sDayCheck.indexOf(m_sCostNumber.substring(0, 2)));
     		}
 			try{
@@ -448,7 +448,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
     	
 		//Check to see if Period End Date is valid date
     	if (bDebugMode){
-			System.out.println("m_sPeriodEndDate: " + m_datPeriodEndDate);
+			System.out.println("[1579275470] m_sPeriodEndDate: " + m_datPeriodEndDate);
 		}
 		//check if period date is already in database.
     	//if there is any record that matches the one line, halt the process and report back.
@@ -466,7 +466,7 @@ public class SMWageScaleDataEntry extends clsMasterEntry{
 	        				" " + SMTablewagescalerecords.TableName + "." + SMTablewagescalerecords.sEmployeeName + " = '" + m_sEmployeeName + "'"
 	        				; 
 	        	if (bDebugMode){
-	    			System.out.println("sSQL: " + sSQL);
+	    			System.out.println("[1579275479] sSQL: " + sSQL);
 	    		}
 	        	rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
 	        	if (rs.next()){

@@ -168,7 +168,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        
 	    }catch (SQLException ex){
 	    	//catch SQL exceptions
-	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
+	    	System.out.println("[1579273063] Error: " + ex.getErrorCode() + " - " + ex.getMessage());
 	    	System.out.println("SQL: " + ex.getSQLState());
 	    }
 
@@ -213,7 +213,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        
 	    }catch (SQLException ex){
 	    	//catch SQL exceptions
-	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
+	    	System.out.println("[1579273069] Error: " + ex.getErrorCode() + " - " + ex.getMessage());
 	    	System.out.println("SQL: " + ex.getSQLState());
 	    }
 
@@ -258,7 +258,7 @@ public class SMJobCostDailyReportSelection extends HttpServlet {
 	        
 	    }catch (SQLException ex){
 	    	//catch SQL exceptions
-	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
+	    	System.out.println("[1579273076] Error: " + ex.getErrorCode() + " - " + ex.getMessage());
 	    	System.out.println("SQL: " + ex.getSQLState());
 	    }
 	}

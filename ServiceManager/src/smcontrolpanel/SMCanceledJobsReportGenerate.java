@@ -240,7 +240,7 @@ public class SMCanceledJobsReportGenerate extends HttpServlet {
 		    rs.close();
 		    out.println("</TABLE>");
 	    }catch (SQLException ex){
-	    	System.out.println("Error in SMCanceledJobsReportGenerate");
+	    	System.out.println("[1579267156] Error in SMCanceledJobsReportGenerate");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

@@ -488,11 +488,11 @@ public class SMEditOrderDetailAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - IOException error redirecting with string: "
+			System.out.println("[1579270646] In " + this.toString() + ".redirectAction - IOException error redirecting with string: "
 					+ sRedirectString + " - " + e1.getMessage());
 			return;
 		} catch (IllegalStateException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
+			System.out.println("[1579270650] In " + this.toString() + ".redirectAction - IllegalStateException error redirecting with string: "
 					+ sRedirectString + " - " + e1.getMessage());
 			return;
 		}

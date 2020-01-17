@@ -526,7 +526,7 @@ public class SMSendInvoiceGenerate extends HttpServlet {
 				;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + ".processReport SQL = " + SQL);
+			System.out.println("[1579274975] In " + this.toString() + ".processReport SQL = " + SQL);
 		}
 
 		//Display the TOP row of command buttons:

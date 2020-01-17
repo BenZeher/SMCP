@@ -266,7 +266,7 @@ public class SMCreateGDriveFolder extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString.replace(" ", "+"));
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579267626] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

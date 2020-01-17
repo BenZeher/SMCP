@@ -124,7 +124,7 @@ public class SMInstallationTicket extends java.lang.Object{
 			;
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - Main SQL = " + SQL);
+			System.out.println("[1579272436] In " + this.toString() + " - Main SQL = " + SQL);
 		}
 		
 		long lLastOrderID = 0;

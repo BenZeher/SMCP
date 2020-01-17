@@ -67,7 +67,7 @@ public class SMEditSiteLocationsAction extends HttpServlet{
 	    		sOutPut = "Successfully updated " + sObjectName + ".";
 	    	}
 	    }catch (SQLException ex){
-			System.out.println("Error in " + this.toString() + " class!!");
+			System.out.println("[1579271761] Error in " + this.toString() + " class!!");
 		    System.out.println("SQLException: " + ex.getMessage());
 		    System.out.println("SQLState: " + ex.getSQLState());
 		    System.out.println("SQL: " + ex.getErrorCode());

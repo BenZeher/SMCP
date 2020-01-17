@@ -70,7 +70,7 @@ public class SMListOrderDocuments extends HttpServlet {
 			}
 			rsOptions.close();
 		}catch (SQLException e){
-			System.out.println("Error reading order docs URL in " + this.toString() + " - " + e.getMessage());
+			System.out.println("[1579273275] Error reading order docs URL in " + this.toString() + " - " + e.getMessage());
 			out.println("<B>Error reading order documents URL: " + e.getMessage() + "</B>");
 		}
 		

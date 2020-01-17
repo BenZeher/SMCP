@@ -64,7 +64,7 @@ public class SMRecreateExportAction extends HttpServlet{
 		}catch (Exception ex){
 	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080656]");
 	    	if (bDebugMode){
-	    		System.out.println("In " + this.toString() + "Error loading GL export data for batchnumber '" + sBatchNumber 
+	    		System.out.println("[1579274895] In " + this.toString() + "Error loading GL export data for batchnumber '" + sBatchNumber 
 	    			+ "', source ledger '" + sSourceLedger + " - " 
 	    			+ ex.getMessage());
 	    	}

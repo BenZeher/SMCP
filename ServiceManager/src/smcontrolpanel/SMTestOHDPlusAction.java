@@ -106,7 +106,7 @@ public class SMTestOHDPlusAction extends HttpServlet{
 			Object obj = parser.parse(sTestString);
 			JSONArray array = (JSONArray)obj;
 		
-			System.out.println("The 2nd element of array");
+			System.out.println("[1579275117] The 2nd element of array");
 			System.out.println(array.get(1));
 			System.out.println();
 

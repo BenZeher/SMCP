@@ -76,7 +76,7 @@ public class SMCustomQuery extends java.lang.Object{
 	){
 
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " bTotalNumericFields = " + bTotalNumericFields);
+			System.out.println("[1579268050] In " + this.toString() + " bTotalNumericFields = " + bTotalNumericFields);
 		}
 		long lStartingTime = System.currentTimeMillis();
 		
@@ -319,7 +319,7 @@ public class SMCustomQuery extends java.lang.Object{
 				out.println("<thead>");
 				out.println("<TR>");
 				if (bDebugMode){
-					System.out.println("In " + this.toString() + " - main SQL = " + sQueryString);
+					System.out.println("[1579268058] In " + this.toString() + " - main SQL = " + sQueryString);
 				}
 				ResultSet rs = clsDatabaseFunctions.openResultSet(sQueryString, conn);
 				iColumnCount = rs.getMetaData().getColumnCount();

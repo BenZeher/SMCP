@@ -176,7 +176,7 @@ public class SMEditAppointmentGroupsEdit  extends HttpServlet {
         	s += SMUtilities.Build_HTML_Table(4, sUserTable,1,true);
         	
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class!!");
+	    	System.out.println("[1579268831] Error in SMManageSecurityGroupsEdit class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -199,7 +199,7 @@ public class SMEditAppointmentGroupsEdit  extends HttpServlet {
 			//If we never found a matching record, return:
 			return "";
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class in Is_User_In_Group!!");
+	    	System.out.println("[1579268835] Error in SMManageSecurityGroupsEdit class in Is_User_In_Group!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

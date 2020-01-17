@@ -109,7 +109,7 @@ public class SMUpdateData extends java.lang.Object{
 			}
 
 			if (bDebugMode){
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579275134] In " + this.toString() 
 					+ " - processDataChanges completed with iReadDatabaseVersion = " + iReadDatabaseVersion);
 			}
 			try {

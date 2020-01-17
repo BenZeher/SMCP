@@ -50,7 +50,7 @@ public class SMCustomPartsOnHandNotOnSalesOrdersCriteriaSelection extends HttpSe
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in SMCustomPartsOnHandNotOnSalesOrdersCriteriaSelection class!!");
+	    	System.out.println("[1579268040] Error in SMCustomPartsOnHandNotOnSalesOrdersCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

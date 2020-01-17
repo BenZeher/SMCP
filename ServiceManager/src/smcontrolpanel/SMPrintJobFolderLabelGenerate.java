@@ -282,7 +282,7 @@ public class SMPrintJobFolderLabelGenerate extends HttpServlet {
 	    	rs.close();
 	    	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080615]");
     	}catch(SQLException ex){
-    		System.out.println("SQL Error: " + ex.getErrorCode() + " - " + ex.getMessage());
+    		System.out.println("[1579274392] SQL Error: " + ex.getErrorCode() + " - " + ex.getMessage());
     	}
     				
 	    out.println("</BODY></HTML>");

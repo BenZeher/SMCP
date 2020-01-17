@@ -75,7 +75,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 		smedit.setbIncludeUpdateButton(false);
 		smedit.setbIncludeDeleteButton(false);
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just before createEditPage.");
+			System.out.println("[1579272423] In " + this.toString() + " just before createEditPage.");
 		}
 	    try {
 			smedit.createEditPage(getEditHTML(smedit, sTrimmedOrderNumber),"");
@@ -90,7 +90,7 @@ public class SMImportWorkOrdersEdit  extends HttpServlet {
 				return;
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " just after createEditPage.");
+			System.out.println("[1579272428] In " + this.toString() + " just after createEditPage.");
 		}
 	    return;
 	}

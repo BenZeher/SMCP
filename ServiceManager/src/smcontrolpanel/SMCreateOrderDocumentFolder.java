@@ -89,7 +89,7 @@ public class SMCreateOrderDocumentFolder extends HttpServlet{
 			}
 			rsOptions.close();
 		}catch (SQLException e){
-			System.out.println("Error reading order docs path in " + this.toString() + " - " + e.getMessage());
+			System.out.println("[1579267836] Error reading order docs path in " + this.toString() + " - " + e.getMessage());
 			m_sWarning = "Error reading order documents path: " + e.getMessage();
 			throw e;
 		}
@@ -170,9 +170,9 @@ public class SMCreateOrderDocumentFolder extends HttpServlet{
 		String osName = "";
 	    try{
 	      osName= System.getProperty("os.name");
-	      System.out.println("Operating system name =>"+ osName);
+	      System.out.println("[1579267846] Operating system name =>"+ osName);
 	    }catch (Exception e){
-	      System.out.println("Exception caught ="+e.getMessage());
+	      System.out.println("[1579267852] Exception caught ="+e.getMessage());
 	    }
 	    return osName;
 	}

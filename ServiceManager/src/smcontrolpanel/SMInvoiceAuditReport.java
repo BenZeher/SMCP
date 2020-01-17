@@ -264,7 +264,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
         		+ ", " + SMTableinvoicedetails.TableName + "." + SMTableinvoicedetails.iLineNumber
         	;
         if (bDebugMode){
-        	System.out.println("In " + this.toString() + ".processReport SQL = " + SQL);
+        	System.out.println("[1579272698] In " + this.toString() + ".processReport SQL = " + SQL);
         }
     	//end SQL statement
 
@@ -1178,7 +1178,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 				}
 				rs.close();
 			}catch (SQLException e){
-				System.out.println("In " + this.toString() 
+				System.out.println("[1579272710] In " + this.toString() 
 					+ ".printOrderHeader - error getting job cost record: " + e.getMessage());
 			}
 			
@@ -1215,7 +1215,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("In " + this.toString() 
+			System.out.println("[1579272715] In " + this.toString() 
 				+ ".printInvoiceHeader - error getting name of salesperson: " + e.getMessage());
 		}
 		pwOut.println("&nbsp;&nbsp;&nbsp;<B>Salesperson:</B>&nbsp;" + sFullSalesName);
@@ -1460,7 +1460,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("Error in " + this.toString() + ".printInvoiceHeader - " + e.getMessage());
+			System.out.println("[1579272727] Error in " + this.toString() + ".printInvoiceHeader - " + e.getMessage());
 		}
 		
 		//If there was a table configured, close it:

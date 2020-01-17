@@ -424,7 +424,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 				}
 		        rsGLAccts.close();
 			}catch (SQLException ex){
-		    	System.out.println("Error in " + this.toString()+ " class!!");
+		    	System.out.println("[1579270287] Error in " + this.toString()+ " class!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());
@@ -527,7 +527,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 			);
 	        rs.close();
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ " class!!");
+	    	System.out.println("[1579270291] Error in " + this.toString()+ " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -587,7 +587,7 @@ public class SMEditLocationsEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString()+ ".Delete_Record class!!");
+	    	System.out.println("[1579270298] Error in " + this.toString()+ ".Delete_Record class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

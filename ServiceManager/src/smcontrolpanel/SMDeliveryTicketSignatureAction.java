@@ -32,7 +32,7 @@ public class SMDeliveryTicketSignatureAction extends HttpServlet{
 					""
 			);
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " loadFromHTTPRequest failed");
+    			System.out.println("[1579268174] In " + this.toString() + " loadFromHTTPRequest failed");
     		}
 			return;
 		}
@@ -91,7 +91,7 @@ public class SMDeliveryTicketSignatureAction extends HttpServlet{
     	if (sCommandValue.compareToIgnoreCase(
     			SMDeliveryTicketSignatureEdit.EDITCOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into edit mode");
+    			System.out.println("[1579268179] In " + this.toString() + " into edit mode");
     			//System.out.println(deliveryticket.read_out_debug_data());
     		}
     		String sRedirectString = SMUtilities.getURLLinkBase(getServletContext())
@@ -108,7 +108,7 @@ public class SMDeliveryTicketSignatureAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579268183] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

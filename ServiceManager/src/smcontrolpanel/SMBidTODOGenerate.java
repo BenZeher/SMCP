@@ -104,7 +104,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 			    }
 			    rsProjectTypes.close();
 		    }catch(SQLException ex){
-		    	System.out.println("Error when getting project type information!!");
+		    	System.out.println("[1579267125] Error when getting project type information!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());
@@ -199,7 +199,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){
-	    	System.out.println("Error when opening rs for sales lead followup list!!");
+	    	System.out.println("[1579267131] Error when opening rs for sales lead followup list!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -269,7 +269,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 				    try{
 				    	rsAppointments = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 				    }catch (SQLException ex){
-				    	System.out.println("Error in SQL: " + sSQL + " Failed to get appointments. " + ex.getMessage());
+				    	System.out.println("[1579267136] Error in SQL: " + sSQL + " Failed to get appointments. " + ex.getMessage());
 				    }
 				    out.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + "\">");
 				    while(rsAppointments.next()){
@@ -328,7 +328,7 @@ public class SMBidTODOGenerate extends HttpServlet {
 		    }
 		    
 	    }catch (SQLException ex){
-	    	System.out.println("Error in SMBidTODOGenerate!!");
+	    	System.out.println("[1579267140] Error in SMBidTODOGenerate!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

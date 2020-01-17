@@ -139,7 +139,7 @@ public class SMSalesEffortCheckSelection extends HttpServlet {
 	        
 	    }catch (SQLException ex){
 	    	//catch SQL exceptions
-	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
+	    	System.out.println("[1579274949] Error: " + ex.getErrorCode() + " - " + ex.getMessage());
 	    	System.out.println("SQL: " + ex.getSQLState());
 	    }
 

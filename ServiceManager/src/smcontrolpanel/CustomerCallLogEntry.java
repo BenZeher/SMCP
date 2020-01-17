@@ -145,7 +145,7 @@ public class CustomerCallLogEntry extends HttpServlet {
 	    	out.println("</SELECT></TD></TR>");
 	    }catch (SQLException ex){
 	    	//catch SQL exceptions
-	    	System.out.println("Error when creating and displaying order source drop down list.");
+	    	System.out.println("[1579207371] Error when creating and displaying order source drop down list.");
 	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
 	    	System.out.println("SQL: " + ex.getSQLState());
 	    }

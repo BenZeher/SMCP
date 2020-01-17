@@ -775,7 +775,7 @@ public class SMCriticalDateEntry extends clsMasterEntry{
 			}
 			rs.close();
 			} catch (SQLException e) {
-				System.out.println("In " + "Error [1428417888] with SQL: " + SQL + " - " + e.getMessage());
+				System.out.println("[1579267998] In " + "Error [1428417888] with SQL: " + SQL + " - " + e.getMessage());
 			}
 		}
 		

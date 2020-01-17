@@ -75,7 +75,7 @@ public class SMEditLabelPrintersSelect extends HttpServlet {
 	        out.println ("<BR>");
 		}catch (SQLException ex){
 			out.println("Error getting list of label printers - " + ex.getMessage());
-	    	System.out.println("Error getting list of label printers - " + ex.getMessage());
+	    	System.out.println("[1579269726] Error getting list of label printers - " + ex.getMessage());
 		}
 		sOutPut = "<P><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Edit Selected " + sObjectName + "'" 
 			//+ " STYLE='width: 2.00in; height: 0.24in'" +

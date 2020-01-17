@@ -147,7 +147,7 @@ public class SMBidReportGenerate extends HttpServlet {
 				}
 				rsProjectTypes.close();
 			}catch(SQLException ex){
-				System.out.println("Error when getting project type information!!");
+				System.out.println("[1579267030] Error when getting project type information!!");
 				System.out.println("SQLException: " + ex.getMessage());
 				System.out.println("SQLState: " + ex.getSQLState());
 				System.out.println("SQL: " + ex.getErrorCode());
@@ -278,7 +278,7 @@ public class SMBidReportGenerate extends HttpServlet {
 		try{
 			rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 		}catch (SQLException ex){
-			System.out.println("Error when opening rs for sales lead report!!");
+			System.out.println("[1579267037] Error when opening rs for sales lead report!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());
@@ -721,7 +721,7 @@ public class SMBidReportGenerate extends HttpServlet {
 			}
 
 		}catch (SQLException ex){
-			System.out.println("Error in SMBidReportGenerate!!");
+			System.out.println("[1579267044] Error in SMBidReportGenerate!!");
 			System.out.println("SQLException: " + ex.getMessage());
 			System.out.println("SQLState: " + ex.getSQLState());
 			System.out.println("SQL: " + ex.getErrorCode());

@@ -415,7 +415,7 @@ public class SMEditOrderAction extends HttpServlet{
     	    SMEditOrderEdit.COMMAND_FLAG, request).compareToIgnoreCase(
     		    SMEditOrderEdit.SAVECOMMAND_VALUE) == 0){
     		if (bDebugMode){
-    			System.out.println("In " + this.toString() + " into save");
+    			System.out.println("[1579270314] In " + this.toString() + " into save");
     		}
     		Connection conn = clsDatabaseFunctions.getConnection(
     			getServletContext(), 
@@ -495,7 +495,7 @@ public class SMEditOrderAction extends HttpServlet{
 						+ clsManageRequestParameters.get_Request_Parameter(SMEditOrderEdit.PRICECHANGE_FLAG, request)
 				);
 	    		if (bDebugMode){
-	    			System.out.println("In " + this.toString() + " save failed");
+	    			System.out.println("[1579270322] In " + this.toString() + " save failed");
 	    		}
 
 				return;
@@ -646,7 +646,7 @@ public class SMEditOrderAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579270327] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

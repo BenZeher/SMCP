@@ -67,7 +67,7 @@ public class SMManageSecurityGroups extends HttpServlet {
 	        out.println ("</SELECT>");
 	        out.println ("<BR>");
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroups class!!");
+	    	System.out.println("[1579274022] Error in SMManageSecurityGroups class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

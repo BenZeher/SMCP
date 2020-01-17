@@ -162,7 +162,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 				rs.close();
 			}catch (SQLException ex){
 				pwOut.println("<BR>Error reading label printer information - " + ex.getMessage());
-				System.out.println("Error reading label printer information - " + ex.getMessage());
+				System.out.println("[1579269707] Error reading label printer information - " + ex.getMessage());
 			}
 		}
 
@@ -416,7 +416,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 
 		if (conn == null){
 			pwOut.println("Error getting connection to delete record.");
-			System.out.println("Error getting connection to delete record.");
+			System.out.println("[1579269714] Error getting connection to delete record.");
 			return false;
 		}
 
@@ -456,7 +456,7 @@ public class SMEditLabelPrintersEdit extends HttpServlet {
 		}catch (SQLException ex){
 			pwOut.println("Error deleting label printer record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
-			System.out.println("Error deleting label printer record with SQL: " + SQL 
+			System.out.println("[1579269718] Error deleting label printer record with SQL: " + SQL 
 					+ " - " + ex.getMessage());
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080495]");
 			return false;

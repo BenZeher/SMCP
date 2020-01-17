@@ -118,7 +118,7 @@ public class SMCanceledJobsReportCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in SMCanceledJobsReportCriteriaSelection class!!");
+	    	System.out.println("[1579267149] Error in SMCanceledJobsReportCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

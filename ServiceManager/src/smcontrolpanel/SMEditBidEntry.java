@@ -1474,7 +1474,7 @@ public class SMEditBidEntry  extends HttpServlet {
 			s += "</TD><TD>&nbsp;</TD></TR>";
 			for (int i = 0; i < entry.getsProductTypeAmountsSize(); i++){
 				if (bDebugMode){
-					System.out.println("In " + this.toString() 
+					System.out.println("[1579268856] In " + this.toString() 
 						+ " reading producttypesarray - string = " + entry.getsProductType(i).trim());
 					System.out.println("insmeditbidentry - producttypeID = " + entry.getsProductTypeID(i));
 				}

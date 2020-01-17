@@ -78,7 +78,7 @@ public class SMEditSiteLocations extends HttpServlet {
 	        out.println ("</SELECT>");
 	        out.println ("<BR>");
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + " class!!");
+	    	System.out.println("[1579271473] Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -125,7 +125,7 @@ public class SMEditSiteLocations extends HttpServlet {
         	out.println("<TD>&nbsp;</TD>");
         	out.println("</TR>");
 		}catch (SQLException ex){
-	    	System.out.println("Error in " + this.toString() + " class!!");
+	    	System.out.println("[1579271477] Error in " + this.toString() + " class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

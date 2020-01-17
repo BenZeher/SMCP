@@ -1094,7 +1094,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 				}
 				rs.close();
 			}catch (SQLException e){
-				System.out.println("In " + this.toString() 
+				System.out.println("1579274344 In " + this.toString() 
 					+ ".printOrderHeader - error getting job cost record: " + e.getMessage());
 			}
 			
@@ -1515,7 +1515,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("Error in " + this.toString() + ".printInvoiceHeader - " + e.getMessage());
+			System.out.println("[1579274364] Error in " + this.toString() + ".printInvoiceHeader - " + e.getMessage());
 		}
 		
 		//If there was a table configured, close it:
@@ -1968,7 +1968,7 @@ public class SMPreInvoiceReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch (SQLException e){
-			System.out.println("Error getting previous commenters - " + e.getMessage());
+			System.out.println("[1579274370] Error getting previous commenters - " + e.getMessage());
 		}
 		
 		if (sResult.compareToIgnoreCase("") == 0){

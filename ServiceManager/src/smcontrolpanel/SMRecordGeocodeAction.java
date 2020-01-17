@@ -46,7 +46,7 @@ public class SMRecordGeocodeAction extends HttpServlet{
 		){
 			//Need to trap this:
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " - invalid geocode:"
+				System.out.println("[1579274882] In " + this.toString() + " - invalid geocode:"
 						+ " sLatitude = '" + sLatitude + "', "
 						+ " sLongitude = '" + sLongitude + "'."
 				);
@@ -102,7 +102,7 @@ public class SMRecordGeocodeAction extends HttpServlet{
 						this.toString() + ".doPost - user: " + smaction.getUserName());
 				} catch (SQLException e) {
 					if (bDebugMode){
-						System.out.println("In " + this.toString() + " - error inserting record with SQL: " + sSQL
+						System.out.println("[1579274887] In " + this.toString() + " - error inserting record with SQL: " + sSQL
 								+ " - " + e.getMessage()
 						);
 					}

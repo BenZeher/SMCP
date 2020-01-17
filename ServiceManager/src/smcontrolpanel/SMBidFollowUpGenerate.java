@@ -101,7 +101,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 			    }
 			    rsProjectTypes.close();
 		    }catch(SQLException ex){
-		    	System.out.println("Error when getting project type information!!");
+		    	System.out.println("[1579266994] Error when getting project type information!!");
 		        System.out.println("SQLException: " + ex.getMessage());
 		        System.out.println("SQLState: " + ex.getSQLState());
 		        System.out.println("SQL: " + ex.getErrorCode());
@@ -266,7 +266,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 	    try{
 	    	rs = clsDatabaseFunctions.openResultSet(sSQL, getServletContext(), sDBID);
 	    }catch (SQLException ex){
-	    	System.out.println("Error when opening rs for sales lead followup list!!");
+	    	System.out.println("[1579267002] Error when opening rs for sales lead followup list!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -350,7 +350,7 @@ public class SMBidFollowUpGenerate extends HttpServlet {
 		    }
 		    
 	    }catch (SQLException ex){
-	    	System.out.println("Error in SMBidFollowUpGenerate!!");
+	    	System.out.println("[1579267008] Error in SMBidFollowUpGenerate!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

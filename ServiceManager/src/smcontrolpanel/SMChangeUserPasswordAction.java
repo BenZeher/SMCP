@@ -125,7 +125,7 @@ public class SMChangeUserPasswordAction extends HttpServlet {
 		    	return false;
 		    }
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMChangeUserPasswordAction.Check_Current_Password class!!");
+	    	System.out.println("[1579267440] Error in SMChangeUserPasswordAction.Check_Current_Password class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -145,7 +145,7 @@ public class SMChangeUserPasswordAction extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMChangeUserPasswordAction.Change_Current_Password class!!");
+	    	System.out.println("[1579267445] Error in SMChangeUserPasswordAction.Change_Current_Password class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

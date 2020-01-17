@@ -107,7 +107,7 @@ public class CustomerCallLogListCriteriaSelection extends HttpServlet {
     	    	
     	    }catch (SQLException ex){
     	    	//catch SQL exceptions
-    	    	System.out.println("Error when creating and displaying order source drop down list.");
+    	    	System.out.println("[1579207381] Error when creating and displaying order source drop down list.");
     	    	System.out.println("Error: " + ex.getErrorCode() + " - " + ex.getMessage());
     	    	System.out.println("SQL: " + ex.getSQLState());
     	    }
@@ -120,7 +120,7 @@ public class CustomerCallLogListCriteriaSelection extends HttpServlet {
 		    
 	    } catch (Exception ex) {
 	        // handle any errors
-	    	System.out.println("Error in CustomerCallLogListCriteriaSelection class!!");
+	    	System.out.println("[1579207385] Error in CustomerCallLogListCriteriaSelection class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	    }
  

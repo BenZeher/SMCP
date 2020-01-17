@@ -153,7 +153,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 		String sMessage = "Invoice #" + sInvoiceNumber + " is credited successfully.<BR>" +
 		"Credit note # is: " + sPrintCredit;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " sMessage = " + sMessage);
+			System.out.println("[1579267587] In " + this.toString() + " sMessage = " + sMessage);
 		}
 		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080417]");
 		//System.out.println("connections freed.");
@@ -195,7 +195,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
 							        								  getServletContext());
         }catch(Exception ex){
         	if (bDebugMode){
-        		System.out.println("Creating credit note failed.<BR>"
+        		System.out.println("[1579267594] Creating credit note failed.<BR>"
         	  		+ ex.getMessage());
         	}
         	throw new Exception ("Credit note creation failed.<BR>"
@@ -203,7 +203,7 @@ public class SMCreateCreditNoteAction extends HttpServlet {
         }
         
         if (bDebugMode){
-        	System.out.println("In " + this.toString() + " Credit note number " 
+        	System.out.println("[1579267598] In " + this.toString() + " Credit note number " 
         		+ "" + " has been created successfully.");
         }
 	    

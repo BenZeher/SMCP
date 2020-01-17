@@ -308,7 +308,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			//}
 			ResultSet rs = clsDatabaseFunctions.openResultSet(SQL, conn);
 			if (bDebugMode){
-				System.out.println("In " + this.toString() + " Main SELECT SQL took " 
+				System.out.println("[1579275273] In " + this.toString() + " Main SELECT SQL took " 
 						+ (System.currentTimeMillis() - lTimer) + " milliseconds");
 			}
 			boolean bInitialInsertLinkHasBeenPrinted = false;
@@ -829,7 +829,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("SQL: '" + SQL + "' - " + e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 9 = " 
+			System.out.println("[1579275280] In " + this.toString() + " time elapsed after SQL 9 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}
@@ -887,7 +887,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		}
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 10 = " 
+			System.out.println("[1579275286] In " + this.toString() + " time elapsed after SQL 10 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}
@@ -991,7 +991,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		//System.out.println("[1385411346] SQL #2 = " + SQL);
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " read mechanics from job cost SQL: " + SQL);
+			System.out.println("[1579275293] In " + this.toString() + " read mechanics from job cost SQL: " + SQL);
 		}
 
 		try {
@@ -1008,7 +1008,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("Error [1428685821] reading mechanics from schedule with SQL: " + SQL + " - " + e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 11 = " 
+			System.out.println("[1579275296] In " + this.toString() + " time elapsed after SQL 11 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}		
@@ -1034,7 +1034,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		}
 
 		if (bDebugMode){
-			System.out.println("sDisplayedMechanics:");
+			System.out.println("[1579275303] sDisplayedMechanics:");
 			for (int i = 0; i < lDisplayedMechanics.size(); i++){
 				System.out.println(i + " - " + lDisplayedMechanics.get(i));
 			}
@@ -1092,7 +1092,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		}
 		 */
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 12 = " 
+			System.out.println("[1579275308] In " + this.toString() + " time elapsed after SQL 12 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}
@@ -1149,7 +1149,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("Error [1428685884] inserting sequence 1 jobs with SQL: " + SQL + " - "+ e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 13 = " 
+			System.out.println("[1579275312] In " + this.toString() + " time elapsed after SQL 13 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}
@@ -1210,7 +1210,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 		SQL += ")" //End the 'WHERE' clause
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " adding 2 and 3 records from job cost SQL = " + SQL);
+			System.out.println("[1579275316] In " + this.toString() + " adding 2 and 3 records from job cost SQL = " + SQL);
 		}
 		try {
 			Statement stmt = conn.createStatement();
@@ -1219,7 +1219,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("Error [1428685886] inserting sequence 2,3, etc jobs with SQL: " + SQL + " - "+ e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 14 = " 
+			System.out.println("[1579275320] In " + this.toString() + " time elapsed after SQL 14 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}
@@ -1242,7 +1242,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 
 			;
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " adding 2 and 3 records from job cost SQL = " + SQL);
+			System.out.println("[1579275324] In " + this.toString() + " adding 2 and 3 records from job cost SQL = " + SQL);
 		}
 		try {
 			Statement stmt = conn.createStatement();
@@ -1251,7 +1251,7 @@ public class SMViewTruckScheduleReport extends java.lang.Object{
 			throw new Exception("Error [1428685887] inserting work order statuses with SQL: " + SQL + " - "+ e.getMessage());
 		}
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " time elapsed after SQL 15 = " 
+			System.out.println("[1579275328] In " + this.toString() + " time elapsed after SQL 15 = " 
 					+ (System.currentTimeMillis() - lStartingTime));
 			lStartingTime = System.currentTimeMillis();
 		}

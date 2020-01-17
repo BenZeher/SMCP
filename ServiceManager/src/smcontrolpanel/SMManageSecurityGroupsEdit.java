@@ -122,7 +122,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 			//If we never found a matching record, return 'NO':
 			return "";
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class in Is_Function_In_Group!!");
+	    	System.out.println("[1579274039] Error in SMManageSecurityGroupsEdit class in Is_Function_In_Group!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -143,7 +143,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 			//If we never found a matching record, return:
 			return "";
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class in Is_User_In_Group!!");
+	    	System.out.println("[1579274043] Error in SMManageSecurityGroupsEdit class in Is_User_In_Group!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -216,7 +216,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
         	//pwOut.println ("</TABLE>");
         	pwOut.println ("<BR>");
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class!!");
+	    	System.out.println("[1579274050] Error in SMManageSecurityGroupsEdit class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -253,7 +253,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
         	pwOut.println(SMUtilities.Build_HTML_Table(3, sUserTable,1,true));
         	
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit class!!");
+	    	System.out.println("[1579274055] Error in SMManageSecurityGroupsEdit class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -282,7 +282,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQLsInTransaction(sSQLList, getServletContext(), sDBID);
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
+	    	System.out.println("[1579274059] Error in SMManageSecurityGroupsEdit.Delete_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -305,7 +305,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 			}
 			rs.close();
 		}catch(SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit.Add_Group class!!");
+	    	System.out.println("[1579274063] Error in SMManageSecurityGroupsEdit.Add_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());
@@ -317,7 +317,7 @@ public class SMManageSecurityGroupsEdit extends HttpServlet {
 			boolean bResult = clsDatabaseFunctions.executeSQL(sSQL, getServletContext(), sDBID); 
 			return bResult;
 		}catch (SQLException ex){
-	    	System.out.println("Error in SMManageSecurityGroupsEdit.Add_Group class!!");
+	    	System.out.println("[1579274067] Error in SMManageSecurityGroupsEdit.Add_Group class!!");
 	        System.out.println("SQLException: " + ex.getMessage());
 	        System.out.println("SQLState: " + ex.getSQLState());
 	        System.out.println("SQL: " + ex.getErrorCode());

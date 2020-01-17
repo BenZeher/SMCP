@@ -27,7 +27,7 @@ public class SMEditDirectOrderDetailEntryAction extends HttpServlet{
 		smaction.getCurrentSession().removeAttribute(SMDirectOrderDetailEntry.ParamObjectName);
 		
 		if (bDebugMode){
-			System.out.println("In " + this.toString() + " - PRINTING PARAMS\n");
+			System.out.println("[1579269679] In " + this.toString() + " - PRINTING PARAMS\n");
 			PrintWriter debugout = new PrintWriter(System.out);
 			clsManageRequestParameters.printRequestParameters(debugout, request);
 		}
@@ -36,7 +36,7 @@ public class SMEditDirectOrderDetailEntryAction extends HttpServlet{
 
 		if (bDebugMode){
 			//PrintWriter debugout = new PrintWriter(System.out);
-			System.out.println("In " + this.toString() + " - entry= \n" + entry.read_out_debug_data());
+			System.out.println("[1579269684] In " + this.toString() + " - entry= \n" + entry.read_out_debug_data());
 			//SMUtilities.printRequestParameters(debugout, request);
 		}
 		
@@ -182,7 +182,7 @@ public class SMEditDirectOrderDetailEntryAction extends HttpServlet{
 		try {
 			res.sendRedirect(sRedirectString);
 		} catch (IOException e1) {
-			System.out.println("In " + this.toString() + ".redirectAction - error redirecting with string: "
+			System.out.println("[1579269690] In " + this.toString() + ".redirectAction - error redirecting with string: "
 					+ sRedirectString);
 			return;
 		}

@@ -521,7 +521,7 @@ public class SMSalesEffortCheckReport extends java.lang.Object{
 			}
 			rs.close();
 		}catch(SQLException e){
-			System.out.println("In " + this.toString() + " could not read salesperson name - " + e.getMessage());
+			System.out.println("[1579274941] In " + this.toString() + " could not read salesperson name - " + e.getMessage());
 		}
 		
 		out.println("<TABLE BORDER=1 WIDTH = 100%>"

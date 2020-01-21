@@ -538,6 +538,22 @@ public class SMAppointment extends clsMasterEntry{
         	}
         }
         
+        m_sbilltoname = m_sbilltoname.trim();
+        if(m_sbilltoname.length() > SMTableappointments.ibilltonameLength) {
+        	sErrors += "Bill to name is too long. ";
+        }
+        
+        
+        m_sshiptoname = m_sshiptoname.trim();	
+        if(m_sshiptoname.length() > SMTableappointments.ishiptonameLength) {
+        	sErrors += "Ship to name is too long. ";
+        }
+        
+        m_scontactname = m_scontactname.trim();
+        if(m_scontactname.length() > SMTableappointments.icontactnameLength) {
+        	sErrors += "Contact name is too long. ";
+        }
+        
         //validate order number
         if(m_sordernumber.compareToIgnoreCase("") != 0){
         	SMOrderHeader order = new SMOrderHeader();

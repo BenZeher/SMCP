@@ -540,18 +540,18 @@ public class SMAppointment extends clsMasterEntry{
         
         m_sbilltoname = m_sbilltoname.trim();
         if(m_sbilltoname.length() > SMTableappointments.ibilltonameLength) {
-        	sErrors += "Bill to name is too long. ";
+        	sErrors += "Bill to name is too long. It needs to be less than " + SMTableappointments.ibilltonameLength + " characters long ";
         }
         
         
         m_sshiptoname = m_sshiptoname.trim();	
         if(m_sshiptoname.length() > SMTableappointments.ishiptonameLength) {
-        	sErrors += "Ship to name is too long. ";
+        	sErrors += "Ship to name is too long. It needs to be less than " + SMTableappointments.ishiptonameLength + " characters long ";
         }
         
         m_scontactname = m_scontactname.trim();
         if(m_scontactname.length() > SMTableappointments.icontactnameLength) {
-        	sErrors += "Contact name is too long. ";
+        	sErrors += "Contact name is too long. It needs to be less than " + SMTableappointments.icontactnameLength + " characters long ";
         }
         
         //validate order number

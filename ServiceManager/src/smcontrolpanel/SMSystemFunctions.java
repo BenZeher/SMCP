@@ -545,7 +545,7 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionDescriptions.add("Required to edit the company profile.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 
-		arrFunctions.add("SM Edit Mechanics"); 
+		arrFunctions.add("SM Edit Technicians"); 
 		arrFunctionIDs.add(SMEditMechanics); 
 		arrFunctionLinks.add("smcontrolpanel.SMEditMechanics"); 
 		arrFunctionDescriptions.add("Required to edit and maintain the mechanics.");
@@ -1241,7 +1241,7 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionDescriptions.add("Required to view order detail information on the 'View Order Information' screen.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 
-		arrFunctions.add("SM View Mechanics Own Truck Schedule");
+		arrFunctions.add("SM View Technicians Own Truck Schedule");
 		arrFunctionIDs.add(SMViewMechanicsOwnTruckSchedule);
 		arrFunctionLinks.add(
 				"smcontrolpanel.SMViewTruckScheduleGenerate?" 

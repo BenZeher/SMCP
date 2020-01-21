@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1441;
+	private static final int m_CurrentDatabaseVersion = 1444;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "1/16/2020";
+	private static final String m_sLastRevisionDate = "1/21/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -14999,6 +14999,39 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by TJR 12/31/2019
 				SQL = "ALTER TABLE `gltransactionbatchentries` "
 						+ "CHANGE COLUMN ssourceledgertransactionid ssourceledgertransactionid VARCHAR(96) NOT NULL DEFAULT ''"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1441:
+				//Added by BJA 1/21/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY sshiptoname varchar(120)"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1442:
+				//Added by BJA 1/21/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY sbilltoname varchar(120)"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1443:
+				//Added by BJA 1/21/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY scontactname varchar(120)"
 						;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

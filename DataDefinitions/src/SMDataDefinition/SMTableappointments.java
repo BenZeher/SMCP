@@ -43,9 +43,9 @@ public class SMTableappointments {
 	public static final int sordernumberlength = 11;
 	public static final int ibididlength = 11;
 	public static final int isalescontactidlength = 11;
-	public static final int icontactnameLength = 60;
-	public static final int ibilltonameLength = 60;
-	public static final int ishiptonameLength = 60;
+	public static final int icontactnameLength = 120;
+	public static final int ibilltonameLength = 120;
+	public static final int ishiptonameLength = 120;
 	public static final int iphoneLength = 30;
 	public static final int iemailLength = 128;
 	public static final int screateduserLength = 128;

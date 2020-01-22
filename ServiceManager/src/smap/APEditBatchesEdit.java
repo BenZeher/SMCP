@@ -45,8 +45,14 @@ public class APEditBatchesEdit extends HttpServlet {
 	 */
 	private static final String sObjectName = "Batch";
 	
-	//public static String CREATEGLBATCH_BUTTON_NAME = "CREATEGLBATCH";
-	//public static String CREATEGLBATCH_BUTTON_LABEL = "Re-create GL batch";
+	//Button labels and values
+	public static final String COMMAND_FLAG = "COMMANDFLAG";
+	public static final String SAVE_COMMAND_VALUE = "SAVE";
+	public static final String SAVE_BUTTON_LABEL = "Save " + sObjectName;
+	public static final String DELETE_COMMAND_VALUE = "DELETE";
+	public static final String DELETE_BUTTON_LABEL = "Delete " + sObjectName;
+	public static final String POST_COMMAND_VALUE = "POST";
+	public static final String POST_BUTTON_LABEL = "Post " + sObjectName;
 	
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
@@ -179,6 +185,7 @@ public class APEditBatchesEdit extends HttpServlet {
 			String sLicenseModuleLevel){
 		
 		pwOut.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APEditBatchesAction' METHOD='POST'>\n");
+		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + COMMAND_FLAG + "\" VALUE=\"" + "" + "\"" + " id=\"" + COMMAND_FLAG + "\"" + "\">");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatches.lbatchnumber + "\" VALUE=\"" + batch.getsbatchnumber() + "\">\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatches.ibatchtype + "\" VALUE=\"" + batch.getsbatchtype() + "\">\n");
@@ -188,11 +195,7 @@ public class APEditBatchesEdit extends HttpServlet {
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatches.datpostdate + "\" VALUE=\"" + batch.getsposteddate() + "\">\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatches.lbatchlastentry + "\" VALUE=\"" + batch.getsbatchlastentry() + "\">\n");
 		pwOut.println("<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatches.llasteditedby + "\" VALUE=\"" + batch.getllasteditedby() + "\">\n");
-		
-		pwOut.println("<INPUT TYPE=HIDDEN"
-			+ " NAME=\"" + "CallingClass" + "\""
-			+ " VALUE=\"" + SMUtilities.getFullClassName(this.toString()) + "\">\n"
-		);
+		pwOut.println("<INPUT TYPE=HIDDEN"+ " NAME=\"" + "CallingClass" + "\""+ " VALUE=\"" + SMUtilities.getFullClassName(this.toString()) + "\">\n");
 		
         //Display fields:
         //Date last maintained:
@@ -242,17 +245,17 @@ public class APEditBatchesEdit extends HttpServlet {
 	    			+ "</FONT></B>\n");
 	    	}
             
-        	pwOut.println("<BR><INPUT TYPE=SUBMIT NAME='SubmitEdit' VALUE='Save "
-        			+ sObjectName + "' STYLE='height: 0.24in'>\n");
+        	pwOut.println("<BR>");
+        	pwOut.println(createSaveButton());     	
         	
         	if (
         			(batch.getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.ENTERED)) == 0)
         			|| (batch.getsbatchstatus().compareToIgnoreCase(Integer.toString(SMBatchStatuses.IMPORTED)) == 0)
         	){
-        		pwOut.println("  <INPUT TYPE=SUBMIT NAME='Post' VALUE='Post " + sObjectName + "' STYLE='height: 0.24in'>");
+        		pwOut.println(createPostButton());
         		pwOut.println("  <LABEL>Check to confirm posting: <INPUT TYPE=CHECKBOX NAME=\"ConfirmPost\"></LABEL>\n");
         	}
-        	pwOut.println("  <INPUT TYPE=SUBMIT NAME='Delete' VALUE='Delete " + sObjectName + "' STYLE='height: 0.24in'>");
+        	pwOut.println(createDeleteButton());
         	pwOut.println("  <LABEL>Check to confirm deletion: <INPUT TYPE=CHECKBOX NAME=\"ConfirmDelete\"></LABEL>\n");
         	
         	//If this is a PAYMENT batch:
@@ -660,15 +663,68 @@ public class APEditBatchesEdit extends HttpServlet {
     		+ "} \n"
 		;
 		
-		 s +=  "   window.addEventListener(\"beforeunload\",function(){\n" 
-				 +  "      document.documentElement.style.cursor = \"not-allowed\";\n "
-				  +  "     document.documentElement.style.cursor = \"wait\";\n"
-				  +"      });\n";
-		 
+		 s +=  "  window.addEventListener(\"beforeunload\",function(){\n" 
+				 + "   document.documentElement.style.cursor = \"not-allowed\";\n "
+				 + "   document.documentElement.style.cursor = \"wait\";\n"
+				 + "});\n";
+		
+		//Post:
+			s += "function post(param){\n"
+					+ "param.disabled=true;\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+					+ POST_COMMAND_VALUE + "\";\n"
+				+ "    document.forms[\"MAINFORM\"].submit();\n"
+				+ "}\n"
+			;
+			
+			s += "function save(param){\n"
+					+ "param.disabled=true;\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+					+ SAVE_COMMAND_VALUE + "\";\n"
+				+ "    document.forms[\"MAINFORM\"].submit();\n"
+				+ "}\n"
+			;
+			
+			s += "function deleteBatch(param){\n"
+					+ "param.disabled=true;\n"
+				+ "    document.getElementById(\"" + COMMAND_FLAG + "\").value = \"" 
+					+ DELETE_COMMAND_VALUE + "\";\n"
+				+ "    document.forms[\"MAINFORM\"].submit();\n"
+				+ "}\n"
+			;
 		s += "</script>\n";
 		return s;
 	}
 	
+	private String createPostButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + POST_BUTTON_LABEL + "\""
+			+ " name=\"" + POST_BUTTON_LABEL + "\""
+			+ " onClick=\"post(this);\">"
+			+ POST_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
+	
+	private String createSaveButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + SAVE_BUTTON_LABEL + "\""
+			+ " name=\"" + SAVE_BUTTON_LABEL + "\""
+			+ " onClick=\"save(this);\">"
+			+ SAVE_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
+	
+	private String createDeleteButton(){
+		return "<button type=\"button\""
+			+ " value=\"" + DELETE_BUTTON_LABEL + "\""
+			+ " name=\"" + DELETE_BUTTON_LABEL + "\""
+			+ " onClick=\"deleteBatch(this);\">"
+			+ DELETE_BUTTON_LABEL
+			+ "</button>\n"
+			;
+	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {

@@ -52,7 +52,8 @@ public class APEditBatchesAction extends HttpServlet{
     out.println(SMUtilities.SMCPTitleSubBGColor(title, subtitle, SMUtilities.getInitBackGroundColor(getServletContext(), sDBID), sCompanyName));
 	
     APBatch batch = new APBatch(request);
-	if (request.getParameter("Delete") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(APEditBatchesEdit.DELETE_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmDelete") != null){
 			try {
 				batch.flag_as_deleted(sBatchNumber, getServletContext(), sDBID, sUserFullName);
@@ -84,7 +85,8 @@ public class APEditBatchesAction extends HttpServlet{
 		}
 	}
 
-	if (request.getParameter("Post") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(APEditBatchesEdit.POST_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmPost") != null){
 			try {
 				batch.post_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName, out);

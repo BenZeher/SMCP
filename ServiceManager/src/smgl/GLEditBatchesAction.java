@@ -85,7 +85,8 @@ public class GLEditBatchesAction extends HttpServlet{
     }
     
     GLTransactionBatch batch = new GLTransactionBatch(request);
-	if (request.getParameter("Delete") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(GLEditBatchesEdit.DELETE_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmDelete") != null){
 			try {
 				batch.flag_as_deleted(sBatchNumber, getServletContext(), sDBID, sUserFullName);
@@ -117,7 +118,8 @@ public class GLEditBatchesAction extends HttpServlet{
 		}
 	}
 
-	if (request.getParameter("Post") != null){
+    if (clsManageRequestParameters.get_Request_Parameter(
+    		"COMMANDFLAG", request).compareToIgnoreCase(GLEditBatchesEdit.POST_COMMAND_VALUE) == 0){
 		if (request.getParameter("ConfirmPost") != null){
 			try {
 				batch.post_with_data_transaction(getServletContext(), sDBID, sUserID, sUserFullName);

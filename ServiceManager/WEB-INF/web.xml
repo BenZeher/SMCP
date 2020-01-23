@@ -977,18 +977,6 @@
     	<servlet-class>smas.ASMainMenu</servlet-class>
 	</servlet>
 
-	<!--  ServletUtilities package classes: -->
-
-	<servlet>
-        <servlet-name>ServletUtilities</servlet-name>
-        <servlet-class>ServletUtilities.ServletUtilities</servlet-class>
-    </servlet>
-
-   <servlet>
-        <servlet-name>URLRecord</servlet-name>
-        <servlet-class>ServletUtilities.URLRecord</servlet-class>
-    </servlet>
-
     <!-- smbk package classes -->
     <servlet>
         <servlet-name>BKAddEntryAction</servlet-name>
@@ -1054,6 +1042,18 @@
         <servlet-name>BKMainMenu</servlet-name>
         <servlet-class>smbk.BKMainMenu</servlet-class>
     </servlet>	
+
+	<!--  ServletUtilities package classes: -->
+
+	<servlet>
+        <servlet-name>ServletUtilities</servlet-name>
+        <servlet-class>ServletUtilities.ServletUtilities</servlet-class>
+    </servlet>
+
+   <servlet>
+        <servlet-name>URLRecord</servlet-name>
+        <servlet-class>ServletUtilities.URLRecord</servlet-class>
+    </servlet>
 
 	<!--  smclasses declarations -->
 
@@ -4777,20 +4777,7 @@
     	<url-pattern>/smas.ASMainMenu</url-pattern>
 	</servlet-mapping>
 
-	<!-- - ServletUtilities package classes: -->
-
-    <servlet-mapping>
-        <servlet-name>ServletUtilities</servlet-name>
-        <url-pattern>/ServletUtilities.ServletUtilities</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>URLRecord</servlet-name>
-        <url-pattern>/ServletUtilities.URLRecord</url-pattern>
-    </servlet-mapping>
-    
     <!-- - smbk package classes: -->
-
     <servlet-mapping>
         <servlet-name>BKAddEntryAction</servlet-name>
         <url-pattern>/smbk.BKAddEntryAction</url-pattern>
@@ -4840,7 +4827,7 @@
         <servlet-name>BKEditStatementSelect</servlet-name>
         <url-pattern>/smbk.BKEditStatementSelect</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>BKEntryImportAction</servlet-name>
         <url-pattern>/smbk.BKEntryImportAction</url-pattern>
@@ -4854,7 +4841,20 @@
     <servlet-mapping>
         <servlet-name>BKMainMenu</servlet-name>
         <url-pattern>/smbk.BKMainMenu</url-pattern>
+    </servlet-mapping>	
+
+	<!-- - ServletUtilities package classes: -->
+
+    <servlet-mapping>
+        <servlet-name>ServletUtilities</servlet-name>
+        <url-pattern>/ServletUtilities.ServletUtilities</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>URLRecord</servlet-name>
+        <url-pattern>/ServletUtilities.URLRecord</url-pattern>
+    </servlet-mapping>
+    
 
     <!-- smcontrolpanel package mappings: -->
     <servlet-mapping>

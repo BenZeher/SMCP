@@ -797,7 +797,6 @@
 
 
     <!--Alarm system packages (smas)-->
-
     <servlet>
 		<servlet-name>ASActivateAlarmsAction</servlet-name>
 		<servlet-class>smas.ASActivateAlarmsAction</servlet-class>
@@ -808,16 +807,6 @@
 		<servlet-class>smas.ASActivateAlarmsEdit</servlet-class>
 	</servlet>
 	
-	<servlet>
-		<servlet-name>ASActivateSelectedSequencesAction</servlet-name>
-		<servlet-class>smas.ASActivateSelectedSequencesAction</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>ASActivateSelectedSequencesEdit</servlet-name>
-		<servlet-class>smas.ASActivateSelectedSequencesEdit</servlet-class>
-	</servlet>
-	
     <servlet>
 		<servlet-name>ASActivateDevicesAction</servlet-name>
 		<servlet-class>smas.ASActivateDevicesAction</servlet-class>
@@ -826,6 +815,16 @@
 	<servlet>
 		<servlet-name>ASActivateDevicesEdit</servlet-name>
 		<servlet-class>smas.ASActivateDevicesEdit</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>ASActivateSelectedSequencesAction</servlet-name>
+		<servlet-class>smas.ASActivateSelectedSequencesAction</servlet-class>
+	</servlet>
+	
+	<servlet>
+		<servlet-name>ASActivateSelectedSequencesEdit</servlet-name>
+		<servlet-class>smas.ASActivateSelectedSequencesEdit</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -879,6 +878,21 @@
 	</servlet>
 
 	<servlet>
+		<servlet-name>ASControllerDiagnosticsAction</servlet-name>
+		<servlet-class>smas.ASControllerDiagnosticsAction</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ASControllerDiagnosticsEdit</servlet-name>
+		<servlet-class>smas.ASControllerDiagnosticsEdit</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ASControllerDiagnosticsSelect</servlet-name>
+		<servlet-class>smas.ASControllerDiagnosticsSelect</servlet-class>
+	</servlet>
+
+	<servlet>
 		<servlet-name>ASDeviceStatusAction</servlet-name>
 		<servlet-class>smas.ASDeviceStatusAction</servlet-class>
 	</servlet>
@@ -886,6 +900,21 @@
 	<servlet>
 		<servlet-name>ASDeviceStatusEdit</servlet-name>
 		<servlet-class>smas.ASDeviceStatusEdit</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ASEditAlarmSequencesAction</servlet-name>
+		<servlet-class>smas.ASEditAlarmSequencesAction</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ASEditAlarmSequencesEdit</servlet-name>
+		<servlet-class>smas.ASEditAlarmSequencesEdit</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>ASEditAlarmSequencesSelect</servlet-name>
+		<servlet-class>smas.ASEditAlarmSequencesSelect</servlet-class>
 	</servlet>
 
 	<servlet>
@@ -932,21 +961,6 @@
 		<servlet-name>ASEditEventSchedulesSelect</servlet-name>
 		<servlet-class>smas.ASEditEventSchedulesSelect</servlet-class>
 	</servlet>
-
-	<servlet>
-		<servlet-name>ASEditAlarmSequencesAction</servlet-name>
-		<servlet-class>smas.ASEditAlarmSequencesAction</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ASEditAlarmSequencesEdit</servlet-name>
-		<servlet-class>smas.ASEditAlarmSequencesEdit</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ASEditAlarmSequencesSelect</servlet-name>
-		<servlet-class>smas.ASEditAlarmSequencesSelect</servlet-class>
-	</servlet>
 	
 	<servlet>
 		<servlet-name>ASEditSSOptionsAction</servlet-name>
@@ -956,21 +970,6 @@
 	<servlet>
 		<servlet-name>ASEditSSOptionsEdit</servlet-name>
 		<servlet-class>smas.ASEditSSOptionsEdit</servlet-class>
-	</servlet>
-	
-	<servlet>
-		<servlet-name>ASControllerDiagnosticsAction</servlet-name>
-		<servlet-class>smas.ASControllerDiagnosticsAction</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ASControllerDiagnosticsEdit</servlet-name>
-		<servlet-class>smas.ASControllerDiagnosticsEdit</servlet-class>
-	</servlet>
-
-	<servlet>
-		<servlet-name>ASControllerDiagnosticsSelect</servlet-name>
-		<servlet-class>smas.ASControllerDiagnosticsSelect</servlet-class>
 	</servlet>
 	
 	<servlet>
@@ -4598,183 +4597,182 @@
     </servlet-mapping>
     
     <!--- smas package classes:-->
-
     <servlet-mapping>
-    	<servlet-name>ASActivateAlarmsAction</servlet-name>
-    	<url-pattern>/smas.ASActivateAlarmsAction</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASActivateAlarmsEdit</servlet-name>
-    	<url-pattern>/smas.ASActivateAlarmsEdit</url-pattern>
+		<servlet-name>ASActivateAlarmsAction</servlet-name>
+		<url-pattern>/smas.ASActivateAlarmsAction</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASActivateSelectedSequencesAction</servlet-name>
-    	<url-pattern>/smas.ASActivateSelectedSequencesAction</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASActivateSelectedSequencesEdit</servlet-name>
-    	<url-pattern>/smas.ASActivateSelectedSequencesEdit</url-pattern>
+		<servlet-name>ASActivateAlarmsEdit</servlet-name>
+		<url-pattern>/smas.ASActivateAlarmsEdit</url-pattern>
 	</servlet-mapping>
 	
     <servlet-mapping>
-    	<servlet-name>ASActivateDevicesAction</servlet-name>
-    	<url-pattern>/smas.ASActivateDevicesAction</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASActivateDevicesEdit</servlet-name>
-    	<url-pattern>/smas.ASActivateDevicesEdit</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASAlarmListenerAction</servlet-name>
-    	<url-pattern>/smas.ASAlarmListenerAction</url-pattern>
+		<servlet-name>ASActivateDevicesAction</servlet-name>
+		<url-pattern>/smas.ASActivateDevicesAction</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASAuthorizeAlarmUsersAction</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeAlarmUsersAction</url-pattern>
+		<servlet-name>ASActivateDevicesEdit</servlet-name>
+		<url-pattern>/smas.ASActivateDevicesEdit</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASAuthorizeAlarmUsersEdit</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeAlarmUsersEdit</url-pattern>
+		<servlet-name>ASActivateSelectedSequencesAction</servlet-name>
+		<url-pattern>/smas.ASActivateSelectedSequencesAction</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASAuthorizeAlarmUsersSelect</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeAlarmUsersSelect</url-pattern>
-	</servlet-mapping>
-	
-    <servlet-mapping>
-    	<servlet-name>ASAuthorizeDeviceUsersAction</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeDeviceUsersAction</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASAuthorizeDeviceUsersEdit</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeDeviceUsersEdit</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-    	<servlet-name>ASAuthorizeDeviceUsersSelect</servlet-name>
-    	<url-pattern>/smas.ASAuthorizeDeviceUsersSelect</url-pattern>
+		<servlet-name>ASActivateSelectedSequencesEdit</servlet-name>
+		<url-pattern>/smas.ASActivateSelectedSequencesEdit</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-    	<servlet-name>ASConfigureControllerAction</servlet-name>
-    	<url-pattern>/smas.ASConfigureControllerAction</url-pattern>
+		<servlet-name>ASAlarmListenerAction</servlet-name>
+		<url-pattern>/smas.ASAlarmListenerAction</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeAlarmUsersAction</servlet-name>
+		<url-pattern>/smas.ASAuthorizeAlarmUsersAction</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeAlarmUsersEdit</servlet-name>
+		<url-pattern>/smas.ASAuthorizeAlarmUsersEdit</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeAlarmUsersSelect</servlet-name>
+		<url-pattern>/smas.ASAuthorizeAlarmUsersSelect</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeDeviceUsersAction</servlet-name>
+		<url-pattern>/smas.ASAuthorizeDeviceUsersAction</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeDeviceUsersEdit</servlet-name>
+		<url-pattern>/smas.ASAuthorizeDeviceUsersEdit</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASAuthorizeDeviceUsersSelect</servlet-name>
+		<url-pattern>/smas.ASAuthorizeDeviceUsersSelect</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-    	<servlet-name>ASConfigureControllerEdit</servlet-name>
-    	<url-pattern>/smas.ASConfigureControllerEdit</url-pattern>
+		<servlet-name>ASConfigureControllerAction</servlet-name>
+		<url-pattern>/smas.ASConfigureControllerAction</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASConfigureControllerEdit</servlet-name>
+		<url-pattern>/smas.ASConfigureControllerEdit</url-pattern>
+	</servlet-mapping>
+	
+	<servlet-mapping>
+		<servlet-name>ASConfigureControllerSelect</servlet-name>
+		<url-pattern>/smas.ASConfigureControllerSelect</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-    	<servlet-name>ASConfigureControllerSelect</servlet-name>
-    	<url-pattern>/smas.ASConfigureControllerSelect</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASDeviceStatusAction</servlet-name>
-    	<url-pattern>/smas.ASDeviceStatusAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASDeviceStatusEdit</servlet-name>
-    	<url-pattern>/smas.ASDeviceStatusEdit</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditControllersAction</servlet-name>
-    	<url-pattern>/smas.ASEditControllersAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditControllersEdit</servlet-name>
-    	<url-pattern>/smas.ASEditControllersEdit</url-pattern>
-	</servlet-mapping>
-	
-    <servlet-mapping>
-    	<servlet-name>ASEditControllersSelect</servlet-name>
-    	<url-pattern>/smas.ASEditControllersSelect</url-pattern>
+		<servlet-name>ASControllerDiagnosticsAction</servlet-name>
+		<url-pattern>/smas.ASControllerDiagnosticsAction</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-    	<servlet-name>ASEditDevicesAction</servlet-name>
-    	<url-pattern>/smas.ASEditDevicesAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditDevicesEdit</servlet-name>
-    	<url-pattern>/smas.ASEditDevicesEdit</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditDevicesSelect</servlet-name>
-    	<url-pattern>/smas.ASEditDevicesSelect</url-pattern>
+		<servlet-name>ASControllerDiagnosticsEdit</servlet-name>
+		<url-pattern>/smas.ASControllerDiagnosticsEdit</url-pattern>
 	</servlet-mapping>
 
 	<servlet-mapping>
-    	<servlet-name>ASEditEventSchedulesAction</servlet-name>
-    	<url-pattern>/smas.ASEditEventSchedulesAction</url-pattern>
+		<servlet-name>ASControllerDiagnosticsSelect</servlet-name>
+		<url-pattern>/smas.ASControllerDiagnosticsSelect</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASDeviceStatusAction</servlet-name>
+		<url-pattern>/smas.ASDeviceStatusAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASDeviceStatusEdit</servlet-name>
+		<url-pattern>/smas.ASDeviceStatusEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditAlarmSequencesAction</servlet-name>
+		<url-pattern>/smas.ASEditAlarmSequencesAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditAlarmSequencesEdit</servlet-name>
+		<url-pattern>/smas.ASEditAlarmSequencesEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditAlarmSequencesSelect</servlet-name>
+		<url-pattern>/smas.ASEditAlarmSequencesSelect</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditControllersAction</servlet-name>
+		<url-pattern>/smas.ASEditControllersAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditControllersEdit</servlet-name>
+		<url-pattern>/smas.ASEditControllersEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditControllersSelect</servlet-name>
+		<url-pattern>/smas.ASEditControllersSelect</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditDevicesAction</servlet-name>
+		<url-pattern>/smas.ASEditDevicesAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditDevicesEdit</servlet-name>
+		<url-pattern>/smas.ASEditDevicesEdit</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditDevicesSelect</servlet-name>
+		<url-pattern>/smas.ASEditDevicesSelect</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>ASEditEventSchedulesAction</servlet-name>
+		<url-pattern>/smas.ASEditEventSchedulesAction</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASEditEventSchedulesEdit</servlet-name>
-    	<url-pattern>/smas.ASEditEventSchedulesEdit</url-pattern>
+		<servlet-name>ASEditEventSchedulesEdit</servlet-name>
+		<url-pattern>/smas.ASEditEventSchedulesEdit</url-pattern>
+	</servlet-mapping>
+	
+		<servlet-mapping>
+		<servlet-name>ASEditEventSchedulesSelect</servlet-name>
+		<url-pattern>/smas.ASEditEventSchedulesSelect</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASEditEventSchedulesSelect</servlet-name>
-    	<url-pattern>/smas.ASEditEventSchedulesSelect</url-pattern>
+		<servlet-name>ASEditSSOptionsAction</servlet-name>
+		<url-pattern>/smas.ASEditSSOptionsAction</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASEditAlarmSequencesAction</servlet-name>
-    	<url-pattern>/smas.ASEditAlarmSequencesAction</url-pattern>
+		<servlet-name>ASEditSSOptionsEdit</servlet-name>
+		<url-pattern>/smas.ASEditSSOptionsEdit</url-pattern>
 	</servlet-mapping>
 	
 	<servlet-mapping>
-    	<servlet-name>ASEditAlarmSequencesEdit</servlet-name>
-    	<url-pattern>/smas.ASEditAlarmSequencesEdit</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditAlarmSequencesSelect</servlet-name>
-    	<url-pattern>/smas.ASEditAlarmSequencesSelect</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditSSOptionsAction</servlet-name>
-    	<url-pattern>/smas.ASEditSSOptionsAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASEditSSOptionsEdit</servlet-name>
-    	<url-pattern>/smas.ASEditSSOptionsEdit</url-pattern>
-	</servlet-mapping>	
-	
-	<servlet-mapping>
-    	<servlet-name>ASControllerDiagnosticsAction</servlet-name>
-    	<url-pattern>/smas.ASControllerDiagnosticsAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASControllerDiagnosticsEdit</servlet-name>
-    	<url-pattern>/smas.ASControllerDiagnosticsEdit</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-    	<servlet-name>ASControllerDiagnosticsSelect</servlet-name>
-    	<url-pattern>/smas.ASControllerDiagnosticsSelect</url-pattern>
-	</servlet-mapping>
-	
-    <servlet-mapping>
     	<servlet-name>ASMainMenu</servlet-name>
     	<url-pattern>/smas.ASMainMenu</url-pattern>
 	</servlet-mapping>

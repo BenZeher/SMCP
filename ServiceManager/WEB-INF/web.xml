@@ -93,6 +93,297 @@
       </listener-class>
     </listener>
     
+    <!-- AP package: -->
+    <servlet>
+        <servlet-name>AP1099CPRSCodesEdit</servlet-name>
+        <servlet-class>smap.AP1099CPRSCodesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AP1099CPRSCodesSelection</servlet-name>
+        <servlet-class>smap.AP1099CPRSCodesSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APAccountSetsEdit</servlet-name>
+        <servlet-class>smap.APAccountSetsEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APAccountSetsSelection</servlet-name>
+        <servlet-class>smap.APAccountSetsSelection</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APAgedPayablesGenerate</servlet-name>
+        <servlet-class>smap.APAgedPayablesGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APAgedPayablesSelect</servlet-name>
+        <servlet-class>smap.APAgedPayablesSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APAutoCreatePaymentBatchAction</servlet-name>
+        <servlet-class>smap.APAutoCreatePaymentBatchAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APCheckRegisterGenerate</servlet-name>
+        <servlet-class>smap.APCheckRegisterGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APClearPostedBatchesAction</servlet-name>
+        <servlet-class>smap.APClearPostedBatchesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APClearPostedBatchesSelect</servlet-name>
+        <servlet-class>smap.APClearPostedBatchesSelect</servlet-class>
+    </servlet>    
+    
+    <servlet>
+        <servlet-name>APClearTransactionsAction</servlet-name>
+        <servlet-class>smap.APClearTransactionsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APClearTransactionsSelect</servlet-name>
+        <servlet-class>smap.APClearTransactionsSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APConfirmCheckPrintAction</servlet-name>
+        <servlet-class>smap.APConfirmCheckPrintAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APControlPaymentsAction</servlet-name>
+        <servlet-class>smap.APControlPaymentsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APControlPaymentsEdit</servlet-name>
+        <servlet-class>smap.APControlPaymentsEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APControlPaymentsSelect</servlet-name>
+        <servlet-class>smap.APControlPaymentsSelect</servlet-class>
+    </servlet>    
+    
+    <servlet>
+        <servlet-name>APConvertACCPAC</servlet-name>
+        <servlet-class>smap.APConvertACCPAC</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APConvertACCPACAction</servlet-name>
+        <servlet-class>smap.APConvertACCPACAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APCreatePaymentsReportEdit</servlet-name>
+        <servlet-class>smap.APCreatePaymentsReportEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APCreatePaymentsReportGenerate</servlet-name>
+        <servlet-class>smap.APCreatePaymentsReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APDisplayVendorInformation</servlet-name>
+        <servlet-class>smap.APDisplayVendorInformation</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APDisplayVendorSelection</servlet-name>
+        <servlet-class>smap.APDisplayVendorSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APDistributionCodesEdit</servlet-name>
+        <servlet-class>smap.APDistributionCodesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APDistributionCodesSelection</servlet-name>
+        <servlet-class>smap.APDistributionCodesSelection</servlet-class>
+    </servlet>
+
+   <servlet>
+        <servlet-name>APEditAPOptions</servlet-name>
+        <servlet-class>smap.APEditAPOptions</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditBatchesAction</servlet-name>
+        <servlet-class>smap.APEditBatchesAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditBatchesEdit</servlet-name>
+        <servlet-class>smap.APEditBatchesEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditBatchesSelect</servlet-name>
+        <servlet-class>smap.APEditBatchesSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditCheckFormsAction</servlet-name>
+        <servlet-class>smap.APEditCheckFormsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditCheckFormsEdit</servlet-name>
+        <servlet-class>smap.APEditCheckFormsEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditCheckFormsSelect</servlet-name>
+        <servlet-class>smap.APEditCheckFormsSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditInvoiceAction</servlet-name>
+        <servlet-class>smap.APEditInvoiceAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditInvoiceEdit</servlet-name>
+        <servlet-class>smap.APEditInvoiceEdit</servlet-class>
+    </servlet>
+    
+        <servlet>
+        <servlet-name>APEditPaymentAction</servlet-name>
+        <servlet-class>smap.APEditPaymentAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditPaymentEdit</servlet-name>
+        <servlet-class>smap.APEditPaymentEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditReversalAction</servlet-name>
+        <servlet-class>smap.APEditReversalAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditReversalEdit</servlet-name>
+        <servlet-class>smap.APEditReversalEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditVendorAction</servlet-name>
+        <servlet-class>smap.APEditVendorAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APEditVendorsEdit</servlet-name>
+        <servlet-class>smap.APEditVendorsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditVendorSelection</servlet-name>
+        <servlet-class>smap.APEditVendorSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditVendorTermsAction</servlet-name>
+        <servlet-class>smap.APEditVendorTermsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditVendorTermsEdit</servlet-name>
+        <servlet-class>smap.APEditVendorTermsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APEditVendorTermsSelect</servlet-name>
+        <servlet-class>smap.APEditVendorTermsSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APMainMenu</servlet-name>
+        <servlet-class>smap.APMainMenu</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APPrintChecksAction</servlet-name>
+        <servlet-class>smap.APPrintChecksAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APPrintChecksEdit</servlet-name>
+        <servlet-class>smap.APPrintChecksEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APResetPostingFlagAction</servlet-name>
+        <servlet-class>smap.APResetPostingFlagAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APResetPostingFlagSelect</servlet-name>
+        <servlet-class>smap.APResetPostingFlagSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APVendorGroupEdit</servlet-name>
+        <servlet-class>smap.APVendorGroupEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APVendorGroupSelection</servlet-name>
+        <servlet-class>smap.APVendorGroupSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APVendorNumberChangeAction</servlet-name>
+        <servlet-class>smap.APVendorNumberChangeAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APVendorNumberChangeSelect</servlet-name>
+        <servlet-class>smap.APVendorNumberChangeSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APVendorRemitToLocationEdit</servlet-name>
+        <servlet-class>smap.APVendorRemitToLocationEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APVendorRemitToLocationSelection</servlet-name>
+        <servlet-class>smap.APVendorRemitToLocationSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APVendorTransactionsGenerate</servlet-name>
+        <servlet-class>smap.APVendorTransactionsGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APVendorTransactionsSelect</servlet-name>
+        <servlet-class>smap.APVendorTransactionsSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>APViewCheckForm</servlet-name>
+        <servlet-class>smap.APViewCheckForm</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>APViewTransactionInformation</servlet-name>
+        <servlet-class>smap.APViewTransactionInformation</servlet-class>
+    </servlet>
+
     <!--Alarm system packages-->
 
     <servlet>
@@ -3421,303 +3712,6 @@
         <servlet-class>smic.ICUnderStockedItemReportSelection</servlet-class>
     </servlet>
 
-     <!-- smap package declarations: -->
-
-    <servlet>
-        <servlet-name>AP1099CPRSCodesEdit</servlet-name>
-        <servlet-class>smap.AP1099CPRSCodesEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AP1099CPRSCodesSelection</servlet-name>
-        <servlet-class>smap.AP1099CPRSCodesSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APAgedPayablesGenerate</servlet-name>
-        <servlet-class>smap.APAgedPayablesGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APAgedPayablesSelect</servlet-name>
-        <servlet-class>smap.APAgedPayablesSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APAutoCreatePaymentBatchAction</servlet-name>
-        <servlet-class>smap.APAutoCreatePaymentBatchAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APClearTransactionsAction</servlet-name>
-        <servlet-class>smap.APClearTransactionsAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APClearTransactionsSelect</servlet-name>
-        <servlet-class>smap.APClearTransactionsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APConfirmCheckPrintAction</servlet-name>
-        <servlet-class>smap.APConfirmCheckPrintAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APConvertACCPAC</servlet-name>
-        <servlet-class>smap.APConvertACCPAC</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APConvertACCPACAction</servlet-name>
-        <servlet-class>smap.APConvertACCPACAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APAccountSetsSelection</servlet-name>
-        <servlet-class>smap.APAccountSetsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APAccountSetsEdit</servlet-name>
-        <servlet-class>smap.APAccountSetsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APCheckRegisterGenerate</servlet-name>
-        <servlet-class>smap.APCheckRegisterGenerate</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APCheckRegisterReport</servlet-name>
-        <servlet-class>smap.APCheckRegisterReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APClearPostedBatchesAction</servlet-name>
-        <servlet-class>smap.APClearPostedBatchesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APClearPostedBatchesSelect</servlet-name>
-        <servlet-class>smap.APClearPostedBatchesSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APControlPaymentsAction</servlet-name>
-        <servlet-class>smap.APControlPaymentsAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APControlPaymentsEdit</servlet-name>
-        <servlet-class>smap.APControlPaymentsEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APControlPaymentsSelect</servlet-name>
-        <servlet-class>smap.APControlPaymentsSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APCreatePaymentsReportGenerate</servlet-name>
-        <servlet-class>smap.APCreatePaymentsReportGenerate</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APCreatePaymentsReportEdit</servlet-name>
-        <servlet-class>smap.APCreatePaymentsReportEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APDisplayVendorInformation</servlet-name>
-        <servlet-class>smap.APDisplayVendorInformation</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APDisplayVendorSelection</servlet-name>
-        <servlet-class>smap.APDisplayVendorSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APDistributionCodesEdit</servlet-name>
-        <servlet-class>smap.APDistributionCodesEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APDistributionCodesSelection</servlet-name>
-        <servlet-class>smap.APDistributionCodesSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditBatchesAction</servlet-name>
-        <servlet-class>smap.APEditBatchesAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditBatchesEdit</servlet-name>
-        <servlet-class>smap.APEditBatchesEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditBatchesSelect</servlet-name>
-        <servlet-class>smap.APEditBatchesSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditCheckFormsAction</servlet-name>
-        <servlet-class>smap.APEditCheckFormsAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditCheckFormsEdit</servlet-name>
-        <servlet-class>smap.APEditCheckFormsEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditCheckFormsSelect</servlet-name>
-        <servlet-class>smap.APEditCheckFormsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditInvoiceAction</servlet-name>
-        <servlet-class>smap.APEditInvoiceAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditInvoiceEdit</servlet-name>
-        <servlet-class>smap.APEditInvoiceEdit</servlet-class>
-    </servlet>
-    
-        <servlet>
-        <servlet-name>APEditPaymentAction</servlet-name>
-        <servlet-class>smap.APEditPaymentAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditPaymentEdit</servlet-name>
-        <servlet-class>smap.APEditPaymentEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditReversalAction</servlet-name>
-        <servlet-class>smap.APEditReversalAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditReversalEdit</servlet-name>
-        <servlet-class>smap.APEditReversalEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditVendorAction</servlet-name>
-        <servlet-class>smap.APEditVendorAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APEditVendorsEdit</servlet-name>
-        <servlet-class>smap.APEditVendorsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditVendorSelection</servlet-name>
-        <servlet-class>smap.APEditVendorSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditVendorTermsAction</servlet-name>
-        <servlet-class>smap.APEditVendorTermsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditVendorTermsEdit</servlet-name>
-        <servlet-class>smap.APEditVendorTermsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APEditVendorTermsSelect</servlet-name>
-        <servlet-class>smap.APEditVendorTermsSelect</servlet-class>
-    </servlet>
-
-   <servlet>
-        <servlet-name>APEditAPOptions</servlet-name>
-        <servlet-class>smap.APEditAPOptions</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APMainMenu</servlet-name>
-        <servlet-class>smap.APMainMenu</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APPrintChecksAction</servlet-name>
-        <servlet-class>smap.APPrintChecksAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APPrintChecksEdit</servlet-name>
-        <servlet-class>smap.APPrintChecksEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APResetPostingFlagAction</servlet-name>
-        <servlet-class>smap.APResetPostingFlagAction</servlet-class>
-    </servlet>
-    
-        <servlet>
-        <servlet-name>APResetPostingFlagSelect</servlet-name>
-        <servlet-class>smap.APResetPostingFlagSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APVendorGroupEdit</servlet-name>
-        <servlet-class>smap.APVendorGroupEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APVendorGroupSelection</servlet-name>
-        <servlet-class>smap.APVendorGroupSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APVendorNumberChangeAction</servlet-name>
-        <servlet-class>smap.APVendorNumberChangeAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APVendorNumberChangeSelect</servlet-name>
-        <servlet-class>smap.APVendorNumberChangeSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APVendorRemitToLocationSelection</servlet-name>
-        <servlet-class>smap.APVendorRemitToLocationSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APVendorRemitToLocationEdit</servlet-name>
-        <servlet-class>smap.APVendorRemitToLocationEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APVendorTransactionsGenerate</servlet-name>
-        <servlet-class>smap.APVendorTransactionsGenerate</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>APVendorTransactionsSelect</servlet-name>
-        <servlet-class>smap.APVendorTransactionsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APViewTransactionInformation</servlet-name>
-        <servlet-class>smap.APViewTransactionInformation</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>APViewCheckForm</servlet-name>
-        <servlet-class>smap.APViewCheckForm</servlet-class>
-    </servlet>
-    
      <!-- smfa package declarations: -->
 
     <servlet>
@@ -4093,6 +4087,298 @@
     </servlet>
 
     <!-- SERVLET MAPPINGS START HERE: -->
+    
+    <!-- smap package mappings: -->
+
+    <servlet-mapping>
+        <servlet-name>AP1099CPRSCodesEdit</servlet-name>
+        <url-pattern>/smap.AP1099CPRSCodesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AP1099CPRSCodesSelection</servlet-name>
+        <url-pattern>/smap.AP1099CPRSCodesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APAccountSetsEdit</servlet-name>
+        <url-pattern>/smap.APAccountSetsEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APAccountSetsSelection</servlet-name>
+        <url-pattern>/smap.APAccountSetsSelection</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APAgedPayablesGenerate</servlet-name>
+        <url-pattern>/smap.APAgedPayablesGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APAgedPayablesSelect</servlet-name>
+        <url-pattern>/smap.APAgedPayablesSelect</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APAutoCreatePaymentBatchAction</servlet-name>
+        <url-pattern>/smap.APAutoCreatePaymentBatchAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APCheckRegisterGenerate</servlet-name>
+        <url-pattern>/smap.APCheckRegisterGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APClearPostedBatchesAction</servlet-name>
+        <url-pattern>/smap.APClearPostedBatchesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APClearPostedBatchesSelect</servlet-name>
+        <url-pattern>/smap.APClearPostedBatchesSelect</url-pattern>
+    </servlet-mapping>    
+    
+    <servlet-mapping>
+        <servlet-name>APClearTransactionsAction</servlet-name>
+        <url-pattern>/smap.APClearTransactionsAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APClearTransactionsSelect</servlet-name>
+        <url-pattern>/smap.APClearTransactionsSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APConfirmCheckPrintAction</servlet-name>
+        <url-pattern>/smap.APConfirmCheckPrintAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APControlPaymentsAction</servlet-name>
+        <url-pattern>/smap.APControlPaymentsAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APControlPaymentsEdit</servlet-name>
+        <url-pattern>/smap.APControlPaymentsEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>APControlPaymentsSelect</servlet-name>
+        <url-pattern>/smap.APControlPaymentsSelect</url-pattern>
+    </servlet-mapping>    
+    
+    <servlet-mapping>
+        <servlet-name>APConvertACCPAC</servlet-name>
+        <url-pattern>/smap.APConvertACCPAC</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APConvertACCPACAction</servlet-name>
+        <url-pattern>/smap.APConvertACCPACAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APCreatePaymentsReportEdit</servlet-name>
+        <url-pattern>/smap.APCreatePaymentsReportEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APCreatePaymentsReportGenerate</servlet-name>
+        <url-pattern>/smap.APCreatePaymentsReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APDisplayVendorInformation</servlet-name>
+        <url-pattern>/smap.APDisplayVendorInformation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APDisplayVendorSelection</servlet-name>
+        <url-pattern>/smap.APDisplayVendorSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APDistributionCodesEdit</servlet-name>
+        <url-pattern>/smap.APDistributionCodesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>APDistributionCodesSelection</servlet-name>
+        <url-pattern>/smap.APDistributionCodesSelection</url-pattern>
+    </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditAPOptions</servlet-name>
+        <url-pattern>/smap.APEditAPOptions</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditBatchesAction</servlet-name>
+        <url-pattern>/smap.APEditBatchesAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditBatchesEdit</servlet-name>
+        <url-pattern>/smap.APEditBatchesEdit</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditBatchesSelect</servlet-name>
+        <url-pattern>/smap.APEditBatchesSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditCheckFormsAction</servlet-name>
+        <url-pattern>/smap.APEditCheckFormsAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditCheckFormsEdit</servlet-name>
+        <url-pattern>/smap.APEditCheckFormsEdit</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditCheckFormsSelect</servlet-name>
+        <url-pattern>/smap.APEditCheckFormsSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditInvoiceAction</servlet-name>
+        <url-pattern>/smap.APEditInvoiceAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditInvoiceEdit</servlet-name>
+        <url-pattern>/smap.APEditInvoiceEdit</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditPaymentAction</servlet-name>
+        <url-pattern>/smap.APEditPaymentAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditPaymentEdit</servlet-name>
+        <url-pattern>/smap.APEditPaymentEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditReversalAction</servlet-name>
+        <url-pattern>/smap.APEditReversalAction</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditReversalEdit</servlet-name>
+        <url-pattern>/smap.APEditReversalEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditVendorAction</servlet-name>
+        <url-pattern>/smap.APEditVendorAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APEditVendorsEdit</servlet-name>
+        <url-pattern>/smap.APEditVendorsEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditVendorSelection</servlet-name>
+        <url-pattern>/smap.APEditVendorSelection</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditVendorTermsAction</servlet-name>
+        <url-pattern>/smap.APEditVendorTermsAction</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditVendorTermsEdit</servlet-name>
+        <url-pattern>/smap.APEditVendorTermsEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APEditVendorTermsSelect</servlet-name>
+        <url-pattern>/smap.APEditVendorTermsSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APMainMenu</servlet-name>
+        <url-pattern>/smap.APMainMenu</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APPrintChecksAction</servlet-name>
+        <url-pattern>/smap.APPrintChecksAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APPrintChecksEdit</servlet-name>
+        <url-pattern>/smap.APPrintChecksEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APResetPostingFlagAction</servlet-name>
+        <url-pattern>/smap.APResetPostingFlagAction</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APResetPostingFlagSelect</servlet-name>
+        <url-pattern>/smap.APResetPostingFlagSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APVendorGroupEdit</servlet-name>
+        <url-pattern>/smap.APVendorGroupEdit</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APVendorGroupSelection</servlet-name>
+        <url-pattern>/smap.APVendorGroupSelection</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APVendorNumberChangeAction</servlet-name>
+        <url-pattern>/smap.APVendorNumberChangeAction</url-pattern>
+   </servlet-mapping>
+   
+   <servlet-mapping>
+        <servlet-name>APVendorNumberChangeSelect</servlet-name>
+        <url-pattern>/smap.APVendorNumberChangeSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APVendorRemitToLocationEdit</servlet-name>
+        <url-pattern>/smap.APVendorRemitToLocationEdit</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APVendorRemitToLocationSelection</servlet-name>
+        <url-pattern>/smap.APVendorRemitToLocationSelection</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APVendorTransactionsGenerate</servlet-name>
+        <url-pattern>/smap.APVendorTransactionsGenerate</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APVendorTransactionsSelect</servlet-name>
+        <url-pattern>/smap.APVendorTransactionsSelect</url-pattern>
+   </servlet-mapping>
+
+   <servlet-mapping>
+        <servlet-name>APViewCheckForm</servlet-name>
+        <url-pattern>/smap.APViewCheckForm</url-pattern>
+   </servlet-mapping>
+    
+   <servlet-mapping>
+        <servlet-name>APViewTransactionInformation</servlet-name>
+        <url-pattern>/smap.APViewTransactionInformation</url-pattern>
+   </servlet-mapping>
     
     <!--- smas package classes:-->
 
@@ -6862,7 +7148,6 @@
         <url-pattern>/smic.ICEditShipmentLine</url-pattern>
     </servlet-mapping>
 
-
     <servlet-mapping>
         <servlet-name>ICEditTransferEntry</servlet-name>
         <url-pattern>/smic.ICEditTransferEntry</url-pattern>
@@ -6882,8 +7167,6 @@
         <servlet-name>ICEditVendorItems</servlet-name>
         <url-pattern>/smic.ICEditVendorItems</url-pattern>
     </servlet-mapping>
-
-   
 
     <servlet-mapping>
         <servlet-name>ICEnterInvoiceAction</servlet-name>
@@ -7425,302 +7708,7 @@
         <url-pattern>/smic.ICUnderStockedItemReportSelection</url-pattern>
     </servlet-mapping>
 
-     <!-- smap package mappings: -->
 
-    <servlet-mapping>
-        <servlet-name>AP1099CPRSCodesEdit</servlet-name>
-        <url-pattern>/smap.AP1099CPRSCodesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AP1099CPRSCodesSelection</servlet-name>
-        <url-pattern>/smap.AP1099CPRSCodesSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APAgedPayablesGenerate</servlet-name>
-        <url-pattern>/smap.APAgedPayablesGenerate</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APAgedPayablesSelect</servlet-name>
-        <url-pattern>/smap.APAgedPayablesSelect</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APAutoCreatePaymentBatchAction</servlet-name>
-        <url-pattern>/smap.APAutoCreatePaymentBatchAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APConvertACCPAC</servlet-name>
-        <url-pattern>/smap.APConvertACCPAC</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APConvertACCPACAction</servlet-name>
-        <url-pattern>/smap.APConvertACCPACAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APAccountSetsSelection</servlet-name>
-        <url-pattern>/smap.APAccountSetsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APAccountSetsEdit</servlet-name>
-        <url-pattern>/smap.APAccountSetsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APCheckRegisterGenerate</servlet-name>
-        <url-pattern>/smap.APCheckRegisterGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APCheckRegisterReport</servlet-name>
-        <url-pattern>/smap.APCheckRegisterReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APClearPostedBatchesAction</servlet-name>
-        <url-pattern>/smap.APClearPostedBatchesAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APClearPostedBatchesSelect</servlet-name>
-        <url-pattern>/smap.APClearPostedBatchesSelect</url-pattern>
-    </servlet-mapping>
-
-   <servlet-mapping>
-        <servlet-name>APClearTransactionsAction</servlet-name>
-        <url-pattern>/smap.APClearTransactionsAction</url-pattern>
-    </servlet-mapping>
-
-   <servlet-mapping>
-        <servlet-name>APClearTransactionsSelect</servlet-name>
-        <url-pattern>/smap.APClearTransactionsSelect</url-pattern>
-    </servlet-mapping>
-
-   <servlet-mapping>
-        <servlet-name>APConfirmCheckPrintAction</servlet-name>
-        <url-pattern>/smap.APConfirmCheckPrintAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APControlPaymentsAction</servlet-name>
-        <url-pattern>/smap.APControlPaymentsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APControlPaymentsEdit</servlet-name>
-        <url-pattern>/smap.APControlPaymentsEdit</url-pattern>
-    </servlet-mapping>
- 
-    <servlet-mapping>
-        <servlet-name>APControlPaymentsSelect</servlet-name>
-        <url-pattern>/smap.APControlPaymentsSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APCreatePaymentsReportGenerate</servlet-name>
-        <url-pattern>/smap.APCreatePaymentsReportGenerate</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APCreatePaymentsReportEdit</servlet-name>
-        <url-pattern>/smap.APCreatePaymentsReportEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APDisplayVendorInformation</servlet-name>
-        <url-pattern>/smap.APDisplayVendorInformation</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APDisplayVendorSelection</servlet-name>
-        <url-pattern>/smap.APDisplayVendorSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APDistributionCodesEdit</servlet-name>
-        <url-pattern>/smap.APDistributionCodesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APDistributionCodesSelection</servlet-name>
-        <url-pattern>/smap.APDistributionCodesSelection</url-pattern>
-    </servlet-mapping>
-
-	<servlet-mapping>
-        <servlet-name>APEditBatchesAction</servlet-name>
-        <url-pattern>/smap.APEditBatchesAction</url-pattern>
-	</servlet-mapping>
-    
-	<servlet-mapping>
-        <servlet-name>APEditBatchesEdit</servlet-name>
-        <url-pattern>/smap.APEditBatchesEdit</url-pattern>
-	</servlet-mapping>
-    
-	<servlet-mapping>
-        <servlet-name>APEditBatchesSelect</servlet-name>
-        <url-pattern>/smap.APEditBatchesSelect</url-pattern>
-	</servlet-mapping>
-
-	<servlet-mapping>
-        <servlet-name>APEditCheckFormsAction</servlet-name>
-        <url-pattern>/smap.APEditCheckFormsAction</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-        <servlet-name>APEditCheckFormsEdit</servlet-name>
-        <url-pattern>/smap.APEditCheckFormsEdit</url-pattern>
-	</servlet-mapping>
-	
-	<servlet-mapping>
-        <servlet-name>APEditCheckFormsSelect</servlet-name>
-        <url-pattern>/smap.APEditCheckFormsSelect</url-pattern>
-	</servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditInvoiceAction</servlet-name>
-        <url-pattern>/smap.APEditInvoiceAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditInvoiceEdit</servlet-name>
-        <url-pattern>/smap.APEditInvoiceEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditPaymentAction</servlet-name>
-        <url-pattern>/smap.APEditPaymentAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APEditPaymentEdit</servlet-name>
-        <url-pattern>/smap.APEditPaymentEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditReversalAction</servlet-name>
-        <url-pattern>/smap.APEditReversalAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APEditReversalEdit</servlet-name>
-        <url-pattern>/smap.APEditReversalEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditVendorAction</servlet-name>
-        <url-pattern>/smap.APEditVendorAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APEditVendorsEdit</servlet-name>
-        <url-pattern>/smap.APEditVendorsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditVendorSelection</servlet-name>
-        <url-pattern>/smap.APEditVendorSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditVendorTermsAction</servlet-name>
-        <url-pattern>/smap.APEditVendorTermsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditVendorTermsEdit</servlet-name>
-        <url-pattern>/smap.APEditVendorTermsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditVendorTermsSelect</servlet-name>
-        <url-pattern>/smap.APEditVendorTermsSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APEditAPOptions</servlet-name>
-        <url-pattern>/smap.APEditAPOptions</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APMainMenu</servlet-name>
-        <url-pattern>/smap.APMainMenu</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APPrintChecksAction</servlet-name>
-        <url-pattern>/smap.APPrintChecksAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APPrintChecksEdit</servlet-name>
-        <url-pattern>/smap.APPrintChecksEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APResetPostingFlagSelect</servlet-name>
-        <url-pattern>/smap.APResetPostingFlagSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APResetPostingFlagAction</servlet-name>
-        <url-pattern>/smap.APResetPostingFlagAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APVendorGroupEdit</servlet-name>
-        <url-pattern>/smap.APVendorGroupEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APVendorGroupSelection</servlet-name>
-        <url-pattern>/smap.APVendorGroupSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APVendorNumberChangeAction</servlet-name>
-        <url-pattern>/smap.APVendorNumberChangeAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APVendorNumberChangeSelect</servlet-name>
-        <url-pattern>/smap.APVendorNumberChangeSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APVendorRemitToLocationSelection</servlet-name>
-        <url-pattern>/smap.APVendorRemitToLocationSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APVendorRemitToLocationEdit</servlet-name>
-        <url-pattern>/smap.APVendorRemitToLocationEdit</url-pattern>
-    </servlet-mapping>
- 
-    <servlet-mapping>
-        <servlet-name>APVendorTransactionsGenerate</servlet-name>
-        <url-pattern>/smap.APVendorTransactionsGenerate</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>APVendorTransactionsSelect</servlet-name>
-        <url-pattern>/smap.APVendorTransactionsSelect</url-pattern>
-    </servlet-mapping> 
-    
-    <servlet-mapping>
-        <servlet-name>APViewTransactionInformation</servlet-name>
-        <url-pattern>/smap.APViewTransactionInformation</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>APViewCheckForm</servlet-name>
-        <url-pattern>/smap.APViewCheckForm</url-pattern>
-    </servlet-mapping>
     
      <!-- smfa package mappings: -->
 

@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1445;
+	private static final int m_CurrentDatabaseVersion = 1448;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "1/23/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15043,6 +15043,39 @@ public class SMUpdateData extends java.lang.Object{
 				//Added by BJA 1/23/2020
 				SQL = "ALTER TABLE `materialreturns` "
 						+ "ADD iCreditDue int(11) NOT NULL default '0'"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1445:
+				//Added by BJA 1/23/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY sshiptoname varchar(120) NOT NULL default ''"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1446:
+				//Added by BJA 1/23/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY sbilltoname varchar(120) NOT NULL default ''"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1447:
+				//Added by BJA 1/23/2020
+				SQL = "ALTER TABLE `appointments` "
+						+ "MODIFY scontactname varchar(120) NOT NULL default ''"
 						;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;

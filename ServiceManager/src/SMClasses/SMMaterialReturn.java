@@ -49,6 +49,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public static final String Paramdatreturnsent = "datreturnsent";
 	public static final String Paramiinvoiceonhold = "iinvoiceonhold";
 	public static final String Parammvendorcomments = "mVendorComments";
+	public static final String Paramicreditdue = "iCreditDue";
 
 
 	private String m_slid;
@@ -78,6 +79,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 	private String m_datreturnsent;
 	private String m_sinvoiceonhold;
 	private String m_svendorcomments;
+	private String m_icreditdue;
 
 	private boolean bDebugMode = false;
 
@@ -270,6 +272,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_datreturnsent = clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTablematerialreturns.datreturnsent));
 				m_sinvoiceonhold = Long.toString(rs.getLong(SMTablematerialreturns.iinvoiceonhold));
 				m_svendorcomments = rs.getString(SMTablematerialreturns.mVendorComments).trim();
+				m_icreditdue = Integer.toString(rs.getInt(SMTablematerialreturns.iCreditDue));
 				rs.close();
 			} else {
 				rs.close();
@@ -372,6 +375,10 @@ public class SMMaterialReturn extends clsMasterEntry{
 		if (sCreditStatus.compareToIgnoreCase("") == 0){
 			sCreditStatus = "0";
 		}
+		String sCreditDue = getiCreditDue();
+		if (sCreditDue.compareToIgnoreCase("") == 0){
+			sCreditDue = "0";
+		}
 
 		//If it's a new record, do an insert:
 		if (getsNewRecord().compareToIgnoreCase("1") == 0){
@@ -401,6 +408,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 					+ ", " + SMTablematerialreturns.datreturnsent
 					+ ", " + SMTablematerialreturns.iinvoiceonhold
 					+ ", " + SMTablematerialreturns.mVendorComments
+					+ ", " + SMTablematerialreturns.iCreditDue
 					+ ") VALUES ("
 					+ "NOW()"
 					+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
@@ -432,6 +440,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", '" +  clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ", " + getsinvoiceonhold()
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsVendorComments().trim()) + "'"
+			+ ", " + sCreditDue
 			+ ")"
 			;
 		}else{
@@ -463,6 +472,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.datreturnsent  + " = '" + clsDateAndTimeConversions.stdDateStringToSQLDateString(getdatreturnsent().trim()) + "'"
 			+ ", " + SMTablematerialreturns.iinvoiceonhold + " = " + getsinvoiceonhold()
 			+ ", " + SMTablematerialreturns.mVendorComments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsVendorComments().trim()) + "'"
+			+ ", " + SMTablematerialreturns.iCreditDue + " = " + sCreditDue
 			+ " WHERE ("
 			+ "(" + SMTablematerialreturns.lid + " = " + getslid() + ")"
 			+ ")"
@@ -732,6 +742,13 @@ public class SMMaterialReturn extends clsMasterEntry{
 				){
 			sErrors += "'AP Invoice on Hold' status (" + m_sinvoiceonhold + ") is invalid.";
 		}
+		
+		if (
+				(m_icreditdue.compareToIgnoreCase("0") != 0)
+				&& (m_icreditdue.compareToIgnoreCase("1") != 0)
+				){
+			sErrors += "'Misc Credit Due' status (" + m_icreditdue + ") is invalid.";
+		}
 
 		m_bdcreditamt = m_bdcreditamt.replaceAll(",", "");
 		m_bdadjustmentamount = m_bdadjustmentamount.replaceAll(",", "");
@@ -903,6 +920,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 	public void setsVendorComments(String svendorcomments) {
 		m_svendorcomments = svendorcomments;
 	}
+	public String getiCreditDue() {
+		return m_icreditdue;
+	}
+	public void setiCreditDue(String iCreditDue) {
+		m_icreditdue = iCreditDue;
+	}
 	
 
 
@@ -954,5 +977,6 @@ public class SMMaterialReturn extends clsMasterEntry{
 		m_datreturnsent = EMPTY_DATE_STRING;
 		m_sinvoiceonhold = "0";
 		m_svendorcomments = "";
+		m_icreditdue = "0";
 	}
 }

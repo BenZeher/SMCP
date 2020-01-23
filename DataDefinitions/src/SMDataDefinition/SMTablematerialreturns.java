@@ -31,6 +31,7 @@ public class SMTablematerialreturns {
 	public static final String datreturnsent = "datreturnsent";
 	public static final String iinvoiceonhold = "iinvoiceonhold";
 	public static final String mVendorComments = "mVendorComments";
+	public static final String iCreditDue = "iCreditDue";
 
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
@@ -45,6 +46,7 @@ public class SMTablematerialreturns {
 	public static final int bdadjustmentamountlength = 19;
 	public static final int screditmemonumberlength = 24;
 	public static final int bdcreditamtlength = 19;
+	
 	
 	//Labels
 	public static final String sidlabel = "Material Return ID";
@@ -68,7 +70,10 @@ public class SMTablematerialreturns {
 	public static final String sreturnsentlabel = "Date Returned";
 	public static final String sinvoiceonholdlabel = "AP Invoice Was Put on Hold";
 	public static final String sVendorCommentsLabel = "Comments";
+	public static final String sCreditDueLabel = "Miscellaneous Credit Due?";
 
 	public static int STATUS_CREDITNOTEXPECTED = 1;
+	public static int STATUS_CREDITDUE = 0;
+	public static int STATUS_CREDITNOLONGERDUE = 1;
 
 }

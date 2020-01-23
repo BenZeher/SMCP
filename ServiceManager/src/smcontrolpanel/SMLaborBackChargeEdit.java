@@ -13,6 +13,7 @@ import javax.servlet.http.HttpSession;
 import SMClasses.SMLaborBackCharge;
 import SMClasses.SMOrderHeader;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecostcenters;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelaborbackcharges;
@@ -87,6 +88,7 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 	    }
 	    
 	    smedit.printHeaderTable();
+		smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());
 	    
 	    //Add a link to return to order:
 	    smedit.getPWOut().println(
@@ -456,6 +458,8 @@ public class SMLaborBackChargeEdit  extends HttpServlet {
 			+ ">&nbsp;" + createCalcTotalButton() + "</TD>"
 			+ "</TR>"
 		;
+		
+		s += "<TR class = \" " + SMMasterStyleSheetDefinitions.TABLE_HEADING + " \" ><TD ALIGN=LEFT COLSPAN=2><B>ACCOUNTING</B>:</TD>\n</TR>\n";
 		
 		//Credit received:
 		s += "<TR><TD ALIGN=RIGHT><B>" + "Credit Received:"  + " </B></TD>";

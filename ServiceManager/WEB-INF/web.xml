@@ -384,7 +384,419 @@
         <servlet-class>smap.APViewTransactionInformation</servlet-class>
     </servlet>
 
-    <!--Alarm system packages-->
+    <!--  smar package classes: -->
+   <servlet>
+        <servlet-name>ARActivityDisplay</servlet-name>
+        <servlet-class>smar.ARActivityDisplay</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARActivityInquiry</servlet-name>
+        <servlet-class>smar.ARActivityInquiry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARActivityReportGenerate</servlet-name>
+        <servlet-class>smar.ARActivityReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARAddEntry</servlet-name>
+        <servlet-class>smar.ARAddEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARAgedTrialBalanceReport</servlet-name>
+        <servlet-class>smar.ARAgedTrialBalanceReport</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARAgedTrialBalanceReportGenerate</servlet-name>
+        <servlet-class>smar.ARAgedTrialBalanceReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARAutoCreateCallSheetsHandler</servlet-name>
+        <servlet-class>smar.ARAutoCreateCallSheetsHandler</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARAutoCreateCallSheetsSelection</servlet-name>
+        <servlet-class>smar.ARAutoCreateCallSheetsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearMonthlyStatisticsAction</servlet-name>
+        <servlet-class>smar.ARClearMonthlyStatisticsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearMonthlyStatisticsSelection</servlet-name>
+        <servlet-class>smar.ARClearMonthlyStatisticsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearPaidTransactionsAction</servlet-name>
+        <servlet-class>smar.ARClearPaidTransactionsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearPaidTransactionsSelection</servlet-name>
+        <servlet-class>smar.ARClearPaidTransactionsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearPostedBatchesAction</servlet-name>
+        <servlet-class>smar.ARClearPostedBatchesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARClearPostedBatchesSelection</servlet-name>
+        <servlet-class>smar.ARClearPostedBatchesSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARCreateSMInvoiceBatch</servlet-name>
+        <servlet-class>smar.ARCreateSMInvoiceBatch</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARCustomerNumberChangeGenerate</servlet-name>
+        <servlet-class>smar.ARCustomerNumberChangeGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDeleteInactiveCustomersGenerate</servlet-name>
+        <servlet-class>smar.ARDeleteInactiveCustomersGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDeleteInactiveCustomersSelection</servlet-name>
+        <servlet-class>smar.ARDeleteInactiveCustomersSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDisplayCustomerInformation</servlet-name>
+        <servlet-class>smar.ARDisplayCustomerInformation</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDisplayCustomerSelect</servlet-name>
+        <servlet-class>smar.ARDisplayCustomerSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDisplayMatchingTransactions</servlet-name>
+        <servlet-class>smar.ARDisplayMatchingTransactions</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARDisplayStatistics</servlet-name>
+        <servlet-class>smar.ARDisplayStatistics</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditAccountSets</servlet-name>
+        <servlet-class>smar.AREditAccountSets</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditAccountSetsAction</servlet-name>
+        <servlet-class>smar.AREditAccountSetsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditAccountSetsEdit</servlet-name>
+        <servlet-class>smar.AREditAccountSetsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditApplyToEntry</servlet-name>
+        <servlet-class>smar.AREditApplyToEntry</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditAROptions</servlet-name>
+        <servlet-class>smar.AREditAROptions</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditBatches</servlet-name>
+        <servlet-class>smar.AREditBatches</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditBatchesEdit</servlet-name>
+        <servlet-class>smar.AREditBatchesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditBatchesUpdate</servlet-name>
+        <servlet-class>smar.AREditBatchesUpdate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCallSheetsAction</servlet-name>
+        <servlet-class>smar.AREditCallSheetsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCallSheetsEdit</servlet-name>
+        <servlet-class>smar.AREditCallSheetsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCallSheetsSelection</servlet-name>
+        <servlet-class>smar.AREditCallSheetsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCashEntry</servlet-name>
+        <servlet-class>smar.AREditCashEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCreditEntry</servlet-name>
+        <servlet-class>smar.AREditCreditEntry</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditCustomerGroups</servlet-name>
+        <servlet-class>smar.AREditCustomerGroups</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomerGroupsAction</servlet-name>
+        <servlet-class>smar.AREditCustomerGroupsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomerGroupsEdit</servlet-name>
+        <servlet-class>smar.AREditCustomerGroupsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomers</servlet-name>
+        <servlet-class>smar.AREditCustomers</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomersAction</servlet-name>
+        <servlet-class>smar.AREditCustomersAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomersEdit</servlet-name>
+        <servlet-class>smar.AREditCustomersEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomerShipTos</servlet-name>
+        <servlet-class>smar.AREditCustomerShipTos</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditCustomerShipTosAction</servlet-name>
+        <servlet-class>smar.AREditCustomerShipTosAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditCustomerShipTosEdit</servlet-name>
+        <servlet-class>smar.AREditCustomerShipTosEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditInvoiceEntry</servlet-name>
+        <servlet-class>smar.AREditInvoiceEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditMiscReceiptEntry</servlet-name>
+        <servlet-class>smar.AREditMiscReceiptEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditPriceListCodes</servlet-name>
+        <servlet-class>smar.AREditPriceListCodes</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditPriceListCodesAction</servlet-name>
+        <servlet-class>smar.AREditPriceListCodesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditPriceListCodesEdit</servlet-name>
+        <servlet-class>smar.AREditPriceListCodesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditRetainageEntry</servlet-name>
+        <servlet-class>smar.AREditRetainageEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditReversalEntry</servlet-name>
+        <servlet-class>smar.AREditReversalEntry</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditTerms</servlet-name>
+        <servlet-class>smar.AREditTerms</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>AREditTermsAction</servlet-name>
+        <servlet-class>smar.AREditTermsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREditTermsEdit</servlet-name>
+        <servlet-class>smar.AREditTermsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AREntryUpdate</servlet-name>
+        <servlet-class>smar.AREntryUpdate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARListCustomersOnHold</servlet-name>
+        <servlet-class>smar.ARListCustomersOnHold</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARListCustomersOnHoldGenerate</servlet-name>
+        <servlet-class>smar.ARListCustomersOnHoldGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARListInactiveCustomersGenerate</servlet-name>
+        <servlet-class>smar.ARListInactiveCustomersGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARListInactiveCustomersSelection</servlet-name>
+        <servlet-class>smar.ARListInactiveCustomersSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARMainMenu</servlet-name>
+        <servlet-class>smar.ARMainMenu</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARMiscCashReportGenerate</servlet-name>
+        <servlet-class>smar.ARMiscCashReportGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>AROptionsUpdate</servlet-name>
+        <servlet-class>smar.AROptionsUpdate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARPrintCallSheetsGenerate</servlet-name>
+        <servlet-class>smar.ARPrintCallSheetsGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARPrintCallSheetsSelection</servlet-name>
+        <servlet-class>smar.ARPrintCallSheetsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARPrintPostingJournal</servlet-name>
+        <servlet-class>smar.ARPrintPostingJournal</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARPrintStatementsGenerate</servlet-name>
+        <servlet-class>smar.ARPrintStatementsGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARPrintStatementsSelection</servlet-name>
+        <servlet-class>smar.ARPrintStatementsSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARResetPostingFlag</servlet-name>
+        <servlet-class>smar.ARResetPostingFlag</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ARResetPostingFlagAction</servlet-name>
+        <servlet-class>smar.ARResetPostingFlagAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectCustomerStatistics</servlet-name>
+        <servlet-class>smar.ARSelectCustomerStatistics</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectDocID</servlet-name>
+        <servlet-class>smar.ARSelectDocID</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectForActivityReport</servlet-name>
+        <servlet-class>smar.ARSelectForActivityReport</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectForCustomerNumberChange</servlet-name>
+        <servlet-class>smar.ARSelectForCustomerNumberChange</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectForMiscCashReport</servlet-name>
+        <servlet-class>smar.ARSelectForMiscCashReport</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSelectForPostingJournal</servlet-name>
+        <servlet-class>smar.ARSelectForPostingJournal</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSetInactiveCustomersAction</servlet-name>
+        <servlet-class>smar.ARSetInactiveCustomersAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSetInactiveCustomersGenerate</servlet-name>
+        <servlet-class>smar.ARSetInactiveCustomersGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARSetInactiveCustomersSelection</servlet-name>
+        <servlet-class>smar.ARSetInactiveCustomersSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARViewChronLogGenerate</servlet-name>
+        <servlet-class>smar.ARViewChronLogGenerate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARViewChronLogSelection</servlet-name>
+        <servlet-class>smar.ARViewChronLogSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARYearEndProcessingAction</servlet-name>
+        <servlet-class>smar.ARYearEndProcessingAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ARYearEndProcessingSelection</servlet-name>
+        <servlet-class>smar.ARYearEndProcessingSelection</servlet-class>
+    </servlet>
+
+
+    <!--Alarm system packages (smas)-->
 
     <servlet>
 		<servlet-name>ASActivateAlarmsAction</servlet-name>
@@ -561,7 +973,6 @@
 		<servlet-class>smas.ASControllerDiagnosticsSelect</servlet-class>
 	</servlet>
 	
-	
 	<servlet>
     	<servlet-name>ASMainMenu</servlet-name>
     	<servlet-class>smas.ASMainMenu</servlet-class>
@@ -645,581 +1056,7 @@
         <servlet-class>smbk.BKMainMenu</servlet-class>
     </servlet>	
 
-    <!--  smar package classes: -->
-    <servlet>
-        <servlet-name>ARAccountSet</servlet-name>
-        <servlet-class>smar.ARAccountSet</servlet-class>
-    </servlet>
-
-   <servlet>
-        <servlet-name>ARActivityDisplay</servlet-name>
-        <servlet-class>smar.ARActivityDisplay</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARActivityInquiry</servlet-name>
-        <servlet-class>smar.ARActivityInquiry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARActivityReport</servlet-name>
-        <servlet-class>smar.ARActivityReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARActivityReportGenerate</servlet-name>
-        <servlet-class>smar.ARActivityReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARAddEntry</servlet-name>
-        <servlet-class>smar.ARAddEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARAgedTrialBalanceReport</servlet-name>
-        <servlet-class>smar.ARAgedTrialBalanceReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARAgedTrialBalanceReportGenerate</servlet-name>
-        <servlet-class>smar.ARAgedTrialBalanceReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARAutoCreateCallSheetsHandler</servlet-name>
-        <servlet-class>smar.ARAutoCreateCallSheetsHandler</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARAutoCreateCallSheetsSelection</servlet-name>
-        <servlet-class>smar.ARAutoCreateCallSheetsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARBatch</servlet-name>
-        <servlet-class>smar.ARBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARBatchTypes</servlet-name>
-        <servlet-class>smar.ARBatchTypes</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCallSheet</servlet-name>
-        <servlet-class>smar.ARCallSheet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARChronLog</servlet-name>
-        <servlet-class>smar.ARChronLog</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClassNames</servlet-name>
-        <servlet-class>smar.ARClassNames</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearMonthlyStatisticsAction</servlet-name>
-        <servlet-class>smar.ARClearMonthlyStatisticsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearMonthlyStatisticsSelection</servlet-name>
-        <servlet-class>smar.ARClearMonthlyStatisticsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearPaidTransactionsAction</servlet-name>
-        <servlet-class>smar.ARClearPaidTransactionsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearPaidTransactionsSelection</servlet-name>
-        <servlet-class>smar.ARClearPaidTransactionsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearPostedBatchesAction</servlet-name>
-        <servlet-class>smar.ARClearPostedBatchesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARClearPostedBatchesSelection</servlet-name>
-        <servlet-class>smar.ARClearPostedBatchesSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCreateEntryForm</servlet-name>
-        <servlet-class>smar.ARCreateEntryForm</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCreateSMInvoiceBatch</servlet-name>
-        <servlet-class>smar.ARCreateSMInvoiceBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomer</servlet-name>
-        <servlet-class>smar.ARCustomer</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomerGroup</servlet-name>
-        <servlet-class>smar.ARCustomerGroup</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomerNumberChange</servlet-name>
-        <servlet-class>smar.ARCustomerNumberChange</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomerNumberChangeGenerate</servlet-name>
-        <servlet-class>smar.ARCustomerNumberChangeGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomerShipTo</servlet-name>
-        <servlet-class>smar.ARCustomerShipTo</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARCustomerStatistics</servlet-name>
-        <servlet-class>smar.ARCustomerStatistics</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDeleteInactiveCustomersGenerate</servlet-name>
-        <servlet-class>smar.ARDeleteInactiveCustomersGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDeleteInactiveCustomersSelection</servlet-name>
-        <servlet-class>smar.ARDeleteInactiveCustomersSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDisplayCustomerInformation</servlet-name>
-        <servlet-class>smar.ARDisplayCustomerInformation</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDisplayCustomerSelect</servlet-name>
-        <servlet-class>smar.ARDisplayCustomerSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDisplayMatchingTransactions</servlet-name>
-        <servlet-class>smar.ARDisplayMatchingTransactions</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDisplayStatistics</servlet-name>
-        <servlet-class>smar.ARDisplayStatistics</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARDocumentTypes</servlet-name>
-        <servlet-class>smar.ARDocumentTypes</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditAccountSetsAction</servlet-name>
-        <servlet-class>smar.AREditAccountSetsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditAccountSets</servlet-name>
-        <servlet-class>smar.AREditAccountSets</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditAccountSetsEdit</servlet-name>
-        <servlet-class>smar.AREditAccountSetsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditAdjustmentEntry</servlet-name>
-        <servlet-class>smar.AREditAdjustmentEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditApplyToEntry</servlet-name>
-        <servlet-class>smar.AREditApplyToEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditAROptions</servlet-name>
-        <servlet-class>smar.AREditAROptions</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditBatches</servlet-name>
-        <servlet-class>smar.AREditBatches</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditBatchesEdit</servlet-name>
-        <servlet-class>smar.AREditBatchesEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditBatchesUpdate</servlet-name>
-        <servlet-class>smar.AREditBatchesUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCallSheetsAction</servlet-name>
-        <servlet-class>smar.AREditCallSheetsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCallSheetsEdit</servlet-name>
-        <servlet-class>smar.AREditCallSheetsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCallSheetsSelection</servlet-name>
-        <servlet-class>smar.AREditCallSheetsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCashEntry</servlet-name>
-        <servlet-class>smar.AREditCashEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCreditEntry</servlet-name>
-        <servlet-class>smar.AREditCreditEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerGroupsAction</servlet-name>
-        <servlet-class>smar.AREditCustomerGroupsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerGroups</servlet-name>
-        <servlet-class>smar.AREditCustomerGroups</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerGroupsEdit</servlet-name>
-        <servlet-class>smar.AREditCustomerGroupsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomersAction</servlet-name>
-        <servlet-class>smar.AREditCustomersAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomers</servlet-name>
-        <servlet-class>smar.AREditCustomers</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomersEdit</servlet-name>
-        <servlet-class>smar.AREditCustomersEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerShipTosAction</servlet-name>
-        <servlet-class>smar.AREditCustomerShipTosAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerShipTos</servlet-name>
-        <servlet-class>smar.AREditCustomerShipTos</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditCustomerShipTosEdit</servlet-name>
-        <servlet-class>smar.AREditCustomerShipTosEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditInvoiceEntry</servlet-name>
-        <servlet-class>smar.AREditInvoiceEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditMiscAdjustmentEntry</servlet-name>
-        <servlet-class>smar.AREditMiscAdjustmentEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditMiscReceiptEntry</servlet-name>
-        <servlet-class>smar.AREditMiscReceiptEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditPriceListCodesAction</servlet-name>
-        <servlet-class>smar.AREditPriceListCodesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditPriceListCodes</servlet-name>
-        <servlet-class>smar.AREditPriceListCodes</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditPriceListCodesEdit</servlet-name>
-        <servlet-class>smar.AREditPriceListCodesEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditRetainageEntry</servlet-name>
-        <servlet-class>smar.AREditRetainageEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditReversalEntry</servlet-name>
-        <servlet-class>smar.AREditReversalEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditTermsAction</servlet-name>
-        <servlet-class>smar.AREditTermsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditTerms</servlet-name>
-        <servlet-class>smar.AREditTerms</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREditTermsEdit</servlet-name>
-        <servlet-class>smar.AREditTermsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREntry</servlet-name>
-        <servlet-class>smar.AREntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREntryInput</servlet-name>
-        <servlet-class>smar.AREntryInput</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AREntryUpdate</servlet-name>
-        <servlet-class>smar.AREntryUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARImportSMInvoices</servlet-name>
-        <servlet-class>smar.ARImportSMInvoices</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARInactiveCustomersReport</servlet-name>
-        <servlet-class>smar.ARInactiveCustomersReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARLine</servlet-name>
-        <servlet-class>smar.ARLine</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARLineInput</servlet-name>
-        <servlet-class>smar.ARLineInput</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARListCustomersOnHold</servlet-name>
-        <servlet-class>smar.ARListCustomersOnHold</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARListCustomersOnHoldGenerate</servlet-name>
-        <servlet-class>smar.ARListCustomersOnHoldGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARListCustomersOnHoldReport</servlet-name>
-        <servlet-class>smar.ARListCustomersOnHoldReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARListInactiveCustomersGenerate</servlet-name>
-        <servlet-class>smar.ARListInactiveCustomersGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARListInactiveCustomersSelection</servlet-name>
-        <servlet-class>smar.ARListInactiveCustomersSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARMainMenu</servlet-name>
-        <servlet-class>smar.ARMainMenu</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARMiscCashReport</servlet-name>
-        <servlet-class>smar.ARMiscCashReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARMiscCashReportGenerate</servlet-name>
-        <servlet-class>smar.ARMiscCashReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARMonthlyStatistics</servlet-name>
-        <servlet-class>smar.ARMonthlyStatistics</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AROptions</servlet-name>
-        <servlet-class>smar.AROptions</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>AROptionsUpdate</servlet-name>
-        <servlet-class>smar.AROptionsUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPostingJournal</servlet-name>
-        <servlet-class>smar.ARPostingJournal</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintCallSheetsGenerate</servlet-name>
-        <servlet-class>smar.ARPrintCallSheetsGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintCallSheetsReport</servlet-name>
-        <servlet-class>smar.ARPrintCallSheetsReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintCallSheetsSelection</servlet-name>
-        <servlet-class>smar.ARPrintCallSheetsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintPostingJournal</servlet-name>
-        <servlet-class>smar.ARPrintPostingJournal</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintStatementsGenerate</servlet-name>
-        <servlet-class>smar.ARPrintStatementsGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARPrintStatementsSelection</servlet-name>
-        <servlet-class>smar.ARPrintStatementsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARResetPostingFlagAction</servlet-name>
-        <servlet-class>smar.ARResetPostingFlagAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARResetPostingFlag</servlet-name>
-        <servlet-class>smar.ARResetPostingFlag</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectCustomerStatistics</servlet-name>
-        <servlet-class>smar.ARSelectCustomerStatistics</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectDocID</servlet-name>
-        <servlet-class>smar.ARSelectDocID</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectForActivityReport</servlet-name>
-        <servlet-class>smar.ARSelectForActivityReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectForCustomerNumberChange</servlet-name>
-        <servlet-class>smar.ARSelectForCustomerNumberChange</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectForMiscCashReport</servlet-name>
-        <servlet-class>smar.ARSelectForMiscCashReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSelectForPostingJournal</servlet-name>
-        <servlet-class>smar.ARSelectForPostingJournal</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSetInactiveCustomersAction</servlet-name>
-        <servlet-class>smar.ARSetInactiveCustomersAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSetInactiveCustomersGenerate</servlet-name>
-        <servlet-class>smar.ARSetInactiveCustomersGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSetInactiveCustomersSelection</servlet-name>
-        <servlet-class>smar.ARSetInactiveCustomersSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARSQLs</servlet-name>
-        <servlet-class>smar.ARSQLs</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARTerms</servlet-name>
-        <servlet-class>smar.ARTerms</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARTransaction</servlet-name>
-        <servlet-class>smar.ARTransaction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARUtilities</servlet-name>
-        <servlet-class>smar.ARUtilities</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARViewChronLogGenerate</servlet-name>
-        <servlet-class>smar.ARViewChronLogGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARViewChronLogSelection</servlet-name>
-        <servlet-class>smar.ARViewChronLogSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARYearEndProcess</servlet-name>
-        <servlet-class>smar.ARYearEndProcess</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARYearEndProcessingAction</servlet-name>
-        <servlet-class>smar.ARYearEndProcessingAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ARYearEndProcessingSelection</servlet-name>
-        <servlet-class>smar.ARYearEndProcessingSelection</servlet-class>
-    </servlet>
+	<!--  smclasses declarations -->
 
     <servlet>
         <servlet-name>FinderResults</servlet-name>
@@ -1230,37 +1067,6 @@
         <servlet-name>ObjectFinder</servlet-name>
         <servlet-class>SMClasses.ObjectFinder</servlet-class>
     </servlet>
-
-    <servlet>
-        <servlet-name>SMGLExport</servlet-name>
-        <servlet-class>smar.SMGLExport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMGLExportDetail</servlet-name>
-        <servlet-class>smar.SMGLExportDetail</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>SMGLExportHeader</servlet-name>
-        <servlet-class>smar.SMGLExportHeader</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMOption</servlet-name>
-        <servlet-class>smar.SMOption</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMOptionInput</servlet-name>
-        <servlet-class>smar.SMOptionInput</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMPriceListCode</servlet-name>
-        <servlet-class>smar.SMPriceListCode</servlet-class>
-    </servlet>
-
 
     <!-- smcontrolpanel declarations: -->
 
@@ -4380,6 +4186,417 @@
         <url-pattern>/smap.APViewTransactionInformation</url-pattern>
    </servlet-mapping>
     
+   <!--- smar package classes:-->
+    <servlet-mapping>
+        <servlet-name>ARActivityDisplay</servlet-name>
+       <url-pattern>/smar.ARActivityDisplay</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARActivityInquiry</servlet-name>
+       <url-pattern>/smar.ARActivityInquiry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARActivityReportGenerate</servlet-name>
+       <url-pattern>/smar.ARActivityReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARAddEntry</servlet-name>
+       <url-pattern>/smar.ARAddEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARAgedTrialBalanceReport</servlet-name>
+       <url-pattern>/smar.ARAgedTrialBalanceReport</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARAgedTrialBalanceReportGenerate</servlet-name>
+       <url-pattern>/smar.ARAgedTrialBalanceReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARAutoCreateCallSheetsHandler</servlet-name>
+       <url-pattern>/smar.ARAutoCreateCallSheetsHandler</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARAutoCreateCallSheetsSelection</servlet-name>
+       <url-pattern>/smar.ARAutoCreateCallSheetsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearMonthlyStatisticsAction</servlet-name>
+       <url-pattern>/smar.ARClearMonthlyStatisticsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearMonthlyStatisticsSelection</servlet-name>
+       <url-pattern>/smar.ARClearMonthlyStatisticsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearPaidTransactionsAction</servlet-name>
+       <url-pattern>/smar.ARClearPaidTransactionsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearPaidTransactionsSelection</servlet-name>
+       <url-pattern>/smar.ARClearPaidTransactionsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearPostedBatchesAction</servlet-name>
+       <url-pattern>/smar.ARClearPostedBatchesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARClearPostedBatchesSelection</servlet-name>
+       <url-pattern>/smar.ARClearPostedBatchesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARCreateSMInvoiceBatch</servlet-name>
+       <url-pattern>/smar.ARCreateSMInvoiceBatch</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARCustomerNumberChangeGenerate</servlet-name>
+       <url-pattern>/smar.ARCustomerNumberChangeGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDeleteInactiveCustomersGenerate</servlet-name>
+       <url-pattern>/smar.ARDeleteInactiveCustomersGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDeleteInactiveCustomersSelection</servlet-name>
+       <url-pattern>/smar.ARDeleteInactiveCustomersSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDisplayCustomerInformation</servlet-name>
+       <url-pattern>/smar.ARDisplayCustomerInformation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDisplayCustomerSelect</servlet-name>
+       <url-pattern>/smar.ARDisplayCustomerSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDisplayMatchingTransactions</servlet-name>
+       <url-pattern>/smar.ARDisplayMatchingTransactions</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARDisplayStatistics</servlet-name>
+       <url-pattern>/smar.ARDisplayStatistics</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditAccountSets</servlet-name>
+       <url-pattern>/smar.AREditAccountSets</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditAccountSetsAction</servlet-name>
+       <url-pattern>/smar.AREditAccountSetsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditAccountSetsEdit</servlet-name>
+       <url-pattern>/smar.AREditAccountSetsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditApplyToEntry</servlet-name>
+       <url-pattern>/smar.AREditApplyToEntry</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditAROptions</servlet-name>
+       <url-pattern>/smar.AREditAROptions</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditBatches</servlet-name>
+       <url-pattern>/smar.AREditBatches</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditBatchesEdit</servlet-name>
+       <url-pattern>/smar.AREditBatchesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditBatchesUpdate</servlet-name>
+       <url-pattern>/smar.AREditBatchesUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCallSheetsAction</servlet-name>
+       <url-pattern>/smar.AREditCallSheetsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCallSheetsEdit</servlet-name>
+       <url-pattern>/smar.AREditCallSheetsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCallSheetsSelection</servlet-name>
+       <url-pattern>/smar.AREditCallSheetsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCashEntry</servlet-name>
+       <url-pattern>/smar.AREditCashEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCreditEntry</servlet-name>
+       <url-pattern>/smar.AREditCreditEntry</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditCustomerGroups</servlet-name>
+       <url-pattern>/smar.AREditCustomerGroups</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomerGroupsAction</servlet-name>
+       <url-pattern>/smar.AREditCustomerGroupsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomerGroupsEdit</servlet-name>
+       <url-pattern>/smar.AREditCustomerGroupsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomers</servlet-name>
+       <url-pattern>/smar.AREditCustomers</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomersAction</servlet-name>
+       <url-pattern>/smar.AREditCustomersAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomersEdit</servlet-name>
+       <url-pattern>/smar.AREditCustomersEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomerShipTos</servlet-name>
+       <url-pattern>/smar.AREditCustomerShipTos</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditCustomerShipTosAction</servlet-name>
+       <url-pattern>/smar.AREditCustomerShipTosAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditCustomerShipTosEdit</servlet-name>
+       <url-pattern>/smar.AREditCustomerShipTosEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditInvoiceEntry</servlet-name>
+       <url-pattern>/smar.AREditInvoiceEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditMiscReceiptEntry</servlet-name>
+       <url-pattern>/smar.AREditMiscReceiptEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditPriceListCodes</servlet-name>
+       <url-pattern>/smar.AREditPriceListCodes</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditPriceListCodesAction</servlet-name>
+       <url-pattern>/smar.AREditPriceListCodesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditPriceListCodesEdit</servlet-name>
+       <url-pattern>/smar.AREditPriceListCodesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditRetainageEntry</servlet-name>
+       <url-pattern>/smar.AREditRetainageEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditReversalEntry</servlet-name>
+       <url-pattern>/smar.AREditReversalEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditTerms</servlet-name>
+       <url-pattern>/smar.AREditTerms</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>AREditTermsAction</servlet-name>
+       <url-pattern>/smar.AREditTermsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREditTermsEdit</servlet-name>
+       <url-pattern>/smar.AREditTermsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AREntryUpdate</servlet-name>
+       <url-pattern>/smar.AREntryUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARListCustomersOnHold</servlet-name>
+       <url-pattern>/smar.ARListCustomersOnHold</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARListCustomersOnHoldGenerate</servlet-name>
+       <url-pattern>/smar.ARListCustomersOnHoldGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARListInactiveCustomersGenerate</servlet-name>
+       <url-pattern>/smar.ARListInactiveCustomersGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARListInactiveCustomersSelection</servlet-name>
+       <url-pattern>/smar.ARListInactiveCustomersSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARMainMenu</servlet-name>
+       <url-pattern>/smar.ARMainMenu</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARMiscCashReportGenerate</servlet-name>
+       <url-pattern>/smar.ARMiscCashReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>AROptionsUpdate</servlet-name>
+       <url-pattern>/smar.AROptionsUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARPrintCallSheetsGenerate</servlet-name>
+       <url-pattern>/smar.ARPrintCallSheetsGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARPrintCallSheetsSelection</servlet-name>
+       <url-pattern>/smar.ARPrintCallSheetsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARPrintPostingJournal</servlet-name>
+       <url-pattern>/smar.ARPrintPostingJournal</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARPrintStatementsGenerate</servlet-name>
+       <url-pattern>/smar.ARPrintStatementsGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARPrintStatementsSelection</servlet-name>
+       <url-pattern>/smar.ARPrintStatementsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARResetPostingFlag</servlet-name>
+       <url-pattern>/smar.ARResetPostingFlag</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ARResetPostingFlagAction</servlet-name>
+       <url-pattern>/smar.ARResetPostingFlagAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectCustomerStatistics</servlet-name>
+       <url-pattern>/smar.ARSelectCustomerStatistics</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectDocID</servlet-name>
+       <url-pattern>/smar.ARSelectDocID</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectForActivityReport</servlet-name>
+       <url-pattern>/smar.ARSelectForActivityReport</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectForCustomerNumberChange</servlet-name>
+       <url-pattern>/smar.ARSelectForCustomerNumberChange</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectForMiscCashReport</servlet-name>
+       <url-pattern>/smar.ARSelectForMiscCashReport</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSelectForPostingJournal</servlet-name>
+       <url-pattern>/smar.ARSelectForPostingJournal</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSetInactiveCustomersAction</servlet-name>
+       <url-pattern>/smar.ARSetInactiveCustomersAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSetInactiveCustomersGenerate</servlet-name>
+       <url-pattern>/smar.ARSetInactiveCustomersGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARSetInactiveCustomersSelection</servlet-name>
+       <url-pattern>/smar.ARSetInactiveCustomersSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARViewChronLogGenerate</servlet-name>
+       <url-pattern>/smar.ARViewChronLogGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARViewChronLogSelection</servlet-name>
+       <url-pattern>/smar.ARViewChronLogSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARYearEndProcessingAction</servlet-name>
+       <url-pattern>/smar.ARYearEndProcessingAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ARYearEndProcessingSelection</servlet-name>
+       <url-pattern>/smar.ARYearEndProcessingSelection</url-pattern>
+    </servlet-mapping>
+    
     <!--- smas package classes:-->
 
     <servlet-mapping>
@@ -4482,7 +4699,7 @@
     	<url-pattern>/smas.ASEditControllersEdit</url-pattern>
 	</servlet-mapping>
 	
-   <servlet-mapping>
+    <servlet-mapping>
     	<servlet-name>ASEditControllersSelect</servlet-name>
     	<url-pattern>/smas.ASEditControllersSelect</url-pattern>
 	</servlet-mapping>
@@ -4639,623 +4856,6 @@
     <servlet-mapping>
         <servlet-name>BKMainMenu</servlet-name>
         <url-pattern>/smbk.BKMainMenu</url-pattern>
-    </servlet-mapping>
-
-    <!-- - smar package classes: -->
-
-    <servlet-mapping>
-        <servlet-name>ARAccountSet</servlet-name>
-        <url-pattern>/smar.ARAccountSet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARActivityDisplay</servlet-name>
-        <url-pattern>/smar.ARActivityDisplay</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARActivityInquiry</servlet-name>
-        <url-pattern>/smar.ARActivityInquiry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARActivityReport</servlet-name>
-        <url-pattern>/smar.ARActivityReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARActivityReportGenerate</servlet-name>
-        <url-pattern>/smar.ARActivityReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARAddEntry</servlet-name>
-        <url-pattern>/smar.ARAddEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARAgedTrialBalanceReport</servlet-name>
-        <url-pattern>/smar.ARAgedTrialBalanceReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARAgedTrialBalanceReportGenerate</servlet-name>
-        <url-pattern>/smar.ARAgedTrialBalanceReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARAutoCreateCallSheetsHandler</servlet-name>
-        <url-pattern>/smar.ARAutoCreateCallSheetsHandler</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARAutoCreateCallSheetsSelection</servlet-name>
-        <url-pattern>/smar.ARAutoCreateCallSheetsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARBatch</servlet-name>
-        <url-pattern>/smar.ARBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARBatchTypes</servlet-name>
-        <url-pattern>/smar.ARBatchTypes</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCallSheet</servlet-name>
-        <url-pattern>/smar.ARCallSheet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARChronLog</servlet-name>
-        <url-pattern>/smar.ARChronLog</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClassNames</servlet-name>
-        <url-pattern>/smar.ARClassNames</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearMonthlyStatisticsAction</servlet-name>
-        <url-pattern>/smar.ARClearMonthlyStatisticsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearMonthlyStatisticsSelection</servlet-name>
-        <url-pattern>/smar.ARClearMonthlyStatisticsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearPaidTransactionsAction</servlet-name>
-        <url-pattern>/smar.ARClearPaidTransactionsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearPaidTransactionsSelection</servlet-name>
-        <url-pattern>/smar.ARClearPaidTransactionsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearPostedBatchesAction</servlet-name>
-        <url-pattern>/smar.ARClearPostedBatchesAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARClearPostedBatchesSelection</servlet-name>
-        <url-pattern>/smar.ARClearPostedBatchesSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCreateEntryForm</servlet-name>
-        <url-pattern>/smar.ARCreateEntryForm</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCreateSMInvoiceBatch</servlet-name>
-        <url-pattern>/smar.ARCreateSMInvoiceBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomer</servlet-name>
-        <url-pattern>/smar.ARCustomer</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomerGroup</servlet-name>
-        <url-pattern>/smar.ARCustomerGroup</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomerNumberChange</servlet-name>
-        <url-pattern>/smar.ARCustomerNumberChange</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomerNumberChangeGenerate</servlet-name>
-        <url-pattern>/smar.ARCustomerNumberChangeGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomerShipTo</servlet-name>
-        <url-pattern>/smar.ARCustomerShipTo</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARCustomerStatistics</servlet-name>
-        <url-pattern>/smar.ARCustomerStatistics</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDeleteInactiveCustomersGenerate</servlet-name>
-        <url-pattern>/smar.ARDeleteInactiveCustomersGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDeleteInactiveCustomersSelection</servlet-name>
-        <url-pattern>/smar.ARDeleteInactiveCustomersSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDisplayCustomerInformation</servlet-name>
-        <url-pattern>/smar.ARDisplayCustomerInformation</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDisplayCustomerSelect</servlet-name>
-        <url-pattern>/smar.ARDisplayCustomerSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDisplayMatchingTransactions</servlet-name>
-        <url-pattern>/smar.ARDisplayMatchingTransactions</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDisplayStatistics</servlet-name>
-        <url-pattern>/smar.ARDisplayStatistics</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARDocumentTypes</servlet-name>
-        <url-pattern>/smar.ARDocumentTypes</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditAccountSetsAction</servlet-name>
-        <url-pattern>/smar.AREditAccountSetsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditAccountSets</servlet-name>
-        <url-pattern>/smar.AREditAccountSets</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditAccountSetsEdit</servlet-name>
-        <url-pattern>/smar.AREditAccountSetsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditAdjustmentEntry</servlet-name>
-        <url-pattern>/smar.AREditAdjustmentEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditApplyToEntry</servlet-name>
-        <url-pattern>/smar.AREditApplyToEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditAROptions</servlet-name>
-        <url-pattern>/smar.AREditAROptions</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditBatches</servlet-name>
-        <url-pattern>/smar.AREditBatches</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditBatchesEdit</servlet-name>
-        <url-pattern>/smar.AREditBatchesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditBatchesUpdate</servlet-name>
-        <url-pattern>/smar.AREditBatchesUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCallSheetsAction</servlet-name>
-        <url-pattern>/smar.AREditCallSheetsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCallSheetsEdit</servlet-name>
-        <url-pattern>/smar.AREditCallSheetsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCallSheetsSelection</servlet-name>
-        <url-pattern>/smar.AREditCallSheetsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCashEntry</servlet-name>
-        <url-pattern>/smar.AREditCashEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCreditEntry</servlet-name>
-        <url-pattern>/smar.AREditCreditEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerGroupsAction</servlet-name>
-        <url-pattern>/smar.AREditCustomerGroupsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerGroups</servlet-name>
-        <url-pattern>/smar.AREditCustomerGroups</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerGroupsEdit</servlet-name>
-        <url-pattern>/smar.AREditCustomerGroupsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomersAction</servlet-name>
-        <url-pattern>/smar.AREditCustomersAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomers</servlet-name>
-        <url-pattern>/smar.AREditCustomers</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomersEdit</servlet-name>
-        <url-pattern>/smar.AREditCustomersEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerShipTosAction</servlet-name>
-        <url-pattern>/smar.AREditCustomerShipTosAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerShipTos</servlet-name>
-        <url-pattern>/smar.AREditCustomerShipTos</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditCustomerShipTosEdit</servlet-name>
-        <url-pattern>/smar.AREditCustomerShipTosEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditInvoiceEntry</servlet-name>
-        <url-pattern>/smar.AREditInvoiceEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditMiscAdjustmentEntry</servlet-name>
-        <url-pattern>/smar.AREditMiscAdjustmentEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditMiscReceiptEntry</servlet-name>
-        <url-pattern>/smar.AREditMiscReceiptEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditPriceListCodesAction</servlet-name>
-        <url-pattern>/smar.AREditPriceListCodesAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditPriceListCodes</servlet-name>
-        <url-pattern>/smar.AREditPriceListCodes</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditPriceListCodesEdit</servlet-name>
-        <url-pattern>/smar.AREditPriceListCodesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditRetainageEntry</servlet-name>
-        <url-pattern>/smar.AREditRetainageEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditReversalEntry</servlet-name>
-        <url-pattern>/smar.AREditReversalEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditTermsAction</servlet-name>
-        <url-pattern>/smar.AREditTermsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditTerms</servlet-name>
-        <url-pattern>/smar.AREditTerms</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREditTermsEdit</servlet-name>
-        <url-pattern>/smar.AREditTermsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREntry</servlet-name>
-        <url-pattern>/smar.AREntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREntryInput</servlet-name>
-        <url-pattern>/smar.AREntryInput</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AREntryUpdate</servlet-name>
-        <url-pattern>/smar.AREntryUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARImportSMInvoices</servlet-name>
-        <url-pattern>/smar.ARImportSMInvoices</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARInactiveCustomersReport</servlet-name>
-        <url-pattern>/smar.ARInactiveCustomersReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARLine</servlet-name>
-        <url-pattern>/smar.ARLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARLineInput</servlet-name>
-        <url-pattern>/smar.ARLineInput</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARListCustomersOnHold</servlet-name>
-        <url-pattern>/smar.ARListCustomersOnHold</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARListCustomersOnHoldGenerate</servlet-name>
-        <url-pattern>/smar.ARListCustomersOnHoldGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARListCustomersOnHoldReport</servlet-name>
-        <url-pattern>/smar.ARListCustomersOnHoldReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARListInactiveCustomersGenerate</servlet-name>
-        <url-pattern>/smar.ARListInactiveCustomersGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARListInactiveCustomersSelection</servlet-name>
-        <url-pattern>/smar.ARListInactiveCustomersSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARMainMenu</servlet-name>
-        <url-pattern>/smar.ARMainMenu</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARMiscCashReport</servlet-name>
-        <url-pattern>/smar.ARMiscCashReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARMiscCashReportGenerate</servlet-name>
-        <url-pattern>/smar.ARMiscCashReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARMonthlyStatistics</servlet-name>
-        <url-pattern>/smar.ARMonthlyStatistics</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AROptions</servlet-name>
-        <url-pattern>/smar.AROptions</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>AROptionsUpdate</servlet-name>
-        <url-pattern>/smar.AROptionsUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPostingJournal</servlet-name>
-        <url-pattern>/smar.ARPostingJournal</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintCallSheetsGenerate</servlet-name>
-        <url-pattern>/smar.ARPrintCallSheetsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintCallSheetsReport</servlet-name>
-        <url-pattern>/smar.ARPrintCallSheetsReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintCallSheetsSelection</servlet-name>
-        <url-pattern>/smar.ARPrintCallSheetsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintPostingJournal</servlet-name>
-        <url-pattern>/smar.ARPrintPostingJournal</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintStatementsGenerate</servlet-name>
-        <url-pattern>/smar.ARPrintStatementsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARPrintStatementsSelection</servlet-name>
-        <url-pattern>/smar.ARPrintStatementsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARResetPostingFlagAction</servlet-name>
-        <url-pattern>/smar.ARResetPostingFlagAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARResetPostingFlag</servlet-name>
-        <url-pattern>/smar.ARResetPostingFlag</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectCustomerStatistics</servlet-name>
-        <url-pattern>/smar.ARSelectCustomerStatistics</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectDocID</servlet-name>
-        <url-pattern>/smar.ARSelectDocID</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectForActivityReport</servlet-name>
-        <url-pattern>/smar.ARSelectForActivityReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectForCustomerNumberChange</servlet-name>
-        <url-pattern>/smar.ARSelectForCustomerNumberChange</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectForMiscCashReport</servlet-name>
-        <url-pattern>/smar.ARSelectForMiscCashReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSelectForPostingJournal</servlet-name>
-        <url-pattern>/smar.ARSelectForPostingJournal</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSetInactiveCustomersAction</servlet-name>
-        <url-pattern>/smar.ARSetInactiveCustomersAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSetInactiveCustomersGenerate</servlet-name>
-        <url-pattern>/smar.ARSetInactiveCustomersGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSetInactiveCustomersSelection</servlet-name>
-        <url-pattern>/smar.ARSetInactiveCustomersSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARSQLs</servlet-name>
-        <url-pattern>/smar.ARSQLs</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARTerms</servlet-name>
-        <url-pattern>/smar.ARTerms</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARTransaction</servlet-name>
-        <url-pattern>/smar.ARTransaction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARUtilities</servlet-name>
-        <url-pattern>/smar.ARUtilities</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARViewChronLogGenerate</servlet-name>
-        <url-pattern>/smar.ARViewChronLogGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARViewChronLogSelection</servlet-name>
-        <url-pattern>/smar.ARViewChronLogSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARYearEndProcess</servlet-name>
-        <url-pattern>/smar.ARYearEndProcess</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARYearEndProcessingAction</servlet-name>
-        <url-pattern>/smar.ARYearEndProcessingAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ARYearEndProcessingSelection</servlet-name>
-        <url-pattern>/smar.ARYearEndProcessingSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FinderResults</servlet-name>
-        <url-pattern>/SMClasses.FinderResults</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ObjectFinder</servlet-name>
-        <url-pattern>/SMClasses.ObjectFinder</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMGLExport</servlet-name>
-        <url-pattern>/smar.SMGLExport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMGLExportDetail</servlet-name>
-        <url-pattern>/smar.SMGLExportDetail</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>SMGLExportHeader</servlet-name>
-        <url-pattern>/smar.SMGLExportHeader</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMOption</servlet-name>
-        <url-pattern>/smar.SMOption</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMOptionInput</servlet-name>
-        <url-pattern>/smar.SMOptionInput</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMPriceListCode</servlet-name>
-        <url-pattern>/smar.SMPriceListCode</url-pattern>
     </servlet-mapping>
 
     <!-- smcontrolpanel package mappings: -->

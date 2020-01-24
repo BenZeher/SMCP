@@ -31,7 +31,7 @@ public class SMTablematerialreturns {
 	public static final String datreturnsent = "datreturnsent";
 	public static final String iinvoiceonhold = "iinvoiceonhold";
 	public static final String mVendorComments = "mVendorComments";
-	public static final String iCreditDue = "iCreditDue";
+	public static final String iCreditDue = "iCreditDue"; //MiscCreditDue
 
 	//Lengths
 	public static final int linitiatedbyidlength = 11;
@@ -73,7 +73,7 @@ public class SMTablematerialreturns {
 	public static final String sCreditDueLabel = "Miscellaneous Credit Due?";
 
 	public static int STATUS_CREDITNOTEXPECTED = 1;
-	public static int STATUS_CREDITDUE = 0;
-	public static int STATUS_CREDITNOLONGERDUE = 1;
+	public static int STATUS_CREDITNOTDUE = 0;
+	public static int STATUS_CREDITDUE = 1;
 
 }

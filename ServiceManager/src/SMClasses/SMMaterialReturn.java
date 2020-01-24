@@ -187,6 +187,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 		
 		m_svendorcomments = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parammvendorcomments, req).trim().replace("&quot;", "\""); 
+		
+		if(req.getParameter(SMMaterialReturn.Paramicreditdue) == null){
+			m_icreditdue = "0";
+		}else{
+			m_icreditdue = "1";
+		}
 
 		m_sNewRecord = clsManageRequestParameters.get_Request_Parameter(SMMasterEditSelect.SUBMIT_ADD_BUTTON_NAME, req).trim().replace("&quot;", "\"");
 	}

@@ -2370,17 +2370,121 @@
         <servlet-class>smcontrolpanel.TaxByCategoryReportSelect</servlet-class>
     </servlet>
 
+    <!-- smfa package declarations: -->
+    <servlet>
+        <servlet-name>FAAssetListGenerate</servlet-name>
+        <servlet-class>smfa.FAAssetListGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAAssetListSelect</servlet-name>
+        <servlet-class>smfa.FAAssetListSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditAssetsAction</servlet-name>
+        <servlet-class>smfa.FAEditAssetsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditAssetsEdit</servlet-name>
+        <servlet-class>smfa.FAEditAssetsEdit</servlet-class>
+    </servlet>    
+    
+    <servlet>
+        <servlet-name>FAEditAssetsSelect</servlet-name>
+        <servlet-class>smfa.FAEditAssetsSelect</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAEditClassAction</servlet-name>
+        <servlet-class>smfa.FAEditClassAction</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAEditClassEdit</servlet-name>
+        <servlet-class>smfa.FAEditClassEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditClassSelect</servlet-name>
+        <servlet-class>smfa.FAEditClassSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditDepreciationTypeAction</servlet-name>
+        <servlet-class>smfa.FAEditDepreciationTypeAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditDepreciationTypeEdit</servlet-name>
+        <servlet-class>smfa.FAEditDepreciationTypeEdit</servlet-class>
+    </servlet>          
+    
+    <servlet>
+        <servlet-name>FAEditDepreciationTypeSelect</servlet-name>
+        <servlet-class>smfa.FAEditDepreciationTypeSelect</servlet-class>
+    </servlet>        
+        
+    <servlet>
+        <servlet-name>FAEditLocationAction</servlet-name>
+        <servlet-class>smfa.FAEditLocationAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditLocationEdit</servlet-name>
+        <servlet-class>smfa.FAEditLocationEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditLocationSelect</servlet-name>
+        <servlet-class>smfa.FAEditLocationSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAEditOptionsEdit</servlet-name>
+        <servlet-class>smfa.FAEditOptionsEdit</servlet-class>
+    </servlet>    
+        
+    <servlet>
+        <servlet-name>FAMainMenu</servlet-name>
+        <servlet-class>smfa.FAMainMenu</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAPeriodEndProcessingAction</servlet-name>
+        <servlet-class>smfa.FAPeriodEndProcessingAction</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAPeriodEndProcessingSelect</servlet-name>
+        <servlet-class>smfa.FAPeriodEndProcessingSelect</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAReCreateGLSelection</servlet-name>
+        <servlet-class>smfa.FAReCreateGLSelection</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FAResetYTDDepreciationAction</servlet-name>
+        <servlet-class>smfa.FAResetYTDDepreciationAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>FAResetYTDDepreciationSelect</servlet-name>
+        <servlet-class>smfa.FAResetYTDDepreciationSelect</servlet-class>
+    </servlet>
 
+    <servlet>
+        <servlet-name>FATransactionListGenerate</servlet-name>
+        <servlet-class>smfa.FATransactionListGenerate</servlet-class>
+    </servlet>
 
-
-
-
+    <servlet>
+        <servlet-name>FATransactionListSelect</servlet-name>
+        <servlet-class>smfa.FATransactionListSelect</servlet-class>
+    </servlet>
 
     <!-- smic package declarations: -->
 
@@ -3326,117 +3430,7 @@
         <servlet-class>smic.ICUnderStockedItemReportSelection</servlet-class>
     </servlet>
 
-     <!-- smfa package declarations: -->
 
-    <servlet>
-        <servlet-name>FAEditAssetsSelect</servlet-name>
-        <servlet-class>smfa.FAEditAssetsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAMainMenu</servlet-name>
-        <servlet-class>smfa.FAMainMenu</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditAssetsEdit</servlet-name>
-        <servlet-class>smfa.FAEditAssetsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditAssetsAction</servlet-name>
-        <servlet-class>smfa.FAEditAssetsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditClassEdit</servlet-name>
-        <servlet-class>smfa.FAEditClassEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditClassSelect</servlet-name>
-        <servlet-class>smfa.FAEditClassSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditClassAction</servlet-name>
-        <servlet-class>smfa.FAEditClassAction</servlet-class>
-    </servlet>
-
-   <servlet>
-        <servlet-name>FAEditOptionsEdit</servlet-name>
-        <servlet-class>smfa.FAEditOptionsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAPeriodEndProcessingSelect</servlet-name>
-        <servlet-class>smfa.FAPeriodEndProcessingSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAPeriodEndProcessingAction</servlet-name>
-        <servlet-class>smfa.FAPeriodEndProcessingAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditDepreciationTypeSelect</servlet-name>
-        <servlet-class>smfa.FAEditDepreciationTypeSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditDepreciationTypeEdit</servlet-name>
-        <servlet-class>smfa.FAEditDepreciationTypeEdit</servlet-class>
-    </servlet>  
-
-    <servlet>
-        <servlet-name>FAEditDepreciationTypeAction</servlet-name>
-        <servlet-class>smfa.FAEditDepreciationTypeAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAReCreateGLSelection</servlet-name>
-        <servlet-class>smfa.FAReCreateGLSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAResetYTDDepreciationSelect</servlet-name>
-        <servlet-class>smfa.FAResetYTDDepreciationSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAAssetListSelect</servlet-name>
-        <servlet-class>smfa.FAAssetListSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FATransactionListSelect</servlet-name>
-        <servlet-class>smfa.FATransactionListSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAAssetListGenerate</servlet-name>
-        <servlet-class>smfa.FAAssetListGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FATransactionListGenerate</servlet-name>
-        <servlet-class>smfa.FATransactionListGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditLocationAction</servlet-name>
-        <servlet-class>smfa.FAEditLocationAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditLocationEdit</servlet-name>
-        <servlet-class>smfa.FAEditLocationEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>FAEditLocationSelect</servlet-name>
-        <servlet-class>smfa.FAEditLocationSelect</servlet-class>
-    </servlet>
 
    <!-- - smgl package classes: -->
 
@@ -6928,53 +6922,85 @@
         <url-pattern>/smic.ICUnderStockedItemReportSelection</url-pattern>
     </servlet-mapping>
 
-
-    
      <!-- smfa package mappings: -->
-
+    <servlet-mapping>
+        <servlet-name>FAAssetListGenerate</servlet-name>
+        <url-pattern>/smfa.FAAssetListGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FAAssetListSelect</servlet-name>
+        <url-pattern>/smfa.FAAssetListSelect</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FAEditAssetsAction</servlet-name>
+        <url-pattern>/smfa.FAEditAssetsAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FAEditAssetsEdit</servlet-name>
+        <url-pattern>/smfa.FAEditAssetsEdit</url-pattern>
+    </servlet-mapping>    
+    
     <servlet-mapping>
         <servlet-name>FAEditAssetsSelect</servlet-name>
         <url-pattern>/smfa.FAEditAssetsSelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>FAMainMenu</servlet-name>
-        <url-pattern>/smfa.FAMainMenu</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditAssetsEdit</servlet-name>
-        <url-pattern>/smfa.FAEditAssetsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditAssetsAction</servlet-name>
-        <url-pattern>/smfa.FAEditAssetsAction</url-pattern>
+        <servlet-name>FAEditClassAction</servlet-name>
+        <url-pattern>/smfa.FAEditClassAction</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>FAEditClassEdit</servlet-name>
         <url-pattern>/smfa.FAEditClassEdit</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>FAEditClassSelect</servlet-name>
         <url-pattern>/smfa.FAEditClassSelect</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
-        <servlet-name>FAEditClassAction</servlet-name>
-        <url-pattern>/smfa.FAEditClassAction</url-pattern>
+        <servlet-name>FAEditDepreciationTypeAction</servlet-name>
+        <url-pattern>/smfa.FAEditDepreciationTypeAction</url-pattern>
     </servlet-mapping>
- 
+    
+    <servlet-mapping>
+        <servlet-name>FAEditDepreciationTypeEdit</servlet-name>
+        <url-pattern>/smfa.FAEditDepreciationTypeEdit</url-pattern>
+    </servlet-mapping>          
+    
+    <servlet-mapping>
+        <servlet-name>FAEditDepreciationTypeSelect</servlet-name>
+        <url-pattern>/smfa.FAEditDepreciationTypeSelect</url-pattern>
+    </servlet-mapping>        
+        
+    <servlet-mapping>
+        <servlet-name>FAEditLocationAction</servlet-name>
+        <url-pattern>/smfa.FAEditLocationAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FAEditLocationEdit</servlet-name>
+        <url-pattern>/smfa.FAEditLocationEdit</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>FAEditLocationSelect</servlet-name>
+        <url-pattern>/smfa.FAEditLocationSelect</url-pattern>
+    </servlet-mapping>
+    
     <servlet-mapping>
         <servlet-name>FAEditOptionsEdit</servlet-name>
         <url-pattern>/smfa.FAEditOptionsEdit</url-pattern>
-    </servlet-mapping>
-
+    </servlet-mapping>    
+        
     <servlet-mapping>
-        <servlet-name>FAPeriodEndProcessingSelect</servlet-name>
-        <url-pattern>/smfa.FAPeriodEndProcessingSelect</url-pattern>
+        <servlet-name>FAMainMenu</servlet-name>
+        <url-pattern>/smfa.FAMainMenu</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -6983,18 +7009,8 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>FAEditDepreciationTypeSelect</servlet-name>
-        <url-pattern>/smfa.FAEditDepreciationTypeSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditDepreciationTypeEdit</servlet-name>
-        <url-pattern>/smfa.FAEditDepreciationTypeEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditDepreciationTypeAction</servlet-name>
-        <url-pattern>/smfa.FAEditDepreciationTypeAction</url-pattern>
+        <servlet-name>FAPeriodEndProcessingSelect</servlet-name>
+        <url-pattern>/smfa.FAPeriodEndProcessingSelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -7003,23 +7019,13 @@
     </servlet-mapping>
 
     <servlet-mapping>
+        <servlet-name>FAResetYTDDepreciationAction</servlet-name>
+        <url-pattern>/smfa.FAResetYTDDepreciationAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
         <servlet-name>FAResetYTDDepreciationSelect</servlet-name>
         <url-pattern>/smfa.FAResetYTDDepreciationSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAAssetListSelect</servlet-name>
-        <url-pattern>/smfa.FAAssetListSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FATransactionListSelect</servlet-name>
-        <url-pattern>/smfa.FATransactionListSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAAssetListGenerate</servlet-name>
-        <url-pattern>/smfa.FAAssetListGenerate</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -7028,18 +7034,8 @@
     </servlet-mapping>
 
     <servlet-mapping>
-        <servlet-name>FAEditLocationSelect</servlet-name>
-        <url-pattern>/smfa.FAEditLocationSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditLocationEdit</servlet-name>
-        <url-pattern>/smfa.FAEditLocationEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>FAEditLocationAction</servlet-name>
-        <url-pattern>/smfa.FAEditLocationAction</url-pattern>
+        <servlet-name>FATransactionListSelect</servlet-name>
+        <url-pattern>/smfa.FATransactionListSelect</url-pattern>
     </servlet-mapping>
 
      <!-- smgl package mappings: -->

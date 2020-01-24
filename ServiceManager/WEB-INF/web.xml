@@ -2742,14 +2742,6 @@
         <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
     </servlet>
 
-
-
-
-
-
-
-
-
     <!-- smic package declarations: -->
 
     <servlet>

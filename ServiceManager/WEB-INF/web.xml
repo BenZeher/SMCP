@@ -2486,6 +2486,270 @@
         <servlet-class>smfa.FATransactionListSelect</servlet-class>
     </servlet>
 
+    <!-- - smgl package classes: -->
+    <servlet>
+        <servlet-name>GLAccountGroupEdit</servlet-name>
+        <servlet-class>smgl.GLAccountGroupEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLAccountGroupSelect</servlet-name>
+        <servlet-class>smgl.GLAccountGroupSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAccountSegmentEdit</servlet-name>
+        <servlet-class>smgl.GLAccountSegmentEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAccountSegmentSelect</servlet-name>
+        <servlet-class>smgl.GLAccountSegmentSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAccountStructureAction</servlet-name>
+        <servlet-class>smgl.GLAccountStructureAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAccountStructureEdit</servlet-name>
+        <servlet-class>smgl.GLAccountStructureEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAccountStructureSelect</servlet-name>
+        <servlet-class>smgl.GLAccountStructureSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAcctSegmentValueEdit</servlet-name>
+        <servlet-class>smgl.GLAcctSegmentValueEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLAcctSegmentValueSelect</servlet-name>
+        <servlet-class>smgl.GLAcctSegmentValueSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLCheckTransactionLinesAgainstACCPAC</servlet-name>
+        <servlet-class>smgl.GLCheckTransactionLinesAgainstACCPAC</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLClearFiscalDataAction</servlet-name>
+        <servlet-class>smgl.GLClearFiscalDataAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLClearFiscalDataSelect</servlet-name>
+        <servlet-class>smgl.GLClearFiscalDataSelect</servlet-class>
+    </servlet>    
+    
+    <servlet>
+        <servlet-name>GLClearPostedBatchesAction</servlet-name>
+        <servlet-class>smgl.GLClearPostedBatchesAction</servlet-class>
+    </servlet>
+        
+    <servlet>
+        <servlet-name>GLClearPostedBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLClearPostedBatchesSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLClearTransactionsAction</servlet-name>
+        <servlet-class>smgl.GLClearTransactionsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+    	<servlet-name>GLClearTransactionsSelect</servlet-name>
+        <servlet-class>smgl.GLClearTransactionsSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+    	<servlet-name>GLCloseFiscalYearAction</servlet-name>
+        <servlet-class>smgl.GLCloseFiscalYearAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLCloseFiscalYearEdit</servlet-name>
+        <servlet-class>smgl.GLCloseFiscalYearEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLConvertACCPAC</servlet-name>
+        <servlet-class>smgl.GLConvertACCPAC</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLConvertACCPACAction</servlet-name>
+        <servlet-class>smgl.GLConvertACCPACAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLEditAccounts</servlet-name>
+        <servlet-class>smgl.GLEditAccounts</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditAccountsEdit</servlet-name>
+        <servlet-class>smgl.GLEditAccountsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditAccountsUpdate</servlet-name>
+        <servlet-class>smgl.GLEditAccountsUpdate</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditBatchesAction</servlet-name>
+        <servlet-class>smgl.GLEditBatchesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditBatchesEdit</servlet-name>
+        <servlet-class>smgl.GLEditBatchesEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLEditBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLEditBatchesSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditCostCentersEdit</servlet-name>
+        <servlet-class>smgl.GLEditCostCentersEdit</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLEditCostCenterSelection</servlet-name>
+        <servlet-class>smgl.GLEditCostCenterSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditEntryAction</servlet-name>
+        <servlet-class>smgl.GLEditEntryAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLEditEntryEdit</servlet-name>
+        <servlet-class>smgl.GLEditEntryEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditExternalCompaniesAction</servlet-name>
+        <servlet-class>smgl.GLEditExternalCompaniesAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditExternalCompaniesEdit</servlet-name>
+        <servlet-class>smgl.GLEditExternalCompaniesEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
+        <servlet-class>smgl.GLEditFiscalPeriodsAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditFiscalPeriodsEdit</servlet-name>
+        <servlet-class>smgl.GLEditFiscalPeriodsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditFiscalPeriodsSelect</servlet-name>
+        <servlet-class>smgl.GLEditFiscalPeriodsSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLEditGLOptions</servlet-name>
+        <servlet-class>smgl.GLEditGLOptions</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLFinancialDataCheckAction</servlet-name>
+        <servlet-class>smgl.GLFinancialDataCheckAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLFinancialDataCheckSelect</servlet-name>
+        <servlet-class>smgl.GLFinancialDataCheckSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLImportBatchesAction</servlet-name>
+        <servlet-class>smgl.GLImportBatchesAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLImportBatchesSelect</servlet-name>
+        <servlet-class>smgl.GLImportBatchesSelect</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLMainMenu</servlet-name>
+        <servlet-class>smgl.GLMainMenu</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLPullIntoConsolidationAction</servlet-name>
+        <servlet-class>smgl.GLPullIntoConsolidationAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLPullIntoConsolidationSelect</servlet-name>
+        <servlet-class>smgl.GLPullIntoConsolidationSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLResetPostingFlagAction</servlet-name>
+        <servlet-class>smgl.GLResetPostingFlagAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLResetPostingFlagSelect</servlet-name>
+        <servlet-class>smgl.GLResetPostingFlagSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLReversePullAction</servlet-name>
+        <servlet-class>smgl.GLReversePullAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLReversePullSelect</servlet-name>
+        <servlet-class>smgl.GLReversePullSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLTransactionListingAction</servlet-name>
+        <servlet-class>smgl.GLTransactionListingAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLTransactionListingSelect</servlet-name>
+        <servlet-class>smgl.GLTransactionListingSelect</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>GLTrialBalanceAction</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceAction</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>GLTrialBalanceSelect</servlet-name>
+        <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
+    </servlet>
+
+
+
+
+
+
+
+
+
     <!-- smic package declarations: -->
 
     <servlet>
@@ -3432,267 +3696,7 @@
 
 
 
-   <!-- - smgl package classes: -->
 
-    <servlet>
-        <servlet-name>GLMainMenu</servlet-name>
-        <servlet-class>smgl.GLMainMenu</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccount</servlet-name>
-        <servlet-class>smgl.GLAccount</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountGroupEdit</servlet-name>
-        <servlet-class>smgl.GLAccountGroupEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLAccountGroupSelect</servlet-name>
-        <servlet-class>smgl.GLAccountGroupSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountSegmentEdit</servlet-name>
-        <servlet-class>smgl.GLAccountSegmentEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountSegmentSelect</servlet-name>
-        <servlet-class>smgl.GLAccountSegmentSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountStructureAction</servlet-name>
-        <servlet-class>smgl.GLAccountStructureAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountStructureEdit</servlet-name>
-        <servlet-class>smgl.GLAccountStructureEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAccountStructureSelect</servlet-name>
-        <servlet-class>smgl.GLAccountStructureSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAcctSegmentValueEdit</servlet-name>
-        <servlet-class>smgl.GLAcctSegmentValueEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLAcctSegmentValueSelect</servlet-name>
-        <servlet-class>smgl.GLAcctSegmentValueSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLCheckTransactionLinesAgainstACCPAC</servlet-name>
-        <servlet-class>smgl.GLCheckTransactionLinesAgainstACCPAC</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLClearFiscalDataAction</servlet-name>
-        <servlet-class>smgl.GLClearFiscalDataAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLClearFiscalDataSelect</servlet-name>
-        <servlet-class>smgl.GLClearFiscalDataSelect</servlet-class>
-    </servlet>    
-    
-    <servlet>
-        <servlet-name>GLClearPostedBatchesSelect</servlet-name>
-        <servlet-class>smgl.GLClearPostedBatchesSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLClearPostedBatchesAction</servlet-name>
-        <servlet-class>smgl.GLClearPostedBatchesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-    	<servlet-name>GLClearTransactionsSelect</servlet-name>
-        <servlet-class>smgl.GLClearTransactionsSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLClearTransactionsAction</servlet-name>
-        <servlet-class>smgl.GLClearTransactionsAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-    	<servlet-name>GLCloseFiscalYearAction</servlet-name>
-        <servlet-class>smgl.GLCloseFiscalYearAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLCloseFiscalYearEdit</servlet-name>
-        <servlet-class>smgl.GLCloseFiscalYearEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLConvertACCPAC</servlet-name>
-        <servlet-class>smgl.GLConvertACCPAC</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLConvertACCPACAction</servlet-name>
-        <servlet-class>smgl.GLConvertACCPACAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLEditAccounts</servlet-name>
-        <servlet-class>smgl.GLEditAccounts</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditAccountsEdit</servlet-name>
-        <servlet-class>smgl.GLEditAccountsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditAccountsUpdate</servlet-name>
-        <servlet-class>smgl.GLEditAccountsUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditBatchesAction</servlet-name>
-        <servlet-class>smgl.GLEditBatchesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditBatchesEdit</servlet-name>
-        <servlet-class>smgl.GLEditBatchesEdit</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLEditBatchesSelect</servlet-name>
-        <servlet-class>smgl.GLEditBatchesSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditCostCenterSelection</servlet-name>
-        <servlet-class>smgl.GLEditCostCenterSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditCostCentersEdit</servlet-name>
-        <servlet-class>smgl.GLEditCostCentersEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditEntryAction</servlet-name>
-        <servlet-class>smgl.GLEditEntryAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLEditEntryEdit</servlet-name>
-        <servlet-class>smgl.GLEditEntryEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditExternalCompaniesAction</servlet-name>
-        <servlet-class>smgl.GLEditExternalCompaniesAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditExternalCompaniesEdit</servlet-name>
-        <servlet-class>smgl.GLEditExternalCompaniesEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
-        <servlet-class>smgl.GLEditFiscalPeriodsAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditFiscalPeriodsEdit</servlet-name>
-        <servlet-class>smgl.GLEditFiscalPeriodsEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditFiscalPeriodsSelect</servlet-name>
-        <servlet-class>smgl.GLEditFiscalPeriodsSelect</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLEditGLOptions</servlet-name>
-        <servlet-class>smgl.GLEditGLOptions</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLFinancialDataCheckAction</servlet-name>
-        <servlet-class>smgl.GLFinancialDataCheckAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLFinancialDataCheckSelect</servlet-name>
-        <servlet-class>smgl.GLFinancialDataCheckSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLImportBatchesSelect</servlet-name>
-        <servlet-class>smgl.GLImportBatchesSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLImportBatchesAction</servlet-name>
-        <servlet-class>smgl.GLImportBatchesAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLPullIntoConsolidationAction</servlet-name>
-        <servlet-class>smgl.GLPullIntoConsolidationAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLPullIntoConsolidationSelect</servlet-name>
-        <servlet-class>smgl.GLPullIntoConsolidationSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLResetPostingFlagAction</servlet-name>
-        <servlet-class>smgl.GLResetPostingFlagAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLResetPostingFlagSelect</servlet-name>
-        <servlet-class>smgl.GLResetPostingFlagSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLReversePullAction</servlet-name>
-        <servlet-class>smgl.GLReversePullAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLReversePullSelect</servlet-name>
-        <servlet-class>smgl.GLReversePullSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLTransactionListingAction</servlet-name>
-        <servlet-class>smgl.GLTransactionListingAction</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLTransactionListingSelect</servlet-name>
-        <servlet-class>smgl.GLTransactionListingSelect</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>GLTrialBalanceAction</servlet-name>
-        <servlet-class>smgl.GLTrialBalanceAction</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>GLTrialBalanceSelect</servlet-name>
-        <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
-    </servlet>
 
     <!-- SERVLET MAPPINGS START HERE: -->
     
@@ -7039,17 +7043,11 @@
     </servlet-mapping>
 
      <!-- smgl package mappings: -->
-
-    <servlet-mapping>
-        <servlet-name>GLMainMenu</servlet-name>
-        <url-pattern>/smgl.GLMainMenu</url-pattern>
-    </servlet-mapping>
-
     <servlet-mapping>
         <servlet-name>GLAccountGroupEdit</servlet-name>
         <url-pattern>/smgl.GLAccountGroupEdit</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>GLAccountGroupSelect</servlet-name>
         <url-pattern>/smgl.GLAccountGroupSelect</url-pattern>
@@ -7059,23 +7057,23 @@
         <servlet-name>GLAccountSegmentEdit</servlet-name>
         <url-pattern>/smgl.GLAccountSegmentEdit</url-pattern>
     </servlet-mapping>
-    
-   <servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>GLAccountSegmentSelect</servlet-name>
         <url-pattern>/smgl.GLAccountSegmentSelect</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLAccountStructureAction</servlet-name>
         <url-pattern>/smgl.GLAccountStructureAction</url-pattern>
     </servlet-mapping>
-    
-   <servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>GLAccountStructureEdit</servlet-name>
         <url-pattern>/smgl.GLAccountStructureEdit</url-pattern>
     </servlet-mapping>
-    
-   <servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>GLAccountStructureSelect</servlet-name>
         <url-pattern>/smgl.GLAccountStructureSelect</url-pattern>
     </servlet-mapping>
@@ -7084,17 +7082,17 @@
         <servlet-name>GLAcctSegmentValueEdit</servlet-name>
         <url-pattern>/smgl.GLAcctSegmentValueEdit</url-pattern>
     </servlet-mapping>
-    
-   <servlet-mapping>
+
+    <servlet-mapping>
         <servlet-name>GLAcctSegmentValueSelect</servlet-name>
         <url-pattern>/smgl.GLAcctSegmentValueSelect</url-pattern>
     </servlet-mapping>
-
-   <servlet-mapping>
+    
+    <servlet-mapping>
         <servlet-name>GLCheckTransactionLinesAgainstACCPAC</servlet-name>
         <url-pattern>/smgl.GLCheckTransactionLinesAgainstACCPAC</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>GLClearFiscalDataAction</servlet-name>
         <url-pattern>/smgl.GLClearFiscalDataAction</url-pattern>
@@ -7103,13 +7101,13 @@
     <servlet-mapping>
         <servlet-name>GLClearFiscalDataSelect</servlet-name>
         <url-pattern>/smgl.GLClearFiscalDataSelect</url-pattern>
-    </servlet-mapping>
-
+    </servlet-mapping>    
+    
     <servlet-mapping>
         <servlet-name>GLClearPostedBatchesAction</servlet-name>
         <url-pattern>/smgl.GLClearPostedBatchesAction</url-pattern>
     </servlet-mapping>
-    
+        
     <servlet-mapping>
         <servlet-name>GLClearPostedBatchesSelect</servlet-name>
         <url-pattern>/smgl.GLClearPostedBatchesSelect</url-pattern>
@@ -7119,15 +7117,14 @@
         <servlet-name>GLClearTransactionsAction</servlet-name>
         <url-pattern>/smgl.GLClearTransactionsAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
-        <servlet-name>GLClearTransactionsSelect</servlet-name>
+    	<servlet-name>GLClearTransactionsSelect</servlet-name>
         <url-pattern>/smgl.GLClearTransactionsSelect</url-pattern>
     </servlet-mapping>
     
-    
     <servlet-mapping>
-        <servlet-name>GLCloseFiscalYearAction</servlet-name>
+    	<servlet-name>GLCloseFiscalYearAction</servlet-name>
         <url-pattern>/smgl.GLCloseFiscalYearAction</url-pattern>
     </servlet-mapping>
     
@@ -7145,7 +7142,7 @@
         <servlet-name>GLConvertACCPACAction</servlet-name>
         <url-pattern>/smgl.GLConvertACCPACAction</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>GLEditAccounts</servlet-name>
         <url-pattern>/smgl.GLEditAccounts</url-pattern>
@@ -7165,20 +7162,15 @@
         <servlet-name>GLEditBatchesAction</servlet-name>
         <url-pattern>/smgl.GLEditBatchesAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditBatchesEdit</servlet-name>
         <url-pattern>/smgl.GLEditBatchesEdit</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>GLEditBatchesSelect</servlet-name>
         <url-pattern>/smgl.GLEditBatchesSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>GLEditCostCenterSelection</servlet-name>
-        <url-pattern>/smgl.GLEditCostCenterSelection</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>
@@ -7186,6 +7178,11 @@
         <url-pattern>/smgl.GLEditCostCentersEdit</url-pattern>
     </servlet-mapping>
     
+    <servlet-mapping>
+        <servlet-name>GLEditCostCenterSelection</servlet-name>
+        <url-pattern>/smgl.GLEditCostCenterSelection</url-pattern>
+    </servlet-mapping>
+
     <servlet-mapping>
         <servlet-name>GLEditEntryAction</servlet-name>
         <url-pattern>/smgl.GLEditEntryAction</url-pattern>
@@ -7195,32 +7192,32 @@
         <servlet-name>GLEditEntryEdit</servlet-name>
         <url-pattern>/smgl.GLEditEntryEdit</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditExternalCompaniesAction</servlet-name>
         <url-pattern>/smgl.GLEditExternalCompaniesAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditExternalCompaniesEdit</servlet-name>
         <url-pattern>/smgl.GLEditExternalCompaniesEdit</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditFiscalPeriodsAction</servlet-name>
         <url-pattern>/smgl.GLEditFiscalPeriodsAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditFiscalPeriodsEdit</servlet-name>
         <url-pattern>/smgl.GLEditFiscalPeriodsEdit</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditFiscalPeriodsSelect</servlet-name>
         <url-pattern>/smgl.GLEditFiscalPeriodsSelect</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLEditGLOptions</servlet-name>
         <url-pattern>/smgl.GLEditGLOptions</url-pattern>
@@ -7245,17 +7242,22 @@
         <servlet-name>GLImportBatchesSelect</servlet-name>
         <url-pattern>/smgl.GLImportBatchesSelect</url-pattern>
     </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>GLMainMenu</servlet-name>
+        <url-pattern>/smgl.GLMainMenu</url-pattern>
+    </servlet-mapping>
     
     <servlet-mapping>
         <servlet-name>GLPullIntoConsolidationAction</servlet-name>
         <url-pattern>/smgl.GLPullIntoConsolidationAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLPullIntoConsolidationSelect</servlet-name>
         <url-pattern>/smgl.GLPullIntoConsolidationSelect</url-pattern>
     </servlet-mapping>
-
+    
     <servlet-mapping>
         <servlet-name>GLResetPostingFlagAction</servlet-name>
         <url-pattern>/smgl.GLResetPostingFlagAction</url-pattern>
@@ -7290,11 +7292,18 @@
         <servlet-name>GLTrialBalanceAction</servlet-name>
         <url-pattern>/smgl.GLTrialBalanceAction</url-pattern>
     </servlet-mapping>
-    
+
     <servlet-mapping>
         <servlet-name>GLTrialBalanceSelect</servlet-name>
         <url-pattern>/smgl.GLTrialBalanceSelect</url-pattern>
     </servlet-mapping>
+
+
+
+
+
+
+
     
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify

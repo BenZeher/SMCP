@@ -263,6 +263,18 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		}
 		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramiinvoiceonhold + "'"+ sChecked + " ><BR>";
 
+		//Misc Credit Due
+		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sCreditDueLabel + " </B></TD>\n";
+		s += "<TD>\n";
+		sChecked = "";
+		if (entry.getiCreditDue().compareToIgnoreCase(Integer.toString(1)) == 0){
+			sChecked = " checked ";
+		}else{
+			sChecked = "";
+		}
+		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMMaterialReturn.Paramicreditdue + "'"+ sChecked + " ><BR>";
+
+
 
 		//Vendor
 		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablematerialreturns.svendoracctlabel  + ": </B></TD>\n";

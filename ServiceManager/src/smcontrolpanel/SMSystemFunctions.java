@@ -54,7 +54,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long ICPrintPurchaseOrders = 22L;
 	public static long SMEditProposalPhraseGroups = 23L;
 	public static long SMRecalibrateOrderAndInvoiceCounters = 24L;
-	public static long ICItemPricing = 25L;
+	//public static long ICItemPricing = 25L;
 	public static long SMReceiveOrderCancellationNotifications = 26L;
 	public static long SMEditWorkOrders = 27L;
 	public static long SMEditServiceTypes = 28L;
@@ -445,12 +445,6 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionLinks.add("smic.ICPrintPOSelection"); 
 		arrFunctionDescriptions.add("Required to display any actual Purchase Orders on the screen.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_INVENTORYCONTROL);
-
-		arrFunctions.add("IC Edit Item Prices"); 
-		arrFunctionIDs.add(ICItemPricing); 
-		arrFunctionLinks.add("smic.ICEditItemPriceSelection"); 
-		arrFunctionDescriptions.add("Required to edit prices for items in the various price lists.");
-		arrFunctionModuleLevel.add(SMModuleListing.MODULE_INVENTORYCONTROL + SMModuleListing.MODULE_ORDERENTRY);
 
 		arrFunctions.add("SM Average MU per Truck Day"); 
 		arrFunctionIDs.add(SMAverageMUpertruckday); 

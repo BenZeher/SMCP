@@ -62,7 +62,7 @@ public class ICListPhysicalInventories extends HttpServlet {
 	    	}
 	    }
 	    String sColor = SMUtilities.getInitBackGroundColor(getServletContext(), sDBID);
-	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalInventoryEdit' METHOD='POST'>");
+	    out.println("<FORM NAME='MAINFORM' ACTION='" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPhysicalInventory' METHOD='POST'>");
 	    out.println("<INPUT TYPE=HIDDEN NAME='" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "' VALUE='" + sDBID + "'>");
 	    out.println(SMUtilities.getMasterStyleSheetLink());
 	    out.println("<TABLE WIDTH = 100% BGCOLOR=\""+ sColor +"\">");

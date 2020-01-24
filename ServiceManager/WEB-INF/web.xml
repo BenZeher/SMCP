@@ -93,7 +93,7 @@
       </listener-class>
     </listener>
     
-    <!-- AP package: -->
+    <!--smap package classes:-->
     <servlet>
         <servlet-name>AP1099CPRSCodesEdit</servlet-name>
         <servlet-class>smap.AP1099CPRSCodesEdit</servlet-class>
@@ -796,7 +796,7 @@
     </servlet>
 
 
-    <!--Alarm system packages (smas)-->
+    <!--smas package classes-->
     <servlet>
 		<servlet-name>ASActivateAlarmsAction</servlet-name>
 		<servlet-class>smas.ASActivateAlarmsAction</servlet-class>
@@ -1043,7 +1043,7 @@
         <servlet-class>smbk.BKMainMenu</servlet-class>
     </servlet>	
 
-	<!--  smclasses declarations -->
+	<!--  smclasses package classes-->
     <servlet>
         <servlet-name>FinderResults</servlet-name>
         <servlet-class>SMClasses.FinderResults</servlet-class>
@@ -1054,7 +1054,7 @@
         <servlet-class>SMClasses.ObjectFinder</servlet-class>
     </servlet>
     
-    <!-- smcontrolpanel declarations: -->
+    <!-- smcontrolpanel package classes: -->
     <servlet>
         <servlet-name>CustomerCallLogEntry</servlet-name>
         <servlet-class>smcontrolpanel.CustomerCallLogEntry</servlet-class>
@@ -2370,7 +2370,7 @@
         <servlet-class>smcontrolpanel.TaxByCategoryReportSelect</servlet-class>
     </servlet>
 
-    <!-- smfa package declarations: -->
+    <!-- smfa package classes: -->
     <servlet>
         <servlet-name>FAAssetListGenerate</servlet-name>
         <servlet-class>smfa.FAAssetListGenerate</servlet-class>
@@ -2486,7 +2486,7 @@
         <servlet-class>smfa.FATransactionListSelect</servlet-class>
     </servlet>
 
-    <!-- - smgl package classes: -->
+    <!-- smgl package classes: -->
     <servlet>
         <servlet-name>GLAccountGroupEdit</servlet-name>
         <servlet-class>smgl.GLAccountGroupEdit</servlet-class>
@@ -2742,18 +2742,7 @@
         <servlet-class>smgl.GLTrialBalanceSelect</servlet-class>
     </servlet>
 
-    <!-- smic package declarations: -->
-
-    <servlet>
-        <servlet-name>ICAccountSet</servlet-name>
-        <servlet-class>smic.ICAccountSet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICAddAdjustment</servlet-name>
-        <servlet-class>smic.ICAddAdjustment</servlet-class>
-    </servlet>
-
+    <!-- smic package classes: -->
     <servlet>
         <servlet-name>ICAddRemovePhysInvItemsAction</servlet-name>
         <servlet-class>smic.ICAddRemovePhysInvItemsAction</servlet-class>
@@ -2770,26 +2759,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICAPExport</servlet-name>
-        <servlet-class>smic.ICAPExport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICAPExportDetail</servlet-name>
-        <servlet-class>smic.ICAPExportDetail</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICAPExportHeader</servlet-name>
-        <servlet-class>smic.ICAPExportHeader</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICAPExportPaymentSchedule</servlet-name>
-        <servlet-class>smic.ICAPExportPaymentSchedule</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICAssignPOGenerate</servlet-name>
         <servlet-class>smic.ICAssignPOGenerate</servlet-class>
     </servlet>
@@ -2800,26 +2769,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICAutoCreateInvoiceBatch</servlet-name>
-        <servlet-class>smic.ICAutoCreateInvoiceBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICAutoCreateReceiptBatch</servlet-name>
-        <servlet-class>smic.ICAutoCreateReceiptBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICBatch</servlet-name>
-        <servlet-class>smic.ICBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICBatchTypes</servlet-name>
-        <servlet-class>smic.ICBatchTypes</servlet-class>
-    </servlet>
-
-   <servlet>
         <servlet-name>ICBulkTransferAction</servlet-name>
         <servlet-class>smic.ICBulkTransferAction</servlet-class>
     </servlet>
@@ -2827,11 +2776,6 @@
     <servlet>
         <servlet-name>ICBulkTransferEdit</servlet-name>
         <servlet-class>smic.ICBulkTransferEdit</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICCategory</servlet-name>
-        <servlet-class>smic.ICCategory</servlet-class>
     </servlet>
 
     <servlet>
@@ -2865,11 +2809,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICConvertACCPAC</servlet-name>
-        <servlet-class>smic.ICConvertACCPAC</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICConvertFromACCPACAction</servlet-name>
         <servlet-class>smic.ICConvertFromACCPACAction</servlet-class>
     </servlet>
@@ -2895,13 +2834,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICDeleteInactiveItemsSelection</servlet-name>
-        <servlet-class>smic.ICDeleteInactiveItemsSelection</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICDeleteInactiveItemsGenerate</servlet-name>
         <servlet-class>smic.ICDeleteInactiveItemsGenerate</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICDeleteInactiveItemsSelection</servlet-name>
+        <servlet-class>smic.ICDeleteInactiveItemsSelection</servlet-class>
     </servlet>
 
     <servlet>
@@ -2975,11 +2914,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditItemPriceSelection</servlet-name>
-        <servlet-class>smic.ICEditItemPriceSelection</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEditItemsAction</servlet-name>
         <servlet-class>smic.ICEditItemsAction</servlet-class>
     </servlet>
@@ -2995,13 +2929,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditPhysicalCountAction</servlet-name>
-        <servlet-class>smic.ICEditPhysicalCountAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEditPhysicalCount</servlet-name>
         <servlet-class>smic.ICEditPhysicalCount</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICEditPhysicalCountAction</servlet-name>
+        <servlet-class>smic.ICEditPhysicalCountAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -3015,23 +2949,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditPhysicalCountLineAction</servlet-name>
-        <servlet-class>smic.ICEditPhysicalCountLineAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEditPhysicalCountLine</servlet-name>
         <servlet-class>smic.ICEditPhysicalCountLine</servlet-class>
     </servlet>
-
+    
     <servlet>
-        <servlet-name>ICEditPhysicalInventories</servlet-name>
-        <servlet-class>smic.ICEditPhysicalInventories</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICEditPhysicalInventoryAction</servlet-name>
-        <servlet-class>smic.ICEditPhysicalInventoryAction</servlet-class>
+        <servlet-name>ICEditPhysicalCountLineAction</servlet-name>
+        <servlet-class>smic.ICEditPhysicalCountLineAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -3040,8 +2964,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditPhysicalInventoryEdit</servlet-name>
-        <servlet-class>smic.ICEditPhysicalInventoryEdit</servlet-class>
+        <servlet-name>ICEditPhysicalInventoryAction</servlet-name>
+        <servlet-class>smic.ICEditPhysicalInventoryAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -3100,13 +3024,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditReceiptLineAction</servlet-name>
-        <servlet-class>smic.ICEditReceiptLineAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEditReceiptLine</servlet-name>
         <servlet-class>smic.ICEditReceiptLine</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICEditReceiptLineAction</servlet-name>
+        <servlet-class>smic.ICEditReceiptLineAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -3135,16 +3059,14 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEditVendorItemsAction</servlet-name>
-        <servlet-class>smic.ICEditVendorItemsAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEditVendorItems</servlet-name>
         <servlet-class>smic.ICEditVendorItems</servlet-class>
     </servlet>
 
-   
+    <servlet>
+        <servlet-name>ICEditVendorItemsAction</servlet-name>
+        <servlet-class>smic.ICEditVendorItemsAction</servlet-class>
+    </servlet>
 
     <servlet>
         <servlet-name>ICEnterInvoiceAction</servlet-name>
@@ -3162,38 +3084,23 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICEntryBatch</servlet-name>
-        <servlet-class>smic.ICEntryBatch</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICEntry</servlet-name>
-        <servlet-class>smic.ICEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICEntryLine</servlet-name>
-        <servlet-class>smic.ICEntryLine</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICEntryTypes</servlet-name>
-        <servlet-class>smic.ICEntryTypes</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICEntryUpdate</servlet-name>
         <servlet-class>smic.ICEntryUpdate</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>ICImportSMInvoices</servlet-name>
-        <servlet-class>smic.ICImportSMInvoices</servlet-class>
+        <servlet-name>ICItemNumberMatchUpCriteriaSelection</servlet-name>
+        <servlet-class>smic.ICItemNumberMatchUpCriteriaSelection</servlet-class>
     </servlet>
-
+         
     <servlet>
-        <servlet-name>ICItem</servlet-name>
-        <servlet-class>smic.ICItem</servlet-class>
+        <servlet-name>ICItemNumberMatchUpGenerate</servlet-name>
+        <servlet-class>smic.ICItemNumberMatchUpGenerate</servlet-class>
+    </servlet>
+      
+    <servlet>
+        <servlet-name>ICItemPriceEdit</servlet-name>
+        <servlet-class>smic.ICItemPriceEdit</servlet-class>
     </servlet>
 
     <servlet>
@@ -3202,28 +3109,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICItemPriceEdit</servlet-name>
-        <servlet-class>smic.ICItemPriceEdit</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICItemsReceivedNotInvoicedGenerate</servlet-name>
         <servlet-class>smic.ICItemsReceivedNotInvoicedGenerate</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>ICItemsReceivedNotInvoicedReport</servlet-name>
-        <servlet-class>smic.ICItemsReceivedNotInvoicedReport</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICItemsReceivedNotInvoicedSelection</servlet-name>
         <servlet-class>smic.ICItemsReceivedNotInvoicedSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICItemValuationReport</servlet-name>
-        <servlet-class>smic.ICItemValuationReport</servlet-class>
     </servlet>
 
     <servlet>
@@ -3247,11 +3139,6 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICListUnusedPOsReport</servlet-name>
-        <servlet-class>smic.ICListUnusedPOsReport</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICListUnusedPOsSelection</servlet-name>
         <servlet-class>smic.ICListUnusedPOsSelection</servlet-class>
     </servlet>
@@ -3267,33 +3154,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICOnHandByDescriptionReport</servlet-name>
-        <servlet-class>smic.ICOnHandByDescriptionReport</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICOnHandByDescriptionSelection</servlet-name>
         <servlet-class>smic.ICOnHandByDescriptionSelection</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>ICOption</servlet-name>
-        <servlet-class>smic.ICOption</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICOptionInput</servlet-name>
-        <servlet-class>smic.ICOptionInput</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICOptionUpdate</servlet-name>
         <servlet-class>smic.ICOptionUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPhysicalCountEntry</servlet-name>
-        <servlet-class>smic.ICPhysicalCountEntry</servlet-class>
     </servlet>
 
     <servlet>
@@ -3307,73 +3174,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICPhysicalCountLineEntry</servlet-name>
-        <servlet-class>smic.ICPhysicalCountLineEntry</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICPhysicalCountLineUpdate</servlet-name>
         <servlet-class>smic.ICPhysicalCountLineUpdate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPhysicalInventoryEntry</servlet-name>
-        <servlet-class>smic.ICPhysicalInventoryEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPhysicalInventoryVarianceReport</servlet-name>
-        <servlet-class>smic.ICPhysicalInventoryVarianceReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPhysicalInventoryWorksheet</servlet-name>
-        <servlet-class>smic.ICPhysicalInventoryWorksheet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOHeader</servlet-name>
-        <servlet-class>smic.ICPOHeader</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOHeaderEntry</servlet-name>
-        <servlet-class>smic.ICPOHeaderEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOInvoice</servlet-name>
-        <servlet-class>smic.ICPOInvoice</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOInvoiceLine</servlet-name>
-        <servlet-class>smic.ICPOInvoiceLine</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOLine</servlet-name>
-        <servlet-class>smic.ICPOLine</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOLineEntry</servlet-name>
-        <servlet-class>smic.ICPOLineEntry</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOReceiptHeader</servlet-name>
-        <servlet-class>smic.ICPOReceiptHeader</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOReceiptLine</servlet-name>
-        <servlet-class>smic.ICPOReceiptLine</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPOReceivingReport</servlet-name>
-        <servlet-class>smic.ICPOReceivingReport</servlet-class>
     </servlet>
 
     <servlet>
@@ -3397,18 +3199,8 @@
     </servlet>
     
     <servlet>
-        <servlet-name>ICPOUnpostedInvoiceReport</servlet-name>
-        <servlet-class>smic.ICPOUnpostedInvoiceReport</servlet-class>
-    </servlet>
-    
-    <servlet>
         <servlet-name>ICPOUnpostedReceiptsGenerate</servlet-name>
         <servlet-class>smic.ICPOUnpostedReceiptsGenerate</servlet-class>
-    </servlet>
-    
-    <servlet>
-        <servlet-name>ICPOUnpostedReceiptsReport</servlet-name>
-        <servlet-class>smic.ICPOUnpostedReceiptsReport</servlet-class>
     </servlet>
     
     <servlet>
@@ -3467,23 +3259,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICPrintUPCItemLabel</servlet-name>
-        <servlet-class>smic.ICPrintUPCItemLabel</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICPrintUPCSelection</servlet-name>
         <servlet-class>smic.ICPrintUPCSelection</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICPurchaseOrderForm</servlet-name>
-        <servlet-class>smic.ICPurchaseOrderForm</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICQuantitiesOnHandReport</servlet-name>
-        <servlet-class>smic.ICQuantitiesOnHandReport</servlet-class>
     </servlet>
 
     <servlet>
@@ -3517,13 +3294,13 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICResetPostingFlagAction</servlet-name>
-        <servlet-class>smic.ICResetPostingFlagAction</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICResetPostingFlag</servlet-name>
         <servlet-class>smic.ICResetPostingFlag</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>ICResetPostingFlagAction</servlet-name>
+        <servlet-class>smic.ICResetPostingFlagAction</servlet-class>
     </servlet>
 
     <servlet>
@@ -3547,23 +3324,8 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICTransactionDetail</servlet-name>
-        <servlet-class>smic.ICTransactionDetail</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICTransactionDetailsDisplay</servlet-name>
         <servlet-class>smic.ICTransactionDetailsDisplay</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICTransactionDetailsReport</servlet-name>
-        <servlet-class>smic.ICTransactionDetailsReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICTransactionHistory</servlet-name>
-        <servlet-class>smic.ICTransactionHistory</servlet-class>
     </servlet>
 
     <servlet>
@@ -3592,13 +3354,18 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICUpdateItemPricesGenerate</servlet-name>
-        <servlet-class>smic.ICUpdateItemPricesGenerate</servlet-class>
+        <servlet-name>ICUnderStockedItemReportGenerate</servlet-name>
+        <servlet-class>smic.ICUnderStockedItemReportGenerate</servlet-class>
     </servlet>
 
     <servlet>
-        <servlet-name>ICUpdateItemPricesPreview</servlet-name>
-        <servlet-class>smic.ICUpdateItemPricesPreview</servlet-class>
+        <servlet-name>ICUnderStockedItemReportSelection</servlet-name>
+        <servlet-class>smic.ICUnderStockedItemReportSelection</servlet-class>
+    </servlet>
+
+    <servlet>
+        <servlet-name>ICUpdateItemPricesGenerate</servlet-name>
+        <servlet-class>smic.ICUpdateItemPricesGenerate</servlet-class>
     </servlet>
 
     <servlet>
@@ -3622,78 +3389,14 @@
     </servlet>
 
     <servlet>
-        <servlet-name>ICViewItemPricingReport</servlet-name>
-        <servlet-class>smic.ICViewItemPricingReport</servlet-class>
-    </servlet>
-
-    <servlet>
         <servlet-name>ICViewItemPricingSelection</servlet-name>
         <servlet-class>smic.ICViewItemPricingSelection</servlet-class>
     </servlet>
-
-    <servlet>
-        <servlet-name>PurchaseOrderForm</servlet-name>
-        <servlet-class>smic.PurchaseOrderForm</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMICAccountSet</servlet-name>
-        <servlet-class>smic.SMICAccountSet</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMICCategory</servlet-name>
-        <servlet-class>smic.SMICCategory</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMICItem</servlet-name>
-        <servlet-class>smic.SMICItem</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICItemNumberMatchUpCriteriaSelection</servlet-name>
-        <servlet-class>smic.ICItemNumberMatchUpCriteriaSelection</servlet-class>
-    </servlet>
-         
-    <servlet>
-        <servlet-name>ICItemNumberMatchUpGenerate</servlet-name>
-        <servlet-class>smic.ICItemNumberMatchUpGenerate</servlet-class>
-    </servlet>
-      
-    <servlet>
-        <servlet-name>ICItemNumberMatchUpList</servlet-name>
-        <servlet-class>smic.ICItemNumberMatchUpList</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>SMPrintUPCItemLabel</servlet-name>
-        <servlet-class>smic.SMPrintUPCItemLabel</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICUnderStockedItemReport</servlet-name>
-        <servlet-class>smic.ICUnderStockedItemReport</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICUnderStockedItemReportGenerate</servlet-name>
-        <servlet-class>smic.ICUnderStockedItemReportGenerate</servlet-class>
-    </servlet>
-
-    <servlet>
-        <servlet-name>ICUnderStockedItemReportSelection</servlet-name>
-        <servlet-class>smic.ICUnderStockedItemReportSelection</servlet-class>
-    </servlet>
-
-
-
 
 
     <!-- SERVLET MAPPINGS START HERE: -->
     
     <!-- smap package mappings: -->
-
     <servlet-mapping>
         <servlet-name>AP1099CPRSCodesEdit</servlet-name>
         <url-pattern>/smap.AP1099CPRSCodesEdit</url-pattern>
@@ -3984,7 +3687,7 @@
         <url-pattern>/smap.APViewTransactionInformation</url-pattern>
    </servlet-mapping>
     
-   <!--- smar package classes:-->
+   <!--- smar package mappings:-->
     <servlet-mapping>
         <servlet-name>ARActivityDisplay</servlet-name>
        <url-pattern>/smar.ARActivityDisplay</url-pattern>
@@ -4395,7 +4098,7 @@
        <url-pattern>/smar.ARYearEndProcessingSelection</url-pattern>
     </servlet-mapping>
     
-    <!--- smas package classes:-->
+    <!--- smas package mappings:-->
     <servlet-mapping>
 		<servlet-name>ASActivateAlarmsAction</servlet-name>
 		<url-pattern>/smas.ASActivateAlarmsAction</url-pattern>
@@ -4576,7 +4279,7 @@
     	<url-pattern>/smas.ASMainMenu</url-pattern>
 	</servlet-mapping>
 
-    <!-- - smbk package classes: -->
+    <!-- smbk package mappings: -->
     <servlet-mapping>
         <servlet-name>BKAddEntryAction</servlet-name>
         <url-pattern>/smbk.BKAddEntryAction</url-pattern>
@@ -5969,955 +5672,6 @@
         <url-pattern>/smcontrolpanel.TaxByCategoryReportSelect</url-pattern>
     </servlet-mapping>
 
-
-
-
-
-
-
-    <!-- smic package mappings: -->
-
-
-    <servlet-mapping>
-        <servlet-name>ICAccountSet</servlet-name>
-        <url-pattern>/smic.ICAccountSet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAddAdjustment</servlet-name>
-        <url-pattern>/smic.ICAddAdjustment</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAddRemovePhysInvItemsAction</servlet-name>
-        <url-pattern>/smic.ICAddRemovePhysInvItemsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAddRemovePhysInvItemsEdit</servlet-name>
-        <url-pattern>/smic.ICAddRemovePhysInvItemsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAdjustmentLineUpdate</servlet-name>
-        <url-pattern>/smic.ICAdjustmentLineUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAPExport</servlet-name>
-        <url-pattern>/smic.ICAPExport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAPExportDetail</servlet-name>
-        <url-pattern>/smic.ICAPExportDetail</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAPExportHeader</servlet-name>
-        <url-pattern>/smic.ICAPExportHeader</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAPExportPaymentSchedule</servlet-name>
-        <url-pattern>/smic.ICAPExportPaymentSchedule</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAssignPOGenerate</servlet-name>
-        <url-pattern>/smic.ICAssignPOGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAssignPOSelection</servlet-name>
-        <url-pattern>/smic.ICAssignPOSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAutoCreateInvoiceBatch</servlet-name>
-        <url-pattern>/smic.ICAutoCreateInvoiceBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICAutoCreateReceiptBatch</servlet-name>
-        <url-pattern>/smic.ICAutoCreateReceiptBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICBatch</servlet-name>
-        <url-pattern>/smic.ICBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICBatchTypes</servlet-name>
-        <url-pattern>/smic.ICBatchTypes</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICBulkTransferAction</servlet-name>
-        <url-pattern>/smic.ICBulkTransferAction</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICBulkTransferEdit</servlet-name>
-        <url-pattern>/smic.ICBulkTransferEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICCategory</servlet-name>
-        <url-pattern>/smic.ICCategory</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearPostedBatchesAction</servlet-name>
-        <url-pattern>/smic.ICClearPostedBatchesAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearPostedBatchesSelection</servlet-name>
-        <url-pattern>/smic.ICClearPostedBatchesSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearStatisticsAction</servlet-name>
-        <url-pattern>/smic.ICClearStatisticsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearStatisticsSelection</servlet-name>
-        <url-pattern>/smic.ICClearStatisticsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearTransactionsAction</servlet-name>
-        <url-pattern>/smic.ICClearTransactionsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICClearTransactionsSelection</servlet-name>
-        <url-pattern>/smic.ICClearTransactionsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICConvertACCPAC</servlet-name>
-        <url-pattern>/smic.ICConvertACCPAC</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICConvertFromACCPACAction</servlet-name>
-        <url-pattern>/smic.ICConvertFromACCPACAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICConvertFromACCPACSelect</servlet-name>
-        <url-pattern>/smic.ICConvertFromACCPACSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICCreateBatchFromInvoices</servlet-name>
-        <url-pattern>/smic.ICCreateBatchFromInvoices</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICCreateBatchFromReceipts</servlet-name>
-        <url-pattern>/smic.ICCreateBatchFromReceipts</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICCreateSMInvoiceBatch</servlet-name>
-        <url-pattern>/smic.ICCreateSMInvoiceBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICDisplayItemInformation</servlet-name>
-        <url-pattern>/smic.ICDisplayItemInformation</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICDeleteInactiveItemsSelection</servlet-name>
-        <url-pattern>/smic.ICDeleteInactiveItemsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICDeleteInactiveItemsGenerate</servlet-name>
-        <url-pattern>/smic.ICDeleteInactiveItemsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICDisplayItemSelection</servlet-name>
-        <url-pattern>/smic.ICDisplayItemSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditAccountSetsAction</servlet-name>
-        <url-pattern>/smic.ICEditAccountSetsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditAccountSetsEdit</servlet-name>
-        <url-pattern>/smic.ICEditAccountSetsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditAccountSetsSelection</servlet-name>
-        <url-pattern>/smic.ICEditAccountSetsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditAdjustmentEntry</servlet-name>
-        <url-pattern>/smic.ICEditAdjustmentEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditAdjustmentLine</servlet-name>
-        <url-pattern>/smic.ICEditAdjustmentLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditBatches</servlet-name>
-        <url-pattern>/smic.ICEditBatches</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditBatchesEdit</servlet-name>
-        <url-pattern>/smic.ICEditBatchesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditBatchesUpdate</servlet-name>
-        <url-pattern>/smic.ICEditBatchesUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditCategoriesAction</servlet-name>
-        <url-pattern>/smic.ICEditCategoriesAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditCategoriesEdit</servlet-name>
-        <url-pattern>/smic.ICEditCategoriesEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditCategoriesSelection</servlet-name>
-        <url-pattern>/smic.ICEditCategoriesSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditICOptions</servlet-name>
-        <url-pattern>/smic.ICEditICOptions</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditItemPriceSelection</servlet-name>
-        <url-pattern>/smic.ICEditItemPriceSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditItemsAction</servlet-name>
-        <url-pattern>/smic.ICEditItemsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditItemsEdit</servlet-name>
-        <url-pattern>/smic.ICEditItemsEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditItemsSelection</servlet-name>
-        <url-pattern>/smic.ICEditItemsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCountAction</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCountAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCount</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCount</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCountEntry</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCountEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCountEntryLine</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCountEntryLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCountLineAction</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCountLineAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalCountLine</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalCountLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalInventories</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalInventories</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalInventoryAction</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalInventoryAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalInventory</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalInventory</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPhysicalInventoryEdit</servlet-name>
-        <url-pattern>/smic.ICEditPhysicalInventoryEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOAction</servlet-name>
-        <url-pattern>/smic.ICEditPOAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOEdit</servlet-name>
-        <url-pattern>/smic.ICEditPOEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOLineAction</servlet-name>
-        <url-pattern>/smic.ICEditPOLineAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOLineEdit</servlet-name>
-        <url-pattern>/smic.ICEditPOLineEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOSelection</servlet-name>
-        <url-pattern>/smic.ICEditPOSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOShipViasAction</servlet-name>
-        <url-pattern>/smic.ICEditPOShipViasAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOShipViasEdit</servlet-name>
-        <url-pattern>/smic.ICEditPOShipViasEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditPOShipViasSelect</servlet-name>
-        <url-pattern>/smic.ICEditPOShipViasSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptAction</servlet-name>
-        <url-pattern>/smic.ICEditReceiptAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptEdit</servlet-name>
-        <url-pattern>/smic.ICEditReceiptEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptEntry</servlet-name>
-        <url-pattern>/smic.ICEditReceiptEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptLineAction</servlet-name>
-        <url-pattern>/smic.ICEditReceiptLineAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptLine</servlet-name>
-        <url-pattern>/smic.ICEditReceiptLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditReceiptLineEdit</servlet-name>
-        <url-pattern>/smic.ICEditReceiptLineEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditShipmentEntry</servlet-name>
-        <url-pattern>/smic.ICEditShipmentEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditShipmentLine</servlet-name>
-        <url-pattern>/smic.ICEditShipmentLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditTransferEntry</servlet-name>
-        <url-pattern>/smic.ICEditTransferEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditTransferLine</servlet-name>
-        <url-pattern>/smic.ICEditTransferLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditVendorItemsAction</servlet-name>
-        <url-pattern>/smic.ICEditVendorItemsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEditVendorItems</servlet-name>
-        <url-pattern>/smic.ICEditVendorItems</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEnterInvoiceAction</servlet-name>
-        <url-pattern>/smic.ICEnterInvoiceAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEnterInvoiceEdit</servlet-name>
-        <url-pattern>/smic.ICEnterInvoiceEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEnterInvoiceSelection</servlet-name>
-        <url-pattern>/smic.ICEnterInvoiceSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEntryBatch</servlet-name>
-        <url-pattern>/smic.ICEntryBatch</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEntry</servlet-name>
-        <url-pattern>/smic.ICEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEntryLine</servlet-name>
-        <url-pattern>/smic.ICEntryLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEntryTypes</servlet-name>
-        <url-pattern>/smic.ICEntryTypes</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICEntryUpdate</servlet-name>
-        <url-pattern>/smic.ICEntryUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICImportSMInvoices</servlet-name>
-        <url-pattern>/smic.ICImportSMInvoices</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItem</servlet-name>
-        <url-pattern>/smic.ICItem</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemPriceEditAction</servlet-name>
-        <url-pattern>/smic.ICItemPriceEditAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemPriceEdit</servlet-name>
-        <url-pattern>/smic.ICItemPriceEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemsReceivedNotInvoicedGenerate</servlet-name>
-        <url-pattern>/smic.ICItemsReceivedNotInvoicedGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemsReceivedNotInvoicedReport</servlet-name>
-        <url-pattern>/smic.ICItemsReceivedNotInvoicedReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemsReceivedNotInvoicedSelection</servlet-name>
-        <url-pattern>/smic.ICItemsReceivedNotInvoicedSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemValuationReport</servlet-name>
-        <url-pattern>/smic.ICItemValuationReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemValuationReportGenerate</servlet-name>
-        <url-pattern>/smic.ICItemValuationReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemValuationReportSelection</servlet-name>
-        <url-pattern>/smic.ICItemValuationReportSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICListPhysicalInventories</servlet-name>
-        <url-pattern>/smic.ICListPhysicalInventories</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICListUnusedPOsGenerate</servlet-name>
-        <url-pattern>/smic.ICListUnusedPOsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICListUnusedPOsReport</servlet-name>
-        <url-pattern>/smic.ICListUnusedPOsReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICListUnusedPOsSelection</servlet-name>
-        <url-pattern>/smic.ICListUnusedPOsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICMainMenu</servlet-name>
-        <url-pattern>/smic.ICMainMenu</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOnHandByDescriptionGenerate</servlet-name>
-        <url-pattern>/smic.ICOnHandByDescriptionGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOnHandByDescriptionReport</servlet-name>
-        <url-pattern>/smic.ICOnHandByDescriptionReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOnHandByDescriptionSelection</servlet-name>
-        <url-pattern>/smic.ICOnHandByDescriptionSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOption</servlet-name>
-        <url-pattern>/smic.ICOption</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOptionInput</servlet-name>
-        <url-pattern>/smic.ICOptionInput</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICOptionUpdate</servlet-name>
-        <url-pattern>/smic.ICOptionUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalCountEntry</servlet-name>
-        <url-pattern>/smic.ICPhysicalCountEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalCountImportAction</servlet-name>
-        <url-pattern>/smic.ICPhysicalCountImportAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalCountImportSelect</servlet-name>
-        <url-pattern>/smic.ICPhysicalCountImportSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalCountLineEntry</servlet-name>
-        <url-pattern>/smic.ICPhysicalCountLineEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalCountLineUpdate</servlet-name>
-        <url-pattern>/smic.ICPhysicalCountLineUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalInventoryEntry</servlet-name>
-        <url-pattern>/smic.ICPhysicalInventoryEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalInventoryVarianceReport</servlet-name>
-        <url-pattern>/smic.ICPhysicalInventoryVarianceReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPhysicalInventoryWorksheet</servlet-name>
-        <url-pattern>/smic.ICPhysicalInventoryWorksheet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOHeader</servlet-name>
-        <url-pattern>/smic.ICPOHeader</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOHeaderEntry</servlet-name>
-        <url-pattern>/smic.ICPOHeaderEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOInvoice</servlet-name>
-        <url-pattern>/smic.ICPOInvoice</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOInvoiceLine</servlet-name>
-        <url-pattern>/smic.ICPOInvoiceLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOLine</servlet-name>
-        <url-pattern>/smic.ICPOLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOLineEntry</servlet-name>
-        <url-pattern>/smic.ICPOLineEntry</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOReceiptHeader</servlet-name>
-        <url-pattern>/smic.ICPOReceiptHeader</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOReceiptLine</servlet-name>
-        <url-pattern>/smic.ICPOReceiptLine</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOReceivingReport</servlet-name>
-        <url-pattern>/smic.ICPOReceivingReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOReceivingReportGenerate</servlet-name>
-        <url-pattern>/smic.ICPOReceivingReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPOReceivingReportSelection</servlet-name>
-        <url-pattern>/smic.ICPOReceivingReportSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPostPhysicalInventory</servlet-name>
-        <url-pattern>/smic.ICPostPhysicalInventory</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICPOUnpostedInvoiceGenerate</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedInvoiceGenerate</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICPOUnpostedInvoiceReport</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedInvoiceReport</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICPOUnpostedReceiptsGenerate</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedReceiptsGenerate</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICPOUnpostedReceiptsReport</servlet-name>
-        <url-pattern>/smic.ICPOUnpostedReceiptsReport</url-pattern>
-    </servlet-mapping>
-    
-    <servlet-mapping>
-        <servlet-name>ICPrintLabelScanSheetAction</servlet-name>
-        <url-pattern>/smic.ICPrintLabelScanSheetAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintLabelScanSheetSelect</servlet-name>
-        <url-pattern>/smic.ICPrintLabelScanSheetSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintPhysicalInventoryVarianceReport</servlet-name>
-        <url-pattern>/smic.ICPrintPhysicalInventoryVarianceReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintPhysicalInventoryWorksheet</servlet-name>
-        <url-pattern>/smic.ICPrintPhysicalInventoryWorksheet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintPhysicalInventoryWorksheetGenerate</servlet-name>
-        <url-pattern>/smic.ICPrintPhysicalInventoryWorksheetGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintPOGenerate</servlet-name>
-        <url-pattern>/smic.ICPrintPOGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintPOSelection</servlet-name>
-        <url-pattern>/smic.ICPrintPOSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintReceivingLabelsAction</servlet-name>
-        <url-pattern>/smic.ICPrintReceivingLabelsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintReceivingLabelsGenerate</servlet-name>
-        <url-pattern>/smic.ICPrintReceivingLabelsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintReceivingLabelsSelection</servlet-name>
-        <url-pattern>/smic.ICPrintReceivingLabelsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintUPCAction</servlet-name>
-        <url-pattern>/smic.ICPrintUPCAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintUPCItemLabel</servlet-name>
-        <url-pattern>/smic.ICPrintUPCItemLabel</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPrintUPCSelection</servlet-name>
-        <url-pattern>/smic.ICPrintUPCSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICPurchaseOrderForm</servlet-name>
-        <url-pattern>/smic.ICPurchaseOrderForm</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICQuantitiesOnHandReport</servlet-name>
-        <url-pattern>/smic.ICQuantitiesOnHandReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICQuantitiesOnHandReportGenerate</servlet-name>
-        <url-pattern>/smic.ICQuantitiesOnHandReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICQuantitiesOnHandSelection</servlet-name>
-        <url-pattern>/smic.ICQuantitiesOnHandSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICReceiptLineUpdate</servlet-name>
-        <url-pattern>/smic.ICReceiptLineUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICRecreateAPExportAction</servlet-name>
-        <url-pattern>/smic.ICRecreateAPExportAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICRecreateAPExportEdit</servlet-name>
-        <url-pattern>/smic.ICRecreateAPExportEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICRecreateAPExportSelection</servlet-name>
-        <url-pattern>/smic.ICRecreateAPExportSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICResetPostingFlagAction</servlet-name>
-        <url-pattern>/smic.ICResetPostingFlagAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICResetPostingFlag</servlet-name>
-        <url-pattern>/smic.ICResetPostingFlag</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICSetInactiveItemsAction</servlet-name>
-        <url-pattern>/smic.ICSetInactiveItemsAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICSetInactiveItemsGenerate</servlet-name>
-        <url-pattern>/smic.ICSetInactiveItemsGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICSetInactiveItemsSelection</servlet-name>
-        <url-pattern>/smic.ICSetInactiveItemsSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICShipmentLineUpdate</servlet-name>
-        <url-pattern>/smic.ICShipmentLineUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionDetail</servlet-name>
-        <url-pattern>/smic.ICTransactionDetail</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionDetailsDisplay</servlet-name>
-        <url-pattern>/smic.ICTransactionDetailsDisplay</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionDetailsReport</servlet-name>
-        <url-pattern>/smic.ICTransactionDetailsReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionHistory</servlet-name>
-        <url-pattern>/smic.ICTransactionHistory</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionHistoryGenerate</servlet-name>
-        <url-pattern>/smic.ICTransactionHistoryGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransactionHistorySelection</servlet-name>
-        <url-pattern>/smic.ICTransactionHistorySelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransferImportAction</servlet-name>
-        <url-pattern>/smic.ICTransferImportAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransferImportSelect</servlet-name>
-        <url-pattern>/smic.ICTransferImportSelect</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICTransferLineUpdate</servlet-name>
-        <url-pattern>/smic.ICTransferLineUpdate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUpdateItemPricesGenerate</servlet-name>
-        <url-pattern>/smic.ICUpdateItemPricesGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUpdateItemPricesPreview</servlet-name>
-        <url-pattern>/smic.ICUpdateItemPricesPreview</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUpdateItemPricesSelection</servlet-name>
-        <url-pattern>/smic.ICUpdateItemPricesSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUpdateMostRecentCostAction</servlet-name>
-        <url-pattern>/smic.ICUpdateMostRecentCostAction</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUpdateMostRecentCostEdit</servlet-name>
-        <url-pattern>/smic.ICUpdateMostRecentCostEdit</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICViewItemPricingGenerate</servlet-name>
-        <url-pattern>/smic.ICViewItemPricingGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICViewItemPricingReport</servlet-name>
-        <url-pattern>/smic.ICViewItemPricingReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICViewItemPricingSelection</servlet-name>
-        <url-pattern>/smic.ICViewItemPricingSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>PurchaseOrderForm</servlet-name>
-        <url-pattern>/smic.PurchaseOrderForm</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMICAccountSet</servlet-name>
-        <url-pattern>/smic.SMICAccountSet</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMICCategory</servlet-name>
-        <url-pattern>/smic.SMICCategory</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMICItem</servlet-name>
-        <url-pattern>/smic.SMICItem</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>SMPrintUPCItemLabel</servlet-name>
-        <url-pattern>/smic.SMPrintUPCItemLabel</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemNumberMatchUpCriteriaSelection</servlet-name>
-        <url-pattern>/smic.ICItemNumberMatchUpCriteriaSelection</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemNumberMatchUpGenerate</servlet-name>
-        <url-pattern>/smic.ICItemNumberMatchUpGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICItemNumberMatchUpList</servlet-name>
-        <url-pattern>/smic.ICItemNumberMatchUpList</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUnderStockedItemReport</servlet-name>
-        <url-pattern>/smic.ICUnderStockedItemReport</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUnderStockedItemReportGenerate</servlet-name>
-        <url-pattern>/smic.ICUnderStockedItemReportGenerate</url-pattern>
-    </servlet-mapping>
-
-    <servlet-mapping>
-        <servlet-name>ICUnderStockedItemReportSelection</servlet-name>
-        <url-pattern>/smic.ICUnderStockedItemReportSelection</url-pattern>
-    </servlet-mapping>
-
      <!-- smfa package mappings: -->
     <servlet-mapping>
         <servlet-name>FAAssetListGenerate</servlet-name>
@@ -7290,11 +6044,656 @@
         <url-pattern>/smgl.GLTrialBalanceSelect</url-pattern>
     </servlet-mapping>
 
+    <!-- smic package mappings: -->
+    <servlet-mapping>
+        <servlet-name>ICAddRemovePhysInvItemsAction</servlet-name>
+        <url-pattern>/smic.ICAddRemovePhysInvItemsAction</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ICAddRemovePhysInvItemsEdit</servlet-name>
+        <url-pattern>/smic.ICAddRemovePhysInvItemsEdit</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ICAdjustmentLineUpdate</servlet-name>
+        <url-pattern>/smic.ICAdjustmentLineUpdate</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ICAssignPOGenerate</servlet-name>
+        <url-pattern>/smic.ICAssignPOGenerate</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ICAssignPOSelection</servlet-name>
+        <url-pattern>/smic.ICAssignPOSelection</url-pattern>
+    </servlet-mapping>
 
+    <servlet-mapping>
+        <servlet-name>ICBulkTransferAction</servlet-name>
+        <url-pattern>/smic.ICBulkTransferAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICBulkTransferEdit</servlet-name>
+        <url-pattern>/smic.ICBulkTransferEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearPostedBatchesAction</servlet-name>
+        <url-pattern>/smic.ICClearPostedBatchesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearPostedBatchesSelection</servlet-name>
+        <url-pattern>/smic.ICClearPostedBatchesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearStatisticsAction</servlet-name>
+        <url-pattern>/smic.ICClearStatisticsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearStatisticsSelection</servlet-name>
+        <url-pattern>/smic.ICClearStatisticsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearTransactionsAction</servlet-name>
+        <url-pattern>/smic.ICClearTransactionsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICClearTransactionsSelection</servlet-name>
+        <url-pattern>/smic.ICClearTransactionsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICConvertFromACCPACAction</servlet-name>
+        <url-pattern>/smic.ICConvertFromACCPACAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICConvertFromACCPACSelect</servlet-name>
+        <url-pattern>/smic.ICConvertFromACCPACSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICCreateBatchFromInvoices</servlet-name>
+        <url-pattern>/smic.ICCreateBatchFromInvoices</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICCreateBatchFromReceipts</servlet-name>
+        <url-pattern>/smic.ICCreateBatchFromReceipts</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICCreateSMInvoiceBatch</servlet-name>
+        <url-pattern>/smic.ICCreateSMInvoiceBatch</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICDeleteInactiveItemsGenerate</servlet-name>
+        <url-pattern>/smic.ICDeleteInactiveItemsGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICDeleteInactiveItemsSelection</servlet-name>
+        <url-pattern>/smic.ICDeleteInactiveItemsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICDisplayItemInformation</servlet-name>
+        <url-pattern>/smic.ICDisplayItemInformation</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICDisplayItemSelection</servlet-name>
+        <url-pattern>/smic.ICDisplayItemSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditAccountSetsAction</servlet-name>
+        <url-pattern>/smic.ICEditAccountSetsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditAccountSetsEdit</servlet-name>
+        <url-pattern>/smic.ICEditAccountSetsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditAccountSetsSelection</servlet-name>
+        <url-pattern>/smic.ICEditAccountSetsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditAdjustmentEntry</servlet-name>
+        <url-pattern>/smic.ICEditAdjustmentEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditAdjustmentLine</servlet-name>
+        <url-pattern>/smic.ICEditAdjustmentLine</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditBatches</servlet-name>
+        <url-pattern>/smic.ICEditBatches</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditBatchesEdit</servlet-name>
+        <url-pattern>/smic.ICEditBatchesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditBatchesUpdate</servlet-name>
+        <url-pattern>/smic.ICEditBatchesUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditCategoriesAction</servlet-name>
+        <url-pattern>/smic.ICEditCategoriesAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditCategoriesEdit</servlet-name>
+        <url-pattern>/smic.ICEditCategoriesEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditCategoriesSelection</servlet-name>
+        <url-pattern>/smic.ICEditCategoriesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditICOptions</servlet-name>
+        <url-pattern>/smic.ICEditICOptions</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditItemsAction</servlet-name>
+        <url-pattern>/smic.ICEditItemsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditItemsEdit</servlet-name>
+        <url-pattern>/smic.ICEditItemsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditItemsSelection</servlet-name>
+        <url-pattern>/smic.ICEditItemsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCount</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCount</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCountAction</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCountAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCountEntry</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCountEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCountEntryLine</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCountEntryLine</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCountLine</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCountLine</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalCountLineAction</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalCountLineAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalInventory</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalInventory</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPhysicalInventoryAction</servlet-name>
+        <url-pattern>/smic.ICEditPhysicalInventoryAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOAction</servlet-name>
+        <url-pattern>/smic.ICEditPOAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOEdit</servlet-name>
+        <url-pattern>/smic.ICEditPOEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOLineAction</servlet-name>
+        <url-pattern>/smic.ICEditPOLineAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOLineEdit</servlet-name>
+        <url-pattern>/smic.ICEditPOLineEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOSelection</servlet-name>
+        <url-pattern>/smic.ICEditPOSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOShipViasAction</servlet-name>
+        <url-pattern>/smic.ICEditPOShipViasAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOShipViasEdit</servlet-name>
+        <url-pattern>/smic.ICEditPOShipViasEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditPOShipViasSelect</servlet-name>
+        <url-pattern>/smic.ICEditPOShipViasSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptAction</servlet-name>
+        <url-pattern>/smic.ICEditReceiptAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptEdit</servlet-name>
+        <url-pattern>/smic.ICEditReceiptEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptEntry</servlet-name>
+        <url-pattern>/smic.ICEditReceiptEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptLine</servlet-name>
+        <url-pattern>/smic.ICEditReceiptLine</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptLineAction</servlet-name>
+        <url-pattern>/smic.ICEditReceiptLineAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditReceiptLineEdit</servlet-name>
+        <url-pattern>/smic.ICEditReceiptLineEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditShipmentEntry</servlet-name>
+        <url-pattern>/smic.ICEditShipmentEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditShipmentLine</servlet-name>
+        <url-pattern>/smic.ICEditShipmentLine</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditTransferEntry</servlet-name>
+        <url-pattern>/smic.ICEditTransferEntry</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditTransferLine</servlet-name>
+        <url-pattern>/smic.ICEditTransferLine</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditVendorItems</servlet-name>
+        <url-pattern>/smic.ICEditVendorItems</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEditVendorItemsAction</servlet-name>
+        <url-pattern>/smic.ICEditVendorItemsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEnterInvoiceAction</servlet-name>
+        <url-pattern>/smic.ICEnterInvoiceAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEnterInvoiceEdit</servlet-name>
+        <url-pattern>/smic.ICEnterInvoiceEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEnterInvoiceSelection</servlet-name>
+        <url-pattern>/smic.ICEnterInvoiceSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICEntryUpdate</servlet-name>
+        <url-pattern>/smic.ICEntryUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemNumberMatchUpCriteriaSelection</servlet-name>
+        <url-pattern>/smic.ICItemNumberMatchUpCriteriaSelection</url-pattern>
+    </servlet-mapping>
+         
+    <servlet-mapping>
+        <servlet-name>ICItemNumberMatchUpGenerate</servlet-name>
+        <url-pattern>/smic.ICItemNumberMatchUpGenerate</url-pattern>
+    </servlet-mapping>
+      
+    <servlet-mapping>
+        <servlet-name>ICItemPriceEdit</servlet-name>
+        <url-pattern>/smic.ICItemPriceEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemPriceEditAction</servlet-name>
+        <url-pattern>/smic.ICItemPriceEditAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemsReceivedNotInvoicedGenerate</servlet-name>
+        <url-pattern>/smic.ICItemsReceivedNotInvoicedGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemsReceivedNotInvoicedSelection</servlet-name>
+        <url-pattern>/smic.ICItemsReceivedNotInvoicedSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemValuationReportGenerate</servlet-name>
+        <url-pattern>/smic.ICItemValuationReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICItemValuationReportSelection</servlet-name>
+        <url-pattern>/smic.ICItemValuationReportSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICListPhysicalInventories</servlet-name>
+        <url-pattern>/smic.ICListPhysicalInventories</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICListUnusedPOsGenerate</servlet-name>
+        <url-pattern>/smic.ICListUnusedPOsGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICListUnusedPOsSelection</servlet-name>
+        <url-pattern>/smic.ICListUnusedPOsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICMainMenu</servlet-name>
+        <url-pattern>/smic.ICMainMenu</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICOnHandByDescriptionGenerate</servlet-name>
+        <url-pattern>/smic.ICOnHandByDescriptionGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICOnHandByDescriptionSelection</servlet-name>
+        <url-pattern>/smic.ICOnHandByDescriptionSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICOptionUpdate</servlet-name>
+        <url-pattern>/smic.ICOptionUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPhysicalCountImportAction</servlet-name>
+        <url-pattern>/smic.ICPhysicalCountImportAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPhysicalCountImportSelect</servlet-name>
+        <url-pattern>/smic.ICPhysicalCountImportSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPhysicalCountLineUpdate</servlet-name>
+        <url-pattern>/smic.ICPhysicalCountLineUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPOReceivingReportGenerate</servlet-name>
+        <url-pattern>/smic.ICPOReceivingReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPOReceivingReportSelection</servlet-name>
+        <url-pattern>/smic.ICPOReceivingReportSelection</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPostPhysicalInventory</servlet-name>
+        <url-pattern>/smic.ICPostPhysicalInventory</url-pattern>
+    </servlet-mapping>
+    
+ 	<servlet-mapping>
+        <servlet-name>ICPOUnpostedInvoiceGenerate</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedInvoiceGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPOUnpostedReceiptsGenerate</servlet-name>
+        <url-pattern>/smic.ICPOUnpostedReceiptsGenerate</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICPrintLabelScanSheetAction</servlet-name>
+        <url-pattern>/smic.ICPrintLabelScanSheetAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintLabelScanSheetSelect</servlet-name>
+        <url-pattern>/smic.ICPrintLabelScanSheetSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintPhysicalInventoryVarianceReport</servlet-name>
+        <url-pattern>/smic.ICPrintPhysicalInventoryVarianceReport</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintPhysicalInventoryWorksheet</servlet-name>
+        <url-pattern>/smic.ICPrintPhysicalInventoryWorksheet</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintPhysicalInventoryWorksheetGenerate</servlet-name>
+        <url-pattern>/smic.ICPrintPhysicalInventoryWorksheetGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintPOGenerate</servlet-name>
+        <url-pattern>/smic.ICPrintPOGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintPOSelection</servlet-name>
+        <url-pattern>/smic.ICPrintPOSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintReceivingLabelsAction</servlet-name>
+        <url-pattern>/smic.ICPrintReceivingLabelsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintReceivingLabelsGenerate</servlet-name>
+        <url-pattern>/smic.ICPrintReceivingLabelsGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintReceivingLabelsSelection</servlet-name>
+        <url-pattern>/smic.ICPrintReceivingLabelsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintUPCAction</servlet-name>
+        <url-pattern>/smic.ICPrintUPCAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICPrintUPCSelection</servlet-name>
+        <url-pattern>/smic.ICPrintUPCSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICQuantitiesOnHandReportGenerate</servlet-name>
+        <url-pattern>/smic.ICQuantitiesOnHandReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICQuantitiesOnHandSelection</servlet-name>
+        <url-pattern>/smic.ICQuantitiesOnHandSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICReceiptLineUpdate</servlet-name>
+        <url-pattern>/smic.ICReceiptLineUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICRecreateAPExportAction</servlet-name>
+        <url-pattern>/smic.ICRecreateAPExportAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICRecreateAPExportEdit</servlet-name>
+        <url-pattern>/smic.ICRecreateAPExportEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICRecreateAPExportSelection</servlet-name>
+        <url-pattern>/smic.ICRecreateAPExportSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICResetPostingFlag</servlet-name>
+        <url-pattern>/smic.ICResetPostingFlag</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>ICResetPostingFlagAction</servlet-name>
+        <url-pattern>/smic.ICResetPostingFlagAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICSetInactiveItemsAction</servlet-name>
+        <url-pattern>/smic.ICSetInactiveItemsAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICSetInactiveItemsGenerate</servlet-name>
+        <url-pattern>/smic.ICSetInactiveItemsGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICSetInactiveItemsSelection</servlet-name>
+        <url-pattern>/smic.ICSetInactiveItemsSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICShipmentLineUpdate</servlet-name>
+        <url-pattern>/smic.ICShipmentLineUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransactionDetailsDisplay</servlet-name>
+        <url-pattern>/smic.ICTransactionDetailsDisplay</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransactionHistoryGenerate</servlet-name>
+        <url-pattern>/smic.ICTransactionHistoryGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransactionHistorySelection</servlet-name>
+        <url-pattern>/smic.ICTransactionHistorySelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransferImportAction</servlet-name>
+        <url-pattern>/smic.ICTransferImportAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransferImportSelect</servlet-name>
+        <url-pattern>/smic.ICTransferImportSelect</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICTransferLineUpdate</servlet-name>
+        <url-pattern>/smic.ICTransferLineUpdate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUnderStockedItemReportGenerate</servlet-name>
+        <url-pattern>/smic.ICUnderStockedItemReportGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUnderStockedItemReportSelection</servlet-name>
+        <url-pattern>/smic.ICUnderStockedItemReportSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUpdateItemPricesGenerate</servlet-name>
+        <url-pattern>/smic.ICUpdateItemPricesGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUpdateItemPricesSelection</servlet-name>
+        <url-pattern>/smic.ICUpdateItemPricesSelection</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUpdateMostRecentCostAction</servlet-name>
+        <url-pattern>/smic.ICUpdateMostRecentCostAction</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICUpdateMostRecentCostEdit</servlet-name>
+        <url-pattern>/smic.ICUpdateMostRecentCostEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICViewItemPricingGenerate</servlet-name>
+        <url-pattern>/smic.ICViewItemPricingGenerate</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>ICViewItemPricingSelection</servlet-name>
+        <url-pattern>/smic.ICViewItemPricingSelection</url-pattern>
+    </servlet-mapping>
 
     
     <!-- Define the default session timeout for your application,

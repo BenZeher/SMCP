@@ -58,7 +58,7 @@ public class ICViewItemPricingReport extends java.lang.Object{
 		
 		//Check permissions for editing prices:
 		boolean bEditPricingPermitted = SMSystemFunctions.isFunctionPermitted(
-			SMSystemFunctions.ICItemPricing,
+			SMSystemFunctions.ICEditItemPricing,
 			sUserID,
 			conn,
 			sLicenseModuleLevel);

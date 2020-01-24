@@ -6694,7 +6694,6 @@
         <servlet-name>ICViewItemPricingSelection</servlet-name>
         <url-pattern>/smic.ICViewItemPricingSelection</url-pattern>
     </servlet-mapping>
-
     
     <!-- Define the default session timeout for your application,
          in minutes.  From a servlet or JSP page, you can modify

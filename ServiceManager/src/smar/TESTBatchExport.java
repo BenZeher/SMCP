@@ -1,8 +1,15 @@
 package smar;
+import java.math.BigDecimal;
 import java.sql.DriverManager;
+import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
+import SMClasses.SMOrderDetail;
+import SMClasses.SMOrderHeader;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
+import ServletUtilities.clsManageBigDecimals;
+import smcontrolpanel.SMSalesOrderTaxCalculator;
 import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
@@ -142,7 +149,60 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		SMSalesOrderTaxCalculator sotc = null;
+		SMOrderHeader order = new SMOrderHeader();
+		order.setM_sOrderNumber("510859");
+		if(!order.load(conn)){
+			System.out.println(order.getErrorMessages());
+		}
+		try {
+			sotc = new SMSalesOrderTaxCalculator(
+					order.salesTaxRate(conn), 
+				new BigDecimal(order.getM_dPrePostingInvoiceDiscountAmount().replace(",","")));
+			;
+		} catch (SQLException e) {
+			System.out.println("Error [1411066627] calculating taxes - " + e.getMessage());
+		}
+		for (int i = 0; i < order.get_iOrderDetailCount(); i++){
+			SMOrderDetail detail = order.getOrderDetail(i);
+			try {
+				sotc.addLine(
+						new BigDecimal(detail.getM_dExtendedOrderPrice().replace(",", "")), 
+						Integer.parseInt(detail.getM_iTaxable()), 
+						new BigDecimal(detail.getM_dQtyShipped().replace(",", "")),
+						detail.getM_sItemNumber());
+				System.out.println("[2020281513337] " + "Ext price for line " + i + " = " + detail.getM_dExtendedOrderPrice());
+			} catch (NumberFormatException e) {
+				System.out.println("Number format error [1411066629] loading line to calculate taxes - " + detail.getM_sItemNumber() 
+					+ " - detail.getM_iTaxable() = " + detail.getM_iTaxable() + " - " + e.getMessage());
+			} catch (Exception e) {
+				System.out.println("General error [1411066630] getting loading line to calculate taxes - " + e.getMessage());
+			}
+		}
+		try {
+			sotc.calculateSalesTax();
+		} catch (Exception e) {
+			System.out.println("Error [1411066631] calculating taxes - " + e.getMessage());
+
+		}
 		
+		for (int i = 0; i < sotc.getLineCount(); i++){
+			String sTaxable = "Y";
+			if (sotc.getIsLineTaxable(i) == 0){
+				sTaxable = "N";
+			}
+			System.out.println("Line " + Integer.toString((i + 1)) + " - " + sotc.getItem(i)
+				+ " " + sotc.getQtyShipped(i).toString()
+				+ ", TAXABLE: " + sTaxable
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceBeforeDiscount(i))
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getLineExtendedPriceAfterDiscount(i))
+				+ ", " + clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(sotc.getSalesTaxAmountPerLine(i))
+			);
+		}
+		System.out.println("DONE");
+		
+		
+		/*
 		//Test GL Transaction Batch posting:
 		ServletUtilities.clsDatabaseFunctions.start_data_transaction(conn);
 		GLTransactionBatch glbatch = new GLTransactionBatch("1");
@@ -155,7 +215,7 @@ public class TESTBatchExport extends HttpServlet{
 		//clsDatabaseFunctions.commit_data_transaction(conn);
 		ServletUtilities.clsDatabaseFunctions.rollback_data_transaction(conn);
 		System.out.println("DONE");
-		
+		*/
 		
 		/*
 		//Test GL conversion function:

@@ -2589,13 +2589,13 @@ public class SMDisplayOrderInformation extends HttpServlet {
 			bOddRow = !bOddRow;
 		}
 		s += "<TR CLASS =" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN+ ">"
-			+ "<TD COLSPAN = 6 class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" ><B>TOTAL SALES TAX:</B></TD>"
-			+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + " \" >" + sotc.getTotalSalesTax().toString() + "</TD>"
+			+ "<TD COLSPAN = 4 class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" ><B>TOTALS:</B></TD>"
+			+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" >" + sotc.getTotalExtendedPriceBeforeDiscount().toString() + "</TD>"
+			+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" >" + sotc.getTotalExtendedPriceAfterDiscount().toString() + "</TD>"
+			+ "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + " \" >" + sotc.getTotalSalesTax().toString() + "</TD>"
 			+ "</TR>"
 		;
 		s += "</TABLE>";
 		return s;
-
 	}
-	
 }

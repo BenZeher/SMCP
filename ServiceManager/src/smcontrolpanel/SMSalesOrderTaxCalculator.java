@@ -80,13 +80,25 @@ public class SMSalesOrderTaxCalculator extends java.lang.Object{
 		if (bdTotalBeforeDiscount.compareTo(BigDecimal.ZERO) != 0){
 			//The 'net percentage' is the 'multiplier', or what percent of the full price is the net price after discount
 			bdNetMultiplier = 
-				(bdTotalBeforeDiscount.subtract(m_bdDiscountAmt)).divide(bdTotalBeforeDiscount, BigDecimal.ROUND_HALF_UP).setScale(2, BigDecimal.ROUND_HALF_UP);
+				(bdTotalBeforeDiscount.subtract(m_bdDiscountAmt)).divide(bdTotalBeforeDiscount, 6, BigDecimal.ROUND_HALF_UP);
 		}
 		//Keep track of the total net amount in this variable:
 		BigDecimal bdNetTotalAfterDiscount = new BigDecimal("0.00");
 		
-		//Iterate through all but the LAST LINE - save that one to accumulate any rounding:
-		for (int i = 0; i < iArraySize - 1; i++){
+		//Determine which is the LAST LINE WITH A PRICE ON IT:
+		int iLastPricedLineIndex = 0;
+		for(int i = m_arExtendedPriceBeforeDiscount.size() - 1; i >= 0; i--){
+			if (m_arExtendedPriceBeforeDiscount.get(i).compareTo(BigDecimal.ZERO) != 0){
+				iLastPricedLineIndex = i;
+				break;
+			}
+		}
+		if (iLastPricedLineIndex == 0){
+			throw new Exception("Error [20202816122] " + "There must be at least one line being shipped which has a price.");
+		}
+		
+		//Iterate through all but the LAST PRICED LINE - save that one to accumulate any rounding:
+		for (int i = 0; i < iLastPricedLineIndex; i++){
 			//The extended price after discount is equal to the price BEFORE discount, times the 'multiplier' factor:
 			BigDecimal bdExtPriceAfterDiscount = (m_arExtendedPriceBeforeDiscount.get(i).multiply(bdNetMultiplier)).setScale(2, BigDecimal.ROUND_HALF_UP);
 			m_arExtendedPriceAfterDiscount.add(bdExtPriceAfterDiscount);
@@ -100,13 +112,22 @@ public class SMSalesOrderTaxCalculator extends java.lang.Object{
 		bdDiscountAmtRemaining =  (bdTotalBeforeDiscount.subtract(m_bdDiscountAmt)).subtract(bdNetTotalAfterDiscount);
 		m_arExtendedPriceAfterDiscount.add(bdDiscountAmtRemaining);
 		
+		//Finish adding the last lines to the 'm_arExtendedPriceAfterDiscount' array:
+		for (int i = iLastPricedLineIndex; i < iArraySize; i++){
+			m_arExtendedPriceAfterDiscount.add(BigDecimal.ZERO);
+		}
+		
 		//Next, calculate the tax on the total extended price AFTER discount (the 'taxable total'):
 		//First, determine which is the LAST TAXABLE LINE: - we need this because when we calculate the tax for each line, we want
 		//to put all the remaining tax on the last line to allow for rounding errors:
 		int iLastTaxableLine = 0;
 		for (int i = 0; i < iArraySize; i++){
-			//If the line is taxable and IF it has a shipped qty, then add the price after discount to the tax base:
-			if ((m_arLineTaxable.get(i) != 0) && (m_arQtyShipped.get(i).compareTo(BigDecimal.ZERO) != 0)){
+			//If the line is taxable and IF it has a shipped qty AND it has a price, then add the price after discount to the tax base:
+			if (
+				(m_arLineTaxable.get(i) != 0) 
+				&& (m_arQtyShipped.get(i).compareTo(BigDecimal.ZERO) != 0)
+				&& (m_arExtendedPriceAfterDiscount.get(i).compareTo(BigDecimal.ZERO) != 0)
+			){
 				iLastTaxableLine = i;
 				//If the line is taxable, then add the extended price after discount to the tax base:
 				m_bdSalesTaxBase = m_bdSalesTaxBase.add(m_arExtendedPriceAfterDiscount.get(i));
@@ -168,5 +189,19 @@ public class SMSalesOrderTaxCalculator extends java.lang.Object{
 	}
 	public int getLineCount(){
 		return m_arExtendedPriceBeforeDiscount.size();
+	}
+	public BigDecimal getTotalExtendedPriceBeforeDiscount(){
+		BigDecimal bdTotalExtendedPriceBeforeDiscount = new BigDecimal("0.00");
+		for (int i = 0; i < m_arExtendedPriceBeforeDiscount.size(); i++){
+			bdTotalExtendedPriceBeforeDiscount = bdTotalExtendedPriceBeforeDiscount.add(m_arExtendedPriceBeforeDiscount.get(i));
+		}
+		return bdTotalExtendedPriceBeforeDiscount;
+	}
+	public BigDecimal getTotalExtendedPriceAfterDiscount(){
+		BigDecimal bdTotalExtendedPriceAfterDiscount = new BigDecimal("0.00");
+		for (int i = 0; i < m_arExtendedPriceAfterDiscount.size(); i++){
+			bdTotalExtendedPriceAfterDiscount = bdTotalExtendedPriceAfterDiscount.add(m_arExtendedPriceAfterDiscount.get(i));
+		}
+		return bdTotalExtendedPriceAfterDiscount;
 	}
 }

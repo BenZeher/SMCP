@@ -93,9 +93,6 @@ public class SMSalesOrderTaxCalculator extends java.lang.Object{
 				break;
 			}
 		}
-		if (iLastPricedLineIndex == 0){
-			throw new Exception("Error [20202816122] " + "There must be at least one line being shipped which has a price.");
-		}
 		
 		//Iterate through all but the LAST PRICED LINE - save that one to accumulate any rounding:
 		for (int i = 0; i < iLastPricedLineIndex; i++){

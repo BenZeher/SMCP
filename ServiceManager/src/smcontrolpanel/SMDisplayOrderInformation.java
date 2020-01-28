@@ -1051,7 +1051,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		
 		//Tax calculation:
 		try {
-			pwOut.println(printTaxCalculation(sOrderNum, order, conn, sLinks, bAllowOrderDetailViewing));
+			pwOut.println(printTaxCalculation(sOrderNum, conn, sLinks, bAllowOrderDetailViewing));
 		} catch (Exception e) {
 			pwOut.println("<BR><FONT COLOR=RED>" + e.getMessage() + "</FONT><BR>");
 		}
@@ -2508,7 +2508,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 	}
 	private String printTaxCalculation(
 		String sOrderNumber, 
-		SMOrderHeader order, 
 		Connection conn,
 		String sLinks,
 		boolean bAllowOrderDetailViewing) throws Exception{
@@ -2522,7 +2521,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 		SMOrderHeader ord = new SMOrderHeader();
 		ord.setM_strimmedordernumber(sOrderNumber.trim());
 		if (!ord.load(conn)){
-			throw new Exception("Error [1411066628] loading order to calculate taxes - " + order.getErrorMessages());
+			throw new Exception("Error [1411066628] loading order to calculate taxes - " + ord.getErrorMessages());
 		}
 		s += "<BR><a name=\"TaxCalculation\"><B><U>Sales&nbsp;Tax&nbsp;Calculation</U></B></a>&nbsp;";
 		s += "<FONT SIZE=2><B>NOTE:</B> Sales Tax is only calculated on items that currently have a 'Qty Shipped'.<BR>";

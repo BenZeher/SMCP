@@ -673,14 +673,12 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					pwOut.println("<TD><FONT SIZE=2><B>Contact: </B>" + rsOrder.getString(SMTableorderheaders.sShipToContact) + "</FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
-					pwOut.println("<TD><FONT SIZE=2><B>Phone: </B>" + rsOrder.getString(SMTableorderheaders.sBillToPhone) + "</FONT></TD>");
-					pwOut.println("<TD><FONT SIZE=2><B>Phone: </B>" + rsOrder.getString(SMTableorderheaders.sShipToPhone) + "</FONT></TD>");
+					pwOut.println("<TD><FONT SIZE=2><B>Phone: </B><A HREF=\"tel:" + rsOrder.getString(SMTableorderheaders.sBillToPhone) + "\"> "+ rsOrder.getString(SMTableorderheaders.sBillToPhone)  +" </FONT></TD>");
+					pwOut.println("<TD><FONT SIZE=2><B>Phone: </B><A HREF=\"tel:" + rsOrder.getString(SMTableorderheaders.sShipToPhone) + "\"> "+ rsOrder.getString(SMTableorderheaders.sShipToPhone)  +" </FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
-					pwOut.println("<TD><FONT SIZE=2><B>2nd phone: </B>" + rsOrder.getString(SMTableorderheaders.ssecondarybilltophone) 
-							+ "</FONT></TD>");
-					pwOut.println("<TD><FONT SIZE=2><B>2nd phone: </B>" + rsOrder.getString(SMTableorderheaders.ssecondaryshiptophone) 
-							+ "</FONT></TD>");
+					pwOut.println("<TD><FONT SIZE=2><B>2nd phone: </B><A HREF=\"tel:" + rsOrder.getString(SMTableorderheaders.ssecondarybilltophone) + "\"> "+ rsOrder.getString(SMTableorderheaders.ssecondarybilltophone)  +" </FONT></TD>");
+					pwOut.println("<TD><FONT SIZE=2><B>2nd phone: </B><A HREF=\"tel:" + rsOrder.getString(SMTableorderheaders.ssecondaryshiptophone) + "\"> "+ rsOrder.getString(SMTableorderheaders.ssecondaryshiptophone)  +" </FONT></TD>");
 					pwOut.println("</TR>");
 					pwOut.println("<TR>");
 					pwOut.println("<TD><FONT SIZE=2><B>Fax: </B>" + rsOrder.getString(SMTableorderheaders.sBillToFax) + "</FONT></TD>");

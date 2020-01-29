@@ -2823,11 +2823,11 @@ public class SMWorkOrderEdit  extends HttpServlet {
 
 			//Ship to phone:
 			+ "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>"
+			+ "<TD class=\"readonlyleftfield\"><A HREF=\"tel:" + orderheader.getM_sShiptoPhone() + "\">" + orderheader.getM_sShiptoPhone() +"</TD>"
 		
 			//Second phone:
 			+ "<TD class=\" fieldlabel \">2nd Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_ssecondaryshiptophone() + "</TD>"
+			+ "<TD class=\"readonlyleftfield\"><A HREF=\"tel:" + orderheader.getM_ssecondaryshiptophone() + "\">" + orderheader.getM_ssecondaryshiptophone() +"</TD>"
 			;
 
 		//Make these fields read only:

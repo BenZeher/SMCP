@@ -2733,7 +2733,6 @@ public class SMSystemFunctions extends java.lang.Object{
 				+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
 			;
 			ArrayList <String>arrFiscalYearList = new ArrayList<String>(0);
-			// {'2010', '2011', 'value 3'}{First description, Second description, Third description}
 			try {
 				ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
 				while (rs.next()){
@@ -2761,7 +2760,7 @@ public class SMSystemFunctions extends java.lang.Object{
 			}
 			sFiscalYearList += "}";
 			
-			System.out.println("[2020291511507] " + "sFiscalYearList = '" + sFiscalYearList + "'");
+			//System.out.println("[2020291511507] " + "sFiscalYearList = '" + sFiscalYearList + "'");
 			
 			arrFunctionLinks.add(
 					"smcontrolpanel.SMQueryParameters?" 

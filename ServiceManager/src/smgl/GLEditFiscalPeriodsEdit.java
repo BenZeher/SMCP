@@ -353,7 +353,7 @@ public class GLEditFiscalPeriodsEdit extends HttpServlet {
           	  + " STYLE=\"height: 0.25in\""
           	  + "></TD>\n"
           	  + "    <TD ALIGN=LEFT>" 
-          	  + "Fiscal years would normally have 12 or possibly 13 fiscal periods per year. " 
+          	  + "<I>Fiscal years would normally have 12 or possibly 13 fiscal periods per year.</I> " 
           	  + "</TD>\n"
           	  + "  </TR>\n"
           	  ;

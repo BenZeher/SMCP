@@ -172,7 +172,12 @@ public class SMUpdateData extends java.lang.Object{
 
 		String SQL = "";
 		//Next, insert/update all the functions:
-		SMSystemFunctions sys = new SMSystemFunctions(sDBID);
+		SMSystemFunctions sys;
+		try {
+			sys = new SMSystemFunctions(sDBID, conn);
+		} catch (Exception e2) {
+			throw new Exception("Error [202029152483] " + "Error initiating System Functions - " + e2.getMessage());
+		}
 		for (int i = 0; i < sys.getSecurityFunctionCount() ;i++){
 			SQL = "INSERT INTO " + SMTablesecurityfunctions.TableName + "("
 			+ SMTablesecurityfunctions.iFunctionID

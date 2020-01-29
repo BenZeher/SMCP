@@ -11,6 +11,8 @@ import SMClasses.SMLogEntry;
 import SMClasses.SMReminders;
 import SMDataDefinition.SMModuleListing;
 import SMDataDefinition.SMTableglexternalcompanypulls;
+import SMDataDefinition.SMTableglfiscalperiods;
+import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
@@ -54,7 +56,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long ICPrintPurchaseOrders = 22L;
 	public static long SMEditProposalPhraseGroups = 23L;
 	public static long SMRecalibrateOrderAndInvoiceCounters = 24L;
-	//public static long ICItemPricing = 25L;
+	public static long GLFiscalSetListing = 25L;
 	public static long SMReceiveOrderCancellationNotifications = 26L;
 	public static long SMEditWorkOrders = 27L;
 	public static long SMEditServiceTypes = 28L;
@@ -345,15 +347,15 @@ public class SMSystemFunctions extends java.lang.Object{
 	private static ArrayList <String>arrFunctionDescriptions;
 	private static ArrayList <Long>arrFunctionModuleLevel;
 
-	SMSystemFunctions(String sDBID){
+	SMSystemFunctions(String sDBID, Connection conn) throws Exception{
 		arrFunctions = new ArrayList<String>(0);
 		arrFunctionIDs = new ArrayList<Long>(0);
 		arrFunctionLinks = new ArrayList<String>(0);
 		arrFunctionDescriptions = new ArrayList<String>(0);
 		arrFunctionModuleLevel = new ArrayList<Long>(0);
-		populateSecurityFunctions(sDBID);
+		populateSecurityFunctions(sDBID, conn);
 	}
-	private static void populateSecurityFunctions(String sDBID){
+	private static void populateSecurityFunctions(String sDBID, Connection conn) throws Exception{
 
 		//Module levels:
 		//If the company has ANY of the module levels in his license package, then a function that references ANY of this modules should appear in his program.
@@ -2720,6 +2722,100 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionIDs.add(GLReverseExternalCompanyPulls); 
 			arrFunctionLinks.add("smgl.GLReversePullSelect"); 
 			arrFunctionDescriptions.add("Allows you to reverse a previous pull from an external company.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("GL List Fiscal Sets");
+			arrFunctionIDs.add(GLFiscalSetListing);
+			
+			//Get the latest GL fiscal year:
+			String SQL = "SELECT DISTINCT " + SMTableglfiscalsets.ifiscalyear
+				+ " FROM " + SMTableglfiscalsets.TableName
+				+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
+			;
+			ArrayList <String>arrFiscalYearList = new ArrayList<String>(0);
+			// {'2010', '2011', 'value 3'}{First description, Second description, Third description}
+			try {
+				ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+				while (rs.next()){
+					arrFiscalYearList.add(Integer.toString(rs.getInt(SMTableglfiscalsets.ifiscalyear)));
+				}
+				rs.close();
+			} catch (SQLException e) {
+				throw new Exception("Error [202029150592] " + "Error getting first and last GL fiscal years - " + e.getMessage() + ".");
+			}
+			String sFiscalYearList = "{";
+			for (int i = 0; i < arrFiscalYearList.size(); i++){
+				if (i == 0){
+					sFiscalYearList += arrFiscalYearList.get(i);
+				}else{
+					sFiscalYearList += ", " + arrFiscalYearList.get(i);
+				}
+			}
+			sFiscalYearList += "}{";
+			for (int i = 0; i < arrFiscalYearList.size(); i++){
+				if (i == 0){
+					sFiscalYearList += arrFiscalYearList.get(i);
+				}else{
+					sFiscalYearList += ", " + arrFiscalYearList.get(i);
+				}
+			}
+			sFiscalYearList += "}";
+			
+			System.out.println("[2020291511507] " + "sFiscalYearList = '" + sFiscalYearList + "'");
+			
+			arrFunctionLinks.add(
+					"smcontrolpanel.SMQueryParameters?" 
+							+ "QUERYSTRING="
+							+ clsServletUtilities.URLEncode(
+									"SELECT"
+											+ " " + SMTableglfiscalsets.ifiscalyear + " AS 'Fiscal<BR>Year'"
+											+ ", " + SMTableglfiscalsets.sAcctID + " AS 'Account'"
+											+ ", " + SMTableglfiscalsets.bdopeningbalance + " AS 'Opening Balance'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod1 + " AS 'Net change<BR>Period 1'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod2 + " AS 'Net change<BR>Period 2'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod3 + " AS 'Net change<BR>Period 3'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod4 + " AS 'Net change<BR>Period 4'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod5 + " AS 'Net change<BR>Period 5'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod6 + " AS 'Net change<BR>Period 6'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod7 + " AS 'Net change<BR>Period 7'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod8 + " AS 'Net change<BR>Period 8'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod9 + " AS 'Net change<BR>Period 9'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod10 + " AS 'Net change<BR>Period 10'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod11 + " AS 'Net change<BR>Period 11'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod12 + " AS 'Net change<BR>Period 12'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod13 + " AS 'Net change<BR>Period 13'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod14 + " AS 'Net change<BR>Period 14'"
+											+ ", " + SMTableglfiscalsets.bdnetchangeperiod15 + " AS 'Net change<BR>Period 15'"
+											
+											+ " FROM " + SMTableglfiscalsets.TableName
+											+ " WHERE ("
+												+ "(" + SMTableglfiscalsets.ifiscalyear + " >= [[*DROPDOWNLIST*{Starting with fiscal year:}" + sFiscalYearList + "]]" + ")"
+											+ ")"
+											+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + ", " + SMTableglfiscalsets.sAcctID
+									)
+									+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("GL List Fiscal Sets")
+									+ "&ALTERNATEROWCOLORS=Y"
+									+ "&FONTSIZE=small"
+									//+ "&SHOWSQLCOMMAND=Y"
+									//				Possible parameters:				
+									//				public static String PARAM_EXPORTOPTIONS = "EXPORTOPTIONS";
+									//				public static String EXPORT_COMMADELIMITED_VALUE = "COMMADELIMITED";
+									//				public static String EXPORT_HTML_VALUE = "HTML";
+									//				public static String EXPORT_NOEXPORT_VALUE = "NOEXPORT";
+									//				public static String EXPORT_COMMADELIMITED_LABEL = "Comma delimited file";
+									//				public static String EXPORT_HTML_LABEL = "HTML (web page) file";
+									//				public static String EXPORT_NOEXPORT_LABEL = "Do not export - display on screen";
+									//				public static String PARAM_QUERYID = "QUERYID";
+									//				public static String PARAM_QUERYTITLE = "QUERYTITLE";
+									//				public static String PARAM_QUERYSTRING = "QUERYSTRING";
+									//				public static String PARAM_PWFORQUICKLINK = "PWFORQUICKLINK";
+									//				public static String PARAM_FONTSIZE = "FONTSIZE";
+									//				public static String PARAM_INCLUDEBORDER = "INCLUDEBORDER";
+									//				public static String PARAM_ALTERNATEROWCOLORS = "ALTERNATEROWCOLORS";
+									//				public static String PARAM_TOTALNUMERICFIELDS = "TOTALNUMERICFIELDS";
+									//				public static String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
+					); 
+			arrFunctionDescriptions.add("Lists sthe GL fiscal sets for a selected year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 	}

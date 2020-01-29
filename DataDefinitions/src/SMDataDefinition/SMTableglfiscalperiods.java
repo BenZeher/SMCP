@@ -11,7 +11,7 @@ public class SMTableglfiscalperiods {
 	public static String slasteditedbyfullusername = "slasteditedbyfullusername";
 	public static String datlastediteddateandtime = "datlastediteddateandtime";
 	public static String inumberofperiods = "inumberofperiods";
-	public static String iactive = "iactive";
+	public static String ilockclosing = "ilockclosing";
 	public static String iclosed = "iclosed";
 	//public static String ilockadjustmentperiod = "ilockadjustmentperiod";
 	public static String ilockclosingperiod = "ilockclosingperiod";

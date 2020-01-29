@@ -1007,7 +1007,7 @@ public class GLACCPACConversion  extends java.lang.Object{
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod11
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod12
 				+ ", " + SMTableglfiscalperiods.datendingdateperiod13
-				+ ", " + SMTableglfiscalperiods.iactive
+				+ ", " + SMTableglfiscalperiods.ilockclosing
 				+ ", " + SMTableglfiscalperiods.ifiscalyear
 				+ ", " + SMTableglfiscalperiods.ilasteditedbyuserid
 				+ ", " + SMTableglfiscalperiods.iclosed

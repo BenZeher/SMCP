@@ -415,6 +415,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 					+ " OR (" + SMTableglfiscalperiods.iperiod11locked + " = 0)"
 					+ " OR (" + SMTableglfiscalperiods.iperiod12locked + " = 0)"
 					+ " OR (" + SMTableglfiscalperiods.iperiod13locked + " = 0)"
+					+ " OR (" + SMTableglfiscalperiods.ilockclosingperiod + " = 0)"
 				+ ")"
 				+ " ORDER BY " + SMTableglfiscalperiods.ifiscalyear
 			;

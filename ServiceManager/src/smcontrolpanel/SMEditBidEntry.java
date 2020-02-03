@@ -723,28 +723,55 @@ public class SMEditBidEntry  extends HttpServlet {
 		s += "</TD></TR>";
 		
 		//Bill to phone:
-		s += "<TR>"
-			+ "<TD class=\" fieldlabel \"><B>Phone:</B></TD>";
-		s += "<TD>"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsphonenumber + "\""
-			+ " VALUE=\"" + entry.getsphonenumber().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMBidEntry.Paramsphonenumber + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + "13"
-			+ " MAXLENGTH=" + Integer.toString(SMTablebids.sphonenumberLength)
-			+ ">"
-		;
+		if(entry.getsphonenumber().replace("\"", "&quot;").compareToIgnoreCase("") == 0) {
 
+			s += "<TR>"
+					+ "<TD class=\" fieldlabel \"><B>Phone:</B></TD>";
+			s += "<TD>"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsphonenumber + "\""
+					+ " VALUE=\"" + entry.getsphonenumber().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMBidEntry.Paramsphonenumber + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + "13"
+					+ " MAXLENGTH=" + Integer.toString(SMTablebids.sphonenumberLength)
+					+ ">"
+					;
+		}else {
+			s +=  "  <TR>\n"
+					+ "<TD class=\" fieldlabel \"><A HREF=\"tel:" +entry.getsphonenumber()  + "\"><B>Phone</B></A>:</TD>\n";
+			s += "<TD>"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsphonenumber + "\""
+					+ " VALUE=\"" + entry.getsphonenumber().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMBidEntry.Paramsphonenumber + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + "13"
+					+ " MAXLENGTH=" + Integer.toString(SMTablebids.sphonenumberLength)
+					+ ">"
+					;
+		}
+		
 		//Alternate phone:
-		s += "&nbsp;<B>Alternate phone:</B>"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsaltphonenumber + "\""
-			+ " VALUE=\"" + entry.getsaltphonenumber().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMBidEntry.Paramsaltphonenumber + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + "13"
-			+ " MAXLENGTH=" + Integer.toString(SMTablebids.saltphonenumberLength)
-			+ ">"
-		;
+		if(entry.getsaltphonenumber().replace("\"", "&quot;").compareToIgnoreCase("") == 0) {
+			s += "&nbsp;<B>Alternate phone:</B>"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsaltphonenumber + "\""
+					+ " VALUE=\"" + entry.getsaltphonenumber().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMBidEntry.Paramsaltphonenumber + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + "13"
+					+ " MAXLENGTH=" + Integer.toString(SMTablebids.saltphonenumberLength)
+					+ ">"
+				;
+		} else {
+			s += "&nbsp;<A HREF=\"tel:" +entry.getsphonenumber()  + "\"><B>Alternate phone</B></A>:\n"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMBidEntry.Paramsaltphonenumber + "\""
+					+ " VALUE=\"" + entry.getsaltphonenumber().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMBidEntry.Paramsaltphonenumber + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + "13"
+					+ " MAXLENGTH=" + Integer.toString(SMTablebids.saltphonenumberLength)
+					+ ">"
+				;
+		}
 		
 		//Fax:
 		s += "&nbsp;<B>Fax:</B>&nbsp;"

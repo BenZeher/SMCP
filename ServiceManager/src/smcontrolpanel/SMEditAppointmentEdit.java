@@ -643,21 +643,40 @@ public class SMEditAppointmentEdit extends HttpServlet {
 			+ "</TR>\n"
 			;
 		s += "<INPUT TYPE=HIDDEN NAME=\"" + SMAppointment.Paramsgeocode + "\" VALUE=\"" + entry.getsgeocode() + "\"" + ">";
+		
 		//Phone:
-		s += "  <TR>\n"
-			+ "<TD ALIGN=RIGHT><B>Phone</B>:</TD>\n"
-			+ " <TD><B>" 
-			+ " <INPUT TYPE=TEXT"
-			+ " NAME = \"" + SMAppointment.Paramsphone + "\""
-			+ " ID = \"" + SMAppointment.Paramsphone + "\""
-			+ " VALUE = \"" + entry.getsphone() + "\""
-			+ " MAXLENGTH=" + SMTableappointments.iphoneLength
-		    + " SIZE = " + "20"
-			+ ">"
-			+ "</B></TD>\n"
-			+ "<TD> Phone number of contact person. </TD>\n"
-			+ "</TR>\n"
-			;
+		if(entry.getslid().compareToIgnoreCase("-1") == 0) {
+			s += "  <TR>\n"
+					+ "<TD ALIGN=RIGHT><B>Phone</B>:</TD>\n"
+					+ " <TD><B>" 
+					+ " <INPUT TYPE=TEXT"
+					+ " NAME = \"" + SMAppointment.Paramsphone + "\""
+					+ " ID = \"" + SMAppointment.Paramsphone + "\""
+					+ " VALUE = \"" + entry.getsphone() + "\""
+					+ " MAXLENGTH=" + SMTableappointments.iphoneLength
+					+ " SIZE = " + "20"
+					+ ">"
+					+ "</B></TD>\n"
+					+ "<TD> Phone number of contact person. </TD>\n"
+					+ "</TR>\n"
+					;
+		}else {
+			s += "  <TR>\n"
+					+ "<TD ALIGN=RIGHT><A HREF=\"tel:" +entry.getsphone()  + "\"><B>Phone</B></A>:</TD>\n"
+					+ " <TD><B>" 
+					+ " <INPUT TYPE=TEXT"
+					+ " NAME = \"" + SMAppointment.Paramsphone + "\""
+					+ " ID = \"" + SMAppointment.Paramsphone + "\""
+					+ " VALUE = \"" + entry.getsphone() + "\""
+					+ " MAXLENGTH=" + SMTableappointments.iphoneLength
+					+ " SIZE = " + "20"
+					+ ">"
+					+ "</B></TD>\n"
+					+ "<TD> Phone number of contact person. </TD>\n"
+					+ "</TR>\n"
+					;
+		}
+		
 		//Email:
 		s += "  <TR>\n"
 			+ "<TD ALIGN=RIGHT><B>Email</B>:</TD>\n"

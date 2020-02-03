@@ -311,8 +311,9 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<b>Salesperson Name: </b>" + sSalespersonName + "");
 							out.println("<br><b>Bill To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "");
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "");
-							out.println("<br><b>Contact: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + ""); 
-							out.println("<br><b>Phone: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone).replace("`", "")).trim() + ""); 
+							out.println("<br><b>Contact: </b>" + rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + "");
+							String sPhoneNumber = rs.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone).replace("`", "")).trim();
+							out.println("<br><b>Phone: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</A>"); 
 							out.println("<br><b>Order Number:</b>" + "<A HREF=\"" 
 									+ SMUtilities.getURLLinkBase(context) 
 									+ "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" 
@@ -336,7 +337,8 @@ public class SMCriticalDateReport extends java.lang.Object{
 									+ "</A>");
 							out.println("<br><b>Customer Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs, SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "").trim() + ""); 
 							out.println("<br><b>Contact Name: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs , SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "").trim() + ""); 
-							out.println("<br><b>Phone: </b>" + clsDatabaseFunctions.getRecordsetStringValue(rs,SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber ).replace("`", "").trim() + ""); 
+							String sPhoneNumber = rs.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim();
+							out.println("<br><b>Phone: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</A>"); 
 							out.println("<br><b>Last Invoice Date: </b>" +  clsDateAndTimeConversions.resultsetDateStringToString(rs.getString("LASTINVOICEDATE")) + ""); 
 							out.println("<br><b>Sales Contact ID: </b>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(context) 
@@ -356,7 +358,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
 							String sPhoneNumber = rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim();
-							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</a>"); 
+							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</A>"); 
 							out.println("<br><b>Project Type: </b>" + rs.getString((SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc).replace("`", "")).trim() + ""); 
 							String sStatus = rs.getString((SMTablebids.TableName + "." + SMTablebids.sstatus).replace("`", "")).trim();
 							if(sStatus.compareToIgnoreCase("P") == 0) {

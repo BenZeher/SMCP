@@ -2813,12 +2813,12 @@ public class SMSystemFunctions extends java.lang.Object{
 									//				public static String PARAM_TOTALNUMERICFIELDS = "TOTALNUMERICFIELDS";
 									//				public static String PARAM_SHOWSQLCOMMAND = "SHOWSQLCOMMAND";
 					); 
-			arrFunctionDescriptions.add("Lists sthe GL fiscal sets for a selected year.");
+			arrFunctionDescriptions.add("Lists the GL fiscal sets for a selected year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
 			
 			arrFunctions.add("SM Edit Price Level Labels"); 
 			arrFunctionIDs.add(SMEditPriceLevelLabels); 
-			arrFunctionLinks.add("smgl.SMEditPriceLevelLabelsEdit"); 
+			arrFunctionLinks.add("smcontrolpanel.SMEditPriceLevelLabelsEdit"); 
 			arrFunctionDescriptions.add("Use this to customise the names of the 6 price levels for each price list.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			

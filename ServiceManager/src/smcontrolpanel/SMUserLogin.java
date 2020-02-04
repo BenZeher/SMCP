@@ -432,7 +432,8 @@ public class SMUserLogin extends HttpServlet {
 		//Edit appointment Calendar groups:
 		arMenu.add(SMSystemFunctions.SMEditAppointmentGroups);
 		
-		
+		//Edit price level labels:
+		arMenu.add(SMSystemFunctions.SMEditPriceLevelLabels);
 
 		
 		if (bMobileView){

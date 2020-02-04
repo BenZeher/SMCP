@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1449;
+	private static final int m_CurrentDatabaseVersion = 1451;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "2/4/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15093,6 +15093,47 @@ public class SMUpdateData extends java.lang.Object{
 				SQL = "ALTER TABLE `glfiscalperiods` "
 						+ "CHANGE COLUMN `iactive` `ilockclosing` int(11) NOT NULL default '1'"
 						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1449:
+				//Added by TJR 2/4/2020
+				SQL = "CREATE TABLE `pricelistlevellabels` ("
+					+ "sbasepricelabel varchar(60) NOT NULL DEFAULT 'Base Price'"
+					+ " , spricelevel1label varchar(60) NOT NULL DEFAULT 'Level 1'"
+					+ " , spricelevel2label varchar(60) NOT NULL DEFAULT 'Level 2'"
+					+ " , spricelevel3label varchar(60) NOT NULL DEFAULT 'Level 3'"
+					+ " , spricelevel4label varchar(60) NOT NULL DEFAULT 'Level 4'"
+					+ " , spricelevel5label varchar(60) NOT NULL DEFAULT 'Level 5'"
+					+ ") Engine=MyISAM"
+					;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			//BEGIN CASE:
+			case 1450:
+				//Added by TJR 2/4/2020
+				SQL = "INSERT INTO `pricelistlevellabels` ("
+					+ "sbasepricelabel"
+					+ " , spricelevel1label"
+					+ " , spricelevel2label"
+					+ " , spricelevel3label"
+					+ " , spricelevel4label"
+					+ " , spricelevel5label"
+					+ ") VALUES ("
+						+ "'Base Price'"
+						+ ", 'Level 1'"
+						+ ", 'Level 2'"
+						+ ", 'Level 3'"
+						+ ", 'Level 4'"
+						+ ", 'Level 5'"
+					+ ")"
+					;
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

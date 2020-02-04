@@ -326,6 +326,7 @@ public class MySQLs {
 				" " + SMTableusers.TableName + "." + SMTableusers.iactive + " = 1" +
 			" ORDER BY" + 
 				" " + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + "," +
+				" " + SMTableusers.TableName + "." + SMTableusers.sUserLastName + "," +
 				" " + SMTablesecuritygroupfunctions.TableName + "." + SMTablesecuritygroupfunctions.sFunction + "," +
 				" " + SMTablesecuritygroupfunctions.TableName + "." + SMTablesecuritygroupfunctions.sGroupName;
 		}
@@ -346,7 +347,9 @@ public class MySQLs {
 			" ORDER BY" + 
 				" " + SMTablesecuritygroupfunctions.TableName + "." + SMTablesecuritygroupfunctions.sGroupName + "," +
 				" " + SMTablesecuritygroupfunctions.TableName + "." + SMTablesecuritygroupfunctions.sFunction + "," +
-				" " + SMTableusers.TableName + "." + SMTableusers.sUserFirstName;
+				" " + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + "," +
+				" " + SMTableusers.TableName + "." + SMTableusers.sUserLastName
+				;
 		}
 		if (sListBy.compareTo("Function") == 0){
 			SQL = "SELECT * FROM" + 
@@ -367,13 +370,17 @@ public class MySQLs {
 				" " + SMTableusers.TableName + "." + SMTableusers.sUserFirstName;
 		}
 		if (sListBy.compareTo("GroupList") == 0){
-			SQL = "SELECT * FROM" +
+			SQL = "SELECT (@rownumber:=@rownumber + 1) AS rownum, "
+				+ SMTablesecuritygroups.TableName + ".*"
+				+ " FROM" +
 					" " + SMTablesecuritygroups.TableName + 
 				  " ORDER BY" +
 				  	" " + SMTablesecuritygroups.sSecurityGroupName;
 		}
 		if (sListBy.compareTo("FunctionList") == 0){
-			SQL = "SELECT * FROM" +
+			SQL = "SELECT (@rownumber:=@rownumber + 1) AS rownum, "
+					+ SMTablesecurityfunctions.TableName + ".*"
+					+ " FROM" +
 					" " + SMTablesecurityfunctions.TableName + 
 				  " ORDER BY" +
 				  	" " + SMTablesecurityfunctions.sFunctionName;

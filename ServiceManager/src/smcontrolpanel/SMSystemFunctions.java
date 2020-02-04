@@ -511,7 +511,7 @@ public class SMSystemFunctions extends java.lang.Object{
 		arrFunctionDescriptions.add("Required to access the Manage Security Groups function, which sets and revokes selected permissions for users/security groups.");
 		arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 
-		arrFunctions.add(" SM List Security Levels"); 
+		arrFunctions.add("SM List Security Levels"); 
 		arrFunctionIDs.add(SMListSecurityLevels); 
 		arrFunctionLinks.add("smcontrolpanel.SMListSecurityLevels"); 
 		arrFunctionDescriptions.add("Required to list the security levels, which show which users/ have which permissions, and through which groups those permissions were granted.");

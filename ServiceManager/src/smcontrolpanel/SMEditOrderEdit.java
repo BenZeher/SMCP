@@ -1,6 +1,7 @@
 package smcontrolpanel;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -12,7 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smar.ARCustomer;
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
 import SMClasses.SMWorkOrderHeader;
@@ -33,11 +33,12 @@ import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTabletax;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
+import smar.ARCustomer;
 
 public class SMEditOrderEdit  extends HttpServlet {
 
@@ -354,7 +355,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 
 		try{
 			smedit.createEditPage(getEditHTML(smedit, entry, sObjectName, sDBID, sUserID, sUserFullName), "");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			String sError = "Could not create edit page - " + e.getMessage();
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
@@ -372,7 +373,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			String sObjectName,
 			String sDBID,
 			String sUserID,
-			String sUserFullName) throws SQLException{
+			String sUserFullName) throws Exception{
 
 		String s = "";
 		
@@ -580,10 +581,56 @@ public class SMEditOrderEdit  extends HttpServlet {
 			bFirstRecord = false;
 		}
 		//rsSalespersons.close();
-		String sPriceLevel = "BASE";
-		if (cus.getM_sPriceLevel().compareToIgnoreCase("0") != 0){
-			sPriceLevel = "LEVEL " + cus.getM_sPriceLevel();
+		
+		Connection conn = null;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [202035188423] " + "could not get connection to read price levels - " + e.getMessage());
 		}
+		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580857764] reading price level labels: " + e1.getMessage());
+		}
+		
+		String sPriceLevel = "";
+		int iPriceLevel;
+		try {
+			iPriceLevel = Integer.parseInt(cus.getM_sPriceLevel());
+		} catch (Exception e2) {
+			throw new Exception("Error [202035181418] " + "parsing customer price level '" + cus.getM_sPriceLevel() + "' - " + e2.getMessage());
+		}
+		switch(iPriceLevel){
+		case 0:
+			sPriceLevel = pricelevellabels.get_sbaselabel();
+			break;
+		case 1:
+			sPriceLevel = pricelevellabels.get_slevel1label();
+			break;
+		case 2:
+			sPriceLevel = pricelevellabels.get_slevel2label();
+			break;
+		case 3:
+			sPriceLevel = pricelevellabels.get_slevel3label();
+			break;
+		case 4:
+			sPriceLevel = pricelevellabels.get_slevel4label();
+			break;
+		case 5:
+			sPriceLevel = pricelevellabels.get_slevel5label();
+			break;
+		default:
+			sPriceLevel = pricelevellabels.get_sbaselabel();
+			break;
+		}
+		
 		s += "<B>" + sObjectName + " number:</B>&nbsp;" 
 			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 			+ "smcontrolpanel.SMDisplayOrderInformation"
@@ -742,11 +789,29 @@ public class SMEditOrderEdit  extends HttpServlet {
 			SMMasterEditEntry sm, 
 			SMOrderHeader entry,
 			ARCustomer customer,
-			String sObjectName) throws SQLException{
+			String sObjectName) throws Exception{
 		String s = "";
 		String SQL = "";
 		//Create the table:
 		s += "<TABLE class = \" innermost \" style=\" title:CustomerSettings; \">\n\n";
+		
+		Connection conn;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sm.getsDBID(), 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sm.getUserName());
+		} catch (Exception e) {
+			throw new Exception("Error [2020351750284] " + "couldn't get connection - " + e.getMessage());
+		}
+		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580852378] reading price level labels: " + e1.getMessage());
+		}
 		
 		//The customer price level:
 		s += "<TR>";
@@ -763,9 +828,30 @@ public class SMEditOrderEdit  extends HttpServlet {
 			if (entry.getM_iCustomerDiscountLevel().compareToIgnoreCase(Integer.toString(i)) == 0){
 				s += " selected=YES ";
 			}
-			String sDesc = "LEVEL " + Integer.toString(i);
-			if (i == 0){
-				sDesc = "BASE LEVEL";
+
+			String sDesc = "";
+			switch(i){
+			case 0:
+				sDesc = pricelevellabels.get_sbaselabel();
+				break;
+			case 1:
+				sDesc = pricelevellabels.get_slevel1label();
+				break;
+			case 2:
+				sDesc = pricelevellabels.get_slevel2label();
+				break;
+			case 3:
+				sDesc = pricelevellabels.get_slevel3label();
+				break;
+			case 4:
+				sDesc = pricelevellabels.get_slevel4label();
+				break;
+			case 5:
+				sDesc = pricelevellabels.get_slevel5label();
+				break;
+			default:
+				sDesc = pricelevellabels.get_sbaselabel();
+				break;
 			}
 			s += " VALUE=\"" + Integer.toString(i) + "\">\n" + sDesc + "</OPTION>";
 		}

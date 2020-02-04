@@ -14,9 +14,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.MySQLs;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
@@ -29,11 +26,15 @@ import SMDataDefinition.SMTablepricelistcodes;
 import SMDataDefinition.SMTablesalesgroups;
 import SMDataDefinition.SMTablesalesperson;
 import SMDataDefinition.SMTabletax;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class AREditCustomersEdit extends HttpServlet {
 
@@ -523,6 +524,23 @@ public class AREditCustomersEdit extends HttpServlet {
         );
         
         //Price level
+		Connection conn = null;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sUserID);
+		} catch (Exception e) {
+			pwOut.println("<BR><FONT COLOR=RED>Error [1580857237] getting connection - " + e.getMessage() + "</FONT><BR>");
+		}
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			pwOut.println("<BR><FONT COLOR=RED>Error [1580857238] reading price level labels - " + e1.getMessage() + "</FONT><BR>");
+		}
+		
         sValues.clear();
         sDescriptions.clear();
         //First, add a blank to make sure the user selects one:
@@ -530,11 +548,30 @@ public class AREditCustomersEdit extends HttpServlet {
         //sDescriptions.add("-- Select a price level --");
         for(int i = 0; i <= 5; i++){
         	sValues.add(Integer.toString(i));
-        	if(i == 0){
-        		sDescriptions.add("Base Price Level");
-        	}else{
-        		sDescriptions.add("Price Level " + Integer.toString(i));
-        	}
+        	
+			switch(i){
+			case 0:
+				sDescriptions.add(pricelevellabels.get_sbaselabel());
+				break;
+			case 1:
+				sDescriptions.add(pricelevellabels.get_slevel1label());
+				break;
+			case 2:
+				sDescriptions.add(pricelevellabels.get_slevel2label());
+				break;
+			case 3:
+				sDescriptions.add(pricelevellabels.get_slevel3label());
+				break;
+			case 4:
+				sDescriptions.add(pricelevellabels.get_slevel4label());
+				break;
+			case 5:
+				sDescriptions.add(pricelevellabels.get_slevel5label());
+				break;
+			default:
+				sDescriptions.add(pricelevellabels.get_sbaselabel());
+				break;
+			}
         }
         pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_List_Row(
         		ARCustomer.Paramspricelevel + "\" ID=\"" + ARCustomer.Paramspricelevel + "\" ONCHANGE=\"flagDirty();", 

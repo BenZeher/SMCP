@@ -578,12 +578,19 @@ public class SMConfigWorkOrderEdit  extends HttpServlet {
 			
 			//Ship to contact:
 			+ "<TD class=\" fieldlabel \">Contact:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoContact() + "</TD>"
+			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoContact() + "</TD>";
 
 			//Ship to phone:
-			+ "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
-			+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>"
-		;
+			if(orderheader.getM_sShiptoPhone().compareToIgnoreCase("") == 0) {
+				s += "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
+						+ "<TD class=\"readonlyleftfield\">" + orderheader.getM_sShiptoPhone() + "</TD>"
+					;
+			} else {
+				s +=  "<TD class=\" fieldlabel \">Phone:&nbsp;</TD>"
+						+ "<TD class=\"readonlyleftfield\"> <A HREF=\"tel:" + orderheader.getM_sShiptoPhone()  + "\">"+ orderheader.getM_sShiptoPhone() + "</A></TD>"
+					;
+			}
+
 		//Close the table:
 		s += "</TABLE style = \" title:OrderHeaderTable2; \">\n";
 		

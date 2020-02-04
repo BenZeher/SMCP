@@ -11,7 +11,6 @@ import SMClasses.SMLogEntry;
 import SMClasses.SMReminders;
 import SMDataDefinition.SMModuleListing;
 import SMDataDefinition.SMTableglexternalcompanypulls;
-import SMDataDefinition.SMTableglfiscalperiods;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablesecurityfunctions;
@@ -218,7 +217,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long FAEnterAdjustments = 1123L;
 	public static long FASettings = 1124L;
 	public static long FAPeriodEndProcessing = 1125L;
-	//public static long FAClearTransactionHistory = 1126L;
+	public static long SMEditPriceLevelLabels = 1126L;
 	public static long FAResetYearToDateDepreciation = 1127L;
 	public static long FAAssetList = 1128L;
 	public static long FATransactionReport = 1129L;
@@ -2816,6 +2815,12 @@ public class SMSystemFunctions extends java.lang.Object{
 					); 
 			arrFunctionDescriptions.add("Lists sthe GL fiscal sets for a selected year.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_GENERALLEDGER);
+			
+			arrFunctions.add("SM Edit Price Level Labels"); 
+			arrFunctionIDs.add(SMEditPriceLevelLabels); 
+			arrFunctionLinks.add("smgl.SMEditPriceLevelLabelsEdit"); 
+			arrFunctionDescriptions.add("Use this to customise the names of the 6 price levels for each price list.");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
 			
 	}
 

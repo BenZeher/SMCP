@@ -1591,6 +1591,16 @@
     </servlet>
 
     <servlet>
+        <servlet-name>SMEditPriceLevelLabelsAction</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditPriceLevelLabelsAction</servlet-class>
+    </servlet>
+    
+    <servlet>
+        <servlet-name>SMEditPriceLevelLabelsEdit</servlet-name>
+        <servlet-class>smcontrolpanel.SMEditPriceLevelLabelsEdit</servlet-class>
+    </servlet>
+
+    <servlet>
         <servlet-name>SMEditProjectTypes</servlet-name>
         <servlet-class>smcontrolpanel.SMEditProjectTypes</servlet-class>
     </servlet>
@@ -4890,6 +4900,16 @@
     <servlet-mapping>
         <servlet-name>SMEditOrderTotalsEdit</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditOrderTotalsEdit</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>SMEditPriceLevelLabelsAction</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditPriceLevelLabelsAction</url-pattern>
+    </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>SMEditPriceLevelLabelsEdit</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditPriceLevelLabelsEdit</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

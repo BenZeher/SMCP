@@ -14,15 +14,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICUpdateItemPricesGenerate extends HttpServlet {
 
@@ -216,47 +217,79 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
    			+ sEndingRptGrp4 + "</B>'";
    		sCriteria = sCriteria + ", with report group 5 from '<B>" + sStartingRptGrp5 + "</B>' to '<B>" 
    			+ sEndingRptGrp5 + "</B>'";
+   		
+    	//Retrieve information
+    	Connection conn = clsDatabaseFunctions.getConnection(
+    			getServletContext(), 
+    			sDBID, 
+    			"MySQL", 
+    			SMUtilities.getFullClassName(this.toString()) 
+    			+ " - user: " 
+    			+ sUserID
+    			+ " - "
+    			+ sUserFullName
+    	);
+    	if (conn == null){
+    		sWarning = "Unable to get data connection.";
+    		response.sendRedirect(
+    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
+    				+ "Warning=" + sWarning
+    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
+    				+ sRedirectParams	
+    		);			
+        	return;
+    	}
+   		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			out.println("<BR><B><FONT COLOR=RED> Error [1580853473] loading price level labels - " + e1.getMessage() + "</FONT></B><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
+   		
    		String sPriceLevels = "";
    		if (bPriceLevel0){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Base</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_sbaselabel() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Base</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_sbaselabel() + "</B>'";
    			}
    		}
    		if (bPriceLevel1){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Level 1</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_slevel1label() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Level 1</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_slevel1label() + "</B>'";
    			}
    		}
    		if (bPriceLevel2){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Level 2</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_slevel2label() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Level 2</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_slevel2label() + "</B>'";
    			}
    		}
    		if (bPriceLevel3){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Level 3</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_slevel3label() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Level 3</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_slevel3label() + "</B>'";
    			}
    		}
    		if (bPriceLevel4){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Level 4</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_slevel4label() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Level 4</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_slevel4label() + "</B>'";
    			}
    		}
    		if (bPriceLevel5){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){
-   				sPriceLevels+= "'<B>Level 5</B>'";
+   				sPriceLevels+= "'<B>" + pricelevellabels.get_slevel5label() + "</B>'";
    			}else{
-   				sPriceLevels+= ", '<B>Level 5</B>'";
+   				sPriceLevels+= ", '<B>" + pricelevellabels.get_slevel5label() + "</B>'";
    			}
    		}
 
@@ -296,28 +329,6 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
     	
 		out.println(SMUtilities.getMasterStyleSheetLink());
 		
-    	//Retrieve information
-    	Connection conn = clsDatabaseFunctions.getConnection(
-    			getServletContext(), 
-    			sDBID, 
-    			"MySQL", 
-    			SMUtilities.getFullClassName(this.toString()) 
-    			+ " - user: " 
-    			+ sUserID
-    			+ " - "
-    			+ sUserFullName
-    	);
-    	if (conn == null){
-    		sWarning = "Unable to get data connection.";
-    		response.sendRedirect(
-    				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
-    				+ "Warning=" + sWarning
-    				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID
-    				+ sRedirectParams	
-    		);			
-        	return;
-    	}
-
 		//If it's a request to PREVIEW, then preview the prices
 		if(request.getParameter(ICUpdateItemPricesSelection.PREVIEWBUTTONNAME_PARAM) != null){
 	    	ICUpdateItemPricesPreview rpt = new ICUpdateItemPricesPreview();

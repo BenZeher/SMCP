@@ -8,8 +8,6 @@ import java.sql.SQLException;
 
 import javax.servlet.ServletContext;
 
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemprices;
@@ -18,6 +16,9 @@ import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICViewItemPricingReport extends java.lang.Object{
 
@@ -85,7 +86,8 @@ public class ICViewItemPricingReport extends java.lang.Object{
 							sDBID,
 							bItemViewingPermitted,
 							out,
-							context);
+							context,
+							conn);
 					iCount=0;
 				}
 				
@@ -110,8 +112,8 @@ public class ICViewItemPricingReport extends java.lang.Object{
 				iCount++;
 			}
 			rs.close();
-    	}catch (SQLException e){
-    		m_sErrorMessage = "Error reading resultset - " + e.getMessage();
+    	}catch (Exception e){
+    		m_sErrorMessage = "Error [1580855424] reading resultset - " + e.getMessage();
     		return false;
     	}
     	
@@ -315,8 +317,9 @@ public class ICViewItemPricingReport extends java.lang.Object{
 		String sDBID,
 		boolean bViewItemPermitted,
 		PrintWriter out,
-		ServletContext context
-	){
+		ServletContext context,
+		Connection conn
+	) throws Exception{
 		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=\"8\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
 		String sOutPut = "<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
 				+ "<TD COLSPAN = 8 CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD + "\">";
@@ -334,17 +337,23 @@ public class ICViewItemPricingReport extends java.lang.Object{
 			+ "&nbsp;Unit of measure:&nbsp;" + sUOM + "</TD></TR>");
 		out.println("<TR CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\"><TD COLSPAN=\"8\" CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BREAK + "\">&nbsp;</TD></TR>");
 		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580855317] reading price level labels: " + e1.getMessage());
+		}
+		
 		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Price List Code</TD>\n");
 		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Base</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 1</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 2</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 3</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 4</TD>\n");
-		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Level 5</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_sbaselabel() + "</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel1label() + "</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel2label() + "</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel3label() + "</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel4label() + "</TD>\n");
+		out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel5label() + "</TD>\n");
 		out.println("</TR>");
-
 	}
 	private void printItemFooter(
 			PrintWriter out

@@ -2,6 +2,7 @@ package smic;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,6 +19,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
@@ -114,6 +116,17 @@ public class ICItemPriceEditAction extends HttpServlet{
 			String sPriceLevel4,
 			String sPriceLevel5) throws Exception{
 		
+		Connection conn;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sUserID);
+		} catch (Exception e) {
+			throw new Exception("Error [2020351654243] " + "getting connection - " + e.getMessage());
+		}
+		
 		try {
 			validateFields(
 					sItemNumber, 
@@ -125,7 +138,8 @@ public class ICItemPriceEditAction extends HttpServlet{
 					sPriceLevel2,
 					sPriceLevel3,
 					sPriceLevel4,
-					sPriceLevel5
+					sPriceLevel5,
+					conn
 					);
 		}catch (Exception e) {
 			throw new Exception("Error in validation - " + e.getMessage());
@@ -194,7 +208,8 @@ public class ICItemPriceEditAction extends HttpServlet{
 			String sPriceLevel2,
 			String sPriceLevel3,
 			String sPriceLevel4,
-			String sPriceLevel5
+			String sPriceLevel5,
+			Connection conn
     	)throws Exception{
 		
 		boolean bResult = true;
@@ -211,12 +226,19 @@ public class ICItemPriceEditAction extends HttpServlet{
 			bResult = false;
 		}
 		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580852368] reading price level labels: " + e1.getMessage());
+		}
+		
 		//Validate the dollar values:
 		if (sBasePrice.compareToIgnoreCase("") == 0){
 			sBasePrice = "0.00";
 		}else{
 			if (!isValidAmount(sBasePrice, 2)){
-				sErrorMessage += "<BR>Invalid base price: '" + sBasePrice + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_sbaselabel() + ": '" + sBasePrice + "'.";
 				bResult = false;
 			}
 		}
@@ -225,7 +247,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			sPriceLevel1 = "0.00";
 		}else{
 			if (!isValidAmount(sPriceLevel1, 2)){
-				sErrorMessage += "<BR>Invalid level 1 price: '" + sPriceLevel1 + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_slevel1label() + " price: '" + sPriceLevel1 + "'.";
 				bResult = false;
 			}
 		}
@@ -234,7 +256,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			sPriceLevel2 = "0.00";
 		}else{
 			if (!isValidAmount(sPriceLevel2, 2)){
-				sErrorMessage += "<BR>Invalid level 2 price: '" + sPriceLevel2 + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_slevel2label() + " price: '" + sPriceLevel2 + "'.";
 				bResult = false;
 			}
 		}
@@ -243,7 +265,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			sPriceLevel3 = "0.00";
 		}else{
 			if (!isValidAmount(sPriceLevel3, 2)){
-				sErrorMessage += "<BR>Invalid level 3 price: '" + sPriceLevel3 + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_slevel3label() + " price: '" + sPriceLevel3 + "'.";
 				bResult = false;
 			}
 		}
@@ -252,7 +274,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			sPriceLevel4 = "0.00";
 		}else{
 			if (!isValidAmount(sPriceLevel4, 2)){
-				sErrorMessage += "<BR>Invalid level 4 price: '" + sPriceLevel4 + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_slevel4label() + " price: '" + sPriceLevel4 + "'.";
 				bResult = false;
 			}
 		}
@@ -261,7 +283,7 @@ public class ICItemPriceEditAction extends HttpServlet{
 			sPriceLevel5 = "0.00";
 		}else{
 			if (!isValidAmount(sPriceLevel5, 2)){
-				sErrorMessage += "<BR>Invalid level 5 price: '" + sPriceLevel5 + "'.";
+				sErrorMessage += "<BR>Invalid " + pricelevellabels.get_slevel5label() + " price: '" + sPriceLevel5 + "'.";
 				bResult = false;
 			}
 		}

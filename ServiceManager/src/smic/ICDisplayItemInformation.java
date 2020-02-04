@@ -42,6 +42,7 @@ import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
@@ -974,6 +975,14 @@ public class ICDisplayItemInformation extends HttpServlet {
 
 			pwOut.println("<TABLE  WIDTH=100%  CLASS = \""+ SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER_COLLAPSE + "\">");
 
+			SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+			try {
+				pricelevellabels.load(conn);
+			} catch (Exception e1) {
+				pwOut.println("Error [1580852367] reading price level labels: " + e1.getMessage());
+				return false;
+			}
+			
 			//Table heading:
 			pwOut.println(
 					"<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">"
@@ -982,12 +991,12 @@ public class ICDisplayItemInformation extends HttpServlet {
 							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Last maintained</TD>"
 							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">By</TD>"
 							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">UOM</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Base price</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Price level 1</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Price level 2</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Price level 3</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Price level 4</TD>"
-							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Price level 5</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_sbaselabel() + "</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel1label() + "</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel2label() + "</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel3label() + "</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel4label() + "</TD>"
+							+ "<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">" + pricelevellabels.get_slevel5label() + "</TD>"
 							+ "</TR>"
 					);
 

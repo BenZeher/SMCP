@@ -2,6 +2,7 @@ package smic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,9 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
@@ -22,6 +20,10 @@ import ServletUtilities.clsCreateHTMLTableFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICItemPriceEdit extends HttpServlet {
 	
@@ -176,14 +178,33 @@ public class ICItemPriceEdit extends HttpServlet {
 			    return;
 			}
 		}
-		buildEditFields(
-				out,
-				sBasePrice,
-				sPriceLevel1,
-				sPriceLevel2,
-				sPriceLevel3,
-				sPriceLevel4,
-				sPriceLevel5);
+		Connection conn;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sUserName);
+		} catch (Exception e) {
+			out.println("<BR><B><FONT COLOR=RED> Error [1580852925] getting connection - " + e.getMessage() + "</FONT></B><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
+		try {
+			buildEditFields(
+					out,
+					sBasePrice,
+					sPriceLevel1,
+					sPriceLevel2,
+					sPriceLevel3,
+					sPriceLevel4,
+					sPriceLevel5,
+					conn);
+		} catch (Exception e) {
+			out.println("<BR><B><FONT COLOR=RED> Error [1580852926] building edit fields - " + e.getMessage() + "</FONT></B><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
 		
 		out.println("</TABLE>");
 		out.println("<BR>");
@@ -200,13 +221,21 @@ public class ICItemPriceEdit extends HttpServlet {
 			String sPriceLevel2,
 			String sPriceLevel3,
 			String sPriceLevel4,
-			String sPriceLevel5){
+			String sPriceLevel5,
+			Connection conn) throws Exception{
+		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580852368] reading price level labels: " + e1.getMessage());
+		}
 		
 		pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
 			"BasePrice", 
 			sBasePrice, 
 			14, 
-			"Base price:", 
+			pricelevellabels.get_sbaselabel() + " price:", 
 			"&nbsp;", 
 			"14")
 			);
@@ -215,7 +244,7 @@ public class ICItemPriceEdit extends HttpServlet {
 			"PriceLevel1", 
 			sPriceLevel1, 
 			14, 
-			"Level 1 price:", 
+			pricelevellabels.get_slevel1label() + " price:", 
 			"&nbsp;", 
 			"14")
 			);
@@ -224,7 +253,7 @@ public class ICItemPriceEdit extends HttpServlet {
 				"PriceLevel2", 
 				sPriceLevel2, 
 				14, 
-				"Level 2 price:", 
+				pricelevellabels.get_slevel2label() + " price:",
 				"&nbsp;", 
 				"14")
 				);
@@ -233,7 +262,7 @@ public class ICItemPriceEdit extends HttpServlet {
 				"PriceLevel3", 
 				sPriceLevel3, 
 				14, 
-				"Level 3 price:", 
+				pricelevellabels.get_slevel3label() + " price:",
 				"&nbsp;", 
 				"14")
 				);
@@ -242,7 +271,7 @@ public class ICItemPriceEdit extends HttpServlet {
 				"PriceLevel4", 
 				sPriceLevel4, 
 				14, 
-				"Level 4 price:", 
+				pricelevellabels.get_slevel4label() + " price:",
 				"&nbsp;", 
 				"14")
 				);
@@ -251,7 +280,7 @@ public class ICItemPriceEdit extends HttpServlet {
 				"PriceLevel5", 
 				sPriceLevel5, 
 				14, 
-				"Level 5 price:", 
+				pricelevellabels.get_slevel5label() + " price:",
 				"&nbsp;", 
 				"14")
 				);

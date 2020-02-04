@@ -2,6 +2,7 @@ package smic;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -11,15 +12,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import smcontrolpanel.SMAuthenticate;
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import ConnectionPool.WebContextParameters;
 import SMDataDefinition.SMTableicitems;
 import SMDataDefinition.SMTablepricelistcodes;
 import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
+import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICUpdateItemPricesSelection  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
@@ -348,6 +350,29 @@ public class ICUpdateItemPricesSelection  extends HttpServlet {
 		out.println("</TD></TR>");
     	
 		//checkboxes for pricelevels:
+		//Get a connection:
+		Connection conn = null;
+		try {
+			conn = ServletUtilities.clsDatabaseFunctions.getConnectionWithException(
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".doPost - user: " + sUser);
+		} catch (Exception e) {
+			out.println("<BR><B><FONT COLOR=RED> Error [1580854741] getting connection - " + e.getMessage() + "</FONT></B><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
+		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			out.println("<BR><B><FONT COLOR=RED> Error [1580854742] getting price level labels - " + e1.getMessage() + "</FONT></B><BR>");
+			out.println("</BODY></HTML>");
+			return;
+		}
+		
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Update price levels:</B></TD>");
 		out.println("<TD>");
@@ -357,43 +382,43 @@ public class ICUpdateItemPricesSelection  extends HttpServlet {
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("Base:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL0_PARAM 
-			+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>" + pricelevellabels.get_sbaselabel() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL0_PARAM 
+			+ "\"" + sCheckBoxValue + "></LABEL>");
 		if (clsManageRequestParameters.get_Request_Parameter(PRICELEVEL1_PARAM, request).compareToIgnoreCase("") != 0){
 			sCheckBoxValue = " checked=\"yes\"";
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("&nbsp;&nbsp;Level 1:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL1_PARAM 
-				+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>&nbsp;&nbsp;" + pricelevellabels.get_slevel1label() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL1_PARAM 
+				+ "\"" + sCheckBoxValue + "></LABEL>");
 		if (clsManageRequestParameters.get_Request_Parameter(PRICELEVEL2_PARAM, request).compareToIgnoreCase("") != 0){
 			sCheckBoxValue = " checked=\"yes\"";
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("&nbsp;&nbsp;Level 2:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL2_PARAM 
-				+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>&nbsp;&nbsp;" + pricelevellabels.get_slevel2label() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL2_PARAM 
+				+ "\"" + sCheckBoxValue + "></LABEL>");
 		if (clsManageRequestParameters.get_Request_Parameter(PRICELEVEL3_PARAM, request).compareToIgnoreCase("") != 0){
 			sCheckBoxValue = " checked=\"yes\"";
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("&nbsp;&nbsp;Level 3:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL3_PARAM 
-				+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>&nbsp;&nbsp;" + pricelevellabels.get_slevel3label() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL3_PARAM 
+				+ "\"" + sCheckBoxValue + "></LABEL>");
 		if (clsManageRequestParameters.get_Request_Parameter(PRICELEVEL4_PARAM, request).compareToIgnoreCase("") != 0){
 			sCheckBoxValue = " checked=\"yes\"";
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("&nbsp;&nbsp;Level 4:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL4_PARAM 
-				+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>&nbsp;&nbsp;" + pricelevellabels.get_slevel4label() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL4_PARAM 
+				+ "\"" + sCheckBoxValue + "></LABEL>");
 		if (clsManageRequestParameters.get_Request_Parameter(PRICELEVEL5_PARAM, request).compareToIgnoreCase("") != 0){
 			sCheckBoxValue = " checked=\"yes\"";
 		}else{
 			sCheckBoxValue = "";
 		}
-		out.println("&nbsp;&nbsp;Level 5:&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL5_PARAM 
-				+ "\"" + sCheckBoxValue + ">");
+		out.println("<LABEL>&nbsp;&nbsp;" + pricelevellabels.get_slevel5label() + ":&nbsp;<INPUT TYPE=CHECKBOX NAME= \"" + PRICELEVEL5_PARAM 
+				+ "\"" + sCheckBoxValue + "></LABEL>");
 
 		out.println("</TD>");
 		out.println("</TR>");

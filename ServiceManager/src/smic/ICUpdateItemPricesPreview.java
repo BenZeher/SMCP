@@ -4,16 +4,18 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+
 import javax.servlet.ServletContext;
 
-import smcontrolpanel.SMSystemFunctions;
-import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableicitemprices;
 import SMDataDefinition.SMTableicitems;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsServletUtilities;
+import smcontrolpanel.SMPriceLevelLabels;
+import smcontrolpanel.SMSystemFunctions;
+import smcontrolpanel.SMUtilities;
 
 public class ICUpdateItemPricesPreview extends java.lang.Object{
 
@@ -146,15 +148,22 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 			conn,
 			sLicenseModuleLevel);
 		
-		printRowHeader(
-			out,
-			bUpdatePriceLevel0,
-			bUpdatePriceLevel1,
-			bUpdatePriceLevel2,
-			bUpdatePriceLevel3,
-			bUpdatePriceLevel4,
-			bUpdatePriceLevel5
-		);
+		try {
+			printRowHeader(
+				out,
+				bUpdatePriceLevel0,
+				bUpdatePriceLevel1,
+				bUpdatePriceLevel2,
+				bUpdatePriceLevel3,
+				bUpdatePriceLevel4,
+				bUpdatePriceLevel5,
+				conn
+			);
+		} catch (Exception e1) {
+			m_sErrorMessage = "Error [1580854514] reading resultset - " + e1.getMessage();
+			return false;
+		}
+		
 		try{
 			if (bDebugMode){
 				System.out.println("[1579204455] In " + this.toString() + " SQL: " + SQL);
@@ -289,7 +298,7 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 			}
 			rs.close();
     	}catch (SQLException e){
-    		m_sErrorMessage = "Error reading resultset - " + e.getMessage();
+    		m_sErrorMessage = "Error [1580854469] reading resultset - " + e.getMessage();
     		return false;
     	}
     	
@@ -304,8 +313,9 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 		boolean IncludePriceLevel2,
 		boolean IncludePriceLevel3,
 		boolean IncludePriceLevel4,
-		boolean IncludePriceLevel5
-	){
+		boolean IncludePriceLevel5,
+		Connection conn
+	) throws Exception{
 		out.println("<TABLE WIDTH=100% CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_BASIC_WITH_BORDER + "\">");
 		out.println("<TR CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_HEADING + "\">");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Price list</TD>");
@@ -313,29 +323,37 @@ public class ICUpdateItemPricesPreview extends java.lang.Object{
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">Description</TD>");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">UOM</TD>");
 		out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Most<BR>Recent&nbsp;Cost</TD>");
+		
+		SMPriceLevelLabels pricelevellabels = new SMPriceLevelLabels();
+		try {
+			pricelevellabels.load(conn);
+		} catch (Exception e1) {
+			throw new Exception("Error [1580854315] reading price level labels: " + e1.getMessage());
+		}
+		
 		if (IncludePriceLevel0){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Base</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Base</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_sbaselabel() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_sbaselabel() + "</TD>");
 		}
 		if (IncludePriceLevel1){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 1</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 1</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_slevel1label() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_slevel1label() + "</TD>");
 		}
 		if (IncludePriceLevel2){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 2</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 2</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_slevel2label() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_slevel2label() + "</TD>");
 		}
 		if (IncludePriceLevel3){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 3</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 3</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_slevel3label() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_slevel3label() + "</TD>");
 		}
 		if (IncludePriceLevel4){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 4</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 4</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_slevel4label() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_slevel4label() + "</TD>");
 		}
 		if (IncludePriceLevel5){
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>Level 5</TD>");
-			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>Level 5</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Current<BR>" + pricelevellabels.get_slevel5label() + "</TD>");
+			out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_RIGHT_JUSTIFIED + "\">Proposed<BR>" + pricelevellabels.get_slevel5label() + "</TD>");
 		}
 		out.println("</TR>");
 	}

@@ -597,8 +597,11 @@ public class SMEditOrderEdit  extends HttpServlet {
 		try {
 			pricelevellabels.load(conn);
 		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910015]");
 			throw new Exception("Error [1580857764] reading price level labels: " + e1.getMessage());
 		}
+		
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910016]");
 		
 		String sPriceLevel = "";
 		int iPriceLevel;

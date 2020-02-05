@@ -142,9 +142,10 @@ public class ICItemPriceEditAction extends HttpServlet{
 					conn
 					);
 		}catch (Exception e) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910619]");
 			throw new Exception("Error in validation - " + e.getMessage());
 		}
-
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910620]");
 		
 		String SQL = "INSERT INTO " + SMTableicitemprices.TableName
 			+ " ("

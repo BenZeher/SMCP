@@ -244,11 +244,13 @@ public class ICUpdateItemPricesGenerate extends HttpServlet {
 		try {
 			pricelevellabels.load(conn);
 		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910621]");
 			out.println("<BR><B><FONT COLOR=RED> Error [1580853473] loading price level labels - " + e1.getMessage() + "</FONT></B><BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
-   		
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910622]");
+		
    		String sPriceLevels = "";
    		if (bPriceLevel0){
    			if (sPriceLevels.compareToIgnoreCase("") == 0){

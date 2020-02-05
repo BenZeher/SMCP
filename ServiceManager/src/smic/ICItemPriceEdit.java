@@ -201,10 +201,13 @@ public class ICItemPriceEdit extends HttpServlet {
 					sPriceLevel5,
 					conn);
 		} catch (Exception e) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910617]");
 			out.println("<BR><B><FONT COLOR=RED> Error [1580852926] building edit fields - " + e.getMessage() + "</FONT></B><BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910618]");
+		
 		
 		out.println("</TABLE>");
 		out.println("<BR>");

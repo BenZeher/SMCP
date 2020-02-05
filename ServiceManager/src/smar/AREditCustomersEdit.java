@@ -538,9 +538,10 @@ public class AREditCustomersEdit extends HttpServlet {
 		try {
 			pricelevellabels.load(conn);
 		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910697]");
 			pwOut.println("<BR><FONT COLOR=RED>Error [1580857238] reading price level labels - " + e1.getMessage() + "</FONT><BR>");
 		}
-		
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910698]");
         sValues.clear();
         sDescriptions.clear();
         //First, add a blank to make sure the user selects one:

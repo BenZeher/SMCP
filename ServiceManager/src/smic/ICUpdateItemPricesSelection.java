@@ -368,10 +368,12 @@ public class ICUpdateItemPricesSelection  extends HttpServlet {
 		try {
 			pricelevellabels.load(conn);
 		} catch (Exception e1) {
+			ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910623]");
 			out.println("<BR><B><FONT COLOR=RED> Error [1580854742] getting price level labels - " + e1.getMessage() + "</FONT></B><BR>");
 			out.println("</BODY></HTML>");
 			return;
 		}
+		ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580910624]");
 		
 		out.println("<TR>");
 		out.println("<TD ALIGN=RIGHT><B>Update price levels:</B></TD>");

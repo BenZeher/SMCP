@@ -630,7 +630,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 			sPriceLevel = pricelevellabels.get_sbaselabel();
 			break;
 		}
-		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580907526]");
 		s += "<B>" + sObjectName + " number:</B>&nbsp;" 
 			+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
 			+ "smcontrolpanel.SMDisplayOrderInformation"
@@ -812,7 +812,7 @@ public class SMEditOrderEdit  extends HttpServlet {
 		} catch (Exception e1) {
 			throw new Exception("Error [1580852378] reading price level labels: " + e1.getMessage());
 		}
-		
+		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1580907542]");
 		//The customer price level:
 		s += "<TR>";
 		s += "<TD class=\"fieldlabel\">\nPrice level<FONT COLOR=RED>*</FONT>:&nbsp;</TD>\n"

@@ -176,14 +176,14 @@ public class SMViewConfiguration  extends HttpServlet {
 		bOddRow = !bOddRow;
 		out.println(createRow("Path to SM temporary files:", SMUtilities.getAbsoluteSMTempPath(request, getServletContext()), "The path that will hold any temporary files for the program.", bOddRow)); //?
 		bOddRow = !bOddRow;
-		out.println(createRow("Path to javascript scripts:", 
+		out.println(createRow("Path to SM javascripts:", 
 				SMUtilities.getAbsoluteRootPath(request, getServletContext()).replace(
 					System.getProperty("file.separator") + WebContextParameters.getInitWebAppName(getServletContext()) + System.getProperty("file.separator"), "")
 				+ WebContextParameters.getInitScriptPath(getServletContext()),
 			"The path on the web server to the folder that holds all the script files for the program.", bOddRow));
 		bOddRow = !bOddRow;
 		
-		out.println(createRow("Path to javascript scripts:", 
+		out.println(createRow("Path to SM 'local resources':", 
 				SMUtilities.getAbsoluteRootPath(request, getServletContext()).replace(
 					System.getProperty("file.separator") + WebContextParameters.getInitWebAppName(getServletContext()) + System.getProperty("file.separator"), "")
 				+ WebContextParameters.getLocalResourcesPath(getServletContext()),

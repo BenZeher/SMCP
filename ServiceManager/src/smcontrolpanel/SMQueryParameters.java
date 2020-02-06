@@ -219,6 +219,14 @@ public class SMQueryParameters  extends HttpServlet {
 	private String createParameterEntryFields(String sQuery, String sDatabaseID, String sUserID, String sUserFullName) throws Exception{
 		String s = "";
 	    //Pattern p = Pattern.compile("\\[\\[");
+		
+		//First, check the query for any 'SQLDROPDOWNLIST' parameters, and replace them with the actuual values:
+		try {
+			sQuery = replaceSQLDropDownPhrases(sQuery, sDatabaseID, sUserID);
+		} catch (Exception e1) {
+			throw new Exception("Error [2020371643214] " + "replacing " + SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + " - " + e1.getMessage());
+		}
+		
 		Pattern pStartingParameterDelimiterPattern = null;
 		String[] sParameterList = null;
 		try {
@@ -677,6 +685,56 @@ public class SMQueryParameters  extends HttpServlet {
 			+ "\n"
 			;
 
+		return s;
+	}
+	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUserID) throws Exception{
+		String s = sRawQuery;
+		
+		while (sRawQuery.contains(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE)){
+			//Read the first SQLDROPDOWN phrase, and replace it with the SQL values and a regular 'DROPDOWNLIST':
+			//Get the SQL command:
+			int iSQLDropDownStart = sRawQuery.indexOf(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE);
+			String sTempString = sRawQuery.substring(iSQLDropDownStart);
+			//System.out.println("[2020371710329] " + "sTempString = '" + sTempString + "'");
+			
+			String sSQLDropDownString = sTempString.substring(0, sTempString.indexOf("]]") + 2);
+			//So now the 'sSQLDropDownString' should look like: *SQLDROPDOWNLIST*{Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			//System.out.println("[2020371710536] " + "sSQLDropDownString = '" + sSQLDropDownString + "'");
+			String sSQLCommand = sSQLDropDownString.replace(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{", "");
+			//The 'sSQLCommand' string should now look like: Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			//System.out.println("[2020371711170] " + "sSQLCommand = '" + sSQLCommand + "'");
+			//Now cut off the trailing ']]':
+			sSQLCommand = sSQLCommand.replace("]]", "").trim();
+			//System.out.println("[2020371712297] " + "sSQLCommand = '" + sSQLCommand + "'");
+			//Cut off the trailing curly brace:
+			sSQLCommand = sSQLCommand.replace("}", "").trim();
+			//System.out.println("[2020371726546] " + "sSQLCommand = '" + sSQLCommand + "'");
+			//And now cut off the prompt:
+			sSQLCommand = sSQLCommand.substring(sSQLCommand.indexOf("{") + 1);
+			//Should now look like: SELECT userid, susername from users ORDER BY susername
+			//System.out.println("[2020371712587] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//Run the SQL command:
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
+				sSQLCommand, 
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".replaceSQLDropDownPhrases - user ID: " + sUserID
+			);
+			String sReplacementString = "";
+			while (rs.next()){
+				//Build the dropdown string:
+				//TODO
+			}
+			rs.close();
+			
+			//TODO - remove this:
+			break;
+			
+			//String sSQL = sRawQuery.substring(sRawQuery.indexOf(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE), endIndex)
+		}
+		
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

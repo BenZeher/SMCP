@@ -39,6 +39,7 @@ public class SMCustomQuery extends java.lang.Object{
 	public static final String DATEPICKER_LASTDAYOFYEAR_PARAM_VARIABLE = "LASTDAYOFYEAR";
 	public static final String DATEPICKER_LASTDAYOFMONTH_PARAM_VARIABLE = "LASTDAYOFMONTH";
 	public static final String DROPDOWN_PARAM_VARIABLE = "*DROPDOWNLIST*";
+	public static final String SQLDROPDOWN_PARAM_VARIABLE = "*SQLDROPDOWNLIST*";
 	public static final String SETVARIABLECOMMAND = "*SETVARIABLES*";
 	public static final String STARTINGPARAMDELIMITER = "[[";
 	public static final String ENDINGPARAMDELIMITER = "]]";

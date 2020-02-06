@@ -101,6 +101,7 @@ public class GLCloseFiscalYearEdit extends HttpServlet {
 			out.println("</BODY></HTML>");
 			return;
 	    }
+	    ServletUtilities.clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1564153192]");
 	    
 	    out.println("<BR>This function will automatically create journal entries for the selected fiscal year"
 	    		+ " to move current balances from all the income statement accounts into the single 'retained earnings'"

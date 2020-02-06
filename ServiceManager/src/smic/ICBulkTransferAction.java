@@ -301,6 +301,7 @@ public class ICBulkTransferAction extends HttpServlet {
 		}
 		
 		if (sLineErrors.compareToIgnoreCase("") != 0){
+			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080277]");
 			throw new Exception(sLineErrors);
 		}
 		

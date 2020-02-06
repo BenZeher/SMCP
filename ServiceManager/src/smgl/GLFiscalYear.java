@@ -90,7 +90,7 @@ public class GLFiscalYear extends java.lang.Object{
 		m_slasteditedbyfullusername = "";
 		m_silastediteddatetime = clsServletUtilities.EMPTY_DATETIME_VALUE;
 		m_sinumberofperiods = "0";
-		m_silockclosing = "0";
+		m_silockclosing = "1";
 		m_siclosed = "0";
 		m_silockclosingperiod = "1";
 		m_sdatbeginningdateperiod1 = clsServletUtilities.EMPTY_SQL_DATE_VALUE;

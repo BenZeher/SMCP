@@ -838,6 +838,8 @@ public class GLTransactionBatch {
     		String SQL = "UPDATE"
     			+ " " + SMTableglfiscalperiods.TableName
     			+ " SET " + SMTableglfiscalperiods.iclosed + " = 1"
+    			+ ", " + SMTableglfiscalperiods.ilockclosing + " = 1"
+    			+ ", " + SMTableglfiscalperiods.ilockclosingperiod + " = 1"
     			+ ", " + SMTableglfiscalperiods.iperiod1locked + " = 1"
     			+ ", " + SMTableglfiscalperiods.iperiod2locked + " = 1"
     			+ ", " + SMTableglfiscalperiods.iperiod3locked + " = 1"
@@ -860,6 +862,7 @@ public class GLTransactionBatch {
 			} catch (Exception e) {
 				throw new Exception("Error [2019337160257] " + "Could not update closing flag on fiscal period with SQL: " + SQL + " - " + e.getMessage());
 			}
+    		
     	}
     	
     	if (bDebugMode){

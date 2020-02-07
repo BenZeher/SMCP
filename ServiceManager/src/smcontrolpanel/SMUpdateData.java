@@ -174,7 +174,7 @@ public class SMUpdateData extends java.lang.Object{
 		//Next, insert/update all the functions:
 		SMSystemFunctions sys;
 		try {
-			sys = new SMSystemFunctions(sDBID, conn);
+			sys = new SMSystemFunctions(sDBID);
 		} catch (Exception e2) {
 			throw new Exception("Error [202029152483] " + "Error initiating System Functions - " + e2.getMessage());
 		}

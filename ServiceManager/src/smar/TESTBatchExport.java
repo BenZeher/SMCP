@@ -7,10 +7,8 @@ import javax.servlet.http.HttpServlet;
 
 import SMClasses.SMOrderDetail;
 import SMClasses.SMOrderHeader;
-import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import ServletUtilities.clsManageBigDecimals;
 import smcontrolpanel.SMSalesOrderTaxCalculator;
-import smgl.GLTransactionBatch;
 
 public class TESTBatchExport extends HttpServlet{
 

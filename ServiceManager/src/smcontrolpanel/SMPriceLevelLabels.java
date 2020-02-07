@@ -8,8 +8,6 @@ import java.sql.Statement;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import SMDataDefinition.SMTablecostcenters;
-import SMDataDefinition.SMTableglaccounts;
 import SMDataDefinition.SMTablepricelistlevellabels;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;

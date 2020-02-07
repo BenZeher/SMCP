@@ -346,15 +346,15 @@ public class SMSystemFunctions extends java.lang.Object{
 	private static ArrayList <String>arrFunctionDescriptions;
 	private static ArrayList <Long>arrFunctionModuleLevel;
 
-	SMSystemFunctions(String sDBID, Connection conn) throws Exception{
+	SMSystemFunctions(String sDBID) throws Exception{
 		arrFunctions = new ArrayList<String>(0);
 		arrFunctionIDs = new ArrayList<Long>(0);
 		arrFunctionLinks = new ArrayList<String>(0);
 		arrFunctionDescriptions = new ArrayList<String>(0);
 		arrFunctionModuleLevel = new ArrayList<Long>(0);
-		populateSecurityFunctions(sDBID, conn);
+		populateSecurityFunctions(sDBID);
 	}
-	private static void populateSecurityFunctions(String sDBID, Connection conn) throws Exception{
+	private static void populateSecurityFunctions(String sDBID) throws Exception{
 
 		//Module levels:
 		//If the company has ANY of the module levels in his license package, then a function that references ANY of this modules should appear in his program.
@@ -2725,42 +2725,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			
 			arrFunctions.add("GL List Fiscal Sets");
 			arrFunctionIDs.add(GLFiscalSetListing);
-			
-			//Get the latest GL fiscal year:
-			String SQL = "SELECT DISTINCT " + SMTableglfiscalsets.ifiscalyear
-				+ " FROM " + SMTableglfiscalsets.TableName
-				+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear
-			;
-			ArrayList <String>arrFiscalYearList = new ArrayList<String>(0);
-			try {
-				ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-				while (rs.next()){
-					arrFiscalYearList.add(Integer.toString(rs.getInt(SMTableglfiscalsets.ifiscalyear)));
-				}
-				rs.close();
-			} catch (SQLException e) {
-				throw new Exception("Error [202029150592] " + "Error getting first and last GL fiscal years - " + e.getMessage() + ".");
-			}
-			String sFiscalYearList = "{";
-			for (int i = 0; i < arrFiscalYearList.size(); i++){
-				if (i == 0){
-					sFiscalYearList += arrFiscalYearList.get(i);
-				}else{
-					sFiscalYearList += ", " + arrFiscalYearList.get(i);
-				}
-			}
-			sFiscalYearList += "}{";
-			for (int i = 0; i < arrFiscalYearList.size(); i++){
-				if (i == 0){
-					sFiscalYearList += arrFiscalYearList.get(i);
-				}else{
-					sFiscalYearList += ", " + arrFiscalYearList.get(i);
-				}
-			}
-			sFiscalYearList += "}";
-			
-			//System.out.println("[2020291511507] " + "sFiscalYearList = '" + sFiscalYearList + "'");
-			
 			arrFunctionLinks.add(
 					"smcontrolpanel.SMQueryParameters?" 
 							+ "QUERYSTRING="
@@ -2787,14 +2751,17 @@ public class SMSystemFunctions extends java.lang.Object{
 											
 											+ " FROM " + SMTableglfiscalsets.TableName
 											+ " WHERE ("
-												+ "(" + SMTableglfiscalsets.ifiscalyear + " >= [[*DROPDOWNLIST*{Starting with fiscal year:}" + sFiscalYearList + "]]" + ")"
+												+ "(" + SMTableglfiscalsets.ifiscalyear 
+													+ " >= [[*SQLDROPDOWNLIST*{Starting with fiscal year:}"
+														+ "{SELECT DISTINCT ifiscalyear, ifiscalyear FROM glfiscalsets ORDER BY ifiscalyear DESC}]]" 
+												+ ")"
 											+ ")"
 											+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + ", " + SMTableglfiscalsets.sAcctID
 									)
 									+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("GL List Fiscal Sets")
 									+ "&ALTERNATEROWCOLORS=Y"
 									+ "&FONTSIZE=small"
-									//+ "&SHOWSQLCOMMAND=Y"
+									+ "&SHOWSQLCOMMAND=Y"
 									//				Possible parameters:				
 									//				public static String PARAM_EXPORTOPTIONS = "EXPORTOPTIONS";
 									//				public static String EXPORT_COMMADELIMITED_VALUE = "COMMADELIMITED";

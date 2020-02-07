@@ -269,7 +269,14 @@ public class TCQueryParameters  extends HttpServlet {
 	}
 	private String createParameterEntryFields(String sQuery, String sDatabaseID, String sUser) throws Exception{
 		String s = "";
-	    //Pattern p = Pattern.compile("\\[\\[");
+		//First, check the query for any 'SQLDROPDOWNLIST' parameters, and replace them with the actuual values:
+		try {
+			sQuery = replaceSQLDropDownPhrases(sQuery, sDatabaseID, sUser);
+		} catch (Exception e1) {
+			throw new Exception("Error [2020371643214] " + "replacing " + TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + " - " + e1.getMessage());
+		}
+
+		//Pattern p = Pattern.compile("\\[\\[");
 		Pattern p = null;
 		String[] x = null;
 		
@@ -479,6 +486,97 @@ public class TCQueryParameters  extends HttpServlet {
 		} catch (Exception e) {
 			throw new Exception("Error [1416328946] checking for drop down in parameter string '" + sParameter + "' - " + e.getMessage());
 		}
+	}
+	
+	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUser) throws Exception{
+		
+		while (sRawQuery.contains(TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE)){
+			//Read the first SQLDROPDOWN phrase, and replace it with the SQL values and a regular 'DROPDOWNLIST':
+			//Get the SQL command:
+			int iSQLDropDownStart = sRawQuery.indexOf(TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE);
+			String sTempString = sRawQuery.substring(iSQLDropDownStart);
+			//System.out.println("[2020371710329] " + "sTempString = '" + sTempString + "'");
+			
+			String sSQLDropDownString = sTempString.substring(0, sTempString.indexOf("]]") + 2);
+			//So now the 'sSQLDropDownString' should look like: *SQLDROPDOWNLIST*{Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			//System.out.println("[2020371710536] " + "sSQLDropDownString = '" + sSQLDropDownString + "'");
+		
+			String sSQLCommand = sSQLDropDownString.replace(TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{", "");
+			//The 'sSQLCommand' string should now look like: Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			//System.out.println("[2020371711170] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//Now cut off the trailing ']]':
+			sSQLCommand = sSQLCommand.replace("]]", "").trim();
+			//System.out.println("[2020371712297] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//Cut off the trailing curly brace:
+			sSQLCommand = sSQLCommand.replace("}", "").trim();
+			//System.out.println("[2020371726546] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//And now cut off the prompt:
+			sSQLCommand = sSQLCommand.substring(sSQLCommand.indexOf("{") + 1);
+			//Should now look like: SELECT userid, susername from users ORDER BY susername
+			//System.out.println("[2020371712587] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//Run the SQL command:
+			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
+				sSQLCommand, 
+				getServletContext(), 
+				sDBID, 
+				"MySQL", 
+				this.toString() + ".replaceSQLDropDownPhrases - user ID: " + sUser
+			);
+			
+			//We have to get this:
+			// [[*SQLDROPDOWNLIST*{Prompt}{SELECT lid, sUserName from users ORDER BY sUserName}]]
+			// To this:
+			// [[*DROPDOWNLIST*{Prompt}{'value 1', 'value 2', 'value 3'}{First description, Second description, Third description}]]
+			
+			String sValuesString = "{";
+			String sLabelsString = "{";
+			while (rs.next()){
+				//Build the dropdown strings:
+				if (rs.getString(1) != null){
+					if (sValuesString.compareToIgnoreCase("{") == 0){
+						sValuesString += rs.getString(1);
+					}else{
+						sValuesString += ", " + rs.getString(1);
+					}
+				}else{
+					rs.close();
+					throw new Exception("Error [2020381120195] " + "Error in SQL statement '" + sSQLCommand + "' - there must be at least one"
+							+ " field selected."
+						);
+				}
+				if (rs.getString(2) != null){
+					if (sLabelsString.compareToIgnoreCase("{") == 0){
+						sLabelsString += rs.getString(2);
+					}else{
+						sLabelsString += ", " + rs.getString(2);
+					}
+				}else{
+					rs.close();
+					throw new Exception("Error [2020381120195] " + "Error in SQL statement '" + sSQLCommand + "' - there must be at least one"
+							+ " field selected."
+						);
+				}
+			}
+			
+			rs.close();
+
+			sValuesString += "}";
+			sLabelsString += "}";
+
+			//Create a replacement string using the DROPDOWN parameter:
+			String sDropDownString = sSQLDropDownString.replace(TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE, TCCustomQuery.DROPDOWN_PARAM_VARIABLE);
+					
+			sRawQuery = sRawQuery.replace(sSQLDropDownString, sDropDownString);
+			sRawQuery = sRawQuery.replace("{" + sSQLCommand + "}", sValuesString + sLabelsString);
+			
+			//System.out.println("[2020381130293] " + "sRawQuery = '" + sRawQuery + "'.");
+		}
+		
+		return sRawQuery;
 	}
 
 	public static String layoutEditTable(){

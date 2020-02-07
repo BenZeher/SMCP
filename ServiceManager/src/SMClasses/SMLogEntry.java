@@ -796,7 +796,7 @@ public class SMLogEntry {
     	m_arrOperationLabelDescriptions.add("Records running of the list of receipts that are not posted");
     	
     	m_arrOperationLabelValues.add(LOG_OPERATION_SSUSEREVENT);
-    	m_arrOperationLabelDescriptions.add("Records whenever a user updates a devices status");
+    	m_arrOperationLabelDescriptions.add("Records whenever a user updates a device's status");
 
     	ArrayList<String>arrCompleteListings = new ArrayList<String>(0);
     	for (int i = 0; i <= m_arrOperationLabelValues.size() - 1; i++){
@@ -806,5 +806,4 @@ public class SMLogEntry {
     	
     	return arrCompleteListings;
     }
-
 }

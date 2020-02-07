@@ -396,6 +396,13 @@ public class TCQuerySelect  extends HttpServlet {
 				+ TCCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'value 1', 'value 2', 'value 3'}{First description, Second description, Third description}]]</B><BR>");
 		out.println("Drop down list example:<B>[[" 
 				+ TCCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'1','2','3'}{Yellow,Blue,Red}]]</B><BR>");
+
+		out.println("To create a prompt with a drop down list of values read from a SQL subquery, define the parameter as : <B>[[" 
+				+ TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{Prompt}{SQL COMMAND}]]</B><BR>");
+		out.println("SQL Drop down list example:<B>[[" 
+				+ TCCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{Select a user name:}{SELECT lid, sUserName from users ORDER BY sUserName}]]</B><BR>");
+		
+		
 		out.println("To assign valuse to MySQL variables, enclose the 'SET' commands in a '<B>*SETCOMMANDS*</B>' phrase : <B>[[" 
 				+ TCCustomQuery.SETVARIABLECOMMAND + "Set variable string]]</B><BR>");
 		out.println("Set variable example:<B>[[" 

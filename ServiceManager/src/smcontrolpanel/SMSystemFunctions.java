@@ -2753,7 +2753,9 @@ public class SMSystemFunctions extends java.lang.Object{
 											+ " WHERE ("
 												+ "(" + SMTableglfiscalsets.ifiscalyear 
 													+ " >= [[*SQLDROPDOWNLIST*{Starting with fiscal year:}"
-														+ "{SELECT DISTINCT ifiscalyear, ifiscalyear FROM glfiscalsets ORDER BY ifiscalyear DESC}]]" 
+														+ "{SELECT DISTINCT " + SMTableglfiscalsets.ifiscalyear + ", " 
+														+ SMTableglfiscalsets.ifiscalyear + " FROM " + SMTableglfiscalsets.TableName 
+														+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + " DESC}]]" 
 												+ ")"
 											+ ")"
 											+ " ORDER BY " + SMTableglfiscalsets.ifiscalyear + ", " + SMTableglfiscalsets.sAcctID

@@ -687,7 +687,7 @@ public class SMQueryParameters  extends HttpServlet {
 
 		return s;
 	}
-	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUserID) throws Exception{
+	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUserName) throws Exception{
 		
 		while (sRawQuery.contains(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE)){
 			//Read the first SQLDROPDOWN phrase, and replace it with the SQL values and a regular 'DROPDOWNLIST':
@@ -723,7 +723,7 @@ public class SMQueryParameters  extends HttpServlet {
 				getServletContext(), 
 				sDBID, 
 				"MySQL", 
-				this.toString() + ".replaceSQLDropDownPhrases - user ID: " + sUserID
+				this.toString() + ".replaceSQLDropDownPhrases - user name: " + sUserName
 			);
 			
 			//We have to get this:

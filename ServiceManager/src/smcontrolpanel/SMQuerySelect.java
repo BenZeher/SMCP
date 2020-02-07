@@ -362,12 +362,12 @@ public class SMQuerySelect  extends HttpServlet {
 		out.println("To create a prompt with a drop down list, define the parameter as : <B>[[" 
 				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'value 1', 'value 2', 'value 3'}{First description, Second description, Third description}]]</B><BR>");
 		out.println("Drop down list example:<B>[[" 
-				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Prompt}{'1','2','3'}{Yellow,Blue,Red}]]</B><BR>");
+				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE + "{Select a color:}{'1','2','3'}{Yellow,Blue,Red}]]</B><BR>");
 		
 		out.println("To create a prompt with a drop down list of values read from a SQL subquery, define the parameter as : <B>[[" 
 				+ SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{Prompt}{SQL COMMAND}]]</B><BR>");
 		out.println("SQL Drop down list example:<B>[[" 
-				+ SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{Prompt}{SELECT lid, sUserName from users ORDER BY sUserName}]]</B><BR>");
+				+ SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{Select a user name:}{SELECT lid, sUserName from users ORDER BY sUserName}]]</B><BR>");
 		
 		out.println("To assign value to MySQL variables, enclose the 'SET' commands in a '<B>*SETCOMMANDS*</B>' phrase : <B>[[" 
 				+ SMCustomQuery.SETVARIABLECOMMAND + "Set variable string]]</B><BR>");

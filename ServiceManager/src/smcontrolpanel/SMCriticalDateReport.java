@@ -358,7 +358,7 @@ public class SMCriticalDateReport extends java.lang.Object{
 							out.println("<br><b>Ship To Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + ""); 
 							out.println("<br><b>Contact Name: </b>" + rs.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + ""); 
 							String sPhoneNumber = rs.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim();
-							out.println("<br><b>Phone Number: </b>" + "<A HREF=\"tel:" + sPhoneNumber + "\">" + sPhoneNumber + "</A>"); 
+							out.println("<br><b>Phone Number: </b>" +SMUtilities.addPhoneNumberLink(sPhoneNumber)); 
 							out.println("<br><b>Project Type: </b>" + rs.getString((SMTableprojecttypes.TableName + "." + SMTableprojecttypes.sTypeDesc).replace("`", "")).trim() + ""); 
 							String sStatus = rs.getString((SMTablebids.TableName + "." + SMTablebids.sstatus).replace("`", "")).trim();
 							if(sStatus.compareToIgnoreCase("P") == 0) {

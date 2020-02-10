@@ -314,7 +314,7 @@ public class SMCriticalDateEdit  extends HttpServlet {
 						s += "<TD ALIGN=LEFT>" + rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sShipToName).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Bill To Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToName).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Contact: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToContact).replace("`", "")).trim() + "</TD></TR>"; 
-						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone).replace("`", "")).trim() + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + SMUtilities.addPhoneNumberLink(rsInfo.getString((SMTableorderheaders.TableName + "." + SMTableorderheaders.sBillToPhone).replace("`", "")).trim()) + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Order Number:</b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
 								+ SMUtilities.getURLLinkBase(getServletContext()) 
 								+ "smcontrolpanel.SMDisplayOrderInformation?OrderNumber=" + rsInfo.getString(SMTableorderheaders.sOrderNumber).replace("`", "")

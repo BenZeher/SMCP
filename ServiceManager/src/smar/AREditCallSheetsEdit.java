@@ -273,6 +273,7 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 		s += "<TABLE BORDER=0 style = \" font-size:small;\" >";
 
 		//Phone
+		if(entry.getsPhone().compareToIgnoreCase("")==0) {
 		s += "<TD ALIGN=RIGHT><B>Phone:</B></TD>"
 			+ "<TD><INPUT TYPE=TEXT NAME=\"" + ARCallSheet.ParamsPhone + "\""
 			+ " VALUE=\"" + entry.getsPhone() + "\""
@@ -280,8 +281,18 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sPhoneLength)
 			+ "</TD>"
 		;
+		} else {
+			s += "<TD ALIGN=RIGHT><A HREF=\"tel:" +entry.getsPhone()   + "\"><B>Phone:</B></A></TD>"
+					+ "<TD><INPUT TYPE=TEXT NAME=\"" + ARCallSheet.ParamsPhone + "\""
+					+ " VALUE=\"" + entry.getsPhone() + "\""
+					+ " SIZE=" + "10"
+					+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sPhoneLength)
+					+ "</TD>"
+				;
+		}
 		
 		//Job Phone
+		if(entry.getM_sJobPhone().compareToIgnoreCase("")==0) {
 		s += "<TD ALIGN=RIGHT><B>Job phone:</B></TD>"
 			+ "<TD><INPUT TYPE=TEXT NAME=\"" + ARCallSheet.ParamsJobPhone + "\""
 			+ " VALUE=\"" + entry.getM_sJobPhone() + "\""
@@ -289,6 +300,16 @@ public class AREditCallSheetsEdit  extends HttpServlet {
 			+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sJobPhoneLength)
 			+ "</TD>"
 		;
+		} else {
+			s += "<TD ALIGN=RIGHT><A HREF=\"tel:" +entry.getsPhone()   + "\"><B>Job phone:</B></A></TD>"
+					+ "<TD><INPUT TYPE=TEXT NAME=\"" + ARCallSheet.ParamsJobPhone + "\""
+					+ " VALUE=\"" + entry.getM_sJobPhone() + "\""
+					+ " SIZE=" + "10"
+					+ " MAXLENGTH=" + Integer.toString(SMTablecallsheets.sJobPhoneLength)
+					+ "</TD>"
+				;
+		}
+		
 		//Last contact
 		s += "<TD ALIGN=RIGHT><B>Last contact:</B></TD>"
 			+ "<TD>" 

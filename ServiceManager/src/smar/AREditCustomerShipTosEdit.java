@@ -356,15 +356,28 @@ public class AREditCustomerShipTosEdit extends HttpServlet {
 		);
         
         //Phone:
-        pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-        		ARCustomerShipTo.ParamsPhoneNumber, 
-        		shipto.getM_sPhoneNumber().replace("\"", "&quot;"), 
-        		SMTablearcustomershiptos.sPhoneNumberLength, 
-        		"Phone:", 
-        		"Up to " + SMTablearcustomershiptos.sPhoneNumberLength + " characters.",
-        		"" + SMTablearcustomershiptos.sPhoneNumberLength
-        	)
-		);
+        if(shipto.getM_sPhoneNumber().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+        	pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
+        			ARCustomerShipTo.ParamsPhoneNumber, 
+        			shipto.getM_sPhoneNumber().replace("\"", "&quot;"), 
+        			SMTablearcustomershiptos.sPhoneNumberLength, 
+        			"Phone:", 
+        			"Up to " + SMTablearcustomershiptos.sPhoneNumberLength + " characters.",
+        			"" + SMTablearcustomershiptos.sPhoneNumberLength
+        			)
+        			);
+		
+        }else {
+        	pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
+        			ARCustomerShipTo.ParamsPhoneNumber, 
+        			shipto.getM_sPhoneNumber().replace("\"", "&quot;"), 
+        			SMTablearcustomershiptos.sPhoneNumberLength, 
+        			"<A HREF=\"tel:" +shipto.getM_sPhoneNumber().replace("\"", "&quot;") +"\">Phone:</A>", 
+        			"Up to " + SMTablearcustomershiptos.sPhoneNumberLength + " characters.",
+        			"" + SMTablearcustomershiptos.sPhoneNumberLength
+        			)
+        			);
+        }
         
         //Fax:
         pwOut.println(clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(

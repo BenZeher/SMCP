@@ -466,8 +466,8 @@ public class ARPrintCallSheetsReport extends java.lang.Object{
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sAccountTerms) + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablecallsheets.datLastContact),"MM/dd/yyy") + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsDateAndTimeConversions.utilDateToString(rs.getDate(SMTablecallsheets.datNextContact),"MM/dd/yyy") + "</TD>");
-					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sPhone) + "</TD>");
-					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + rs.getString(SMTablecallsheets.sJobPhone) + "</TD>");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablecallsheets.sPhone)) + "</TD>");
+					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablecallsheets.sJobPhone)) + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, rs.getBigDecimal(SMTablearcustomer.dCreditLimit)) + "</TD>");
 					out.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER +"\"  >" + clsManageBigDecimals.BigDecimalToScaledFormattedString(2, rs.getBigDecimal(SMTablearcustomerstatistics.sCurrentBalance)) + "</TD>");
 					out.println("</TR>");

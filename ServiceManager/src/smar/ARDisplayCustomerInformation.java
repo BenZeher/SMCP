@@ -403,8 +403,14 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 
 				pwOut.println("<FONT SIZE=2><B>Contact name:</B> " 
 						+ rsCustomer.getString(SMTablearcustomer.sContactName).trim() + "<BR>");
-				pwOut.println("<FONT SIZE=2><B>Phone:</B> " 
-						+ rsCustomer.getString(SMTablearcustomer.sPhoneNumber).trim() + "<BR>");
+				String sPhoneNumber = rsCustomer.getString(SMTablearcustomer.sPhoneNumber).trim();
+				if(sPhoneNumber.compareToIgnoreCase("")==0) {
+					pwOut.println("<FONT SIZE=2><B>Phone:</B> " 
+							+ sPhoneNumber + "<BR>");
+				}else {
+					pwOut.println("<FONT SIZE=2><B>Phone:</B>"
+							+"<A HREF=\"tel:" + sPhoneNumber +"\">" +   sPhoneNumber + "</A><BR>");
+				}
 				pwOut.println("<FONT SIZE=2><B>Fax:</B> " 
 						+ rsCustomer.getString(SMTablearcustomer.sFaxNumber).trim() + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Email:</B> " 
@@ -711,7 +717,13 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" + "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMSalesContactEdit?" + SMTablesalescontacts.id + "=" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id))+ "\">" + Integer.toString(rsSalesContact.getInt(SMTablesalescontacts.id)) + "</A></TD>\n");		
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.salespersoncode) + "</TD>");		
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.scontactname) + "</TD>");		
-							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.sphonenumber) + "</TD>");		
+							 String sSalesContactPhoneNumber = rsSalesContact.getString(SMTablesalescontacts.sphonenumber);
+							 if(sSalesContactPhoneNumber.compareToIgnoreCase("")== 0) {
+								 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" +sSalesContactPhoneNumber  + "</TD>");	
+							 }else {
+								 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><A HREF=\"tel"+ sSalesContactPhoneNumber + "\"> " +sSalesContactPhoneNumber  + "</TD>");	
+							 }
+							 	
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.semailaddress) + "</TD>");		
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.mnotes) + "</TD>");		
 								pwOut.println( "</TR>");

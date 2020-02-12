@@ -1661,7 +1661,9 @@ public class ICEditPOEdit  extends HttpServlet {
 
 		//New Row:
 		s += "<TR>";
+		//TODO PHONE
 		//Bill to Phone:
+		if(entry.getsbillphone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Phone:</TD>";
 		s += "<TD>"
 			+ "<INPUT TYPE=TEXT NAME=\"" + ICPOHeader.Paramsbillphone + "\""
@@ -1672,7 +1674,21 @@ public class ICEditPOEdit  extends HttpServlet {
 			+ ">"
 			+ "</TD>"
 			;
+		} else {
+			s += "<TD style=\" text-align:right; font-weight:bold; \"><A HREF=\"tel:" + entry.getsbillphone().replace("\"", "&quot;") + "\">Phone:</A></TD>";
+			s += "<TD>"
+				+ "<INPUT TYPE=TEXT NAME=\"" + ICPOHeader.Paramsbillphone + "\""
+				+ " onchange=\"flagDirty();\""
+				+ " VALUE=\"" + entry.getsbillphone().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "40"
+				+ " MAXLENGTH=" + Integer.toString(SMTableicpoheaders.sbillphoneLength)
+				+ ">"
+				+ "</TD>"
+				;
+		}
+		
 		//ship to Phone:
+		if(entry.getsshipphone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
 		s += "<TD style=\" text-align:right; font-weight:bold; \">Phone:</TD>";
 		s += "<TD>"
 			+ "<INPUT TYPE=TEXT NAME=\"" + ICPOHeader.Paramsshipphone + "\""
@@ -1683,6 +1699,18 @@ public class ICEditPOEdit  extends HttpServlet {
 			+ ">"
 			+ "</TD>"
 			;
+		} else {
+			s += "<TD style=\" text-align:right; font-weight:bold; \"><A HREF=\"tel:" + entry.getsbillphone().replace("\"", "&quot;") + "\">Phone:</A></TD>";
+			s += "<TD>"
+				+ "<INPUT TYPE=TEXT NAME=\"" + ICPOHeader.Paramsshipphone + "\""
+				+ " onchange=\"flagDirty();\""
+				+ " VALUE=\"" + entry.getsshipphone().replace("\"", "&quot;") + "\""
+				+ " SIZE=" + "40"
+				+ " MAXLENGTH=" + Integer.toString(SMTableicpoheaders.sshipphoneLength)
+				+ ">"
+				+ "</TD>"
+				;
+		}
 		s += "</TR>";
 
 		//New Row:

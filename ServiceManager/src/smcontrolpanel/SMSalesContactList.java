@@ -252,7 +252,7 @@ public class SMSalesContactList extends HttpServlet {
         			//Contact Name
 					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + rs.getString(SMTablesalescontacts.scontactname) + "&nbsp;</TD>");
 					//Phone Number
-					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + rs.getString(SMTablesalescontacts.sphonenumber) + "&nbsp;</TD>");
+					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + SMUtilities.addPhoneNumberLink(rs.getString(SMTablesalescontacts.sphonenumber)) + "&nbsp;</TD>");
 					//Email
 					out.println("<TD ALIGN=LEFT VALIGN=TOP>" + rs.getString(SMTablesalescontacts.semailaddress) + "&nbsp;</TD>");
     				//Status

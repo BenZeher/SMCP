@@ -259,8 +259,12 @@ public class SMSalesContactEdit extends HttpServlet {
 		    		//customer contact information
 		    		out.println("<TR><TD ALIGN=RIGHT>Contact Name:&nbsp;</TD><TD>");
 		    		out.println("<INPUT TYPE=TEXT NAME=\"ContactName\" VALUE=\"" + rs.getString(SMTablesalescontacts.scontactname) + "\">"+ "</TD></TR>");
-		    		
-		    		out.println("<TR><TD ALIGN=RIGHT>Phone Number:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"" + rs.getString(SMTablesalescontacts.sphonenumber) + "\"></TD></TR>");
+		    		String PhoneNumber = rs.getString(SMTablesalescontacts.sphonenumber);
+		    		if(PhoneNumber.compareToIgnoreCase("")==0) {
+		    		out.println("<TR><TD ALIGN=RIGHT>Phone Number:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"" + PhoneNumber + "\"></TD></TR>");
+		    		} else {
+			    		out.println("<TR><TD ALIGN=RIGHT><A HREF=\"tel:" + PhoneNumber + "\">Phone Number:</A>&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"PhoneNumber\" VALUE=\"" + PhoneNumber+ "\"></TD></TR>");
+		    		}
 		    		out.println("<TR><TD ALIGN=RIGHT>Email Address:&nbsp;</TD><TD><INPUT TYPE=TEXT NAME=\"EmailAddress\" VALUE=\"" + rs.getString(SMTablesalescontacts.semailaddress) + "\"></TD></TR>");
 		    		
 		        	//Is Active?

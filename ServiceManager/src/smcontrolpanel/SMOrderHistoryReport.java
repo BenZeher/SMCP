@@ -900,13 +900,19 @@ public class SMOrderHistoryReport extends java.lang.Object{
 		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Contact: </B>" + rsOrder.getString(SMTableorderheaders.sShipToContact) + "</TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Phone: </B>" + rsOrder.getString(SMTableorderheaders.sBillToPhone) + "</TD>");
-		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Phone: </B>" + rsOrder.getString(SMTableorderheaders.sShipToPhone) + "</TD>");
+		
+		String BillToPhone= rsOrder.getString(SMTableorderheaders.sBillToPhone) ;
+		String BillToPhoneTwo= rsOrder.getString(SMTableorderheaders.ssecondarybilltophone);
+		String ShipToPhone= rsOrder.getString(SMTableorderheaders.sShipToPhone) ;
+		String ShipToPhoneTwo = rsOrder.getString(SMTableorderheaders.ssecondaryshiptophone) ;
+		
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Phone: </B>" + SMUtilities.addPhoneNumberLink(BillToPhone) + "</TD>");
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>Phone: </B>" + SMUtilities.addPhoneNumberLink(ShipToPhone) + "</TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");
-		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>2nd phone: </B>" + rsOrder.getString(SMTableorderheaders.ssecondarybilltophone) 
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>2nd phone: </B>" + SMUtilities.addPhoneNumberLink(BillToPhoneTwo)
 				+ "</TD>");
-		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>2nd phone: </B>" + rsOrder.getString(SMTableorderheaders.ssecondaryshiptophone) 
+		pwOut.println("<TD CLASS= \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><B>2nd phone: </B>" + SMUtilities.addPhoneNumberLink(ShipToPhoneTwo)
 				+ "</TD>");
 		pwOut.println("</TR>");
 		pwOut.println("<TR>");

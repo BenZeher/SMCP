@@ -407,15 +407,28 @@ public class APEditVendorsEdit  extends HttpServlet {
 		);
 
 		//Phone number
-		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
-				APVendor.Paramsphonenumber,
-				entry.getsphonenumber().replace("\"", "&quot;"), 
-				SMTableicvendors.sphonenumberLength, 
-				"<B>Phone number:</B>",
-				"(No punctuation)",
-				"40",
-				"flagDirty();"
-		);
+		if(entry.getsphonenumber().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+			s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
+					APVendor.Paramsphonenumber,
+					entry.getsphonenumber().replace("\"", "&quot;"), 
+					SMTableicvendors.sphonenumberLength, 
+					"<B>Phone number:</B>",
+					"(No punctuation)",
+					"40",
+					"flagDirty();"
+			);
+		} else {
+			s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(
+					APVendor.Paramsphonenumber,
+					entry.getsphonenumber().replace("\"", "&quot;"), 
+					SMTableicvendors.sphonenumberLength, 
+					"<B><A HREF=\"tel:" + entry.getsphonenumber().replace("\"", "&quot;") + "\">Phone number:</A></B>",
+					"(No punctuation)",
+					"40",
+					"flagDirty();"
+			);
+		}
+
 		
 		//Fax number
 		s += clsCreateHTMLTableFormFields.Create_Edit_Form_Text_Input_Row(

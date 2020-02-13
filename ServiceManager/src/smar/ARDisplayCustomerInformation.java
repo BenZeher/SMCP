@@ -721,7 +721,7 @@ public class ARDisplayCustomerInformation extends HttpServlet {
 							 if(sSalesContactPhoneNumber.compareToIgnoreCase("")== 0) {
 								 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">" +sSalesContactPhoneNumber  + "</TD>");	
 							 }else {
-								 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><A HREF=\"tel"+ sSalesContactPhoneNumber + "\"> " +sSalesContactPhoneNumber  + "</TD>");	
+								 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><A HREF=\"tel:"+ sSalesContactPhoneNumber + "\"> " +sSalesContactPhoneNumber  + "</TD>");	
 							 }
 							 	
 							 pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">"+ rsSalesContact.getString(SMTablesalescontacts.semailaddress) + "</TD>");		

@@ -329,7 +329,7 @@ public class SMCriticalDateEdit  extends HttpServlet {
 						s +="<TR><TD ALIGN=RIGHT><b>Ship To Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablebids.TableName + "." + SMTablebids.scustomername).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Bill To Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablebids.TableName + "." + SMTablebids.sprojectname).replace("`", "")).trim() + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Contact: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablebids.TableName + "." + SMTablebids.scontactname).replace("`", "")).trim() + "</TD></TR>"; 
-						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim() + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" +SMUtilities.addPhoneNumberLink(rsInfo.getString((SMTablebids.TableName + "." + SMTablebids.sphonenumber).replace("`", "")).trim()) + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Sales Lead: </b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
 							+ SMUtilities.getURLLinkBase(getServletContext()) 
 							+ "smcontrolpanel.SMEditBidEntry?lid=" + Integer.toString(rsInfo.getInt((SMTablebids.TableName + "." + SMTablebids.lid).replace("`", ""))) 
@@ -360,7 +360,7 @@ public class SMCriticalDateEdit  extends HttpServlet {
 								+ "</A> - " + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scustomername).replace("`", "")).trim() + "</TD></TR>";
 						s +="<TR><TD ALIGN=RIGHT><b>Sales Person: </b></TD><TD ALIGN=LEFT>" + sSalesPersonFullName + "</TD></TR>";
 						s +="<TR><TD ALIGN=RIGHT><b>Contact Name: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.scontactname).replace("`", "")).trim() + "</TD></TR>"; 
-						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim() + "</TD></TR>"; 
+						s +="<TR><TD ALIGN=RIGHT><b>Phone: </b></TD><TD ALIGN=LEFT>" + SMUtilities.addPhoneNumberLink(rsInfo.getString((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.sphonenumber).replace("`", "")).trim()) + "</TD></TR>"; 
 						s +="<TR><TD ALIGN=RIGHT><b>Sales Contact ID: </b></TD><TD ALIGN=LEFT>" + "<A HREF=\"" 
 							+ SMUtilities.getURLLinkBase(getServletContext()) 
 							+ "smcontrolpanel.SMSalesContactEdit?id=" + Integer.toString(rsInfo.getInt((SMTablesalescontacts.TableName + "." + SMTablesalescontacts.id).replace("`", ""))) 

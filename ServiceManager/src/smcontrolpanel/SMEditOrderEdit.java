@@ -1677,30 +1677,59 @@ public class SMEditOrderEdit  extends HttpServlet {
 			+ "</TD>\n"
 		;
 		
-		s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
-		s += "<TD class=\" fieldcontrol \">\n"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToPhone + "\""
-			+ " VALUE=\"" + entry.getM_sBilltoPhone().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMOrderHeader.ParamsBillToPhone + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
-			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToPhoneLength)
-			+ "</TD>\n"
-		;
+		//TODO  
+		if(entry.getM_sBilltoPhone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+			s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToPhone + "\""
+					+ " VALUE=\"" + entry.getM_sBilltoPhone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.ParamsBillToPhone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToPhoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		} else {
+			s += "<TD class=\" fieldlabel \">\n<B><A HREF=\"tel:" + entry.getM_sBilltoPhone().replace("\"", "&quot;") + "\">Phone:</A></B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsBillToPhone + "\""
+					+ " VALUE=\"" + entry.getM_sBilltoPhone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.ParamsBillToPhone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sBillToPhoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		}
 		s += "</TR>\n";
 		
-		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">\n<B>2nd phone:</B>&nbsp;</TD>\n";
-		s += "<TD class=\" fieldcontrol \" >"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondarybilltophone + "\""
-			+ " VALUE=\"" + entry.getM_ssecondarybilltophone().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMOrderHeader.Paramssecondarybilltophone + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
-			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondarybilltophoneLength)
-			+ ">"
-			+ "</TD>\n"
-		;
+		if(entry.getM_ssecondarybilltophone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+			s += "<TD class=\" fieldlabel \">\n<B>2nd phone:</B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondarybilltophone + "\""
+					+ " VALUE=\"" + entry.getM_ssecondarybilltophone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.Paramssecondarybilltophone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondarybilltophoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		} else {
+			s += "<TD class=\" fieldlabel \">\n<B><A HREF=\"tel:" + entry.getM_ssecondarybilltophone().replace("\"", "&quot;") + "\">2nd phone:</A></B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondarybilltophone + "\""
+					+ " VALUE=\"" + entry.getM_ssecondarybilltophone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.Paramssecondarybilltophone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondarybilltophoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		}
 		s += "</TR>\n";
 		
 		s += "<TR>";
@@ -1995,29 +2024,58 @@ public class SMEditOrderEdit  extends HttpServlet {
 		s += "</TR>\n";
 		
 		s += "<TR>";
-		s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
-		s += "<TD class=\" fieldcontrol \" >"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToPhone + "\""
-			+ " VALUE=\"" + entry.getM_sShiptoPhone().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMOrderHeader.ParamsShipToPhone + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
-			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToPhoneLength)
-			+ ">"
-			+ "</TD>\n"
-		;
-		s += "<TD class=\" fieldlabel \">\n&nbsp;&nbsp;<B>2nd phone:</B>&nbsp;</TD>\n";
-		s += "<TD class=\" fieldcontrol \" >"
-			+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
-			+ " VALUE=\"" + entry.getM_ssecondaryshiptophone().replace("\"", "&quot;") + "\""
-			+ " id = \"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
-			+ " onchange=\"flagDirty();\""
-			+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
-			+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondaryshiptophoneLength)
-			+ ">"
-			+ "</TD>\n"
-		;
-		
+		if(entry.getM_sShiptoPhone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+			s += "<TD class=\" fieldlabel \">\n<B>Phone:</B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToPhone + "\""
+					+ " VALUE=\"" + entry.getM_sShiptoPhone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.ParamsShipToPhone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToPhoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		} else {
+			s += "<TD class=\" fieldlabel \">\n<B><A HREF=\"tel:" + entry.getM_sShiptoPhone().replace("\"", "&quot;") + "\">Phone:</A></B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.ParamsShipToPhone + "\""
+					+ " VALUE=\"" + entry.getM_sShiptoPhone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.ParamsShipToPhone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.sShipToPhoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		}
+
+		if(entry.getM_ssecondaryshiptophone().replace("\"", "&quot;").compareToIgnoreCase("")==0) {
+			s += "<TD class=\" fieldlabel \">\n<B>2nd phone:</B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
+					+ " VALUE=\"" + entry.getM_ssecondaryshiptophone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondaryshiptophoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		} else {
+			s += "<TD class=\" fieldlabel \">\n<B><A HREF=\"tel:" + entry.getM_ssecondaryshiptophone().replace("\"", "&quot;") + "\">2nd phone:</A></B>&nbsp;</TD>\n";
+			s += "<TD class=\" fieldcontrol \" >"
+					+ "<INPUT TYPE=TEXT NAME=\"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
+					+ " VALUE=\"" + entry.getM_ssecondaryshiptophone().replace("\"", "&quot;") + "\""
+					+ " id = \"" + SMOrderHeader.Paramssecondaryshiptophone + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " SIZE=" + PHONE_NUMBER_FIELD_WIDTH
+					+ " MAXLENGTH=" + Integer.toString(SMTableorderheaders.ssecondaryshiptophoneLength)
+					+ ">"
+					+ "</TD>\n"
+					;
+		}
+			
 		s += "</TR>\n";
 		
 		

@@ -232,8 +232,9 @@ public class APDisplayVendorInformation extends HttpServlet {
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.scountry).trim() + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Contact name:</B> " 
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.scontactname).trim() + "<BR>");
+				String PhoneNumber = rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sphonenumber).trim();
 				pwOut.println("<FONT SIZE=2><B>Phone:</B> " 
-						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sphonenumber).trim() + "<BR>");
+						+ SMUtilities.addPhoneNumberLink(PhoneNumber) + "<BR>");
 				pwOut.println("<FONT SIZE=2><B>Fax:</B> " 
 						+ rsVendor.getString(SMTableicvendors.TableName + "." + SMTableicvendors.sfaxnumber).trim() + "<BR>");
 				

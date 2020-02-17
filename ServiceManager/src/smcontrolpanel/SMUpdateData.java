@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1451;
+	private static final int m_CurrentDatabaseVersion = 1452;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "2/7/2020";
+	private static final String m_sLastRevisionDate = "2/17/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15139,6 +15139,32 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
+			case 1451:
+				//Added by TJR 2/4/2020
+				SQL = "CREATE TABLE `vendorreturns` ("
+						+ "`lid` int(11) NOT NULL auto_increment"
+						+ ", `iinvoiceonhold` int(11) NOT NULL default '0'"
+						+ ", `itobereturned` int(11) NOT NULL default '0'"
+						+ ", `iCreditDue` int(11) NOT NULL default '0'"
+						+ ", `svendoracct` varchar(12) NOT NULL default ''"
+						+ ", `iponumber` int(11) NOT NULL default '0'"
+						+ ", `mVendorComments` MEDIUMTEXT NOT NULL"
+						+ ", `datreturnsent` datetime NOT NULL default '0000-00-00 00:00:00'"
+						+ ", `ladjustedbatchnumber` int(11) NOT NULL default '0'"
+						+ ", `ladjustedentrynumber` int(11) NOT NULL default '0'"
+						+ ",  `bdadjustmentamount` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+						+ ", `screditmemonumber` varchar(24) NOT NULL default ''"
+						+ ", `datcreditnotedate` datetime NOT NULL default '0000-00-00 00:00:00'"
+						+ ",  `bdcreditamt` DECIMAL(17,2) NOT NULL DEFAULT '0.00'"
+						+ ", `icreditnotexpected` int(11) NOT NULL default '0'"
+						+ ", PRIMARY KEY  (`lid`)"
+						+ " ) ENGINE=InnoDB"
+					;
+				
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;
+	
 			//End switch:
 		}
 

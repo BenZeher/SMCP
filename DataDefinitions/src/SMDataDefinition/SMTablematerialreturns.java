@@ -13,7 +13,10 @@ public class SMTablematerialreturns {
 	public static final String sresolvedbyfullname = "sresolvedbyfullname";
 	public static final String sdescription = "sdescription";
 	public static final String mcomments = "mcomments";
-	public static final String mresolutioncomments = "mresolutioncomments";
+	
+	public static final String mresolutioncomments = "mresolutioncomments"; 
+	
+	//TODO Be put into Vendor Returns
 	public static final String iworkorderid = "iworkorderid";
 	public static final String strimmedordernumber = "strimmedordernumber";
 	public static final String icreditnotexpected = "icreditnotexpected";
@@ -40,6 +43,7 @@ public class SMTablematerialreturns {
 	public static final int sresolvedbyfullnamelength = 128;
 	public static final int sdescriptionlength = 254;
 	public static final int strimmedordernumberlength = 22;
+	
 	public static final int svendoracctlength = 12;  //Same as icvendors.svendoracctLength
 	public static final int ladjustedbatchnumberlength = 11;
 	public static final int lentrynumberlength = 11;

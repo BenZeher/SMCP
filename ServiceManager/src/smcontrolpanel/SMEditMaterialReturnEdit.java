@@ -222,7 +222,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 		s += "</TR>\n";
 
 		//Resolution Comments:
-		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sresolutioncommentslabel + "</B>:</TD>\n";
+	/*	s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablematerialreturns.sresolutioncommentslabel + "</B>:</TD>\n";
 		s += "<TD>\n"
 				+ "<TEXTAREA NAME=\"" + SMMaterialReturn.Parammresolutioncomments + "\""
 				+ " rows=\"" + "3" + "\""
@@ -232,7 +232,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 				+ "</TEXTAREA>"
 				+ "</TD>\n"
 				+ "</TR>\n"
-				;
+				;*/
 
 
 		//Status Options

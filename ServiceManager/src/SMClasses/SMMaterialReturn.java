@@ -128,8 +128,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 				SMMaterialReturn.Paramsdescription, req).trim().replace("&quot;", "\"");
 		m_scomments = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Parammcomments, req).trim().replace("&quot;", "\"");
-		m_sresolutioncomments = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Parammresolutioncomments, req).trim().replace("&quot;", "\"");
+		/*m_sresolutioncomments = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Parammresolutioncomments, req).trim().replace("&quot;", "\"");*/
 		m_sworkorderid = clsManageRequestParameters.get_Request_Parameter(
 				SMMaterialReturn.Paramiworkorderid, req).trim();
 		m_strimmedordernumber = clsManageRequestParameters.get_Request_Parameter(
@@ -249,7 +249,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 				m_sresolvedbyfullname = rs.getString(SMTablematerialreturns.sresolvedbyfullname).trim();
 				m_sdescription = rs.getString(SMTablematerialreturns.sdescription).trim();
 				m_scomments = rs.getString(SMTablematerialreturns.mcomments).trim();
-				m_sresolutioncomments = rs.getString(SMTablematerialreturns.mresolutioncomments).trim();
+				//m_sresolutioncomments = rs.getString(SMTablematerialreturns.mresolutioncomments).trim();
 				m_sworkorderid = Long.toString(rs.getLong(SMTablematerialreturns.iworkorderid));
 				if (Long.parseLong(m_sworkorderid) < 1){
 					m_sworkorderid = "";
@@ -461,7 +461,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			+ ", " + SMTablematerialreturns.itobereturned + " = " + getstobereturned()
 			+ ", " + SMTablematerialreturns.mcomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getscomments().trim()) + "'"
 			+ ", " + SMTablematerialreturns.sdescription  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsdescription().trim()) + "'"
-			+ ", " + SMTablematerialreturns.mresolutioncomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
+			//+ ", " + SMTablematerialreturns.mresolutioncomments  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolutioncomments().trim()) + "'"
 			+ ", " + SMTablematerialreturns.lresolvedbyid  + " = " + clsDatabaseFunctions.FormatSQLStatement(getlresolvedbyid().trim()) + ""
 			+ ", " + SMTablematerialreturns.sresolvedbyfullname  + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsresolvedbyfullname().trim()) + "'"
 			+ ", " + SMTablematerialreturns.iworkorderid + " = " + sWorkOrderID
@@ -634,8 +634,8 @@ public class SMMaterialReturn extends clsMasterEntry{
 
 		m_scomments = m_scomments.trim();
 
-		m_sresolutioncomments = m_sresolutioncomments.trim();
-		if (getsresolved().compareToIgnoreCase("1") == 0){
+		//m_sresolutioncomments = m_sresolutioncomments.trim();
+		/*if (getsresolved().compareToIgnoreCase("1") == 0){
 			if (m_sresolutioncomments.compareToIgnoreCase("") == 0){
 				sErrors += ParamObjectName + "s cannot be resolved without adding a resolution comment.  ";
 			}
@@ -643,7 +643,7 @@ public class SMMaterialReturn extends clsMasterEntry{
 			if (m_sresolutioncomments.compareToIgnoreCase("") != 0){
 				sErrors += "You cannot enter resolution comments unless the return is resolved.  ";
 			}
-		}
+		}*/
 		m_sworkorderid = m_sworkorderid.trim();
 		if (m_sworkorderid.compareToIgnoreCase("") == 0){
 		}else{

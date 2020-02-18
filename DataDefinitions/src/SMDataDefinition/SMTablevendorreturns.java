@@ -29,7 +29,7 @@ public class SMTablevendorreturns {
 
 
 	//Labels
-	public static final String sidlabel = "Material Return ID";
+	public static final String sidlabel = "Vendor Return ID";
 	public static final String sinitiatedlabel = "Initiated by";
 	public static final String sresolvedlabel = "Resolved";
 	public static final String sdescriptionlabel = "Description";

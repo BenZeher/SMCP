@@ -1765,6 +1765,16 @@
 		<servlet-class>smcontrolpanel.SMEditVendorReturnSelect</servlet-class>
 	</servlet>
 
+	<servlet>
+		<servlet-name>SMEditVendorReturnAction</servlet-name>
+		<servlet-class>smcontrolpanel.SMEditVendorReturnAction</servlet-class>
+	</servlet>
+
+	<servlet>
+		<servlet-name>SMEditVendorReturnEdit</servlet-name>
+		<servlet-class>smcontrolpanel.SMEditVendorReturnEdit</servlet-class>
+	</servlet>
+
     <servlet>
         <servlet-name>SMEditWorkPerformedCodes</servlet-name>
         <servlet-class>smcontrolpanel.SMEditWorkPerformedCodes</servlet-class>
@@ -5076,11 +5086,21 @@
         <servlet-name>SMEditUsersSelection</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditUsersSelection</url-pattern>
     </servlet-mapping>
-    
-        <servlet-mapping>
-        <servlet-name>SMEditVendorReturnSelect</servlet-name>
-        <url-pattern>/smcontrolpanel.SMEditVendorReturnSelect</url-pattern>
-    </servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SMEditVendorReturnSelect</servlet-name>
+		<url-pattern>/smcontrolpanel.SMEditVendorReturnSelect</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SMEditVendorReturnAction</servlet-name>
+		<url-pattern>/smcontrolpanel.SMEditVendorReturnAction</url-pattern>
+	</servlet-mapping>
+
+	<servlet-mapping>
+		<servlet-name>SMEditVendorReturnEdit</servlet-name>
+		<url-pattern>/smcontrolpanel.SMEditVendorReturnEdit</url-pattern>
+	</servlet-mapping>
 
     <servlet-mapping>
         <servlet-name>SMEditWorkPerformedCodes</servlet-name>

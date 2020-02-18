@@ -1,8 +1,5 @@
 package smcontrolpanel;
 
-
-
-
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.SQLException;
@@ -12,18 +9,18 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import SMClasses.SMMaterialReturn;
-import SMDataDefinition.SMTablematerialreturns;
+import SMClasses.SMVendorReturn;
+import SMDataDefinition.SMTablevendorreturns;
 
 public class SMEditVendorReturnSelect  extends HttpServlet {
 
 	private static final long serialVersionUID = 1L;
-	private static final String sCalledClassName = "smcontrolpanel.SMEditVendorReturnSelect";
+	private static final String sCalledClassName = "smcontrolpanel.SMEditVendorReturnEdit";
 	public void doPost(HttpServletRequest request,
 				HttpServletResponse response)
 				throws ServletException, IOException {
 
-		SMMaterialReturn entry = new SMMaterialReturn();
+		SMVendorReturn entry = new SMVendorReturn();
 		SMMasterEditSelect smeditselect = new SMMasterEditSelect(
 				request,
 				response,
@@ -32,10 +29,10 @@ public class SMEditVendorReturnSelect  extends HttpServlet {
 				sCalledClassName,
 				"smcontrolpanel.SMUserLogin",
 				"Go back to user login",
-				SMSystemFunctions.SMEditMaterialReturns
+				SMSystemFunctions.SMEditVendorReturns
 				);
 		
-		if (!smeditselect.processSession(getServletContext(), SMSystemFunctions.SMEditMaterialReturns)){
+		if (!smeditselect.processSession(getServletContext(), SMSystemFunctions.SMEditVendorReturns)){
 			PrintWriter m_out = response.getWriter();
 			m_out.println("Error in process session: " + smeditselect.getErrorMessages());
 			return;
@@ -44,7 +41,7 @@ public class SMEditVendorReturnSelect  extends HttpServlet {
 		smeditselect.printHeaderTable();
 		smeditselect.showAddNewButton(
 			SMSystemFunctions.isFunctionPermitted(
-				SMSystemFunctions.SMInitiateMaterialReturns, 
+				SMSystemFunctions.SMEditVendorReturns, 
 				smeditselect.getUserID(), 
 				getServletContext(), 
 				smeditselect.getsDBID(),
@@ -65,13 +62,13 @@ public class SMEditVendorReturnSelect  extends HttpServlet {
 
 		String s = "";
 	    String sEditCode = "";
-	    if (req.getParameter(SMMaterialReturn.Paramlid) != null){
-	    	sEditCode = req.getParameter(SMMaterialReturn.Paramlid);
+	    if (req.getParameter(SMVendorReturn.Paramlid) != null){
+	    	sEditCode = req.getParameter(SMVendorReturn.Paramlid);
 	    }
 	    
 		s+= 
-			"<P>Enter " + SMMaterialReturn.ParamObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
-			+ SMMaterialReturn.Paramlid + "\""
+			"<P>Enter " + SMVendorReturn.ParamObjectName + " Number: <INPUT TYPE=TEXT NAME=\"" 
+			+ SMVendorReturn.Paramlid + "\""
 			+ " VALUE = \"" + sEditCode + "\""
 			//+ " SIZE=32"
 			+ " MAXLENGTH=" + "8"
@@ -79,35 +76,27 @@ public class SMEditVendorReturnSelect  extends HttpServlet {
 		
 		//Link to finder:
 		s+= "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "SMClasses.ObjectFinder" +
-				"?ObjectName=" + SMMaterialReturn.ParamObjectName +
+				"?ObjectName=" + SMVendorReturn.ParamObjectName +
 				"&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"&ResultClass=FinderResults" +
 				"&SearchingClass=" + SMUtilities.getFullClassName(this.toString()) +
-				"&ReturnField=" + SMMaterialReturn.Paramlid +
-				"&SearchField1=" + SMTablematerialreturns.sdescription +
-				"&SearchFieldAlias1=Description" +
-				"&SearchField2=" + SMTablematerialreturns.sinitiatedbyfullname +
-				"&SearchFieldAlias2=Initiated by" +
-				"&SearchField3=" + SMTablematerialreturns.iponumber +
+				"&ReturnField=" + SMVendorReturn.Paramlid +
+				"&SearchField1=" + SMTablevendorreturns.svendoracct +
+				"&SearchFieldAlias1=Vendor Account" +
+				"&SearchField2=" + SMTablevendorreturns.mVendorComments +
+				"&SearchFieldAlias2=Vendor Comments" +
+				"&SearchField3=" + SMTablevendorreturns.iponumber +
 				"&SearchFieldAlias3=P.O. Number" +
-				"&SearchField4=" + SMTablematerialreturns.strimmedordernumber +
-				"&SearchFieldAlias4=Order Number" +
-				"&ResultListField1="  + SMTablematerialreturns.lid +
+				"&SearchField4=" + SMTablevendorreturns.screditmemonumber +
+				"&SearchFieldAlias4=Credit Memo Number" +
+				"&ResultListField1="  + SMTablevendorreturns.lid +
 				"&ResultHeading1=ID" +
-				"&ResultListField2="  + SMTablematerialreturns.iponumber +
+				"&ResultListField2="  + SMTablevendorreturns.iponumber +
 				"&ResultHeading2=P.O. Number" +
-				"&ResultListField3="  + SMTablematerialreturns.strimmedordernumber +
-				"&ResultHeading3=Order Number" +
-				"&ResultListField4="  + SMTablematerialreturns.sdescription +
-				"&ResultHeading4=Description" +
-				"&ResultListField5="  + SMTablematerialreturns.datinitiated +
-				"&ResultHeading5=Initiated" +
-				"&ResultListField6="  + SMTablematerialreturns.sinitiatedbyfullname +
-				"&ResultHeading6=Initiated%20By" +
-				"&ResultListField7="  + SMTablematerialreturns.iresolved +
-				"&ResultHeading7=Resolved?" +
+				"&ResultListField3="  + SMTablevendorreturns.screditmemonumber +
+				"&ResultHeading3=Credit Memo Number" +
 				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
-				"\"> Find " + SMMaterialReturn.ParamObjectName + "</A>";
+				"\"> Find " + SMVendorReturn.ParamObjectName + "</A>";
 		return s;
 	}
 	public void doGet(HttpServletRequest request,

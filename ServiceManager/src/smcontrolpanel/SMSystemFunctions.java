@@ -339,6 +339,7 @@ public class SMSystemFunctions extends java.lang.Object{
 	public static long GLCheckFinancialData = 1245;
 	public static long SMTestOHDPlusConnection = 1246;
 	public static long GLReverseExternalCompanyPulls = 1247;
+	public static long SMEditVendorReturns = 1248;
 	
 	private static ArrayList <String>arrFunctions;
 	private static ArrayList <Long>arrFunctionIDs;
@@ -2790,6 +2791,13 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smcontrolpanel.SMEditPriceLevelLabelsEdit"); 
 			arrFunctionDescriptions.add("Use this to customise the names of the 6 price levels for each price list.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
+			
+			arrFunctions.add("SM Edit Vendor Returns"); 
+			arrFunctionIDs.add(SMEditVendorReturns); 
+			arrFunctionLinks.add("smcontrolpanel.SMEditVendorReturnSelect"); 
+			arrFunctionDescriptions.add("Required to edit and maintain 'Vendor Returns', which are records of material that was returned from jobs, awaiting disposition (e.g., to be"
+					+ "returned to the vendor, to be replaced, to be scrapped, etc').");
+			arrFunctionModuleLevel.add(SMModuleListing.MODULE_ORDERENTRY);
 			
 	}
 

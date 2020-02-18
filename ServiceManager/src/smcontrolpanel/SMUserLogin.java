@@ -420,6 +420,9 @@ public class SMUserLogin extends HttpServlet {
 		//Edit material returns:
 		arMenu.add(SMSystemFunctions.SMEditMaterialReturns);
 		
+		//Edit vendor returns:
+		arMenu.add(SMSystemFunctions.SMEditVendorReturns);
+		
 		//Edit tax certificates:
 		arMenu.add(SMSystemFunctions.SMEditTaxCertificates);
 		

@@ -1760,6 +1760,11 @@
         <servlet-class>smcontrolpanel.SMEditUsersSelection</servlet-class>
     </servlet>
 
+	<servlet>
+		<servlet-name>SMEditVendorReturnSelect</servlet-name>
+		<servlet-class>smcontrolpanel.SMEditVendorReturnSelect</servlet-class>
+	</servlet>
+
     <servlet>
         <servlet-name>SMEditWorkPerformedCodes</servlet-name>
         <servlet-class>smcontrolpanel.SMEditWorkPerformedCodes</servlet-class>
@@ -5070,6 +5075,11 @@
     <servlet-mapping>
         <servlet-name>SMEditUsersSelection</servlet-name>
         <url-pattern>/smcontrolpanel.SMEditUsersSelection</url-pattern>
+    </servlet-mapping>
+    
+        <servlet-mapping>
+        <servlet-name>SMEditVendorReturnSelect</servlet-name>
+        <url-pattern>/smcontrolpanel.SMEditVendorReturnSelect</url-pattern>
     </servlet-mapping>
 
     <servlet-mapping>

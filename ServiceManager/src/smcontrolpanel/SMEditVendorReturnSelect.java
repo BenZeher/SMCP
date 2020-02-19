@@ -95,6 +95,10 @@ public class SMEditVendorReturnSelect  extends HttpServlet {
 				"&ResultHeading2=P.O. Number" +
 				"&ResultListField3="  + SMTablevendorreturns.screditmemonumber +
 				"&ResultHeading3=Credit Memo Number" +
+				"&ResultListField4=" + SMTablevendorreturns.svendoracct +
+				"&ResultHeading4=Vendor Account" +
+				"&ResultListField5=" + SMTablevendorreturns.mVendorComments +
+				"&ResultHeading5=Comments" +
 				//"&ParameterString=*" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smselect.getsDBID() +
 				"\"> Find " + SMVendorReturn.ParamObjectName + "</A>";
 		return s;

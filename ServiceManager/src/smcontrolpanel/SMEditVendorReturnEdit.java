@@ -137,6 +137,25 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 					+ entry.getslid() + "\">"
 					+ "</B></TD>\n</TR>\n";
 		}
+		
+		//Initiated by:
+		String sInitiatedByString = "";
+		if (entry.getlinitiatedbyid().compareToIgnoreCase("0") != 0){
+			sInitiatedByString = entry.getsinitiatedbyfullname() 
+					+ " on " + entry.getsdatinitiated() + ".";
+		}
+		if (entry.getsinitiatedbyfullname().trim().compareToIgnoreCase("") == 0){
+			entry.setsinitiatedbyfullname(sm.getFullUserName());
+		}
+		s += "<TR>\n<TD ALIGN=RIGHT><B>" + SMTablevendorreturns.sinitiatedlabel + "<B>:</TD>\n"
+				+ "<TD>\n" 
+				+ sInitiatedByString 
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMVendorReturn.Paramdatinitiated + "\" VALUE=\"" + entry.getsdatinitiated() + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMVendorReturn.Paramlinitiatedbyid + "\" VALUE=\"" + entry.getlinitiatedbyid() + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMVendorReturn.Paramsinitiatedbyfullname + "\" VALUE=\"" + entry.getsinitiatedbyfullname() + "\">"
+				+ "</TD>\n"
+				+ "</TR>\n"
+				;
 
 		
 		//To Be Returned
@@ -144,12 +163,12 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		s += "<TD>\n";
 		String sChecked = "";
 		if (entry.getstobereturned().compareToIgnoreCase(Integer.toString(1)) == 0){
-			sChecked = " checked ";
+			s += "<INPUT TYPE='RADIO' ID='Yes' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1 checked ><label for=\"Yes\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='No' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0><label for=\"No\">No</label><BR>";
 		}else{
-			sChecked = "";
+			s += "<INPUT TYPE='RADIO' ID='Yes' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1><label for=\"Yes\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='No' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0 checked ><label for=\"No\">No</label><BR>";
 		}
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMVendorReturn.Paramitobereturned + "'"+ sChecked + " ><BR>";
-
 		//AP Invoice Was Put on Hold
 		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablevendorreturns.sinvoiceonholdlabel + " </B></TD>\n";
 		s += "<TD>\n";

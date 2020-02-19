@@ -18,6 +18,9 @@ public class SMTablevendorreturns {
 	public static final String datcreditnotedate = "datcreditnotedate";
 	public static final String bdcreditamt = "bdcreditamt";
 	public static final String icreditnotexpected = "icreditnotexpected";
+	public static final String datinitiated = "datinitiated";
+	public static final String linitiatedbyid = "linitiatedbyid";
+	public static final String sinitiatedbyfullname = "sinitiatedbyfullname";
 
 	//Lengths
 	public static final int svendoracctlength = 12; 

@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1452;
+	private static final int m_CurrentDatabaseVersion = 1454;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "2/17/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15139,8 +15139,9 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
+			//BEGIN CASE:
 			case 1451:
-				//Added by TJR 2/4/2020
+				//Added by BJA 2/18/2020
 				SQL = "CREATE TABLE `vendorreturns` ("
 						+ "`lid` int(11) NOT NULL auto_increment"
 						+ ", `iinvoiceonhold` int(11) NOT NULL default '0'"
@@ -15164,7 +15165,80 @@ public class SMUpdateData extends java.lang.Object{
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;
+			//END CASE
 	
+			//BEGIN CASE:
+			case 1452:
+				//Added by BJA 2/19/2020
+				SQL = "ALTER TABLE `vendorreturns` "
+						+ "ADD datinitiated DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'" 
+						+ ", ADD  linitiatedbyid int(11) NOT NULL DEFAULT '0' COMMENT '[010102]'"
+						+ ", ADD sinitiatedbyfullname varchar(128) NOT NULL DEFAULT ''"
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
+			/*//BEGIN CASE:
+			case 1453:
+				//Added by BJA 2/19/2020
+				SQL = "INSERT INTO vendorreturns"
+						+ " ("
+						+ "iinvoiceonhold"
+						+ ", itobereturned"
+						+ ", iCreditDue"
+						+ ", svendoracct"
+						+ ", iponumber"
+						+ ", mVendorComments"
+						+ ", datreturnsent"
+						+ ", ladjustedbatchnumber"
+						+ ", ladjustedentrynumber"
+						+ ", bdadjustmentamount"
+						+ ", screditmemonumber"
+						+ ", datcreditnotedate"
+						+ ", bdcreditamt"
+						+ ", icreditnotexpected"
+						+ ", datinitiated"
+						+ ", linitiatedbyid"
+						+ ", sinitiatedbyfullname"
+						+ ") "
+						+ "SELECT "
+						+ "iinvoiceonhold"
+						+ ", itobereturned"
+						+ ", iCreditDue"
+						+ ", svendoracct"
+						+ ", iponumber"
+						+ ", mVendorComments"
+						+ ", datreturnsent"
+						+ ", ladjustedbatchnumber"
+						+ ", ladjustedentrynumber"
+						+ ", bdadjustmentamount"
+						+ ", screditmemonumber"
+						+ ", datcreditnotedate"
+						+ ", bdcreditamt"
+						+ ", icreditnotexpected"
+						+ ", datinitiated"
+						+ ", linitiatedbyid"
+						+ ", sinitiatedbyfullname"
+						+ " FROM"
+						+ " materialreturns"
+						+ " WHERE("
+						+ " (datreturnsent != '00/00/0000')"
+						+ " OR (ladjustedbatchnumber != 0)"
+						+ " OR (ladjustedentrynumber != 0)"
+						+ " OR (bdadjustmentamount != 0.00)"
+						+ " OR (screditmemonumber != '')"
+						+ " OR (datcreditnotedate != '00/00/0000')"
+						+ " OR (bdcreditamt != 0.00)"
+						+ ")"
+						
+						;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE*/
+
 			//End switch:
 		}
 

@@ -7,6 +7,7 @@ import java.sql.Statement;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMDataDefinition.SMTablematerialreturns;
 import SMDataDefinition.SMTablevendorreturns;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -38,6 +39,9 @@ public class SMVendorReturn extends clsMasterEntry{
 	public static final String Paramdatcreditnotedate = "datcreditnotedate";
 	public static final String Parambdcreditamt = "bdcreditamt";
 	public static final String Paramicreditnotexpected = "icreditnotexpected";
+	public static final String Paramdatinitiated = "datinitiated";
+	public static final String Paramlinitiatedbyid = "linitiatedbyid";
+	public static final String Paramsinitiatedbyfullname = "sinitiatedbyfullname";
 
 
 	private String m_slid;
@@ -56,6 +60,9 @@ public class SMVendorReturn extends clsMasterEntry{
 	private String m_sinvoiceonhold;
 	private String m_svendorcomments;
 	private String m_icreditdue;
+	private String m_datinitiated;
+	private String m_linitiatedbyid;
+	private String m_sinitiatedbyfullname;
 
 	private boolean bDebugMode = false;
 
@@ -69,15 +76,27 @@ public class SMVendorReturn extends clsMasterEntry{
 		initEntryVariables();
 		m_slid = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramlid, req).trim();
+		m_slid = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramlid, req).trim();
+		m_datinitiated = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramdatinitiated, req).trim().replace("&quot;", "\"");
+		if(m_datinitiated.compareToIgnoreCase("") == 0){
+			m_datinitiated = EMPTY_DATETIME_STRING;
+		}
+		m_linitiatedbyid = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramlinitiatedbyid, req).trim().replace("&quot;", "\"");
+		if(req.getParameter(SMMaterialReturn.Paramiresolved) == null || m_linitiatedbyid.compareToIgnoreCase("") == 0){
+			m_linitiatedbyid = "0";
+		}
+		m_sinitiatedbyfullname = clsManageRequestParameters.get_Request_Parameter(
+				SMMaterialReturn.Paramsinitiatedbyfullname, req).trim().replace("&quot;", "\"");
 		m_screditnotexpected = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramicreditnotexpected, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
-		if(req.getParameter(SMVendorReturn.Paramitobereturned) == null){
-			m_itobereturned = "0";
-		}else{
-			m_itobereturned = "1";
-		}
+		
+		m_itobereturned = req.getParameter(SMVendorReturn.Paramitobereturned);
+		
 		m_svendoracct = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramsvendoracct, req).trim().replace("&quot;", "\"");
 		m_ladjustedbatchnumber = clsManageRequestParameters.get_Request_Parameter(
@@ -173,6 +192,10 @@ public class SMVendorReturn extends clsMasterEntry{
 			if (rs.next()) {
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTablevendorreturns.lid));
+				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+						rs.getString(SMTablematerialreturns.datinitiated));
+				m_linitiatedbyid = Long.toString(rs.getLong(SMTablematerialreturns.linitiatedbyid));
+				m_sinitiatedbyfullname = rs.getString(SMTablematerialreturns.sinitiatedbyfullname).trim();
 				m_screditnotexpected = Long.toString(rs.getLong(SMTablevendorreturns.icreditnotexpected));
 				m_sponumber = Long.toString(rs.getLong(SMTablevendorreturns.iponumber));
 				if (Long.parseLong(m_sponumber) < 1){
@@ -284,8 +307,11 @@ public class SMVendorReturn extends clsMasterEntry{
 					+ ", " + SMTablevendorreturns.iinvoiceonhold
 					+ ", " + SMTablevendorreturns.mVendorComments
 					+ ", " + SMTablevendorreturns.iCreditDue
+					+ ", " + SMTablevendorreturns.datinitiated
+					+ ", " + SMTablevendorreturns.sinitiatedbyfullname
+					+ ", " + SMTablevendorreturns.linitiatedbyid
 					+ ") VALUES ( " 
-					+ getstobereturned()
+					+  getstobereturned()
 					+ ", " + sCreditStatus
 					+ ", " + sPONumber
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsvendoracct().trim()) + "'"
@@ -299,6 +325,9 @@ public class SMVendorReturn extends clsMasterEntry{
 					+ ", " + getsinvoiceonhold()
 					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsVendorComments().trim()) + "'"
 					+ ", " + sCreditDue
+					+ ", NOW()"
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName) + "'"
+					+ ", " + clsDatabaseFunctions.FormatSQLStatement(sUserID) + ""
 					+ ")"
 					;
 		}else{
@@ -418,6 +447,24 @@ public class SMVendorReturn extends clsMasterEntry{
 			long lID = Long.parseLong(m_slid);
 		} catch (Exception e) {
 			throw new Exception("Invalid ID: '" + m_slid + "'.");
+		}
+		
+		m_datinitiated = m_datinitiated.trim();
+		if (m_datinitiated.compareToIgnoreCase("") == 0){
+			m_datinitiated = EMPTY_DATETIME_STRING;
+		}
+		if (m_datinitiated.compareToIgnoreCase(EMPTY_DATETIME_STRING) != 0){
+			if (!clsDateAndTimeConversions.IsValidDateString("M/d/yyyy hh:ss a", m_datinitiated)){
+				sErrors += "Date initiated is invalid: '" + m_datinitiated + "'.";
+			}
+		}
+		m_linitiatedbyid = m_linitiatedbyid.trim();
+		if (m_linitiatedbyid.length() > SMTablematerialreturns.linitiatedbyidlength){
+			sErrors += "Initiated by ID cannot be more than " + Integer.toString(SMTablematerialreturns.linitiatedbyidlength) + " characters.  ";
+		}
+		m_sinitiatedbyfullname = m_sinitiatedbyfullname.trim();
+		if (m_sinitiatedbyfullname.length() > SMTablematerialreturns.sinitiatedbyfullnamelength){
+			sErrors += "Initiated by full name cannot be more than " + Integer.toString(SMTablematerialreturns.sinitiatedbyfullnamelength) + " characters.  ";
 		}
 
 		//m_sresolutioncomments = m_sresolutioncomments.trim();
@@ -624,7 +671,24 @@ public class SMVendorReturn extends clsMasterEntry{
 	public void setiCreditDue(String iCreditDue) {
 		m_icreditdue = iCreditDue;
 	}
-	
+	public String getsdatinitiated() {
+		return m_datinitiated;
+	}
+	public void setsdatinitiated(String sdatinitiated) {
+		m_datinitiated = sdatinitiated;
+	}
+	public String getlinitiatedbyid() {
+		return m_linitiatedbyid;
+	}
+	public void setlinitiatedbyid(String linitiatedbyid) {
+		m_linitiatedbyid = linitiatedbyid;
+	}
+	public String getsinitiatedbyfullname() {
+		return m_sinitiatedbyfullname;
+	}
+	public void setsinitiatedbyfullname(String sinitiatedbyfullname) {
+		m_sinitiatedbyfullname = sinitiatedbyfullname;
+	}
 
 
 	public String getObjectName(){
@@ -664,5 +728,8 @@ public class SMVendorReturn extends clsMasterEntry{
 		m_sinvoiceonhold = "0";
 		m_svendorcomments = "";
 		m_icreditdue = "0";
+		m_datinitiated = EMPTY_DATETIME_STRING;
+		m_linitiatedbyid = "0";
+		m_sinitiatedbyfullname = "";
 	}
 }

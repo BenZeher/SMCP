@@ -20,7 +20,7 @@ public class SMUpdateData extends java.lang.Object{
 
 	private static final int m_CurrentDatabaseVersion = 1454;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "2/17/2020";
+	private static final String m_sLastRevisionDate = "2/19/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15180,10 +15180,10 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 			
-			/*//BEGIN CASE:
+			//BEGIN CASE:
 			case 1453:
 				//Added by BJA 2/19/2020
-				SQL = "INSERT INTO vendorreturns"
+				/*SQL = "INSERT INTO vendorreturns"
 						+ " ("
 						+ "iinvoiceonhold"
 						+ ", itobereturned"
@@ -15233,11 +15233,11 @@ public class SMUpdateData extends java.lang.Object{
 						+ " OR (bdcreditamt != 0.00)"
 						+ ")"
 						
-						;
+						;*/
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	
-			//END CASE*/
+			//END CASE
 
 			//End switch:
 		}

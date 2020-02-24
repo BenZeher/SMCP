@@ -95,7 +95,11 @@ public class SMVendorReturn extends clsMasterEntry{
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
 		
-		m_itobereturned = req.getParameter(SMVendorReturn.Paramitobereturned);
+		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
+			m_itobereturned = "0";
+		}else{
+			m_itobereturned = "1";
+		}
 		
 		m_svendoracct = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramsvendoracct, req).trim().replace("&quot;", "\"");

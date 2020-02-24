@@ -31,7 +31,7 @@ import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicshipvias;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablelocations;
-import SMDataDefinition.SMTablematerialreturns;
+import SMDataDefinition.SMTablevendorreturns;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -195,19 +195,19 @@ public class ICEditPOEdit  extends HttpServlet {
 					);
 
 
-			boolean bEditingMaterialReturns = SMSystemFunctions.isFunctionPermitted(
-					SMSystemFunctions.SMEditMaterialReturns, 
+			boolean bEditingVendorReturns = SMSystemFunctions.isFunctionPermitted(
+					SMSystemFunctions.SMEditVendorReturns, 
 					smedit.getUserID(), 
 					getServletContext(), 
 					smedit.getsDBID(),
 					(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 					);
 
-			if(bEditingMaterialReturns) {
-				// Link to Edit Material Return Selection Screen
+			if(bEditingVendorReturns) {
+				// Link to Edit Vendor Return Selection Screen
 				smedit.getPWOut().println( 
-						"&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditMaterialReturnSelect"
-								+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">" + "Manage Material Returns" + "</A>"
+						"&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMEditVendorReturnSelect"
+								+ "?" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID() + "\">" + "Manage Vendor Returns" + "</A>"
 						);
 			}
 
@@ -393,7 +393,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					));
 		}
 		
-		listMaterialReturns(
+		listVendorReturns(
 				smedit.getPWOut(), 
 				getServletContext(), 
 				smedit.getsDBID(), 
@@ -2531,7 +2531,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		return s;
 	}
 	
-	private void listMaterialReturns(
+	private void listVendorReturns(
 			PrintWriter out, 
 			ServletContext context, 
 			String sDBID, 
@@ -2541,20 +2541,20 @@ public class ICEditPOEdit  extends HttpServlet {
 			){
 
 
-		out.println("<br><b><u><FONT SIZE=2>Material Returns</FONT></u></b><BR>");
+		out.println("<br><b><u><FONT SIZE=2>Vendor Returns</FONT></u></b><BR>");
 
 		if (entry.getsID().compareToIgnoreCase("") != 0){
 			String SQL = "SELECT"
-					+ " " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.iponumber
-					+ " , " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.lid
-					+ " FROM " + SMTablematerialreturns.TableName
-					+ " WHERE " + SMTablematerialreturns.TableName + "." + SMTablematerialreturns.iponumber 
+					+ " " + SMTablevendorreturns.TableName + "." + SMTablevendorreturns.iponumber
+					+ " , " + SMTablevendorreturns.TableName + "." + SMTablevendorreturns.lid
+					+ " FROM " + SMTablevendorreturns.TableName
+					+ " WHERE " + SMTablevendorreturns.TableName + "." + SMTablevendorreturns.iponumber 
 					+ " = " + entry.getsID()
 					;
 
-			boolean bEditMaterialReturns  = 
+			boolean bEditVendorReturns  = 
 					SMSystemFunctions.isFunctionPermitted(
-							SMSystemFunctions.SMEditMaterialReturns, 
+							SMSystemFunctions.SMEditVendorReturns, 
 							sUserID, 
 							context,
 							sDBID,
@@ -2572,7 +2572,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				if(rs.next() != false) {
 					out.println("<TABLE BORDER=0 cellspacing=0 cellpadding=1 style= \""
 							+ " background-color: " + RECEIPTS_TABLE_BG_COLOR + "; \" ><TR>");
-					out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Material Return Link(s)</B></FONT></TD>");				
+					out.println("<TD class = \" leftjustifiedheading \"><FONT SIZE=2><B>Vendor Return Link(s)</B></FONT></TD>");				
 					out.println("</TR>");
 					rs.beforeFirst();
 
@@ -2589,15 +2589,15 @@ public class ICEditPOEdit  extends HttpServlet {
 						//receipts at all.  So we have to add this check to make sure that we have a 'real' receipt:
 						out.println("<TR  bgcolor =" + sBackgroundColor +">");
 						//Line number:
-						int MRID = rs.getInt(SMTablematerialreturns.TableName + "." + SMTablematerialreturns.lid); 
+						int MRID = rs.getInt(SMTablevendorreturns.TableName + "." + SMTablevendorreturns.lid); 
 						String sMRIDLink = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
-						+ "smcontrolpanel.SMEditMaterialReturnEdit"
+						+ "smcontrolpanel.SMEditVendorReturnEdit"
 						+ "?lid=" + MRID
 						+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 						+ "\">" + clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(Integer.toString(MRID)) + "</A>";
 
-						if (bEditMaterialReturns){
+						if (bEditVendorReturns){
 							out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + sMRIDLink + "</FONT></TD>");	
 						}else{
 							out.println("<TD ALIGN=LEFT><FONT SIZE=2>" + MRID + "</FONT></TD>");

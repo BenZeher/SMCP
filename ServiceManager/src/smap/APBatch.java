@@ -38,6 +38,7 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMUtilities;
@@ -267,7 +268,7 @@ public class APBatch {
 		} catch (Exception e) {
 			clsDatabaseFunctions.rollback_data_transaction(conn);
 			clsDatabaseFunctions.freeConnection(context, conn, "[1546998949]");
-			throw new Exception("Error [1488918752] saving - " + e.getMessage());
+			throw new Exception(clsServletUtilities.URLEncode("Error [1488918752] saving - " + e.getMessage()));
 		}
 		clsDatabaseFunctions.commit_data_transaction(conn);
 		clsDatabaseFunctions.freeConnection(context, conn, "[1546998950]");

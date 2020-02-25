@@ -77,25 +77,25 @@ public class SMVendorReturn extends clsMasterEntry{
 		m_slid = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramlid, req).trim();
 		m_slid = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramlid, req).trim();
+				SMVendorReturn.Paramlid, req).trim();
 		m_datinitiated = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramdatinitiated, req).trim().replace("&quot;", "\"");
+				SMVendorReturn.Paramdatinitiated, req).trim().replace("&quot;", "\"");
 		if(m_datinitiated.compareToIgnoreCase("") == 0){
 			m_datinitiated = EMPTY_DATETIME_STRING;
 		}
 		m_linitiatedbyid = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramlinitiatedbyid, req).trim().replace("&quot;", "\"");
-		if(req.getParameter(SMMaterialReturn.Paramiresolved) == null || m_linitiatedbyid.compareToIgnoreCase("") == 0){
+				SMVendorReturn.Paramlinitiatedbyid, req).trim().replace("&quot;", "\"");
+		if( m_linitiatedbyid.compareToIgnoreCase("") == 0){
 			m_linitiatedbyid = "0";
 		}
 		m_sinitiatedbyfullname = clsManageRequestParameters.get_Request_Parameter(
-				SMMaterialReturn.Paramsinitiatedbyfullname, req).trim().replace("&quot;", "\"");
+				SMVendorReturn.Paramsinitiatedbyfullname, req).trim().replace("&quot;", "\"");
 		m_screditnotexpected = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramicreditnotexpected, req).trim().replace("&quot;", "\"");
 		m_sponumber = clsManageRequestParameters.get_Request_Parameter(
 				SMVendorReturn.Paramiponumber, req).trim().replace("&quot;", "\"");
 		
-		if(req.getParameter(SMMaterialReturn.Paramitobereturned) == null){
+		if((req.getParameter(SMVendorReturn.Paramitobereturned) == null)||(req.getParameter(SMVendorReturn.Paramitobereturned).compareToIgnoreCase("0")==0)){
 			m_itobereturned = "0";
 		}else{
 			m_itobereturned = "1";
@@ -137,7 +137,8 @@ public class SMVendorReturn extends clsMasterEntry{
 		if(clsManageRequestParameters.get_Request_Parameter(SMVendorReturn.Paramdatreturnsent, req).compareToIgnoreCase("") == 0){
 			m_datreturnsent = clsServletUtilities.EMPTY_DATE_VALUE;
 		}
-		if(req.getParameter(SMVendorReturn.Paramiinvoiceonhold) == null){
+		
+		if((req.getParameter(SMVendorReturn.Paramiinvoiceonhold) == null)|| (req.getParameter(SMVendorReturn.Paramiinvoiceonhold).compareToIgnoreCase("0")==0)){
 			m_sinvoiceonhold = "0";
 		}else{
 			m_sinvoiceonhold = "1";

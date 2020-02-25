@@ -163,23 +163,22 @@ public class SMEditVendorReturnEdit   extends HttpServlet {
 		s += "<TD>\n";
 		String sChecked = "";
 		if (entry.getstobereturned().compareToIgnoreCase(Integer.toString(1)) == 0){
-			s += "<INPUT TYPE='RADIO' ID='Yes' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1 checked ><label for=\"Yes\">Yes</label>";
-			s += "<INPUT TYPE='RADIO' ID='No' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0><label for=\"No\">No</label><BR>";
+			s += "<INPUT TYPE='RADIO' ID='YesReturn' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1 checked ><label for=\"YesReturn\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='NoReturn' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0><label for=\"NoReturn\">No</label><BR>";
 		}else{
-			s += "<INPUT TYPE='RADIO' ID='Yes' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1><label for=\"Yes\">Yes</label>";
-			s += "<INPUT TYPE='RADIO' ID='No' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0 checked ><label for=\"No\">No</label><BR>";
+			s += "<INPUT TYPE='RADIO' ID='YesReturn' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=1><label for=\"YesReturn\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='NoReturn' NAME='" + SMVendorReturn.Paramitobereturned + "' VALUE=0 checked ><label for=\"NoReturn\">No</label><BR>";
 		}
 		//AP Invoice Was Put on Hold
 		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablevendorreturns.sinvoiceonholdlabel + " </B></TD>\n";
 		s += "<TD>\n";
-		sChecked = "";
 		if (entry.getsinvoiceonhold().compareToIgnoreCase(Integer.toString(1)) == 0){
-			sChecked = " checked ";
+			s += "<INPUT TYPE='RADIO' ID='YesInvoice' NAME='" + SMVendorReturn.Paramiinvoiceonhold + "' VALUE=1 checked ><label for=\"YesInvoice\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='NoInvoice' NAME='" + SMVendorReturn.Paramiinvoiceonhold + "' VALUE=0><label for=\"NoInvoice\">No</label><BR>";
 		}else{
-			sChecked = "";
+			s += "<INPUT TYPE='RADIO' ID='YesInvoice' NAME='" + SMVendorReturn.Paramiinvoiceonhold + "' VALUE=1><label for=\"YesInvoice\">Yes</label>";
+			s += "<INPUT TYPE='RADIO' ID='NoInvoice' NAME='" + SMVendorReturn.Paramiinvoiceonhold + "' VALUE=0 checked ><label for=\"NoInvoice\">No</label><BR>";
 		}
-		s += "<INPUT TYPE='CHECKBOX' NAME='" + SMVendorReturn.Paramiinvoiceonhold + "'"+ sChecked + " ><BR>";
-
 		//Misc Credit Due
 		s += "<TR>\n<TD ALIGN=RIGHT VALIGN=TOP><B>" + SMTablevendorreturns.sCreditDueLabel + " </B></TD>\n";
 		s += "<TD>\n";

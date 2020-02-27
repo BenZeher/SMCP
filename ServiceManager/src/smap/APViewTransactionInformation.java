@@ -852,14 +852,18 @@ public class APViewTransactionInformation  extends HttpServlet {
 				;
 				
 				String sApplyToDocument = rs.getString(SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.sapplytodocnumber);
+				String sTransactionLines = Long.toString(rs.getLong(SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.lapplytodocid));
 				if (
-					(sApplyToDocument.compareToIgnoreCase("") != 0)
-					&& (bViewAPTransactions)
-						
-				){
+						(
+								(sApplyToDocument.compareToIgnoreCase("") != 0) 
+								|| (sTransactionLines.compareToIgnoreCase("") != 0)
+								|| (sTransactionLines.compareToIgnoreCase("0") != 0)
+								)
+						&& (bViewAPTransactions)
+
+						){
 					sApplyToDocument = "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smap.APViewTransactionInformation?"
-						+ SMTableaptransactions.lid + "=" + Long.toString(rs.getLong(SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.lapplytodocid)) 
-						+ "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
+						+ SMTableaptransactions.lid + "=" + sTransactionLines + "&CallingClass=" + SMUtilities.getFullClassName(this.toString())
 						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
 				    	+ "\">" 
 				    	+ sApplyToDocument

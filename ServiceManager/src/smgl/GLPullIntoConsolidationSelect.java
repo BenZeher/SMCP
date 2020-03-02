@@ -86,7 +86,7 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 	    	+ " GL transactions from that company, for the selected year and period, into THIS (consolidated) company.<BR>"
 	    	+ "  There is no batch to post or any further steps required after doing the 'pull' for a selected company.<BR>"
 	    	+ "<BR>Every time an individual company is 'pulled' successfully, it gets recorded in the 'glexternalcompanypulls' table."
-	    	+ "  If you try to pull the same company, fiscal year and period again, the program will check that record"
+	    	+ "  If you try to pull the same company, fiscal year and period again, the program will check that record,"
 	    	+ " notify you, and prevent you from pulling it again."  
 	    	+ "<BR><BR>"
 	    );

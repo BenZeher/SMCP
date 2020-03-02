@@ -17,6 +17,7 @@ import SMDataDefinition.SMTableglexternalcompanies;
 import SMDataDefinition.SMTableglfinancialstatementdata;
 import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMAuthenticate;
+import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 
@@ -71,6 +72,11 @@ public class GLPullIntoConsolidationSelect extends HttpServlet {
 			out.println("<B><FONT COLOR=\"RED\">WARNING: " + sWarning + "</FONT></B><BR>");
 		}
 	    
+		String sStatus = ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMasterEditAction.STATUS_PARAMETER, request);
+		if (sStatus.compareToIgnoreCase("") != 0){
+			out.println("<B><FONT COLOR=\"GREEN\">RESULT: " + sStatus + "</FONT></B><BR>");
+		}
+		
 		//Print a link to the first page after login:
 	    out.println("<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smcontrolpanel.SMUserLogin?" 
 				+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 

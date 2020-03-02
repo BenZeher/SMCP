@@ -89,12 +89,14 @@ public class SMEditTaxCertificatesSelect extends HttpServlet {
 			+ "&SearchFieldAlias1=ID"
 			+ "&SearchField2=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.screatedbyfullname
 			+ "&SearchFieldAlias2=Created%20By"
-			+ "&SearchField3=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.scustomername
+			+ "&SearchField3=" + SMTablearcustomer.TableName + "." + SMTablearcustomer.sCustomerName
 			+ "&SearchFieldAlias3=Customer%20Name"
 			+ "&SearchField4=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.scustomernumber
 			+ "&SearchFieldAlias4=Customer%20Number"
-			+ "&SearchField5=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.sjobnumber
-			+ "&SearchFieldAlias5=Job%20Number"
+			+ "&SearchField5=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.scustomername
+			+ "&SearchFieldAlias5=Entered%20Customer%20Name"
+			+ "&SearchField6=" + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.sjobnumber
+			+ "&SearchFieldAlias6=Job%20Number"
 			+ "&ResultListField1="  + SMTabletaxcertificates.lid
 			+ "&ResultHeading1=ID"
 			+ "&ResultListField2="  + SMTabletaxcertificates.TableName + "." + SMTabletaxcertificates.scustomernumber

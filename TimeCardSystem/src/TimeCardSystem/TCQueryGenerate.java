@@ -262,7 +262,13 @@ public class TCQueryGenerate extends HttpServlet {
 						+ TCQuerySelect.PARAM_HIDECOLUMNLABELS
 						+ "\" VALUE=\"" + "1"
 						+ "\">" + "\n");
+    		
     		}
+        	if	(sQueryTitle.trim().compareToIgnoreCase("") == 0){
+        		sQueryTitle="(Default Query Title)";
+        	}
+    		
+    		
 			out.println("<INPUT TYPE=HIDDEN NAME=CallingClass VALUE=\"" 
 					+ "TimeCardSystem.TCQuerySelect" + "\">" + "\n");
 			
@@ -278,11 +284,12 @@ public class TCQueryGenerate extends HttpServlet {
 					) 
 			);
 			
-			out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PRIVATE_BUTTON 
-					+ "' VALUE='" + SAVE_AS_PRIVATE_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
-			);
-			//TODO - add authentication for this later:
-			/*
+			if(!sQueryTitle.trim().equalsIgnoreCase("(Default Query Title)")) {
+				out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PRIVATE_BUTTON 
+						+ "' VALUE='" + SAVE_AS_PRIVATE_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+						);
+				//TODO - add authentication for this later:
+				/*
 			if (SMSystemFunctions.isFunctionPermitted(
 					SMSystemFunctions.SMManagePublicQueries, 
 					sUserID, 
@@ -293,11 +300,11 @@ public class TCQueryGenerate extends HttpServlet {
 						+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
 				);
 			}
-			*/
-			out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PUBLIC_BUTTON 
-					+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
-			);
-			
+				 */
+				out.println("<INPUT TYPE=SUBMIT NAME='" + SAVE_AS_PUBLIC_BUTTON 
+						+ "' VALUE='" + SAVE_AS_PUBLIC_BUTTON_LABEL + "' STYLE='height: 0.24in'>"
+						);
+			}
 			out.println("</FORM>");
 	    }
 
@@ -352,7 +359,7 @@ public class TCQueryGenerate extends HttpServlet {
     			|| (sQueryString.trim().compareToIgnoreCase("") == 0)
     	){
     		clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547060172]");
-    		sWarning = "You must enter a query title and a query string.";
+    		sWarning = "You must enter a query string.";
     		String sRedirect = clsServletUtilities.getURLLinkBase(getServletContext()) + "" + sCallingClass + "?"
     		+ TCQuerySelect.PARAM_QUERYTITLE + "=" + sQueryTitle
 			+ "&" + TCQuerySelect.PARAM_FONTSIZE + "=" + sFontSize

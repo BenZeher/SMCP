@@ -243,16 +243,7 @@ public class GLEditEntryEdit  extends HttpServlet {
 		
 		s += "  <TR>\n";
 		
-		//Batchnumber:
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" ><B>Batchnumber</B>:</TD>\n"
-				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" ><B>" 
-				+ entry.getsbatchnumber() 
-				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.lbatchnumber + "\" VALUE=\"" 
-				+ entry.getsbatchnumber() + "\">"
-				+ "</B></TD>\n"
-			;
-		
-		//Entry number:
+		//Batch/entry number:
 		String sEntryNumber = "NEW";
 		if (
 			(entry.getsentrynumber().compareToIgnoreCase("-1") != 0)
@@ -261,17 +252,15 @@ public class GLEditEntryEdit  extends HttpServlet {
 		){
 			sEntryNumber = entry.getsentrynumber();
 		}
-		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" ><B>Entrynumber</B>:</TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" ><B>" 
-			+ sEntryNumber 
-			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.lentrynumber + "\" VALUE=\"" 
-			+ entry.getsentrynumber() + "\">"
-			+ "</B></TD>\n"
-		;
-		
-		s += "  </TR>\n";
-		
-		s += "  <TR>\n";
+		s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" ><B>Batch/entry number</B>:</TD>\n"
+				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" ><B>" 
+				+ entry.getsbatchnumber() + " - " + sEntryNumber 
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.lbatchnumber + "\" VALUE=\"" 
+				+ entry.getsbatchnumber() + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.lentrynumber + "\" VALUE=\"" 
+				+ entry.getsentrynumber() + "\">"
+				+ "</B></TD>\n"
+			;
 		
 		String sID = "NEW";
 		if (
@@ -296,35 +285,6 @@ public class GLEditEntryEdit  extends HttpServlet {
 			+ "</B></TD>\n"
 		;
 		
-		//Auto reverse
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Auto-reverse?</TD>\n"
- 		    ;
-     	if (bEditable && (entry.getsclosingentry().compareToIgnoreCase("1") != 0)){
-     		String sTemp = "";
-     		if (entry.getsautoreverse().compareToIgnoreCase("0") != 0){
-    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
-    		}
-     		sControlHTML = "<INPUT TYPE=CHECKBOX"
-     			+ " NAME=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
-     			+ " ID=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
-     			+ " " + sTemp
- 	    		+ " onchange=\"flagDirty();\""
- 	    		+ ">"
- 	    	;
-     	}else{
-     		String sAutoReverseValue = "N";
-     		if (entry.getsautoreverse().compareToIgnoreCase("1") == 0){
-     			sAutoReverseValue = "Y";
-     		}
-     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsautoreverse()) + "\""
- 	    		+ ">"
- 	    		+ "<B>" + sAutoReverseValue + "</B>"
- 	    	;
-     	}
-     	
-    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
-
 		s += "  </TR>\n";
 		
 		s += "  <TR>\n";
@@ -806,6 +766,39 @@ public class GLEditEntryEdit  extends HttpServlet {
  	    	;
      	}
      	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+     	
+		//Auto reverse
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >Auto-reverse?</TD>\n"
+ 		    ;
+     	if (bEditable && (entry.getsclosingentry().compareToIgnoreCase("1") != 0)){
+     		String sTemp = "";
+     		if (entry.getsautoreverse().compareToIgnoreCase("0") != 0){
+    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+    		}
+     		sControlHTML = "<INPUT TYPE=CHECKBOX"
+     			+ " NAME=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
+     			+ " ID=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
+     			+ " " + sTemp
+ 	    		+ " onchange=\"flagDirty();\""
+ 	    		+ ">"
+ 	    	;
+     	}else{
+     		String sAutoReverseValue = "N";
+     		if (entry.getsautoreverse().compareToIgnoreCase("1") == 0){
+     			sAutoReverseValue = "Y";
+     		}
+     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTablegltransactionbatchentries.iautoreverse + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsautoreverse()) + "\""
+ 	    		+ ">"
+ 	    		+ "<B>" + sAutoReverseValue + "</B>"
+ 	    	;
+     	}
+     	
+    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+
+		s += "  </TR>\n";
+     	
+     	
      	s += "  </TR>\n";
      	
     	s += "</TABLE>\n";

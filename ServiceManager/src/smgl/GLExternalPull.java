@@ -104,7 +104,7 @@ public class GLExternalPull {
 	    	}
 	    	
 	    	try {
-				setPostingFlag(conn, sUserID, "PULLING EXTERNAL COMPANY " + sCompanyName + "'");
+				setPostingFlag(conn, sUserID, "PULLING EXTERNAL COMPANY " + sCompanyName + "");
 			} catch (Exception e2) {
 				throw new Exception("Error [20191971411123] " + "setting posting flag - " + e2.getMessage());
 			}
@@ -308,8 +308,9 @@ public class GLExternalPull {
 			throw new Exception("Error [1563297148] checking for previous posting - " + e.getMessage());
 		}
 		//If not, then set the posting flag:
+		String SQL = "";
 		try{
-			String SQL = "UPDATE " + SMTablegloptions.TableName 
+			SQL = "UPDATE " + SMTablegloptions.TableName 
 				+ " SET " + SMTablegloptions.ibatchpostinginprocess + " = 1"
 				+ ", " + SMTablegloptions.datstartdate + " = NOW()"
 				+ ", " + SMTablegloptions.sprocess 
@@ -318,12 +319,11 @@ public class GLExternalPull {
 					+ " = " + sUserID
 			;
 			if (!clsDatabaseFunctions.executeSQL(SQL, conn)){
-				throw new Exception("Error [1563297149] setting posting flag in GL Options");
+				throw new Exception("Error [1563297149] setting posting flag in GL Options with SQL '" + SQL + "'.");
 	    		
 			}
 		}catch (SQLException e){
-			throw new Exception("Error [1563297160] setting posting flag in GL Options - " + e.getMessage());
-			
+			throw new Exception("Error [1563297160] setting posting flag in GL Options with SQL: '" + SQL + "' - " + e.getMessage());
 		}
     }
 	private void unsetPostingFlag(Connection conn) throws Exception{

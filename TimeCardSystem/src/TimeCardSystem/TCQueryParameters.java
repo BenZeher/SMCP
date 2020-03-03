@@ -26,6 +26,8 @@ public class TCQueryParameters  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String QUERYPARAMBASE = "QPBASE";
 	public static final String QUERYDATEPICKERPARAMBASE = "QPDATEPICKERBASE";
+	public static final String QUERYPARAMPROMPTBASE = "QPPARAMPROMPTBASE";
+	public static final String QUERYDROPDOWNCHOICEBASE = "QPDROPDOWNCHOICEBASE";
 	private static final String CALLED_CLASS_NAME = "TimeCardSystem.TCQueryGenerate";
 	private static final String SUBMIT_BUTTON_VALUE = "Process query";
 
@@ -320,9 +322,19 @@ public class TCQueryParameters  extends HttpServlet {
 						//Test here to see if the default date is one of the pre-established dates (TODAY, FIRST DAY OF THE YEAR, etc.)
 						sParamDefault = getDefaultDatePickerDate(sParamDefault, sDatabaseID, sUser);
 						String sDatePickerField = "<BR>" + sParamPrompt;
+						
+						//Store the prompt in a hidden field:
+						s += "\n"
+							+ "<INPUT"
+							+ " TYPE=HIDDEN NAME = \"" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMPROMPTBASE + "\""
+							+ " VALUE = \"" + sParamPrompt + "\""
+							+ ">"
+							+ "\n"
+						;
+						
 						sDatePickerField += "<BR>" 
 							+ clsCreateHTMLFormFields.Create_Edit_Form_Date_Input_Field(
-									clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYDATEPICKERPARAMBASE, 
+								clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYDATEPICKERPARAMBASE, 
 								sParamDefault, 
 								getServletContext()
 							)
@@ -369,19 +381,46 @@ public class TCQueryParameters  extends HttpServlet {
 						}
 						String[] sDescriptions = y[3].substring(0, iParamDataEnd).split(",");
 						ArrayList<String> alDescriptions = new ArrayList<String>(0);
+						
 						for (int m = 0; m < sDescriptions.length; m++){
-							alDescriptions.add(sDescriptions[m].replace("\"", ""));
+
+							String sDescription = sDescriptions[m].replace("\"", "");
+							alDescriptions.add(sDescription);
 						}
+						
+						//Store the prompt in a hidden field:
+						s += "\n"
+							+ "<INPUT"
+							+ " TYPE=HIDDEN NAME = \"" + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMPROMPTBASE + "\""
+							+ " VALUE = \"" + sParamPrompt + "\""
+							+ ">"
+							+ "\n"
+						;
 						String sDropDownListField = "<BR>" + sParamPrompt;
 						sDropDownListField += "<BR>"
 							+ clsCreateHTMLFormFields.Create_Edit_Form_List_Field(
-									clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMBASE, 
+								clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMBASE, 
 								alValues, 
 								"", 
 								alDescriptions
 							)
 						;
-						s += sDropDownListField;
+						s += "\n" + sDropDownListField;
+						
+						//We'll have a list of hidden fields added to it to store the visible listed value, so we can
+						// display it in the 'Criteria' list on the results page:
+						String sVisibleSelectionValuesList = "";
+						for (int iValueCounter = 0; iValueCounter < alValues.size(); iValueCounter++){
+							sVisibleSelectionValuesList += 
+									"<INPUT TYPE=HIDDEN"
+									+ " NAME=\"" + QUERYDROPDOWNCHOICEBASE + clsStringFunctions.PadLeft(Integer.toString(i), "0", 3) + QUERYPARAMBASE + alValues.get(iValueCounter).trim() + "\""
+									+ " VALUE=\"" + alDescriptions.get(iValueCounter).trim() + "\""
+									+ ">"
+									+ "\n"
+								;
+						}
+						
+						s += "\n" + sVisibleSelectionValuesList;
 					} catch (Exception e) {
 						throw new Exception("Error [1416325830] in drop down prompt '" + sParam + "' - " + e.getMessage());
 					}

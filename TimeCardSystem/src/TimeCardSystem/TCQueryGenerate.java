@@ -133,7 +133,7 @@ public class TCQueryGenerate extends HttpServlet {
 		String sComment = clsManageRequestParameters.get_Request_Parameter(SMTablesavedqueries.scomment, request);
 		boolean bIncludeBorder = (request.getParameter(TCQuerySelect.PARAM_INCLUDEBORDER) != null);
     	String sReportTitle = "Service Manager Query: " + sQueryTitle;  
-    	String sCriteria = "";
+    	String sCriteria = getParameterPromptsAndValues(request);
 
 		boolean bExportAsCommaDelimited = clsManageRequestParameters.get_Request_Parameter(
 				TCQuerySelect.PARAM_EXPORTOPTIONS, 
@@ -441,6 +441,13 @@ public class TCQueryGenerate extends HttpServlet {
 		String s = sQuery;
 		ArrayList <String>sQueryParameterNames = new ArrayList<String>(0);
 		ArrayList <String>sTextToBeReplaced = new ArrayList<String>(0);
+		
+		//Replace the obsolete 'SESSIONTAG' with a blank:
+		// TJR - 12/21/2018
+		//System.out.println("[1545410100] - " + sQuery);
+		sQuery = sQuery.replaceAll(TCCustomQuery.SESSION_TAG_PARAM_VARIABLE, "");
+		//System.out.println("[1545410101] - " + sQuery);
+		
 		loadQueryParameters(sQuery, sTextToBeReplaced, pwOut);
 		
 		Enumeration <String> e = req.getParameterNames();
@@ -511,6 +518,60 @@ public class TCQueryGenerate extends HttpServlet {
 			throw e;
 		}
 		return;
+	}
+	private String getParameterPromptsAndValues(HttpServletRequest req){
+		
+		String sCriteria = "";
+		ArrayList<String>arrQueryParameterNames = new ArrayList<String>(0);
+		Enumeration <String> e = req.getParameterNames();
+		String sParam = "";
+		while (e.hasMoreElements()){
+			sParam = e.nextElement();
+			//If the parameter contains EITHER the 'query parameter base' OR the query DATE PICKER parameter base, add
+			//it to the list of parameter names:
+			if (sParam.contains(TCQueryParameters.QUERYPARAMBASE)){
+				//But we don't want to include the 'QUERYDROPDOWNCHOICEBASE' parameters:
+				if (!sParam.contains(TCQueryParameters.QUERYDROPDOWNCHOICEBASE)){
+					arrQueryParameterNames.add(sParam);
+				}
+			}
+			if (sParam.contains(TCQueryParameters.QUERYDATEPICKERPARAMBASE)){
+				if (!sParam.contains(TCQueryParameters.QUERYDROPDOWNCHOICEBASE)){
+					arrQueryParameterNames.add(sParam);
+				}
+			}
+		}
+		Collections.sort(arrQueryParameterNames);
+		
+		//Now build the list of criteria:
+		for (int i = 0; i < arrQueryParameterNames.size(); i++){
+			//System.out.println("[1553031177] - arrQueryParameterNames.get(i) = '" + arrQueryParameterNames.get(i) + "'");
+			//If the control on the form was NOT a drop down list, then the user's choice was simply whatever was placed in the text field:
+			String sUserChoice = clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req);
+			//But if the control was a DROP DOWN LIST, then we have to go get the actual user's choice, because it may be different than the 'value' of the control:
+			
+			//See if we have a parameter whose name includes the control's name AND the select value:
+			String sDropDownChoiceParam = TCQueryParameters.QUERYDROPDOWNCHOICEBASE + arrQueryParameterNames.get(i) + clsManageRequestParameters.get_Request_Parameter(arrQueryParameterNames.get(i), req).trim();
+			//System.out.println("[1553031178] - sDropDownChoiceParam = '" + sDropDownChoiceParam + "'");
+			if (req.getParameter(sDropDownChoiceParam) != null){
+				sUserChoice = clsManageRequestParameters.get_Request_Parameter(sDropDownChoiceParam, req);
+				//System.out.println("[1553031179] - sUserChoice = '" + sUserChoice + "'");
+			}
+			
+			sCriteria += clsManageRequestParameters.get_Request_Parameter(
+					arrQueryParameterNames.get(i).replaceAll(
+							TCQueryParameters.QUERYPARAMBASE, TCQueryParameters.QUERYPARAMPROMPTBASE).replaceAll(
+									TCQueryParameters.QUERYDATEPICKERPARAMBASE, TCQueryParameters.QUERYPARAMPROMPTBASE), req)
+				+ " <B>"
+				+ sUserChoice
+				+ "</B>"
+				+ "<BR>"
+			;
+		}
+		if (sCriteria.compareToIgnoreCase("") != 0){
+			sCriteria = "<BR><I><U><B>Selection Criteria:</B></U></I><BR>" + sCriteria;
+		}
+		return sCriteria;
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)

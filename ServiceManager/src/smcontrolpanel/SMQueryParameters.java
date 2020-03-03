@@ -67,17 +67,17 @@ public class SMQueryParameters  extends HttpServlet {
 		
 	    try {
 			smedit.createEditPage(getEditHTML(smedit), "");
-		} catch (SQLException e) {
+		} catch (Exception e) {
 			response.sendRedirect(
 				"" + SMUtilities.getURLLinkBase(getServletContext()) + "" + smedit.getCallingClass()
-				+ "?Warning=Could not process query."
+				+ "?Warning=Could not process query - " + SMUtilities.URLEncode(e.getMessage())
 				+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + smedit.getsDBID()
 			);
 				return;
 		}
 	    return;
 	}
-	private String getEditHTML(SMMasterEditEntry sm) throws SQLException{
+	private String getEditHTML(SMMasterEditEntry sm) throws Exception{
 
 		String s = layoutEditTable();
 		
@@ -91,8 +91,21 @@ public class SMQueryParameters  extends HttpServlet {
 			sQueryString = SMSystemQueries.getSystemQuery(Integer.parseInt(sSystemQueryID));
 			//System.out.println("[1512578289] - SMSystemQueries.getSystemQuery(Integer.parseInt(sSystemQueryID)) = '" + sQueryString);
 		}
-		String sRawQueryString = sQueryString.replace("\n", "<BR>");
 		
+		//before we go any further, let's check the user's permissions on the tables queried:
+    	SMCustomQuery qry = new SMCustomQuery();
+    	try {
+			qry.checkTablePermissions(
+				sm.getUserID(), 
+				getServletContext(), 
+				sm.getsDBID(), 
+				sm.getLicenseModuleLevel(), 
+				sQueryString);
+		} catch (Exception e) {
+			throw new Exception("Error [202063910446] - " + e.getMessage());
+		}
+		
+		String sRawQueryString = sQueryString.replace("\n", "<BR>");
 		String sQueryID = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYID, sm.getRequest());
 		String sQueryTitle = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_QUERYTITLE, sm.getRequest());
 		String sFontSize = clsManageRequestParameters.get_Request_Parameter(SMQuerySelect.PARAM_FONTSIZE, sm.getRequest());
@@ -690,6 +703,7 @@ public class SMQueryParameters  extends HttpServlet {
 	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUserName) throws Exception{
 		
 		while (sRawQuery.contains(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE)){
+			
 			//Read the first SQLDROPDOWN phrase, and replace it with the SQL values and a regular 'DROPDOWNLIST':
 			//Get the SQL command:
 			int iSQLDropDownStart = sRawQuery.indexOf(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE);
@@ -699,7 +713,7 @@ public class SMQueryParameters  extends HttpServlet {
 			String sSQLDropDownString = sTempString.substring(0, sTempString.indexOf("]]") + 2);
 			//So now the 'sSQLDropDownString' should look like: *SQLDROPDOWNLIST*{Prompt}{SELECT userid, susername from users ORDER BY susername}]]
 			//System.out.println("[2020371710536] " + "sSQLDropDownString = '" + sSQLDropDownString + "'");
-		
+			
 			String sSQLCommand = sSQLDropDownString.replace(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{", "");
 			//The 'sSQLCommand' string should now look like: Prompt}{SELECT userid, susername from users ORDER BY susername}]]
 			//System.out.println("[2020371711170] " + "sSQLCommand = '" + sSQLCommand + "'");
@@ -737,9 +751,9 @@ public class SMQueryParameters  extends HttpServlet {
 				//Build the dropdown strings:
 				if (rs.getString(1) != null){
 					if (sValuesString.compareToIgnoreCase("{") == 0){
-						sValuesString += rs.getString(1);
+						sValuesString += "'" + rs.getString(1) + "'";
 					}else{
-						sValuesString += ", " + rs.getString(1);
+						sValuesString += ",'" + rs.getString(1) + "'";
 					}
 				}else{
 					rs.close();

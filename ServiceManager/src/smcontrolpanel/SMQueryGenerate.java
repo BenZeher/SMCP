@@ -375,7 +375,7 @@ public class SMQueryGenerate extends HttpServlet {
 				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL), 
 				sQueryString);
 		} catch (Exception e) {
-			out.println("Could not print query - " + qry.getErrorMessage());
+			out.println("Could not print query - " + e.getMessage());
 			out.println("</BODY></HTML>");
 			return;
 		}

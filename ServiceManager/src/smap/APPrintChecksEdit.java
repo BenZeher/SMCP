@@ -25,6 +25,7 @@ import SMDataDefinition.SMTablebkbanks;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import smbk.BKBank;
 import smcontrolpanel.SMAuthenticate;
@@ -161,7 +162,7 @@ public class APPrintChecksEdit extends HttpServlet {
 		} catch (Exception e) {
 			redirectProcess(
 				sRedirectString
-					+ "&Warning=Error [1504189906] - could not load batch number " + sBatchNumber + " - " + e.getMessage()
+					+ "&Warning=" + clsServletUtilities.URLEncode("Error [1504189906] - could not load batch number " + sBatchNumber + " - " + e.getMessage())
 				, 
 				response);
 			return;
@@ -171,7 +172,7 @@ public class APPrintChecksEdit extends HttpServlet {
 	    if (batch.bAllChecksHaveBeenFinalized()){
 			redirectProcess(
 				sRedirectString
-				+ "&Status=Checks were printed successfully and finalized."
+				+ "&Status=" + clsServletUtilities.URLEncode("Checks were printed successfully and finalized.")
 				, 
 				response);
 			return;
@@ -187,7 +188,7 @@ public class APPrintChecksEdit extends HttpServlet {
 			} catch (Exception e) {
 				redirectProcess(
 					sRedirectString
-						+ "&Warning=Error [1510771036] - could not load single entry to print check(s) " + " - " + e.getMessage()
+						+ "&Warning=" + clsServletUtilities.URLEncode("Error [1510771036] - could not load single entry to print check(s) " + " - " + e.getMessage())
 					, 
 					response);
 				return;
@@ -200,7 +201,7 @@ public class APPrintChecksEdit extends HttpServlet {
 		} catch (Exception e) {
 			redirectProcess(
 				sRedirectString
-				+ "&Warning=Error [1510771056] - checking for zero amount payments " + " - " + e.getMessage()
+				+ "&Warning=" + clsServletUtilities.URLEncode("Error [1510771056] - checking for zero amount payments " + " - " + e.getMessage())
 				, 
 				response);
 			return;
@@ -214,7 +215,7 @@ public class APPrintChecksEdit extends HttpServlet {
 			} catch (Exception e) {
 				redirectProcess(
 					sRedirectString
-					+ "&Warning=" + e.getMessage()
+					+ "&Warning=" + clsServletUtilities.URLEncode(e.getMessage())
 					,
 					response);
 				return;
@@ -243,7 +244,7 @@ public class APPrintChecksEdit extends HttpServlet {
 		} catch (Exception e) {
 			redirectProcess(
 				sRedirectString
-					+ "&Warning=Error [1504189907] - could not load bank with ID " + batch.getBatchEntryArray().get(0).getslbankid() + "' - " + e.getMessage()
+					+"&Warning=" + clsServletUtilities.URLEncode("Error [1504189907] - could not load bank with ID " + batch.getBatchEntryArray().get(0).getslbankid() + "' - " + e.getMessage())
 				, 
 				response);
 			return;

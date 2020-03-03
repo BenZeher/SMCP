@@ -81,14 +81,6 @@ public class SMCustomQuery extends java.lang.Object{
 		}
 		long lStartingTime = System.currentTimeMillis();
 		
-		//Check permissions on tables included in the query:
-		try {
-			checkTablePermissions(sUserID, context, sDBID, sLicenseModuleLevel, sQueryString);
-		} catch (Exception e2) {
-			m_sErrorMessage = "Error [1553194860] attempting to run query - " + e2.getMessage();
-			return false;
-		}
-		
 		//Log the report usage:
 		if(sQueryID.compareToIgnoreCase("") != 0){
 			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
@@ -687,7 +679,7 @@ public class SMCustomQuery extends java.lang.Object{
 	public String getErrorMessage (){
 		return m_sErrorMessage;
 	}
-	private void checkTablePermissions(
+	public void checkTablePermissions(
 		String sUserID, 
 		ServletContext context, 
 		String sDBID, 

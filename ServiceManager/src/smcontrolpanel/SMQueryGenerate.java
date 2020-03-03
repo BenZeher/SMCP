@@ -365,6 +365,21 @@ public class SMQueryGenerate extends HttpServlet {
 			out.println("<BR>Error [1416325303] reading parameters - " + e.getMessage() + "<BR>");
 		}
     	SMCustomQuery qry = new SMCustomQuery();
+    	
+    	//First, check permissions before even starting the query:
+    	try {
+			qry.checkTablePermissions(
+				sUserID, 
+				getServletContext(), 
+				sDBID, 
+				(String) CurrentSession.getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL), 
+				sQueryString);
+		} catch (Exception e) {
+			out.println("Could not print query - " + qry.getErrorMessage());
+			out.println("</BODY></HTML>");
+			return;
+		}
+    	
     	//Font sizes:
     	if (!qry.processReport(
     			conn, 
@@ -393,6 +408,7 @@ public class SMQueryGenerate extends HttpServlet {
     	}
     	clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1547080655]");
 	    out.println("</BODY></HTML>");
+	    return;
 	}
 	private String replaceQueryParameters(String sQuery, HttpServletRequest req, PrintWriter pwOut) throws Exception{
 		

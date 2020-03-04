@@ -71,6 +71,743 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		return s;
 	}
 	
+	private String buildListingReport(
+			String sStartingFiscalPeriod,
+			String sEndingFiscalPeriod,
+			String sStartingAccount,
+			String sEndingAccount,
+			String sStartingAccountGroupCode,
+			String sEndingAccountGroupCode,
+			boolean bIncludeAccountsWithNoActivity,
+			ArrayList<String>alStartingSegmentIDs,
+			ArrayList<String>alStartingSegmentValueDescriptions,
+			ArrayList<String>alEndingSegmentIDs,
+			ArrayList<String>alEndingSegmentValueDescriptions,
+			Connection conn,
+			String sDBID, 
+			ServletContext context,
+			boolean bAllowBatchViewing,
+			String sExternalPull
+		) throws Exception{
+		String s = "";
+		
+		s += printColumnHeadings();
+
+		String sStartingFiscalYear = sStartingFiscalPeriod.substring(0, sStartingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
+		String sStartingPeriod = sStartingFiscalPeriod.replace(sStartingFiscalYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
+		String sEndingFiscalYear = sEndingFiscalPeriod.substring(0, sEndingFiscalPeriod.indexOf(GLTransactionListingSelect.PARAM_VALUE_DELIMITER));
+		String sEndingPeriod = sEndingFiscalPeriod.replace(sEndingFiscalYear + GLTransactionListingSelect.PARAM_VALUE_DELIMITER, "");
+		
+		int iStartingFiscalPeriodProduct;
+		try {
+			iStartingFiscalPeriodProduct = (Integer.parseInt(sStartingFiscalYear) * 100) + Integer.parseInt(sStartingPeriod);
+		} catch (Exception e) {
+			throw new Exception("Error [20191981522491] " + "Could not parse starting fiscal year '" + sStartingFiscalYear 
+				+ "', or starting fiscal period '" + sStartingFiscalPeriod + "'.");
+		}
+		int iEndingFiscalPeriodProduct;
+		try {
+			iEndingFiscalPeriodProduct = (Integer.parseInt(sEndingFiscalYear) * 100) + Integer.parseInt(sEndingPeriod);
+		} catch (Exception e) {
+			throw new Exception("Error [20191981522492] " + "Could not parse ending fiscal year '" + sEndingFiscalYear 
+				+ "', or ending fiscal period '" + sEndingFiscalPeriod + "'.");
+		}
+		
+		//First, get a recordset of all the accounts we need to list:
+		String sSQL = "SELECT DISTINCT"
+			+ " " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
+			+ " FROM " + SMTableglfinancialstatementdata.TableName
+			+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
+			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+			+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
+			+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
+			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
+			+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid + "\n"
+			+ " LEFT JOIN " + SMTableglaccountstructures.TableName + "\n"
+			+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
+			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
+				
+			+  " WHERE (" + "\n"
+
+			+ "("
+			+ "((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " * 100) +  " 
+			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + ") >= " + iStartingFiscalPeriodProduct
+			+ ")"
+
+			+ " AND ("
+			+ "((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " * 100) +  " 
+			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
+			+ ")"
+
+			+ " AND ("
+			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance + " + "  
+			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + ") != 0.00"
+			+ ")"
+			
+			//Account range:
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " >= '" + sStartingAccount + "')" + "\n"
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " <= '" + sEndingAccount + "')" + "\n"
+
+			//Account group range:
+			+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')" + "\n"
+			+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " <= '" + sEndingAccountGroupCode + "')" + "\n"
+			;
+
+			//Include accounts with no activity?
+			//if(!bIncludeAccountsWithNoActivity){
+			//	sSQL += " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdtotalyeartodate
+			//		+ " + " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdopeningbalance
+			//		+ ")  != 0.00)" + "\n";
+			//}
+			
+			//Now process the segments:
+
+			for (int i = 0; i < alStartingSegmentIDs.size(); i++){
+
+				//SEGMENT 1:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid1 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid1 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1, " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//SEGMENT 2:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid2 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid1 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 3:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid3 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+  "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid3 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			 + "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 4:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid4 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 			+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 			+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid4 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 5:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid5 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid5 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 6:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid6 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid6 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 7:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid7 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid7 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 8:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid8 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid8 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+				
+				//SEGMENT 9:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid9 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8
+				 				
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength9 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid9 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength9 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//SEGMENT 10:
+				//Check the starting value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid10 + " = " + alStartingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8
+				 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength9
+				 				
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength10 + ") >= '" + alStartingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+				//Check the ending value:
+				sSQL += " AND ("
+					//IF the segments match then...
+					+ "IF (" + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lsegmentid10 + " = " + alEndingSegmentIDs.get(i)
+					
+					//THEN, if the segment in the account number >= the starting selected value for the segment:
+			 		+ ", IF(SUBSTRING(" 
+				 			+ SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				 			+ ", " 
+				 			+ "1 + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength1
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength2
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength3
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength4
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength5
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength6
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength7
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength8
+			 				+ " + " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength9
+				 			+ ", " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.llength10 + ") <= '" + alEndingSegmentValueDescriptions.get(i) + "'"
+				 	//IF the segment value if the account is greater then or equal to the selected starting value, then qualify the record:
+				 	//If not, the DISqualify the record:
+				 	+ ", TRUE"
+					+ ", FALSE"
+					+ ")"
+					//If this ISN'T the segment we're looking for, then don't disqualify the record:
+					+ ", TRUE"
+					+ ")"
+				+ ")" + "\n"
+				;
+
+			}
+			sSQL += ")";
+
+			sSQL += " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+		;
+		
+		//This gives us a recordset of all the accounts we need to show in the listing
+		try {
+			ResultSet rsAccounts = clsDatabaseFunctions.openResultSet(sSQL, conn);
+			while (rsAccounts.next()){
+				s += sProcessAccount(
+					rsAccounts.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID),
+					rsAccounts.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
+					sStartingFiscalYear,
+					sStartingPeriod,
+					sEndingPeriod,
+					bIncludeAccountsWithNoActivity,
+					conn,
+					sDBID, 
+					context,
+					bAllowBatchViewing,
+					sExternalPull		
+				);
+			}
+			rsAccounts.close();
+		} catch (Exception e) {
+			throw new Exception("Error [202064161333] " + " could not process accounts with SQL: '" + sSQL + " - " + e.getMessage());
+		}
+		
+		return s;
+	}
+	
+	private String sProcessAccount(
+		String sAccount,
+		String sAccountDescription,
+		String sStartingFiscalYear,
+		String sStartingFiscalPeriod,
+		String sEndingFiscalPeriod,
+		boolean bIncludeAccountsWithNoActivity,
+		Connection conn,
+		String sDBID, 
+		ServletContext context,
+		boolean bAllowBatchViewing,
+		String sExternalPull
+		) throws Exception{
+		
+		String s = "";
+		BigDecimal bdNetChangeForAccount = new BigDecimal("0.00");
+		BigDecimal bdEndingBalanceForAccount = new BigDecimal("0.00");
+		BigDecimal bdTotalDebitsForAccount = new BigDecimal("0.00");
+		BigDecimal bdTotalCreditsForAccount = new BigDecimal("0.00");
+		//For each account, first print the header line:
+		s += printAccountHeadingLine(
+				sAccount, 
+				sAccountDescription, 
+				getStartingAccountBalance(
+					conn,
+					sAccount,
+					sStartingFiscalYear,
+					sStartingFiscalPeriod
+				)
+			);
+		
+		//Loop through the transactions for this account:
+		String sSQL = "SELECT"
+			+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+			//+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
+			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
+			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
+		;
+		//If the fiscal period has changed, print the fiscal period totals:
+		/*
+		if (
+			(rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
+			&& (iPreviousFiscalPeriod != 0)
+		){
+			sStringBuffer += printFiscalPeriodSubtotals(
+				iPreviousFiscalYear,
+				iPreviousFiscalPeriod,
+				bdNetChangeForFiscalPeriod,
+				bdEndingBalanceForPeriod
+				);
+			bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
+			bdEndingBalanceForPeriod = BigDecimal.ZERO;
+		}
+		*/
+		//Print a line for each transaction:
+		
+		
+		//Finally, print the totals line for the account:
+		s += printAccountSubTotals(
+			bdNetChangeForAccount,
+			bdEndingBalanceForAccount,
+			bdTotalDebitsForAccount,
+			bdTotalCreditsForAccount,
+			sAccount + " - " + sAccountDescription
+		);
+		
+		return s;
+	}
+	
 	private String buildTransactionListingReport(
 		String sStartingFiscalPeriod,
 		String sEndingFiscalPeriod,
@@ -151,7 +888,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")";
 		
 		//Change the Where Clause when External Pull is not the Default Value
-		//This disregards all the other inputs from the selections screen and will print the hole input from that external company pull
+		//This disregards all the other inputs from the selections screen and will print the whole input from that external company pull
 		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
 
 			sSQL += " LEFT JOIN " + SMTableglexternalcompanypulls.TableName + "\n" 
@@ -161,7 +898,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "(" + SMTableglexternalcompanypulls.TableName + "." + SMTableglexternalcompanypulls.lid + " = " + sExternalPull + ")"
 			+ "\n)";
 		}else{
-
 
 			sSQL +=  " WHERE (" + "\n"
 

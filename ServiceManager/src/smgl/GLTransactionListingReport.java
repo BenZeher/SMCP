@@ -47,7 +47,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String s = "";
 		
 		s += printTableHeading();
-		s += buildTransactionListingReport(
+		s += buildListingReport(
 			sStartingFiscalPeriod,
 			sEndingFiscalPeriod,
 			sStartingAccount,
@@ -103,14 +103,14 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			iStartingFiscalPeriodProduct = (Integer.parseInt(sStartingFiscalYear) * 100) + Integer.parseInt(sStartingPeriod);
 		} catch (Exception e) {
 			throw new Exception("Error [20191981522491] " + "Could not parse starting fiscal year '" + sStartingFiscalYear 
-				+ "', or starting fiscal period '" + sStartingFiscalPeriod + "'.");
+				+ "', or starting fiscal period '" + sStartingPeriod + "'.");
 		}
 		int iEndingFiscalPeriodProduct;
 		try {
 			iEndingFiscalPeriodProduct = (Integer.parseInt(sEndingFiscalYear) * 100) + Integer.parseInt(sEndingPeriod);
 		} catch (Exception e) {
 			throw new Exception("Error [20191981522492] " + "Could not parse ending fiscal year '" + sEndingFiscalYear 
-				+ "', or ending fiscal period '" + sEndingFiscalPeriod + "'.");
+				+ "', or ending fiscal period '" + sEndingPeriod + "'.");
 		}
 		
 		//First, get a recordset of all the accounts we need to list:
@@ -118,17 +118,17 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ " " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc
 			+ " FROM " + SMTableglfinancialstatementdata.TableName
-			+ " LEFT JOIN " + SMTableglaccounts.TableName + "\n" 
+			+ " LEFT JOIN " + SMTableglaccounts.TableName 
 			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
-			+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + "\n"
-			+ " LEFT JOIN " + SMTableglaccountgroups.TableName + "\n"
+			+ " = " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
+			+ " LEFT JOIN " + SMTableglaccountgroups.TableName
 			+ " ON " + SMTableglaccounts.TableName + "." + SMTableglaccounts.laccountgroupid 
-			+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid + "\n"
-			+ " LEFT JOIN " + SMTableglaccountstructures.TableName + "\n"
+			+ " = " + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.lid
+			+ " LEFT JOIN " + SMTableglaccountstructures.TableName
 			+ " ON " + SMTableglaccountstructures.TableName + "." + SMTableglaccountstructures.lid + " = "
-			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid + "\n"
-				
-			+  " WHERE (" + "\n"
+			+ SMTableglaccounts.TableName + "." + SMTableglaccounts.lstructureid
+			
+			+  " WHERE ("
 
 			+ "("
 			+ "((" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " * 100) +  " 
@@ -152,6 +152,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			//Account group range:
 			+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " >= '" + sStartingAccountGroupCode + "')" + "\n"
 			+ " AND (" + SMTableglaccountgroups.TableName + "." + SMTableglaccountgroups.sgroupcode + " <= '" + sEndingAccountGroupCode + "')" + "\n"
+
 			;
 
 			//Include accounts with no activity?
@@ -688,32 +689,39 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				;
 
 			}
+
 			sSQL += ")";
 
-			sSQL += " ORDER BY " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid
-				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
-				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
-				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
-				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
-				//+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+			sSQL += " ORDER BY " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+//				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+//				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+//				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+//				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+//				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
 		;
 		
 		//This gives us a recordset of all the accounts we need to show in the listing
 		try {
 			ResultSet rsAccounts = clsDatabaseFunctions.openResultSet(sSQL, conn);
+			long lRecordCounter = 0;
 			while (rsAccounts.next()){
+				lRecordCounter++;
 				s += sProcessAccount(
 					rsAccounts.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID),
 					rsAccounts.getString(SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc),
 					sStartingFiscalYear,
+					sEndingFiscalYear,
 					sStartingPeriod,
 					sEndingPeriod,
+					iStartingFiscalPeriodProduct,
+					iEndingFiscalPeriodProduct,
 					bIncludeAccountsWithNoActivity,
 					conn,
 					sDBID, 
 					context,
 					bAllowBatchViewing,
-					sExternalPull		
+					sExternalPull,
+					lRecordCounter
 				);
 			}
 			rsAccounts.close();
@@ -728,22 +736,34 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String sAccount,
 		String sAccountDescription,
 		String sStartingFiscalYear,
+		String sEndingFiscalYear,
 		String sStartingFiscalPeriod,
 		String sEndingFiscalPeriod,
+		int iStartingFiscalPeriodProduct,
+		int iEndingFiscalPeriodProduct,
 		boolean bIncludeAccountsWithNoActivity,
 		Connection conn,
 		String sDBID, 
 		ServletContext context,
 		boolean bAllowBatchViewing,
-		String sExternalPull
+		String sExternalPull,
+		long lRecordCounter
 		) throws Exception{
 		
 		String s = "";
-		BigDecimal bdNetChangeForAccount = new BigDecimal("0.00");
-		BigDecimal bdEndingBalanceForAccount = new BigDecimal("0.00");
-		BigDecimal bdTotalDebitsForAccount = new BigDecimal("0.00");
-		BigDecimal bdTotalCreditsForAccount = new BigDecimal("0.00");
 		//For each account, first print the header line:
+		
+		//Unless it's the very first account, print a blank line first:
+		if (lRecordCounter != 1){
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+			
+			s += "    <TD COLSPAN = 10 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+				+  "&nbsp;"
+				+ "</TD>\n"
+							
+				+ "  </TR>\n"
+			; 
+		}
 		s += printAccountHeadingLine(
 				sAccount, 
 				sAccountDescription, 
@@ -758,44 +778,234 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		//Loop through the transactions for this account:
 		String sSQL = "SELECT"
 			+ " " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + "\n"
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
-			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger + "\n"
+			+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype + "\n"
 			//+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdnetchangeforperiod
-			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance
-			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance + "\n"
+			+ ", " + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sDesc + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype + "\n"
 			+ ", " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctType + "\n"
+			+ " FROM " + SMTablegltransactionlines.TableName
+			+ " LEFT JOIN " + SMTableglaccounts.TableName + " ON " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+			+ " = " + SMTableglaccounts.TableName + "." + SMTableglaccounts.sAcctID
+			+ " LEFT JOIN " + SMTableglfinancialstatementdata.TableName + " ON "
+			+ "(" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.sacctid + " = "
+			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + ")"
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalyear + " = "
+			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + ")"
+			+ " AND (" + SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.ifiscalperiod + " = "
+			+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ")"
+			;
+		if(sExternalPull.compareToIgnoreCase("-1")!=0) {
+
+			sSQL += " LEFT JOIN " + SMTableglexternalcompanypulls.TableName + "\n" 
+			+ " ON " + SMTableglexternalcompanypulls.TableName + "." + SMTableglexternalcompanypulls.lid
+			+ " = " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.lexternalcompanypullid + "\n"
+			+ " WHERE ("
+			+ "(" + SMTableglexternalcompanypulls.TableName + "." + SMTableglexternalcompanypulls.lid + " = " + sExternalPull + ")"
+			+ "\n)";
+		}else{
+
+			sSQL +=  " WHERE (" + "\n"
+
+				+ "("
+				+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") >= " + iStartingFiscalPeriodProduct
+				+ ")"
+
+				+ " AND ("
+				+ "((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear + " * 100) +  " 
+				+ SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod + ") <= " + iEndingFiscalPeriodProduct
+				+ ")"
+
+				//Account:
+				+ " AND (" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid + " = '" + sAccount + "')" + "\n"
+				;
+
+			//Include accounts with no activity?
+			//if(!bIncludeAccountsWithNoActivity){
+			//	sSQL += " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdtotalyeartodate
+			//		+ " + " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdopeningbalance
+			//		+ ")  != 0.00)" + "\n";
+			//}
+		}
+		
+		sSQL += ") ORDER BY " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber
+				+ ", " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginallinenumber
 		;
-		//If the fiscal period has changed, print the fiscal period totals:
-		/*
-		if (
-			(rs.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
-			&& (iPreviousFiscalPeriod != 0)
-		){
-			sStringBuffer += printFiscalPeriodSubtotals(
+		
+		boolean bOddRow = true;
+		String sStringBuffer = "";
+		int iBufferLoopSize = 50;
+		int iLoopCounter = 0;
+		BigDecimal bdDebit = new BigDecimal("0.00");
+		BigDecimal bdCredit = new BigDecimal("0.00");
+		BigDecimal bdAmount = new BigDecimal("0.00");
+		BigDecimal bdNetChangeForFiscalPeriod = new BigDecimal("0.00");
+		BigDecimal bdEndingBalanceForPeriod = new BigDecimal("0.00");
+		BigDecimal bdNetChangeForAccount = new BigDecimal("0.00");
+		
+		BigDecimal bdTotalDebitsForAccount = new BigDecimal("0.00");
+		BigDecimal bdTotalCreditsForAccount = new BigDecimal("0.00");
+		int iPreviousFiscalPeriod = 0;
+		int iPreviousFiscalYear = 0;
+		
+		BigDecimal bdEndingBalanceForAccount = getEndingAccountBalance(
+			conn,
+			sAccount,
+			Integer.parseInt(sEndingFiscalYear),
+			Integer.parseInt(sEndingFiscalPeriod)
+		);
+		
+		try {
+			ResultSet rsTransactions = clsDatabaseFunctions.openResultSet(sSQL, conn);
+			while(rsTransactions.next()){
+				iLoopCounter++;
+				//If the fiscal period has changed, print the fiscal period totals:
+				if (
+					(rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod) != iPreviousFiscalPeriod)
+					&& (iPreviousFiscalPeriod != 0)
+				){
+					sStringBuffer += printFiscalPeriodSubtotals(
+						sAccount,
+						sAccountDescription,
+						iPreviousFiscalYear,
+						iPreviousFiscalPeriod,
+						bdNetChangeForFiscalPeriod,
+						getEndingAccountBalance(
+							conn,
+							sAccount,
+							iPreviousFiscalYear,
+							iPreviousFiscalPeriod
+						)
+					);
+					bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
+					bdEndingBalanceForPeriod = BigDecimal.ZERO;
+				}
+				
+				bdDebit = BigDecimal.ZERO;
+				bdCredit = BigDecimal.ZERO;
+				bdAmount = rsTransactions.getBigDecimal(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdamount);
+				
+				//If the account is normally a debit balance:
+				if (rsTransactions.getInt(SMTableglaccounts.TableName + "." + SMTableglaccounts.inormalbalancetype) == SMTableglaccounts.NORMAL_BALANCE_TYPE_DEBIT){
+					if (bdAmount.compareTo(BigDecimal.ZERO) > 0){
+						bdDebit = bdAmount;
+						bdCredit = BigDecimal.ZERO;
+					}else{
+						bdDebit = BigDecimal.ZERO;
+						bdCredit = bdAmount.negate();
+					}
+				// But if the account is normally a credit balance:
+				}else{
+					if (bdAmount.compareTo(BigDecimal.ZERO) < 0){
+						bdDebit = BigDecimal.ZERO;
+						bdCredit = bdAmount.negate();
+					}else{
+						bdDebit = bdAmount;
+						bdCredit = BigDecimal.ZERO;
+					}
+				}
+				
+				bdTotalDebitsForAccount = bdTotalDebitsForAccount.add(bdDebit);
+				bdTotalCreditsForAccount = bdTotalCreditsForAccount.add(bdCredit);
+				bdNetChangeForAccount = bdNetChangeForAccount.add(bdAmount);
+				
+				bdNetChangeForFiscalPeriod = bdNetChangeForFiscalPeriod.add(bdAmount);
+				//This value keeps being rewritten on every record within a fiscal period, but there's no harm in that:
+				bdEndingBalanceForPeriod = rsTransactions.getBigDecimal(
+					SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance).add(
+							rsTransactions.getBigDecimal(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate))
+					;
+				
+				bdEndingBalanceForAccount = rsTransactions.getBigDecimal(
+					SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdopeningbalance).add(
+						rsTransactions.getBigDecimal(SMTableglfinancialstatementdata.TableName + "." + SMTableglfinancialstatementdata.bdtotalyeartodate))
+					;
+				
+				String sBatchAndEntry = Long.toString(rsTransactions.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber)) 
+					+ " - " 
+					+ Long.toString(rsTransactions.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber)
+				);
+				
+				if (bAllowBatchViewing){
+					sBatchAndEntry = "<A HREF=\"" + SMUtilities.getURLLinkBase(context) + "smgl.GLEditEntryEdit?"
+						+ "lbatchnumber=" + Long.toString(rsTransactions.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalbatchnumber))
+						+ "&lentrynumber=" + Long.toString(rsTransactions.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.loriginalentrynumber))
+						//+ "&lid=" + Long.toString(rs.getLong(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.l))
+						+ "&Editable=Yes"
+						+ "&CallingClass=smgl.GLEditBatchesEdit"
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID 
+						+ "\">" + sBatchAndEntry + "</A>"
+					;
+				}
+				//Print a line for each transaction:
+				sStringBuffer += printReportLine(
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sacctid),
+					rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear),
+					rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod),
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourceledger),
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ssourcetype),
+					ServletUtilities.clsDateAndTimeConversions.sqlDateToString(
+						rsTransactions.getDate(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.dattransactiondate),
+						ServletUtilities.clsDateAndTimeConversions.DATE_FORMAT_STD_Mdyyy),
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sdescription),
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sreference),
+					sBatchAndEntry,
+					bdDebit,
+					bdCredit,
+					rsTransactions.getString(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.sSourceledgertransactionlink),
+					context,
+					sDBID,
+					bOddRow
+				);
+				
+				if ((iLoopCounter % iBufferLoopSize) == 0){
+					s += sStringBuffer;
+					sStringBuffer = "";
+				}
+				bOddRow = !bOddRow;
+				
+				iPreviousFiscalPeriod = rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalperiod);
+				iPreviousFiscalYear = rsTransactions.getInt(SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.ifiscalyear);
+			}
+			rsTransactions.close();
+		} catch (Exception e) {
+			throw new Exception("Error [2020651222409] " + "reading transactions for account '" + sAccount + "' with SQL: '" + sSQL + "' - " + e.getMessage());
+		}
+		
+		s += sStringBuffer;
+
+		//If there were any transactions, print the last set of fiscal period subtotals:
+		if (iLoopCounter != 0){
+			s += printFiscalPeriodSubtotals(
+				sAccount,
+				sAccountDescription,
 				iPreviousFiscalYear,
 				iPreviousFiscalPeriod,
 				bdNetChangeForFiscalPeriod,
 				bdEndingBalanceForPeriod
-				);
-			bdNetChangeForFiscalPeriod = BigDecimal.ZERO;
-			bdEndingBalanceForPeriod = BigDecimal.ZERO;
+			);
 		}
-		*/
-		//Print a line for each transaction:
-		
-		
+
 		//Finally, print the totals line for the account:
 		s += printAccountSubTotals(
 			bdNetChangeForAccount,
@@ -1524,6 +1734,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					&& (iPreviousFiscalPeriod != 0)
 				){
 					sStringBuffer += printFiscalPeriodSubtotals(
+						"",
+						"",
 						iPreviousFiscalYear,
 						iPreviousFiscalPeriod,
 						bdNetChangeForFiscalPeriod,
@@ -1681,6 +1893,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		
 		//Print the final fiscal period totals:
 		s += printFiscalPeriodSubtotals(
+			"",
+			"",
 			iPreviousFiscalYear,
 			iPreviousFiscalPeriod,
 			bdNetChangeForFiscalPeriod,
@@ -1723,9 +1937,9 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		
 		try {
 			if (bOddRow){
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
 			}else{
-				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
+				s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
 			}
 			
 			String sDebit = "&nbsp;";
@@ -1790,6 +2004,8 @@ public class GLTransactionListingReport  extends java.lang.Object{
 	}
 	
 	private String printFiscalPeriodSubtotals(
+			String sAccount,
+			String sAccountDesc,
 			int iFiscalYear,
 			int iFiscalPeriod,
 			BigDecimal bdNetChange,
@@ -1798,10 +2014,10 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String s = "";
 		
 		try {
-			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+			s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTBLUE + " \" >\n";
 			
 			s += "    <TD COLSPAN = 8 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
-				+  "<B>Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
+				+  "<B>Account " + sAccount + " - " + sAccountDesc + " - Net Change and Ending Balance For Fiscal Year " + Integer.toString(iFiscalYear) + ", Period " + Integer.toString(iFiscalPeriod) + ":</B>"
 				+ "</TD>\n"
 								
 				+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
@@ -1870,7 +2086,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			){
 		String s = "";
 
-		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_WHITE + " \" >\n";
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_YELLOW + " \" >\n";
 		
 		s += "    <TD COLSPAN = 6 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
 			+  "<B>Totals For " + sAcctDesc + ":</B>"
@@ -1909,10 +2125,10 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+  "<B>" + sDescription + "</B>"
 			+ "</TD>"
 
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
-			+  "<B>" + "&nbsp;" + "</B>"
+			+ "    <TD COLSPAN=4 class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
+			+  "<B>" + "Starting balance:" + "</B>"
 			+ "</TD>"
-			
+			/*
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "<B>" + "&nbsp;" + "</B>"
 			+ "</TD>"
@@ -1924,7 +2140,7 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >"
 			+  "<B>" + "&nbsp;" + "</B>"
 			+ "</TD>"
-
+*/
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_ALIGN_TOP + " \" >"
 			+  "<B>" + ServletUtilities.clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(bdBalance) + "</B>"
 			+ "</TD>\n"
@@ -2014,17 +2230,58 @@ public class GLTransactionListingReport  extends java.lang.Object{
 				//And finally subtract the changes for this period, to get back to the balance just BEFORE the starting period:
 				bdStartingBalance = bdStartingBalance.subtract(rs.getBigDecimal(SMTableglfinancialstatementdata.bdnetchangeforperiod));
 			}else{
-				throw new Exception("Error [1554829782] - ending balance for account " 
+				throw new Exception("Error [1554829782] - starting balance for account " 
 					+ sAccount + " fiscal year " + sFiscalYear + ", period " + sStartingPeriod + " was not found.");
 			}
 		} catch (Exception e) {
-			throw new Exception("Error [1554829783] getting ending balance for account " 
+			throw new Exception("Error [1554829783] getting starting balance for account " 
 					+ sAccount + " fiscal year " + sFiscalYear + ", period " + sStartingPeriod + " - " + e.getMessage());
 		}
 		
 		return bdStartingBalance;
 		
 	}
+	
+	private BigDecimal 	getEndingAccountBalance(
+			Connection conn,
+			String sAccount,
+			int iFiscalYear,
+			int iEndingPeriod
+			) throws Exception{
+			
+			BigDecimal bdEndingBalance = new BigDecimal("0.00");
+			String sSQL = "SELECT"
+				+ " " + SMTableglfinancialstatementdata.bdopeningbalance
+				+ ", " + SMTableglfinancialstatementdata.bdtotalyeartodate
+				+ " FROM " + SMTableglfinancialstatementdata.TableName
+				+ " WHERE ("
+					+ "(" + SMTableglfinancialstatementdata.sacctid + " = '" + sAccount + "')"
+					+ " AND (" + SMTableglfinancialstatementdata.ifiscalyear + " = " + Integer.toString(iFiscalYear) + ")"
+					+ " AND (" + SMTableglfinancialstatementdata.ifiscalperiod + " = " + Integer.toString(iEndingPeriod) + ")"
+				+ ")"
+			;
+			System.out.println("[202065134534] " + "SQL = '" + sSQL + "'");
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(sSQL, conn);
+				if (rs.next()){
+					//Start with the opening balance for the year:
+					bdEndingBalance = rs.getBigDecimal(SMTableglfinancialstatementdata.bdopeningbalance);
+					//Add in the total year's changes to date:
+					bdEndingBalance = bdEndingBalance.add(rs.getBigDecimal(SMTableglfinancialstatementdata.bdtotalyeartodate));
+				}else{
+					throw new Exception("Error [1554829882] - ending balance for account " 
+						+ sAccount + " fiscal year " + Integer.toString(iFiscalYear) + ", period " + Integer.toString(iEndingPeriod) + " was not found.");
+				}
+			} catch (Exception e) {
+				throw new Exception("Error [1554829883] getting ending balance for account " 
+					+ sAccount + " fiscal year " + Integer.toString(iFiscalYear) + ", period " + Integer.toString(iEndingPeriod) + " - " + e.getMessage());
+			}
+			
+			System.out.println("[202065134445] " + "bdEndingBalance for account '" + sAccount + "' = " + bdEndingBalance);
+			
+			return bdEndingBalance;
+			
+		}
 	private String printTableHeading(){
 		String s = "";
 		

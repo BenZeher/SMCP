@@ -702,20 +702,64 @@ public class SMQueryParameters  extends HttpServlet {
 	}
 	private String replaceSQLDropDownPhrases(String sRawQuery, String sDBID, String sUserName) throws Exception{
 		
+		/*
+		//Test to see characters in string:
+		for (int i = 0; i < sRawQuery.length(); i++){
+			char character = sRawQuery.charAt(i); // This gives the character
+			int ascii = (int) character;
+			System.out.println("[202066125346] " + " ASCII of character at position " + i + " - '" + ascii + "'.");
+		}
+		*/
+		/*Assume the whole SQLDROPDOWN string looks like this:
+
+		[[*SQLDROPDOWNLIST*{Prompt}{
+		SELECT lid
+		, susername
+		 from users
+		  ORDER BY susername
+		 }]]
+		
+		 */
+		
 		while (sRawQuery.contains(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE)){
 			
 			//Read the first SQLDROPDOWN phrase, and replace it with the SQL values and a regular 'DROPDOWNLIST':
 			//Get the SQL command:
 			int iSQLDropDownStart = sRawQuery.indexOf(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE);
+			
+			//Save the part of the query that comes BEFORE the SQLDROPDOWN phrase:
+			String sPrefix = sRawQuery.substring(0, iSQLDropDownStart - 2);
+			//System.out.println("[2020661243494] " + "sPrefix = '" + sPrefix + "'");
+			
 			String sTempString = sRawQuery.substring(iSQLDropDownStart);
 			//System.out.println("[2020371710329] " + "sTempString = '" + sTempString + "'");
 			
+			String sSuffix = sTempString.substring(sTempString.indexOf("]]") + 2, sTempString.length());
+			//System.out.println("[202066124749] " + "Suffix = '" + sSuffix + "'.");
+			
 			String sSQLDropDownString = sTempString.substring(0, sTempString.indexOf("]]") + 2);
-			//So now the 'sSQLDropDownString' should look like: *SQLDROPDOWNLIST*{Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			/*So now the 'sSQLDropDownString' should look like:
+			
+			*SQLDROPDOWNLIST*{Prompt}{
+			SELECT lid
+			, susername
+			 from users
+			  ORDER BY susername
+			}]]
+			
+			*/
 			//System.out.println("[2020371710536] " + "sSQLDropDownString = '" + sSQLDropDownString + "'");
 			
 			String sSQLCommand = sSQLDropDownString.replace(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE + "{", "");
-			//The 'sSQLCommand' string should now look like: Prompt}{SELECT userid, susername from users ORDER BY susername}]]
+			/*The 'sSQLCommand' string should now look like:
+			
+			Prompt}{
+			SELECT lid
+			, susername
+			 from users
+			  ORDER BY susername
+			}]]
+			 */
 			//System.out.println("[2020371711170] " + "sSQLCommand = '" + sSQLCommand + "'");
 			
 			//Now cut off the trailing ']]':
@@ -726,14 +770,31 @@ public class SMQueryParameters  extends HttpServlet {
 			sSQLCommand = sSQLCommand.replace("}", "").trim();
 			//System.out.println("[2020371726546] " + "sSQLCommand = '" + sSQLCommand + "'");
 			
+			//Now store the prompt string:
+			String sPrompt = sSQLCommand.substring(0, sSQLCommand.indexOf("{"));
+			//System.out.println("[2020661252261] " + "Prompt = '" + sPrompt + "'.");
+			
 			//And now cut off the prompt:
 			sSQLCommand = sSQLCommand.substring(sSQLCommand.indexOf("{") + 1);
-			//Should now look like: SELECT userid, susername from users ORDER BY susername
+			/* Should now look like:
+			SELECT lid
+			, susername
+			 from users
+			  ORDER BY susername
+			*/
 			//System.out.println("[2020371712587] " + "sSQLCommand = '" + sSQLCommand + "'");
+			
+			//Replace any end of line characters:
+			String SQLCommandWOEOL = sSQLCommand.replace("\n", " ");
+			String SQLCommandWOCR = SQLCommandWOEOL.replace("\r", " ");
+			/* Should now look like:
+			SELECT lid, susername from users ORDER BY susername
+			 */
+			//System.out.println("[2020661213532] " + "SQLCommandWOCR = '" + SQLCommandWOCR + "'.");
 			
 			//Run the SQL command:
 			ResultSet rs = ServletUtilities.clsDatabaseFunctions.openResultSet(
-				sSQLCommand, 
+				SQLCommandWOCR, 
 				getServletContext(), 
 				sDBID, 
 				"MySQL", 
@@ -780,13 +841,17 @@ public class SMQueryParameters  extends HttpServlet {
 			sValuesString += "}";
 			sLabelsString += "}";
 
-			//Create a replacement string using the DROPDOWN parameter:
-			String sDropDownString = sSQLDropDownString.replace(SMCustomQuery.SQLDROPDOWN_PARAM_VARIABLE, SMCustomQuery.DROPDOWN_PARAM_VARIABLE);
-					
-			sRawQuery = sRawQuery.replace(sSQLDropDownString, sDropDownString);
-			sRawQuery = sRawQuery.replace("{" + sSQLCommand + "}", sValuesString + sLabelsString);
-			
-			//System.out.println("[2020381130293] " + "sRawQuery = '" + sRawQuery + "'.");
+			//Now rebuild the string using the values and labels:
+			sRawQuery = sPrefix 
+				+ "[[" 
+				+ SMCustomQuery.DROPDOWN_PARAM_VARIABLE 
+				+ "{" + sPrompt + "}"
+				+ sValuesString
+				+ sLabelsString
+				+ "]]"
+				+ sSuffix
+			;
+			//System.out.println("[2020661256273] " + "sRawQuery = '" + sRawQuery + "'.");
 		}
 		
 		return sRawQuery;

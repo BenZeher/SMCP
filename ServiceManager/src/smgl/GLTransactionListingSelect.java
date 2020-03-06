@@ -18,7 +18,6 @@ import SMDataDefinition.SMTableglaccountsegments;
 import SMDataDefinition.SMTableglacctsegmentvalues;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfinancialstatementdata;
-import ServletUtilities.clsCreateHTMLFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsManageRequestParameters;
 import smcontrolpanel.SMAuthenticate;
@@ -34,7 +33,7 @@ public class GLTransactionListingSelect extends HttpServlet {
 	public static String PARAM_DOWNLOAD_TO_HTML = "DOWNLOADTOHTML";
 	public static String PARAM_STARTING_ACCOUNT = "StartingAccount";
 	public static String PARAM_ENDING_ACCOUNT = "EndingAccount";
-	public static String PARAM_PROCESS_FOR_NO_ACTIVITY = "PROCESSFORNOACTIVITY";
+	//public static String PARAM_PROCESS_FOR_NO_ACTIVITY = "PROCESSFORNOACTIVITY";
 	public static String PARAM_STARTING_ACCOUNT_GROUP = "STARTINGACCOUNTGROUP";
 	public static String PARAM_ENDING_ACCOUNT_GROUP = "ENDINGACCOUNTGROUP";
 	public static String PARAM_STARTING_SEGMENT_BASE = "STARTINGSEGMENTBASE";
@@ -173,6 +172,7 @@ public class GLTransactionListingSelect extends HttpServlet {
 		out.println("    <TD>&nbsp;</TD>");
 		out.println("  </TR>");
 		
+		/*
 		// Checkbox to include accounts with no activity
 		out.println("  <TR>");
 		out.println("    <TD ALIGN=RIGHT >"
@@ -185,7 +185,8 @@ public class GLTransactionListingSelect extends HttpServlet {
 		);
 		out.println("    <TD>&nbsp;</TD>");
 		out.println("  </TR>");
-					
+		*/
+		
 		//Account number range:
 		alValues.clear();
 		alOptions.clear();

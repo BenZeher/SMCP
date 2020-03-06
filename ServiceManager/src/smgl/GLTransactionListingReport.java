@@ -35,7 +35,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String sEndingAccountGroup,
 		String sStartingFiscalPeriod,
 		String sEndingFiscalPeriod,
-		boolean bIncludeAccountsWithNoActivity,
 		ArrayList<String>alStartingSegmentIDs,
 		ArrayList<String>alStartingSegmentValueDescriptions,
 		ArrayList<String>alEndingSegmentIDs,
@@ -54,7 +53,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			sEndingAccount,
 			sStartingAccountGroup,
 			sEndingAccountGroup,
-			bIncludeAccountsWithNoActivity,
 			alStartingSegmentIDs,
 			alStartingSegmentValueDescriptions,
 			alEndingSegmentIDs,
@@ -78,7 +76,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 			String sEndingAccount,
 			String sStartingAccountGroupCode,
 			String sEndingAccountGroupCode,
-			boolean bIncludeAccountsWithNoActivity,
 			ArrayList<String>alStartingSegmentIDs,
 			ArrayList<String>alStartingSegmentValueDescriptions,
 			ArrayList<String>alEndingSegmentIDs,
@@ -155,13 +152,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 
 			;
 
-			//Include accounts with no activity?
-			//if(!bIncludeAccountsWithNoActivity){
-			//	sSQL += " AND ((" + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdtotalyeartodate
-			//		+ " + " + SMTablegltransactionlines.TableName + "." + SMTablegltransactionlines.bdopeningbalance
-			//		+ ")  != 0.00)" + "\n";
-			//}
-			
 			//Now process the segments:
 
 			for (int i = 0; i < alStartingSegmentIDs.size(); i++){
@@ -715,7 +705,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 					sEndingPeriod,
 					iStartingFiscalPeriodProduct,
 					iEndingFiscalPeriodProduct,
-					bIncludeAccountsWithNoActivity,
 					conn,
 					sDBID, 
 					context,
@@ -741,7 +730,6 @@ public class GLTransactionListingReport  extends java.lang.Object{
 		String sEndingFiscalPeriod,
 		int iStartingFiscalPeriodProduct,
 		int iEndingFiscalPeriodProduct,
-		boolean bIncludeAccountsWithNoActivity,
 		Connection conn,
 		String sDBID, 
 		ServletContext context,

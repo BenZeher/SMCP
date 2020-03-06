@@ -55,7 +55,6 @@ public class GLTransactionListingAction extends HttpServlet {
 		String sStartingAccountGroup = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_ACCOUNT_GROUP);
 		String sStartingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_STARTING_FISCAL_PERIOD_SELECTION);
 		String sEndingFiscalPeriod = request.getParameter(GLTransactionListingSelect.PARAM_ENDING_FISCAL_PERIOD_SELECTION);
-		boolean bIncludeAccountsWithNoActivity = request.getParameter(GLTransactionListingSelect.PARAM_PROCESS_FOR_NO_ACTIVITY) != null;
 		String sExternalPull = request.getParameter(GLTransactionListingSelect.PARAM_EXTERNAL_PULL);
 		String sSelectBy = request.getParameter(GLTransactionListingSelect.PARAM_SELECT_BY);
 
@@ -206,20 +205,6 @@ public class GLTransactionListingAction extends HttpServlet {
 			+ "  </TR>\n"
 		;
 		
-		String sNoActivity = "N";
-		if (bIncludeAccountsWithNoActivity){
-			sNoActivity = "Y";
-		}
-		s += "  <TR>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "Include accounts with no activity?:&nbsp;"
-			+ "    </TD>\n"
-			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
-			+ "<B>" + sNoActivity + "</B>"
-			+ "    </TD>\n"
-			+ "  </TR>\n"
-		;
-
 		s += "  <TR>\n"
 			+ "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >"
 			+ "Starting with account:&nbsp;"
@@ -314,7 +299,6 @@ public class GLTransactionListingAction extends HttpServlet {
 					sEndingAccountGroup,
 					sStartingFiscalPeriod,
 					sEndingFiscalPeriod,
-					bIncludeAccountsWithNoActivity,
 					alStartingSegmentIDs,
 					alStartingSegmentValueDescriptions,
 					alEndingSegmentIDs,

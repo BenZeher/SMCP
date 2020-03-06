@@ -5,7 +5,6 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.text.ParseException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -13,7 +12,6 @@ import javax.servlet.http.HttpServletRequest;
 
 import smap.APVendor;
 import smcontrolpanel.SMUtilities;
-import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;

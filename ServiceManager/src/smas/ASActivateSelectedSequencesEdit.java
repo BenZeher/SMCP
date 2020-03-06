@@ -301,13 +301,13 @@ public class ASActivateSelectedSequencesEdit  extends HttpServlet {
 				String sAlarmInfo = "";
 				if (iAlarmState != SMTablessalarmsequences.ALARM_STATE_UNARMED){
 					sAlarmInfo = "<span style = \" font-size: small; color: grey; \"><BR>(Previously set at <B><I>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.datlastarmed))
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.datlastarmed))
 						+ " by " + rs.getString(SMTablessalarmsequences.llastarmedbyid) + " ("
 						+ rs.getString(SMTablessalarmsequences.slastarmedbyfullname) + ")"
 						+ "</I></B></span>";
 				}else{
 					sAlarmInfo = "<span style = \" font-size: small; color: grey; \"><BR>(Previously UNset at <B><I>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.datlastdisarmed))
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.datlastdisarmed))
 						+ " by " + rs.getString(SMTablessalarmsequences.slastdisarmedbyfullname) + ")"
 						+ "</I></B></span>";
 				}

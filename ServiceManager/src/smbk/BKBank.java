@@ -249,7 +249,7 @@ public class BKBank extends clsMasterEntry{
 				m_sbankname = rs.getString(SMTablebkbanks.sbankname).trim();
 				m_saccountname = rs.getString(SMTablebkbanks.saccountname).trim();
 				m_saccountnumber = rs.getString(SMTablebkbanks.saccountnumber).trim();
-				m_sdattimelastmaintained = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_sdattimelastmaintained = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablebkbanks.dattimelastmaintained));
 				m_llastmaintainedbyid = rs.getString(SMTablebkbanks.llastmaintainedbyid).trim();
 				m_slastmaintainedbyfullname = rs.getString(SMTablebkbanks.slastmaintainedbyfullname).trim();

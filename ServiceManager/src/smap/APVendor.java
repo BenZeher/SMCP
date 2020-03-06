@@ -252,7 +252,7 @@ public class APVendor extends clsMasterEntry{
 				m_scompanyaccountcode = rs.getString(SMTableicvendors.scompanyacctcode);
 				m_swebaddress = rs.getString(SMTableicvendors.swebaddress);
 				m_svendoremail = rs.getString(SMTableicvendors.svendoremail);
-				m_sdatlastmaintained = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_sdatlastmaintained = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTableicvendors.datlastmaintained));
 				m_slasteditedby = rs.getString(SMTableicvendors.slasteditedbyfullname);
 				m_sactive = Integer.toString(rs.getInt(SMTableicvendors.iactive));
@@ -527,7 +527,7 @@ public class APVendor extends clsMasterEntry{
 				rs.close();
 				return false;
 			}else{
-				m_sdatlastmaintained = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableicvendors.datlastmaintained));
+				m_sdatlastmaintained = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableicvendors.datlastmaintained));
 				m_slasteditedby = rs.getString(SMTableicvendors.slasteditedbyfullname);
 				rs.close();
 			}

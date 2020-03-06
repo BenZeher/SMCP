@@ -146,7 +146,7 @@ public class SMEntryBatch {
 					throw new Exception("Error reading converting date from 'sPost' = '" + sPost + "' [1423157509] - " + e.getMessage());
 				}
     		}
-    		m_spostingdate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(datpostdate));
+    		m_spostingdate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(datpostdate));
 			rs.close();
 		}catch (SQLException ex){
 			throw new Exception("Error loading from recordset [1385582782] - " + ex.getMessage());
@@ -198,7 +198,7 @@ public class SMEntryBatch {
 					throw new Exception("Error [1423492044] reading posting date: '" + sPost + "' - " + e.getMessage() + ".");
 				}
     		}
-    		m_spostingdate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(datpostdate));
+    		m_spostingdate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(datpostdate));
     		rs.close();
     	}catch (SQLException ex){
     		throw new Exception("Error [1385582795] loading from recordset - " + ex.getMessage());

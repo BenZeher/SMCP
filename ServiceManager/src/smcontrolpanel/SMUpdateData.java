@@ -18,7 +18,7 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1454;
+	private static final int m_CurrentDatabaseVersion = 1455;
 	private static final String m_sVersionNumber = "1.4";
 	private static final String m_sLastRevisionDate = "3/6/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
@@ -15245,6 +15245,22 @@ public class SMUpdateData extends java.lang.Object{
 			break;	
 			//END CASE
 
+			//BEGIN CASE:
+			case 1454:
+				//Added by TJR 3/6/2020
+				SQL = "ALTER TABLE `icpoheaders`"
+					+ " ADD ipaymentonhold INT(11) NOT NULL DEFAULT '0'"
+					+ ", ADD spaymentonholdbyfullname varchar(128) NOT NULL DEFAULT ''"
+					+ ", ADD lpaymentonholdbyuserid int(11) NOT NULL DEFAULT '0' COMMENT '[010102]'"
+					+ ", ADD datpaymentplacedonhold DATETIME NOT NULL DEFAULT '0000-00-00 00:00:00'" 
+					+ ", ADD mpaymentonholdreason MEDIUMTEXT NOT NULL"
+					+ ", ADD mpaymentonholdvendorcomment MEDIUMTEXT NOT NULL"
+				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE
+			
 			//End switch:
 		}
 

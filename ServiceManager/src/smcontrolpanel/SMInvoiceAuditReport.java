@@ -508,7 +508,7 @@ public class SMInvoiceAuditReport extends java.lang.Object{
 				
 				//If it's a new invoice number, print the invoice header:
 				if (sCurrentInvoiceNumber.compareToIgnoreCase(sLastInvoiceNumber) != 0){
-					String sCreationDateTime = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableinvoiceheaders.TableName + "." 
+					String sCreationDateTime = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableinvoiceheaders.TableName + "." 
 						+ SMTableinvoiceheaders.datInvoiceCreationDate));
 					/*String sCreationTime = rs.getString(SMTableinvoiceheaders.TableName + "." 
 						+ SMTableinvoiceheaders.sInvoiceCreationTime);*/

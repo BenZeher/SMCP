@@ -316,7 +316,7 @@ public class SMDeliveryTicket extends clsMasterEntry{
 			if (rs.next()) {
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTabledeliverytickets.lid));
-				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTabledeliverytickets.datinitiated));
 				m_linitiatedbyid = Long.toString(rs.getLong(SMTabledeliverytickets.linitiatedbyid));
 				m_sinitiatedbyfullname = rs.getString(SMTabledeliverytickets.sinitiatedbyfullname).trim();

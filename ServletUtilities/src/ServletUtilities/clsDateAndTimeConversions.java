@@ -392,6 +392,19 @@ public class clsDateAndTimeConversions {
 			return "0000-00-00 00:00";
 		}
 	}
+	public static String stdDateTimeToSQLDateTimeInSecondsString(String sAMPMDateStringWithSeconds){
+		//This takes a string of the form: "00/00/0000 00:00:00 AM"
+		// and converts it to a SQL string that can be used in SQL commands:
+		SimpleDateFormat sdf = new SimpleDateFormat("M/d/yyyy hh:mm:ss a");
+		sdf.setLenient(false); // This is very important
+		try{
+			java.util.Date myDate = sdf.parse(sAMPMDateStringWithSeconds);
+			java.sql.Timestamp ts = new java.sql.Timestamp(myDate.getTime());
+			return TimeStampToString(ts, "yyyy-MM-dd HH:mm:ss", "0000-00-00 00:00:00");
+		}catch(ParseException pse){
+			return "0000-00-00 00:00:00";
+		}
+	}
 
 	public static String stdDateStringToSQLDateString (String sMdyyyy){
 		//Modified on 9/30/2015 by BZ to allow for M/d/yy formats as well:
@@ -474,7 +487,7 @@ public class clsDateAndTimeConversions {
 		return s;
 	}
 
-	public static String resultsetDateTimeStringToString (
+	public static String resultsetDateTimeToTheMinuteStringToString (
 			String rsString
 	){
 	
@@ -526,6 +539,67 @@ public class clsDateAndTimeConversions {
 			+ sHour
 			+ ":"
 			+ sMinute
+			+ " "
+			+ sAMPM
+			;
+		return s;
+	}
+	public static String resultsetDateTimeToTheSecondStringToString (
+			String rsString
+	){
+	
+		//If it's a null string, return the 'zero date':
+		if (rsString == null){
+			return "00/00/0000 00:00:00 AM";
+		}
+	
+		//Try to parse off the string:
+		String sYear = clsStringFunctions.StringLeft(rsString, 4);
+		if (Integer.parseInt(sYear) < 1970){
+			//System.out.println("Integer.parseInt(sYear) < 1970) is YES");
+			return "00/00/0000 00:00:00 AM";
+		}
+		String sMonth = rsString.substring(5, 6).replace("0", "") + rsString.substring(6, 7);
+		String sDay = rsString.substring(8, 9).replace("0", "") + rsString.substring(9, 10);
+	
+		String sHour = "";
+		String sMinute = "";
+		String sSecond = "";
+		String sAMPM = "";
+		if (rsString.length() > 10){
+			//It's a date time string, with time in it, so we need to set the hour, minute, and second:
+			sHour = rsString.substring(11, 13);
+			//Adjust for AM/PM:
+			int iHour = Integer.parseInt(sHour);
+			if (iHour > 11){
+				sHour = Integer.toString(iHour - 12);
+				sAMPM = "PM";
+			}else{
+				sAMPM = "AM";
+			}
+			if ((iHour == 12) || (iHour == 0)){
+				sHour = "12";
+			}
+			sMinute = rsString.substring(14, 16);
+			sSecond = rsString.substring(17, 19);
+		}
+	
+		if (Integer.parseInt(sYear) < 1970){
+			return "00/00/0000 00:00:00 AM";
+		}
+	
+		String s = 
+			sMonth
+			+ "/"
+			+ sDay
+			+ "/"
+			+ sYear
+			+ " "
+			+ sHour
+			+ ":"
+			+ sMinute
+			+ ":"
+			+ sSecond
 			+ " "
 			+ sAMPM
 			;

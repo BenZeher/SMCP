@@ -158,7 +158,7 @@ public class SSController extends clsMasterEntry{
 				m_scontrollername = rs.getString(SMTablesscontrollers.scontrollername).trim();
 				m_sdescription = rs.getString(SMTablesscontrollers.sdescription).trim();
 				m_spasscode = rs.getString(SMTablesscontrollers.spasscode).trim();
-				m_sdattimelastmaintained = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_sdattimelastmaintained = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTablesscontrollers.dattimelastmaintained));
 				m_llastmaintainedbyid = Long.toString(rs.getLong(SMTablesscontrollers.llastmaintainedbyid));
 				m_slastmaintainedbyfullname = rs.getString(SMTablesscontrollers.slastmaintainedbyfullname).trim();

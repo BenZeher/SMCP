@@ -23,7 +23,9 @@ import smcontrolpanel.SMMasterEditSelect;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
+import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecriticaldates;
+import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -167,6 +169,8 @@ public class ICEditPOEdit  extends HttpServlet {
 		}
 		smedit.getPWOut().println(clsServletUtilities.getJQueryIncludeString());
 		smedit.getPWOut().println(clsServletUtilities.getJQueryUIIncludeString());
+		smedit.getPWOut().println(clsServletUtilities.getMasterStyleSheetLink());
+		
 		smedit.printHeaderTable();
 
 		//Add a link to return to the original URL:
@@ -228,9 +232,6 @@ public class ICEditPOEdit  extends HttpServlet {
 					);
 
 		}
-
-
-
 		
 		boolean bEditingPOAllowed = SMSystemFunctions.isFunctionPermitted(
 				SMSystemFunctions.ICEditPurchaseOrders, 
@@ -819,7 +820,93 @@ public class ICEditPOEdit  extends HttpServlet {
 			s += "</TD>";
 			
 		s += "</TR>";
+		
+		//Begin the 'payment on hold' section here:
+		s += "  <TR class = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_BACKGROUNDCOLOR_LIGHTGREY + " \" >\n";
+		s += "    <TD COLSPAN = 4><B><I><U>PAYMENT ON HOLD INFORMATION</U></I?</B></TD>" + "\n";
+		s += "  </TR>" + "\n";
+		
+		s += "  <TR>\n";
+		//On hold checkbox:
+		String sChecked = "";
+		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
+			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		}
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Payment on hold:</TD>\n";
+		s += "    <TD><INPUT TYPE=CHECKBOX"
+			+ " NAME=\"" + ICPOHeader.Paramipaymentonhold + "\""
+			+ " ID=\"" + ICPOHeader.Paramipaymentonhold + "\""
+			+ " " + sChecked
+ 		+ " onchange=\"flagDirty();\""
+ 		+ ">"
+ 		+ "</TD>" + "\n"
+ 		;
+		
+		//Date placed on hold:
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Date placed on hold:</TD>\n";
+		s += "    <TD>" + entry.getdatpaymentplacedonhold() 
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Paramdatpaymentplacedonhold + "\" VALUE=\"" + entry.getdatpaymentplacedonhold() + "\">"
+			+ "</TD>\n"
+		;
+		
+		s += "  </TR>\n";
+		
+		s += "  <TR>\n";
+		//Placed on hold by:
+		String sPlacedOnHoldBy = "";
+		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
+			sPlacedOnHoldBy = "User ID: " + entry.getlpaymentonholdbyuserid() + " - " + entry.getspaymentonholdbyfullname();
+		}
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Placed on hold by:</TD>\n";
+		s += "    <TD COLSPAN = 3>" + sPlacedOnHoldBy
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Paramlpaymentonholdbyuserid + "\" VALUE=\"" + entry.getlpaymentonholdbyuserid() + "\">"
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Paramspaymentonholdbyfullname + "\" VALUE=\"" + entry.getspaymentonholdbyfullname() + "\">"
+		+ "</TD>\n"
+		;
+		
+		s += "  </TR>\n";
+		
+		s += "  <TR>\n";
+		//On hold reason:
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Reason for hold:</TD>\n";
+		s += "    <TD colspan=3>";
+		
+		//If the PO is already placed on hold, then don't let the user edit the reason:
+		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
+			s += "<I>" + entry.getmpaymentonholdreason().replace("\"", "&quot;") + "</I>"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + ICPOHeader.Parammpaymentonholdreason 
+				+ "\" VALUE=\"" + entry.getmpaymentonholdreason().replace("\"", "&quot;") + "\">"
+			;
+		}else{
+			s += "<TEXTAREA NAME=\"" + ICPOHeader.Parammpaymentonholdreason + "\""
+				+ " onchange=\"flagDirty();\""
+				+ " rows=\"1\""
+				+ " cols=\"80\""
+				+ ">"
+				+ entry.getmpaymentonholdreason().replace("\"", "&quot;")
+				+ "</TEXTAREA>"
+				;
+		}
 
+		s += "</TD>\n";
+		s += "  </TR>\n";
+		
+		s += "  <TR>\n";
+		
+		//Vendor comments:
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Vendor comments:</TD>\n";
+		s += "    <TD colspan=3>";
+		s += "<TEXTAREA NAME=\"" + ICPOHeader.Parammpaymentonholdvendorcomment + "\""
+		+ " onchange=\"flagDirty();\""
+		+ " rows=\"1\""
+		+ " cols=\"80\""
+		+ ">"
+		+ entry.getmpaymentonholdvendorcomment().replace("\"", "&quot;")
+		+ "</TEXTAREA>"
+		;
+		s += "</TD>\n";
+		s += "  </TR>\n";
+		
 		s += "</TABLE>";
 		
 		//Add a field for Google Docs link
@@ -1251,7 +1338,7 @@ public class ICEditPOEdit  extends HttpServlet {
 					String sDeletedDate = "N/A";
 					String sDeletedBy = "N/A";
 					if (rs.getInt(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.lstatus) == SMTableicporeceiptheaders.STATUS_DELETED){
-						sDeletedDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datdeleted));
+						sDeletedDate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.datdeleted));
 						sDeletedBy = rs.getString(SMTableicporeceiptheaders.TableName + "." + SMTableicporeceiptheaders.sdeletedbyfullname);
 					}
 					out.println("<TD><FONT SIZE=2 COLOR=" + sFontColor + " >" + sDeletedDate + "</FONT></TD>");

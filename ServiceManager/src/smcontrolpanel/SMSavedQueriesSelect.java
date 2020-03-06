@@ -327,7 +327,7 @@ public class SMSavedQueriesSelect  extends HttpServlet {
 		
 		//Date:
 		s += "<TD class=\"queryfieldcenteraligned" + sRowSuffix + "\" >"
-				+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(
+				+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(
 						SMTablesavedqueries.TableName + "." + SMTablesavedqueries.dattimesaved))
 				+ "</TD>";
 		

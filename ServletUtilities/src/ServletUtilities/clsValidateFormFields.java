@@ -161,6 +161,10 @@ public class clsValidateFormFields {
 			return s;
 		}
 		
+		if (bAllowEmptyDate && s.compareToIgnoreCase(clsServletUtilities.EMPTY_DATETIME_VALUE) == 0){
+			return s;
+		}
+		
         DateFormat sDateFormat = new SimpleDateFormat(sDateTimeFormat);
 		try {
 			@SuppressWarnings("unused")

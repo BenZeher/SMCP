@@ -119,7 +119,7 @@ public class ICListUnusedPOsReport extends java.lang.Object{
 				
 				//Assigned date:
 				out.println("<TD CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" >" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 							rs.getString(SMTableicpoheaders.TableName + "." 
 							+ SMTableicpoheaders.datassigned)) + "</TD>");
 				

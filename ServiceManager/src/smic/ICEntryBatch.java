@@ -167,7 +167,7 @@ public class ICEntryBatch {
     		if (!sSetCreatedByFullName(rs.getString(screatedbyfullname))){ rs.close(); return false; };
     		m_ibatchlastentry = rs.getInt(lbatchlastentry);
     		if (!sModuleType(rs.getString(smoduletype))){ rs.close(); return false; };
-    		m_sdatpostdate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+    		m_sdatpostdate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(datpostdate));
 			rs.close();
 		}catch (SQLException ex){
@@ -205,7 +205,7 @@ public class ICEntryBatch {
 	    		if (!sSetCreatedByFullName(rs.getString(screatedbyfullname))){ rs.close(); return false; };
 	    		m_ibatchlastentry = rs.getInt(lbatchlastentry);
 	    		if (!sModuleType(rs.getString(smoduletype))){ rs.close(); return false; };
-	    		m_sdatpostdate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+	    		m_sdatpostdate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(datpostdate));
     		}else{
     			return false;

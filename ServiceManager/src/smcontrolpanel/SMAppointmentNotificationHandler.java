@@ -205,7 +205,7 @@ public class SMAppointmentNotificationHandler  extends clsMasterEntry{
 		if(appointment.getsphone().compareToIgnoreCase("") != 0){
 			sBody += "\n Email: " + appointment.getsemail();
 		}			
-			sBody += "\n\n\n" + "appointment created by " + SMUtilities.getFullNamebyUserID(appointment.getlcreateduserid(), conn) + " on " + clsDateAndTimeConversions.resultsetDateTimeStringToString(appointment.getdatcreatedtime())
+			sBody += "\n\n\n" + "appointment created by " + SMUtilities.getFullNamebyUserID(appointment.getlcreateduserid(), conn) + " on " + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(appointment.getdatcreatedtime())
 		;
 
 		int iSMTPPort;

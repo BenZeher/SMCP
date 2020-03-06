@@ -197,7 +197,7 @@ public class SMVendorReturn extends clsMasterEntry{
 			if (rs.next()) {
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTablevendorreturns.lid));
-				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablematerialreturns.datinitiated));
 				m_linitiatedbyid = Long.toString(rs.getLong(SMTablematerialreturns.linitiatedbyid));
 				m_sinitiatedbyfullname = rs.getString(SMTablematerialreturns.sinitiatedbyfullname).trim();

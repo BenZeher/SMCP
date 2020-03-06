@@ -380,7 +380,7 @@ public class SMDisplayReminders  extends HttpServlet {
 			 + "<TD class=\"reminder\">" + scheduleCode + "</TD>"
 			 + "<TD class=\"reminder\">" + scheduleDescription + "</TD>"
 			 + "<TD class=\"reminder\">" + sLastEditedBy + "</TD>"
-			 + "<TD class=\"reminder\">" + clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditDate) + "</TD>"
+			 + "<TD class=\"reminder\">" + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(sLastEditDate) + "</TD>"
 			 + "</TR>";
 		incrimentRowCounter();
 		return s;

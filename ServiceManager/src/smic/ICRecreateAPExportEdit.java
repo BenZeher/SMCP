@@ -177,7 +177,7 @@ public class ICRecreateAPExportEdit  extends HttpServlet {
 		//Export date:
 		s += "<TD class=\"sequencefieldcenteraligned\" >"
 				+ "Export date:&nbsp;"
-				+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsSequence.getString(
+				+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsSequence.getString(
 				SMTableicinvoiceexportsequences.TableName + "." + SMTableicinvoiceexportsequences.datexported))
 				+ "</TD>";
 		iColumnCount++;

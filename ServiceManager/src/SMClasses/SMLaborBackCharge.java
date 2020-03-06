@@ -184,7 +184,7 @@ public class SMLaborBackCharge extends clsMasterEntry{
 				//Load the variables here:
 				m_lid = Long.toString(rs.getLong(SMTablelaborbackcharges.lid));
 				
-				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTablelaborbackcharges.datinitiated));
 				m_linitiatedbyid = Long.toString(rs.getLong(SMTablelaborbackcharges.linitiatedbyid));
 				m_sinitiatedbyfullname = rs.getString(SMTablelaborbackcharges.sinitiatedbyfullname).trim();

@@ -735,7 +735,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					}
 					pwOut.println("<TD><FONT SIZE=2><B>Expected ship date: </B>" + clsDateAndTimeConversions.resultsetDateStringToString(rsOrder.getString(SMTableorderheaders.datExpectedShipDate)) + "</FONT></TD>");
 					pwOut.println("<TD><FONT SIZE=2><B>Creation date: </B>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsOrder.getString(SMTableorderheaders.datOrderCreationDate))
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsOrder.getString(SMTableorderheaders.datOrderCreationDate))
 						+ "</FONT></TD>");
 					//pwOut.println("<TD><FONT SIZE=2><B>Creation date: </B>" + SMUtilities.utilDateToString(rsOrder.getDate(SMTableorderheaders.datOrderCreationDate),"MM/d/yyyy") + "</FONT></TD>");
 					pwOut.println("<TD><FONT SIZE=2><B>Terms: </B>" + rsOrder.getString(SMTableorderheaders.sTerms) + "</FONT></TD>");
@@ -847,7 +847,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					}
 					pwOut.println("<TD><FONT SIZE=2><B>Date canceled: </B>" + sCanceledDate + "</FONT></TD>");
 					//Last posting date:
-					pwOut.println("<TD><FONT SIZE=2><B>Header last saved: </B>" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
+					pwOut.println("<TD><FONT SIZE=2><B>Header last saved: </B>" + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rsOrder.getString(SMTableorderheaders.datLastPostingDate)) + "</FONT></TD>");
 					//Cloned from:
 					pwOut.println("<TD><FONT SIZE=2><B>Cloned from: </B>" + rsOrder.getString(SMTableorderheaders.sclonedfrom) + "</FONT></TD>");
@@ -1929,7 +1929,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					;
 				}
 				s += "<TD class = \" " +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER+ " \" >" + sMRLink + "</TD>";
-				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rsMaterialReturns.getString(SMTablematerialreturns.datinitiated) + "</TD>");
 				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsMaterialReturns.getString(SMTablematerialreturns.sinitiatedbyfullname) 
 					+ "</TD>";
@@ -2065,7 +2065,7 @@ public class SMDisplayOrderInformation extends HttpServlet {
 				//Sales Lead ID
 				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sSalesLeadLink + "</TD>";
 				//Date initiated:
-				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rsFollowUpSalesLead.getString(SMTablebids.datcreatedtime) + "</TD>");
 				//Sales Person:
 				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsFollowUpSalesLead.getString(SMTablebids.ssalespersoncode) 

@@ -171,7 +171,7 @@ public class SMProposal extends Object{
 				m_sfurnishandinstallstring = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.sfurnishandinstallstring));
 				m_lapprovedbyuserid = Integer.toString(rs.getInt(SMTableproposals.lapprovedbyuserid));
 				m_sapprovedbyfullname = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.sapprovedbyfullname));
-				m_dattimeapproved = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableproposals.dattimeapproved));
+				m_dattimeapproved = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableproposals.dattimeapproved));
 				m_sbodydescription = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.sbodydescription));
 				m_salternate1 = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.salternate1));
 				m_salternate2 = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.salternate2));
@@ -192,7 +192,7 @@ public class SMProposal extends Object{
 				m_sdbaproposallogo = rs.getString(SMTableproposals.sdbaproposallogo);
 				m_lsignedbyuserid = Integer.toString(rs.getInt(SMTableproposals.lsignedbyuserid));
 				m_ssignedbyfullname = clsStringFunctions.checkStringForNull(rs.getString(SMTableproposals.ssignedbyfullname));
-				m_dattimesigned = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableproposals.dattimesigned));
+				m_dattimesigned = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableproposals.dattimesigned));
 				rs.close();
 			}
 			else{

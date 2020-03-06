@@ -144,7 +144,7 @@ public class ICPhysicalInventoryEntry extends clsMasterEntry {
 				m_sdesc = rs.getString(SMTableicphysicalinventories.sdesc);
 				m_screatedbyfullname = rs
 						.getString(SMTableicphysicalinventories.screatedbyfullname);
-				m_datcreated = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs
+				m_datcreated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs
 						.getString(SMTableicphysicalinventories.datcreated));
 				m_sstatus = Long.toString(rs
 						.getLong(SMTableicphysicalinventories.istatus));

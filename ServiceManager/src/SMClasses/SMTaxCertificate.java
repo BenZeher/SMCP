@@ -152,7 +152,7 @@ public class SMTaxCertificate extends clsMasterEntry{
 			if (rs.next()) {
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTabletaxcertificates.lid));
-				m_datcreated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datcreated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTabletaxcertificates.datcreated));
 				m_screatedbyfullname = rs.getString(SMTabletaxcertificates.screatedbyfullname).trim();
 				m_lcreatedbyuserid = rs.getString(SMTabletaxcertificates.lcreatedbyuserid).trim();

@@ -252,7 +252,7 @@ public class SMEditAppointmentEdit extends HttpServlet {
 			+ "    <TD ALIGN=RIGHT><B>Created by</B>:</TD>\n"
 			+ "    <TD>" ;
 		s += SMUtilities.getFullNamebyUserID(entry.getlcreateduserid(), getServletContext(), sm.getsDBID(), "SmEditAppointmentEdit.getEditHTML")
-					+ " on " + clsDateAndTimeConversions.resultsetDateTimeStringToString(entry.getdatcreatedtime());
+					+ " on " + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(entry.getdatcreatedtime());
 		s += " <INPUT TYPE=HIDDEN"
 			+ " NAME = \"" + SMTableappointments.lcreateduserid + "\""
 			+ " ID = \"" + SMTableappointments.lcreateduserid + "\""

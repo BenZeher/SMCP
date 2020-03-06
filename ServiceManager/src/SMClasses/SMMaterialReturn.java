@@ -239,12 +239,12 @@ public class SMMaterialReturn extends clsMasterEntry{
 				//Load the variables here:
 				m_slid = Long.toString(rs.getLong(SMTablematerialreturns.lid));
 
-				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datinitiated = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablematerialreturns.datinitiated));
 				m_linitiatedbyid = Long.toString(rs.getLong(SMTablematerialreturns.linitiatedbyid));
 				m_sinitiatedbyfullname = rs.getString(SMTablematerialreturns.sinitiatedbyfullname).trim();
 				m_sresolved = Long.toString(rs.getLong(SMTablematerialreturns.iresolved));
-				m_datresolved = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablematerialreturns.datresolved));
+				m_datresolved = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablematerialreturns.datresolved));
 				m_lresolvedbyid = Long.toString(rs.getLong(SMTablematerialreturns.lresolvedbyid));
 				m_sresolvedbyfullname = rs.getString(SMTablematerialreturns.sresolvedbyfullname).trim();
 				m_sdescription = rs.getString(SMTablematerialreturns.sdescription).trim();

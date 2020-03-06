@@ -533,7 +533,7 @@ public class SMOrderHistoryReport extends java.lang.Object{
 					pwOut.println("<TR  CLASS = \"" + SMMasterStyleSheetDefinitions.TABLE_ROW_EVEN + "\">");
 				}
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><FONT SIZE=2>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate)) 
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate)) 
 						+ "</TD>");
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ALIGN=RIGHT><FONT SIZE=2>" + 
 						Integer.toString(rsJobCost.getInt(SMTableworkorders.TableName + "." + SMTableworkorders.ijoborder)) + "</TD>");
@@ -553,16 +553,16 @@ public class SMOrderHistoryReport extends java.lang.Object{
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\" ALIGN=RIGHT><FONT SIZE=2>" + clsManageBigDecimals.BigDecimalToScaledFormattedString(
 						SMTableworkorders.bdbackchargehoursScale, rsJobCost.getBigDecimal(SMTableworkorders.TableName + "." + SMTableworkorders.bdbackchargehours)) + "</TD>");
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><FONT SIZE=2>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimeleftprevious)) 
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimeleftprevious)) 
 						+ "</TD>");
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><FONT SIZE=2>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimearrivedatcurrent)) 
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimearrivedatcurrent)) 
 						+ "</TD>");
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><FONT SIZE=2>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimeleftcurrent)) 
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimeleftcurrent)) 
 						+ "</TD>");
 				pwOut.println("<TD CLASS=\"" +  SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\"><FONT SIZE=2>" 
-						+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimearrivedatnext)) 
+						+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsJobCost.getString(SMTableworkorders.TableName + "." + SMTableworkorders.dattimearrivedatnext)) 
 						+ "</TD>");
 
 				pwOut.println("</TR>");

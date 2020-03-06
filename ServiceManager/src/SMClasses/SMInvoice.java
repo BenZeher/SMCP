@@ -442,7 +442,7 @@ public class SMInvoice extends clsMasterEntry{//java.lang.Object{
 			m_iExportedToIC = rs.getInt(SMTableinvoiceheaders.iExportedToIC);
 			m_sCreatedByFullName = rs.getString(SMTableinvoiceheaders.sCreatedByFullName);
 			m_lCreatedByID = rs.getLong(SMTableinvoiceheaders.lCreatedByID);
-			m_sInvoiceCreationDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableinvoiceheaders.datInvoiceCreationDate));
+			m_sInvoiceCreationDate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableinvoiceheaders.datInvoiceCreationDate));
 			m_iOrderSourceID = rs.getInt(SMTableinvoiceheaders.iOrderSourceID);
 			m_iSalesGroup = rs.getInt(SMTableinvoiceheaders.iSalesGroup);
 			m_sOrderSourceDesc = rs.getString(SMTableinvoiceheaders.sOrderSourceDesc);

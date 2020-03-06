@@ -220,7 +220,7 @@ public class SMReminders extends java.lang.Object{
         				m_sErrorMessageArray.add("Error loading start date: " + e1.getMessage());
         			}
         			m_iremindermode = Long.toString(rs.getLong(SMTablereminders.iremindermode));
-        			m_datlasteditdate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablereminders.datlasteditdate));
+        			m_datlasteditdate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablereminders.datlasteditdate));
         			m_slasteditedfullname = rs.getString(SMTablereminders.slastediteduserfullname);
         			m_sNewRecord = "0";
         			rs.close();
@@ -354,8 +354,8 @@ private void updateRemindersUsersTable(Connection conn, String sStartDate) throw
 		
 		if(rsLastDates.next()){
 			sLastAckReminderDate = clsDateAndTimeConversions.resultsetDateStringToString(rsLastDates.getString(SMTablereminderusers.datlastacknowledgedreminderdate));
-			sLastAckDate =  clsDateAndTimeConversions.resultsetDateTimeStringToString(rsLastDates.getString(SMTablereminderusers.datlastacknowledgeddate));
-			sLastRunDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(rsLastDates.getString(SMTablereminderusers.datlastrundate));
+			sLastAckDate =  clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsLastDates.getString(SMTablereminderusers.datlastacknowledgeddate));
+			sLastRunDate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rsLastDates.getString(SMTablereminderusers.datlastrundate));
 			arrUsersLastAckReminderDate.add(sLastAckReminderDate);
 			arrUsersLastAckDate.add(sLastAckDate);
 			arrUsersLastRunDate.add(sLastRunDate);

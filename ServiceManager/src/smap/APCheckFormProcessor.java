@@ -516,7 +516,7 @@ public class APCheckFormProcessor {
 				+ ", bank ID: " + Long.toString(rs.getLong(SMTableapchecks.lbankid))
 				+ ", remit to name: " + rs.getString(SMTableapchecks.sremittoname)
 				+ ", vendor #: " + rs.getString(SMTableapchecks.svendoracct)
-				+ ", check created at: " + clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableapchecks.dattimecreated))
+				+ ", check created at: " + clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableapchecks.dattimecreated))
 				+ ", check created at: " + clsDateAndTimeConversions.resultsetDateTimeStringToFormattedString(
 					rs.getString(SMTableapchecks.dattimecreated), 
 					SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 

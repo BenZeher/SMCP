@@ -366,7 +366,7 @@ public class SMBidEntry extends clsMasterEntry{
 				m_spricingpersoncode = rs.getString(SMTablebids.spricingpersoncode);
 				m_datoriginationdate = clsDateAndTimeConversions.resultsetDateStringToString(
 						rs.getString(SMTablebids.dattimeoriginationdate));
-				m_dattimebiddate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_dattimebiddate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablebids.dattimebiddate));
 				m_scustomername = rs.getString(SMTablebids.scustomername);
 				m_sprojectname = rs.getString(SMTablebids.sprojectname);
@@ -377,7 +377,7 @@ public class SMBidEntry extends clsMasterEntry{
 				m_datpricecomplete = clsDateAndTimeConversions.resultsetDateStringToString(
 						rs.getString(SMTablebids.dattimepricecomplete));
 				m_mdescription = rs.getString(SMTablebids.mdescription);
-				m_dattimeactualbiddate = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_dattimeactualbiddate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablebids.dattimeactualbiddate));
 				m_scontactname = rs.getString(SMTablebids.scontactname);
 				m_sphonenumber = rs.getString(SMTablebids.sphonenumber);
@@ -394,7 +394,7 @@ public class SMBidEntry extends clsMasterEntry{
 //				m_sbinnumber = rs.getString(SMTablebids.sbinnumber);
 				m_screatedbyfullname = rs.getString(SMTablebids.screatedbyfullname);
 				m_lcreatedbyuserid= rs.getString(SMTablebids.lcreatedbyuserid);
-				m_datcreatedtime = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_datcreatedtime = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTablebids.datcreatedtime));
 				m_saltphonenumber = rs.getString(SMTablebids.saltphonenumber);
 				m_sfaxnumber = rs.getString(SMTablebids.sfaxnumber);

@@ -160,8 +160,8 @@ public class SSAlarmSequence extends clsMasterEntry{
 				m_salarmstate = Long.toString(rs.getLong(SMTablessalarmsequences.ialarmstate));
 				m_snotificationemails = rs.getString(SMTablessalarmsequences.semailnotifications).trim();
 				m_salarmsetcountdown = Long.toString(rs.getLong(SMTablessalarmsequences.lalarmsetdelaycountdown));
-				m_sdatlastarmed = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablessalarmsequences.datlastarmed));
-				m_sdatlastdisarmed = clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTablessalarmsequences.datlastdisarmed));
+				m_sdatlastarmed = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablessalarmsequences.datlastarmed));
+				m_sdatlastdisarmed = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTablessalarmsequences.datlastdisarmed));
 				m_ldatlastarmedunixtimestamp = rs.getLong("LASTARMEDUNIXFORMAT");
 				m_ldatlastdisarmedunixtimestamp = rs.getLong("LASTDISARMEDUNIXFORMAT");
 				m_llastarmedbyid = Long.toString(rs.getLong(SMTablessalarmsequences.llastarmedbyid));

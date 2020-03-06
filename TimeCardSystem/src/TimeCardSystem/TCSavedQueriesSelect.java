@@ -403,7 +403,7 @@ public class TCSavedQueriesSelect  extends HttpServlet {
 		
 		//Date:
 		s += "    <TD class=\"queryfieldcenteraligned" + sRowSuffix + "\" >"
-				+ clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(
+				+ clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(
 						TCTablesavedqueries.TableName + "." + TCTablesavedqueries.dattimesaved))
 				+ "</TD>" + "\n";
 		

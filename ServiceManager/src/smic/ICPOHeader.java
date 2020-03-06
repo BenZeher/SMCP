@@ -5,6 +5,7 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.text.ParseException;
 import java.util.Enumeration;
 
 import javax.servlet.ServletContext;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import smap.APVendor;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -19,8 +21,10 @@ import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicshipvias;
 import SMDataDefinition.SMTableicvendoritems;
 import SMDataDefinition.SMTablelocations;
+import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsServletUtilities;
+import ServletUtilities.clsValidateFormFields;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -75,6 +79,13 @@ public class ICPOHeader extends clsMasterEntry{
 	public static final String Paramsgdoclink = "sgdoclink";
 	public static final String Paramscreatedbyfullname = "screatedbyfullname";
 	
+	public static final String Paramipaymentonhold = SMTableicpoheaders.ipaymentonhold;
+	public static final String Paramspaymentonholdbyfullname = SMTableicpoheaders.spaymentonholdbyfullname;
+	public static final String Paramlpaymentonholdbyuserid = SMTableicpoheaders.lpaymentonholdbyuserid;
+	public static final String Paramdatpaymentplacedonhold = SMTableicpoheaders.datpaymentplacedonhold;
+	public static final String Parammpaymentonholdreason = SMTableicpoheaders.mpaymentonholdreason;
+	public static final String Parammpaymentonholdvendorcomment = SMTableicpoheaders.mpaymentonholdvendorcomment;
+	
 	private String m_slid;
 	private String m_svendor;
 	private String m_sponumber;
@@ -119,6 +130,13 @@ public class ICPOHeader extends clsMasterEntry{
 	private String m_sdatdeleted;
 	private String m_sgdoclink;
 	private String m_screatedbyfullname;
+	private String m_ipaymentonhold;
+	private String m_spaymentonholdbyfullname;
+	private String m_lpaymentonholdbyuserid;
+	private String m_datpaymentplacedonhold;
+	private String m_mpaymentonholdreason;
+	private String m_mpaymentonholdvendorcomment;
+	
 	private boolean bDebugMode = false;
 	
 	public ICPOHeader() {
@@ -195,6 +213,20 @@ public class ICPOHeader extends clsMasterEntry{
 		}
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
+		
+		if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") != 0){
+			m_ipaymentonhold = "1";
+		}else{
+			m_ipaymentonhold = "0";
+		}
+		m_spaymentonholdbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramspaymentonholdbyfullname, req).trim();
+		m_lpaymentonholdbyuserid = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramlpaymentonholdbyuserid, req).trim();
+		m_datpaymentplacedonhold = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramdatpaymentplacedonhold, req).trim();
+		if (m_datpaymentplacedonhold.compareToIgnoreCase("") == 0){
+			m_datpaymentplacedonhold = EMPTY_DATETIME_STRING;
+		}
+		m_mpaymentonholdreason = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdreason, req).trim();
+		m_mpaymentonholdvendorcomment = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Parammpaymentonholdvendorcomment, req).trim();
 	}
     public boolean load (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	Connection conn = clsDatabaseFunctions.getConnection(
@@ -292,13 +324,13 @@ public class ICPOHeader extends clsMasterEntry{
 				m_sshipvianame = rs.getString(SMTableicpoheaders.sshipvianame).trim();
 				m_sdatexpecteddate = clsDateAndTimeConversions.resultsetDateStringToString(
 						rs.getString(SMTableicpoheaders.datexpecteddate));
-				m_sdatassigned = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_sdatassigned = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTableicpoheaders.datassigned));
 				m_sassignedtofullname = rs.getString(SMTableicpoheaders.sassignedtofullname).trim();
 				m_scomment = rs.getString(SMTableicpoheaders.scomment).trim();
 				m_sdescription = rs.getString(SMTableicpoheaders.sdescription).trim();
 				m_sdeletedbyfullname = rs.getString(SMTableicpoheaders.sdeletedbyfullname).trim();
-				m_sdatdeleted = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				m_sdatdeleted = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 						rs.getString(SMTableicpoheaders.datdeleted));
 				if (rs.getString(SMTableicpoheaders.sgdoclink) == null){
 					m_sgdoclink = "";
@@ -306,6 +338,13 @@ public class ICPOHeader extends clsMasterEntry{
 					m_sgdoclink = rs.getString(SMTableicpoheaders.sgdoclink).trim();
 				}
 				m_screatedbyfullname = rs.getString(SMTableicpoheaders.screatedbyfullname).trim();
+				m_ipaymentonhold = Integer.toString(rs.getInt(SMTableicpoheaders.ipaymentonhold));
+				m_spaymentonholdbyfullname = rs.getString(SMTableicpoheaders.spaymentonholdbyfullname).trim();
+				m_lpaymentonholdbyuserid = Long.toString(rs.getLong(SMTableicpoheaders.lpaymentonholdbyuserid));
+				m_datpaymentplacedonhold = clsDateAndTimeConversions.resultsetDateTimeToTheSecondStringToString(
+					rs.getString(SMTableicpoheaders.datpaymentplacedonhold));
+				m_mpaymentonholdreason = rs.getString(SMTableicpoheaders.mpaymentonholdreason).trim();
+				m_mpaymentonholdvendorcomment = rs.getString(SMTableicpoheaders.mpaymentonholdvendorcomment).trim();
 				rs.close();
 			} else {
 				super.addErrorMessage("No " + ParamObjectName + " found for : '" + sPOID
@@ -438,7 +477,7 @@ public class ICPOHeader extends clsMasterEntry{
 	    		return false;
 	    	}
     	}
-    	if (!validate_entry_fields(conn)){
+    	if (!validate_entry_fields(conn, sUserID)){
     		return false;
     	}
     	String SQL = "";
@@ -490,6 +529,12 @@ public class ICPOHeader extends clsMasterEntry{
 			+ ", " + SMTableicpoheaders.sgdoclink
 			+ ", " + SMTableicpoheaders.screatedbyfullname
 			+ ", " + SMTableicpoheaders.lcreatedbyuserid
+			+ ", " + SMTableicpoheaders.ipaymentonhold
+			+ ", " + SMTableicpoheaders.spaymentonholdbyfullname
+			+ ", " + SMTableicpoheaders.lpaymentonholdbyuserid
+			+ ", " + SMTableicpoheaders.datpaymentplacedonhold
+			+ ", " + SMTableicpoheaders.mpaymentonholdreason
+			+ ", " + SMTableicpoheaders.mpaymentonholdvendorcomment
 			+ ") VALUES ("
 			+ " 0" //POs start as 'ENTERED'
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sponumber.trim()) + "'"
@@ -534,6 +579,12 @@ public class ICPOHeader extends clsMasterEntry{
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink).trim() + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(sUserFullName).trim() + "'"
 			+ ", " + sUserID + ""
+			+ ", " + m_ipaymentonhold
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_spaymentonholdbyfullname).trim() + "'"
+			+ ", " + m_lpaymentonholdbyuserid
+			+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(m_datpaymentplacedonhold) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mpaymentonholdreason).trim() + "'"
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(m_mpaymentonholdvendorcomment).trim() + "'"
 			+ ")"
 			;
 		}else{
@@ -617,6 +668,18 @@ public class ICPOHeader extends clsMasterEntry{
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sdescription.trim()) + "'"
 			+ ", " + SMTableicpoheaders.sgdoclink
 				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_sgdoclink.trim()) + "'"
+			+ ", " + SMTableicpoheaders.ipaymentonhold
+				+ " = " + m_ipaymentonhold
+			+ ", " + SMTableicpoheaders.spaymentonholdbyfullname
+				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_spaymentonholdbyfullname.trim()) + "'"
+			+ ", " + SMTableicpoheaders.lpaymentonholdbyuserid
+				+ " = " + m_lpaymentonholdbyuserid
+			+ ", " + SMTableicpoheaders.datpaymentplacedonhold
+				+ " = '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(m_datpaymentplacedonhold) + "'"
+			+ ", " + SMTableicpoheaders.mpaymentonholdreason
+				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mpaymentonholdreason.trim()) + "'"
+			+ ", " + SMTableicpoheaders.mpaymentonholdvendorcomment
+				+ " = '" + clsDatabaseFunctions.FormatSQLStatement(m_mpaymentonholdvendorcomment.trim()) + "'"						
 			+ " WHERE ("
 				+ "(" + SMTableicpoheaders.lid + " = " + m_slid + ")"
 			+ ")"
@@ -673,7 +736,7 @@ public class ICPOHeader extends clsMasterEntry{
     				rs = clsDatabaseFunctions.openResultSet(SQL, conn);
     				if (rs.next()) {
     					m_sassignedtofullname = rs.getString(SMTableicpoheaders.sassignedtofullname);
-    					m_sdatassigned = clsDateAndTimeConversions.resultsetDateTimeStringToString(
+    					m_sdatassigned = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
     							rs.getString(SMTableicpoheaders.datassigned));
     				} else {
     					super.addErrorMessage("Could not get last ID number with SQL: " + SQL);
@@ -763,7 +826,7 @@ public class ICPOHeader extends clsMasterEntry{
 	return true;
     }
 
-    public boolean validate_entry_fields (Connection conn){
+    public boolean validate_entry_fields (Connection conn, String sUserID){
         //Validate the entries here:
     	boolean bEntriesAreValid = true;
 
@@ -1042,6 +1105,127 @@ public class ICPOHeader extends clsMasterEntry{
         	bEntriesAreValid = false;
         }
 
+        //Payment on hold logic:
+		try {
+			m_ipaymentonhold  = clsValidateFormFields.validateLongIntegerField(m_ipaymentonhold, "Payment on hold", 0L, 1L);
+		} catch (Exception e) {
+			super.addErrorMessage(e.getMessage() + ".");
+			bEntriesAreValid = false;
+		}
+        
+        //Get the existing record, if there is one, and determine if it was already on hold:
+
+        //If the payment is on hold, then if it's a new PO we need to update the related fields:
+        boolean bOnHoldIsBeingSet = false;
+        if (getspaymentonhold().compareToIgnoreCase("1") == 0){
+        	//If it's a NEW PO, then we know the on hold is being set now:
+        	if (lID <= 0){
+        		bOnHoldIsBeingSet = true;
+        	//But if it's an EXISTING PO, then we have to see if it was already set or not:
+        	}else{
+            	ICPOHeader pohead = new ICPOHeader();
+            	pohead.setsID(m_slid);
+            	if (!pohead.load(conn)){
+                	super.addErrorMessage("Could not load previous version of PO with ID '" + m_slid + "' - " + pohead.getErrorMessages() + ".");
+                	bEntriesAreValid = false;
+            	}else{
+            		//Now figure out if the payment on hold status has changed:
+            		//If it was NOT on hold before, but it is now:
+            		if (pohead.getspaymentonhold().compareToIgnoreCase("0") == 0){
+            			bOnHoldIsBeingSet = true;
+            		}
+            	}
+        	}
+        }
+        if (bOnHoldIsBeingSet){
+			//We need to update the user id, date, etc.
+			setlpaymentonholdbyuserid(sUserID);
+			//Get the full user name:
+			String SQL = "SELECT"
+				+ " " + SMTableusers.sUserFirstName
+				+ ", " + SMTableusers.sUserLastName
+				+ " FROM " + SMTableusers.TableName
+				+ " WHERE ("
+					+ "(" + SMTableusers.lid + " = " + sUserID + ")"
+				+ ")"
+			;
+			try {
+				ResultSet rsUser = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+				if (rsUser.next()){
+					setspaymentonholdbyfullname(rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName));
+				}else{
+					setspaymentonholdbyfullname("N/A");
+				}
+				rsUser.close();
+			} catch (SQLException e) {
+				super.addErrorMessage("Error [1583526341] getting full user name for placing payment on hold with SQL: '"
+					+ SQL + "' - " + e.getMessage() + ".");
+				bEntriesAreValid = false;
+			}
+			//Get the on hold date:
+			ServletUtilities.clsDBServerTime dbtime;
+			try {
+				dbtime = new ServletUtilities.clsDBServerTime(conn);
+				setdatpaymentplacedonhold(dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
+				//System.out.println("[202066171436] " + "this.getdatpaymentplacedonhold = '" + this.getdatpaymentplacedonhold() + "'.");
+			} catch (Exception e) {
+				super.addErrorMessage("Error [1583526342] getting current date/time for placing payment on hold - " + e.getMessage() + ".");
+					bEntriesAreValid = false;
+			}
+        }
+
+		//If the payment is not on hold, make sure we clear all the related fields:
+		if (m_ipaymentonhold.compareToIgnoreCase("0") == 0){
+			m_spaymentonholdbyfullname = "";
+			m_lpaymentonholdbyuserid = "0";
+			m_datpaymentplacedonhold = SMUtilities.EMPTY_DATETIME_VALUE;
+			m_mpaymentonholdreason = "";
+			m_mpaymentonholdvendorcomment = "";
+		}
+		
+        m_spaymentonholdbyfullname = m_spaymentonholdbyfullname.trim();
+        if (m_spaymentonholdbyfullname.length() > SMTableicpoheaders.spaymentonholdbyfullnamelength){
+        	super.addErrorMessage("Payment on hold by full name is too long.");
+        	bEntriesAreValid = false;
+        }
+        
+		try {
+			m_lpaymentonholdbyuserid  = clsValidateFormFields.validateLongIntegerField(m_lpaymentonholdbyuserid, "Payment on hold user ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+		} catch (Exception e) {
+			super.addErrorMessage(e.getMessage() + ".");
+			bEntriesAreValid = false;
+		}
+		
+		try {
+			m_datpaymentplacedonhold  = clsValidateFormFields.validateDateTimeField(
+				m_datpaymentplacedonhold, 
+				"Date payment placed on hold", 
+				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+				true);
+		} catch (Exception e1) {
+			super.addErrorMessage(e1.getMessage() + ".");
+			bEntriesAreValid = false;
+		}
+		
+		System.out.println("[20206617470] " + "m_datpaymentplacedonhold = '" + m_datpaymentplacedonhold + "'.");
+		
+        m_mpaymentonholdreason = m_mpaymentonholdreason.trim();
+        if (m_ipaymentonhold.compareToIgnoreCase("1") == 0){
+        	if (m_mpaymentonholdreason.compareToIgnoreCase("") == 0){
+        		//Set the on hold fields back to blanks:
+        		setipaymentonhold("0");
+        		setdatpaymentplacedonhold(SMUtilities.EMPTY_DATETIME_VALUE);
+        		setlpaymentonholdbyuserid("0");
+        		setspaymentonholdbyfullname("");
+        		setmpaymentonholdreason("");
+        		setmpaymentonholdvendorcomment("");
+        		super.addErrorMessage("If the payment is on hold, it must have a reason noted.");
+        		bEntriesAreValid = false;
+        	}
+        }
+        
+        m_mpaymentonholdvendorcomment = m_mpaymentonholdvendorcomment.trim();
+        
         return bEntriesAreValid;
     }
 
@@ -1090,7 +1274,13 @@ public class ICPOHeader extends clsMasterEntry{
     	sResult += "\nDeleted by: " + this.getsdeletedbyfullname();
     	sResult += "\nDeleted date: " + this.getsdeleteddate();
     	sResult += "\nObject name: " + this.getObjectName();
-    	sResult += "\nGDoclink: " + this.getsgdoclink();
+    	sResult += "\nGDoc Link: " + this.getsgdoclink();
+    	sResult += "\nPayment on hold: " + this.getspaymentonhold();
+    	sResult += "\nPayment on hold by full user name: " + this.getspaymentonholdbyfullname();
+    	sResult += "\nPayment on hold by user ID: " + this.getlpaymentonholdbyuserid();
+    	sResult += "\nDate payment placed on hold: " + this.getdatpaymentplacedonhold();
+    	sResult += "\nPayment on hold reason: " + this.getmpaymentonholdreason();
+    	sResult += "\nOn hold vendor comment: " + this.getmpaymentonholdvendorcomment();
     	return sResult;
     }
 
@@ -1144,6 +1334,20 @@ public class ICPOHeader extends clsMasterEntry{
 		sQueryString += "&" + Paramsdeletedbyfullname + "=" + clsServletUtilities.URLEncode(getsdeletedbyfullname());
 		sQueryString += "&" + Paramsdatdeleted + "=" + clsServletUtilities.URLEncode(getsdeleteddate());
 		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		sQueryString += "&" + Paramsgdoclink + "=" + clsServletUtilities.URLEncode(getsgdoclink());
+		
+		sQueryString += "&" + Paramipaymentonhold + "=" + clsServletUtilities.URLEncode(getspaymentonhold());
+		sQueryString += "&" + Paramspaymentonholdbyfullname + "=" + clsServletUtilities.URLEncode(getspaymentonholdbyfullname());
+		sQueryString += "&" + Paramlpaymentonholdbyuserid + "=" + clsServletUtilities.URLEncode(getlpaymentonholdbyuserid());
+		sQueryString += "&" + Paramdatpaymentplacedonhold + "=" + clsServletUtilities.URLEncode(getdatpaymentplacedonhold());
+		sQueryString += "&" + Parammpaymentonholdreason + "=" + clsServletUtilities.URLEncode(getmpaymentonholdreason());
+		sQueryString += "&" + Parammpaymentonholdvendorcomment + "=" + clsServletUtilities.URLEncode(getmpaymentonholdvendorcomment());
 		return sQueryString;
 	}
 
@@ -1405,6 +1609,43 @@ public class ICPOHeader extends clsMasterEntry{
 	public void setcreatedbyfullname(String screatedbyfullname){
 		m_screatedbyfullname = screatedbyfullname;
 	}
+	public String getspaymentonhold(){
+		return m_ipaymentonhold;
+	}
+	public void setipaymentonhold(String spaymentonhold){
+		m_ipaymentonhold = spaymentonhold;
+	}
+	public String getspaymentonholdbyfullname(){
+		return m_spaymentonholdbyfullname;
+	}
+	public void setspaymentonholdbyfullname(String spaymentonholdbyfullname){
+		m_spaymentonholdbyfullname = spaymentonholdbyfullname;
+	}
+	public String getlpaymentonholdbyuserid(){
+		return m_lpaymentonholdbyuserid;
+	}
+	public void setlpaymentonholdbyuserid(String smpaymentonholdbyuserid){
+		m_lpaymentonholdbyuserid = smpaymentonholdbyuserid;
+	}
+	public String getdatpaymentplacedonhold(){
+		return m_datpaymentplacedonhold;
+	}
+	public void setdatpaymentplacedonhold(String sdatpaymentplacedonhold){
+		m_datpaymentplacedonhold = sdatpaymentplacedonhold;
+	}
+	public String getmpaymentonholdreason(){
+		return m_mpaymentonholdreason;
+	}
+	public void setmpaymentonholdreason(String mpaymentonholdreason){
+		m_mpaymentonholdreason = mpaymentonholdreason;
+	}
+	public String getmpaymentonholdvendorcomment(){
+		return m_mpaymentonholdvendorcomment;
+	}
+	public void setmpaymentonholdvendorcomment(String mpaymentonholdvendorcomment){
+		m_mpaymentonholdvendorcomment = mpaymentonholdvendorcomment;
+	}
+	
 	public boolean loadDefaultBillToInformation(ServletContext context, String sDBID, String sUser){
 		//If the ship to code is blank, don't update the ship to info:
 		if (m_sbillcode.compareToIgnoreCase("") == 0){
@@ -1744,6 +1985,12 @@ public class ICPOHeader extends clsMasterEntry{
     	m_sdatdeleted = EMPTY_DATETIME_STRING;
     	m_sgdoclink = "";
     	m_screatedbyfullname = "";
+    	m_ipaymentonhold = "0";
+    	m_spaymentonholdbyfullname = "";
+    	m_lpaymentonholdbyuserid = "0";
+    	m_datpaymentplacedonhold = EMPTY_DATETIME_STRING;
+    	m_mpaymentonholdreason = "";
+    	m_mpaymentonholdvendorcomment = "";
 		super.initVariables();
 		super.setObjectName(ParamObjectName);
     }

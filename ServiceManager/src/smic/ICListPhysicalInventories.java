@@ -156,7 +156,7 @@ public class ICListPhysicalInventories extends HttpServlet {
         			Build_Row(		
 	        			out,
 	        			Long.toString(rs.getLong(SMTableicphysicalinventories.lid)),
-	        			clsDateAndTimeConversions.resultsetDateTimeStringToString(
+	        			clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 	    					rs.getString(SMTableicphysicalinventories.datcreated)),
 	        			rs.getString(SMTableicphysicalinventories.screatedbyfullname),
 	        			rs.getString(SMTableicphysicalinventories.sdesc),

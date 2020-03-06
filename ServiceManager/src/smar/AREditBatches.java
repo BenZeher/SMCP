@@ -291,11 +291,11 @@ public class AREditBatches extends HttpServlet {
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeStringToString(sLastEditedDate));
+		sOutPut += clsServletUtilities.Fill_In_Empty_String_For_HTML_Cell(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(sLastEditedDate));
 		sOutPut += "</TD>";
 		
 		sOutPut += "<TD class=\"fieldleftaligned" + SMBatchStatuses.Get_Transaction_Status(iBatchStatus) + "\" >";
-		String sFormattedPostingDate = clsDateAndTimeConversions.resultsetDateTimeStringToString(sPostingDate);
+		String sFormattedPostingDate = clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(sPostingDate);
 		if (sFormattedPostingDate.compareToIgnoreCase("00/00/0000 00:00 AM") == 0){
 			sFormattedPostingDate = "(N/A)";
 		}

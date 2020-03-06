@@ -2173,7 +2173,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setmechid(Long.toString(rs.getLong(SMTableworkorders.imechid)));
 				setmechanicsinitials(rs.getString(SMTableworkorders.smechanicinitials));
 				setmechanicsname(rs.getString(SMTableworkorders.smechanicname));
-				setdattimeposted(clsDateAndTimeConversions.resultsetDateTimeStringToString(rs.getString(SMTableworkorders.dattimeposted)));
+				setdattimeposted(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(rs.getString(SMTableworkorders.dattimeposted)));
 				setdattimedone(clsDateAndTimeConversions.resultsetDateStringToString(rs.getString(SMTableworkorders.dattimedone)));
 				setstrimmedordernumber(rs.getString(SMTableworkorders.strimmedordernumber));
 				setssignedbyname(rs.getString(SMTableworkorders.ssignedbyname));
@@ -2188,13 +2188,13 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setstimestamp(Long.toString(rs.getLong(SMTableworkorders.ltimestamp)));
 				setminstructions(rs.getString(SMTableworkorders.minstructions));
 				setmmanagernotes(rs.getString(SMTableworkorders.mmanagersnotes));
-				setdattimeleftprevious(clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				setdattimeleftprevious(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTableworkorders.dattimeleftprevious)));
-				setdattimearrivedatcurrent(clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				setdattimearrivedatcurrent(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTableworkorders.dattimearrivedatcurrent)));
-				setdattimeleftcurrent(clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				setdattimeleftcurrent(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTableworkorders.dattimeleftcurrent)));
-				setdattimearrivedatnext(clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				setdattimearrivedatnext(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 					rs.getString(SMTableworkorders.dattimearrivedatnext)));
 				setsassistant(rs.getString(SMTableworkorders.sassistant));
 				setsstartingtime(rs.getString(SMTableworkorders.sstartingtime));
@@ -2206,7 +2206,7 @@ public class SMWorkOrderHeader extends clsMasterEntry{//java.lang.Object{
 				setslasteditedbyfullname(rs.getString(SMTableworkorders.slasteditedbyfullname));
 				setsjoborder(Long.toString(rs.getLong(SMTableworkorders.ijoborder)));
 				setsschedulecomment(rs.getString(SMTableworkorders.sschedulecomment));
-				setsdattimelastschedulechange(clsDateAndTimeConversions.resultsetDateTimeStringToString(
+				setsdattimelastschedulechange(clsDateAndTimeConversions.resultsetDateTimeToTheMinuteStringToString(
 				rs.getString(SMTableworkorders.dattimelastschedulechange)));
 				setsschedulechangedbyfullname(rs.getString(SMTableworkorders.sschedulechangedbyfullname));
 				setsgdoclink(rs.getString(SMTableworkorders.sgdoclink));

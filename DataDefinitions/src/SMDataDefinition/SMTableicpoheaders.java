@@ -51,6 +51,12 @@ public class SMTableicpoheaders {
 	public static final String screatedbyfullname = "screatedbyfullname";
 	public static final String lcreatedbyuserid = "lcreatedbyuserid";
 	//public static final String lphase = "lphase"; - removed 2/21/2019 - TJR
+	public static final String ipaymentonhold = "ipaymentonhold";
+	public static final String spaymentonholdbyfullname = "spaymentonholdbyfullname";
+	public static final String lpaymentonholdbyuserid = "lpaymentonholdbyuserid";
+	public static final String datpaymentplacedonhold = "datpaymentplacedonhold";
+	public static final String mpaymentonholdreason = "mpaymentonholdreason";
+	public static final String mpaymentonholdvendorcomment = "mpaymentonholdvendorcomment";
 	
 	//Field lengths:
 	public static final int svendorLength = 24;
@@ -90,6 +96,7 @@ public class SMTableicpoheaders {
 	public static final int sdescriptionLength = 60;
 	public static final int sdeletedbyLength = 128;
 	public static final int screatedbylength = 128;
+	public static final int spaymentonholdbyfullnamelength = 128;
 	
 	public static final int STATUS_ENTERED = 0;
 	public static final int STATUS_PARTIALLY_RECEIVED = 1;

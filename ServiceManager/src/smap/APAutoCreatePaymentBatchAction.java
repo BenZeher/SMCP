@@ -108,7 +108,7 @@ public class APAutoCreatePaymentBatchAction extends HttpServlet{
 			autopaymentbatch.save_with_data_transaction(getServletContext(), smaction.getsDBID(), smaction.getUserID(), smaction.getFullUserName(), false);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(getServletContext(), conn, "[1546998939]");
-			String sWarning = "Could not SAVE payment batch - " + e.getMessage();
+			String sWarning = SMUtilities.URLEncode("Could not SAVE payment batch - " + e.getMessage());
 			if (sWarning.length() > MAX_ERROR_LENGTH){
 				sWarning = sWarning.substring(0, MAX_ERROR_LENGTH) + "...";
 			}

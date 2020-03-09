@@ -64,6 +64,9 @@ public class ASAlarmListenerAction extends HttpServlet{
 		String sPasscode = clsManageRequestParameters.get_Request_Parameter(SSConstants.QUERY_KEY_PASSCODE, request);
 		String sControllerName = clsManageRequestParameters.get_Request_Parameter(SSConstants.QUERY_KEY_CONTROLLERNAME, request);
 		
+		sPasscode = sPasscode.replaceAll("'", "");
+		sControllerName = sControllerName.replaceAll("'", "");
+		
 		//Need to build some checking in here, but for now, we'll just use the DBID to get a connection and make an entry in the log:
 		Connection conn = null;
 		try {

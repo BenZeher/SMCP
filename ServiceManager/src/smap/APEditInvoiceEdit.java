@@ -1036,11 +1036,23 @@ public class APEditInvoiceEdit  extends HttpServlet {
 		String sPlacedOnHoldBy = "";
 		if (entry.getsionhold().compareToIgnoreCase("1") == 0){
 			sPlacedOnHoldBy = "User ID: " + entry.getsonholdbyuserid() + " - " + entry.getsonholdbyfullname();
+			if (entry.getsonholdpoheaderid().compareToIgnoreCase("0") != 0){
+				if(bAllowPOViewing){
+					sPlacedOnHoldBy += " on "
+						+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
+						+ "?" + ICPOHeader.Paramlid + "=" + entry.getsonholdpoheaderid()
+						+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() + "\">PO #" + entry.getsonholdpoheaderid() + "</A>"
+					;
+				}else{
+					sPlacedOnHoldBy += " on PO #" + entry.getsonholdpoheaderid();
+				}
+			}
 		}
 		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Placed on hold by:</TD>\n";
 		s += "    <TD COLSPAN = 3>" + sPlacedOnHoldBy
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.lonholdbyuserid + "\" VALUE=\"" + entry.getsonholdbyuserid() + "\">"
 			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.sonholdbyfullname + "\" VALUE=\"" + entry.getsonholdbyfullname() + "\">"
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.lonholdpoheaderid + "\" VALUE=\"" + entry.getsonholdpoheaderid() + "\">"
 		+ "</TD>\n"
 		;
 		

@@ -57,7 +57,7 @@ public class SMTableapbatchentries {
 	public static final String lonholdbyuserid = "lonholdbyuserid";
 	public static final String datplacedonhold = "datplacedonhold";
 	public static final String monholdreason = "monholdreason";
-	public static final String ionholdpoheaderid = "ionholdpoheaderid";
+	public static final String lonholdpoheaderid = "lonholdpoheaderid";
 	
 	//Field lengths:
 	public static final int sdocnumberLength = 75;

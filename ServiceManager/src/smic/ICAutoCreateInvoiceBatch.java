@@ -392,6 +392,7 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 									entry.setsonholdbyuserid(pohead.getlpaymentonholdbyuserid());
 									entry.setsdatplacedonhold(pohead.getdatpaymentplacedonhold());
 									entry.setsonholdreason(pohead.getmpaymentonholdreason());
+									entry.setsonholdpoheaderid(sPOHeaderID);
 								}
 							}
 						}

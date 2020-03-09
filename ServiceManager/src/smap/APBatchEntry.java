@@ -12,8 +12,6 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import com.sun.xml.internal.ws.encoding.soap.SOAP12Constants;
-
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMOption;
 import SMDataDefinition.SMTableapaccountsets;
@@ -22,7 +20,6 @@ import SMDataDefinition.SMTableapbatchentrylines;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapchecks;
 import SMDataDefinition.SMTableaptransactions;
-import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTabletax;
@@ -37,7 +34,6 @@ import ServletUtilities.clsValidateFormFields;
 import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;
-import smic.ICPOHeader;
 
 public class APBatchEntry {
 
@@ -89,6 +85,7 @@ public class APBatchEntry {
 	private String m_lonholdbyuserid;
 	private String m_datplacedonhold;
 	private String m_monholdreason;
+	private String m_sonholdpoheaderid;
 	
 	private ArrayList<APBatchEntryLine>m_arrBatchEntryLines;
 
@@ -277,6 +274,7 @@ public class APBatchEntry {
 		setsonholdbyuserid(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.lonholdbyuserid, req).replace("&quot;", "\""));
 		setsdatplacedonhold(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.datplacedonhold, req).replace("&quot;", "\""));
 		setsonholdreason(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.monholdreason, req).replace("&quot;", "\""));
+		setsonholdpoheaderid(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.lonholdpoheaderid, req).replace("&quot;", "\""));
 		
 		readEntryLines(req);
 	}
@@ -328,6 +326,7 @@ public class APBatchEntry {
 		newentry.setsonholdbyuserid(getsonholdbyuserid());
 		newentry.setsdatplacedonhold(getsdatonhold());
 		newentry.setsonholdreason(getsonholdreason());
+		newentry.setsonholdpoheaderid(getsonholdpoheaderid());
 		
 		for (int i = 0; i < this.m_arrBatchEntryLines.size(); i++){
 			newentry.addLine(m_arrBatchEntryLines.get(i));
@@ -572,6 +571,7 @@ public class APBatchEntry {
 			+ ", " + SMTableapbatchentries.lonholdbyuserid
 			+ ", " + SMTableapbatchentries.datplacedonhold
 			+ ", " + SMTableapbatchentries.monholdreason
+			+ ", " + SMTableapbatchentries.lonholdpoheaderid
 			
 			+ ")"
 			+ " VALUES ("
@@ -619,7 +619,9 @@ public class APBatchEntry {
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyfullname()) + "'"
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyuserid())
 			+ ", '" + getsdatplacedonholdInSQLFormat() + "'"
-					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getsonholdpoheaderid())		
+			
 			+ ")"
 			
 			+ " ON DUPLICATE KEY UPDATE"
@@ -667,6 +669,7 @@ public class APBatchEntry {
 			+ ", " + SMTableapbatchentries.lonholdbyuserid + " = " + getsonholdbyuserid()
 			+ ", " + SMTableapbatchentries.datplacedonhold + " = '" + getsdatplacedonholdInSQLFormat() + "'"
 			+ ", " + SMTableapbatchentries.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
+			+ ", " + SMTableapbatchentries.lonholdpoheaderid + " = " + getsonholdpoheaderid()
 		;
 		
 		//System.out.println("[1494260359] - SQL = '" + SQL + "'");
@@ -1206,6 +1209,7 @@ public class APBatchEntry {
 			setsonholdbyuserid("0");
 			setsdatplacedonhold(SMUtilities.EMPTY_DATETIME_VALUE);
 			setsonholdreason("");
+			setsonholdpoheaderid("0");
 		}
 
 		setsonholdbyfullname(getsonholdbyfullname().trim());
@@ -2268,6 +2272,7 @@ public class APBatchEntry {
 				setsdatplacedonhold(clsDateAndTimeConversions.resultsetDateTimeToTheSecondStringToString(
 						rs.getString(SMTableapbatchentries.datplacedonhold)));
 				setsonholdreason(rs.getString(SMTableapbatchentries.monholdreason));
+				setsonholdpoheaderid(Long.toString(rs.getInt(SMTableapbatchentries.lonholdpoheaderid)));
 			}else{
 				rs.close();
 				throw new Exception("Error [1489248040] - No AP batch entry found with lid = " + getslid() + ".");
@@ -2793,6 +2798,12 @@ public class APBatchEntry {
 	public void setsonholdreason(String sonholdreason){
 		m_monholdreason = sonholdreason;
 	}
+	public String getsonholdpoheaderid(){
+		return m_sonholdpoheaderid;
+	}
+	public void setsonholdpoheaderid(String sonholdpoheaderid){
+		m_sonholdpoheaderid = sonholdpoheaderid;
+	}
 	
 	//Negative numbers, like credit amounts, payment amts, etc., are carried ALL THROUGH THE SYSTEM as negatives.  But when they are displayed 
 	//to the user on the entry screen, they appear without the negative sign.  So just before we display them on the screen, we need a function
@@ -3068,6 +3079,7 @@ public class APBatchEntry {
 		sQueryString += "&" + SMTableapbatchentries.lonholdbyuserid + "=" + clsServletUtilities.URLEncode(getsonholdbyuserid());
 		sQueryString += "&" + SMTableapbatchentries.datplacedonhold + "=" + clsServletUtilities.URLEncode(getsdatonhold());
 		sQueryString += "&" + SMTableapbatchentries.monholdreason + "=" + clsServletUtilities.URLEncode(getsonholdreason());
+		sQueryString += "&" + SMTableapbatchentries.lonholdpoheaderid + "=" + clsServletUtilities.URLEncode(getsonholdpoheaderid());
 		return sQueryString;
 	}
 	public String dumpData(){
@@ -3115,6 +3127,7 @@ public class APBatchEntry {
 		s += "  On hold by user ID: " + getsonholdbyuserid() + "\n";
 		s += "  Date placed on hold: " + getsdatonhold() + "\n";
 		s += "  On hold reason: " + getsonholdreason() + "\n";
+		s += "  On hold PO header ID: " + getsonholdpoheaderid() + "\n";
 		
 		s += "  -- Number of lines: " + m_arrBatchEntryLines.size() + "\n";
 		
@@ -3171,6 +3184,7 @@ public class APBatchEntry {
 		m_lonholdbyuserid = "0";
 		m_datplacedonhold = "0";
 		m_monholdreason = "";
+		m_sonholdpoheaderid = "0";
 		m_arrBatchEntryLines = new ArrayList<APBatchEntryLine>(0);
 	}
 }

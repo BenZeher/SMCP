@@ -467,8 +467,9 @@ public class ICPOHeader extends clsMasterEntry{
     	//bForceSave tells the system to save the PO even if it's completed or deleted, e.g. when we are trying to update a vendor
     	if (!bForceSave){
 	    	if (
-	    			(getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_COMPLETE)) == 0)
-	    			|| (getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_DELETED)) == 0)
+	    			//We're allowing 'completed' orders to be updated so that people can update 'on hold' information for them:
+	    			//(getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_COMPLETE)) == 0)
+	    			(getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_DELETED)) == 0)
 	    	){
 	    		super.addErrorMessage(SMTableicpoheaders.getStatusDescription(Integer.parseInt(getsstatus())) 
 	    			+ " purchase orders cannot be updated.");
@@ -1205,7 +1206,7 @@ public class ICPOHeader extends clsMasterEntry{
 			bEntriesAreValid = false;
 		}
 		
-		System.out.println("[20206617470] " + "m_datpaymentplacedonhold = '" + m_datpaymentplacedonhold + "'.");
+		//System.out.println("[20206617470] " + "m_datpaymentplacedonhold = '" + m_datpaymentplacedonhold + "'.");
 		
         m_mpaymentonholdreason = m_mpaymentonholdreason.trim();
         if (m_ipaymentonhold.compareToIgnoreCase("1") == 0){

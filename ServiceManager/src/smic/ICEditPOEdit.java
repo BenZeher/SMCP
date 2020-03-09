@@ -240,6 +240,9 @@ public class ICEditPOEdit  extends HttpServlet {
 				smedit.getsDBID(),
 				(String) smedit.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 		);
+		
+		boolean bEditingOnHoldAllowed = bEditingPOAllowed;
+				
 		if (bEditingPOAllowed){
 			smedit.getPWOut().println(
 				"&nbsp;&nbsp;&nbsp;<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) 
@@ -337,6 +340,10 @@ public class ICEditPOEdit  extends HttpServlet {
 			{
 			bEditingPOAllowed = false;
 			}
+		
+		if (Integer.parseInt(entry.getsstatus()) == SMTableicpoheaders.STATUS_DELETED){
+			bEditingOnHoldAllowed = false;
+		}
 
 		try {
 			smedit.getPWOut().println(getEditHTML(smedit, entry, bEditingPOAllowed, bPODocumentViewingAllowed, bUseGoogleDrivePicker));
@@ -352,8 +359,14 @@ public class ICEditPOEdit  extends HttpServlet {
 		}
 		
 		//If PO can be edited, display Update and Delete buttons
+		if (bEditingPOAllowed || bEditingOnHoldAllowed){
+			smedit.getPWOut().println("<P>" + createUpdateButton());	
+		}
 		if (bEditingPOAllowed){
-			smedit.getPWOut().println("<P>" + createUpdateButton() + createDeleteButton() + "</P>");	
+			smedit.getPWOut().println(createDeleteButton());
+		}
+		if (bEditingPOAllowed || bEditingOnHoldAllowed){
+			smedit.getPWOut().println("<P>");	
 		}
 
 		//List the po lines and receipts here:
@@ -827,6 +840,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		s += "  </TR>" + "\n";
 		
 		s += "  <TR>\n";
+		
 		//On hold checkbox:
 		String sChecked = "";
 		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){

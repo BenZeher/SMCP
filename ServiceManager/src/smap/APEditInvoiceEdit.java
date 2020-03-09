@@ -33,6 +33,7 @@ import ServletUtilities.clsStringFunctions;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import smic.ICPOHeader;
 
 public class APEditInvoiceEdit  extends HttpServlet {
 
@@ -536,34 +537,9 @@ public class APEditInvoiceEdit  extends HttpServlet {
     		+ "&nbsp;<div style = \"" + " display: inline; color: black" + "\" id=\"" + CALCULATED_LINE_TOTAL_FIELD_CONTAINER + "\"><B>LINE TOTAL:&nbsp;<label id=\"" + CALCULATED_LINE_TOTAL_FIELD + "\" >" 
 			+ "" + "</label></FONT></B></div></TD>\n";
     	
-    	//On hold:
-     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >On&nbsp;hold?</TD>\n"
- 		    ;
-     	if (bEditable){
-     		String sTemp = "";
-     		if (entry.getsionhold().compareToIgnoreCase("0") != 0){
-    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
-    		}
-     		sControlHTML = "<INPUT TYPE=CHECKBOX"
-     			+ " NAME=\"" + SMTableapbatchentries.ionhold + "\""
-     			+ " ID=\"" + SMTableapbatchentries.ionhold + "\""
-     			+ " " + sTemp
- 	    		+ " onchange=\"flagDirty();\""
- 	    		+ ">"
- 	    	;
-     	}else{
-     		String sOnHoldValue = "N";
-     		if (entry.getsionhold().compareToIgnoreCase("1") == 0){
-     			sOnHoldValue = "Y";
-     		}
-     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.ionhold + "\""
- 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsionhold()) + "\""
- 	    		+ ">"
- 	    		+ "<B>" + sOnHoldValue + "</B>"
- 	    	;
-     	}
-     	
-    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+    	//Empty columns:
+    	s += "    <TD>&nbsp;</TD>\n";
+    	s += "    <TD>&nbsp;</TD>\n";
     	
     	s += "  <TR>\n";
     	
@@ -1014,7 +990,87 @@ public class APEditInvoiceEdit  extends HttpServlet {
  
     	
     	s += "  </TR>\n";
+    	
+    	
+    	//On hold:
+    	s += "  <TR>\n";
+     	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_RIGHT_JUSTIFIED_ARIAL_SMALL_WO_BORDER_BOLD   + "\" >On&nbsp;hold?</TD>\n"
+ 		    ;
+     	if (bEditable){
+     		String sTemp = "";
+     		if (entry.getsionhold().compareToIgnoreCase("0") != 0){
+    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+    		}
+     		sControlHTML = "<INPUT TYPE=CHECKBOX"
+     			+ " NAME=\"" + SMTableapbatchentries.ionhold + "\""
+     			+ " ID=\"" + SMTableapbatchentries.ionhold + "\""
+     			+ " " + sTemp
+ 	    		+ " onchange=\"flagDirty();\""
+ 	    		+ ">"
+ 	    	;
+     	}else{
+     		String sOnHoldValue = "N";
+     		if (entry.getsionhold().compareToIgnoreCase("1") == 0){
+     			sOnHoldValue = "Y";
+     		}
+     		sControlHTML = "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.ionhold + "\""
+ 	    		+ " VALUE=\"" + clsStringFunctions.filter(entry.getsionhold()) + "\""
+ 	    		+ ">"
+ 	    		+ "<B>" + sOnHoldValue + "</B>"
+ 	    	;
+     	}
+     	
+    	s += "    <TD class = \"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER   + "\" >" + sControlHTML + "</TD>\n";
+    	
+		//Date placed on hold:
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Date placed on hold:</TD>\n";
+		s += "    <TD>" + entry.getsdatonhold() 
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.datplacedonhold + "\" VALUE=\"" + entry.getsdatonhold() + "\">"
+			+ "</TD>\n"
+		;
 		
+		s += "  </TR>\n";
+    	
+		s += "  <TR>\n";
+		//Placed on hold by:
+		String sPlacedOnHoldBy = "";
+		if (entry.getsionhold().compareToIgnoreCase("1") == 0){
+			sPlacedOnHoldBy = "User ID: " + entry.getsonholdbyuserid() + " - " + entry.getsonholdbyfullname();
+		}
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Placed on hold by:</TD>\n";
+		s += "    <TD COLSPAN = 3>" + sPlacedOnHoldBy
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.lonholdbyuserid + "\" VALUE=\"" + entry.getsonholdbyuserid() + "\">"
+			+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.sonholdbyfullname + "\" VALUE=\"" + entry.getsonholdbyfullname() + "\">"
+		+ "</TD>\n"
+		;
+		
+		s += "  </TR>\n";
+		
+		s += "  <TR>\n";
+		//On hold reason:
+		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Reason for hold:</TD>\n";
+		s += "    <TD colspan=3>";
+		
+		//If the entry is already placed on hold, or if the entry just isn't editable, then don't let the user edit the reason:
+		if ((entry.getsionhold().compareToIgnoreCase("1") == 0) || (!bEditable)){
+			s += "<I>" + entry.getsonholdreason().replace("\"", "&quot;") + "</I>"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.monholdreason 
+				+ "\" VALUE=\"" + entry.getsonholdreason().replace("\"", "&quot;") + "\">"
+			;
+		}else{
+			s += "<TEXTAREA NAME=\"" + SMTableapbatchentries.monholdreason + "\""
+				+ " onchange=\"flagDirty();\""
+				+ " rows=\"1\""
+				+ " cols=\"80\""
+				+ ">"
+				+ entry.getsonholdreason().replace("\"", "&quot;")
+				+ "</TEXTAREA>"
+				;
+		}
+
+		s += "</TD>\n";
+		s += "  </TR>\n";
+    	
     	s += "</TABLE>\n";
     	
     	//Display the first row of control buttons:

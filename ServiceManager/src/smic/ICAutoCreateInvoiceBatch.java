@@ -379,6 +379,21 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
             		try {
 						if(rcpt.load(conn)){
 							sPOHeaderID = rcpt.getspoheaderid();
+							//If we get a valid PO, then check the ON HOLD information:
+							ICPOHeader pohead = new ICPOHeader();
+							pohead.setsID(sPOHeaderID);
+							if (!pohead.load(conn)){
+								//Nothing to do here but skip it and go on....
+							}else{
+								if (pohead.getspaymentonhold().compareToIgnoreCase("1") == 0){
+									//set the invoice on hold:
+									entry.setsionhold(pohead.getspaymentonhold());
+									entry.setsonholdbyfullname(pohead.getspaymentonholdbyfullname());
+									entry.setsonholdbyuserid(pohead.getlpaymentonholdbyuserid());
+									entry.setsdatplacedonhold(pohead.getdatpaymentplacedonhold());
+									entry.setsonholdreason(pohead.getmpaymentonholdreason());
+								}
+							}
 						}
 					} catch (Exception e) {
 						//No need to catch this - leave the PO at '0'
@@ -393,6 +408,8 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
             		line.setslporeceiptlineid(invline.getsporeceiptlineid());
             		entry.addLine(line);
             	}
+            	
+            	//Add any 'on hold' information:
             	batch.addBatchEntry(entry);
         	}
         } catch (Exception e){

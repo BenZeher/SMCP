@@ -53,6 +53,12 @@ public class SMTableapbatchentries {
 	
 	public static final String iinvoiceincludestax = "iinvoiceincludestax";
 	
+	public static final String sonholdbyfullname = "sonholdbyfullname";
+	public static final String lonholdbyuserid = "lonholdbyuserid";
+	public static final String datplacedonhold = "datplacedonhold";
+	public static final String monholdreason = "monholdreason";
+	public static final String ionholdpoheaderid = "ionholdpoheaderid";
+	
 	//Field lengths:
 	public static final int sdocnumberLength = 75;
 	public static final int sentrydescriptionLength = 128;
@@ -78,6 +84,7 @@ public class SMTableapbatchentries {
 	public static final int sremittopostalcodeLength = 20;	 	 	 
 	public static final int sremittocountryLength = 30;
 	public static final int sapplytoinvoicenumberLength = 75;
+	public static final int sonholdbyfullnameLength = 128;
 	
 	public static final int PAYMENT_DOCNUMBER_LENGTH = 12;
 	public static final int REVERSAL_DOCNUMBER_LENGTH = 12;

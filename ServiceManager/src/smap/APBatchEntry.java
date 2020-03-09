@@ -12,6 +12,8 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import com.sun.xml.internal.ws.encoding.soap.SOAP12Constants;
+
 import SMClasses.SMBatchStatuses;
 import SMClasses.SMOption;
 import SMDataDefinition.SMTableapaccountsets;
@@ -20,9 +22,11 @@ import SMDataDefinition.SMTableapbatchentrylines;
 import SMDataDefinition.SMTableapbatches;
 import SMDataDefinition.SMTableapchecks;
 import SMDataDefinition.SMTableaptransactions;
+import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpoinvoiceheaders;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTabletax;
+import SMDataDefinition.SMTableusers;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -33,6 +37,7 @@ import ServletUtilities.clsValidateFormFields;
 import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;
+import smic.ICPOHeader;
 
 public class APBatchEntry {
 
@@ -80,6 +85,11 @@ public class APBatchEntry {
 	private String m_siprintingfinalized;
 	private String m_siinvoiceincludestax;
 	
+	private String m_sonholdbyfullname;
+	private String m_lonholdbyuserid;
+	private String m_datplacedonhold;
+	private String m_monholdreason;
+	
 	private ArrayList<APBatchEntryLine>m_arrBatchEntryLines;
 
 	public static final int LINE_NUMBER_PADDING_LENGTH = 6;
@@ -114,11 +124,14 @@ public class APBatchEntry {
 		
 		setsdatentrydate(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.datentrydate, req).replace("&quot;", "\""));
 		//System.out.println("[1541185712] entry.getsdatentrydate() = '" + getsdatentrydate() + "'");
+		
+		//If it's a '6 digit' date:
 		if (clsDateAndTimeConversions.IsValidDateString(SMUtilities.DATE_FORMAT_SIX_DIGIT_FOR_DISPLAY, getsdatentrydate())){
 			try {
-				System.out.println("[1541185713] entry.getsdatentrydate() = '" + getsdatentrydate() + "'");
+				//System.out.println("[1541185713] entry.getsdatentrydate() = '" + getsdatentrydate() + "'");
 				setsdatentrydate(clsDateAndTimeConversions.convertDateFormat(getsdatentrydate(), SMUtilities.DATE_FORMAT_SIX_DIGIT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.EMPTY_DATE_VALUE));
 			} catch (Exception e) {
+				//System.out.println("[202069151434] " + "Error wth entry date string '" + clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.datentrydate, req).replace("&quot;", "\"") + "'.");
 				//Don't have to do anything here, since we only have to deal with it IF the user entered a valid '6 digit' date (e.g. 060117)
 			}
 		}
@@ -260,6 +273,11 @@ public class APBatchEntry {
 			}
 		}
 
+		setsonholdbyfullname(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.sonholdbyfullname, req).replace("&quot;", "\""));
+		setsonholdbyuserid(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.lonholdbyuserid, req).replace("&quot;", "\""));
+		setsdatplacedonhold(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.datplacedonhold, req).replace("&quot;", "\""));
+		setsonholdreason(clsManageRequestParameters.get_Request_Parameter(SMTableapbatchentries.monholdreason, req).replace("&quot;", "\""));
+		
 		readEntryLines(req);
 	}
 	public APBatchEntry copyEntry(){
@@ -305,6 +323,11 @@ public class APBatchEntry {
 		newentry.setsterms(getsterms());
 		newentry.setsvendoracct(getsvendoracct());
 		newentry.setsvendorname(getsvendorname());
+		
+		newentry.setsonholdbyfullname(getsonholdbyfullname());
+		newentry.setsonholdbyuserid(getsonholdbyuserid());
+		newentry.setsdatplacedonhold(getsdatonhold());
+		newentry.setsonholdreason(getsonholdreason());
 		
 		for (int i = 0; i < this.m_arrBatchEntryLines.size(); i++){
 			newentry.addLine(m_arrBatchEntryLines.get(i));
@@ -545,6 +568,11 @@ public class APBatchEntry {
 			+ ", " + SMTableapbatchentries.bdtaxrate
 			+ ", " + SMTableapbatchentries.staxtype
 			+ ", " + SMTableapbatchentries.icalculateonpurchaseorsale
+			+ ", " + SMTableapbatchentries.sonholdbyfullname
+			+ ", " + SMTableapbatchentries.lonholdbyuserid
+			+ ", " + SMTableapbatchentries.datplacedonhold
+			+ ", " + SMTableapbatchentries.monholdreason
+			
 			+ ")"
 			+ " VALUES ("
 			+ "" + getsentryamount().trim().replace(",", "")
@@ -588,7 +616,10 @@ public class APBatchEntry {
 			+ ", " + getsbdtaxrate()
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getstaxtype()) + "'"
 			+ ", " + getsicalculateonpurchaseorsale()
-			
+			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyfullname()) + "'"
+			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyuserid())
+			+ ", '" + getsdatplacedonholdInSQLFormat() + "'"
+					+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
 			+ ")"
 			
 			+ " ON DUPLICATE KEY UPDATE"
@@ -632,6 +663,10 @@ public class APBatchEntry {
 			+ ", " + SMTableapbatchentries.bdtaxrate + " = " + getsbdtaxrate().trim().replace(",", "")
 			+ ", " + SMTableapbatchentries.staxtype + " = '" + clsDatabaseFunctions.FormatSQLStatement(getstaxtype()) + "'"
 			+ ", " + SMTableapbatchentries.icalculateonpurchaseorsale + " = " + getsicalculateonpurchaseorsale()
+			+ ", " + SMTableapbatchentries.sonholdbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyfullname()) + "'"
+			+ ", " + SMTableapbatchentries.lonholdbyuserid + " = " + getsonholdbyuserid()
+			+ ", " + SMTableapbatchentries.datplacedonhold + " = '" + getsdatplacedonholdInSQLFormat() + "'"
+			+ ", " + SMTableapbatchentries.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
 		;
 		
 		//System.out.println("[1494260359] - SQL = '" + SQL + "'");
@@ -848,6 +883,7 @@ public class APBatchEntry {
 		}
 		
 		@SuppressWarnings("unused")
+		
 		java.sql.Date datEntry = null;
 		try {
 			datEntry = clsDateAndTimeConversions.StringTojavaSQLDate(SMUtilities.DATE_FORMAT_FOR_DISPLAY, m_sdatentrydate);
@@ -855,6 +891,7 @@ public class APBatchEntry {
 			try {
 				m_sdatentrydate  = clsValidateFormFields.validateStandardDateField(m_sdatentrydate, "Entry date", false);
 			} catch (Exception e1) {
+				//System.out.println("[2020691524179] " + "error with m_sdatentrydate");
 				sResult += "  " + e.getMessage() + ".";
 			}
 		}
@@ -1107,6 +1144,107 @@ public class APBatchEntry {
 		}
 		
 		setsapplytoinvoicenumber(getsapplytoinvoicenumber().trim());
+
+		try {
+			m_sionhold  = clsValidateFormFields.validateLongIntegerField(m_sionhold, "On hold", 0L, 1L);
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+
+		
+		if (getsionhold().compareToIgnoreCase("1") == 0){
+			//Determine if the entry is being put on hold NOW, or if it was already on hold - either from a previous save
+			// OR from someone putting the PO on hold earlier:
+			//If the on hold user ID is not valid, then we'll assume it's just being put on hold now:
+	        boolean bOnHoldIsBeingSet = false;
+	        if (
+	        	(getsonholdbyuserid().compareToIgnoreCase("0") == 0) 
+	        	|| (getsonholdbyuserid().compareToIgnoreCase("-1") == 0) 
+	        	|| (getsonholdbyuserid().compareToIgnoreCase("") == 0) 
+	        ){
+	        	bOnHoldIsBeingSet = true;
+	        }
+	        
+	         if (bOnHoldIsBeingSet){
+	 			//We need to update the user id, date, etc.
+	        	 setsonholdbyuserid(sUserID);
+	 			//Get the full user name:
+	 			SQL = "SELECT"
+	 				+ " " + SMTableusers.sUserFirstName
+	 				+ ", " + SMTableusers.sUserLastName
+	 				+ " FROM " + SMTableusers.TableName
+	 				+ " WHERE ("
+	 					+ "(" + SMTableusers.lid + " = " + sUserID + ")"
+	 				+ ")"
+	 			;
+	 			try {
+	 				ResultSet rsUser = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+	 				if (rsUser.next()){
+	 					setsonholdbyfullname(rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName));
+	 				}else{
+	 					setsonholdbyfullname("N/A");
+	 				}
+	 				rsUser.close();
+	 			} catch (SQLException e) {
+	 				throw new Exception("Error [1583778961] getting full user name for placing payment on hold with SQL: '"
+	 					+ SQL + "' - " + e.getMessage() + ".");
+	 			}
+	 			//Get the on hold date:
+	 			ServletUtilities.clsDBServerTime dbtime;
+	 			try {
+	 				dbtime = new ServletUtilities.clsDBServerTime(conn);
+	 				setsdatplacedonhold(dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
+	 				//System.out.println("[202066171436] " + "this.getdatpaymentplacedonhold = '" + this.getdatpaymentplacedonhold() + "'.");
+	 			} catch (Exception e) {
+	 				throw new Exception("Error [1583779014] getting current date/time for placing payment on hold - " + e.getMessage() + ".");
+	 			}
+	         }
+	        
+		}else{
+			//Clear all the 'on hold' fields:
+			setsonholdbyfullname("");
+			setsonholdbyuserid("0");
+			setsdatplacedonhold(SMUtilities.EMPTY_DATETIME_VALUE);
+			setsonholdreason("");
+		}
+
+		setsonholdbyfullname(getsonholdbyfullname().trim());
+        if (getsonholdbyfullname().length() > SMTableapbatchentries.sonholdbyfullnameLength){
+        	sResult += "  " + "On hold by user name is too long.";
+        }
+        
+		try {
+			setsonholdbyuserid(clsValidateFormFields.validateLongIntegerField(getsonholdbyuserid(), "On hold user ID", 0L, clsValidateFormFields.MAX_LONG_VALUE));
+		} catch (Exception e) {
+			sResult += "  " + e.getMessage() + ".";
+		}
+		
+		try {
+			setsdatplacedonhold(clsValidateFormFields.validateDateTimeField(
+				getsdatonhold(), 
+				"Date payment placed on hold", 
+				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+				true)
+			);
+		} catch (Exception e1) {
+			sResult += "  " + e1.getMessage() + ".";
+		}
+		
+		//System.out.println("[20206617470] " + "m_datpaymentplacedonhold = '" + m_datpaymentplacedonhold + "'.");
+		
+        setsonholdreason(getsonholdreason().trim());
+        if (getsionhold().compareToIgnoreCase("1") == 0){
+        	if (getsonholdreason().compareToIgnoreCase("") == 0){
+        		//Set the on hold fields back to blanks:
+        		setsionhold("0");
+        		setsdatplacedonhold(SMUtilities.EMPTY_DATETIME_VALUE);
+        		setsonholdbyuserid("0");
+        		setsonholdbyfullname("");
+        		setsonholdreason("");
+        		sResult += "  " + "If the payment is on hold, it must have a reason noted.";
+        	}
+        }
+		//  END ON HOLD LOGIC
 		
 		//Validate the lines:
 		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
@@ -2125,6 +2263,11 @@ public class APBatchEntry {
 				setsbdtaxrate(clsManageBigDecimals.BigDecimalTo2DecimalSTDFormat(rs.getBigDecimal(SMTableapbatchentries.bdtaxrate)));
 				setstaxtype(rs.getString(SMTableapbatchentries.staxtype));
 				setsicalculateonpurchaseorsale(Integer.toString(rs.getInt(SMTableapbatchentries.icalculateonpurchaseorsale)));
+				setsonholdbyfullname(rs.getString(SMTableapbatchentries.sonholdbyfullname));
+				setsonholdbyuserid(Long.toString(rs.getInt(SMTableapbatchentries.lonholdbyuserid)));
+				setsdatplacedonhold(clsDateAndTimeConversions.resultsetDateTimeToTheSecondStringToString(
+						rs.getString(SMTableapbatchentries.datplacedonhold)));
+				setsonholdreason(rs.getString(SMTableapbatchentries.monholdreason));
 			}else{
 				rs.close();
 				throw new Exception("Error [1489248040] - No AP batch entry found with lid = " + getslid() + ".");
@@ -2619,6 +2762,37 @@ public class APBatchEntry {
 	public void setsiinvoiceincludestax(String siinvoiceincludestax){
 		m_siinvoiceincludestax = siinvoiceincludestax;
 	}
+	public String getsonholdbyfullname(){
+		return m_sonholdbyfullname;
+	}
+	public void setsonholdbyfullname(String sonholdbyfullname){
+		m_sonholdbyfullname = sonholdbyfullname;
+	}
+	public String getsonholdbyuserid(){
+		return m_lonholdbyuserid;
+	}
+	public void setsonholdbyuserid(String sonholdbyuserid){
+		m_lonholdbyuserid = sonholdbyuserid;
+	}
+	public String getsdatonhold(){
+		return m_datplacedonhold;
+	}
+	public void setsdatplacedonhold(String sdatplacedonhold){
+		m_datplacedonhold = sdatplacedonhold;
+	}
+	public String getsdatplacedonholdInSQLFormat() throws Exception{
+		if (m_datplacedonhold.compareToIgnoreCase("") == 0){
+			return SMUtilities.EMPTY_SQL_DATETIME_VALUE;
+		}else{
+			return clsDateAndTimeConversions.convertDateFormat(m_datplacedonhold, SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.DATETIME_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATETIME_VALUE);
+		}
+	}
+	public String getsonholdreason(){
+		return m_monholdreason;
+	}
+	public void setsonholdreason(String sonholdreason){
+		m_monholdreason = sonholdreason;
+	}
 	
 	//Negative numbers, like credit amounts, payment amts, etc., are carried ALL THROUGH THE SYSTEM as negatives.  But when they are displayed 
 	//to the user on the entry screen, they appear without the negative sign.  So just before we display them on the screen, we need a function
@@ -2890,7 +3064,10 @@ public class APBatchEntry {
 		sQueryString += "&" + SMTableapbatchentries.iprintcheck + "=" + clsServletUtilities.URLEncode(getsiprintcheck());
 		sQueryString += "&" + SMTableapbatchentries.iprintingfinalized + "=" + clsServletUtilities.URLEncode(getsiprintingfinalized());
 		sQueryString += "&" + SMTableapbatchentries.iinvoiceincludestax + "=" + clsServletUtilities.URLEncode(getsiinvoiceincludestax());
-		
+		sQueryString += "&" + SMTableapbatchentries.sonholdbyfullname + "=" + clsServletUtilities.URLEncode(getsonholdbyfullname());
+		sQueryString += "&" + SMTableapbatchentries.lonholdbyuserid + "=" + clsServletUtilities.URLEncode(getsonholdbyuserid());
+		sQueryString += "&" + SMTableapbatchentries.datplacedonhold + "=" + clsServletUtilities.URLEncode(getsdatonhold());
+		sQueryString += "&" + SMTableapbatchentries.monholdreason + "=" + clsServletUtilities.URLEncode(getsonholdreason());
 		return sQueryString;
 	}
 	public String dumpData(){
@@ -2934,6 +3111,10 @@ public class APBatchEntry {
 		s += "  Print check?: " + getsiprintcheck() + "\n";
 		s += "  Printing finalized?: " + getsiprintingfinalized() + "\n";
 		s += "  Invoice includes tax?: " + getsiinvoiceincludestax() + "\n";
+		s += "  On hold by user full name: " + getsonholdbyfullname() + "\n";
+		s += "  On hold by user ID: " + getsonholdbyuserid() + "\n";
+		s += "  Date placed on hold: " + getsdatonhold() + "\n";
+		s += "  On hold reason: " + getsonholdreason() + "\n";
 		
 		s += "  -- Number of lines: " + m_arrBatchEntryLines.size() + "\n";
 		
@@ -2986,6 +3167,10 @@ public class APBatchEntry {
 		m_siprintcheck = "0";
 		m_siprintingfinalized = "0";
 		m_siinvoiceincludestax = "0";
+		m_sonholdbyfullname = "";
+		m_lonholdbyuserid = "0";
+		m_datplacedonhold = "0";
+		m_monholdreason = "";
 		m_arrBatchEntryLines = new ArrayList<APBatchEntryLine>(0);
 	}
 }

@@ -10,9 +10,11 @@ import javax.servlet.ServletContext;
 import SMClasses.SMLogEntry;
 import SMClasses.SMReminders;
 import SMDataDefinition.SMModuleListing;
+import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
 import SMDataDefinition.SMTablesecurityusergroups;
@@ -24,9 +26,10 @@ import SMDataDefinition.SMTablessdeviceusers;
 import SMDataDefinition.SMTablessuserevents;
 import SMDataDefinition.SMTablesystemlog;
 import SMDataDefinition.SMTableusers;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsDatabaseFunctions;
+import ServletUtilities.clsServletUtilities;
 import smic.ICItem;
+import smic.ICPOHeader;
 
 public class SMSystemFunctions extends java.lang.Object{
 
@@ -2315,17 +2318,31 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionLinks.add("smcontrolpanel.SMQueryParameters?" 
 					+ "QUERYSTRING="
 					+ clsServletUtilities.URLEncode(
-							"SELECT aptransactions.datdocdate AS 'Date'"
-							+ " , CONCAT(aptransactions.svendor,'-',icvendors.sname) AS 'Vendor name'"
+							"SELECT " + SMTableaptransactions.datdocdate + " AS 'Date'"
+							+ " , CONCAT(" + SMTableaptransactions.svendor + ",'-'," + SMTableicvendors.sname + ") AS 'Vendor name'"
 							+ " , CONCAT("
 								+ "'<A HREF=\\*LINKBASE*smap.APViewTransactionInformation?lid=',"
-								+ "aptransactions.lid,"
+								+ SMTableaptransactions.lid + ","
 								+ "'&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "',"
 								+ "'>',"
 								+ " aptransactions.sdocnumber,"
 								+ " '</A>'"
 							+ ")  as 'Invoice #'"
 							+ " , aptransactions.bdcurrentamt AS 'Amount'  "
+							+ ", DATE_FORMAT(" + SMTableaptransactions.datplacedonhold + ", '%c/%d/%Y') AS 'Placed on hold'" 
+							+ ", CONCAT("
+								+ "'User ID ', " + SMTableaptransactions.lonholdbyuserid + ", ' - ', " + SMTableaptransactions.sonholdbyfullname
+								+ "   , ' on '"
+								+ "   ,'<A HREF=\\*LINKBASE*smic.ICEditPOEdit'"
+								+ "   ,'?'"
+								+ "   ,'" + ICPOHeader.Paramlid + "'"
+								+ "   ,'='"
+								+ "   ," + SMTableaptransactions.lonholdpoheaderid
+								+ "   , '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + ">PO #'"
+								+ "   ,"+ SMTableaptransactions.lonholdpoheaderid 
+								+ "   ,'</A>'"
+							+ "   ) AS 'On Hold User'"
+							+ ", " + SMTableaptransactions.monholdreason + " AS 'Reason'"
 							+ " FROM aptransactions"
 							+ " LEFT JOIN icvendors ON aptransactions.svendor = icvendors.svendoracct "
 							+ "  WHERE ("
@@ -2337,7 +2354,7 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ " , aptransactions.sdocnumber ")
 							+"&QUERYTITLE=" + clsServletUtilities.URLEncode("AP Invoices On Hold")
 							+ "&ALTERNATEROWCOLORS=Y"
-							+ "&SHOWSQLCOMMAND=Y"
+							//+ "&SHOWSQLCOMMAND=N"
 							+ "&FONTSIZE=small"
 							);
 			arrFunctionDescriptions.add("This show invoices that are on hold");

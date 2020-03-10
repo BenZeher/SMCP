@@ -12,9 +12,6 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
-import smap.APTermsCalculator;
-import smap.APVendor;
-import smcontrolpanel.SMUtilities;
 import SMClasses.SMLogEntry;
 import SMClasses.SMOption;
 import SMDataDefinition.SMTableicpoheaders;
@@ -25,12 +22,16 @@ import SMDataDefinition.SMTableicporeceiptlines;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTableicvendorterms;
 import SMDataDefinition.SMTabletax;
-import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
+import ServletUtilities.clsMasterEntry;
 import ServletUtilities.clsValidateFormFields;
+import smap.APTermsCalculator;
+import smap.APVendor;
+import smcontrolpanel.SMUtilities;
+import smgl.GLAccount;
 
 public class ICPOInvoice extends clsMasterEntry{
 	public static final String ParamObjectName = "PO Invoice";
@@ -1186,10 +1187,44 @@ public class ICPOInvoice extends clsMasterEntry{
 	
 	private boolean validate_entry_lines(Connection conn){
 		
+		boolean bResult = true;
+		
 		if (m_arrLines.size() == 0){
 			return true;
 		}
-		boolean bResult = true;
+		
+		//Validate the GL's on the lines:
+		for(int i = 0; i < m_arrLines.size(); i++){
+			GLAccount glacct = new GLAccount(m_arrLines.get(i).getsexpenseaccount());
+			if(!glacct.load(conn)){
+				super.addErrorMessage("GL account '" + m_arrLines.get(i).getsexpenseaccount() 
+					+ "' on line " + Integer.toString(i + 1)
+					+ " is an invalid GL account."
+				);
+				bResult = false;
+			}
+		}
+		
+		//Validate the GL accounts on any additional lines:
+		//System.out.println("[2020701349249] " + "m_arrLines.size = '" + m_arrLines.size() + "'.");
+		
+		for (int i = 0; i < m_arrNewAcctLine.size(); i++){
+			if (
+				(m_arrNewDescLine.get(i).compareToIgnoreCase("") != 0)
+				|| (m_arrNewAcctLine.get(i).compareToIgnoreCase("") != 0)
+				|| (m_arrNewAmountLine.get(i).compareToIgnoreCase("") != 0)
+					
+			){
+				GLAccount glacct = new GLAccount(m_arrNewAcctLine.get(i));
+				if(!glacct.load(conn)){
+					super.addErrorMessage("GL account '" + m_arrNewAcctLine.get(i) + "' on the last additional line"
+						+ " is an invalid GL account."
+					);
+					bResult = false;
+				}
+			}
+		}
+		
 		String SQL = "SELECT"
 			+ " DISTINCT " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendor
 			+ ", " + SMTableicpoheaders.TableName + "." + SMTableicpoheaders.svendorname

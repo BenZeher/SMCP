@@ -412,6 +412,14 @@ public class APEditBatchesEdit extends HttpServlet {
         	iColumnCount++;
     	}
     	
+    	//If it's an invoice batch, indicate if the entry is on hold:
+    	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_INVOICE)) == 0){
+        	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
+        	pwOut.println("On hold?");
+        	pwOut.println("</TD>\n");
+        	iColumnCount++;
+    	}
+    	
     	pwOut.println("<TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_HEADING_LEFT_JUSTIFIED + "\">");
     	pwOut.println("Description");
     	pwOut.println("</TD>\n");
@@ -587,6 +595,16 @@ public class APEditBatchesEdit extends HttpServlet {
 	        	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_PAYMENT)) == 0){
 		        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_CENTER_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
 		        	pwOut.println(sCheckFinalized);
+		        	pwOut.println("</TD>\n");
+	        	}
+	        	
+	        	String sOnHold = "N";
+	        	if (entry.getsionhold().compareToIgnoreCase("1") == 0){
+	        		sOnHold = "<B><FONT COLOR=RED>Y</FONT></B>";
+	        	}
+	        	if (batch.getsbatchtype().compareToIgnoreCase(Integer.toString(SMTableapbatches.AP_BATCH_TYPE_INVOICE)) == 0){
+		        	pwOut.println("    <TD CLASS=\"" + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + "\">");
+		        	pwOut.println(sOnHold);
 		        	pwOut.println("</TD>\n");
 	        	}
 	        	

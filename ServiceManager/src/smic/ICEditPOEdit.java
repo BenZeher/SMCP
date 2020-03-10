@@ -25,7 +25,6 @@ import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMCreateGoogleDriveFolderParamDefinitions;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablecriticaldates;
-import SMDataDefinition.SMTablegltransactionbatchentries;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -417,7 +416,7 @@ public class ICEditPOEdit  extends HttpServlet {
 		);
 		
 		smedit.getPWOut().println("<BR>");
-		
+		smedit.getPWOut().println("</HTML>");
 		
 		return;
 	}
@@ -845,12 +844,14 @@ public class ICEditPOEdit  extends HttpServlet {
 		String sChecked = "";
 		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
-		}
+		}//else{
+			//sChecked = clsServletUtilities.CHECKBOX_UNCHECKED_STRING;
+		//}
 		s += "    <TD style=\" vertical-align:top; text-align:right; font-weight:bold; \">Payment on hold:</TD>\n";
 		s += "    <TD><INPUT TYPE=CHECKBOX"
+			+ " " + sChecked
 			+ " NAME=\"" + ICPOHeader.Paramipaymentonhold + "\""
 			+ " ID=\"" + ICPOHeader.Paramipaymentonhold + "\""
-			+ " " + sChecked
  		+ " onchange=\"flagDirty();\""
  		+ ">"
  		+ "</TD>" + "\n"

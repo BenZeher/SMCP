@@ -304,16 +304,60 @@ public class APViewTransactionInformation  extends HttpServlet {
 			//On hold?
 			String sOnHold = "N";
 			if (rs.getInt(SMTableaptransactions.TableName + "." + SMTableaptransactions.ionhold) == 1){
-				sOnHold = "Y";
+				sOnHold = "Y by User ID: " 
+					+ Long.toString(rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lonholdbyuserid)) 
+					+ " - " + rs.getString(SMTableaptransactions.TableName + "." + SMTableaptransactions.sonholdbyfullname)
+				;
+				if (rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lonholdpoheaderid) != 0){
+					String sOnHoldPOHeaderID = Long.toString(rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lonholdpoheaderid));
+					sOnHold += " on PO #";
+					
+					boolean bAllowPOViewing = SMSystemFunctions.isFunctionPermitted(
+							SMSystemFunctions.ICEditPurchaseOrders, 
+							sUserID, 
+							getServletContext(), 
+							sDBID, 
+							sLicenseModuleLevel
+						);
+					if(bAllowPOViewing){
+						sOnHold += " on "
+							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
+							+ "?" + ICPOHeader.Paramlid + "=" + sOnHoldPOHeaderID
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "\">PO #" + sOnHoldPOHeaderID + "</A>"
+						;			
+					}else{
+						sOnHold += " on PO #" + rs.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lonholdpoheaderid);
+					}
+				}
 			}
 			s += "  <TR>\n"
-					+ "    <TD ALIGN=RIGHT>On Hold?:</TD>\n"
-					+ "    <TD><B>" 
-					+ sOnHold
-					+ "</B></TD>\n"
-					+ "    <TD>&nbsp;</TD>\n"
-					+ "  </TR>\n"
-				;
+				+ "    <TD ALIGN=RIGHT>On Hold?:</TD>\n"
+				+ "    <TD><B>" 
+				+ sOnHold
+				+ "</B></TD>\n"
+				+ "    <TD>&nbsp;</TD>\n"
+				+ "  </TR>\n"
+			;
+			
+			s += "  <TR>\n"
+				+ "    <TD ALIGN=RIGHT>Placed on hold:</TD>\n"
+				+ "    <TD><B>" 
+				+ ServletUtilities.clsDateAndTimeConversions.resultsetDateTimeToTheSecondStringToString(
+					rs.getString(SMTableaptransactions.TableName + "." + SMTableaptransactions.datplacedonhold) 
+					)
+				+ "</B></TD>\n"
+				+ "    <TD>&nbsp;</TD>\n"
+				+ "  </TR>\n"
+			;
+			
+			s += "  <TR>\n"
+				+ "    <TD ALIGN=RIGHT>On Hold Reason:</TD>\n"
+				+ "    <TD><B>" 
+				+ "<I>" + rs.getString(SMTableaptransactions.TableName + "." + SMTableaptransactions.monholdreason) + "</I>"
+				+ "</B></TD>\n"
+				+ "    <TD>&nbsp;</TD>\n"
+				+ "  </TR>\n"
+			;
 			
 			//Doc Date:
 			String sDocDate = SMUtilities.EMPTY_DATE_VALUE;

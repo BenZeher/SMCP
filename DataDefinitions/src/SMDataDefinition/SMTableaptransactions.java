@@ -29,7 +29,6 @@ public class SMTableaptransactions {
 	// a 'current discount available', that available discount gets set to zero.
 	public static final String bdoriginaldiscountavailable = "bdoriginaldiscountavailable";
 	public static final String bdcurrentdiscountavailable = "bdcurrentdiscountavailable";
-	public static final String ionhold = "ionhold";
 	
 	//These are used to carry the apply to information for pre-pay transactions, so the system knows how to apply them automatically:
 	public static final String lapplytopurchaseorderid = "lapplytopurchaseorderid";
@@ -49,6 +48,14 @@ public class SMTableaptransactions {
 	public static final String staxtype = "staxtype";
 	public static final String icalculateonpurchaseorsale = "icalculateonpurchaseorsale";
 	
+	//On hold info:
+	public static final String ionhold = "ionhold";
+	public static final String sonholdbyfullname = "sonholdbyfullname";
+	public static final String lonholdbyuserid = "lonholdbyuserid";
+	public static final String datplacedonhold = "datplacedonhold";
+	public static final String monholdreason = "monholdreason";
+	public static final String lonholdpoheaderid = "lonholdpoheaderid";
+	
 	//Field lengths:
 	public static final int svendorlength = 12;
 	public static final int sdocnumberlength = 75;
@@ -64,6 +71,7 @@ public class SMTableaptransactions {
 	public static final int staxjurisdictionLength = 12;
 	public static final int staxtypeLength = 254;
 	public static final int bdtaxrateScale = 4;
+	public static final int sonholdbyfullnamelength = 128;
 	
 	public static final int AP_TRANSACTION_TYPE_INVOICE_INVOICE = SMTableapbatchentries.ENTRY_TYPE_INV_INVOICE;
 	public static final int AP_TRANSACTION_TYPE_INVOICE_CREDITNOTE = SMTableapbatchentries.ENTRY_TYPE_INV_CREDITNOTE;

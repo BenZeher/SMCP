@@ -38,7 +38,6 @@ import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageBigDecimals;
 import ServletUtilities.clsManageRequestParameters;
-import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsStringFunctions;
 import ServletUtilities.clsValidateFormFields;
 import smcontrolpanel.SMUtilities;
@@ -2773,6 +2772,11 @@ public class APBatch {
     		+ ", " + SMTableaptransactions.bdtaxrate
     		+ ", " + SMTableaptransactions.staxtype
     		+ ", " + SMTableaptransactions.icalculateonpurchaseorsale
+    		+ ", " + SMTableaptransactions.sonholdbyfullname
+    		+ ", " + SMTableaptransactions.lonholdbyuserid
+    		+ ", " + SMTableaptransactions.datplacedonhold
+    		+ ", " + SMTableaptransactions.monholdreason
+    		+ ", " + SMTableaptransactions.lonholdpoheaderid
     		
     		+ ") VALUES ("
     		+ " '" + clsDateAndTimeConversions.convertDateFormat(entry.getsdatdiscount(), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
@@ -2784,7 +2788,7 @@ public class APBatch {
     		+ ", " + entry.getsentryamount().replace(",", "")
     		+ ", " + entry.getsentrytype()
     		+ ", " + entry.getsiinvoiceincludestax()
-    		+ ", 0" //on hold
+    		+ ", " + entry.getsionhold()
     		+ ", " + entry.getslpurchaseordernumber()
     		+ ", " + entry.getslsalesordernumber()
     		+ ", " + entry.getslid()
@@ -2800,6 +2804,11 @@ public class APBatch {
     		+ ", " + entry.getsbdtaxrate()
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getstaxtype()) + "'"
     		+ ", " + entry.getsicalculateonpurchaseorsale()
+    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsonholdbyfullname()) + "'"
+    		+ ", " + entry.getsonholdbyuserid()
+    		+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(entry.getsdatonhold()) + "'"
+    		+ ", '" + entry.getsonholdreason() + "'"
+    		+ ", " + entry.getsonholdpoheaderid()
     		+ ")"
     	;
 
@@ -2952,6 +2961,12 @@ public class APBatch {
     		+ ", " + SMTableaptransactions.sdocdescription
     		+ ", " + SMTableaptransactions.sdocnumber
     		+ ", " + SMTableaptransactions.svendor
+    		+ ", " + SMTableaptransactions.sonholdbyfullname
+    		+ ", " + SMTableaptransactions.lonholdbyuserid
+    		+ ", " + SMTableaptransactions.datplacedonhold
+    		+ ", " + SMTableaptransactions.monholdreason
+    		+ ", " + SMTableaptransactions.lonholdpoheaderid
+    		
     		+ ") VALUES ("
     		+ " '" + clsDateAndTimeConversions.convertDateFormat(entry.getsdatdiscount(), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
     		+ ", '" + clsDateAndTimeConversions.convertDateFormat(entry.getsdatdocdate(), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
@@ -2973,6 +2988,11 @@ public class APBatch {
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsentrydescription()) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsdocnumber()) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsvendoracct()) + "'"
+    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsonholdbyfullname()) + "'"
+    		+ ", " + entry.getsonholdbyuserid()
+    		+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(entry.getsdatonhold()) + "'"
+    		+ ", '" + entry.getsonholdreason() + "'"
+    		+ ", " + entry.getsonholdpoheaderid()
     		+ ")"
     	;
 
@@ -3040,6 +3060,11 @@ public class APBatch {
     		+ ", " + SMTableaptransactions.sdocdescription
     		+ ", " + SMTableaptransactions.sdocnumber
     		+ ", " + SMTableaptransactions.svendor
+    		+ ", " + SMTableaptransactions.sonholdbyfullname
+    		+ ", " + SMTableaptransactions.lonholdbyuserid
+    		+ ", " + SMTableaptransactions.datplacedonhold
+    		+ ", " + SMTableaptransactions.monholdreason
+    		+ ", " + SMTableaptransactions.lonholdpoheaderid
     		+ ") VALUES ("
     		+ " '" + clsDateAndTimeConversions.convertDateFormat(entry.getsdatdiscount(), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
     		+ ", '" + clsDateAndTimeConversions.convertDateFormat(entry.getsdatdocdate(), SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
@@ -3061,6 +3086,11 @@ public class APBatch {
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsentrydescription()) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsdocnumber()) + "'"
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsvendoracct()) + "'"
+    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsonholdbyfullname()) + "'"
+    		+ ", " + entry.getsonholdbyuserid()
+    		+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(entry.getsdatonhold()) + "'"
+    		+ ", '" + entry.getsonholdreason() + "'"
+    		+ ", " + entry.getsonholdpoheaderid()
     		+ ")"
     	;
 

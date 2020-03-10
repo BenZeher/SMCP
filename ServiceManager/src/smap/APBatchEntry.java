@@ -618,7 +618,7 @@ public class APBatchEntry {
 			+ ", " + getsicalculateonpurchaseorsale()
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyfullname()) + "'"
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyuserid())
-			+ ", '" + getsdatplacedonholdInSQLFormat() + "'"
+			+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(getsdatonhold()) + "'"
 			+ ", '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
 			+ ", " + clsDatabaseFunctions.FormatSQLStatement(getsonholdpoheaderid())		
 			
@@ -667,7 +667,8 @@ public class APBatchEntry {
 			+ ", " + SMTableapbatchentries.icalculateonpurchaseorsale + " = " + getsicalculateonpurchaseorsale()
 			+ ", " + SMTableapbatchentries.sonholdbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdbyfullname()) + "'"
 			+ ", " + SMTableapbatchentries.lonholdbyuserid + " = " + getsonholdbyuserid()
-			+ ", " + SMTableapbatchentries.datplacedonhold + " = '" + getsdatplacedonholdInSQLFormat() + "'"
+			+ ", " + SMTableapbatchentries.datplacedonhold + " = '" 
+				+ clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(getsdatonhold()) + "'"
 			+ ", " + SMTableapbatchentries.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(getsonholdreason()) + "'"
 			+ ", " + SMTableapbatchentries.lonholdpoheaderid + " = " + getsonholdpoheaderid()
 		;

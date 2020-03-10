@@ -41,6 +41,8 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 	private String m_sUserID;
 	private String m_sBatchNumber;
 	private String m_sExportSequenceNumber;
+	private String m_sListOfOnHoldInvoices;
+	private String  m_sAPBatchNumber;
 	private boolean bDebugMode = false;
 	
 	public ICAutoCreateInvoiceBatch(){
@@ -49,6 +51,8 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 		m_sUserID = "0";
 		m_sBatchNumber = "-1";
 		m_sExportSequenceNumber = "-1";
+		m_sListOfOnHoldInvoices = "";
+		m_sAPBatchNumber = "";
 	}
 //	@Override
 //	public void run() {
@@ -83,6 +87,12 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 	
 	public String getErrorMessage (){
 		return m_sErrorMessage;
+	}
+	public String getListOfOnHoldInvoices(){
+		return m_sListOfOnHoldInvoices;
+	}
+	public String getAPBatchNumber(){
+		return m_sAPBatchNumber;
 	}
 	public boolean setCreatedBy(String sCreatedByFullName, String sUserID){
 		
@@ -393,6 +403,9 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 									entry.setsdatplacedonhold(pohead.getdatpaymentplacedonhold());
 									entry.setsonholdreason(pohead.getmpaymentonholdreason());
 									entry.setsonholdpoheaderid(sPOHeaderID);
+									m_sListOfOnHoldInvoices += "  Entry number " + Integer.toString((batch.getBatchEntryArray().size() + 1))
+										+ " is flagged as on hold from PO number " + sPOHeaderID + "."
+									;
 								}
 							}
 						}
@@ -427,6 +440,8 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 			throw new Exception("Error [1489113737] - could not save AP batch - " + e.getMessage());
 		}
         //SMUtilities.commit_data_transaction(conn);
+        
+        m_sAPBatchNumber = batch.getsbatchnumber();
         
         //Now go to post the batch:
         // TJR - 6/12/2017 - turned off the automatic posting for now:

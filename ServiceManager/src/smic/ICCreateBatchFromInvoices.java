@@ -80,6 +80,17 @@ public class ICCreateBatchFromInvoices extends HttpServlet {
 				sStatus += "Successfully created and posted adjustment batch " + iccreate.getM_sBatchNumber();
 			}
 			sStatus += " - export sequence number was " + iccreate.getsExportSequenceNumber() + ".";
+			
+			if (iccreate.getAPBatchNumber().compareToIgnoreCase("") != 0){
+				sStatus += "  AP invoice batch number " + iccreate.getAPBatchNumber() + " contains the PO invoices.";
+			}
+			
+			if (iccreate.getListOfOnHoldInvoices().compareToIgnoreCase("") != 0){
+				sStatus += "<B><I><FONT COLOR=RED><BR>NOTE: "
+					+ iccreate.getListOfOnHoldInvoices().trim()
+					+ "</FONT></I></B>"
+				;
+			}
 			response.sendRedirect(
 					"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic." + "ICEditBatches" + "?"
 					+ "Status=" + sStatus

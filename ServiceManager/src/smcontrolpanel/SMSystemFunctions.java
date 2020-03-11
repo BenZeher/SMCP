@@ -14,6 +14,7 @@ import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableglexternalcompanypulls;
 import SMDataDefinition.SMTableglfiscalsets;
 import SMDataDefinition.SMTableicitems;
+import SMDataDefinition.SMTableicvendoritems;
 import SMDataDefinition.SMTableicvendors;
 import SMDataDefinition.SMTablesecurityfunctions;
 import SMDataDefinition.SMTablesecuritygroupfunctions;
@@ -1261,25 +1262,25 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ "&ResultClass=FinderResults"
 							+ "&SearchingClass=smic.ICDisplayItemSelection"
 							+ "&ReturnField=" + ICItem.ParamItemNumber			
-							+ "&SearchField1=icitems.sitemdescription"
+							+ "&SearchField1=" + SMTableicitems.TableName + "." + SMTableicitems.sItemDescription
 							+ "&SearchFieldAlias1=Description"
-							+ "&SearchField2=icitems.sitemnumber"
+							+ "&SearchField2=" + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
 							+ "&SearchFieldAlias2=Item%20No."
-							+ "&SearchField3=icvendoritems.svendoritemNumber"
+							+ "&SearchField3=" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber
 							+ "&SearchFieldAlias3=Vendor%20Item%20Number"
-							+ "&SearchField4=icvendoritems.scomment"
+							+ "&SearchField4=" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sComment
 							+ "&SearchFieldAlias4=Comment"
-							+ "&ResultListField1=icitems.sitemnumber"
+							+ "&ResultListField1=" + SMTableicitems.TableName + "." + SMTableicitems.sItemNumber
 							+ "&ResultHeading1=Item%20No."
-							+ "&ResultListField2=icitems.sitemdescription"
+							+ "&ResultListField2=" + SMTableicitems.TableName + "." + SMTableicitems.sItemDescription
 							+ "&ResultHeading2=Description"
-							+ "&ResultListField3=icitems.scostunitofmeasure"
+							+ "&ResultListField3=" + SMTableicitems.TableName + "." + SMTableicitems.sCostUnitOfMeasure
 							+ "&ResultHeading3=Unit"
-							+ "&ResultListField4=icvendoritems.svendor"
+							+ "&ResultListField4=" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendor
 							+ "&ResultHeading4=Vendor"
-							+ "&ResultListField5=icvendoritems.svendoritemnumber"
+							+ "&ResultListField5=" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sVendorItemNumber
 							+ "&ResultHeading5=Vendor%20Item"
-							+ "&ResultListField6=icvendoritems.scomment"
+							+ "&ResultListField6=" + SMTableicvendoritems.TableName + "." + SMTableicvendoritems.sComment
 							+ "&ResultHeading6=Comment"			
 							+ "&ParameterString="
 					); 
@@ -2150,15 +2151,18 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ "QUERYSTRING="
 							+ clsServletUtilities.URLEncode(
 									"SELECT" 
-										+ " CONCAT('<A HREF=*LINKBASE*smas.ASAuthorizeDeviceUsersEdit?lid=', ssdevices.lid, '&" 
-												+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "='" + sDBID + "', ssdevices.sdescription, '</A>') as 'Device'"
-											+ ", ssdeviceusers.suser AS 'Authorized User'"
-											+ ", CONCAT(users.sUserFirstName, ' ', users.sUserLastName) AS 'Full Name'"
+										+ " CONCAT('<A HREF=*LINKBASE*smas.ASAuthorizeDeviceUsersEdit?lid=', " 
+												+ SMTablessdevices.TableName + "." + SMTablessdevices.lid 
+												+ ", '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + ">'"
+												+ ", " + SMTablessdevices.TableName + "." + SMTablessdevices.sdescription 
+												+ ", '</A>') as 'Device'"
+											+ ", " + SMTablessdeviceusers.TableName + "." + SMTablessdeviceusers.luserid + " AS 'Authorized User ID'"
+											+ ", CONCAT(" + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + ", ' ', " + SMTableusers.TableName + "." + SMTableusers.sUserLastName + ") AS 'Full Name'"
 											+ " from"
-											+ " ssdeviceusers"
-											+ " LEFT JOIN ssdevices on ssdevices.lid = ssdeviceusers.ldeviceid"
-											+ " LEFT JOIN users on users.sUserName = ssdeviceusers.suser"
-											+ " ORDER BY ssdevices.sdescription, ssdeviceusers.suser"
+											+ " " + SMTablessdeviceusers.TableName
+											+ " LEFT JOIN " + SMTablessdevices.TableName + " on " + SMTablessdevices.TableName + "." + SMTablessdevices.lid + " = " + SMTablessdeviceusers.TableName + "." + SMTablessdeviceusers.ldeviceid
+											+ " LEFT JOIN " + SMTableusers.TableName + " on " + SMTableusers.TableName + "." + SMTableusers.lid + " = " + SMTablessdeviceusers.TableName + "." + SMTablessdeviceusers.luserid
+											+ " ORDER BY " + SMTablessdevices.TableName + "." + SMTablessdevices.sdescription + ", " + SMTablessdeviceusers.TableName + "." + SMTablessdeviceusers.luserid
 									)
 									+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("AS List Authorized Device Users")
 									+ "&ALTERNATEROWCOLORS=Y"
@@ -2175,16 +2179,18 @@ public class SMSystemFunctions extends java.lang.Object{
 							+ "QUERYSTRING="
 							+ clsServletUtilities.URLEncode(
 									"SELECT" 
-											+ " CONCAT('<A HREF=*LINKBASE*smas.ASAuthorizeAlarmUsersEdit?lid=', ssalarmsequences.lid, '&'" 
-												+ SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "='" + sDBID + "'>', ssalarmsequences.sname, '</A>')"
+											+ " CONCAT('<A HREF=*LINKBASE*smas.ASAuthorizeAlarmUsersEdit?lid=', ssalarmsequences.lid,"
+												+ "'&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + ">',"
+												+ SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.sname + ", '</A>')"
 											+ " as 'Alarm Sequence Name'"
-											+ ", ssalarmsequenceusers.suser AS 'Authorized User'"
-											+ ", CONCAT(users.sUserFirstName, ' ', users.sUserLastName) AS 'Full Name'"
+											+ ", " + SMTablessalarmsequenceusers.TableName + "." + SMTablessalarmsequenceusers.luserid + " AS 'Authorized User ID'"
+											+ ", CONCAT(" + SMTableusers.TableName + "." + SMTableusers.sUserFirstName + ", ' ', " + SMTableusers.TableName + "." + SMTableusers.sUserLastName + ") AS 'Full Name'"
 											+ " from"
-											+ " ssalarmsequenceusers"
-											+ " LEFT JOIN ssalarmsequences on ssalarmsequences.lid = ssalarmsequenceusers.lalarmsequenceid"
-											+ " LEFT JOIN users on users.sUserName = ssalarmsequenceusers.suser"
-											+ " order by ssalarmsequences.sname, ssalarmsequenceusers.suser"
+											+ " " + SMTablessalarmsequenceusers.TableName
+											+ " LEFT JOIN " + SMTablessalarmsequences.TableName + " on " + SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.lid 
+											+ " = " + SMTablessalarmsequenceusers.TableName + "." + SMTablessalarmsequenceusers.lalarmsequenceid
+											+ " LEFT JOIN users on " + SMTableusers.TableName + "." + SMTableusers.lid + " = " + SMTablessalarmsequenceusers.TableName + "." + SMTablessalarmsequenceusers.luserid
+											+ " order by " + SMTablessalarmsequences.TableName + "." + SMTablessalarmsequences.sname + ", " + SMTablessalarmsequenceusers.TableName + "." + SMTablessalarmsequenceusers.luserid
 									)
 									+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("AS List Authorized Device Users")
 									+ "&ALTERNATEROWCOLORS=Y"
@@ -2411,7 +2417,7 @@ public class SMSystemFunctions extends java.lang.Object{
 								"select"
 								+ " CONCAT("
 								+ "   '<A HREF=\\*LINKBASE*smap.APEditVendorAction?svendoracct='"
-								+ "   , svendoracct"
+								+ "   , " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct
 								+ "   , '&COMMANDFLAG=DELETEVENDOR'"
 								+ "   , '&CONFIRMDELETE=CONFIRMDELETE'"
 								+ "   , '&CallingClass=smap.APEditVendorsEdit'"
@@ -2423,48 +2429,48 @@ public class SMSystemFunctions extends java.lang.Object{
 								
 								+ ", CONCAT("
 								+ "   '<A HREF=\\*LINKBASE*smap.APDisplayVendorInformation?VendorNumber='"
-								+ "   , svendoracct"
+								+ "   , " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct
 								+ "   , '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "'"
-								+ "   , svendoracct"
+								+ "   , " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct
 								+ "   , '</A>'"
 								+ ") as 'ACCT'"
 								
-								+ ", sname AS NAME"
+								+ ", " + SMTableicvendors.TableName + "." + SMTableicvendors.sname + " AS NAME"
 								+ ", IF(iactive=0, 'INACTIVE', 'ACTIVE') AS STATUS"
 								+ ", TRANSACTIONQUERY.LASTTRANSACTION AS 'LAST TRANSACTION'"
 								+ ",CONCAT("
 								+ "   '<A HREF=\\*LINKBASE*smap.APViewTransactionInformation'"
-								+ "   ,'?lid='"
+								+ "   ,'?" + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid + "='"
 								+ "   , TRANSACTIONQUERY.lid"
-								+ "   , '&sdocnumber='"
-								+ "   , TRANSACTIONQUERY.sdocnumber"
-								+ "   , '&svendor='"
+								+ "   , '&" + SMTableaptransactions.TableName + "." + SMTableaptransactions.sdocnumber + "='"
+								+ "   , TRANSACTIONQUERY.DOCUMENTNUMBER"
+								+ "   , '&" + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + "='"
 								+ "   , TRANSACTIONQUERY.svendor"
-								+ "   , 'loriginalbatchnumber='"
+								+ "   , '" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalbatchnumber + "='"
 								+ "   , TRANSACTIONQUERY.loriginalbatchnumber"
-								+ "   , 'loriginalentrynumber='"
+								+ "   , '" + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalentrynumber + "='"
 								+ "   , TRANSACTIONQUERY.loriginalentrynumber"
 								+ "   , '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "'"
 								+ "   , '>'"
-								+ "   , TRANSACTIONQUERY.sdocnumber"
+								+ "   , TRANSACTIONQUERY.DOCUMENTNUMBER"
 								+ "   , '</A>'"
 								+ ") AS 'DOC #'"
-								+ " FROM icvendors"
+								+ " FROM " + SMTableicvendors.TableName
 								+ " LEFT JOIN"
 								+ " (SELECT"
-								+ " MAX(datdocdate) AS LASTTRANSACTION"
-								+ ", sdocnumber"
-								+ ", svendor"
-								+ ", loriginalbatchnumber"
-								+ ", loriginalentrynumber"
-								+ ", lid"
-								+ " FROM aptransactions"
-								+ " GROUP BY svendor"
+								+ " MAX(" + SMTableaptransactions.TableName + "." + SMTableaptransactions.datdocdate + ") AS LASTTRANSACTION"
+								+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.sdocnumber + " AS DOCUMENTNUMBER"
+								+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor + " AS svendor"
+								+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalbatchnumber + " AS loriginalbatchnumber"
+								+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.loriginalentrynumber + " AS loriginalentrynumber"
+								+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid + " AS lid"
+								+ " FROM " + SMTableaptransactions.TableName
+								+ " GROUP BY " + SMTableaptransactions.TableName + "." + SMTableaptransactions.svendor
 								+ ") AS TRANSACTIONQUERY" 
-								+ " ON icvendors.svendoracct=TRANSACTIONQUERY.svendor"
+								+ " ON " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct + "=TRANSACTIONQUERY.svendor"
 								+ " WHERE ("
-								+ "(iactive = 0)"
-								+ ") ORDER BY svendoracct"	
+								+ "(" + SMTableicvendors.TableName + "." + SMTableicvendors.iactive + " = 0)"
+								+ ") ORDER BY " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct	
 							)
 								+ "&QUERYTITLE=" + clsServletUtilities.URLEncode("AP Delete Inactive Vendors")
 								+ "&ALTERNATEROWCOLORS=Y"

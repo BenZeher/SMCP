@@ -2325,33 +2325,38 @@ public class SMSystemFunctions extends java.lang.Object{
 								+ SMTableaptransactions.lid + ","
 								+ "'&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + "',"
 								+ "'>',"
-								+ " aptransactions.sdocnumber,"
+								+ " " + SMTableaptransactions.sdocnumber + ","
 								+ " '</A>'"
 							+ ")  as 'Invoice #'"
-							+ " , aptransactions.bdcurrentamt AS 'Amount'  "
+							+ " , " + SMTableaptransactions.bdcurrentamt + " AS 'Amount'  "
 							+ ", DATE_FORMAT(" + SMTableaptransactions.datplacedonhold + ", '%c/%d/%Y') AS 'Placed on hold'" 
 							+ ", CONCAT("
 								+ "'User ID ', " + SMTableaptransactions.lonholdbyuserid + ", ' - ', " + SMTableaptransactions.sonholdbyfullname
-								+ "   , ' on '"
-								+ "   ,'<A HREF=\\*LINKBASE*smic.ICEditPOEdit'"
-								+ "   ,'?'"
-								+ "   ,'" + ICPOHeader.Paramlid + "'"
-								+ "   ,'='"
-								+ "   ," + SMTableaptransactions.lonholdpoheaderid
-								+ "   , '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + ">PO #'"
-								+ "   ,"+ SMTableaptransactions.lonholdpoheaderid 
-								+ "   ,'</A>'"
-							+ "   ) AS 'On Hold User'"
+								+ ") AS 'Put on hold by'"
+							
+							+ ", IF (" + SMTableaptransactions.lonholdpoheaderid + " = 0, " + "'', "
+								+ " CONCAT("
+									+ "   '<A HREF=\\*LINKBASE*smic.ICEditPOEdit'"
+									+ "   ,'?'"
+									+ "   ,'" + ICPOHeader.Paramlid + "'"
+									+ "   ,'='"
+									+ "   ," + SMTableaptransactions.lonholdpoheaderid
+									+ "   , '&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sDBID + ">PO #'"
+									+ "   ,"+ SMTableaptransactions.lonholdpoheaderid 
+									+ "   ,'</A>'"
+								+ "   )"
+							+ ") AS 'On Hold PO'"
 							+ ", " + SMTableaptransactions.monholdreason + " AS 'Reason'"
-							+ " FROM aptransactions"
-							+ " LEFT JOIN icvendors ON aptransactions.svendor = icvendors.svendoracct "
+							+ " FROM " + SMTableaptransactions.TableName
+							+ " LEFT JOIN " + SMTableicvendors.TableName + " ON " + SMTableaptransactions.TableName + "." +  SMTableaptransactions.svendor
+								+ " = " + SMTableicvendors.TableName + "." + SMTableicvendors.svendoracct
 							+ "  WHERE ("
-							+ " (aptransactions.ionhold = 1) "
-							+ " AND (aptransactions.bdcurrentamt != 0)"
+							+ " (" + SMTableaptransactions.ionhold + " = 1) "
+							+ " AND (" + SMTableaptransactions.bdcurrentamt + " != 0)"
 							+ " )"
-							+ " ORDER BY aptransactions.datdocdate"
-							+ " , icvendors.sname"
-							+ " , aptransactions.sdocnumber ")
+							+ " ORDER BY " + SMTableaptransactions.datdocdate
+							+ " , " + SMTableicvendors.sname
+							+ " , " + SMTableaptransactions.sdocnumber)
 							+"&QUERYTITLE=" + clsServletUtilities.URLEncode("AP Invoices On Hold")
 							+ "&ALTERNATEROWCOLORS=Y"
 							//+ "&SHOWSQLCOMMAND=N"

@@ -123,6 +123,38 @@ public class APControlPaymentsAction extends HttpServlet{
 			sOnHold = "1";
 		}
 		
+		//On hold user id:
+		String sOnHoldUserID = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.lonholdbyuserid, req).trim();
+		try {
+			sOnHoldUserID = clsValidateFormFields.validateLongIntegerField(sOnHoldUserID, "On hold user ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
+		} catch (Exception e1) {
+			sValidationResult += "  " + e1.getMessage() + ".";
+		}
+		
+		//On hold full user name:
+		String sOnHoldFullUserName = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.sonholdbyfullname, req).trim();
+		try {
+			sOnHoldFullUserName = clsValidateFormFields.validateStringField(sOnHoldFullUserName, SMTableaptransactions.sonholdbyfullnamelength, "On hold user full name", false);
+		} catch (Exception e1) {
+			sValidationResult += "  " + e1.getMessage() + ".";
+		}
+		
+		//On hold date:
+		String sOnHoldDate = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.datplacedonhold, req);
+		try {
+			sOnHoldDate = clsValidateFormFields.validateDateTimeField(sOnHoldDate, "On hold date", SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, true);
+		} catch (Exception e) {
+			sValidationResult += "  " + e.getMessage() + ".";
+		}
+		
+		//On hold reason:
+		String sOnHoldReason = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.monholdreason, req).trim();
+		try {
+			sOnHoldReason = clsValidateFormFields.validateStringField(sOnHoldReason, SMTableaptransactions.sonholdbyfullnamelength, "On hold reason", sOnHold.compareToIgnoreCase("1") == 0);
+		} catch (Exception e1) {
+			sValidationResult += "  " + e1.getMessage() + ".";
+		}
+		
 		if (sValidationResult.compareToIgnoreCase("") != 0){
 			throw new Exception(sValidationResult);
 		}
@@ -134,6 +166,11 @@ public class APControlPaymentsAction extends HttpServlet{
 			+ ", " + SMTableaptransactions.datduedate + " = '" + clsDateAndTimeConversions.convertDateFormat(
 				sDueDate, SMUtilities.DATE_FORMAT_FOR_DISPLAY, SMUtilities.DATE_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATE_VALUE) + "'"
 			+ ", " + SMTableaptransactions.ionhold + " = " + sOnHold
+			+ ", " + SMTableaptransactions.lonholdbyuserid + " = " + sOnHoldUserID
+			+ ", " + SMTableaptransactions.sonholdbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sOnHoldFullUserName) + "'"
+			+ ", " + SMTableaptransactions.datplacedonhold + " = '" + clsDateAndTimeConversions.convertDateFormat(
+				sOnHoldDate, SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.DATETIME_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATETIME_VALUE) + "'"
+			+ ", " + SMTableaptransactions.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(sOnHoldReason) + "'"
 			+ " WHERE ("
 				+ "(" + SMTableaptransactions.svendor + " = '" + sVendor + "')"
 				+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + sDocNumber + "')"

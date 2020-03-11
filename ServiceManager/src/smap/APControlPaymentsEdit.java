@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 import smcontrolpanel.SMMasterEditEntry;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
+import smic.ICPOHeader;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTableapbatchentries;
 import SMDataDefinition.SMTableaptransactions;
@@ -251,30 +252,6 @@ public class APControlPaymentsEdit  extends HttpServlet {
 					+ "  </TR>\n"
 				;
 			
-			//On hold?
-			//If the request returns an 'on hold' parameter, OR if the recordset returns one, set it to 'on hold':
-     		String sTemp = "";
-     		if (clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.ionhold, sm.getRequest()).compareToIgnoreCase("Y") == 0){
-    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
-    		}else{
-    			if (rs.getInt(SMTableaptransactions.ionhold) == 1){
-    				sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
-    			}
-    		}
-			s += "  <TR>\n"
-					+ "    <TD ALIGN=RIGHT><B>On hold?</B>:</TD>\n"
-					+ "    <TD><B>" 
-					+ "<INPUT TYPE=CHECKBOX"
-	     			+ " NAME=\"" + SMTableaptransactions.ionhold + "\""
-	     			+ " ID=\"" + SMTableaptransactions.ionhold + "\""
-	     			+ " " + sTemp
-	 	    		+ " onchange=\"flagDirty();\""
-	 	    		+ ">"
-					+ "</B></TD>\n"
-					+ "    <TD>Check to put invoice ON HOLD.</TD>\n"
-					+ "  </TR>\n"
-				;
-     		
 			//Due date:
 			String sDueDate = "";
 			try {
@@ -355,6 +332,126 @@ public class APControlPaymentsEdit  extends HttpServlet {
 		    		+ "    <TD>Update the discount amount still available here.</TD>\n"
 					+ "  </TR>\n"
 		    	;
+			
+			//On hold?
+			//If the request returns an 'on hold' parameter, OR if the recordset returns one, set it to 'on hold':
+     		String sTemp = "";
+     		boolean bOnHold = false;
+     		if (clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.ionhold, sm.getRequest()).compareToIgnoreCase("Y") == 0){
+    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+    			bOnHold = true;
+    		}else{
+    			if (rs.getInt(SMTableaptransactions.ionhold) == 1){
+    				sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+    				bOnHold = true;
+    			}
+    		}
+			s += "  <TR>\n"
+				+ "    <TD ALIGN=RIGHT><B>On hold?</B>:</TD>\n"
+				+ "    <TD><B>" 
+				+ "<INPUT TYPE=CHECKBOX"
+     			+ " NAME=\"" + SMTableaptransactions.ionhold + "\""
+     			+ " ID=\"" + SMTableaptransactions.ionhold + "\""
+     			+ " " + sTemp
+ 	    		+ " onchange=\"flagDirty();\""
+ 	    		+ ">"
+				+ "</B></TD>\n"
+				+ "    <TD>Check to put invoice ON HOLD.</TD>\n"
+				+ "  </TR>\n"
+			;
+			
+			//On hold date:
+			String sOnHoldDate = clsDateAndTimeConversions.resultsetDateTimeToTheSecondStringToString(
+				rs.getString(SMTableaptransactions.datplacedonhold));
+			s += "  <TR>\n"
+					+ "    <TD ALIGN=RIGHT>" + "<B>Date placed on hold:</B>" + "</TD>\n";
+			s += "    <TD><B>" + sOnHoldDate + "</B>" 
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableapbatchentries.datplacedonhold + "\" VALUE=\"" + sOnHoldDate + "\">"
+				+ "</TD>\n"
+			;
+			s += "  <TD>&nbsp;</TD>\n";
+			s += "  </TR>\n";
+			
+			
+			s += "  <TR>\n";
+			//Placed on hold by:
+			String sPlacedOnHoldByFullName = rs.getString(SMTableaptransactions.sonholdbyfullname);
+			String sOnHoldUserID = Long.toString(rs.getLong(SMTableaptransactions.lonholdbyuserid));
+			String sPOHeaderID = Long.toString(rs.getLong(SMTableaptransactions.lonholdpoheaderid));
+			String sPlacedOnHoldBy = "";
+			boolean bAllowPOViewing = SMSystemFunctions.isFunctionPermitted(
+				SMSystemFunctions.ICEditPurchaseOrders, 
+				sm.getUserID(), 
+				getServletContext(), 
+				sm.getsDBID(), 
+				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
+			);
+			if (bOnHold){
+				sPlacedOnHoldBy = "User ID: " + sOnHoldUserID + " - " + sPlacedOnHoldByFullName;
+				if (sPOHeaderID.compareToIgnoreCase("0") != 0){
+					if(bAllowPOViewing){
+						sPlacedOnHoldBy += " on "
+							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
+							+ "?" + ICPOHeader.Paramlid + "=" + sPOHeaderID
+							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() 
+							+ "\">PO #" + sPOHeaderID + "</A>"
+						;
+					}else{
+						sPlacedOnHoldBy += " on PO #" + sPOHeaderID;
+					}
+				}
+			}
+			s += "    <TD ALIGN=RIGHT><B>Placed on hold by:</B></TD>\n";
+			s += "    <TD>" + sPlacedOnHoldBy
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableaptransactions.lonholdbyuserid + "\" VALUE=\"" + sOnHoldUserID + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableaptransactions.sonholdbyfullname + "\" VALUE=\"" + sPlacedOnHoldByFullName + "\">"
+				+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableaptransactions.lonholdpoheaderid + "\" VALUE=\"" + sPOHeaderID + "\">"
+			+ "</TD>\n"
+			;
+			s += "  <TD>&nbsp;</TD>\n";
+			s += "  </TR>\n";
+			
+			s += "  <TR>\n";
+			//On hold reason:
+			String sOnHoldReason = rs.getString(SMTableaptransactions.monholdreason);
+			//If there's a reason in the request, then override with that:
+			if (clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.monholdreason, sm.getRequest()).compareToIgnoreCase("") != 0){
+				sOnHoldReason = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.monholdreason, sm.getRequest());
+			}
+			
+		     		if (clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.ionhold, sm.getRequest()).compareToIgnoreCase("Y") == 0){
+		    			sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		    			bOnHold = true;
+		    		}else{
+		    			if (rs.getInt(SMTableaptransactions.ionhold) == 1){
+		    				sTemp += clsServletUtilities.CHECKBOX_CHECKED_STRING;
+		    				bOnHold = true;
+		    			}
+		    		}
+			s += "    <TD ALIGN=RIGHT><B>Reason for hold:</B></TD>\n";
+			s += "    <TD colspan=2>";
+			
+			//If the entry is already placed on hold, then don't let the user edit the reason:
+			if (bOnHold){
+				s += "<I>" + sOnHoldReason + "</I>"
+					+ "<INPUT TYPE=HIDDEN NAME=\"" + SMTableaptransactions.monholdreason 
+					+ "\" VALUE=\"" + sOnHoldReason + "\">"
+				;
+			}else{
+				s += "<TEXTAREA NAME=\"" + SMTableaptransactions.monholdreason + "\""
+					+ " onchange=\"flagDirty();\""
+					+ " rows=\"1\""
+					+ " cols=\"80\""
+					+ ">"
+					+ sOnHoldReason
+					+ "</TEXTAREA>"
+					;
+			}
+
+			s += "</TD>\n";
+			s += "  </TR>\n";
+			
+			
 		}else{
 			rs.close();
 			throw new SQLException("No record found.");

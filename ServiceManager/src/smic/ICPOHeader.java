@@ -12,6 +12,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import smap.APVendor;
 import smcontrolpanel.SMUtilities;
+import SMDataDefinition.SMTableaptransactionlines;
+import SMDataDefinition.SMTableaptransactions;
 import SMDataDefinition.SMTableicpoheaders;
 import SMDataDefinition.SMTableicpolines;
 import SMDataDefinition.SMTableicporeceiptheaders;
@@ -748,9 +750,120 @@ public class ICPOHeader extends clsMasterEntry{
     				return false;
     			}
     	}
+			//If the PO is on hold, update any AP invoices that include any receipts on this PO:
+		if (getspaymentonhold().compareToIgnoreCase("1") == 0){
+			try {
+				placeRelatedInvoicesOnHold(conn, getsID());
+			} catch (Exception e) {
+				super.addErrorMessage("Error [1584025716] - unable to place related AP invoices on hold - " + e.getMessage() + ".");
+			}
+		}
     	return true;
     }
 
+    public void placeRelatedInvoicesOnHold(Connection conn, String sPOHeaderID) throws Exception{
+    	//We only worry about open AP invoices which might include receipts for this PO:
+    	//Get all the receipts for this PO:
+		boolean bSomeReceiptsAreStillUnpaid = false;
+		boolean bInvoicesForThisReceiptExist = false;
+    	String SQLReceiptHeaders = "SELECT"
+    		+ " " + SMTableicporeceiptheaders.lid
+    		+ " FROM " + SMTableicporeceiptheaders.TableName
+    		+ " WHERE ("
+    			+ "(" + SMTableicporeceiptheaders.lpoheaderid + " = " + sPOHeaderID + ")"
+    		+ ")"
+    	;
+    	
+    	try {
+			ResultSet rsReceiptHeaders = clsDatabaseFunctions.openResultSet(SQLReceiptHeaders, conn);
+			String SQLInvoiceTransactions = "";
+			while (rsReceiptHeaders.next()){
+				bInvoicesForThisReceiptExist = false;
+				//If this receipt is on an open AP invoice, put it in hold:
+				//Get all the open AP invoice lines with this receipt on them:
+				SQLInvoiceTransactions = "SELECT"
+					+ " " + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid
+					+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.bdcurrentamt
+					+ ", " + SMTableaptransactions.TableName + "." + SMTableaptransactions.ionhold
+					+ " FROM " + SMTableaptransactionlines.TableName
+					+ " LEFT JOIN " + SMTableaptransactions.TableName
+					+ " ON " + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.ltransactionheaderid
+					+ " = " + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid
+					+ " WHERE ("
+						+ "(" + SMTableaptransactionlines.TableName + "." + SMTableaptransactionlines.lreceiptheaderid + " = " + Long.toString(rsReceiptHeaders.getLong(SMTableicporeceiptheaders.lid)) + ")"
+						+ " AND (" + SMTableaptransactions.TableName + "." + SMTableaptransactions.idoctype + " = " 
+							+ Integer.toString(SMTableaptransactions.AP_TRANSACTION_TYPE_INVOICE_INVOICE) + ")"
+					+ ")"
+					+ " GROUP BY " + SMTableaptransactions.TableName + "." + SMTableaptransactions.lid
+				;
+				//If there is an AP invoice that is open, update its On Hold status now:
+				try {
+					ResultSet rsAPInvoices = clsDatabaseFunctions.openResultSet(SQLInvoiceTransactions, conn);
+					int iInvoiceCounter = 0;
+					while(rsAPInvoices.next()){
+						iInvoiceCounter++;
+						bInvoicesForThisReceiptExist = true;
+						//Track the number of unpaid receipts:
+						if (rsAPInvoices.getBigDecimal(SMTableaptransactions.TableName + "." + SMTableaptransactions.bdcurrentamt).compareTo(BigDecimal.ZERO) != 0){
+							bSomeReceiptsAreStillUnpaid = true;
+							//Put the invoice on hold if it's not already:
+							if (rsAPInvoices.getInt(SMTableaptransactions.TableName + "." + SMTableaptransactions.ionhold) == 0){
+								String SQLUpdate = "";
+								try {
+									SQLUpdate = "UPDATE"
+										+ " " + SMTableaptransactions.TableName
+										+ " SET " + SMTableaptransactions.ionhold + " = 1"
+										+ ", " + SMTableaptransactions.sonholdbyfullname + " = '" + getspaymentonholdbyfullname() + "'"
+										+ ", " + SMTableaptransactions.lonholdbyuserid + " = " + getlpaymentonholdbyuserid()
+										+ ", " + SMTableaptransactions.lonholdpoheaderid + " = " + sPOHeaderID
+										+ ", " + SMTableaptransactions.monholdreason + " = '" + getmpaymentonholdreason() + "'"
+										+ ", " + SMTableaptransactions.datplacedonhold + " = '" 
+											+ clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(
+												getdatpaymentplacedonhold()
+											) + "'"
+										+ " WHERE ("
+											+ "(" + SMTableaptransactions.lid + " = " + rsAPInvoices.getLong(SMTableaptransactions.TableName + "." + SMTableaptransactions.lid) + ")"
+										+ ")"
+									;
+									Statement stmt = conn.createStatement();
+									stmt.execute(SQLUpdate);
+								} catch (Exception e) {
+									throw new Exception("Error [2020721417255] " + "Could not update ON HOLD status of AP Invoice with SQL: '" + SQLUpdate + "' - " + e.getMessage());
+								}
+								
+							}
+						}
+					}
+					rsAPInvoices.close();
+					//If there were NO invoices for this receipt, then there are still some unpaid receipts:
+					if (iInvoiceCounter == 0){
+						bSomeReceiptsAreStillUnpaid = true;
+					}
+				} catch (Exception e) {
+					throw new Exception("Error [202072142158] " + " reading AP invoices to update on hold status with SQL '" 
+						+ SQLInvoiceTransactions + "' - " + e.getMessage());
+				}
+			}
+			rsReceiptHeaders.close();
+		} catch (Exception e) {
+			throw new Exception("Error [2020721424327] " + "reading receipt headers to put AP invoices on hold with SQL '" 
+				+ SQLReceiptHeaders + "' - " + e.getMessage());
+		}
+    	
+    	//If this PO is complete,and all the receipts have been paid, notify the user that they can't put it on hold:
+    	if(getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_COMPLETE)) == 0){
+    		//If invoices for it exist:
+    		if(
+    			(bInvoicesForThisReceiptExist) && (!bSomeReceiptsAreStillUnpaid)
+    		){
+				//Notify the user that they can't put it on hold because every receipt has been invoiced and paid:
+				throw new Exception("This PO is received completely, and all the invoices have been fully paid," 
+					+ " so it can no longer be put on hold.");
+    		}
+    	}
+    	return;
+    }
+    
     public boolean delete (ServletContext context, String sDBID, String sUserID, String sUserFullName){
     	
     	Connection conn = clsDatabaseFunctions.getConnection(

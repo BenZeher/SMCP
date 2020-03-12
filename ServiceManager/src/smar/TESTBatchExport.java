@@ -1,14 +1,9 @@
 package smar;
-import java.math.BigDecimal;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
 import javax.servlet.http.HttpServlet;
 
-import SMClasses.SMOrderDetail;
-import SMClasses.SMOrderHeader;
-import ServletUtilities.clsManageBigDecimals;
-import smcontrolpanel.SMSalesOrderTaxCalculator;
+import smic.ICPOHeader;
 
 public class TESTBatchExport extends HttpServlet{
 
@@ -147,6 +142,27 @@ public class TESTBatchExport extends HttpServlet{
 		}
 		*/
 		
+		//Test PO on hold function:
+		ICPOHeader pohead = new ICPOHeader();
+		pohead.setsID("62813");
+		if(!pohead.load(conn)){
+			System.out.println("[202072150436] " + "error loading - " + pohead.getErrorMessages());
+		}
+		/*
+		pohead.setipaymentonhold("1");
+		pohead.setdatpaymentplacedonhold("03/12/2020 04:00:00 PM");
+		pohead.setlpaymentonholdbyuserid("6");
+		pohead.setmpaymentonholdreason("Test reason");
+		pohead.setspaymentonholdbyfullname("Tom Ronayne");
+		*/
+		try {
+			pohead.placeRelatedInvoicesOnHold(conn, pohead.getsID());
+		} catch (Exception e) {
+			System.out.println("[202072151164] " + " error - " + e.getMessage());
+		}
+		System.out.println("[202072151310] " + "Done");
+		
+		/*
 		SMSalesOrderTaxCalculator sotc = null;
 		SMOrderHeader order = new SMOrderHeader();
 		order.setM_sOrderNumber("510859");
@@ -198,7 +214,7 @@ public class TESTBatchExport extends HttpServlet{
 			);
 		}
 		System.out.println("DONE");
-		
+		*/
 		
 		/*
 		//Test GL Transaction Batch posting:

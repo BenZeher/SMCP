@@ -2,18 +2,20 @@ package smap;
 
 import java.io.IOException;
 import java.math.BigDecimal;
+import java.sql.ResultSet;
 
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import SMDataDefinition.SMTableaptransactions;
+import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
 import ServletUtilities.clsServletUtilities;
 import ServletUtilities.clsValidateFormFields;
-import ServletUtilities.clsDatabaseFunctions;
 import smcontrolpanel.SMMasterEditAction;
 import smcontrolpanel.SMSystemFunctions;
 import smcontrolpanel.SMUtilities;
@@ -130,11 +132,24 @@ public class APControlPaymentsAction extends HttpServlet{
 		} catch (Exception e1) {
 			sValidationResult += "  " + e1.getMessage() + ".";
 		}
+		//System.out.println("[202072958390] " + "sOnHoldUserID = " + sOnHoldUserID);
 		
 		//On hold full user name:
 		String sOnHoldFullUserName = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.sonholdbyfullname, req).trim();
 		try {
-			sOnHoldFullUserName = clsValidateFormFields.validateStringField(sOnHoldFullUserName, SMTableaptransactions.sonholdbyfullnamelength, "On hold user full name", false);
+			sOnHoldFullUserName = clsValidateFormFields.validateStringField(
+				sOnHoldFullUserName, 
+				SMTableaptransactions.sonholdbyfullnamelength, 
+				"On hold user full name", true);
+		} catch (Exception e1) {
+			sValidationResult += "  " + e1.getMessage() + ".";
+		}
+		//System.out.println("[20207295905] " + "sOnHoldFullUserName = '" + sOnHoldFullUserName + "'.");
+		
+		//On hold PO Header ID:
+		String sOnHoldPOHeaderID = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.lonholdpoheaderid, req).trim();
+		try {
+			sOnHoldPOHeaderID = clsValidateFormFields.validateLongIntegerField(sOnHoldPOHeaderID, "On hold PO header ID", 0L, clsValidateFormFields.MAX_LONG_VALUE);
 		} catch (Exception e1) {
 			sValidationResult += "  " + e1.getMessage() + ".";
 		}
@@ -146,19 +161,79 @@ public class APControlPaymentsAction extends HttpServlet{
 		} catch (Exception e) {
 			sValidationResult += "  " + e.getMessage() + ".";
 		}
+		//System.out.println("[202072959210] " + "sOnHoldDate = '" + sOnHoldDate + "'.");
 		
 		//On hold reason:
 		String sOnHoldReason = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.monholdreason, req).trim();
 		try {
-			sOnHoldReason = clsValidateFormFields.validateStringField(sOnHoldReason, SMTableaptransactions.sonholdbyfullnamelength, "On hold reason", sOnHold.compareToIgnoreCase("1") == 0);
+			sOnHoldReason = clsValidateFormFields.validateStringField(sOnHoldReason, 16000, "On hold reason", sOnHold.compareToIgnoreCase("0") == 0);
 		} catch (Exception e1) {
 			sValidationResult += "  " + e1.getMessage() + ".";
 		}
+		//System.out.println("[202072959435] " + "sOnHoldReason = '" + sOnHoldReason + "'.");
 		
 		if (sValidationResult.compareToIgnoreCase("") != 0){
 			throw new Exception(sValidationResult);
 		}
 
+		//System.out.println("[202072102318] " + "sOnHold = '" + sOnHold + "'.");
+		
+		//If the payment is NOT on hold, clear the on hold fields:
+		if (sOnHold.compareToIgnoreCase("0") == 0){
+			//System.out.println("[20207210391] " + "sOnHold == 0");
+			sOnHoldUserID = "0";
+			sOnHoldFullUserName = "";
+			sOnHoldDate = SMUtilities.EMPTY_DATETIME_VALUE;
+			sOnHoldReason = "";
+			sOnHoldPOHeaderID = "0";
+		}else{
+			//System.out.println("[20207210391] " + "sOnHold != 0");
+			//If the payment is being PLACED on hold for the first time, get the user and date info, and require a reason:
+			//First, get the current on hold status of the transaction
+			boolean bTransactionWasAlreadyOnHold = false;
+			String sSQL = "SELECT"
+				+ " " + SMTableaptransactions.ionhold
+				+ " FROM " + SMTableaptransactions.TableName
+				+ " WHERE ("
+					+ "(" + SMTableaptransactions.svendor + " = '" + sVendor + "')"
+					+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + sDocNumber + "')"
+				+ ")"
+			;
+			try {
+				ResultSet rs = clsDatabaseFunctions.openResultSet(
+					sSQL, 
+					getServletContext(), 
+					sm.getsDBID(), 
+					"MySQL", 
+					this.toString() + ".savePaymentInformation - user: " + sm.getFullUserName()
+				);
+				if (rs.next()){
+					if (rs.getInt(SMTableaptransactions.ionhold) == 1){
+						bTransactionWasAlreadyOnHold = true;
+					}
+				}
+				rs.close();
+			} catch (Exception e1) {
+				throw new Exception("Error [202072930501] " + "reading on hold status of existing transaction with SQL = '" + sSQL + "' - " + e1.getMessage());
+			}
+			
+			//If the user is setting it on hold for the first time, then get the additional info now:
+			//System.out.println("[202072103562] " + "bTransactionWasAlreadyOnHold = " + bTransactionWasAlreadyOnHold);
+			if (!bTransactionWasAlreadyOnHold){
+				//Get the user info, etc.:
+				sOnHoldUserID = sm.getUserID();
+				sOnHoldFullUserName = sm.getFullUserName();
+				sOnHoldPOHeaderID = "0";  //User can't set an on hold PO number from here
+				try {
+					ServletUtilities.clsDBServerTime dbtime;
+					dbtime = new ServletUtilities.clsDBServerTime(sm.getsDBID(), sm.getFullUserName(), getServletContext());
+					sOnHoldDate = dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY);
+				} catch (Exception e) {
+					throw new Exception("Error [202072930130] " + "Could not get current date and time - " + e.getMessage());
+				}
+			}
+		}
+		
 		String SQL = "UPDATE " + SMTableaptransactions.TableName
 			+ " SET " + SMTableaptransactions.bdcurrentdiscountavailable + " = " + sDiscountAvailable.replaceAll(",", "")
 			+ ", " + SMTableaptransactions.datdiscountdate + " = '" + clsDateAndTimeConversions.convertDateFormat(
@@ -171,6 +246,7 @@ public class APControlPaymentsAction extends HttpServlet{
 			+ ", " + SMTableaptransactions.datplacedonhold + " = '" + clsDateAndTimeConversions.convertDateFormat(
 				sOnHoldDate, SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.DATETIME_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATETIME_VALUE) + "'"
 			+ ", " + SMTableaptransactions.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(sOnHoldReason) + "'"
+					+ ", " + SMTableaptransactions.lonholdpoheaderid + " = " + sOnHoldPOHeaderID
 			+ " WHERE ("
 				+ "(" + SMTableaptransactions.svendor + " = '" + sVendor + "')"
 				+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + sDocNumber + "')"

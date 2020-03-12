@@ -386,18 +386,24 @@ public class APControlPaymentsEdit  extends HttpServlet {
 				sm.getsDBID(), 
 				(String) sm.getCurrentSession().getAttribute(SMUtilities.SMCP_SESSION_PARAM_LICENSE_MODULE_LEVEL)
 			);
+			//System.out.println("[202072946134] " + "On hold = " + bOnHold);
 			if (bOnHold){
+				//System.out.println("[202072943444] " + "bOnHold");
 				sPlacedOnHoldBy = "User ID: " + sOnHoldUserID + " - " + sPlacedOnHoldByFullName;
+				//System.out.println("[202072943575] " + "sPlacedOnHoldBy = '" + sPlacedOnHoldBy + "'");
 				if (sPOHeaderID.compareToIgnoreCase("0") != 0){
 					if(bAllowPOViewing){
+						//System.out.println("[202072944203] " + "bAllowPOViewing = true");
 						sPlacedOnHoldBy += " on "
 							+ "<A HREF=\"" + SMUtilities.getURLLinkBase(getServletContext()) + "smic.ICEditPOEdit"
 							+ "?" + ICPOHeader.Paramlid + "=" + sPOHeaderID
 							+ "&" + SMUtilities.SMCP_REQUEST_PARAM_DATABASE_ID + "=" + sm.getsDBID() 
 							+ "\">PO #" + sPOHeaderID + "</A>"
 						;
+						//System.out.println("[202072944372] " + "sPLacedOnHoldBy = '" + sPlacedOnHoldBy + "'.");
 					}else{
 						sPlacedOnHoldBy += " on PO #" + sPOHeaderID;
+						//System.out.println("[202072944373] " + "sPLacedOnHoldBy = '" + sPlacedOnHoldBy + "'.");
 					}
 				}
 			}

@@ -34,6 +34,9 @@ import ServletUtilities.clsValidateFormFields;
 import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;
+import smic.ICPOHeader;
+import smic.ICPOInvoiceLine;
+import smic.ICPOReceiptHeader;
 
 public class APBatchEntry {
 
@@ -1156,55 +1159,108 @@ public class APBatchEntry {
 		}
 
 		
-		if (getsionhold().compareToIgnoreCase("1") == 0){
-			//Determine if the entry is being put on hold NOW, or if it was already on hold - either from a previous save
-			// OR from someone putting the PO on hold earlier:
-			//If the on hold user ID is not valid, then we'll assume it's just being put on hold now:
-	        boolean bOnHoldIsBeingSet = false;
-	        if (
-	        	(getsonholdbyuserid().compareToIgnoreCase("0") == 0) 
-	        	|| (getsonholdbyuserid().compareToIgnoreCase("-1") == 0) 
-	        	|| (getsonholdbyuserid().compareToIgnoreCase("") == 0) 
-	        ){
-	        	bOnHoldIsBeingSet = true;
-	        }
-	        
-	         if (bOnHoldIsBeingSet){
-	 			//We need to update the user id, date, etc.
-	        	 setsonholdbyuserid(sUserID);
-	 			//Get the full user name:
-	 			SQL = "SELECT"
-	 				+ " " + SMTableusers.sUserFirstName
-	 				+ ", " + SMTableusers.sUserLastName
-	 				+ " FROM " + SMTableusers.TableName
-	 				+ " WHERE ("
-	 					+ "(" + SMTableusers.lid + " = " + sUserID + ")"
-	 				+ ")"
-	 			;
-	 			try {
-	 				ResultSet rsUser = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
-	 				if (rsUser.next()){
-	 					setsonholdbyfullname(rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName));
-	 				}else{
-	 					setsonholdbyfullname("N/A");
-	 				}
-	 				rsUser.close();
-	 			} catch (SQLException e) {
-	 				throw new Exception("Error [1583778961] getting full user name for placing payment on hold with SQL: '"
-	 					+ SQL + "' - " + e.getMessage() + ".");
-	 			}
-	 			//Get the on hold date:
-	 			ServletUtilities.clsDBServerTime dbtime;
-	 			try {
-	 				dbtime = new ServletUtilities.clsDBServerTime(conn);
-	 				setsdatplacedonhold(dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
-	 				//System.out.println("[202066171436] " + "this.getdatpaymentplacedonhold = '" + this.getdatpaymentplacedonhold() + "'.");
-	 			} catch (Exception e) {
-	 				throw new Exception("Error [1583779014] getting current date/time for placing payment on hold - " + e.getMessage() + ".");
-	 			}
-	         }
-	        
-		}else{
+		//ON HOLD LOGIC:
+		//If there's a related PO that's on hold, use that information to put this
+		//entry on hold:
+		boolean bEntrySetOnHoldFromPO = false;
+		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
+			APBatchEntryLine line = m_arrBatchEntryLines.get(i);
+    		
+    		ICPOReceiptHeader rcpt = new ICPOReceiptHeader();
+    		rcpt.setsID(line.getslreceiptheaderid());
+    		//System.out.println("[202073151029] " + "receipt lid = " + line.getslreceiptheaderid());
+    		String sPOHeaderID = "0";
+    		try {
+				if(rcpt.load(conn)){
+					sPOHeaderID = rcpt.getspoheaderid();
+					//System.out.println("[2020731510389] " + "sPOHeaderID = " + sPOHeaderID);
+					//If we get a valid PO, then check the ON HOLD information:
+					ICPOHeader pohead = new ICPOHeader();
+					pohead.setsID(sPOHeaderID);
+					if (!pohead.load(conn)){
+						//Nothing to do here but skip it and go on....
+					}else{
+						//System.out.println("[202073151161] " + "loaded PO");
+						if (pohead.getspaymentonhold().compareToIgnoreCase("1") == 0){
+							//System.out.println("[2020731511171] " + "PO is on hold");
+							//set the invoice on hold:
+							setsionhold(pohead.getspaymentonhold());
+							setsonholdbyfullname(pohead.getspaymentonholdbyfullname());
+							setsonholdbyuserid(pohead.getlpaymentonholdbyuserid());
+							setsdatplacedonhold(pohead.getdatpaymentplacedonhold());
+							setsonholdreason(pohead.getmpaymentonholdreason());
+							setsonholdpoheaderid(sPOHeaderID);
+							//m_sListOfOnHoldInvoices += "  Entry number " + Integer.toString((batch.getBatchEntryArray().size() + 1))
+							//	+ " is flagged as on hold from PO number " + sPOHeaderID + "."
+							;
+							bEntrySetOnHoldFromPO = true;
+							
+							//We take the on hold information from the FIRST on hold PO we run across.
+							//So IF there is more than one on hold PO involved, only the first one is used:
+							break;
+						}
+					}
+				}
+			} catch (Exception e) {
+				//No need to catch this - leave the PO at '0'
+			}
+    	}
+		
+		//If the entry was NOT set on hold from a PO, then process the possibility that the user is putting it
+		//on hold now:
+		//System.out.println("[2020731512302] " + "bEntrySetOnHoldFromPO = " + bEntrySetOnHoldFromPO);
+		if (!bEntrySetOnHoldFromPO){
+			if (getsionhold().compareToIgnoreCase("1") == 0){
+				//Determine if the entry is being put on hold NOW, or if it was already on hold - either from a previous save
+				// OR from someone putting the PO on hold earlier:
+				//If the on hold user ID is not valid, then we'll assume it's just being put on hold now:
+		        boolean bOnHoldIsBeingSet = false;
+		        if (
+		        	(getsonholdbyuserid().compareToIgnoreCase("0") == 0) 
+		        	|| (getsonholdbyuserid().compareToIgnoreCase("-1") == 0) 
+		        	|| (getsonholdbyuserid().compareToIgnoreCase("") == 0) 
+		        ){
+		        	bOnHoldIsBeingSet = true;
+		        }
+		        
+		         if (bOnHoldIsBeingSet){
+		 			//We need to update the user id, date, etc.
+		        	 setsonholdbyuserid(sUserID);
+		 			//Get the full user name:
+		 			SQL = "SELECT"
+		 				+ " " + SMTableusers.sUserFirstName
+		 				+ ", " + SMTableusers.sUserLastName
+		 				+ " FROM " + SMTableusers.TableName
+		 				+ " WHERE ("
+		 					+ "(" + SMTableusers.lid + " = " + sUserID + ")"
+		 				+ ")"
+		 			;
+		 			try {
+		 				ResultSet rsUser = ServletUtilities.clsDatabaseFunctions.openResultSet(SQL, conn);
+		 				if (rsUser.next()){
+		 					setsonholdbyfullname(rsUser.getString(SMTableusers.sUserFirstName) + " " + rsUser.getString(SMTableusers.sUserLastName));
+		 				}else{
+		 					setsonholdbyfullname("N/A");
+		 				}
+		 				rsUser.close();
+		 			} catch (SQLException e) {
+		 				throw new Exception("Error [1583778961] getting full user name for placing payment on hold with SQL: '"
+		 					+ SQL + "' - " + e.getMessage() + ".");
+		 			}
+		 			//Get the on hold date:
+		 			ServletUtilities.clsDBServerTime dbtime;
+		 			try {
+		 				dbtime = new ServletUtilities.clsDBServerTime(conn);
+		 				setsdatplacedonhold(dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY));
+		 				//System.out.println("[202066171436] " + "this.getdatpaymentplacedonhold = '" + this.getdatpaymentplacedonhold() + "'.");
+		 			} catch (Exception e) {
+		 				throw new Exception("Error [1583779014] getting current date/time for placing payment on hold - " + e.getMessage() + ".");
+		 			}
+		         }
+			} 
+		}
+		
+		if(getsionhold().compareToIgnoreCase("0") == 0){
 			//Clear all the 'on hold' fields:
 			setsonholdbyfullname("");
 			setsonholdbyuserid("0");
@@ -1212,7 +1268,8 @@ public class APBatchEntry {
 			setsonholdreason("");
 			setsonholdpoheaderid("0");
 		}
-
+		
+		//Now just validate all the fields:
 		setsonholdbyfullname(getsonholdbyfullname().trim());
         if (getsonholdbyfullname().length() > SMTableapbatchentries.sonholdbyfullnameLength){
         	sResult += "  " + "On hold by user name is too long.";
@@ -1249,8 +1306,10 @@ public class APBatchEntry {
         		sResult += "  " + "If the payment is on hold, it must have a reason noted.";
         	}
         }
+        
+        //System.out.println("[2020731513183] " + "getsionhold() = " + getsionhold());
 		//  END ON HOLD LOGIC
-		
+        
 		//Validate the lines:
 		for (int i = 0; i < m_arrBatchEntryLines.size(); i++){
 			APBatchEntryLine line = m_arrBatchEntryLines.get(i);

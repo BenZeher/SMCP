@@ -751,11 +751,14 @@ public class ICPOHeader extends clsMasterEntry{
     			}
     	}
 			//If the PO is on hold, update any AP invoices that include any receipts on this PO:
+    	//System.out.println("[2020731433530] " + "Going to place AP invoices on hold");
 		if (getspaymentonhold().compareToIgnoreCase("1") == 0){
 			try {
 				placeRelatedInvoicesOnHold(conn, getsID());
 			} catch (Exception e) {
+				//System.out.println("[2020731436170] " + "Caught error placing invoices on hold - " + e.getMessage());
 				super.addErrorMessage("Error [1584025716] - unable to place related AP invoices on hold - " + e.getMessage() + ".");
+				return false;
 			}
 		}
     	return true;
@@ -764,6 +767,8 @@ public class ICPOHeader extends clsMasterEntry{
     public void placeRelatedInvoicesOnHold(Connection conn, String sPOHeaderID) throws Exception{
     	//We only worry about open AP invoices which might include receipts for this PO:
     	//Get all the receipts for this PO:
+    	
+    	//System.out.println("[2020731434135] " + "Placing invoices on hold for PO " + sPOHeaderID);
 		boolean bSomeReceiptsAreStillUnpaid = false;
 		boolean bInvoicesForThisReceiptExist = false;
     	String SQLReceiptHeaders = "SELECT"
@@ -850,6 +855,9 @@ public class ICPOHeader extends clsMasterEntry{
 				+ SQLReceiptHeaders + "' - " + e.getMessage());
 		}
     	
+    	//System.out.println("[2020731434525] " + "PO status is " + getsstatus());
+    	//System.out.println("[2020731435249] " + "bInvoicesForThisReceiptExist = " + bInvoicesForThisReceiptExist);
+    	//System.out.println("[2020731435398] " + "!bSomeReceiptsAreStillUnpaid = " + !bSomeReceiptsAreStillUnpaid);
     	//If this PO is complete,and all the receipts have been paid, notify the user that they can't put it on hold:
     	if(getsstatus().compareToIgnoreCase(Integer.toString(SMTableicpoheaders.STATUS_COMPLETE)) == 0){
     		//If invoices for it exist:
@@ -857,6 +865,7 @@ public class ICPOHeader extends clsMasterEntry{
     			(bInvoicesForThisReceiptExist) && (!bSomeReceiptsAreStillUnpaid)
     		){
 				//Notify the user that they can't put it on hold because every receipt has been invoiced and paid:
+    			//System.out.println("[2020731433305] " + "Cannot be put on hold");
 				throw new Exception("This PO is received completely, and all the invoices have been fully paid," 
 					+ " so it can no longer be put on hold.");
     		}

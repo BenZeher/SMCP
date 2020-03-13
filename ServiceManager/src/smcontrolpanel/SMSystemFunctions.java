@@ -1434,8 +1434,6 @@ public class SMSystemFunctions extends java.lang.Object{
 			arrFunctionDescriptions.add("Required to access the 'Import Data Command' function, which uploads the csv file onto the database.  This should be highly restricted"
 					+ " to prevent accidental changes to the database.");
 			arrFunctionModuleLevel.add(SMModuleListing.MODULE_BASE);
-			
-			
 
 			arrFunctions.add("IC Find Items Sorted By Most Used");
 			arrFunctionIDs.add(ICFindItemsSortedByMostUsed);

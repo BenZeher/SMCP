@@ -144,17 +144,17 @@ public class TESTBatchExport extends HttpServlet{
 		
 		//Test PO on hold function:
 		ICPOHeader pohead = new ICPOHeader();
-		pohead.setsID("62813");
+		pohead.setsID("49694");
 		if(!pohead.load(conn)){
 			System.out.println("[202072150436] " + "error loading - " + pohead.getErrorMessages());
 		}
-		/*
+		
 		pohead.setipaymentonhold("1");
 		pohead.setdatpaymentplacedonhold("03/12/2020 04:00:00 PM");
 		pohead.setlpaymentonholdbyuserid("6");
 		pohead.setmpaymentonholdreason("Test reason");
 		pohead.setspaymentonholdbyfullname("Tom Ronayne");
-		*/
+		
 		try {
 			pohead.placeRelatedInvoicesOnHold(conn, pohead.getsID());
 		} catch (Exception e) {

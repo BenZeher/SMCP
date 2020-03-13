@@ -66,6 +66,7 @@ public class ASAlarmListenerAction extends HttpServlet{
 		
 		sPasscode = sPasscode.replaceAll("'", "");
 		sControllerName = sControllerName.replaceAll("'", "");
+
 		
 		//Need to build some checking in here, but for now, we'll just use the DBID to get a connection and make an entry in the log:
 		Connection conn = null;
@@ -89,6 +90,7 @@ public class ASAlarmListenerAction extends HttpServlet{
 			 "Query string from controller " + sControllerName + ": '" + request.getQueryString() + "'", 
 			"[1458694548]");
 		
+		System.out.println("[20207395716] " + "Controller Name: " + sControllerName + " Passcode: " + sPasscode);
 		try {
 			validate_request(sPasscode, sControllerName, conn);
 		} catch (Exception e1) {

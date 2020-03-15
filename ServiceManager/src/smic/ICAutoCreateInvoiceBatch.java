@@ -379,13 +379,13 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
         		}
             	entry.setscontrolacct(apset.getspayablescontrolacct());
             	entry.setsvendoracct(inv.getM_svendor());
+            	String sPOHeaderID = "0";            	
             	for (int i = 0; i < inv.getLines().size(); i++){
             		ICPOInvoiceLine invline = inv.getLines().get(i);
             		APBatchEntryLine line = new APBatchEntryLine();
             		
             		ICPOReceiptHeader rcpt = new ICPOReceiptHeader();
             		rcpt.setsID(invline.getsporeceiptid());
-            		String sPOHeaderID = "0";
             		try {
 						if(rcpt.load(conn)){
 							sPOHeaderID = rcpt.getspoheaderid();
@@ -403,9 +403,6 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
 									entry.setsdatplacedonhold(pohead.getdatpaymentplacedonhold());
 									entry.setsonholdreason(pohead.getmpaymentonholdreason());
 									entry.setsonholdpoheaderid(sPOHeaderID);
-									m_sListOfOnHoldInvoices += "  Entry number " + Integer.toString((batch.getBatchEntryArray().size() + 1))
-										+ " is flagged as on hold from PO number " + sPOHeaderID + "."
-									;
 								}
 							}
 						}
@@ -423,7 +420,14 @@ public class ICAutoCreateInvoiceBatch extends java.lang.Object{
             		entry.addLine(line);
             	}
             	
-            	//Add any 'on hold' information:
+            	//If the entry is on hold, record it for the user:
+            	if (entry.getsionhold().compareToIgnoreCase("1") == 0){
+					m_sListOfOnHoldInvoices += "  Entry number " + Integer.toString((batch.getBatchEntryArray().size() + 1))
+					+ " is flagged as on hold from PO number " + sPOHeaderID + "."
+				;
+            	}
+            	
+            	//Add the entry:
             	batch.addBatchEntry(entry);
         	}
         } catch (Exception e){

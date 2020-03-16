@@ -936,6 +936,7 @@ public class ARAgedTrialBalanceReportGenerate extends HttpServlet {
 			SQL = SQL + " AND (" + SMTableartransactions.dcurrentamt + " != 0.00)";
 		}
 		SQL = SQL + ")"
+				//TODO ADD CHECK FOR TYPE OF WORK DONE
 		;
 		lTestTime = System.currentTimeMillis();
 		//System.out.println("[1500489199] SQL 2 = " + SQL);

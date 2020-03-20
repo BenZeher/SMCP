@@ -18,9 +18,9 @@ import ServletUtilities.clsDatabaseFunctions;
 
 public class SMUpdateData extends java.lang.Object{
 
-	private static final int m_CurrentDatabaseVersion = 1458;
+	private static final int m_CurrentDatabaseVersion = 1459;
 	private static final String m_sVersionNumber = "1.4";
-	private static final String m_sLastRevisionDate = "3/16/2020";
+	private static final String m_sLastRevisionDate = "3/20/2020";
 	private static final String m_sCopyright = "Copyright 2003-2020 AIRO Tech OMD, Inc.";
 
 	private String m_sErrorMessage;
@@ -15296,6 +15296,29 @@ public class SMUpdateData extends java.lang.Object{
 					+ ", ADD monholdreason MEDIUMTEXT NOT NULL"
 					+ ", ADD lonholdpoheaderid int(11) NOT NULL DEFAULT '0'"
 				;
+				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
+				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
+			break;	
+			//END CASE	
+			
+			//BEGIN CASE:
+			case 1458:
+				//Added by BJA 3/20/2020
+				SQL = "ALTER TABLE `materialreturns`"
+						+ "  DROP COLUMN `icreditnotexpected`"
+						+ ", DROP COLUMN `iponumber`"
+						+ ", DROP COLUMN `itobereturned`"
+						+ ", DROP COLUMN `svendoracct`"
+						+ ", DROP COLUMN `ladjustedbatchnumber`"
+						+ ", DROP COLUMN `ladjustedentrynumber`"
+						+ ", DROP COLUMN `bdadjustmentamount`"
+						+ ", DROP COLUMN `datcreditnotedate`"
+						+ ", DROP COLUMN `screditmemonumber`"
+						+ ", DROP COLUMN `bdcreditamt`"
+						+ ", DROP COLUMN `datreturnsent`"
+						+ ", DROP COLUMN `iinvoiceonhold`"
+						+ ", DROP COLUMN `mVendorComments`"
+						+ ", DROP COLUMN `iCreditDue`";
 				if (!execUpdate(sUser, SQL, conn, iSystemDatabaseVersion)){return false;}
 				iVersionUpdatedTo = iSystemDatabaseVersion + 1;
 			break;	

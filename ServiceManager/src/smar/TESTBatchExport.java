@@ -1,8 +1,23 @@
 package smar;
+import java.io.IOException;
 import java.sql.DriverManager;
+import java.util.Map;
+import java.util.Properties;
+import java.util.Set;
 
+import javax.mail.Authenticator;
+import javax.mail.Message;
+import javax.mail.Multipart;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeBodyPart;
+import javax.mail.internet.MimeMessage;
+import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
+import smap.APVendor;
 import smic.ICPOHeader;
 
 public class TESTBatchExport extends HttpServlet{
@@ -141,6 +156,36 @@ public class TESTBatchExport extends HttpServlet{
 			return;
 		}
 		*/
+		
+		APVendor ven = new APVendor();
+		ven.setsvendoracct("OHD03");
+		ven.load(conn);
+		try {
+			ven.mailNewVendorNotification("Tom Ronayne", "OHD Washington", conn);
+		} catch (Exception e2) {
+			System.out.println("Error  - " + e2.getMessage());
+		}
+		
+		//Test emailing function:
+		try {
+			sendEmailWithEmbeddedHTML(
+					"smtp.gmail.com",
+			        "printmanager@odcdc.com", 
+			        "madg1973!",
+			        "465",
+			        "printmanager@odcdc.com", 
+			        "tjprona@gmail.com",
+			        "Test Subject", 
+			        "This is the body",
+			        false,
+			        null)
+			;
+		} catch (Exception e1) {
+			System.out.println("Email NOT sent - " + e1.getMessage());
+		}
+		
+		System.out.println("DONE");
+		
 		
 		//Test PO on hold function:
 		ICPOHeader pohead = new ICPOHeader();
@@ -523,4 +568,113 @@ insert into gltransactionlines_bak select * from gltransactionlines;
 		*/
 
 	}
+    private static void sendEmailWithEmbeddedHTML(
+    		String host,
+            final String userName, 
+            final String password,
+            String sMailPort,
+            String replytoAddress,
+            String toAddress,
+            String subject, 
+            String body,
+            boolean bUseHTML,
+            Map<String, String> mapInlineImages)
+                throws Exception {
+        // sets SMTP server properties
+        Properties properties;
+		try {
+			properties = new Properties();
+			properties.put("mail.smtp.host", host);
+			properties.put("mail.smtp.port", sMailPort);
+			properties.put("mail.smtp.auth", "true");
+			properties.put("mail.smtp.starttls.enable", "true");
+			properties.put("mail.user", userName);
+			properties.put("mail.password", password);
+			//properties.put("mail.smtp.from", fromAddress);  //This line doesn't appear to have any effect..... TJR - 3/8/2018
+		} catch (Exception e) {
+			throw new Exception("Error [1395084034] - setting properties in EmailInlineHTML - " + e.getMessage());
+		}
+ 
+        // creates a new session with an authenticator
+        Authenticator auth;
+		try {
+			auth = new Authenticator() {
+			    public PasswordAuthentication getPasswordAuthentication() {
+			        return new PasswordAuthentication(userName, password);
+			    }
+			};
+		} catch (Exception e) {
+			throw new Exception("Error [1395085035] - getting Authenticator in EmailInlineHTML - " + e.getMessage());
+		}
+        Session session;
+		try {
+			session = Session.getInstance(properties, auth);
+		} catch (Exception e) {
+			throw new Exception("Error [1395085036] - getting session in EmailInlineHTML - " + e.getMessage());
+		}
+ 
+        // creates a new e-mail message
+        Message msg;
+		try {
+			msg = new MimeMessage(session);
+ 
+			msg.setFrom(new InternetAddress(userName));
+			InternetAddress[] mailAddress_REPLY_TO = new InternetAddress[1];
+			mailAddress_REPLY_TO[0] = new InternetAddress(replytoAddress);
+			msg.setReplyTo(mailAddress_REPLY_TO);
+			//InternetAddress[] toAddresses = { new InternetAddress(toAddress) };
+			//If there is more than one address, it should be separated with commas:
+			if (toAddress.indexOf(',') > 0){ 
+				msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+			}else{
+				//msg.setRecipient(Message.RecipientType.TO, new InternetAddress(toAddress));
+				msg.setRecipients(Message.RecipientType.TO, InternetAddress.parse(toAddress));
+			}
+			
+			msg.setSubject(subject);
+			//msg.setSentDate(new Date());
+ 
+			if (bUseHTML){
+
+				// adds inline image attachments
+				if (mapInlineImages != null){
+					// creates message part
+					MimeBodyPart messageBodyPart = new MimeBodyPart();
+					messageBodyPart.setContent(body, "text/html");
+					// creates multi-part
+					Multipart multipart = new MimeMultipart();
+					multipart.addBodyPart(messageBodyPart);
+
+					if (mapInlineImages.size() > 0) {
+					    Set<String> setImageID = mapInlineImages.keySet();
+					    for (String contentId : setImageID) {
+					        MimeBodyPart imagePart = new MimeBodyPart();
+					        imagePart.setHeader("Content-ID", "<" + contentId + ">");
+					        imagePart.setDisposition(MimeBodyPart.INLINE);
+					        String imageFilePath = mapInlineImages.get(contentId);
+					        try {
+					            imagePart.attachFile(imageFilePath);
+					        } catch (IOException ex) {
+					            ex.printStackTrace();
+					        }
+					        multipart.addBodyPart(imagePart);
+					    }
+					}
+					msg.setContent(multipart);
+				}else{
+					msg.setContent(body, "text/html");
+				}
+			}else{
+				//If we're NOT sending HTML:
+				msg.setContent(body, "text/plain");
+			}
+		} catch (Exception e) {
+			throw new Exception("Error [1395085037] - preparing message in sendEmailWithEmbeddedHTML - " + e.getMessage());
+		}
+        try {
+			Transport.send(msg);
+		} catch (Exception e) {
+			throw new Exception("Error [1395085038] - sending message in sendEmailWithEmbeddedHTML - " + e.getMessage());
+		}
+    }
 }

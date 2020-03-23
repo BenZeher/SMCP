@@ -275,12 +275,13 @@ public class AnniversaryNotification
 			Calendar calAnniday	//paramCalendar3
 			) throws Exception
 			{
-
+ 
 		//calNow is the current date and time
 		//calNextMonth is one month from now
 		//calAnniDay is the date we are testing
 
 		Calendar c = Calendar.getInstance();
+		
 		//Set c to the employee's anniversary date:
 		c.setTimeInMillis(calAnniday.getTimeInMillis());
 		if (c.get(Calendar.MONTH) > calNow.get(Calendar.MONTH))

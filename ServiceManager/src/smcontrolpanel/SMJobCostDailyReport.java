@@ -14,6 +14,7 @@ import javax.servlet.ServletContext;
 import SMDataDefinition.SMMasterStyleSheetDefinitions;
 import SMDataDefinition.SMTablemechanics;
 import SMDataDefinition.SMTableorderheaders;
+import SMDataDefinition.SMTableservicetypes;
 import SMDataDefinition.SMTablesmoptions;
 import SMDataDefinition.SMTableworkorders;
 import ServletUtilities.clsDatabaseFunctions;
@@ -51,6 +52,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
 			String sStartingDate,
 			String sEndingDate,
 			ArrayList <String> sMechanics,
+			ArrayList <String> sServiceType,
 			String sDBID,
 			String sUserID,
 			boolean bSuppressDetail,
@@ -75,6 +77,15 @@ public class SMJobCostDailyReport extends java.lang.Object{
 				+ clsStringFunctions.PadRight(sMechanics.get(i), " ", SMTablemechanics.sMechInitialLength);
 		}
 		
+		String sServiceTypeString = "";
+		if(sServiceType.size()!=0) {
+			for (int i = 0; i < sServiceType.size(); i++){
+				sServiceTypeString += "," 
+						+ clsStringFunctions.PadRight(sServiceType.get(i), " ", SMTableservicetypes.sCodeLength);
+			}
+		}
+		
+		
     	//SQL Statement:
         String SQL = "SELECT "
         	+ SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate
@@ -97,10 +108,13 @@ public class SMJobCostDailyReport extends java.lang.Object{
         		+ " AND (" + SMTableworkorders.TableName + "." + SMTableworkorders.datscheduleddate + " <= '" 
         			+ sEndingDate + "')"
         		+ " AND (INSTR('" + sMechanicsString + "', RPAD(" + SMTableworkorders.TableName + "." 
-        			+ SMTableworkorders.smechanicinitials + ", " + SMTablemechanics.sMechInitialLength + ",' ')) > 0)"
-        			
+        			+ SMTableworkorders.smechanicinitials + ", " + SMTablemechanics.sMechInitialLength + ",' ')) > 0)";
+        if(sServiceType.size()!=0) {
+        		SQL+= " AND (INSTR('" + sServiceTypeString + "', RPAD(" + SMTableorderheaders.TableName + "." 
+        			+ SMTableorderheaders.sServiceTypeCode + ", " + SMTableorderheaders.sServiceTypeCodeLength + ",' ')) > 0)";
+        }
         		//Link the tables:
-        		+ " AND (" + SMTableworkorders.TableName + "." + SMTableworkorders.strimmedordernumber + " = " 
+        SQL+= " AND (" + SMTableworkorders.TableName + "." + SMTableworkorders.strimmedordernumber + " = " 
         			+ SMTableorderheaders.TableName + "." + SMTableorderheaders.strimmedordernumber + ")"
         		
         		//Don't pick up the zero value records that may have been put in by the truck schedule
@@ -120,7 +134,7 @@ public class SMJobCostDailyReport extends java.lang.Object{
         	;
     	//end SQL statement
 
-        //System.out.println("[1431361866] SQL: " + SQL);
+       System.out.println("[1431361866] SQL: " + SQL);
         
     	String sCurrentMechanic = "";
     	String sLastMechanic = "";

@@ -86,16 +86,22 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 		ArrayList<String> sMechanics = new ArrayList<String>(0);
 		Enumeration<String> paramNames = request.getParameterNames();
 		ArrayList<String> sLocations = new ArrayList<String>(0);
+		ArrayList<String> sServiceType = new ArrayList<String>(0);
 
 		if (bSelectByCategory){
 	    	//Get the list of selected mechanics:
 		    String sLocationMarker = "LocationCheckBox";
+		    String sServiceMarker = "ServiceTypeCheckbox";
 		    while(paramNames.hasMoreElements()) {
 		      String sParamName = paramNames.nextElement();
 			  if (sParamName.contains(sLocationMarker)){
 				  sLocations.add(
 						  sParamName.substring(sParamName.indexOf(sLocationMarker) 
 								  + sLocationMarker.length()));
+			  }else if (sParamName.contains(sServiceMarker)){
+				  sServiceType.add(
+						  sParamName.substring(sParamName.indexOf(sServiceMarker) 
+								  + sServiceMarker.length()));
 			  }
 		    }
 			if(sLocations.size() == 0){
@@ -115,7 +121,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
 					+ "(INSTR('" + sLocationsString + "', " + SMTablemechanics.sMechLocation + ") > 0))"
 				;
 			
-			//System.out.println("In " + this.toString() + ".doGet, SQL = " + SQL);
+			System.out.println("In " + this.toString() + ".doGet, SQL = " + SQL);
 			
 			try {
 				ResultSet rs = clsDatabaseFunctions.openResultSet(
@@ -185,6 +191,16 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     					+ sLocations.get(i) + "</B>";
     			}
     		}
+    		sCriteria += ", selected service types:&nbsp;";
+    		for (int i = 0; i < sServiceType.size(); i++){
+    			if (i == 0){
+    				sCriteria += "<B>" 
+    					+ sServiceType.get(i) + "</B>";
+    			}else{
+    				sCriteria += ", <B>" 
+    					+ sServiceType.get(i) + "</B>";
+    			}
+    		}
     	}
     	
     	sCriteria += ", including technicians: ";
@@ -246,6 +262,7 @@ public class SMJobCostDailyReportGenerate extends HttpServlet {
     			sStartingDate, 
     			sEndingDate, 
     			sMechanics, 
+    			sServiceType,
     			sDBID,
     			sUserID,
     			bSuppressDetails,

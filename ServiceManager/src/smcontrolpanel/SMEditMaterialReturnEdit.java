@@ -53,7 +53,7 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			currentSession.removeAttribute(SMMaterialReturn.ParamObjectName);
 			//But if it's NOT a 'resubmit', meaning this class was called for the first time to 
 			//edit, we'll pick up the ID or key from the request and try to load the entry:
-		}else if(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0 && ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlid, request).compareToIgnoreCase("-1") == 0 ){
+		}else if(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramlid, request).compareToIgnoreCase("-1") == 0 ){
 			//IF new entry, and clicked find vendor: don't load
 		}else {
 			if (!smedit.getAddingNewEntryFlag()){ 
@@ -66,11 +66,6 @@ public class SMEditMaterialReturnEdit  extends HttpServlet {
 			}
 		}
 
-		//If there is a vendor in the request, then that might mean we are coming back from a vendor 'find', and we'll put that in the entry:
-		if (ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request).compareToIgnoreCase("") != 0){
-			entry.setsvendoracct(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramsvendoracct, request));
-			entry.setsponumber(ServletUtilities.clsManageRequestParameters.get_Request_Parameter(SMMaterialReturn.Paramiponumber, request));
-		}
 		String sWarning = clsManageRequestParameters.get_Request_Parameter("Warning", request);
 		smedit.printHeaderTable();
 		smedit.getPWOut().println(SMUtilities.getMasterStyleSheetLink());

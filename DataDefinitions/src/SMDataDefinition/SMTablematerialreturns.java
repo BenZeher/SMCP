@@ -7,34 +7,16 @@ public class SMTablematerialreturns {
 	public static final String datinitiated = "datinitiated";
 	public static final String linitiatedbyid = "linitiatedbyid";
 	public static final String sinitiatedbyfullname = "sinitiatedbyfullname";
+	public static final String iworkorderid = "iworkorderid";
+	public static final String strimmedordernumber = "strimmedordernumber";
+	public static final String sdescription = "sdescription";
+	public static final String mcomments = "mcomments";
 	public static final String iresolved = "iresolved";
 	public static final String datresolved = "datresolved";
 	public static final String lresolvedbyid = "lresolvedbyid";
-	public static final String sresolvedbyfullname = "sresolvedbyfullname";
-	public static final String sdescription = "sdescription";
-	public static final String mcomments = "mcomments";
-	
+	public static final String sresolvedbyfullname = "sresolvedbyfullname";	
 	public static final String mresolutioncomments = "mresolutioncomments"; 
 	
-	//TODO Be put into Vendor Returns
-	public static final String iworkorderid = "iworkorderid";
-	public static final String strimmedordernumber = "strimmedordernumber";
-	public static final String icreditnotexpected = "icreditnotexpected";
-	public static final String iponumber = "iponumber";
-	// TJR - Added these two fields 2/22/2019:
-	public static final String itobereturned = "itobereturned";
-	public static final String svendoracct = "svendoracct";
-	// TJR - Added these fields 9/26/2019:
-	public static final String ladjustedbatchnumber = "ladjustedbatchnumber"; //AdjustedBatch#
-	public static final String ladjustedentrynumber = "ladjustedentrynumber"; //Adjusted Entry Number 
-	public static final String bdadjustmentamount = "bdadjustmentamount"; //Adjusted Credit Amount
-	public static final String datcreditnotedate = "datcreditnotedate";
-	public static final String screditmemonumber = "screditmemonumber";
-	public static final String bdcreditamt = "bdcreditamt"; //Actual Credit Amount
-	public static final String datreturnsent = "datreturnsent";
-	public static final String iinvoiceonhold = "iinvoiceonhold";
-	public static final String mVendorComments = "mVendorComments";
-	public static final String iCreditDue = "iCreditDue"; //MiscCreditDue
 
 	//Lengths
 	public static final int linitiatedbyidlength = 11;

@@ -1964,16 +1964,6 @@ public class SMDisplayOrderInformation extends HttpServlet {
 					s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + "N/A" + "</TD>";
 				}
 				
-				//To Be Returned?
-				String sToBeReturned = "N";
-				if (rsMaterialReturns.getInt(SMTablematerialreturns.itobereturned)==1){
-					sToBeReturned = "Y";
-				}
-				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + sToBeReturned + "</TD>";
-				
-				//Vendor acct:
-				s += "<TD class = \" " + SMMasterStyleSheetDefinitions.TABLE_CELL_LEFT_JUSTIFIED_ARIAL_SMALL_WO_BORDER + " \" >" + rsMaterialReturns.getString(SMTablematerialreturns.svendoracct) + "</TD>";
-				
 				//Resolved:
 				String sResolved = "N";
 				if (rsMaterialReturns.getInt(SMTablematerialreturns.iresolved)==1){

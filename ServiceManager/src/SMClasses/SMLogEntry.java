@@ -279,9 +279,6 @@ public class SMLogEntry {
 				Statement stmt = conn.createStatement();
 				stmt.execute(SQL);
 			} catch (Exception e) {
-				if(sOperation.compareToIgnoreCase(SMLogEntry.LOG_OPERATION_SSSYSTEMERROR)==0) {
-					System.out.println("[202062750106] " + SQL);
-				}
 				System.out.println("Error [1413216633]" + Long.toString(System.currentTimeMillis()) 
 						+ " - logging operation '" + sOperation + "' in " + SMUtilities.getFullClassName(this.toString()) 
 						+ " error using connnection: " + e.getMessage() + ".");

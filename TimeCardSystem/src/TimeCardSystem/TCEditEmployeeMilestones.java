@@ -16,9 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import com.sun.org.apache.xerces.internal.impl.xpath.regex.ParseException;
-
-
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
 import ServletUtilities.clsManageRequestParameters;
@@ -402,7 +399,7 @@ public class TCEditEmployeeMilestones extends HttpServlet {
 		SimpleDateFormat sdf = new SimpleDateFormat("YYYY-MM-dd");
 		try {
 			sdf.parse(datDateCompleted);
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			sInvalidEntryMsg += "Date completed is invalid. ";
 		}
 	

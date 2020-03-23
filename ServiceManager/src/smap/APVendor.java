@@ -564,7 +564,7 @@ public class APVendor extends clsMasterEntry{
     	}
     	return true;
     }
-	private void mailNewVendorNotification(String sUserFullName, String sCompany, Connection conn) throws Exception{
+	public void mailNewVendorNotification(String sUserFullName, String sCompany, Connection conn) throws Exception{
 		//Notify any specified users that a new vendor was built:
 		String SQL = "SELECT " + SMTableusers.semail 
 			+ " FROM " 

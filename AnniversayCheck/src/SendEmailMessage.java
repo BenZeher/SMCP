@@ -6,6 +6,7 @@ import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+
  
 public class SendEmailMessage{
 	/*
@@ -70,6 +71,7 @@ public class SendEmailMessage{
 	     return true;
 	}
 	*/
+
 	public static void sendSSLMail(
 			String mailhost,
 			String sUserName,
@@ -95,6 +97,7 @@ public class SendEmailMessage{
 			"tom_ronayne@odcdc.com,tjprona@gmail.com");
 		*/
 		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+		
 		final String sUser = sUserName;
 		final String sPw = sPassword;
 		Properties props = new Properties();

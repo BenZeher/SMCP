@@ -75,7 +75,6 @@ public class AdminMain extends HttpServlet {
 		}
 		
 		
-		
 		//check for valid conf name
 		try {
 			if (request.getParameter(TimeCardUtilities.REQUEST_PARAMETER_DB) == null){

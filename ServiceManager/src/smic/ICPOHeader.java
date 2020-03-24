@@ -213,6 +213,9 @@ public class ICPOHeader extends clsMasterEntry{
 		}
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
+
+		System.out.println("[202003241030] - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
+			+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
 		
 		if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") != 0){
 			m_ipaymentonhold = "1";

@@ -35,7 +35,6 @@ import smbk.BKBank;
 import smcontrolpanel.SMUtilities;
 import smgl.GLAccount;
 import smic.ICPOHeader;
-import smic.ICPOInvoiceLine;
 import smic.ICPOReceiptHeader;
 
 public class APBatchEntry {

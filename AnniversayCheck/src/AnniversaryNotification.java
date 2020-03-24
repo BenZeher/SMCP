@@ -1,3 +1,4 @@
+import java.security.Security;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -7,7 +8,15 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
+import java.util.Properties;
 import java.util.concurrent.TimeUnit;
+
+import javax.mail.Message;
+import javax.mail.PasswordAuthentication;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 public class AnniversaryNotification
 {
@@ -117,17 +126,29 @@ public class AnniversaryNotification
 		SimpleDateFormat sdfNormalDate = new SimpleDateFormat("yyyy-MM-dd EEE");
 		int iBirthdayCount = 0;
 		int iAnniversaryCount = 0;
-		Calendar calNow = Calendar.getInstance();
-		calNow.setTimeInMillis(System.currentTimeMillis());
-		Calendar calNextMonth = Calendar.getInstance();
-		calNextMonth.setTimeInMillis(System.currentTimeMillis());
-		calNextMonth.add(Calendar.MONTH, 1);
+		Calendar calCalculateAsOfDate = Calendar.getInstance();
+		calCalculateAsOfDate.setTimeInMillis(System.currentTimeMillis());
+		//Move our 'calculate as of' date back one day:
+		calCalculateAsOfDate.add(Calendar.DATE, -1);
+		Calendar calThisDayNextMonth = Calendar.getInstance();
+		calThisDayNextMonth.setTimeInMillis(System.currentTimeMillis());
+		calThisDayNextMonth.add(Calendar.MONTH, 1);
 		Calendar calBirthday = Calendar.getInstance();
 		Calendar calHiredDate = Calendar.getInstance();
 		ArrayList<String> alBirthdayList = new ArrayList<String>(0); 
 		ArrayList<String> alAnniversaryList = new ArrayList<String>(0); 
 
-		String sEmail = "UPCOMING BIRTHDAY(S):\n\n"; //str8
+		//Prepare the header message:
+		java.sql.Date datCalculatedAsOfDate;
+		try {
+			datCalculatedAsOfDate = new java.sql.Date(calCalculateAsOfDate.getTimeInMillis());
+		} catch (Exception e) {
+			System.out.println("[1585069280] "+e.getMessage());
+			return;
+		}
+		
+		String sEmail = "Birthday and Anniversary dates within the next month, calculating from " + sdfNormalDate.format(datCalculatedAsOfDate) + ":\n\n\"";
+		sEmail += "UPCOMING BIRTHDAY(S) - Birthday, Name, Age:\n\n"; //str8
 		String sTemp = "";
 		sSQL = "SELECT * FROM Employees WHERE iActive=1 AND datBirthday <> '0000-00-00' ORDER BY DAYOFYEAR(datBirthday)";
 		Statement statement;
@@ -139,8 +160,8 @@ public class AnniversaryNotification
 				calBirthday.setTimeInMillis(rs.getDate("datBirthday").getTime());
 				java.sql.Date datNextBirthday;
 				try {
-					datNextBirthday = FindNextAnniversary(calNow, 
-							calNextMonth, 
+					datNextBirthday = FindNextAnniversary(calCalculateAsOfDate, 
+							calThisDayNextMonth, 
 							calBirthday);
 				} catch (Exception e) {
 					System.out.println("[1579014164] "+e.getMessage());
@@ -174,13 +195,13 @@ public class AnniversaryNotification
 		sSQL = "SELECT * FROM Employees WHERE iActive=1 AND datBirthday <> '0000-00-00' ORDER BY DAYOFYEAR(datHiredDate)";
 		try {
 			rs = statement.executeQuery(sSQL);
-			sEmail += "\n\nUPCOMING ANNIVERSARY(S):\n\n";
+			sEmail += "\n\nUPCOMING ANNIVERSARY(S) - Anniversary date, Name, Years with the company:\n\n";
 			while (rs.next()) {
 				calHiredDate.setTimeInMillis(rs.getDate("datHiredDate").getTime());
 				java.sql.Date datNextAnniversary;
 				try {
-					datNextAnniversary = FindNextAnniversary(calNow, 
-							calNextMonth, 
+					datNextAnniversary = FindNextAnniversary(calCalculateAsOfDate, 
+							calThisDayNextMonth, 
 							calHiredDate);
 				} catch (Exception e) {
 					System.out.println("[1579014211] " + e.getMessage());
@@ -244,7 +265,7 @@ public class AnniversaryNotification
 		SimpleDateFormat sdf = new SimpleDateFormat(DATETIME_FORMAT_STD);
 		System.out.println(" *********************");
 		try{
-			SendEmailMessage.sendSSLMail(
+			sendSSLMail(
 					sSMTPServerName, 
 					sSMTPUserName, 
 					sSMTPUserPassword, 
@@ -270,54 +291,120 @@ public class AnniversaryNotification
 	}
 
 	private static java.sql.Date FindNextAnniversary(
-			Calendar calNow, 		//paramCalendar1, 
+			Calendar calCalculateAsOfDate, 		//paramCalendar1, 
 			Calendar calNextMonth, //paramCalendar2, 
-			Calendar calAnniday	//paramCalendar3
+			Calendar calAnniversaryDay	//paramCalendar3
 			) throws Exception
 			{
  
-		//calNow is the current date and time
+		//calCalculateAsOfDate is the date we use base our calculation on, usually today or within a day of it.
 		//calNextMonth is one month from now
-		//calAnniDay is the date we are testing
-
-		Calendar c = Calendar.getInstance();
+		//calAnniversaryDay is the birthday or anniversary date we are checking
+		//cTempDate is used to temporarily carry the anniversary date we are checking
 		
-		//Set c to the employee's anniversary date:
-		c.setTimeInMillis(calAnniday.getTimeInMillis());
-		if (c.get(Calendar.MONTH) > calNow.get(Calendar.MONTH))
+		Calendar cTempDate = Calendar.getInstance();
+		
+		//Set cCurrentDate to the employee's anniversary date:
+		cTempDate.setTimeInMillis(calAnniversaryDay.getTimeInMillis());
+		//If the anniversary date MONTH is later than the 'As Of' month:
+		if (cTempDate.get(Calendar.MONTH) > calCalculateAsOfDate.get(Calendar.MONTH))
 		{
-			//If the month of the anniversary is LATER than the current month, then the next anniversary is this year:
-			c.add(Calendar.YEAR, calNow.get(Calendar.YEAR) - c.get(Calendar.YEAR));
+			//If the month of the anniversary is LATER than the 'as of' month, then the next anniversary is this year:
+			//So we add a number of years to the original anniversary date to bring it up to this year:
+			cTempDate.add(Calendar.YEAR, (calCalculateAsOfDate.get(Calendar.YEAR) - cTempDate.get(Calendar.YEAR)));
 		}
-		else if (c.get(Calendar.MONTH) < calNow.get(Calendar.MONTH))
+		else if (cTempDate.get(Calendar.MONTH) < calCalculateAsOfDate.get(Calendar.MONTH))
 		{
 			//Otherwise, if the month of the anniversary is PREVIOUS to the current month, then the next anniversary is next year:
-			c.add(Calendar.YEAR, calNow.get(Calendar.YEAR) - c.get(Calendar.YEAR) + 1);
+			cTempDate.add(Calendar.YEAR, calCalculateAsOfDate.get(Calendar.YEAR) - cTempDate.get(Calendar.YEAR) + 1);
 		}
-		else if (c.get(Calendar.DAY_OF_MONTH) < calNow.get(Calendar.DAY_OF_MONTH))
+		else if (cTempDate.get(Calendar.DAY_OF_MONTH) < calCalculateAsOfDate.get(Calendar.DAY_OF_MONTH))
 		{
 			//Otherwise, if the anniversary month is THIS month AND the anniversary day is earlier than TODAY, then the next anniversary
 			//is next year:
-			c.add(Calendar.YEAR, calNow.get(Calendar.YEAR) - c.get(Calendar.YEAR) + 1);
+			cTempDate.add(Calendar.YEAR, calCalculateAsOfDate.get(Calendar.YEAR) - cTempDate.get(Calendar.YEAR) + 1);
 		}
 		else
 		{
-			//Or, finally, if the anniversary month is THIS month AND the anniversary day is TODAY or later, then the next
+			//Or, finally, if the anniversary month is THIS month AND the anniversary day is the As Of date or later, then the next
 			//anniversary is this year:
-			c.add(Calendar.YEAR, calNow.get(Calendar.YEAR) - c.get(Calendar.YEAR));
+			cTempDate.add(Calendar.YEAR, calCalculateAsOfDate.get(Calendar.YEAR) - cTempDate.get(Calendar.YEAR));
 		}
 		
-		//So at this point, 'c' carries the correct next anniversary date
-;
-		//If the next anniversary date is earlier than or previous to the next month' date
-		// AND it is AFTER this instant, then return the next anniversary date:
-		if (c.getTimeInMillis() <= calNextMonth.getTimeInMillis() && 
-				c.getTimeInMillis() + TimeUnit.DAYS.toMillis(1) >= calNow.getTimeInMillis()) {
-			return new java.sql.Date(c.getTimeInMillis());
+		//So at this point, 'cTempDate' carries the correct next anniversary date
+
+		//If the next anniversary date is earlier than or previous to the next month's date
+		// AND it is AFTER the 'As Of', then return the next anniversary date:
+		if (
+				(cTempDate.getTimeInMillis() <= calNextMonth.getTimeInMillis()) 
+				&& (cTempDate.getTimeInMillis() + TimeUnit.DAYS.toMillis(1) >= calCalculateAsOfDate.getTimeInMillis())
+		) {
+			return new java.sql.Date(cTempDate.getTimeInMillis());
 		}else{
 			return null;
 		}
-			}
+	}
 	
-
+	private static void sendSSLMail(
+			String sMailHost,
+			String sUserName,
+			String sPassword,
+			String sMailPort,
+			String sSubject, 
+			String sBody, 
+			String sSender, 
+			String sRecipients,
+			boolean bUseHTML
+			) throws Exception 
+	{	
+		//Sample:
+		/*
+		SMUtilities.sendMail(
+			"smtp.gmail.com",
+			"someone@gmail.com",
+			"password",
+			"465",
+			"Subject",
+			"This is a test message",
+			"test@guess.com",
+			"tom_ronayne@odcdc.com,tjprona@gmail.com");
+		*/
+		Security.addProvider(new com.sun.net.ssl.internal.ssl.Provider());
+		
+		//For testing only:
+		//sRecipients = "tjprona@gmail.com,tom_ronayne@odcdc.com";
+		
+		final String sUser = sUserName;
+		final String sPw = sPassword;
+		Properties props = new Properties();
+		props.setProperty("mail.transport.protocol", "smtp");
+		props.setProperty("mail.host", sMailHost);
+		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.port", sMailPort);
+		props.put("mail.smtp.socketFactory.port", sMailPort);
+		props.put("mail.smtp.socketFactory.class",
+		"javax.net.ssl.SSLSocketFactory");
+		props.put("mail.smtp.socketFactory.fallback", "false");
+		props.setProperty("mail.smtp.quitwait", "false");
+		Session session = Session.getDefaultInstance(props,
+				new javax.mail.Authenticator() 
+		{
+			protected PasswordAuthentication getPasswordAuthentication()
+			{ return new PasswordAuthentication(sUser,sPw);	}
+		});		
+		MimeMessage message = new MimeMessage(session);
+		message.setSender(new InternetAddress(sSender));
+		message.setSubject(sSubject);
+		if (bUseHTML){
+			message.setContent(sBody, "text/html");
+		}else{
+			message.setContent(sBody, "text/plain");
+		}
+		if (sRecipients.indexOf(',') > 0) 
+					message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(sRecipients));
+		else
+					message.setRecipient(Message.RecipientType.TO, new InternetAddress(sRecipients));
+		
+		Transport.send(message);
+	}
 }

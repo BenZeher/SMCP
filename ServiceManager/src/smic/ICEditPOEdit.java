@@ -44,7 +44,8 @@ public class ICEditPOEdit  extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	public static final String FOUND_VENDOR_PARAMETER = "FOUND" + ICPOHeader.Paramsvendor;
 	public static final String FIND_VENDOR_BUTTON_NAME = "Find Vendor";
-	public static final String SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE = "*** Use customized ship via  ***";
+	public static final String SHIPVIA_LIST_OPTION_NOT_CHOSEN_DESC = "*** Use customized ship via  ***";
+	public static final String SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE = "0";
 	public static final String COMMAND_FLAG = "COMMANDFLAG";
 //	public static final String CREATE_DOCUMENT_FOLDER_COMMAND_VALUE = "CREATEDOCFOLDER";
 //	public static final String CREATE_DOCUMENT_FOLDER_BUTTON_LABEL = "Create document folder in Google Drive";
@@ -62,6 +63,7 @@ public class ICEditPOEdit  extends HttpServlet {
 	public static final String FINDVENDOR_COMMAND_VALUE = "FINDVENDOR";
 	public static final String RETURNING_FROM_FIND_VENDOR_FLAG = "RETURNINGFROMFINDER";
 	public static final String SORT_LINE_COMMAND_VALUE = "SORTPOLINES";
+	public static final String ON_HOLD_CHECKBOX_TRUE_VALUE = "1";
 	
 	//This value will hold the last SAVED value for the origination date, so we can tell when it's been changed on the scree
 	public static final String Paramlastsavedpodate = "lastsavedpodate";
@@ -795,11 +797,11 @@ public class ICEditPOEdit  extends HttpServlet {
 			if (entry.getsshipviacode().compareToIgnoreCase("") != 0){
 				sCode = entry.getsshipvianame().replace("\"", "&quot;");	
 			}else{
-				sCode = "Enter or pick a ship via from the list";
+				sCode = "";
 			}
 			
 			//ship via name:
-			s += "<TD style=\" text-align:right; font-weight:bold; \">Ship via:</TD>";
+			s += "<TD style=\" text-align:right; font-weight:bold; \">Ship via:<BR><I><FONT COLOR=RED>(Enter or pick a ship via from the list)</FONT></I></TD>";
 			s += "<TD colspan=3>"
 				+ "<INPUT TYPE=TEXT NAME=\"" + ICPOHeader.Paramsshipvianame + "\""
 				+ " onchange=\"flagDirty();\""
@@ -817,7 +819,7 @@ public class ICEditPOEdit  extends HttpServlet {
 				if (entry.getsshipviacode().compareToIgnoreCase("") == 0){
 					s += " selected=YES ";
 				}
-				s += " VALUE=\"0\">" + SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE + "</OPTION>";
+				s += " VALUE=\"" + SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE + "\">" + SHIPVIA_LIST_OPTION_NOT_CHOSEN_DESC + "</OPTION>";
 
 				for (int i = 0; i < arrShipVias.size(); i++){
 					s += "<OPTION";
@@ -842,8 +844,10 @@ public class ICEditPOEdit  extends HttpServlet {
 		
 		//On hold checkbox:
 		String sChecked = "";
+		String sCheckBoxValue = "";
 		if (entry.getspaymentonhold().compareToIgnoreCase("1") == 0){
 			sChecked = clsServletUtilities.CHECKBOX_CHECKED_STRING;
+			sCheckBoxValue = ON_HOLD_CHECKBOX_TRUE_VALUE;
 		}//else{
 			//sChecked = clsServletUtilities.CHECKBOX_UNCHECKED_STRING;
 		//}
@@ -852,6 +856,7 @@ public class ICEditPOEdit  extends HttpServlet {
 			+ " " + sChecked
 			+ " NAME=\"" + ICPOHeader.Paramipaymentonhold + "\""
 			+ " ID=\"" + ICPOHeader.Paramipaymentonhold + "\""
+			//+ " VALUE=\"" + sCheckBoxValue + "\""
  		+ " onchange=\"flagDirty();\""
  		+ ">"
  		+ "</TD>" + "\n"

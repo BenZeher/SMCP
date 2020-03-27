@@ -214,14 +214,21 @@ public class ICPOHeader extends clsMasterEntry{
 		m_sgdoclink = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramsgdoclink, req).trim();
 		m_screatedbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramscreatedbyfullname, req).trim();
 
-		System.out.println("[202003241030] - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
-			+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
+		//System.out.println("[202003241030-1] - clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) = '" 
+		//	+ clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req) + "'.");
 		
-		if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") != 0){
-			m_ipaymentonhold = "1";
-		}else{
+		if (req.getParameter(ICPOHeader.Paramipaymentonhold) == null) {
+			//System.out.println("[202003271548-1] - req.getParameter(ICPOHeader.Paramipaymentonhold) == null");
 			m_ipaymentonhold = "0";
+		}else {
+			if (clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramipaymentonhold, req).compareToIgnoreCase("") == 0){
+				m_ipaymentonhold = "0";
+			}else{
+				m_ipaymentonhold = "1";
+			}
 		}
+
+		//System.out.println("[202003272552-1] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
 		m_spaymentonholdbyfullname = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramspaymentonholdbyfullname, req).trim();
 		m_lpaymentonholdbyuserid = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramlpaymentonholdbyuserid, req).trim();
 		m_datpaymentplacedonhold = clsManageRequestParameters.get_Request_Parameter(ICPOHeader.Paramdatpaymentplacedonhold, req).trim();
@@ -240,7 +247,6 @@ public class ICPOHeader extends clsMasterEntry{
     			+ sUserID
     			+ " - "
     			+ sUserFullName
-    			
     			);
     	
     	if (conn == null){
@@ -1189,8 +1195,13 @@ public class ICPOHeader extends clsMasterEntry{
         	bEntriesAreValid = false;
         }
         if (m_sshipviacode.compareToIgnoreCase(ICEditPOEdit.SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE) == 0){
-        	super.addErrorMessage("No ship via code selected from the list.");
-        	bEntriesAreValid = false;
+        	//If there's nothing typed into the 'ship via name' field, then force the user to 
+        	//pick a ship via code OR enter a ship via name:
+        	m_sshipvianame = m_sshipvianame.trim();
+        	if (m_sshipvianame.compareToIgnoreCase("") == 0) {
+            	super.addErrorMessage("You need to EITHER select a ship via code OR enter something in the 'Ship via' field.");
+            	bEntriesAreValid = false;
+        	}
         }
     	//m_sshipvianame;
         //If there's a ship via code, the ship via name will be updated.  Otherwise, it's whatever
@@ -1229,13 +1240,14 @@ public class ICPOHeader extends clsMasterEntry{
         }
 
         //Payment on hold logic:
+        //System.out.println("[202003272553] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
 		try {
 			m_ipaymentonhold  = clsValidateFormFields.validateLongIntegerField(m_ipaymentonhold, "Payment on hold", 0L, 1L);
 		} catch (Exception e) {
 			super.addErrorMessage(e.getMessage() + ".");
 			bEntriesAreValid = false;
 		}
-        
+		//System.out.println("[202003272554] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
         //Get the existing record, if there is one, and determine if it was already on hold:
 
         //If the payment is on hold, then if it's a new PO we need to update the related fields:
@@ -1297,6 +1309,7 @@ public class ICPOHeader extends clsMasterEntry{
 			}
         }
 
+        //System.out.println("[202003272556] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
 		//If the payment is not on hold, make sure we clear all the related fields:
 		if (m_ipaymentonhold.compareToIgnoreCase("0") == 0){
 			m_spaymentonholdbyfullname = "";
@@ -1331,7 +1344,7 @@ public class ICPOHeader extends clsMasterEntry{
 		}
 		
 		//System.out.println("[20206617470] " + "m_datpaymentplacedonhold = '" + m_datpaymentplacedonhold + "'.");
-		
+		//System.out.println("[202003272551] - m_ipaymentonhold = '" + m_ipaymentonhold + "'.");
         m_mpaymentonholdreason = m_mpaymentonholdreason.trim();
         if (m_ipaymentonhold.compareToIgnoreCase("1") == 0){
         	if (m_mpaymentonholdreason.compareToIgnoreCase("") == 0){
@@ -1866,7 +1879,11 @@ public class ICPOHeader extends clsMasterEntry{
 	public boolean loadShipViaInformation(Connection conn){
 		
 		//If the ship to code is blank, don't update the ship to info:
-		if (m_sshipviacode.compareToIgnoreCase("") == 0){
+		if (
+			(m_sshipviacode.compareToIgnoreCase("") == 0)
+			|| (m_sshipviacode.compareToIgnoreCase(ICEditPOEdit.SHIPVIA_LIST_OPTION_NOT_CHOSEN_VALUE) == 0)
+				
+		){
 			return true;
 		}
 		
@@ -1886,7 +1903,7 @@ public class ICPOHeader extends clsMasterEntry{
 				rs.close();
 			}else{
 				rs.close();
-				super.addErrorMessage("No ship via record for ship via code.");
+				super.addErrorMessage("Error - No ship via record for ship via code '" + m_sshipviacode + "'.");
 				return false;
 			}
 		} catch (SQLException e) {

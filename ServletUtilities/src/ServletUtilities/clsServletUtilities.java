@@ -59,6 +59,7 @@ public class clsServletUtilities {
 	public final static String EMPTY_DATETIME_VALUE = "00/00/0000 00:00:00 AM";
 	public final static String EMPTY_DATE_VALUE = "00/00/0000";
 	public final static String DATETIME_FORMAT_FOR_SQL = "yyyy-MM-dd hh:mm:ss";
+	public final static String DATETIME_12HR_FORMAT_FOR_SQL = "yyyy-MM-dd hh:mm:ss p";
 	
 	//This will change, for example, a date/time like '1/1/2018 1:00:00 PM' to '2018-01-01 13:00:00'
 	// Without the 'HH', it would be converted to '2018-01-01 01:00:00'

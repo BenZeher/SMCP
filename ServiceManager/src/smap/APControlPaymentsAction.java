@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.math.BigDecimal;
 import java.sql.ResultSet;
 
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -23,6 +22,8 @@ import smcontrolpanel.SMUtilities;
 public class APControlPaymentsAction extends HttpServlet{
 	
 	private static final long serialVersionUID = 1L;
+	private static final String ON_HOLD_WITHOUT_REASON_ERROR = "ONHOLDERROR";
+	
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response)
 			throws ServletException, IOException {
@@ -35,11 +36,18 @@ public class APControlPaymentsAction extends HttpServlet{
 			savePaymentInformation(smaction, request);
 		} catch (Exception e) {
 			String sOnHold = "";
+			String sErrorMessage = e.getMessage();
 			if (clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.ionhold, request).compareToIgnoreCase("") != 0){
 				sOnHold = "Y";
 			}
+			
+			if (e.getMessage().compareToIgnoreCase(ON_HOLD_WITHOUT_REASON_ERROR) == 0) {
+				sOnHold = "N";
+				sErrorMessage = "If you are placing this transaction on hold, the 'On hold reason' cannot be blank.";
+			}
+			
 			smaction.redirectAction(
-					"Error updating transaction - " + e.getMessage(), 
+					"Error updating transaction - " + sErrorMessage, 
 					"", 
 		    		SMTableaptransactions.svendor + "=" + clsServletUtilities.URLEncode(clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.svendor, request))
 		    		+ "&" + SMTableaptransactions.sdocnumber + "=" + clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.sdocnumber, request)
@@ -166,7 +174,7 @@ public class APControlPaymentsAction extends HttpServlet{
 		//On hold reason:
 		String sOnHoldReason = clsManageRequestParameters.get_Request_Parameter(SMTableaptransactions.monholdreason, req).trim();
 		try {
-			sOnHoldReason = clsValidateFormFields.validateStringField(sOnHoldReason, 16000, "On hold reason", sOnHold.compareToIgnoreCase("0") == 0);
+			sOnHoldReason = clsValidateFormFields.validateStringField(sOnHoldReason, 16000, "On hold reason", true);
 		} catch (Exception e1) {
 			sValidationResult += "  " + e1.getMessage() + ".";
 		}
@@ -224,10 +232,15 @@ public class APControlPaymentsAction extends HttpServlet{
 				sOnHoldUserID = sm.getUserID();
 				sOnHoldFullUserName = sm.getFullUserName();
 				sOnHoldPOHeaderID = "0";  //User can't set an on hold PO number from here
+				
+				if (sOnHoldReason.compareToIgnoreCase("") == 0) {
+					throw new Exception(ON_HOLD_WITHOUT_REASON_ERROR);
+				}
 				try {
 					ServletUtilities.clsDBServerTime dbtime;
 					dbtime = new ServletUtilities.clsDBServerTime(sm.getsDBID(), sm.getFullUserName(), getServletContext());
 					sOnHoldDate = dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY);
+					System.out.println("[202003271414] - sOnHoldDate = '" + sOnHoldDate + "'.");
 				} catch (Exception e) {
 					throw new Exception("Error [202072930130] " + "Could not get current date and time - " + e.getMessage());
 				}
@@ -244,7 +257,10 @@ public class APControlPaymentsAction extends HttpServlet{
 			+ ", " + SMTableaptransactions.lonholdbyuserid + " = " + sOnHoldUserID
 			+ ", " + SMTableaptransactions.sonholdbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(sOnHoldFullUserName) + "'"
 			+ ", " + SMTableaptransactions.datplacedonhold + " = '" + clsDateAndTimeConversions.convertDateFormat(
-				sOnHoldDate, SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, SMUtilities.DATETIME_FORMAT_FOR_SQL, SMUtilities.EMPTY_SQL_DATETIME_VALUE) + "'"
+				sOnHoldDate, 
+				SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+				SMUtilities.DATETIME_24HR_FORMAT_FOR_SQL, 
+				SMUtilities.EMPTY_SQL_DATETIME_VALUE) + "'"
 			+ ", " + SMTableaptransactions.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(sOnHoldReason) + "'"
 					+ ", " + SMTableaptransactions.lonholdpoheaderid + " = " + sOnHoldPOHeaderID
 			+ " WHERE ("

@@ -17,7 +17,9 @@ import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 import javax.servlet.http.HttpServlet;
 
+import ServletUtilities.clsDateAndTimeConversions;
 import smap.APVendor;
+import smcontrolpanel.SMUtilities;
 import smic.ICPOHeader;
 
 public class TESTBatchExport extends HttpServlet{
@@ -156,6 +158,30 @@ public class TESTBatchExport extends HttpServlet{
 			return;
 		}
 		*/
+		
+		String sOnHoldDate = "";
+		try {
+			ServletUtilities.clsDBServerTime dbtime;
+			dbtime = new ServletUtilities.clsDBServerTime(conn);
+			sOnHoldDate = dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY);
+			System.out.println("[202003271414] - sOnHoldDate = '" + sOnHoldDate + "'.");
+		} catch (Exception e) {
+			System.out.println("Error [202072930130] " + "Could not get current date and time - " + e.getMessage());
+		}
+		try {
+			System.out.println("Date = '" +
+				clsDateAndTimeConversions.convertDateFormat(
+					sOnHoldDate, 
+					SMUtilities.DATETIME_FORMAT_FOR_DISPLAY, 
+					SMUtilities.DATETIME_24HR_FORMAT_FOR_SQL, 
+					SMUtilities.EMPTY_SQL_DATETIME_VALUE) + "'"
+			)
+			;
+		} catch (Exception e3) {
+			System.out.println("[202003273417] - ");
+		}
+		
+		
 		
 		APVendor ven = new APVendor();
 		ven.setsvendoracct("OHD03");

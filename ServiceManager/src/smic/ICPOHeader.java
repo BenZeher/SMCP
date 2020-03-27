@@ -821,10 +821,10 @@ public class ICPOHeader extends clsMasterEntry{
 									SQLUpdate = "UPDATE"
 										+ " " + SMTableaptransactions.TableName
 										+ " SET " + SMTableaptransactions.ionhold + " = 1"
-										+ ", " + SMTableaptransactions.sonholdbyfullname + " = '" + getspaymentonholdbyfullname() + "'"
+										+ ", " + SMTableaptransactions.sonholdbyfullname + " = '" + clsDatabaseFunctions.FormatSQLStatement(getspaymentonholdbyfullname()) + "'"
 										+ ", " + SMTableaptransactions.lonholdbyuserid + " = " + getlpaymentonholdbyuserid()
 										+ ", " + SMTableaptransactions.lonholdpoheaderid + " = " + sPOHeaderID
-										+ ", " + SMTableaptransactions.monholdreason + " = '" + getmpaymentonholdreason() + "'"
+										+ ", " + SMTableaptransactions.monholdreason + " = '" + clsDatabaseFunctions.FormatSQLStatement(getmpaymentonholdreason()) + "'"
 										+ ", " + SMTableaptransactions.datplacedonhold + " = '" 
 											+ clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(
 												getdatpaymentplacedonhold()
@@ -838,7 +838,6 @@ public class ICPOHeader extends clsMasterEntry{
 								} catch (Exception e) {
 									throw new Exception("Error [2020721417255] " + "Could not update ON HOLD status of AP Invoice with SQL: '" + SQLUpdate + "' - " + e.getMessage());
 								}
-								
 							}
 						}
 					}

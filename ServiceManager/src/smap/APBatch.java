@@ -2807,7 +2807,7 @@ public class APBatch {
     		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsonholdbyfullname()) + "'"
     		+ ", " + entry.getsonholdbyuserid()
     		+ ", '" + clsDateAndTimeConversions.stdDateTimeToSQLDateTimeInSecondsString(entry.getsdatonhold()) + "'"
-    		+ ", '" + entry.getsonholdreason() + "'"
+    		+ ", '" + clsDatabaseFunctions.FormatSQLStatement(entry.getsonholdreason()) + "'"
     		+ ", " + entry.getsonholdpoheaderid()
     		+ ")"
     	;

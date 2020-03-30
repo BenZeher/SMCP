@@ -495,28 +495,36 @@ public class ICPOHeader extends clsMasterEntry{
     	//Figure out if this PO is being put on hold, or if it's being taken off hold:
     	boolean bPOIsBeingPutOnHold = false;
     	boolean bPOIsBeingTakenOffHold = false;
-    	
-    	ICPOHeader pohead = new ICPOHeader();
-    	pohead.setsID(m_slid);
-    	if (!pohead.load(conn)){
-        	super.addErrorMessage("Error [1585594067] - Could not load previous version of PO with ID '" + m_slid + "' - " + pohead.getErrorMessages() + ".");
-        	return false;
-    	}else{
-    		//Now figure out if the payment on hold status has changed:
-    		//If it was NOT on hold before, but it is now:
-    		if (
-    			(pohead.getspaymentonhold().compareToIgnoreCase("0") == 0) 
-    			&& (getspaymentonhold().compareToIgnoreCase("1") == 0)
+    	long lID;
+		try {
+			lID = Long.parseLong(m_slid);
+		} catch (NumberFormatException e) {
+			super.addErrorMessage("Error [202003300917] - cannot parse PO ID '" + m_slid + "'.");
+			return false;
+		}
+		String sPreviousOnHoldStatus = "0";
+    	if (lID > 0){
+        	ICPOHeader pohead = new ICPOHeader();
+        	pohead.setsID(m_slid);
+        	if (!pohead.load(conn)){
+            	super.addErrorMessage("Error [1585594067] - Could not load previous version of PO with ID '" + m_slid + "' - " + pohead.getErrorMessages() + ".");
+            	return false;
+        	}else{
+        		sPreviousOnHoldStatus = pohead.getspaymentonhold();
+        	}
+    	}
+		if (
+    		(sPreviousOnHoldStatus.compareToIgnoreCase("0") == 0) 
+    		&& (getspaymentonhold().compareToIgnoreCase("1") == 0)
+    	){
+    		bPOIsBeingPutOnHold = true;
+    	}
+		//If it WAS on hold before, but is NOT now:
+		if (
+    		(sPreviousOnHoldStatus.compareToIgnoreCase("1") == 0) 
+    		&& (getspaymentonhold().compareToIgnoreCase("0") == 0)
     		){
-    			bPOIsBeingPutOnHold = true;
-    		}
-    		//If it WAS on hold before, but is NOT now:
-    		if (
-        			(pohead.getspaymentonhold().compareToIgnoreCase("1") == 0) 
-        			&& (getspaymentonhold().compareToIgnoreCase("0") == 0)
-        		){
-    			bPOIsBeingTakenOffHold = true;
-        		}
+			bPOIsBeingTakenOffHold = true;
     	}
     	
     	String SQL = "";

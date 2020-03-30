@@ -10,6 +10,7 @@ import java.util.Enumeration;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import SMClasses.SMLogEntry;
 import smap.APVendor;
 import smcontrolpanel.SMUtilities;
 import SMDataDefinition.SMTableaptransactionlines;
@@ -490,6 +491,34 @@ public class ICPOHeader extends clsMasterEntry{
     	if (!validate_entry_fields(conn, sUserID)){
     		return false;
     	}
+    	
+    	//Figure out if this PO is being put on hold, or if it's being taken off hold:
+    	boolean bPOIsBeingPutOnHold = false;
+    	boolean bPOIsBeingTakenOffHold = false;
+    	
+    	ICPOHeader pohead = new ICPOHeader();
+    	pohead.setsID(m_slid);
+    	if (!pohead.load(conn)){
+        	super.addErrorMessage("Error [1585594067] - Could not load previous version of PO with ID '" + m_slid + "' - " + pohead.getErrorMessages() + ".");
+        	return false;
+    	}else{
+    		//Now figure out if the payment on hold status has changed:
+    		//If it was NOT on hold before, but it is now:
+    		if (
+    			(pohead.getspaymentonhold().compareToIgnoreCase("0") == 0) 
+    			&& (getspaymentonhold().compareToIgnoreCase("1") == 0)
+    		){
+    			bPOIsBeingPutOnHold = true;
+    		}
+    		//If it WAS on hold before, but is NOT now:
+    		if (
+        			(pohead.getspaymentonhold().compareToIgnoreCase("1") == 0) 
+        			&& (getspaymentonhold().compareToIgnoreCase("0") == 0)
+        		){
+    			bPOIsBeingTakenOffHold = true;
+        		}
+    	}
+    	
     	String SQL = "";
     	ResultSet rs;
 
@@ -770,6 +799,30 @@ public class ICPOHeader extends clsMasterEntry{
 				return false;
 			}
 		}
+		
+		//If it's either being put ON hold, or being taken off, then record it in the log:
+		if (bPOIsBeingPutOnHold) {
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+		    log.writeEntry(
+		    	sUserID, 
+		    	SMLogEntry.LOG_OPERATION_POONHOLD, 
+		    	"PO " + this.getsID() + "; REASON: '" + getmpaymentonholdreason() + "'",
+		    	"PUT ON HOLD",
+		    	"[1577471378]"
+		   	);
+		}
+		
+		if (bPOIsBeingTakenOffHold) {
+			SMClasses.SMLogEntry log = new SMClasses.SMLogEntry(conn);
+		    log.writeEntry(
+		    	sUserID, 
+		    	SMLogEntry.LOG_OPERATION_POONHOLD, 
+		    	"PO " + this.getsID(),
+		    	"TAKEN OFF HOLD",
+		    	"[1577471378]"
+		   	);
+		}
+		
     	return true;
     }
 

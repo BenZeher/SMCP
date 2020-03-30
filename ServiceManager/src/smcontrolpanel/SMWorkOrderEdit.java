@@ -1044,11 +1044,17 @@ public class SMWorkOrderEdit  extends HttpServlet {
 						throw new SQLException(e.getMessage() + ".");
 					}
 				}else{
-					//Otherwise, just calculate the price for this item and this qty, disregarding the unit price on the order:
-					try {
-						dummyorder.updateLinePrice(dummydetail, sm.getsDBID(), sm.getUserName(), getServletContext());
-					} catch (Exception e) {
-						throw new Exception ("Error [1431442449] updating price for item '" + dummydetail.getM_sItemNumber() + "' - " + e.getMessage());
+					//Don't bother with calculating an item on a work order if it has not order associated with it:
+					if (
+						(order.getM_strimmedordernumber().compareToIgnoreCase("") != 0)
+						&& (order.getM_strimmedordernumber() != null)
+					){
+						//Otherwise, just calculate the price for this item and this qty, disregarding the unit price on the order:
+						try {
+							dummyorder.updateLinePrice(dummydetail, sm.getsDBID(), sm.getUserName(), getServletContext());
+						} catch (Exception e) {
+							throw new Exception ("Error [1431442449] updating price for item '" + dummydetail.getM_sItemNumber() + "' - " + e.getMessage());
+						}
 					}
 				}
 				String sExtendedPrice = dummydetail.getM_dExtendedOrderPrice();

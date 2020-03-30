@@ -4957,10 +4957,13 @@ public class SMOrderHeader extends clsMasterEntry{
 			updateLinePrice(line, conn);
 		} catch (Exception e) {
 			clsDatabaseFunctions.freeConnection(context, conn, "[1547067748]");
-			throw new Exception("Error [1397655971] updating line price - " + e.getMessage());
+			throw new Exception("Error [1397655971] updating line price on line number - " + line.getM_iLineNumber() 
+				+ ", item '" + line.getM_sItemNumber() 
+				+ "' on order '" + this.m_strimmedordernumber + "' - " 
+				+ e.getMessage()
+			);
 		}
 		clsDatabaseFunctions.freeConnection(context, conn, "[1547067749]");
-		
 	}
 	public void updateLinePrice(
     		SMOrderDetail line,

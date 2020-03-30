@@ -816,7 +816,7 @@ public class ICPOHeader extends clsMasterEntry{
 		    	SMLogEntry.LOG_OPERATION_POONHOLD, 
 		    	"PO " + this.getsID() + "; REASON: '" + getmpaymentonholdreason() + "'",
 		    	"PUT ON HOLD",
-		    	"[1577471378]"
+		    	"[1585596483]"
 		   	);
 		}
 		
@@ -827,7 +827,7 @@ public class ICPOHeader extends clsMasterEntry{
 		    	SMLogEntry.LOG_OPERATION_POONHOLD, 
 		    	"PO " + this.getsID(),
 		    	"TAKEN OFF HOLD",
-		    	"[1577471378]"
+		    	"[1585596484]"
 		   	);
 		}
 		

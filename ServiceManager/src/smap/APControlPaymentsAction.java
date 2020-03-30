@@ -9,6 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import SMClasses.SMLogEntry;
 import SMDataDefinition.SMTableaptransactions;
 import ServletUtilities.clsDatabaseFunctions;
 import ServletUtilities.clsDateAndTimeConversions;
@@ -186,7 +187,34 @@ public class APControlPaymentsAction extends HttpServlet{
 
 		//System.out.println("[202072102318] " + "sOnHold = '" + sOnHold + "'.");
 		
-		//If the payment is NOT on hold, clear the on hold fields:
+		//First, get the current on hold status of the transaction
+		boolean bTransactionWasAlreadyOnHold = false;
+		String sSQL = "SELECT"
+			+ " " + SMTableaptransactions.ionhold
+			+ " FROM " + SMTableaptransactions.TableName
+			+ " WHERE ("
+				+ "(" + SMTableaptransactions.svendor + " = '" + sVendor + "')"
+				+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + sDocNumber + "')"
+			+ ")"
+		;
+		try {
+			ResultSet rs = clsDatabaseFunctions.openResultSet(
+				sSQL, 
+				getServletContext(), 
+				sm.getsDBID(), 
+				"MySQL", 
+				this.toString() + ".savePaymentInformation - user: " + sm.getFullUserName()
+			);
+			if (rs.next()){
+				if (rs.getInt(SMTableaptransactions.ionhold) == 1){
+					bTransactionWasAlreadyOnHold = true;
+				}
+			}
+			rs.close();
+		} catch (Exception e1) {
+			throw new Exception("Error [202072930501] " + "reading on hold status of existing transaction with SQL = '" + sSQL + "' - " + e1.getMessage());
+		}
+		
 		if (sOnHold.compareToIgnoreCase("0") == 0){
 			//System.out.println("[20207210391] " + "sOnHold == 0");
 			sOnHoldUserID = "0";
@@ -197,33 +225,7 @@ public class APControlPaymentsAction extends HttpServlet{
 		}else{
 			//System.out.println("[20207210391] " + "sOnHold != 0");
 			//If the payment is being PLACED on hold for the first time, get the user and date info, and require a reason:
-			//First, get the current on hold status of the transaction
-			boolean bTransactionWasAlreadyOnHold = false;
-			String sSQL = "SELECT"
-				+ " " + SMTableaptransactions.ionhold
-				+ " FROM " + SMTableaptransactions.TableName
-				+ " WHERE ("
-					+ "(" + SMTableaptransactions.svendor + " = '" + sVendor + "')"
-					+ " AND (" + SMTableaptransactions.sdocnumber + " = '" + sDocNumber + "')"
-				+ ")"
-			;
-			try {
-				ResultSet rs = clsDatabaseFunctions.openResultSet(
-					sSQL, 
-					getServletContext(), 
-					sm.getsDBID(), 
-					"MySQL", 
-					this.toString() + ".savePaymentInformation - user: " + sm.getFullUserName()
-				);
-				if (rs.next()){
-					if (rs.getInt(SMTableaptransactions.ionhold) == 1){
-						bTransactionWasAlreadyOnHold = true;
-					}
-				}
-				rs.close();
-			} catch (Exception e1) {
-				throw new Exception("Error [202072930501] " + "reading on hold status of existing transaction with SQL = '" + sSQL + "' - " + e1.getMessage());
-			}
+
 			
 			//If the user is setting it on hold for the first time, then get the additional info now:
 			//System.out.println("[202072103562] " + "bTransactionWasAlreadyOnHold = " + bTransactionWasAlreadyOnHold);
@@ -240,7 +242,7 @@ public class APControlPaymentsAction extends HttpServlet{
 					ServletUtilities.clsDBServerTime dbtime;
 					dbtime = new ServletUtilities.clsDBServerTime(sm.getsDBID(), sm.getFullUserName(), getServletContext());
 					sOnHoldDate = dbtime.getCurrentDateTimeInSelectedFormat(SMUtilities.DATETIME_FORMAT_FOR_DISPLAY);
-					System.out.println("[202003271414] - sOnHoldDate = '" + sOnHoldDate + "'.");
+					//System.out.println("[202003271414] - sOnHoldDate = '" + sOnHoldDate + "'.");
 				} catch (Exception e) {
 					throw new Exception("Error [202072930130] " + "Could not get current date and time - " + e.getMessage());
 				}
@@ -278,6 +280,29 @@ public class APControlPaymentsAction extends HttpServlet{
 		} catch (Exception e) {
 			throw new Exception("Error [1493058206] updating AP transaction with SQL: " + SQL + " - " + e.getMessage());
 		}
+		
+    	//If it was already on hold, but is being taken OFF hold now, log it:
+    	if ((bTransactionWasAlreadyOnHold) && (sOnHold.compareToIgnoreCase("0") == 0)){
+    		SMLogEntry log = new SMLogEntry(sm.getsDBID(), getServletContext());
+    		log.writeEntry(
+    			sm.getUserID(), 
+    			SMLogEntry.LOG_OPERATION_APINVOICEONHOLD, 
+    			"Vendor '" + sVendor + "', document number '" + sDocNumber + "' taken off hold", 
+    			"TAKEN OFF HOLD", 
+    			"[1585596603]");
+    	}
+    	
+    	//If it was NOT previously on hold, but is being put ON hold now, log it:
+    	if ((!bTransactionWasAlreadyOnHold) && (sOnHold.compareToIgnoreCase("1") == 0)) {
+       		SMLogEntry log = new SMLogEntry(sm.getsDBID(), getServletContext());
+    		log.writeEntry(
+    			sm.getUserID(), 
+    			SMLogEntry.LOG_OPERATION_APINVOICEONHOLD, 
+    			"Vendor '" + sVendor + "', document number '" + sDocNumber + "' put on hold", 
+    			"PUT ON HOLD", 
+    			"[1585596604]");
+    	}
+
 	}
 	public void doGet(HttpServletRequest request,
 			HttpServletResponse response)
